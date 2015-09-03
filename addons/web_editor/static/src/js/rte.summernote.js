@@ -45,13 +45,26 @@ renderer.createPalette = function ($container, options) {
     }
 
     var $color = $container.find('.note-color');
-    var html = QWeb.render('web_editor.colorpicker');
-    $color.find('.note-color-palette').prepend(html);
-    var $bg = $color.find('.colorpicker:first button');
-    var $fore = $color.find('.colorpicker:last button');
+    var html = $(QWeb.render('web_editor.colorpicker'));
+    var theme = html.find('.theme')
 
-    $bg.each(function () { $(this).attr('data-event', 'backColor').attr('data-value', $(this).attr('class')); });
-    $fore.each(function () { $(this).attr('data-event', 'foreColor').attr('data-value', $(this).attr('class').replace(/bg-/, 'text-')); });
+    $color.find('.palette_theme').prepend(html.find('.theme'));
+    $color.find('.palette_ui').prepend(html.find('.ui'));
+    $color.find('.palette_grayscale').prepend(html.find('.grayscale'));
+
+    var $bg = $color.find('.background_toggle .dropdown-menu button');
+    var $fore = $color.find('.foreground_toggle .dropdown-menu button');
+
+    $bg.each(function () {
+        $(this).attr('data-event', 'backColor').attr('data-value',
+             $(this).attr($(this).attr('class') == 'note-color-btn' ?'title':'class')
+        );
+    });
+    $fore.each(function () {
+        $(this).attr('data-event', 'foreColor').attr('data-value',
+            $(this).attr($(this).attr('class') == 'note-color-btn' ?'title':'class').replace(/bg-/, 'text-')
+        );
+     });
 };
 
 var fn_tplPopovers = renderer.tplPopovers;
@@ -144,7 +157,7 @@ renderer.tplPopovers = function (lang, options) {
     $imagePopover.find('.popover-content').append($airPopover.find(".note-history").clone());
 
     $imagePopover.find('[data-event="showImageDialog"]').before($airPopover.find('[data-event="showLinkDialog"]').clone());
-    
+
     //////////////// link popover
 
     $linkPopover.find('.popover-content').append($airPopover.find(".note-history").clone());
@@ -196,7 +209,24 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
     fn_boutton_update.call(this, $container, oStyle);
 
-    $container.find('.note-color').removeClass("hidden");
+    $container.find('.note-color').removeClass("hidden")
+
+    // ACTIVATE TABS
+    $container.find('[data-tab-target]').each(function(){
+      var $el = $(this);
+      var target = $el.data('tab-target');
+      var $parent = $el.parent().closest('.tabs_container');
+      var $parentLi = $el.parent().closest('li');
+
+      $parentLi.on('click', function(){return false});
+
+      $el.on('click', function(){
+        $parent.find('.tab, .tabs_toggles li').removeClass('on');
+        $parent.find(target).add($parentLi).addClass('on')
+        return false;
+      })
+    })
+
 
     if (oStyle.image) {
         $container.find('[data-event]').parent().removeClass("active");
@@ -343,7 +373,7 @@ eventHandler.modules.editor.imageShape = function ($editable, sValue) {
 eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, linkInfo) {
     $editable.data('range').select();
     $editable.data('NoteHistory').recordUndo();
-    
+
     var editor = new widgets.LinkDialog($editable, linkInfo);
     editor.appendTo(document.body);
 
@@ -586,7 +616,7 @@ function summernote_mousedown (event) {
     rte.history.splitNext();
 
     var $editable = $(event.target).closest(".o_editable, .note-editor");
-    
+
     if (!!document.documentMode) {
         summernote_ie_fix(event, function (node) { return node.tagName === "DIV" || node.tagName === "IMG" || (node.dataset && node.dataset.oeModel); });
     } else if (last_div && event.target !== last_div) {
@@ -714,6 +744,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
         }
     });
     $(document).on("keyup", reRangeSelectKey);
+
     var clone_data = false;
     var $node = oLayoutInfo.editor();
     if ($node.data('oe-model') || $node.data('oe-translation-id')) {

@@ -10,15 +10,26 @@
     </xpath>
 </template>
 
+<template id="less_assets" name="Website Less Assets">
+    <link rel="stylesheet" href='/website/static/src/less/website.ui.mixins.less'/>
+    <link rel="stylesheet" href='/website/static/src/less/website.ui.variables.less'/>
+    <link rel="stylesheet" href='/website/static/src/less/website.ui.interactions.less'/>
+    <link rel="stylesheet" href='/website/static/src/less/website.ui.components.less'/>
+    <link rel="stylesheet" href='/website/static/src/less/website.ui.less'/>
+    <link rel="stylesheet" href='/website/static/src/less/website.snippets.less'/>
+    <link rel="stylesheet" href='/website/static/src/less/website.wrapwrap.less'/>
+</template>
+
 <template id="assets_frontend" name="Website assets">
     <link id="bootstrap_css" rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
+    <link rel="stylesheet" href="/web/static/src/less/utils.less"/>
 
-    <link rel="stylesheet" href='/website/static/src/css/website.css'/>
+    <link rel="stylesheet" href="/web/static/src/less/mimetypes.less"/>
+    <t id="assets_frontend_less" t-call="website.less_assets"/>
 
     <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.share.js"></script>
-
     <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
 
     <t t-call="web.bootstrap"/>
@@ -34,6 +45,16 @@
 </template>
 
 <template id="assets_editor" name="Editor assets">
+    <!-- Call default mixins from WEB module -->
+    <link rel="stylesheet" href='/web/static/src/less/utils.less'/>
+    <!-- Call mixins from frontend bundle -->
+    <link rel="stylesheet" href='/website/static/src/less/website.ui.mixins.less'/>
+
+    <link rel='stylesheet' href='/web_editor/static/src/less/web_editor.common.less'/>
+    <link rel='stylesheet' href='/web_editor/static/src/less/web_editor.less'/>
+
+    <link rel='stylesheet' href='/website/static/src/less/website.edit_mode.less'/>
+
     <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
     <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
@@ -50,9 +71,7 @@
     <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
     <script type="text/javascript" src="/website/static/src/js/web_planner_website.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.contentMenu.js"></script>
-    <link rel='stylesheet' href='/web_editor/static/src/css/web_editor.css'/>
-    <link rel='stylesheet' href='/web_editor/static/src/less/web_editor.less'/>
-    <link rel="stylesheet" href="/website/static/src/css/website.editor.css"/>
+
     <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js"></script>
 </template>
@@ -229,6 +248,9 @@
         </a>
     </xpath>
 </template>
+
+
+
 
 <!--
     Optional Bundle for PDFJS lib

@@ -1,0 +1,454 @@
+
+/*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY  */
+
+@footer-bg: lighten(@gray-lighter, 18%);
+@footer-border-top: 1px solid lighten(@gray-lighter, 10%);
+
+
+// Default Style
+// ===========================
+
+header {
+  a.navbar-brand.logo {
+    padding: 0 15px;
+  }
+  a.navbar-brand {
+    img {
+      max-height: 50px;
+    }
+  }
+}
+
+.logo-img {
+  width: 220px;
+}
+
+#wrapwrap {
+  .container {
+    max-width: 100% !important;
+  }
+  > footer {
+    background-color: @footer-bg;
+    border-top: @footer-border-top;
+    padding-top: 3em;
+  }
+}
+
+// Odoo utility classes
+// ===========================
+
+.o_hidden {
+  display: none!important;
+}
+.o_noSelect {
+  &::-moz-selection {
+    background-color: transparent;
+  }
+  &::selection {
+    background-color: transparent;
+  }
+}
+
+// Odoo options classes
+// ===========================
+
+.para_large {
+  font-size: 120%;
+}
+
+.jumbotron.para_large p{
+  font-size: 150%;
+}
+
+.readable {
+  font-size: 120%;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+// Odoo image background classes
+// ===============================
+.o_bg_img_cover {
+  background-size: cover;
+}
+
+.o_bg_img_contain {
+  background-size: contain;
+  &.o_bg_img_no_repeat{
+    background-position: center center;
+  }
+}
+
+.o_bg_img_repeat{
+  background-repeat: repeat;
+}
+.o_bg_img_repeat_x{
+  background-repeat: repeat-x;
+}
+.o_bg_img_repeat_y{
+  background-repeat: repeat-y;
+}
+.o_bg_img_no_repeat{
+  background-repeat: no-repeat;
+}
+
+
+
+// COLORS
+// ===========================
+
+@brand-primary:         darken(#428bca, 6.5%); // #337ab7
+@brand-success:         #5cb85c;
+@brand-info:            #5bc0de;
+@brand-warning:         #f0ad4e;
+@brand-danger:          #d9534f;
+
+
+@white:                  #fff;
+@black:                  #000;
+@gray-darker:            lighten(@gray-base, 13.5%); // #222
+@gray-dark:              lighten(@gray-base, 20%);   // #333
+@gray:                   lighten(@gray-base, 33.5%); // #555
+@gray-light:             lighten(@gray-base, 46.7%); // #777
+@gray-lighter:           lighten(@gray-base, 93.5%); // #eee
+
+@color-accent        : #1cc1a9;
+@color-complementary : #a24689;
+@color-alpha         : #BA3C3D;
+@color-beta          : #0D6759;
+@color-gamma         : #0B2E59;
+
+
+
+//  Background (kept for 8.0 compatibility)
+// =============================================
+
+.oe_dark {
+  background-color: rgba(200, 200, 200, 0.14);
+}
+
+.oe_black {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+}
+
+.oe_green {
+  background-color: #169C78;
+  color: white;
+}
+.oe_green .text-muted {
+  color: #ddd;
+}
+
+.oe_blue_light {
+  background-color: #41b6ab;
+  color: white;
+}
+.oe_blue_light .text-muted {
+  color: #ddd;
+}
+
+.oe_blue {
+  background-color: #34495e;
+  color: white;
+}
+
+.oe_orange {
+  background-color: #f05442;
+  color: white;
+}
+.oe_orange .text-muted {
+  color: #ddd;
+}
+
+.oe_purple {
+  background-color: #b163a3;
+  color: white;
+}
+.oe_purple .text-muted {
+  color: #ddd;
+}
+
+.oe_red {
+  background-color: #9C1b31;
+  color: white;
+}
+.oe_red .text-muted {
+  color: #ddd;
+}
+
+.oe_none {
+  background-color: #FFFFFF;
+}
+
+.oe_yellow {
+  background-color: #A2A51B;
+}
+
+.oe_green {
+  background-color: #149F2C;
+}
+
+
+.createColorClasses(@class_name, @color) {
+  .text-@{class_name} {
+    color: @color;
+  }
+  .bg-@{class_name} {
+    background-color: @color
+  }
+  .tab .text-@{class_name},
+  .tab .bg-@{class_name}   {
+    span{
+      background-color: @color
+    }
+  }
+}
+
+// Create classes for theme colors
+.createColorClasses(accent, @color-accent);
+.createColorClasses(compl, @color-complementary);
+.createColorClasses(alpha, @color-alpha);
+.createColorClasses(beta, @color-beta);
+.createColorClasses(gamma, @color-gamma);
+
+// Create classes for UI colors
+.createColorClasses(primary, @brand-primary);
+.createColorClasses(success, @brand-success);
+.createColorClasses(info, @brand-info);
+.createColorClasses(warning, @brand-warning);
+.createColorClasses(danger, @brand-danger);
+
+// Create classes for greyscale colors
+.createColorClasses(white, @white);
+.createColorClasses(black, @black);
+.createColorClasses(gray_darker, @gray-darker);
+.createColorClasses(gray_dark, @gray-dark);
+.createColorClasses(gray, @gray);
+.createColorClasses(gray_light, @gray-light);
+.createColorClasses(gray_lighter, @gray-lighter);
+
+
+
+
+// Typography
+// ===========================
+
+ul {
+  list-style-type: disc;
+}
+
+li > ul {
+  list-style-type: circle;
+}
+
+li > * > li > ul {
+  list-style-type: square;
+}
+
+li > * > li > * > li > ul {
+  list-style-type: disc;
+}
+
+li > * > li > * > li > * > li > ul {
+  list-style-type: circle;
+}
+
+li > * > li > * > li > * > li > * > li > ul {
+  list-style-type: square;
+}
+
+li > * > li > * > li > * > li > * > li > * > li > ul {
+  list-style-type: disc;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+li > ol {
+  list-style-type: lower-alpha;
+}
+
+li > * > li > ol {
+  list-style-type: lower-greek;
+}
+
+li > * > li > * > li > ol {
+  list-style-type: decimal;
+}
+
+li > * > li > * > li > * > li > ol {
+  list-style-type: lower-alpha;
+}
+
+li > * > li > * > li > * > li > * > li > ol {
+  list-style-type: lower-greek;
+}
+
+li > * > li > * > li > * > li > * > li > * > li > ol {
+  list-style-type: decimal;
+}
+
+li > p {
+  margin: 0;
+}
+
+font[style*='background'], font[class*='bg-'] {
+  padding: 0 2px;
+}
+
+
+hr {
+  padding: 4px 0;
+}
+
+
+// O_UL
+// ===========================
+
+.o_ul_toggle_self, .o_ul_toggle_next {
+  display: none;
+}
+
+.o_ul_folded .o_close {
+  display: none !important;
+}
+.o_ul_folded .o_ul_toggle_self, .o_ul_folded .o_ul_toggle_next {
+  display: inline-block;
+  line-height: inherit;
+  float: left;
+  position: relative;
+  margin-left: -1em;
+  z-index: 1;
+  top: -0.15em;
+  left: 0.2em;
+  font-size: 1.4em;
+  text-decoration: none;
+  &.open{
+    left: 0em;
+    &:before{
+      content: "";
+    }
+  }
+  &:before{
+    content: "";
+  }
+}
+
+
+// Bootsrtap hacks
+// ===========================
+
+// container inside container
+.container, .readable{
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+    width: auto;
+  }
+}
+
+// HEADER NAV BAR
+.navbar.navbar-static-top {
+  margin-bottom: 0;
+  ul.nav > li.divider {
+    margin-top: 15px;
+    padding-top: 20px;
+    border-right: 1px solid grey;
+  }
+}
+ul.nav-stacked > li > a {
+  padding: 2px 15px;
+}
+
+// Columns min height
+[class^="col-md-"] {
+  min-height: 24px;
+}
+
+
+
+// PUBLISH
+// ===========================
+
+.css_published .btn-danger,
+.css_published .css_publish {
+  display: none;
+}
+
+.css_unpublished .btn-success,
+.css_unpublished .css_unpublish {
+  display: none;
+}
+
+[data-publish='off'] > *:not(.css_options) {
+  .opacity(0.5);
+}
+
+// Hack for removing double scrollbar from mobile preview
+// TODO: move to website.ui.components.less
+// ===========================
+
+div#mobile-preview.modal {
+  overflow: hidden;
+}
+#customize-menu .dropdown-header {
+  text-transform: uppercase;
+}
+
+// END of PUBLISH
+// ===========================
+
+::-moz-selection {
+  background: rgba(150, 150, 220, 0.3);
+}
+
+::selection {
+  background: rgba(150, 150, 220, 0.3);
+}
+
+.logo-img {
+  width: 220px;
+}
+
+.oe_demo {
+  position: relative;
+  img {
+    width: 100%;
+  }
+  div {
+    position: absolute;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0.85;
+    bottom: 0px;
+    width: 100%;
+    padding: 7px;
+    color: white;
+    font-weight: bold;
+    a {
+      color: white;
+    }
+  }
+}
+
+// OE search
+// ===========================
+
+.oe_search_clear {
+  position: absolute;
+  display: none;
+  cursor: pointer;
+  z-index: 2;
+  right: 42px;
+  color: #939393;
+  padding: 10px 0;
+  top: 1px;
+}
+
+.oe_search_box {
+  padding-right: 23px;
+}

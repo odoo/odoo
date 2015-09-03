@@ -177,7 +177,7 @@ ajax.loadXML('/web/static/src/xml/base_common.xml', qweb);
  
 base.ready().then(function () {
     data.topBar = new TopBar();
-    data.topBar.attachTo($("#oe_main_menu_navbar"));
+    data.topBar.attachTo($("#website_main_menu_navbar"));
 });
 
 /**

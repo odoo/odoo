@@ -13,7 +13,7 @@
                 var args = Array.prototype.slice.call(arguments);
                 var factorie = args.pop();
                 var id = args[0];
-                
+
                 if (id instanceof Array) {
                     var name = "summernote_factorie_" + (++uniqId);
                     odoo[name] = factorie;
@@ -50,14 +50,22 @@
         delete odoo.__define__;
         delete odoo.website_next_define;
     </script>
-
-    <!--link rel="stylesheet" href="/web_editor/static/lib/summernote/src/less/summernote.less"/-->
-    <link rel="stylesheet" href="/web_editor/static/lib/summernote/summernote.css"/>
+    <link rel="stylesheet" href="/web_editor/static/lib/summernote/src/less/summernote.less"/>
+    <!-- <link rel="stylesheet" href="/web_editor/static/lib/summernote/summernote.css"/> -->
 </template>
 
 <template id="editor" name="Editor">
-    <link rel='stylesheet' href='/web_editor/static/src/css/snippets.css'/>
-    <link rel="stylesheet" href='/web_editor/static/src/css/editor.css'/>
+    <!-- Call default mixins from WEB module -->
+    <link rel="stylesheet" href='/web/static/src/less/utils.less'/>
+
+    <!-- Web Editor style -->
+    <link rel='stylesheet' href='/web_editor/static/src/less/web_editor.variables.less'/>
+    <link rel="stylesheet" href='/web_editor/static/src/less/web_editor.interactions.less'/>
+    <link rel="stylesheet" href='/web_editor/static/src/less/web_editor.mixins.less'/>
+    <link rel="stylesheet" href='/web_editor/static/src/less/web_editor.backend.less'/>
+    <link rel="stylesheet" href='/web_editor/static/src/less/web_editor.components.less'/>
+    <link rel="stylesheet" href='/web_editor/static/src/less/web_editor.ui.less'/>
+
     <script type="text/javascript" src='/web_editor/static/lib/nearest/jquery.nearest.js' />
     <script type="text/javascript" src="/web_editor/static/src/js/editor.js" />
     <script type="text/javascript" src="/web_editor/static/src/js/rte.js" />
@@ -72,7 +80,7 @@
 
 <template id="assets_common" inherit_id="web.assets_common" name="web_editor base assets_common">
     <xpath expr="." position="inside">
-        <link rel="stylesheet" href='/web_editor/static/src/css/web_editor.css'/>
+        <link rel="stylesheet" href='/web_editor/static/src/less/web_editor.common.less'/>
         <link rel="stylesheet" href='/web_editor/static/src/less/web_editor.less'/>
         <script type="text/javascript" src="/web_editor/static/src/js/base.js" />
         <script type="text/javascript" src="/web_editor/static/src/js/snippets.animation.js" />
@@ -91,7 +99,7 @@
     <xpath expr="." position="inside">
         <t t-call="web_editor.summernote"/>
         <t t-call="web_editor.editor"/>
-        <link rel="stylesheet" href="/web_editor/static/src/css/backend.css"/>
+        <link rel="stylesheet" href="/web_editor/static/src/less/web_editor.backend.less"/>
         <script type="text/javascript" src="/web_editor/static/src/js/backend.js" />
     </xpath>
 </template>
@@ -100,17 +108,31 @@
 <!-- HTML class to hide option for one mode : only-text, only-bg -->
 
 <template id="web_editor.colorpicker" name="Color-Picker">
-    <table class="colorpicker">
-        <tr>
-            <td><button class="bg-primary" title="Primary Color"/></td>
-            <td><button class="bg-success" title="Success Color"/></td>
-            <td><button class="bg-info" title="Info Color"/></td>
-            <td><button class="bg-warning" title="Warning Color"/></td>
-            <td><button class="bg-danger" title="Danger Color"/></td>
-            <!-- retrocompatibility v8 -->
-            <td><button class="oe_dark" title="Light"/></td>
-        </tr>
-    </table>
+    <div class="colorpicker">
+        <div class="theme">
+            <button class="bg-accent">Accent <span></span></button>
+            <button class="bg-compl">Complementary<span></span></button>
+            <button class="bg-alpha">Alpha <span></span></button>
+            <button class="bg-beta">Beta <span></span></button>
+            <button class="bg-gamma">Gamma <span></span></button>
+        </div>
+        <div class="grayscale">
+            <button class="bg-white">White <span></span></button>
+            <button class="bg-gray_lighter">Gray Lighter <span></span></button>
+            <button class="bg-gray_light">Gray Light <span></span></button>
+            <button class="bg-gray">Gray <span></span></button>
+            <button class="bg-gray_dark">Gray Dark <span></span></button>
+            <button class="bg-gray_darker">Gray Darker <span></span></button>
+            <button class="bg-black">Black <span></span></button>
+        </div>
+        <div class="ui">
+            <button class="bg-primary">Primary Color <span></span></button>
+            <button class="bg-success">Success Color <span></span></button>
+            <button class="bg-info">Info Color <span></span></button>
+            <button class="bg-warning">Warning Color <span></span></button>
+            <button class="bg-danger">Danger Color <span></span></button>
+        </div>
+    </div>
 </template>
 
 </openerp>

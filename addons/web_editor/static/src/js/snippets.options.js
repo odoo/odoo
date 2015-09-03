@@ -70,7 +70,7 @@ var Option = Class.extend({
             this.$target.trigger("snippet-option-preview", [this]);
         }
     },
-    /* 
+    /*
     *  select and set item active or not (add highlight item and his parents)
     *  called before start
     */
@@ -276,8 +276,59 @@ var colorpicker = Option.extend({
         var self = this;
         var res = this._super();
 
+        var paletteTemplate = '<div class="colorpicker">'+
+                       '<div class="note-palette-title">Background Color</div>' +
+                       '<div class="btn-group palette-reset">' +
+                         '<div class="note-color-reset" data-event="foreColor"' +
+                           ' data-value="inherit" title="None"><i class="material-icons">&#xE23B;</i> '+
+                         '</div>' +
+                       '</div>' +
+
+                       '<div class="tabs_container">' +
+                         '<ul class="tabs_toggles">'+
+                           '<li class="on"><a href="#" data-tab-target=".palette_theme"><i class="material-icons">&#xE3B7;</i></a></li>' +
+                           '<li><a href="#" data-tab-target=".palette_grayscale"><i class="material-icons">&#xE3E9;</i></a></li>' +
+                           '<li><a href="#" data-tab-target=".palette_ui"><i class="material-icons">&#xE41D;</i></a></li>' +
+                           '<li><a href="#" data-tab-target=".palette_spectrum"><i class="material-icons">&#xE3B8;</i></a></li>' +
+                         '</ul>' +
+                         '<div class="tabs">' +
+                           '<div class="tab palette_theme on"/>'+
+                           '<div class="tab palette_grayscale"/>'+
+                           '<div class="tab palette_ui"/>'+
+                           '<div class="tab palette_spectrum">'+
+                             '<div class="note-color-palette"></div>' +
+                           '</div>' +
+                         '</div>' +
+                       '</div>' +
+
+                     '</div></div>';
+        var $pt = $(paletteTemplate);
+
         if (!this.$el.find('.colorpicker').length) {
-            this.$el.find('li').append( qweb.render('web_editor.colorpicker') );
+            var $clpicker = $(qweb.render('web_editor.colorpicker'))
+            var pTheme = $clpicker.find('.theme')
+            var pGray = $clpicker.find('.grayscale')
+            var pUi = $clpicker.find('.ui')
+            $pt.find('.palette_theme').append(pTheme).end()
+               .find('.palette_grayscale').append(pGray).end()
+               .find('.palette_ui').append(pUi)
+            this.$el.find('li').append($pt);
+
+            // ACTIVATE TABS
+            this.$el.find('[data-tab-target]').each(function(){
+              var $el = $(this);
+              var target = $el.data('tab-target');
+              var $parent = $el.parent().closest('.tabs_container');
+              var $parentLi = $el.parent().closest('li');
+
+              $parentLi.on('click', function(){return false});
+
+              $el.on('click', function(){
+                $parent.find('.tab, .tabs_toggles li').removeClass('on');
+                $parent.find(target).add($parentLi).addClass('on')
+                return false;
+              })
+            })
         }
         if (this.$el.data('area')) {
             this.$target = this.$target.find(this.$el.data('area'));
@@ -301,7 +352,7 @@ var colorpicker = Option.extend({
     },
     bind_events: function () {
         var self = this;
-        var $td = this.$el.find(".colorpicker td");
+        var $td = this.$el.find(".tab");
         var $colors = this.$el.find(".colorpicker button");
         $colors
             .mouseenter(function () {
@@ -309,14 +360,182 @@ var colorpicker = Option.extend({
             })
             .mouseleave(function () {
                 self.$target.removeClass(self.classes)
-                    .addClass($td.filter(".selected").children().attr("class"));
+                    .addClass($colors.filter(".selected").attr("class"));
             })
             .click(function () {
-                $td.removeClass("selected");
-                $(this).parent().addClass("selected");
+                $colors.removeClass("selected");
+                $(this).addClass("selected");
                 self.$target.closest(".o_editable").trigger("content_changed");
             });
     }
+});
+
+var background_position = Option.extend({
+    start: function(){
+        var self = this;
+        var $btn = self.$overlay.find('.oe_options');
+        $btn.on('show.bs.dropdown', function(){
+            if (self.$target.css('background-image') == 'none'){
+                $btn.find('.background_position_li').addClass('hidden')
+            } else {
+                $btn.find('.background_position_li').removeClass('hidden')
+            }
+        })
+    },
+    background_position: function(type, value, $li){
+        if (type != 'click') return;
+        var self = this;
+        var $modal = $(qweb.render('web_editor.dialog.background_position'));
+        $modal.modal()
+        $modal.on('hidden.bs.modal', function(){
+            setTimeout(function(){
+                $modal.remove()
+            },2000)
+        })
+        self.editing(self, $modal)
+    },
+    editing: function(self, $modal){
+        // Init main collapse
+        $modal.find(".panel-collapse.collapse").collapse({
+            toggle: false,
+            parent: $('#bg_image_opt_accordition')
+        })
+
+        // Fetch data form $target
+        if(self.$target.hasClass('o_bg_img_contain')){
+            $modal.find("#bg_size").val('o_bg_img_contain').end()
+                  .find("#radio2").prop('checked', true).end()
+                  .find("#collapse_contain").collapse('show');
+
+        } else if (self.$target.hasClass('o_bg_img_cover')){
+            $modal.find("#bg_size").val('o_bg_img_cover').end()
+                  .find("#radio1").prop('checked', true).end()
+                  .find("#collapse_cover").collapse('show');
+        } else if (self.$target.hasClass('o_bg_img_custom')){
+            $modal.find("#bg_size").val('o_bg_img_custom').end()
+                  .find("#radio3").prop('checked', true).end()
+                  .find("#collapse_custom").collapse('show');
+        }
+        if(self.$target.hasClass("o_bg_img_repeat")){
+            $modal.find("#contain_repeat").prop('checked', true);
+            $modal.find("#custom_repeat").val('o_bg_img_repeat')
+        } else if (self.$target.hasClass("o_bg_img_no_repeat")){
+            $modal.find("#custom_repeat").val('o_bg_img_no_repeat')
+        } else if (self.$target.hasClass("o_bg_img_repeat_x")){
+            $modal.find("#custom_repeat").val('o_bg_img_repeat_x')
+        } else if (self.$target.hasClass("o_bg_img_repeat_y")){
+            $modal.find("#custom_repeat").val('o_bg_img_repeat_y')
+        }
+
+        var bg_pos = self.$target.css('background-position').split(' '),
+            bg_siz = self.$target.css('background-size').split(' ');
+
+        if( bg_pos.length > 1 ) {
+            $modal.find("#custom_pos_x").val(bg_pos[0].replace('%',''))
+            $modal.find("#custom_pos_y").val(bg_pos[1].replace('%',''))
+        }
+        if( bg_siz.length > 1 ) {
+            $modal.find("#custom_size_x").val(bg_siz[0].replace('%',''))
+            $modal.find("#custom_size_y").val(bg_siz[1].replace('%',''))
+        }
+
+        // Collapse events
+        $('#collapse_cover').on('show.bs.collapse', function(){
+            $('#radio1').prop('checked', true);
+            $modal.find("#bg_size").val('o_bg_img_cover');
+        });
+
+        $('#collapse_contain').on('show.bs.collapse', function(){
+            $('#radio2').prop('checked', true);
+            $modal.find("#bg_size").val('o_bg_img_contain');
+        });
+
+        $('#collapse_custom').on('show.bs.collapse', function(){
+            $('#radio3').prop('checked', true);
+            $modal.find("#bg_size").val('o_bg_img_custom');
+        });
+
+        // Focus Point
+        var img_url  = self.$target.css('background-image').replace(/url\(['"]*|['"]*\)|^none$/g, "");
+
+        var $object  = $modal.find(".object"),
+            $focus   = $modal.find(".focus_point");
+
+        $modal.find("#pos_x").val(bg_pos[0]).end()
+              .find("#pos_y").val(bg_pos[1]).end()
+              .find(".ui_info .x").text(bg_pos[0]).end()
+              .find(".ui_info .y").text(bg_pos[1])
+        $focus.css({
+            left: bg_pos[0],
+            top:  bg_pos[1]
+        })
+        setTimeout(function(){$focus.addClass("ready") },50)
+
+        var $img = $('<img class="img-responsive" src="'+ img_url +'"/>')
+        $img.prependTo($object)
+        $img.on('load',function(){
+            self.retrive_click($img, $focus, $modal, self);
+        })
+
+        // Save
+        $modal.find('.save').on('click',function(){self.save($modal, self) })
+    },
+    retrive_click: function($img, $focus, $modal, self){
+        // Prevent clicks on ui items
+        $focus.on('click', function(){$img.mousedown(); })
+        $modal.find('.ui_info').on('click', function(){$img.mousedown(); })
+        $modal.find('.grid').on('click', function(){$img.mousedown(); })
+
+        // Retrive click position
+        $img.click(function (e) {
+            var posX  = e.pageX - $(this).offset().left,
+                posY  = e.pageY - $(this).offset().top;
+            var res = {
+                x: (self.range_value(posX/$img.width()*100).toFixed(2)) + '%',
+                y: (self.range_value(posY/$img.height()*100).toFixed(2)) + '%'
+            };
+            $focus.css({top:  res.y, left: res.x })
+
+            $modal.find("#pos_x").val(res.x).end()
+                  .find("#pos_y").val(res.y).end()
+                  .find(".ui_info .x").text(res.x).end()
+                  .find(".ui_info .y").text(res.y).end()
+                  .find(".ui_info").hide()
+
+            setTimeout(function(){$modal.find(".ui_info").show() },50)
+        });
+    },
+    range_value: function(value){
+        if (value < 0)   value = 0;
+        if (value > 100) value = 100;
+        return (value)
+    },
+    save: function($modal, self){
+        self.clean(self.$target);
+        self.$target.addClass($modal.find("#bg_size").val());
+        switch ($modal.find("#bg_size").val()) {
+            case "o_bg_img_cover":
+                self.$target.css('background-position', $modal.find("#pos_x").val() + ' ' +$modal.find("#pos_y").val())
+                break;
+            case "o_bg_img_contain":
+                if ($modal.find("#contain_repeat").is(":checked")){
+                    self.$target.addClass('o_bg_img_repeat')
+                } else {
+                    self.$target.addClass('o_bg_img_no_repeat')
+                }
+                break;
+            case "o_bg_img_custom":
+                self.$target.addClass($modal.find("#custom_repeat").val());
+                self.$target.css('background-size',     $modal.find("#custom_size_x").val() + '% ' + $modal.find("#custom_size_y").val() + '%');
+                self.$target.css('background-position', $modal.find("#custom_pos_x").val()  + '% ' + $modal.find("#custom_pos_y").val()  + '%');
+                break;
+        }
+    },
+    clean: function($target){
+        $target.removeClass('o_bg_img_cover o_bg_img_contain o_bg_img_custom o_bg_img_repeat o_bg_img_repeat_x o_bg_img_repeat_y o_bg_img_no_repeat')
+               .css('background-size', '')
+               .css('background-position', '');
+    },
 });
 
 var background = Option.extend({
@@ -537,6 +756,7 @@ return {
     'registry': {
         'media': media,
         'colorpicker': colorpicker,
+        'background_position': background_position,
         'background': background,
         'many2one': many2one,
     },

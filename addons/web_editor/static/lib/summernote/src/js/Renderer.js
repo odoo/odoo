@@ -31,9 +31,11 @@ define([
       var title = options.title;
       var className = options.className;
       var dropdown = options.dropdown;
+      var dropdown2 = options.dropdown2;
+      var wrapper = options.wrapper;
       var hide = options.hide;
 
-      return (dropdown ? '<div class="btn-group' +
+      var btn = (dropdown ? '<div class="btn-group' +
                (className ? ' ' + className : '') + '">' : '') +
                '<button type="button"' +
                  ' class="btn btn-default btn-sm' +
@@ -51,6 +53,10 @@ define([
                '</button>' +
                (dropdown || '') +
              (dropdown ? '</div>' : '');
+
+        if (wrapper) btn = $(wrapper).html(btn).prop('outerHTML');
+
+        return btn;
     };
 
     /**
@@ -216,36 +222,85 @@ define([
       color: function (lang, options) {
         var colorButtonLabel = '<i class="' +
                                   options.iconPrefix + options.icons.color.recent +
-                                '" style="color:black;background-color:yellow;"></i>';
-
+                                '" id="colors_preview" style="color:white;background-color:#B35E9B"></i>';
         var colorButton = tplButton(colorButtonLabel, {
           className: 'note-recent-color',
           title: lang.color.recent,
           event: 'color',
-          value: '{"backColor":"yellow"}'
+          value: '{"backColor":"#B35E9B"}'
         });
 
-        var items = [
-          '<li><div class="btn-group">',
-          '<div class="note-palette-title">' + lang.color.background + '</div>',
-          '<div class="note-color-reset" data-event="backColor"',
-          ' data-value="inherit" title="' + lang.color.transparent + '">' + lang.color.setTransparent + '</div>',
-          '<div class="note-color-palette" data-target-event="backColor"></div>',
-          '</div><div class="btn-group">',
-          '<div class="note-palette-title">' + lang.color.foreground + '</div>',
-          '<div class="note-color-reset" data-event="foreColor" data-value="inherit" title="' + lang.color.reset + '">',
-          lang.color.resetToDefault,
-          '</div>',
-          '<div class="note-color-palette" data-target-event="foreColor"></div>',
-          '</div></li>'
-        ];
+        var foreground =  '<ul class="dropdown-menu">' +
+                             '<li>' +
+                               '<div class="note-palette-title">' + lang.color.foreground + '</div>' +
+                               '<div class="btn-group palette-reset">' +
+                                 '<div class="note-color-reset" data-event="foreColor"' +
+                                   ' data-value="inherit" title="' + lang.color.reset + '"><i class="material-icons">&#xE23B;</i> '+
+                                 '</div>' +
+                               '</div>' +
 
-        var moreButton = tplButton('', {
-          title: lang.color.more,
-          dropdown: tplDropdown(items)
+                               '<div class="tabs_container">' +
+                                 '<ul class="tabs_toggles">'+
+                                   '<li class="on"><a href="#" data-tab-target=".palette_theme"><i class="material-icons">&#xE3B7;</i></a></li>' +
+                                   '<li><a href="#" data-tab-target=".palette_grayscale"><i class="material-icons">&#xE3E9;</i></a></li>' +
+                                   '<li><a href="#" data-tab-target=".palette_ui"><i class="material-icons">&#xE41D;</i></a></li>' +
+                                   '<li><a href="#" data-tab-target=".palette_spectrum"><i class="material-icons">&#xE3B8;</i></a></li>' +
+                                 '</ul>' +
+                                 '<div class="tabs">' +
+                                   '<div class="tab palette_theme on"/>'+
+                                   '<div class="tab palette_grayscale"/>'+
+                                   '<div class="tab palette_ui"/>'+
+                                   '<div class="tab palette_spectrum">'+
+                                     '<div class="note-color-palette" data-target-event="foreColor"></div>' +
+                                   '</div>' +
+                                 '</div>' +
+                               '</div>' +
+
+                             '</div>' +
+                           '</li>' +
+                         '</ul>';
+
+        var background = '<ul class="dropdown-menu">' +
+                          '<li>' +
+                            '<div class="note-palette-title">' + lang.color.background + '</div>' +
+                            '<div class="btn-group palette-reset">' +
+                              '<div class="note-color-reset" data-event="backColor"' +
+                                ' data-value="inherit" title="' + lang.color.transparent + '"><i class="material-icons">&#xE23B;</i> '+
+                              '</div>' +
+                            '</div>' +
+
+                            '<div class="tabs_container">' +
+                              '<ul class="tabs_toggles">'+
+                                '<li class="on"><a href="#" data-tab-target=".palette_theme"><i class="material-icons">&#xE3B7;</i></a></li>' +
+                                '<li><a href="#" data-tab-target=".palette_grayscale"><i class="material-icons">&#xE3E9;</i></a></li>' +
+                                '<li><a href="#" data-tab-target=".palette_ui"><i class="material-icons">&#xE41D;</i></a></li>' +
+                                '<li><a href="#" data-tab-target=".palette_spectrum"><i class="material-icons">&#xE3B8;</i></a></li>' +
+                              '</ul>' +
+                              '<div class="tabs">' +
+                                '<div class="tab palette_theme on"/>'+
+                                '<div class="tab palette_grayscale"/>'+
+                                '<div class="tab palette_ui"/>'+
+                                '<div class="tab palette_spectrum">'+
+                                  '<div class="note-color-palette" data-target-event="backColor"></div>' +
+                                '</div>' +
+                              '</div>' +
+                            '</div>' +
+
+                          '</li>' +
+                        '</ul>';
+
+        var foregroundButton = tplButton('', {
+          title: lang.color.foreground,
+          wrapper: '<span class="btn-group foreground_toggle" />',
+          dropdown: foreground
+        });
+        var backgroundButton = tplButton('', {
+          title: lang.color.background,
+          wrapper: '<span class="btn-group background_toggle" />',
+          dropdown: background
         });
 
-        return colorButton + moreButton;
+        return colorButton + foregroundButton + backgroundButton;
       },
       bold: function (lang, options) {
         return tplIconButton(options.iconPrefix + options.icons.font.bold, {
@@ -793,12 +848,13 @@ define([
       });
 
       var body = document.body;
+      var container = $('#web_editor-toolbars')
 
       // create Popover
       var $popover = $(this.tplPopovers(langInfo, options)); // ODOO: user (maybe) overrided method
       $popover.addClass('note-air-layout');
       $popover.attr('id', 'note-popover-' + id);
-      $popover.appendTo(body);
+      $popover.appendTo(container);
       createTooltip($popover, keyMap);
       this.createPalette($popover, options); // ODOO: use (maybe) overrided method
 
@@ -806,7 +862,7 @@ define([
       var $handle = $(tplHandles(options));
       $handle.addClass('note-air-layout');
       $handle.attr('id', 'note-handle-' + id);
-      $handle.appendTo(body);
+      $handle.appendTo(container);
 
       // create Dialog
       var $dialog = $(tplDialogs(langInfo, options));
@@ -815,7 +871,7 @@ define([
       $dialog.find('button.close, a.modal-close').click(function () {
         $(this).closest('.modal').modal('hide');
       });
-      $dialog.appendTo(body);
+      $dialog.appendTo(container);
     };
 
     /**

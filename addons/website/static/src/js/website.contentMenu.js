@@ -22,6 +22,24 @@ var TopBarContent = Widget.extend({
             var $content_item = $(this);
             self[$content_item.data('action')]();
         });
+
+        // Build 'ADD PAGE' modal
+        var $cont    = $('#website_addPage_modal .website_addPage_ul');
+        var $defIcon = $('<i class="fa fa-cube"></i>')
+
+        $("#website_addPage_list").nextAll().each(function(){
+            var $clone = $(this).clone().appendTo($cont).attr("data-dismiss","modal").addClass('animated')
+            var $a     = $clone.find('a')
+            var text   = $a.text()
+
+            if($clone.find('i').length < 1){ $defIcon.clone().prependTo($a)}
+            if($clone.find('p').length < 1){ $a.html($a.html().replace($a.text(),'')).append('<p>' + text + '</p>')}
+
+            $a.on('click', function(){
+                var $content_item = $(this);
+                self[$content_item.data('action')]();
+            })
+        })
         return this._super();
     },
     edit_menu: function() {
@@ -63,12 +81,16 @@ var TopBarContent = Widget.extend({
 
                 var $add = $(
                     '<div class="form-group mb0">'+
-                        '<label class="col-sm-offset-3 col-sm-9 text-left">'+
-                        '    <input type="checkbox" checked="checked" required="required"/> '+
-                        '</label>'+
+                        '<span class="col-sm-offset-3 col-sm-9 text-left">'+
+                            '<label class="switch checked" for="switch_addTo_menu">' +
+                              '<input type="checkbox" id="switch_addTo_menu" class="switch_input" checked="checked" />' +
+                              '<span class="switch_track"></span>' +
+                            '</label>' +
+                        '</span>'+
                     '</div>');
-                $add.find('label').append(_t("Add page in menu"));
+                $add.find('label').after(_t("Add page in menu"));
                 $group.after($add);
+                console.log(website)
             }
         }).then(function (val, field, $dialog) {
             if (val) {
