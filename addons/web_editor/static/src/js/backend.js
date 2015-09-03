@@ -307,15 +307,7 @@ var FieldTextHtml = widget.extend({
             return this.editor.save();
         } else if (this._dirty_flag && this.editor && this.editor.buildingBlock) {
             this.editor.buildingBlock.clean_for_save();
-
-            // escape text nodes for xml saving
-            var $escaped_el = this.$content.clone();
-            $escaped_el.find('*').addBack().not('script,style').contents().each(function(){
-                if(this.nodeType == 3) {
-                    this.nodeValue = _.escape(this.nodeValue);
-                }
-            });
-            this.internal_set_value( $escaped_el.html() );
+            this.internal_set_value( this.$content.html() );
         }
     },
     destroy: function () {
