@@ -1545,6 +1545,7 @@ class Reports(http.Controller):
         'pdf': 'application/pdf',
         'sxw': 'application/vnd.sun.xml.writer',
         'xls': 'application/vnd.ms-excel',
+        'csv': 'text/csv',        
     }
 
     @http.route('/web/report', type='http', auth="user")
