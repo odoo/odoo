@@ -125,8 +125,7 @@
                     </header>
                     <sheet>
                         <div class="oe_title" style="width: 100%;">
-                            <label for="title" class="oe_edit_only"/>
-                            <h1><field name="title" /></h1>
+                            <h1><field name="title" placeholder="Survey Title"/></h1>
                         </div>
                         <notebook>
                             <page string="Edit Pages and Questions">
@@ -242,8 +241,7 @@
                 <form string="Survey Page" create="false">
                     <sheet>
                         <div class="oe_title" style="width: 100%;">
-                            <label for="title" class="oe_edit_only"/>
-                            <h1><field name="title"/></h1>
+                            <h1><field name="title" placeholder="Page Title"/></h1>
                         </div>
                         <field name="question_ids" nolabel="1" mode="tree" context="{'default_page_id': active_id}">
                             <tree>
@@ -307,8 +305,7 @@
                 <form string="Survey Question" create="false">
                     <sheet>
                         <div class="oe_title" style="width: 100%;">
-                            <label for="question" string="Question name" class="oe_edit_only"/>
-                            <h1><field name="question" colspan="4"/></h1>
+                            <h1><field name="question" colspan="4" placeholder="Question Name"/></h1>
                             <separator />
                         </div>
                         <group>
