@@ -534,11 +534,10 @@ class view(osv.osv):
                         if child.get('add') or child.get('remove'):
                             assert not child.text
                             separator = child.get('separator', None)
-                            to_add = set(map(str.strip, child.get('add', '').split(separator)))
-                            to_remove = set(map(str.strip, child.get('remove', '').split(separator)))
-                            value = list((set(map(str.strip, node.get(attribute, '').split(separator))) | to_add) - to_remove)
-                            value.sort()
-                            value = (separator or ' ').join(value)
+                            to_add = map(str.strip, child.get('add', '').split(separator))
+                            to_remove = map(str.strip, child.get('remove', '').split(separator))
+                            values = map(str.strip, node.get(attribute, '').split(separator))
+                            value = (separator or ' ').join(filter(lambda s: s not in to_remove, values) + to_add)
                         if value:
                             node.set(attribute, value)
                         elif attribute in node.attrib:
