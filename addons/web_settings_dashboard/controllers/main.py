@@ -4,7 +4,7 @@ from openerp import http
 from openerp.http import request
 
 
-class WebDashboard(http.Controller):
+class WebSettingsDashboard(http.Controller):
 
     @http.route('/web_settings_dashboard/data', type='json', auth='user')
     def web_settings_dashboard_data(self, **kw):
