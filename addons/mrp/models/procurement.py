@@ -26,18 +26,20 @@ class ProcurementOrder(models.Model):
                 procurement.production_id.action_cancel()
         return super(ProcurementOrder, self).propagate_cancels()
 
-    @api.model
-    def _run(self, procurement):
-        if procurement.rule_id and procurement.rule_id.action == 'manufacture':
+    @api.multi
+    def _run(self):
+        self.ensure_one()
+        if self.rule_id and self.rule_id.action == 'manufacture':
             #make a manufacturing order for the procurement
-            return procurement.make_mo()[procurement.id]
-        return super(ProcurementOrder, self)._run(procurement)
+            return self.make_mo()[self.id]
+        return super(ProcurementOrder, self)._run()
 
-    @api.model
-    def _check(self, procurement):
-        if procurement.production_id and procurement.production_id.state == 'done':  # TOCHECK: no better method? 
+    @api.multi
+    def _check(self):
+        self.ensure_one()
+        if self.production_id and self.production_id.state == 'done':  # TOCHECK: no better method?
             return True
-        return super(ProcurementOrder, self)._check(procurement)
+        return super(ProcurementOrder, self)._check()
 
     def check_bom_exists(self):
         """ Finds the bill of material for the product from procurement order.
