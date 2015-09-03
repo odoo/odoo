@@ -91,10 +91,10 @@ class account_invoice_line(osv.osv):
             if not cacc:
                 cacc = i_line.product_id.categ_id.property_account_expense_categ and i_line.product_id.categ_id.property_account_expense_categ.id
             if dacc and cacc:
-                if i_line.move_id:
-                    price = i_line.move_id.product_id.standard_price
-                    from_unit = i_line.move_id.product_tmpl_id.uom_id.id
-                    to_unit = i_line.move_id.product_uom.id
+                if i_line:
+                    price = i_line.product_id.standard_price
+                    from_unit = i_line.product_id.uom_id.id
+                    to_unit = i_line.uos_id.id
                     price_unit = self.pool['product.uom']._compute_price(cr, uid, from_unit, price, to_uom_id=to_unit)
                 else:
                     price_unit = i_line.product_id.standard_price
