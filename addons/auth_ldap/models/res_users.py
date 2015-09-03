@@ -1,45 +1,41 @@
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import ldap
-import openerp.exceptions
-from openerp.osv import fields, osv
-from openerp import SUPERUSER_ID
-from openerp.modules.registry import RegistryManager
+from odoo.exceptions import AccessDenied
 
-class users(osv.osv):
+from odoo import api, models, registry, SUPERUSER_ID
+
+
+class Users(models.Model):
     _inherit = "res.users"
+
     def _login(self, db, login, password):
-        user_id = super(users, self)._login(db, login, password)
+        user_id = super(Users, self)._login(db, login, password)
         if user_id:
             return user_id
-        registry = RegistryManager.get(db)
-        with registry.cursor() as cr:
+        with registry(db).cursor() as cr:
+            env = api.Environment(cr, SUPERUSER_ID, {})
             cr.execute("SELECT id FROM res_users WHERE lower(login)=%s", (login,))
             res = cr.fetchone()
             if res:
                 return False
-            ldap_obj = registry.get('res.company.ldap')
-            for conf in ldap_obj.get_ldap_dicts(cr):
-                entry = ldap_obj.authenticate(conf, login, password)
+            Ldap = env['res.company.ldap']
+            for conf in Ldap.get_ldap_dicts():
+                entry = Ldap.authenticate(conf, login, password)
                 if entry:
-                    user_id = ldap_obj.get_or_create_user(
-                        cr, SUPERUSER_ID, conf, login, entry)
+                    user_id = Ldap.sudo().get_or_create_user(conf, login, entry)
                     if user_id:
                         break
             return user_id
 
-    def check_credentials(self, cr, uid, password):
+    @api.model
+    def check_credentials(self, password):
         try:
-            super(users, self).check_credentials(cr, uid, password)
-        except openerp.exceptions.AccessDenied:
-
-            cr.execute('SELECT login FROM res_users WHERE id=%s AND active=TRUE',
-                       (int(uid),))
-            res = cr.fetchone()
-            if res:
-                ldap_obj = self.pool['res.company.ldap']
-                for conf in ldap_obj.get_ldap_dicts(cr):
-                    if ldap_obj.authenticate(conf, res[0], password):
+            super(Users, self).check_credentials(password)
+        except AccessDenied:
+            if self.env.user.active:
+                Ldap = self.env['res.company.ldap']
+                for conf in Ldap.get_ldap_dicts():
+                    if Ldap.authenticate(conf, self.env.user.login, password):
                         return
             raise
-        
