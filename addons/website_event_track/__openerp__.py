@@ -20,12 +20,12 @@ Adds support for:
         """,
     'depends': ['website_event'],
     'data': [
-        'data/event_data.xml',
-        'views/website_event.xml',
-        'views/event_backend.xml',
-        'data/event_track_tip_data.xml',
+        'data/website_event_track_data.xml',
+        'views/website_event_track_templates.xml',
+        'views/website_event_track_views.xml',
+        'data/website_event_track_tip_data.xml',
         'security/ir.model.access.csv',
-        'security/event.xml',
+        'security/website_event_track_security.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'demo': [
