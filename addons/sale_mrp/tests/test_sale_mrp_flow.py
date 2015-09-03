@@ -189,9 +189,8 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         # Check total consume line with product c and uom kg.
         self.assertEqual(len(moves), 1, 'Production move lines are not generated proper.')
-        list_qty = [move.product_uom_qty for move in moves]
-        print '***', list_qty
-        self.assertEqual(set(list_qty), set([6.0]), "Wrong product quantity in 'To consume line' of manufacturing order.")
+        list_qty = {move.product_uom_qty for move in moves}
+        self.assertEqual(list_qty, {6.0}, "Wrong product quantity in 'To consume line' of manufacturing order.")
         # Check state of consume line with product c and uom kg.
         for move in moves:
             self.assertEqual(move.state, 'confirmed', "Wrong state in 'To consume line' of manufacturing order.")
