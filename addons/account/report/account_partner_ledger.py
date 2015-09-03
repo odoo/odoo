@@ -42,7 +42,7 @@ class ReportPartnerLedger(models.AbstractModel):
         # Prepare initial sql query and Get the initial move lines
         init_res = {}
         if initial_balance:
-            init_tables, init_where_clause, init_where_params = MoveLine.with_context(initial_bal=True)._query_get()
+            init_tables, init_where_clause, init_where_params = MoveLine.with_context(date_to=self.env.context.get('date_from'), date_from=False)._query_get()
             init_wheres = [""]
             if init_where_clause.strip():
                 init_wheres.append(init_where_clause.strip())
@@ -75,10 +75,9 @@ class ReportPartnerLedger(models.AbstractModel):
         # fecthing partner_ids
         partner_ids = list(set(map(lambda x: x['partner_id'], res)))
         move_lines = dict(map(lambda x: (x, []), partner_ids))
-        if move_lines:
-            for row in init_res:
-                move_lines[row].append(init_res[row])
-
+        for row in init_res:
+            if row in move_lines:
+                move_lines.get(row).append(init_res[row])
         # Calculate the total balance of move lines
         for row in res:
             balance = 0
