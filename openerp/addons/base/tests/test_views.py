@@ -390,6 +390,53 @@ class TestApplyInheritanceSpecs(ViewCase):
                                               self.base_arch,
                                               spec, None)
 
+class TestApplyInheritanceWrapSpecs(ViewCase):
+    def setUp(self):
+        super(TestApplyInheritanceWrapSpecs, self).setUp()
+        self.View = self.registry('ir.ui.view')
+        self.base_arch = E.template(E.div(E.p("Content")))
+
+    def apply_spec(self, spec):
+        self.View.apply_inheritance_specs(self.cr, self.uid,
+                                          self.base_arch,
+                                          spec, None)
+
+    def test_replace(self):
+        spec = E.xpath(
+            E.div("$0", {'class': "some"}),
+            expr="//p", position="replace")
+
+        self.apply_spec(spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(E.div(
+                E.div(E.p('Content'), {'class': 'some'})
+            ))
+        )
+
+    def test_replacecontent(self):
+        spec = E.xpath(
+            E.div("$0", {'class': "some"}),
+            expr="//div", position="replacecontent")
+
+        self.apply_spec(spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(E.div(
+                E.div(E.p('Content'), {'class': 'some'})
+            ))
+        )
+
+    def test_unwrap(self):
+        spec = E.xpath(expr="//div", position="unwrap")
+
+        self.apply_spec(spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(E.p('Content'))
+        )
+
+
 class TestApplyInheritedArchs(ViewCase):
     """ Applies a sequence of modificator archs to a base view
     """
