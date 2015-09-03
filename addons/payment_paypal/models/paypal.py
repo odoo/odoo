@@ -119,7 +119,7 @@ class AcquirerPaypal(osv.Model):
             'currency_code': tx_values['currency'] and tx_values['currency'].name or '',
             'address1': partner_values['address'],
             'city': partner_values['city'],
-            'country': partner_values['country'] and partner_values['country'].name or '',
+            'country': partner_values['country'] and partner_values['country'].code or '',
             'state': partner_values['state'] and partner_values['state'].name or '',
             'email': partner_values['email'],
             'zip': partner_values['zip'],
