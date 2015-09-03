@@ -250,7 +250,7 @@ class account_analytic_account(osv.osv):
     _defaults = {
         'type': 'normal',
         'company_id': _default_company,
-        'code' : lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account'),
+        'code' : lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account', context=context),
         'state': 'open',
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
