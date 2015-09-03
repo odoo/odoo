@@ -45,11 +45,6 @@ You can manage:
     'demo': [
         'data/hr_demo.xml'
     ],
-    'test': [
-        'test/hr_users.yml',
-        'test/open2recruit2close_job.yml',
-        'test/hr_demo.yml',
-    ],
     'installable': True,
     'application': True,
     'auto_install': False,
