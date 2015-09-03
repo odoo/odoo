@@ -53,7 +53,6 @@
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="approve" string="Refuse" type="action" groups="account.group_account_user" />
                     <button name="reset_expenses" states="cancel" string="Set to Draft" type="object"/>
                     <button name="action_move_create" states="approve" string="Generate Accounting Entries" type="object" groups="account.group_account_user" class="oe_highlight"/>
-                    <button name="action_view_move" states="post" string="Open Accounting Entries" type="object" groups="account.group_account_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done" statusbar_colors='{"submit":"blue","cancel":"red"}'/>
                 </header>
                 <sheet>
@@ -74,9 +73,22 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                         </group>
+                        <group groups="account.group_account_user">
+                            <field name="journal_id" domain="[('type', '=', 'purchase'])]"/>
+                            <label for="payment_mode" string="Payment Done"/>
+                            <div>
+                                <field name="payment_mode" widget="radio"/>
+                                <field name="bank_journal_id" attrs="{'invisible': [('payment_mode', '=', 'own_account')], 'required': [('payment_mode', '=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]" class="oe_inline"/>
+                            </div>
+                            <field name="account_move_id" domain="[('type', '=', 'purchase'])]" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string='Description'>
                         <group>
                             <field name="product_id" context="{'default_can_be_expensed': 1}"/>
                             <field name="name"/>
+                        </group>
+                        <group>
                             <field name="unit_amount" required="1"/>
                             <label for="quantity"/>
                             <div>
@@ -92,16 +104,8 @@
                             <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                         </div>
                     </group>
-                    <group groups="account.group_account_user">
-                        <label for="payment_mode" string="Payment Done"/>
-                        <div>
-                            <field name="payment_mode" widget="radio"/>
-                            <field name="journal_id" attrs="{'invisible': [('payment_mode', '=', 'own_account')], 'required': [('payment_mode', '=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]" class="oe_inline"/>
-                        </div>
-                    </group>
                     <div>
-                        <separator string="Description"/>
-                        <field name="description" placeholder="Free Notes" style="width: 65%"/>
+                        <field name="description" placeholder="Free Notes"/>
                     </div>
                 </sheet>
                 <div class="oe_chatter">

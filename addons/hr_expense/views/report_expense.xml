@@ -33,6 +33,7 @@
                                 <th>Name</th>
                                 <th>Unit Price</th>
                                 <th class="text-center">Qty</th>
+                                <th>Taxe(s)</th>
                                 <th class="text-right">Price</th>
                             </tr>
                         </thead>
@@ -48,6 +49,11 @@
                                 </td>
                                 <td class="text-center">
                                     <span t-field="o.quantity"/>
+                                </td>
+                                <td>
+                                    <t t-foreach="o.tax_ids" t-as="tax">
+                                        <span t-field="tax.description"/>
+                                    </t>
                                 </td>
                                 <td class="text-right">
                                     <span t-field="o.total_amount"

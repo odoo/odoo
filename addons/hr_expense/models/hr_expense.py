@@ -30,8 +30,9 @@ class HrExpense(models.Model):
     department_id = fields.Many2one('hr.department', string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
     description = fields.Text()
     payment_mode = fields.Selection([("own_account", "By Employee's payment method"), ("company_account", "By Company's payment method")], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)]})
-    journal_id = fields.Many2one('account.journal', string='Force Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', 'in', ['case', 'bank'])], limit=1), help = "The journal used when the expense is done.")
-    account_move_id = fields.Many2one('account.move', string='Ledger Posting', copy=False, track_visibility="onchange")
+    journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', '=', 'purchase')], limit=1), required=True, help="The journal used when the expense is done.")
+    bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', 'in', ['case', 'bank'])], limit=1), help="The payment method used when the expense is paid by the company.")
+    account_move_id = fields.Many2one('account.move', string='Journal Entry', copy=False, track_visibility="onchange")
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
     state = fields.Selection([('draft', 'To Submit'),
                               ('submit', 'Submitted'),
@@ -205,13 +206,9 @@ class HrExpense(models.Model):
         if any(expense.employee_id != self[0].employee_id for expense in self):
             raise UserError(_("Expenses must belong to the same Employee."))
 
-        journal_id = self.env['account.journal'].search([('type', '=', 'purchase')], limit=1).id
-        if not journal_id:
-            raise UserError(_("No expense journal found. Please make sure you have a journal with type 'purchase' configured."))
-
         #create the move that will contain the accounting entries
         move = self.env['account.move'].create({
-            'journal_id': journal_id,
+            'journal_id': self.journal_id,
             'company_id': self.env.user.company_id.id,
         })
 
@@ -224,9 +221,9 @@ class HrExpense(models.Model):
             #create one more move line, a counterline for the total on payable account
             total, total_currency, move_lines = expense._compute_expense_totals(company_currency, move_lines)
             if expense.payment_mode == 'company_account':
-                if not expense.journal_id.default_credit_account_id:
-                    raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.journal_id.name))
-                emp_account = expense.journal_id.default_credit_account_id.id
+                if not expense.bank_journal_id.default_credit_account_id:
+                    raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.bank_journal_id.name))
+                emp_account = expense.bank_journal_id.default_credit_account_id.id
             else:
                 if not expense.employee_id.address_home_id:
                     raise UserError(_("No Home Address found for the employee %s, please configure one.") % (expense.employee_id.name))
@@ -250,8 +247,7 @@ class HrExpense(models.Model):
             expense.write({'account_move_id': move.id, 'state': 'post'})
             if expense.payment_mode == 'company_account':
                 expense.paid_expenses()
-        move.post()
-        return True
+        return move.post()
 
     @api.multi
     def _move_line_get(self):
@@ -296,26 +292,6 @@ class HrExpense(models.Model):
                     'tax_line_id': tax['id'],
                 })
         return account_move
-
-    @api.multi
-    def action_view_move(self):
-        '''
-        This function returns an action that display existing account.move of given expense ids.
-        '''
-        self.ensure_one()
-        view_ref = self.env.ref('account.view_move_form', raise_if_not_found=False)
-
-        return {
-            'name': _('Expense Account Move'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': view_ref.id if view_ref else False,
-            'res_model': 'account.move',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-            'res_id': self.account_move_id.id
-        }
 
     @api.multi
     def action_get_attachment_view(self):
