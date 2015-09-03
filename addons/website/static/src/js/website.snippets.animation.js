@@ -26,6 +26,48 @@ function load_called_template () {
     }
 }
 
+
+// Ripple animation
+animation.registry.ripple = animation.Class.extend({
+  selector: ".wb_dropdown-toggle, #oe_systray .dropdown-toggle",
+
+  start: function(){
+
+    var timeout,
+        btn = this.$target;
+
+    btn
+    .css({ position: 'relative', overflow: 'hidden'})
+    .bind('mousedown', function(e) {
+      var ripple;
+      if (btn.find('.ripple').length === 0) {
+        ripple = $('<span class="ripple"/>');
+        btn.prepend(ripple);
+      } else {
+        ripple = btn.find('.ripple');
+      }
+      ripple.removeClass('animate');
+
+      if (!ripple.height() && !ripple.width()) {
+        var diameter = Math.max(btn.outerWidth(), btn.outerHeight());
+        ripple.css({ height: diameter, width: diameter });
+      }
+
+      var x = e.pageX - btn.offset().left - ripple.width() / 2;
+      var y = e.pageY - btn.offset().top - ripple.height() / 2;
+
+      ripple
+        .css({ top: y + 'px',left: x + 'px'})
+        .addClass('animate');
+
+      setTimeout(function() {
+        //ripple.removeClass('animate');
+      }, 700);
+    });
+  },
+}),
+
+
 /*-------------------------------------------------------------------------*/
 
 base.ready().then(function () {
@@ -150,10 +192,10 @@ animation.registry.ul = animation.Class.extend({
 });
 
 /* -------------------------------------------------------------------------
-Gallery Animation  
+Gallery Animation
 
-This ads a Modal window containing a slider when an image is clicked 
-inside a gallery 
+This ads a Modal window containing a slider when an image is clicked
+inside a gallery
 -------------------------------------------------------------------------*/
 animation.registry.gallery = animation.Class.extend({
     selector: ".o_gallery:not(.o_slideshow)",
@@ -165,7 +207,7 @@ animation.registry.gallery = animation.Class.extend({
         var self = this;
         var $cur = $(event.currentTarget);
         var edition_mode = ($cur.closest("[contenteditable='true']").size() !== 0);
-        
+
         // show it only if not in edition mode
         if (!edition_mode) {
             var urls = [],
@@ -213,7 +255,7 @@ animation.registry.gallery = animation.Class.extend({
 
             this.carousel = new animation.registry.gallery_slider($modal.find(".carousel").carousel());
         }
-    } // click_handler  
+    } // click_handler
 });
 animation.registry.gallery_slider = animation.Class.extend({
     selector: ".o_slideshow",

@@ -1,0 +1,334 @@
+// Fonts
+// ============================
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+
+// Layouting
+// ============================
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+#wrapwrap {
+  width: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  margin-bottom: -160px;
+  padding-bottom: 160px;
+}
+
+main {
+  max-width: 100%;
+}
+
+// Main menu style
+// ========================================================
+#website_editor_container {
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  height: @wb_editor-bar-height;
+  width: 100%;
+  #website_main_menu_navbar {
+    background: @wb_editor-bar-bg;
+    width: 100%;
+    height: @wb_editor-bar-height;
+    min-height: @wb_editor-bar-height;
+    font-family: @wb_font-default;
+    font-weight: 600;
+    z-index: 9999;
+    position: fixed;
+    color: @wb_color-text-normal;
+    border: none;
+    position: fixed;
+    z-index: 1001;
+    .border-radius(0px);
+    margin-bottom: 0px;
+    .o-transition(opacity 0.4s @wb_md-ease);
+    &.editing_mode > ul {
+      opacity: 0;
+    }
+  }
+}
+
+
+// Applications switcher
+// ========================================================
+#website_main_menu_navbar {
+  .o_menu_toggle {
+    position: relative;
+    padding: 10px 15px;
+    color: white;
+    text-shadow:0 1px 0 @wb_color-primary-d10;
+    &:hover{
+      background-color: @wb_color-primary-d10;
+      color: white;
+    }
+  }
+  .o_menu_brand {
+    .user-select(none);
+    position: relative;
+    cursor: default;
+    margin-right: 25px;
+    font-size: 22px;
+    font-weight: 800;
+    float: left;
+    padding: 13px 0px;
+    line-height: 18px;
+    height: @wb_editor-bar-height;
+    color: white;
+    text-shadow:0 1px 0 @wb_color-primary-d10;
+  }
+}
+
+
+// Menu UL
+// ========================================================
+#website_main_menu_navbar {
+  > ul {
+    height: @wb_editor-bar-height;
+    display: inline-block;
+    float: left;
+    padding: 0 0 0 5px;
+    opacity: 1;
+    font-size: 0; // remove default browser margin beetwen inline-block elements
+    &.right {
+      float: right;
+      padding: 0;
+    }
+  }
+}
+
+
+// General 'li' + animated edit button (.ui-effects-wrapper)
+// ==========================================================
+#website_main_menu_navbar {
+  > ul > li,
+  > ul > .ui-effects-wrapper {
+    font-size: @wb_font-size-def; // restore default font-size
+    height: @wb_editor-bar-height;
+    display: inline-block;
+    position: relative;
+    list-style: none;
+    > a, > button {
+      color: @wb_editor-bar-link-color;
+      text-shadow:0 1px 0 @wb_editor-bar-link-shadow;
+      padding: 0 10px;
+      font-weight: 600;
+      height: @wb_editor-bar-height;
+      line-height: @wb_editor-bar-height - 5px;
+      display: inline-block;
+      margin: 0;
+      font-size: 11px;
+      text-decoration: none;
+      text-transform: uppercase;
+      border: none;
+      outline: none;
+      .o-transition(all 0.2s ease);
+      &.full {
+        color: white;
+      }
+      &.accent{
+        text-shadow:0 1px 0 @wb_color-accent-d10;
+      }
+    }
+    &:hover, &:active, &:focus {
+      > a, > button {
+        color: white;
+        text-decoration: none;
+        border: none;
+        outline: none;
+      }
+    }
+  }
+}
+
+
+// Menu dropdowns
+// ==========================================================
+#website_main_menu_navbar > ul {
+   > li.dropdown {
+    font-size: @wb_font-size-def;
+    position: relative;
+    > .dropdown-toggle {
+      color: @wb_dropdown-toggle-color;
+      height: @wb_editor-bar-height;
+      line-height: @wb_editor-bar-height - @wb_editor-dropdown-border-height;
+      border-top: @wb_editor-dropdown-border-height solid transparent;
+      text-shadow:0 1px 0 @wb_dropdown-toggle-shadow-color;
+      border-top: @wb_editor-dropdown-border-height solid transparent;
+      .box-shadow(inset 0 9px 16px -32px transparent);
+      &:hover, &:focus, &:active {
+        outline: 0;
+      }
+      .caret{}
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      display: none; // none by default, but block on "open" of the menu
+      float: left;
+      min-width: 160px;
+      padding: @wb_dropdown-menu-padding;
+      list-style: none;
+      text-align: left;
+      background-clip: padding-box;
+      margin: 0;
+      overflow: hidden;
+      border-radius: 0;
+      border: none;
+      background-color: @wb_dropdown-menu-color;
+      .box-shadow(@wb_dropdown-shadow);
+      li {
+        display: block;
+        white-space: nowrap;
+        > a {
+          padding: @wb_dropdown-li-padding;
+          color: @wb_dropdown-li-color;
+          display: block;
+        }
+        &:hover {
+          background: @wb_dropdown-li-hover-bg;
+          > a {
+            color: @wb_dropdown-li-hover-color;
+            background: transparent;
+          }
+        }
+      }
+      li > ul {
+        background: @wb_dropdown-menu-color;
+        padding: 2px 0 0 0;
+        &:before{
+          content: "";
+          margin: @wb_dropdown-li-padding;
+          margin-top: 0;
+          display: block;
+          background: fadeout(@wb_dropdown-li-color, 50%);
+          height: 1px;
+        }
+        > li > a {
+          padding: @wb_dropdown-li-wrapped-padding;
+        }
+      }
+
+      li.divider {
+        pointer-events: none;
+        margin: @wb_dropdown-li-divider-margin;
+        padding: 0;
+        background-color: fadeout(@wb_dropdown-li-color, 50%);
+      }
+      li.dropdown-header{
+        pointer-events: none;
+        margin: @wb_dropdown-li-divider-margin;
+        padding: 0;
+        color: fadeout(@wb_dropdown-li-color, 50%);
+        &:hover {
+          background: transparent;
+        }
+      }
+    } // /.wb_dropdown-menu, .dropdown-menu
+    &.right{
+      .dropdown-menu {
+        position: absolute;
+        text-align: right;
+        left: auto;
+        right: 0;
+      }
+    }
+  }
+}
+// Menu dropdowns OPEN
+// ==========================================================
+#website_main_menu_navbar > ul {
+  > li.dropdown.open {
+    > .dropdown-toggle {
+      background-color: @wb_dropdown--open-toggle-bg-color;
+      color:  @wb_dropdown--open-toggle-color;
+      text-shadow:0 1px 0 @wb_dropdown--open-toggle-shadow-color;
+      border-top: @wb_editor-dropdown-border-height solid white;
+      .box-shadow(inset 0 9px 16px -12px fadeOut(white, 30%));
+    }
+    > .dropdown-menu{
+      display: block;
+    }
+  }
+}
+
+// Ripples
+// ==========================================================
+.ripple {
+	display: block;
+  position: absolute;
+	background: hsl(180, 40%, 80%);
+	border-radius: 100%;
+	.scale(0);
+  &.animate{
+    .animation(ripple 0.3s linear);
+  }
+}
+
+// Child unique elements
+// ==========================================================
+#website_main_menu_navbar {
+  #oe_editzone {
+    padding: 0;
+  }
+  #oe_systray {
+    .transition(opacity 0.3s @wb_md-ease);
+    .opacity(0);
+    &.ready{
+      .opacity(1);
+    }
+  }
+  .o_planner_systray {
+    float: right;
+    width: 45px;
+    margin-right: 5px;
+    .progress {
+      margin: ((@wb_editor-bar-height/2)-3px) 0;
+      height: 8px;
+      background-color: @wb_color-primary-d10;
+      .progress-bar {
+        box-shadow: none;
+        background-color: @wb_color-accent;
+      }
+    }
+  }
+  .o_mobile_preview{
+    float: right;
+    margin: 0 10px 0 20px;
+    a{
+      font-size: 20px;
+      line-height: @wb_editor-bar-height;
+    }
+  }
+  li.content{
+    #website_addPage_list ~ li{
+      display: none;
+    }
+  }
+}
+
+
+// Entering in 'Edit Mode'
+// ==========================================================
+body.editor_enable {
+  #wrapwrap {
+    .o-transition(margin-left 0.4s @wb_md-ease);
+  }
+}
+
+body.editor_enable.editor_has_snippets {
+  #wrapwrap {
+    margin-left: 210px;
+  }
+}
+
+// UTILITY CLASSES
+// ==========================================================
+.wb_hidden_xs{
+  @media screen and (max-width: @wb_screen_sm){
+    display: none;
+  }
+}

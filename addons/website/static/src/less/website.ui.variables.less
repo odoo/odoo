@@ -1,0 +1,105 @@
+body {
+  visibility: visible;
+}
+
+// Fonts
+// =======================
+@wb_font-default  : "Roboto", Roboto, sans-serif;
+@wb_font-size-def : 12px;
+
+// COLORS UI
+// =======================
+@wb_color-dark    : #2c2c36;
+@wb_color-darker  : darken(#2c2c36,10%);
+@wb_color-divider : #33363e;
+@wb_color-normal  : #50545d;
+@wb_color-light   : #4e525b;
+
+@wb_color-paper    : #fbfbfd;
+@wb_color-inactive : #646465;
+
+@wb_color-text-normal : #999999;
+@wb_color-text-light  : #d4d5d7;
+@wb_color-text-dark   : #505050;
+
+@wb_color-accent         : #1cc1a9;
+@wb_color-accent-d10     : darken(@wb_color-accent, 10%);
+@wb_color-primary        : #a24689;
+@wb_color-primary-d5     : darken(@wb_color-primary, 5%);
+@wb_color-primary-d10    : darken(@wb_color-primary, 10%);
+@wb_color-primary-l10    : lighten(@wb_color-primary, 10%);
+
+@wb_color-danger  : #e6586c;
+@wb_color-success : #4ab980;
+
+
+// LAYOUT
+// =======================
+@wb_screen_xs : 480px;
+@wb_screen_sm : 768px;
+@wb_screen_md : 992px;
+@wb_screen_lg : 1200px;
+
+
+// TOP BAR
+// =======================
+@wb_editor-bar-height             : 45px;
+@wb_editor-dropdown-border-height : 1px;
+@wb_editor-bar-bg                 : @wb_color-primary;
+@wb_editor-bar-link-color         : @wb_color-paper;
+@wb_editor-bar-link-shadow        : @wb_color-primary-d10;
+
+
+// EDITOR
+// =======================
+@wb_sidebar-width: 210px;
+
+
+// SHADOWS
+// =======================
+@wb_box-shadow:       0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 3px 1px -2px rgba(0, 0, 0, 0.2),
+                      0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+@wb_dropdown-shadow:  0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 3px 1px -2px rgba(0, 0, 0, 0.2),
+                      transparent;
+
+
+// DROPDOWNS
+// =======================
+@wb_dropdown-toggle-color        : @wb_color-paper;
+@wb_dropdown-toggle-shadow-color : @wb_color-primary-d10;
+    // open
+    @wb_dropdown--open-toggle-color        : white;
+    @wb_dropdown--open-toggle-bg-color     : @wb_color-primary-d5;
+    @wb_dropdown--open-toggle-shadow-color : @wb_color-primary-d10;
+    // menu
+    @wb_dropdown-menu-color          : @wb_color-primary-d5;
+    @wb_dropdown-menu-padding        : 8px 0 4px;
+    @wb_dropdown-li-padding          : 9px 15px 9px 10px;
+    @wb_dropdown-li-wrapped-padding  : 4px 15px 4px 10px;
+    @wb_dropdown-li-divider-margin   : 5px 15px 3px 10px;
+    @wb_dropdown-li-color            : @wb_color-paper;
+    @wb_dropdown-li-hover-color      : @wb_color-paper;
+    @wb_dropdown-li-hover-bg         : @wb_color-primary;
+
+
+// MODALS
+// =======================
+@wb_modal-header-color      : @wb_color-text-dark;
+@wb_modal-title-line-height : 1.42857143;
+
+@wb_modal-lg                : 900px;
+@wb_modal-md                : 600px;
+@wb_modal-sm                : 300px;
+
+@wb_modal-header-padding    : 15px;
+@wb_modal-body-padding      : 15px;
+@wb_modal-footer-padding    : 15px;
+
+@wb_modal-margin-top        : @wb_editor-bar-height + (@wb_editor-bar-height / 5);
+
+@wb_modal-content-bg        : @wb_color-paper;
+@wb_modal-header-bg         : #fff;
+@wb_modal-footer-bg         : #fff;

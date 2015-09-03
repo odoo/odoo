@@ -3,7 +3,7 @@
 <data>
 
 <template id="s_banner" name="Banner">
-    <div id="myCarousel" class="carousel slide s_banner oe_custom_bg" data-interval="10000" style="height: 320px;">
+    <div id="myCarousel" class="carousel slide s_banner oe_custom_bg mb32" data-interval="10000" style="height: 320px;">
         <!-- Indicators -->
         <ol class="carousel-indicators hidden">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -121,7 +121,7 @@
 </template>
 
 <template id="s_big_message" name="Big message">
-    <section class="jumbotron s_big_message">
+    <section class="jumbotron s_big_message mt16 mb16">
         <div class="container">
             <h1>Sell Online. Easily.</h1>
             <p>
@@ -183,7 +183,7 @@
 </template>
 
 <template id="s_features" name="Features">
-    <section class="s_features">
+    <section class="s_features mt16">
         <div class="container">
             <div class="row mt16 mb16">
                 <div class="col-md-4 text-center">
@@ -207,7 +207,7 @@
 </template>
 
 <template id="s_big_picture" name="Big Picture">
-    <section class="s_big_picture bg-primary">
+    <section class="s_big_picture bg-primary mt16 mb16">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 text-center mt32 mb32">
@@ -235,7 +235,7 @@
 </template>
 
 <template id="s_three_columns" name="Three Columns">
-    <section class="s_three_columns">
+    <section class="s_three_columns mt16 mb16">
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
@@ -570,7 +570,7 @@ great way to build confidence in your products or services.
 </template>
 
 <template id="s_references" name="References">
-    <section class="s_references">
+    <section class="s_references mt16 mb32">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -623,7 +623,7 @@ Things are better organized and more visible with it.
 </template>
 
 <template id="s_quotes_slider" name="Quotes Slider">
-    <div id="myQuoteCarousel" class="carousel quotecarousel slide s_quotes_slider" data-interval="10000">
+    <div id="myQuoteCarousel" class="carousel quotecarousel slide s_quotes_slider mb0" data-interval="10000">
         <!-- Indicators -->
         <ol class="carousel-indicators mb0">
             <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
@@ -787,37 +787,25 @@ Things are better organized and more visible with it.
 
 
 <template id="snippets">
-<ul>
-    <li class="active">
+<ul id="snippets_menu">
+    <li class="active structure">
         <a href="#snippet_structure" class="scroll-link">
-            <span class="fa-stack fa-lg">
-                <i class="fa fa-square fa-stack-2x fa-inverse"></i>
-                <i class="fa fa-th-large fa-stack-1x"></i>
-            </span>
+            <i class="material-icons">&#xE8F1;</i>
         </a>
     </li>
-    <li>
+    <li class="content">
         <a href="#snippet_content" class="scroll-link">
-            <span class="fa-stack fa-lg">
-                <i class="fa fa-square fa-stack-2x fa-inverse"></i>
-                <i class="fa fa-align-justify fa-stack-1x"></i>
-            </span>
+            <i class="material-icons">&#xE8AA;</i>
         </a>
     </li>
-    <li>
+    <li class="feature">
         <a href="#snippet_feature" class="scroll-link">
-            <span class="fa-stack fa-lg">
-                <i class="fa fa-square fa-stack-2x fa-inverse"></i>
-                <i class="fa fa-pie-chart fa-stack-1x"></i>
-            </span>
+            <i class="material-icons">&#xE8B8;</i>
         </a>
     </li>
-    <li>
+    <li class="effect">
         <a href="#snippet_effect" class="scroll-link">
-            <span class="fa-stack fa-lg">
-                <i class="fa fa-square fa-stack-2x fa-inverse"></i>
-                <i class="fa fa-paper-plane fa-stack-1x"></i>
-            </span>
+            <i class="fa fa-magic icon-fix"></i>
         </a>
     </li>
 </ul>
@@ -825,9 +813,7 @@ Things are better organized and more visible with it.
 <div id="o_scroll">
 <div id="snippet_structure" class="o_panel">
     <div class="o_panel_header">
-        <span class="fa-stack">
-            <i class="fa fa-th-large fa-stack-1x"></i>
-        </span> Structure
+        <i class="material-icons">&#xE8F1;</i> Structure
     </div>
     <div class="o_panel_body">
         <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
@@ -846,9 +832,7 @@ Things are better organized and more visible with it.
 
 <div id="snippet_content" class="o_panel">
     <div class="o_panel_header">
-        <span class="fa-stack">
-            <i class="fa fa-align-justify fa-stack-1x"></i>
-        </span> Content
+        <i class="material-icons">&#xE8AA;</i> Content
     </div>
     <div class="o_panel_body">
         <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
@@ -861,9 +845,7 @@ Things are better organized and more visible with it.
 
 <div id="snippet_feature" class="o_panel">
     <div class="o_panel_header">
-        <span class="fa-stack">
-            <i class="fa fa-pie-chart fa-stack-1x"></i>
-        </span> Feature
+        <i class="material-icons">&#xE8B8;</i> Feature
     </div>
     <div class="o_panel_body">
         <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
@@ -879,9 +861,7 @@ Things are better organized and more visible with it.
 
 <div id="snippet_effect" class="o_panel">
     <div class="o_panel_header">
-        <span class="fa-stack">
-            <i class="fa fa-paper-plane fa-stack-1x"></i>
-        </span> Effect
+        <i class="fa fa-magic icon-fix"></i> Effect
     </div>
     <div class="o_panel_body">
         <t t-snippet="website.s_parallax" t-thumbnail="/website/static/src/img/blocks/block_parallax.png"/>
@@ -896,7 +876,7 @@ Things are better organized and more visible with it.
 </template>
 
 <template id="snippet_options">
-    
+
     <t t-call="web_editor.snippet_options"/>
 
     <div data-js='blog-style'
@@ -913,8 +893,10 @@ Things are better organized and more visible with it.
     <div data-js='background'
         data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#">Background</a>
+            <a tabindex="-1" href="#">Background Image</a>
             <ul class="dropdown-menu">
+                <li data-background=""><a>None</a></li>
+                <li class="divider"></li>
                 <li data-background="/website/static/src/img/parallax/parallax_bg.jpg"><a>Sunflower</a></li>
                 <li data-background="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
                 <li data-background="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
@@ -932,17 +914,23 @@ Things are better organized and more visible with it.
                 <li data-background="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
                 <li data-background="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
                 <li data-background="/website/static/src/img/parallax/quote.png"><a>Quote</a></li>
-                <li data-background=""><a>None</a></li>
-                <li><a style="background: none; padding: 5px; border-top: 1px solid #ddd;"></a></li>
+                <li class="divider"></li>
                 <li data-choose_image="choose_image"><a><b>Choose an image...</b></a></li>
             </ul>
+        </li>
+    </div>
+
+    <div data-js='background_position'
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
+        <li class="background_position_li" data-background_position="background_position">
+            <a tabindex="-1" href="#">Background Image Options</a>
         </li>
     </div>
 
     <div data-js='colorpicker'
         data-selector="section:not(.jumbotron), :not(.o_gallery > .container) > .carousel, .parallax">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#">Color</a>
+            <a tabindex="-1" href="#">Background Color</a>
             <ul class="dropdown-menu">
                 <li></li>
             </ul>

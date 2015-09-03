@@ -38,16 +38,63 @@ website.TopBar.include({
             .attr("data-oe-placeholder", _t("Press The Top-Left Edit Button"));
 
         if (location.search.indexOf("enable_editor") >= 0 && $('html').attr('lang') === "en_US") {
-            this.$el.hide();
+            this.$el.addClass('editing_mode');
         }
+
+        self.init_components()
+
+        self.resize()
+        $(window).on("resize", function(){
+            self.resize()
+        })
 
         return this._super();
     },
+    init_components: function(){
+        $(".switch").each(function(){
+            var $el = $(this)
+            $el.on('click', function(){
+                var $i = $el.find('.switch_input')
+                $el.toggleClass('checked')
+                if($i.prop("checked")){
+                    $i.prop("checked", false);
+                } else {
+                    $i.prop("checked", true);
+                }
+                return false;
+            })
+        });
+    },
     edit: function () {
         this.$('button[data-action=edit]').prop('disabled', true);
-        this.$el.hide();
+        this.$el.addClass('editing_mode');
         editor.editor_bar = new editor.Class(this);
         editor.editor_bar.prependTo(document.body);
+    },
+    resize: function() {
+        var wW = $(window).width(),
+            $sys = $('#oe_systray'),
+            $nav = $('#website_main_menu_navbar');
+
+        // Adapt dropdown-menu orientation to fit screen size
+        $sys.find('> li.wb_dropdown, >li.dropdown').each(function(){
+          var $el = $(this),
+           offset = $el.offset(),
+            width = $el.width();
+          var centerX = offset.left + width / 2;
+          if(centerX > wW/2){
+            $el.addClass('right')
+          } else {
+            $el.removeClass('right')
+          }
+        })
+        // Resize oe_systray
+        var totalWidth = null;
+        $nav.find('>*').not($sys).each(function(index) {
+            totalWidth += parseInt($(this).outerWidth() , 10);
+        });
+        $sys.width((wW - totalWidth)-50).addClass('ready')
+
     }
 });
 
@@ -79,8 +126,18 @@ website.TopBarCustomize = Widget.extend({
                     if (item.header) {
                         self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
                     } else {
-                        self.$menu.append(_.str.sprintf('<li role="presentation"><a href="#" data-view-id="%s" role="menuitem"><strong class="fa fa%s-square-o"></strong> %s</a></li>',
-                            item.id, item.active ? '-check' : '', item.name));
+                         self.$menu.append(_.str.sprintf(
+                                                '<li role="presentation">'+
+                                                    '<a href="#" data-view-id="%s" role="menuitem">' +
+                                                        '<span class="toggle_container">' +
+                                                            '<label class="switch %s" for="switch-%s">' +
+                                                                '<input type="checkbox" id="switch-%s" class="switch_input" checked="%s">' +
+                                                                '<span class="switch_track"></span>' +
+                                                            '</label>' +
+                                                        '</span> %s'+
+                                                    '</a>' +
+                                                '</li>',
+                            item.id, item.active ? 'checked' : '', item.id, item.id, item.active ? 'true' : 'false', item.name));
                     }
                 });
                 self.loaded = true;
@@ -89,6 +146,7 @@ website.TopBarCustomize = Widget.extend({
     },
     do_customize: function (event) {
         var view_id = $(event.currentTarget).data('view-id');
+        $('#website_loading').addClass('active')
         return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'ir.ui.view',
             method: 'toggle',
@@ -117,7 +175,7 @@ widget.LinkDialog.include({
         var self = this;
         var href = this.data.url;
         var last;
-        
+
         this.$('#link-page').select2({
             minimumInputLength: 1,
             placeholder: _t("New or existing page"),

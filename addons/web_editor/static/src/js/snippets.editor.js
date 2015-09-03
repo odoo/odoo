@@ -377,7 +377,7 @@ var BuildingBlock = Widget.extend({
             var $last = $scroll.children(":visible").last().children(".o_panel_body");
             $last.css({'min-height': (height-$last.prev().outerHeight())+'px'});
             if ($scroll[0].scrollHeight + $ul[0].scrollHeight > document.body.clientHeight) {
-                $scroll.css("overflow", "auto").css("width", "226px");
+                $scroll.css("overflow", "auto").css("width", "100%");
             } else {
                 $scroll.css("width", "");
             }

@@ -61,7 +61,7 @@ var Translate = translate.Class.include({
         this._super();
     },
     edit: function () {
-        $("#oe_main_menu_navbar").hide();
+        $("#website_main_menu_navbar").hide();
         if (!localStorage[nodialog]) {
             var dialog = new TranslatorDialog();
             dialog.appendTo($(document.body));
@@ -77,7 +77,7 @@ var Translate = translate.Class.include({
         return this._super();
     },
     cancel: function () {
-        $("#oe_main_menu_navbar").show();
+        $("#website_main_menu_navbar").show();
         return this._super();
     }
 });
