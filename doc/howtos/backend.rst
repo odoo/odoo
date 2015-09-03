@@ -644,6 +644,8 @@ instead of a single view its ``arch`` field is composed of any number of
         appends ``xpath``'s body at the end of the matched element
     ``replace``
         replaces the matched element by the ``xpath``'s body
+    ``replacecontent``
+        replaces the content of the matched element by the ``xpath``'s body
     ``before``
         inserts the ``xpath``'s body as a sibling before the matched element
     ``after``
@@ -651,6 +653,8 @@ instead of a single view its ``arch`` field is composed of any number of
     ``attributes``
         alters the attributes of the matched element using special
         ``attribute`` elements in the ``xpath``'s body
+    ``unwrap``
+        unwraps the matched element
 
 .. tip::
 

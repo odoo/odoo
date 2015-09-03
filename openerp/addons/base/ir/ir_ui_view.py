@@ -533,12 +533,44 @@ class view(osv.osv):
             if node is not None:
                 pos = spec.get('position', 'inside')
                 if pos == 'replace':
+                    for loc in spec.xpath(".//*[text()='$0']"):
+                        loc.text = ''
+                        loc.append(copy.deepcopy(node))
                     if node.getparent() is None:
                         source = copy.deepcopy(spec[0])
                     else:
                         for child in spec:
                             node.addprevious(child)
                         node.getparent().remove(node)
+
+                elif pos == 'replacecontent':
+                    for loc in spec.xpath(".//*[text()='$0']"):
+                        loc.text = node.text
+                        for child in node:
+                            loc.append(copy.deepcopy(child))
+                        loc.tail = node.tail
+                    node.clear()
+                    node.text = spec.text
+                    for child in spec:
+                        node.append(child)
+                    node.tail = spec.tail
+
+                elif pos == 'unwrap':
+                    if node.getparent() is None:
+                        attrs = ''.join([
+                            ' %s="%s"' % (attr, node.get(attr))
+                            for attr in node.attrib
+                        ])
+                        tag = "<%s%s>" % (node.tag, attrs)
+                        self.raise_view_error(
+                            cr, uid, _("Can't unwrap parent-less node '%s'") % tag,
+                            inherit_id, context=context
+                        )
+                    else:
+                        for child in node:
+                            node.addprevious(copy.deepcopy(child))
+                        node.getparent().remove(node)
+
                 elif pos == 'attributes':
                     for child in spec.getiterator('attribute'):
                         attribute = (child.get('name'), child.text or None)
