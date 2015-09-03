@@ -113,7 +113,7 @@
             <field name="applicability">taxes</field>
         </record>
 
-        <record id="tax_ACH_UE_due-10_0" model="account.account.tag">
+        <record id="tax_ACH_UE_due_10_0" model="account.account.tag">
             <field name="name">ACH_UE_due-10.0</field>
             <field name="applicability">taxes</field>
         </record>
@@ -123,7 +123,7 @@
             <field name="applicability">taxes</field>
         </record>
 
-        <record id="tax_ACH_UE_due-2_1" model="account.account.tag">
+        <record id="tax_ACH_UE_due_2_1" model="account.account.tag">
             <field name="name">ACH_UE_due-2.1</field>
             <field name="applicability">taxes</field>
         </record>
@@ -258,7 +258,7 @@
       <field name="account_id" ref="pcg_44566"/>
       <field name="sequence" eval="1"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_20_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-20_0')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_specifique">
@@ -491,7 +491,7 @@
       <field name="account_id" ref="pcg_445202"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_10_0')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_10_0')])]"/>
     </record>
 
     <record model="account.tax.template" id="tva_intra_reduite">
@@ -517,7 +517,7 @@
       <field name="account_id" ref="pcg_445203"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
-      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due-2_1')])]"/>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_2_1')])]"/>
     </record>
 
 
