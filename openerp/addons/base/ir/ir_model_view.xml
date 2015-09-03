@@ -109,6 +109,31 @@
                                                 <field name="depends"/>
                                                 <field name="compute"/>
                                             </group>
+                                            <h3>How to define a computed field</h3>
+                                            <p>Computed fields are defined with the fields
+                                            <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
+                                            <p>The field <strong>Dependencies</strong> lists the fields that
+                                            the current field depends on. It is a comma-separated list of
+                                            field names, like <code>name, size</code>. You can also refer to
+                                            fields accessible through other relational fields, for instance
+                                            <code>partner_id.company_id.name</code>.</p>
+                                            <p>The field <strong>Compute</strong> is the Python code to
+                                            compute the value of the field on a set of records. The value of
+                                            the field must be assigned to each record with a dictionary-like
+                                            assignment.</p>
+                                            <pre>
+    for record in self:
+        record['size'] = len(record.name)
+</pre>
+                                            <p>The only predefined variables are</p>
+                                            <ul>
+                                                <li><code>self</code> (the set of records to compute)</li>
+                                                <li><code>datetime</code> (Python module)</li>
+                                                <li><code>dateutil</code> (Python module)</li>
+                                                <li><code>time</code> (Python module)</li>
+                                            </ul>
+                                            <p>Other features are accessible through <code>self</code>, like
+                                            <code>self.env</code>, etc.</p>
                                         </page>
                                         <page name="groups" string="Groups">
                                             <field name="groups"/>
@@ -247,6 +272,31 @@
                                     <field name="depends"/>
                                     <field name="compute"/>
                                 </group>
+                                <h3>How to define a computed field</h3>
+                                <p>Computed fields are defined with the fields
+                                <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
+                                <p>The field <strong>Dependencies</strong> lists the fields that
+                                the current field depends on. It is a comma-separated list of
+                                field names, like <code>name, size</code>. You can also refer to
+                                fields accessible through other relational fields, for instance
+                                <code>partner_id.company_id.name</code>.</p>
+                                <p>The field <strong>Compute</strong> is the Python code to
+                                compute the value of the field on a set of records. The value of
+                                the field must be assigned to each record with a dictionary-like
+                                assignment.</p>
+                                <pre>
+    for record in self:
+        record['size'] = len(record.name)
+</pre>
+                                <p>The only predefined variables are</p>
+                                <ul>
+                                    <li><code>self</code> (the set of records to compute)</li>
+                                    <li><code>datetime</code> (Python module)</li>
+                                    <li><code>dateutil</code> (Python module)</li>
+                                    <li><code>time</code> (Python module)</li>
+                                </ul>
+                                <p>Other features are accessible through <code>self</code>, like
+                                <code>self.env</code>, etc.</p>
                             </page>
                             <page name="groups" string="Groups">
                                 <field name="groups"/>
