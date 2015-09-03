@@ -32,6 +32,7 @@
         product_uom: product.product_uom_kgm
         price_unit: 50.0
         name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I confirm the first purchase order
 -
@@ -64,6 +65,7 @@
         product_uom: product.product_uom_kgm
         price_unit: 80.0
         name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I confirm the second purchase order
 - 
@@ -166,10 +168,13 @@
         product_uom: product.product_uom_gram
         price_unit: 0.150
         name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
       - product_id: product_fifo_icecream
         product_qty: 10.0
         product_uom: product.product_uom_kgm
         price_unit: 150.0
+        name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I confirm the purchase order in USD
 -
@@ -326,6 +331,7 @@
         product_uom: product.product_uom_kgm
         price_unit: 50.0
         name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I confirm the first purchase order
 -
@@ -354,6 +360,7 @@
         product_uom: product.product_uom_kgm
         price_unit: 80
         name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I confirm the second negative purchase order
 - 

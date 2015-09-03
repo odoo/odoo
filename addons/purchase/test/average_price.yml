@@ -24,6 +24,7 @@
         product_uom: product.product_uom_kgm
         price_unit: 60.0
         name: 'Average Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I confirm the first purchase order
 -
@@ -58,6 +59,7 @@
         product_uom: product.product_uom_kgm
         price_unit: 80.0
         name: 'Average Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I confirm the second purchase order
 - 
@@ -112,6 +114,7 @@
         product_uom: product.product_uom_gram
         price_unit: 0.2
         name: 'Average Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I confirm the first purchase order
 -

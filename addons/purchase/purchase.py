@@ -553,26 +553,40 @@ class PurchaseOrderLine(models.Model):
            :rtype: dict
            :return: name, seller quantity, seller price, date planned
         """
-        # Switch quantity in uom_id
-        quantity_uom_id = quantity
-        if quantity_uom_id and product_id.uom_id != product_uom:
-            quantity_uom_id = product_uom._compute_qty_obj(product_uom, quantity_uom_id, product_id.uom_id)
+        # This is useful in case partner is not registered supplier
+        if not product_id or not partner_id or not product_uom or not currency_id:
+            return {
+                'name': False,
+                'quantity': 0.0,
+                'price_unit': 0.0,
+                'date_planned': False,
+            }
+
+        # The first browse is used to know the uom_id and the currency_id for the given vendor
+        product = product_id.with_context({'partner_id': partner_id.id})
+        seller_currency_id = product.selected_seller_id.currency_id if product.selected_seller_id else partner_id.currency_id
+        seller_product_uom = product.selected_seller_id.product_uom if product.selected_seller_id else product_id.uom_id
+
+        # Switch quantity to uom_id
+        quantity_seller_uom_id = quantity
+        if quantity_seller_uom_id and seller_product_uom != product_uom:
+            quantity_seller_uom_id = product_uom._compute_qty_obj(product_uom, quantity_seller_uom_id, seller_product_uom)
 
         product = product_id.with_context({
             'lang': partner_id.lang,
             'partner_id': partner_id.id,
             'date': date,
-            'quantity': quantity_uom_id,
+            'quantity': quantity_seller_uom_id,
         })
 
         # Switch quantity back in product_uom
-        quantity = max(quantity_uom_id, product.seller_qty)
-        if quantity and product_id.uom_id != product_uom:
-            quantity = product_id.uom_id._compute_qty_obj(product_id.uom_id, quantity, product_uom)
+        quantity = max(quantity_seller_uom_id, product.seller_qty)
+        if quantity and seller_product_uom != product_uom:
+            quantity = seller_product_uom._compute_qty_obj(seller_product_uom, quantity, product_uom)
 
         price_unit = product.seller_price
-        if price_unit and partner_id.currency_id != currency_id:
-            price_unit = partner_id.currency_id.compute(price_unit, currency_id)
+        if price_unit and seller_currency_id != currency_id:
+            price_unit = seller_currency_id.compute(price_unit, currency_id)
 
         date_planned = self._get_date_planned(product, po=order_id).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 

@@ -38,6 +38,7 @@
         product_uom: product.product_uom_kgm
         price_unit: 60.0
         name: 'LIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I create a draft Purchase Order for second shipment for 30 pieces at 80 euro
 - 
@@ -49,6 +50,7 @@
         product_uom: product.product_uom_kgm
         price_unit: 80.0
         name: 'LIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I confirm the first purchase order
 -
