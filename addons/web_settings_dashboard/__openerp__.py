@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Odoo Dashboard',
+    'name': 'Odoo Settings Dashboard',
     'version': '1.0',
     'summary': 'Quick actions for installing new app, user invitation, planners',
-    'author': 'Odoo SA',
     'category': 'Tools',
     'description':
     """

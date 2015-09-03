@@ -1,4 +1,4 @@
-odoo.define('web.dashboard', function (require) {
+odoo.define('web_settings_dashboard', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -37,7 +37,7 @@ var Dashboard = Widget.extend({
                 }
             });
 
-            // Resolve loading_done when all dashboards defs are resolved 
+            // Resolve loading_done when all dashboards defs are resolved
             $.when.apply($, all_dashboards_defs).then(function() {
                 loading_done.resolve();
             });
@@ -62,9 +62,7 @@ var Dashboard = Widget.extend({
     },
 
     on_new_apps: function(){
-        this.do_action('base.open_module_tree', {
-            'additional_context': {'search_default_app': 1, 'search_default_not_installed': 1}
-        });
+        this.do_action('base.open_module_tree');
     }
 });
 
@@ -248,7 +246,7 @@ var DashboardShare = Widget.extend({
     }
 });
 
-core.action_registry.add('web_dashboard.main', Dashboard);
+core.action_registry.add('web_settings_dashboard.main', Dashboard);
 
 return {
     Dashboard: Dashboard,
