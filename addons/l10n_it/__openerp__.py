@@ -15,13 +15,14 @@ Italian accounting chart and localization.
     'category': 'Localization/Account Charts',
     'website': 'http://www.openerp-italia.org/',
     'data': [
+        'data/account_chart.xml',
         'data/account.account.template.csv',
-        'account_chart.xml',
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',
-        'l10n_chart_it_generic.xml',
+        'data/account.chart.template.csv',
+        'data/account_chart_template.yml',
         ],
     'demo': [],
-    'installable': False,
     'auto_install': False,
+    'installable': True,
 }

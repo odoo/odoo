@@ -62,7 +62,7 @@
                             <field name="event_ticket_ids" context="{'default_name': name}">
                                 <tree string="Tickets" editable="bottom">
                                     <field name="name"/>
-                                    <field name="product_id"/>
+                                    <field name="product_id" context="{'default_event_ok':1}"/>
                                     <field name="deadline"/>
                                     <field name="price"/>
                                     <field name="seats_max"/>

@@ -7,8 +7,12 @@
 // Warning, this value is also specified in the abstractReconciliation widget
 @aestetic_animation_speed: 300ms;
 
+.oe_application .o_reconciliation {
+    height: 100%;
+    overflow: auto;
+}
 
-.oe_reconciliation, .o_reconciliation {
+.o_reconciliation {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -16,7 +20,6 @@
     user-select: none;
     cursor: default;
     font-size: 12px;
-    overflow: auto;
 
     // Why on earth does bootstrap set font-size to 14px in popovers ?
     .popover {
@@ -38,7 +41,7 @@
         clear: both;
     }
 
-    .oe_view_nocontent, .o_view_nocontent {
+    .oe_view_nocontent {
         max-width: none;
 
         > p {
@@ -212,7 +215,7 @@
     }
 
     // reconciliationLine widget
-    .oe_reconciliation_line, .o_reconciliation_line {
+    .o_reconciliation_line {
         margin-bottom: 30px;
 
         table {
@@ -384,13 +387,17 @@
                 color: #bbb;
             }
 
-            tr .toggle_create, .toggle_match, .fa-add-remove {
-                visibility: hidden;
-                color: #555;
-            }
+            tr {
+                .toggle_create, .toggle_match, .fa-add-remove {
+                    visibility: hidden;
+                    color: #555;
+                }
 
-            tr:hover .toggle_create, tr:focus .toggle_match, tr.active .fa-add-remove, tr:hover .toggle_create, tr:focus .toggle_match, tr.active .fa-add-remove, tr:hover .toggle_create, tr:focus .toggle_match, tr.active .fa-add-remove {
-                visibility: visible;
+                &:hover, &:active, &:focus {
+                    .toggle_create, .toggle_match, .fa-add-remove {
+                        visibility: visible;
+                    }
+                }
             }
 
             tr .do_partial_reconcile_button {
@@ -539,16 +546,26 @@
                 }
             }
 
-            .oe_form > table, .o_form > table {
+            .o_form > table {
                 width: 49%;
-                height: 26px;
+                margin: 0;
+                vertical-align: top;
 
-                &:nth-child(2n+1) { float: left; clear: left; }
-                &:nth-child(2n) { float: right; clear: right; }
+                &.create_group_left { float: left; }
+                &.create_group_right { float: right; }
 
-                th {
-                    font-weight: bold;
+                td {
+                    width: 99%;
+                    padding-left: 8px;
+
+                    .oe_m2o_cm_button {
+                        line-height: 22px;
+                    }
+                }
+
+                td.o_td_label {
                     line-height: 26px;
+                    font-weight: bold;
                     padding-right: 8px;
                     min-width: 100px;
                     border-right: 1px solid #ddd;
@@ -556,36 +573,25 @@
                     width: 1%;
                 }
 
-                td {
-                    width: 99%;
-                    padding-left: 8px;
-                }
-
                 input, select {
                     width: 100%;
                 }
 
-                &.add_line_container {
-                    width: 98%;
-                    float: none;
-                    clear: both;
-                    margin: auto;
+            }
 
-                    td {
-                        text-align: center;
-                    }
-
-                    .add_line {
-                        line-height: 26px;
-                    }
-                }
+            .add_line_container {
+                clear: both;
+                line-height: 26px;
+                text-align: center;
+                margin: 0;
+                padding-top: 7px;
             }
         }
     }
 }
 
-.oe_manual_reconciliation, .o_manual_reconciliation {
-    .oe_manual_reconciliation_line, .o_manual_reconciliation_line {
+.o_manual_reconciliation {
+    .o_manual_reconciliation_line {
         .button_reconcile {
             float: right;
             position: relative;

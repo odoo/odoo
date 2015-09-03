@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2015-01-21 14:09+0000\n"
+"POT-Creation-Date: 2015-08-25 09:00+0000\n"
+"PO-Revision-Date: 2015-08-25 09:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: website_sale_delivery
-#: field:delivery.carrier,website_published:0
-msgid "Available in the website"
+#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
+msgid "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -26,28 +26,34 @@ msgid "Carrier"
 msgstr ""
 
 #. module: website_sale_delivery
-#: view:website:website_sale.payment
+#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose your Delivery Method"
 msgstr ""
 
 #. module: website_sale_delivery
-#: field:sale.order,amount_delivery:0
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
 msgstr ""
 
 #. module: website_sale_delivery
-#: view:website:website_sale.total
-msgid "Delivery will be updated after choosing a new delivery method"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
+msgid "Description for Online Quotations"
 msgstr ""
 
 #. module: website_sale_delivery
-#: view:website:website_sale.total
-msgid "Delivery:"
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
+msgid "Has an order line set for delivery"
 msgstr ""
 
 #. module: website_sale_delivery
-#: field:delivery.carrier,website_description:0
-msgid "Description for the website"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
+msgid "Has delivery"
+msgstr ""
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/models/sale_order.py:133
+#, python-format
+msgid "No shipping method is available for your current order and shipping address. Please contact us for more information."
 msgstr ""
 
 #. module: website_sale_delivery
@@ -56,7 +62,28 @@ msgid "Sales Order"
 msgstr ""
 
 #. module: website_sale_delivery
-#: help:sale.order,amount_delivery:0
+#: code:addons/website_sale_delivery/models/sale_order.py:132
+#, python-format
+msgid "Sorry, we are unable to ship your order"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
 msgid "The amount without tax."
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+msgid "Visible in Website"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_url
+msgid "Website URL"
 msgstr ""
 

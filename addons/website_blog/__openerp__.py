@@ -4,6 +4,7 @@
 {
     'name': 'Blogs',
     'category': 'Website',
+    'sequence': 140,
     'website': 'https://www.odoo.com/page/blog-engine',
     'summary': 'News, Blogs, Announces, Discussions',
     'version': '1.0',
@@ -12,7 +13,6 @@ OpenERP Blog
 ============
 
         """,
-    'author': 'OpenERP SA',
     'depends': ['website_mail', 'website_partner'],
     'data': [
         'data/website_blog_data.xml',

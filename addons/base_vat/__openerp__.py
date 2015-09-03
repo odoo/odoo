@@ -34,7 +34,6 @@ Supported countries currently include EU countries, and a few non-EU countries
 such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,
 only the country code will be validated.
     """,
-    'author': 'OpenERP SA',
     'depends': ['account'],
     'website': 'https://www.odoo.com/page/accounting',
     'data': ['base_vat_view.xml'],

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
+from openerp import _, SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 
@@ -28,6 +28,9 @@ class note_tag(osv.osv):
     _columns = {
         'name' : fields.char('Tag Name', required=True),
     }
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]
 
 class note_note(osv.osv):
     """ Note """
@@ -153,13 +156,13 @@ class note_note(osv.osv):
             return super(note_note, self).read_group(cr, uid, domain, fields, groupby,
                 offset=offset, limit=limit, context=context, orderby=orderby,lazy=lazy)
 
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(note_note, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+        res['user'] = {
+            'actions': [{'url': self._notification_link_helper(cr, uid, ids, 'new', context=context), 'title': _('New Note')}]
+        }
+        return res
 
-#upgrade config setting page to configure pad
-class note_base_config_settings(osv.osv_memory):
-    _inherit = 'base.config.settings'
-    _columns = {
-        'module_note_pad': fields.boolean('Use collaborative pads (etherpad)'),
-    }
 
 class res_users(osv.Model):
     _name = 'res.users'

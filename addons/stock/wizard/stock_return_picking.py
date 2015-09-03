@@ -140,7 +140,6 @@ class stock_return_picking(osv.osv_memory):
                 move_obj.copy(cr, uid, move.id, {
                     'product_id': data_get.product_id.id,
                     'product_uom_qty': new_qty,
-                    'product_uos_qty': new_qty * move.product_uos_qty / move.product_uom_qty,
                     'picking_id': new_picking,
                     'state': 'draft',
                     'location_id': move.location_dest_id.id,

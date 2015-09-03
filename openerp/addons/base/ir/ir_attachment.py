@@ -104,7 +104,7 @@ class ir_attachment(osv.osv):
 
     def force_storage(self, cr, uid, context=None):
         """Force all attachments to be stored in the currently configured storage"""
-        if not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+        if not self.pool['res.users']._is_admin(cr, uid, [uid]):
             raise AccessError(_('Only administrators can execute this action.'))
 
         location = self._storage(cr, uid, context)
@@ -237,9 +237,8 @@ class ir_attachment(osv.osv):
         """ compute the checksum for the given datas
             :param bin_data : datas in its binary form
         """
-        if bin_data:
-            return hashlib.sha1(bin_data).hexdigest()
-        return False
+        # an empty file has a checksum too (for caching)
+        return hashlib.sha1(bin_data or '').hexdigest()
 
     def _compute_mimetype(self, values):
         """ compute the mimetype of the given values
@@ -279,8 +278,8 @@ class ir_attachment(osv.osv):
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', change_default=True),
-        'type': fields.selection( [ ('url','URL'), ('binary','Binary'), ],
-                'Type', help="Binary File or URL", required=True, change_default=True),
+        'type': fields.selection( [ ('url','URL'), ('binary','File'), ],
+                'Type', help="You can either upload a file from your computer or copy/paste an internet link to your file", required=True, change_default=True),
         'url': fields.char('Url', size=1024),
         # al: We keep shitty field names for backward compatibility with document
         'datas': fields.function(_data_get, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),

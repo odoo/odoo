@@ -55,6 +55,11 @@ class AccountVoucher(models.Model):
             voucher.amount = total + voucher.tax_correction
             voucher.tax_amount = tax_amount
 
+    @api.one
+    @api.depends('account_pay_now_id', 'account_pay_later_id', 'pay_now')
+    def _get_account(self):
+        self.account_id = self.account_pay_now_id if self.pay_now == 'pay_now' else self.account_pay_later_id
+
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _inherit = ['mail.thread']
@@ -65,7 +70,7 @@ class AccountVoucher(models.Model):
     date = fields.Date(readonly=True, select=True, states={'draft': [('readonly', False)]},
                            help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_journal)
-    account_id = fields.Many2one('account.account', 'Account', required=True, readonly=True, states={'draft': [('readonly', False)]}, domain=[('deprecated', '=', False)])
+    account_id = fields.Many2one('account.account', 'Account', required=True, readonly=True, states={'draft': [('readonly', False)]}, domain="[('deprecated', '=', False), ('internal_type','=', (pay_now == 'pay_now' and 'liquidity' or 'receivable'))]")
     line_ids = fields.One2many('account.voucher.line', 'voucher_id', 'Voucher Lines',
                                    readonly=True, copy=True,
                                    states={'draft': [('readonly', False)]})
@@ -78,10 +83,10 @@ class AccountVoucher(models.Model):
              ('proforma', 'Pro-forma'),
              ('posted', 'Posted')
             ], 'Status', readonly=True, track_visibility='onchange', copy=False, default='draft',
-            help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Voucher. \
-                        \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
-                        \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
-                        \n* The \'Cancelled\' status is used when user cancel voucher.')
+            help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
+                 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
+                 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
+                 " * The 'Cancelled' status is used when user cancel voucher.")
     reference = fields.Char('Bill Reference', readonly=True, states={'draft': [('readonly', False)]},
                                  help="The partner reference of this document.", copy=False)
     amount = fields.Monetary(string='Total', store=True, readonly=True, compute='_compute_total')
@@ -97,19 +102,19 @@ class AccountVoucher(models.Model):
         ], 'Payment', select=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
     date_due = fields.Date('Due Date', readonly=True, select=True, states={'draft': [('readonly', False)]})
 
-    @api.onchange('partner_id')
+    @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
-        if self.journal_id.type == 'sale':
-            account_id = self.partner_id.property_account_receivable_id.id
-        elif self.journal_id.type == 'purchase':
-            account_id = self.partner_id.property_account_payable_id.id
-        elif self.voucher_type  == 'sale':
-            account_id = sef.journal_id.default_debit_account_id.id
-        elif self.voucher_type == 'purchase':
-            account_id = self.journal_id.default_credit_account_id.id
+        if self.pay_now =='pay_now':
+            liq_journal = self.env['account.journal'].search([('type', 'in', ('bank', 'cash'))], limit=1)
+            self.account_id = liq_journal.default_debit_account_id \
+                if self.voucher_type == 'sale' else liq_journal.default_credit_account_id
         else:
-            account_id = self.journal_id.default_credit_account_id.id or self.journal_id.default_debit_account_id.id
-        self.account_id = account_id
+            if self.partner_id:
+                self.account_id = self.partner_id.property_account_receivable_id \
+                    if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id
+            else:
+                self.account_id = self.journal_id.default_debit_account_id \
+                    if self.voucher_type == 'sale' else self.journal_id.default_credit_account_id
 
     @api.multi
     def button_proforma_voucher(self):
@@ -138,24 +143,6 @@ class AccountVoucher(models.Model):
             if voucher.state not in ('draft', 'cancel'):
                 raise Warning(_('Cannot delete voucher(s) which are already opened or paid.'))
         return super(AccountVoucher, self).unlink()
-
-    @api.onchange('pay_now')
-    def onchange_payment(self):
-        account_id = False
-        if self.pay_now == 'pay_later':
-            partner = self.partner_id
-            journal = self.journal_id
-            if journal.type == 'sale':
-                account_id = partner.property_account_receivable_id.id
-            elif journal.type == 'purchase':
-                account_id = partner.property_account_payable_id.id
-            elif self.voucher_type == 'sale':
-                account_id = journal.default_debit_account_id.id
-            elif self.voucher_type == 'purchase':
-                account_id = journal.default_credit_account_id.id
-            else:
-                account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
-        self.account_id = account_id
 
     @api.multi
     def first_move_line_get(self, move_id, company_currency, current_currency):
@@ -234,11 +221,9 @@ class AccountVoucher(models.Model):
         :return: Tuple build as (remaining amount not allocated on voucher lines, list of account_move_line created in this method)
         :rtype: tuple(float, list of int)
         '''
-        prec = self.company_id.currency_id.rounding
         for line in self.line_ids:
             #create one move line per voucher line where amount is not 0.0
-            # AND (second part of the clause) only if the original move line was not having debit = credit = 0 (which is a legal value)
-            if not line.price_subtotal and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_digits=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_digits=prec)):
+            if not line.price_subtotal:
                 continue
             # convert the amount set on the voucher line into the currency of the voucher's company
             # this calls res_curreny.compute() with the right context, so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
@@ -339,7 +324,6 @@ class account_voucher_line(models.Model):
         store=True, readonly=True, compute='_compute_subtotal')
     quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
-    account_id = fields.Many2one('account.account', 'Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     company_id = fields.Many2one('res.company', related='voucher_id.company_id', string='Company', store=True, readonly=True)
     tax_ids = fields.Many2many('account.tax', string='Tax', help="Only for tax excluded from price")

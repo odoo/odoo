@@ -31,6 +31,8 @@ class Rating(models.Model):
     feedback = fields.Text('Feedback reason', help="Reason of the rating")
     access_token = fields.Char(string='Security Token', default=new_access_token, help="Access token to set the rating of the value")
 
+    message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
+
     @api.model
     def apply_rating(self, rate, res_model=None, res_id=None, token=None):
         """ apply a rating for given res_model/res_id or token. If the res_model is a mail.thread
@@ -100,10 +102,10 @@ class RatingMixin(models.AbstractModel):
         for record in self:
             res_id = record.id
             values = {
-                'res_model' : res_model,
-                'res_id' : res_id,
-                'partner_id' : partner_id.id,
-                'rated_partner_id' : rated_partner_id.id
+                'res_model': res_model,
+                'res_id': res_id,
+                'partner_id': partner_id.id,
+                'rated_partner_id': rated_partner_id.id
             }
             if reuse_rating:
                 # search the existing rating for the given res_model/res_id
@@ -118,25 +120,46 @@ class RatingMixin(models.AbstractModel):
             template.send_mail(rating.id, force_send=True)
 
     @api.multi
-    def rating_get_stats(self):
+    def rating_get_repartition(self, add_stats=False, domain=None):
         """ get the repatition of rating grade for the given res_ids.
-            :return dictionnary where the key is the rating value (the note), and the value, the number of object (res_model, res_id) having the value
+            :param add_stats : flag to add stat to the result
+            :type add_stats : boolean
+            :param domain : optional extra domain of the rating to include/exclude in repartition
+            :return dictionnary
+                if not add_stats, the dict is like
+                    - key is the rating value (integer)
+                    - value is the number of object (res_model, res_id) having the value
+                otherwise, key is the value of the information (string) : either stat name (avg, total, ...) or 'repartition'
+                containing the same dict if add_stats was False.
         """
-        data = self.env['rating.rating'].read_group([('res_model', '=', self._name), ('res_id', 'in', self.ids), ('rating', '>=', 0)], ['rating'], ['rating', 'res_id'])
+        base_domain = [('res_model', '=', self._name), ('res_id', 'in', self.ids), ('rating', '>=', 0)]
+        if domain:
+            base_domain += domain
+        data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
         # init dict with all posible rate value, except -1 (no value for the rating)
-        res = dict.fromkeys(range(11), 0)
-        res.update((d['rating'], d['rating_count']) for d in data)
-        return res
+        values = dict.fromkeys(range(11), 0)
+        values.update((d['rating'], d['rating_count']) for d in data)
+        # add other stats
+        if add_stats:
+            rating_number = sum(values.values())
+            result = {
+                'repartition': values,
+                'avg': sum([float(key*values[key]) for key in values])/rating_number if rating_number > 0 else 0,
+                'total': reduce(lambda x, y: y['rating_count']+x, data, 0),
+            }
+            return result
+        return values
 
     @api.multi
-    def rating_get_grades(self):
+    def rating_get_grades(self, domain=None):
         """ get the repatition of rating grade for the given res_ids.
+            :param domain : optional domain of the rating to include/exclude in grades computation
             :return dictionnary where the key is the grade (great, okay, bad), and the value, the number of object (res_model, res_id) having the grade
                     the grade are compute as    0-30% : Bad
                                                 31-69%: Okay
                                                 70-100%: Great
         """
-        data = self.rating_get_stats()
+        data = self.rating_get_repartition(domain=domain)
         res = dict.fromkeys(['great', 'okay', 'bad'], 0)
         for key in data:
             if key >= 7:
@@ -146,3 +169,22 @@ class RatingMixin(models.AbstractModel):
             else:
                 res['bad'] += data[key]
         return res
+
+    @api.multi
+    def rating_get_stats(self, domain=None):
+        """ get the statistics of the rating repatition
+            :param domain : optional domain of the rating to include/exclude in statistic computation
+            :return dictionnary where
+                - key is the the name of the information (stat name)
+                - value is statistic value : 'percent' contains the repartition in percentage, 'avg' is the average rate
+                  and 'total' is the number of rating
+        """
+        data = self.rating_get_repartition(domain=domain, add_stats=True)
+        result = {
+            'avg': data['avg'],
+            'total': data['total'],
+            'percent': dict.fromkeys(range(11), 0),
+        }
+        for rate in data['repartition']:
+            result['percent'][rate] = (data['repartition'][rate] * 100) / data['total'] if data['total'] > 0 else 0
+        return result

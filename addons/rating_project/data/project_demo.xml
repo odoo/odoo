@@ -22,6 +22,11 @@
             <field name="res_id" ref="project.project_task_24"/>
         </record>
 
+        <!-- add the email template as value for the project stage 2 -->
+        <record id="project.project_stage_2" model="project.task.type">
+            <field name="rating_template_id" ref="rating_project_request_email_template"/>
+        </record>
+
         <function model="rating.rating" name="apply_rating" eval="(10, 'project.task', ref('project.project_task_3'))"/>
         <function model="rating.rating" name="apply_rating" eval="(0, 'project.task', ref('project.project_task_8'))"/>
         <function model="rating.rating" name="apply_rating" eval="(5, 'project.task', ref('project.project_task_15'))"/>

@@ -36,7 +36,7 @@
         <record model="ir.actions.act_window" id="crm_case_form_view_salesteams_opportunity">
             <field name="name">Opportunities</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">kanban,tree,graph,form,calendar</field>
+            <field name="view_mode">kanban,tree,graph,form,calendar,pivot</field>
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="view_id" ref="crm.crm_case_kanban_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
@@ -64,7 +64,7 @@
            <field name="name">Leads Analysis</field>
            <field name="res_model">crm.opportunity.report</field>
            <field name="context">{"search_default_month":1}</field>
-           <field name="view_mode">pivot, graph</field>
+           <field name="view_mode">pivot,graph</field>
            <field name="view_id" ref="crm.crm_opportunity_report_view_pivot_lead"/>
            <field name="domain">[('type', '=', 'lead'),('team_id', '=', active_id)]</field>
            <field name="context">{'active_test': True}</field>
@@ -74,7 +74,7 @@
        <record id="action_report_crm_opportunity_salesteam" model="ir.actions.act_window">
             <field name="name">Pipeline Analysis</field>
             <field name="res_model">crm.opportunity.report</field>
-            <field name="view_mode">pivot, graph</field>
+            <field name="view_mode">pivot,graph</field>
             <field name="view_id" ref="crm.crm_opportunity_report_view_pivot"/>
             <field name="domain">[('type', '=', 'opportunity'), ('team_id', '=', active_id)]</field>
             <field name="context">{'active_test': True}</field>
@@ -87,10 +87,14 @@
                 <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
                 <field name="arch" type="xml">
                     <xpath expr="//div[@name='options_active']" position="inside">
-                        <field name="use_leads" on_change="onchange_use_leads(use_leads)"/>
-                        <label for="use_leads" string="Leads"/>
-                        <field name="use_opportunities" class="oe_inline"/>
-                        <label for="use_opportunities"/>
+                        <div class="o_row">
+                            <span groups="crm.group_use_lead" class="o_row">
+                                <field name="use_leads" on_change="onchange_use_leads_opportunities(use_leads, use_opportunities)"/>
+                                <label for="use_leads" string="Leads"/>
+                            </span>
+                            <field name="use_opportunities" on_change="onchange_use_leads_opportunities(use_leads, use_opportunities)"/>
+                            <label for="use_opportunities"/>
+                        </div>
                     </xpath>
                     <xpath expr="//page[@name='members']" position="after">
                         <page string="Stages" groups="base.group_no_one">
@@ -101,10 +105,10 @@
                    <xpath expr="//field[@name='code']" position="after">
                         <label for="alias_name" string="Email Alias"
                             groups="base.group_no_one"
-                            attrs="{'invisible': [('use_leads', '=', False)]}"/>
+                            attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                         <div name="alias_def"
                             groups="base.group_no_one"
-                            attrs="{'invisible': [('use_leads', '=', False)]}">
+                            attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}">
                             <field name="alias_id" class="oe_read_only oe_inline"
                                 string="Email Alias" required="0"/>
                             <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
@@ -113,7 +117,7 @@
                         </div>
                         <field name="alias_contact" class="oe_inline"
                            string="Accept Emails From"
-                           attrs="{'invisible': [('use_leads', '=', False)]}"/>
+                           attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                    </xpath>
                 </field>
             </record>
@@ -143,7 +147,6 @@
         <record id="crm_team_act_tree" model="ir.actions.act_window">
             <field name="name">Cases by Sales Team</field>
             <field name="res_model">crm.team</field>
-            <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="sales_team.crm_team_view_tree"/>
         </record>

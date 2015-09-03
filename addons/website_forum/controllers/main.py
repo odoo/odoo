@@ -6,13 +6,14 @@ import werkzeug.wrappers
 import simplejson
 import lxml
 from urllib2 import urlopen, URLError
+import base64
 
+import openerp
 from openerp import tools, _
 from openerp.addons.web import http
-from openerp.addons.web.controllers.main import login_redirect
+from openerp.addons.web.controllers.main import binary_content
 from openerp.addons.web.http import request
 from openerp.addons.website.models.website import slug
-from openerp.tools.translate import _
 
 
 class WebsiteForum(http.Controller):
@@ -22,7 +23,7 @@ class WebsiteForum(http.Controller):
     def _get_notifications(self):
         badge_subtype = request.env.ref('gamification.mt_badge_granted')
         if badge_subtype:
-            msg = request.env['mail.message'].search([('subtype_id', '=', badge_subtype.id), ('to_read', '=', True)])
+            msg = request.env['mail.message'].search([('subtype_id', '=', badge_subtype.id), ('needaction', '=', True)])
         else:
             msg = list()
         return msg
@@ -115,7 +116,7 @@ class WebsiteForum(http.Controller):
         if filters == 'unanswered':
             domain += [('child_ids', '=', False)]
         elif filters == 'followed':
-            domain += [('message_follower_ids', '=', request.env.user.partner_id.id)]
+            domain += [('message_partner_ids', '=', request.env.user.partner_id.id)]
         if post_type:
             domain += [('post_type', '=', post_type)]
 
@@ -300,10 +301,8 @@ class WebsiteForum(http.Controller):
 
     # Post
     # --------------------------------------------------
-    @http.route(['/forum/<model("forum.forum"):forum>/ask'], type='http', auth="public", website=True)
+    @http.route(['/forum/<model("forum.forum"):forum>/ask'], type='http', auth="user", website=True)
     def forum_post(self, forum, post_type=None, **post):
-        if not request.session.uid:
-            return login_redirect()
         user = request.env.user
         if post_type not in ['question', 'link', 'discussion']:  # fixme: make dynamic
             return werkzeug.utils.redirect('/forum/%s' % slug(forum))
@@ -314,10 +313,8 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum/<model("forum.forum"):forum>/new',
                  '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply'],
-                type='http', auth="public", website=True)
+                type='http', auth="user", methods=['POST'], website=True)
     def post_create(self, forum, post_parent=None, post_type=None, **post):
-        if not request.session.uid:
-            return login_redirect()
         if post_type == 'question' and not post.get('post_name', '').strip():
             return request.website.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
@@ -332,10 +329,8 @@ class WebsiteForum(http.Controller):
         })
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), post_parent and slug(post_parent) or new_question.id))
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="public", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="user", methods=['POST'], website=True)
     def post_comment(self, forum, post, **kwargs):
-        if not request.session.uid:
-            return login_redirect()
         question = post.parent_id if post.parent_id else post
         if kwargs.get('comment') and post.forum_id.id == forum.id:
             # TDE FIXME: check that post_id is the question or one of its answers
@@ -462,13 +457,14 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True)
     def user_avatar(self, user_id=0, **post):
-        response = werkzeug.wrappers.Response()
-        User = request.env['res.users']
-        Website = request.env['website']
-        user = User.sudo().search([('id', '=', user_id)])
-        if not user.exists() or (user_id != request.session.uid and user.karma < 1):
-            return Website._image_placeholder(response)
-        return Website._image('res.users', user.id, 'image', response)
+        status, headers, content = binary_content(model='res.users', id=user_id, field='image', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+        if status == 304:
+            return werkzeug.wrappers.Response(status=304)
+        image_base64 = base64.b64decode(content)
+        headers.append(('Content-Length', len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status = str(status)
+        return response
 
     @http.route(['/forum/<model("forum.forum"):forum>/user/<int:user_id>'], type='http', auth="public", website=True)
     def open_user(self, forum, user_id=0, **post):

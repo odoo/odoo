@@ -8,7 +8,6 @@
     'depends': ['marketing_campaign',
                  'crm',
     ],
-    'author': 'OpenERP SA',
     'category': 'Marketing',
     'description': """
 Demo data for the module marketing_campaign.

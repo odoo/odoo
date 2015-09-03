@@ -16,9 +16,21 @@
                         </group>
                         <group>
                             <field name="auto_apply"/>
+                            <field name="states_count" invisible="1"/>
                             <field name="vat_required" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
-                            <field name="country_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
                             <field name="country_group_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="country_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
+                                attrs="{'invisible': ['|', '|', ('auto_apply', '!=', True), ('country_id', '=', False), ('states_count', '=', 0)]}"/>
+                            <label for="zip_from" string="Zip Range"
+                                attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}"/>
+                            <div attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}">
+                                <span> From </span>
+                                <field name="zip_from" class="oe_inline"/>
+                                <div class="oe_edit_only"/>
+                                <span> To </span>
+                                <field name="zip_to" class="oe_inline"/>
+                            </div>
                         </group>
                     </group>
                     <notebook>
@@ -27,11 +39,11 @@
                             <field name="tax_ids" widget="one2many_list" nolabel="1">
                                 <tree string="Tax Mapping" editable="bottom">
                                     <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
-                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
+                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None), ('price_include', '=', False)]"/>
                                 </tree>
                                 <form string="Tax Mapping">
                                     <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
-                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
+                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None), ('price_include', '=', False)]"/>
                                 </form>
                             </field>
                         </group>
@@ -69,11 +81,10 @@
 
         <record id="action_open_partner_analytic_accounts" model="ir.actions.act_window">
             <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
-            <field name="name">Contracts/Analytic Accounts</field>
+            <field name="name">Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
-            <field name="view_id" ref="analytic.view_account_analytic_account_tree"/>
-            <field name="search_view_id" ref="analytic.view_account_analytic_account_search"/>
         </record>
+
         <record model="ir.ui.view" id="partner_view_buttons">
             <field name="name">partner.view.buttons</field>
             <field name="model">res.partner</field>
@@ -90,12 +101,24 @@
                         attrs="{'invisible': [('customer', '=', False)]}"
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}">
                         <div class="o_form_field o_stat_info">
-                            <span class="o_stat_value"><field name="total_invoiced"/></span>
+                            <span class="o_stat_value"><field name="total_invoiced" widget='monetary' options="{'currency_field': 'currency_id'}"/></span>
                             <span class="o_stat_text">Invoiced</span>
                         </div>
                     </button>
-                    <field name="currency_id" invisible="1"/>
                 </div>
+                <group name="container_row_2" position="inside">
+                    <group string="Payments" name="banks">
+                        <field name="currency_id" invisible="1"/>
+                        <div>
+                            <button type="action" class="btn-link"
+                                name="%(base.action_res_partner_bank_account_form)d"
+                                context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}">
+                                <field string="Bank account(s)" name="bank_account_count" widget="statinfo"/>
+                            </button>
+                        </div>
+
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -109,7 +132,7 @@
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d"
                         icon="fa-book">
-                        <field string="Contracts" name="contracts_count" widget="statinfo"/>
+                        <field string="Analytic Accounts" name="contracts_count" widget="statinfo"/>
                     </button>
                 </div>
             </field>
@@ -142,34 +165,21 @@
                 <page string="Accounting" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
                     <group>
                         <group string="Sale" name="acc_sale">
-                            <button name="%(action_account_partner_followup_note)d" class="oe_link" type="action" string="Log a followup note" colspan="2"/>
                             <field name="property_payment_term_id" widget="selection"/>
-                            <field name="credit"/>
-                            <field name="credit_limit"/>
+                            <field name="credit" groups="base.group_no_one"/>
                         </group>
                         <group string="Purchase" name="acc_purchase">
                             <field name="property_supplier_payment_term_id" widget="selection"/>
-                            <field name="debit"/>
+                            <field name="debit" groups="base.group_no_one"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <group string="Fiscal Information" name="fiscal_information">
                             <field name="property_account_position_id" widget="selection"/>
                         </group>
-                        <group string="Accounting Entries" name="accounting_entries">
-                            <field name="property_account_receivable_id" groups="account.group_account_invoice" />
-                            <field name="property_account_payable_id" groups="account.group_account_invoice"/>
+                        <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_manager">
+                            <field name="property_account_receivable_id"/>
+                            <field name="property_account_payable_id"/>
                         </group>
-                    </group>
-                    <group string="Bank Accounts" name="bank_accounts">
-                        <field name="bank_ids" context="{'default_partner_id': active_id, 'form_view_ref': 'base.view_partner_bank_form'}" nolabel="1">
-                            <tree string="Bank Details">
-                                <field name="state" invisible="1"/>
-                                <field name="sequence" invisible="1"/>
-                                <field name="acc_number"/>
-                                <field name="bank_name"/>
-                                <field name="owner_name"/>
-                            </tree>
-                        </field>
                     </group>
                 </page>
                 <page string="Accounting" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}">

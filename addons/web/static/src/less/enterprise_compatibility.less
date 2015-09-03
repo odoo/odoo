@@ -8,51 +8,55 @@
 // The problem is that we have two web clients in parallel, and every
 // addons should behave properly with both.
 
-@odoo-brand-optional-disabled: #6ED0BC; // Specifically used for status bar status arrows
 @odoo-brand-primary: #337ab7;
 @odoo-brand-optional: @odoo-brand-primary;
 @odoo-brand-secondary: #8f8f8f;
-@odoo-form-group-cols: 12;
-@odoo-horizontal-padding: 16px;
-@odoo-list-grey: #e2e2e0;  // FIXME: listview thead background color
-@odoo-main-color-muted: #a8a8a8;
-@odoo-main-text-color: #666666;
-@odoo-webclient-background-color: @odoo-brand-secondary;
+@odoo-brand-lightsecondary: #e2e2e0;
+@odoo-list-grey: @odoo-brand-lightsecondary; // FIXME: listview thead background color
+@odoo-webclient-background-color: #F0EEEE;
 @odoo-view-background-color: white;
 @odoo-shadow-color: #303030;
 @brand-primary: @odoo-brand-primary;
 
+@odoo-font-size-base: 13px;
+@odoo-font-size-base-touch: 15px;
+@odoo-main-text-color: #555555;
+@odoo-main-color-muted: #a8a8a8;
+
+@odoo-form-group-cols: 12;
+@odoo-horizontal-padding: 16px;
+
+@screen-xs-min: 475px;
+@screen-xxs-max: (@screen-xs-min - 1);
+
 .oe-view-manager {
-    background-color: #f0eeee !important;
+    background-color: @odoo-webclient-background-color !important;
 }
 
 .o_kanban_view {
-    background-color: #f0eeee;
-    .o_kanban_header {
-        color: black !important;
-    }
+    background-color: @odoo-webclient-background-color;
 
     .o_kanban_config i, .o_kanban_quick_add i {
-        color: #555 !important;
+        color: @odoo-main-text-color !important;
         &:hover {
-            background-color: darken(#f0eeee, 10%) !important;
+            background-color: darken(@odoo-webclient-background-color, 10%) !important;
         }
+    }
+    .o_column_title, .o_kanban_title, .o_kanban_add_column, .o_column_unfold {
+        color: @odoo-main-text-color !important;
     }
 
     .o_column_folded {
-        background-color: #f0eeee !important;
-        border: none !important;
-        span.o_column_title, span.o_column_unfold {
-            // color: white !important;
-        }
+        background-color: darken(@odoo-webclient-background-color, 5%) !important;
+        border-color: darken(@odoo-webclient-background-color, 10%) !important;
     }
 
     .o_column_quick_create {
-        background-color: #f0eeee !important;
-        .o_kanban_add_column, .o_kanban_title {
-            color: black !important;
-        }
+        background-color: darken(@odoo-webclient-background-color, 10%) !important;
+    }
 
+    &.o_kanban_grouped .o_kanban_group .o_kanban_header {
+        margin-bottom: 2px; // For the buttons not to overlap first record's box shaddow on hover
     }
 }
 
@@ -60,8 +64,30 @@
     background-color: white !important;
 }
 
+// Buttons and links
+@link-hover-decoration: none;
+.btn, .btn-group > .btn {
+    &:hover, &:active, &:focus, &:active:focus {
+        outline: none;
+    }
+}
 .btn-icon {
     .btn-default;
+}
+.oe_button {
+    .btn-default;
+    &.oe_highlight, &.btn-primary {
+        .btn-primary;
+    }
+    &.oe_link, &.btn-link {
+        .btn-link;
+    }
+}
+.oe_highlight {
+    .btn-primary;
+}
+.oe_link {
+    .btn-link;
 }
 
 .openerp .oe_avatar {
@@ -72,12 +98,6 @@
     float: right;
 }
 
-@grid-gutter-width: 0;
-
-.oe-control-panel .row {
-    margin-left: 15px;
-    margin-right: 15px;
-}
 
 // Pager input (to edit pager values)
 .o_pager_value > input {
@@ -115,17 +135,31 @@
     display: inline-block;
     padding: 0;
     margin: 0;
-    > a {
+    vertical-align: middle;
+    > .o_priority_star {
         display: inline-block;
-    }
-    .o_star_on, .o_star_off {
-        color: @odoo-main-color-muted !important;
-        &:hover {
+        font-size: 1.35em;
+        &:hover, &:focus {
             text-decoration: none;
+            outline: none;
+        }
+
+        + .o_priority_star {
+            padding-left: 5px;
+        }
+
+        &.fa-star-o {
+            color: @odoo-main-color-muted;
+        }
+        &.fa-star {
+            color: gold;
         }
     }
-    .o_star_on {
-        color: gold !important;
+}
+
+.oe_title {
+    .o_priority > .o_priority_star {
+        font-size: inherit;
     }
 }
 
@@ -153,35 +187,18 @@ div.o_checkbox {
 .openerp .oe_formview {
    .oe_button_box {
         .oe_stat_button {
-            .stat_button_icon {
-                display: inline-block;
-            }
-
-            // padding: @odoo-statbutton-vpadding @odoo-statbutton-spacing @odoo-statbutton-vpadding 0px;
             text-align: left;
 
             .o_button_icon {
-                // margin-left: @odoo-statbutton-spacing; // To create the button padding left (firefox bug)
+                width: 30%;
                 display: inline-block;
                 vertical-align: middle;
-                &:before {
-                    font-size: x-large;
-                    vertical-align: middle;
-                }
-
-                width: 30%;
             }
-
-            // .o_form_field_percent_pie {
-            //     margin-left: @odoo-statbutton-spacing; // To create the button padding left (firefox bug)
-            // }
 
             .o_stat_info { // contains the value and text
                 display: inline-block;
                 vertical-align: middle;
-
                 max-width: 70%;
-                // padding-right: @odoo-statbutton-spacing;
                 line-height: 1.2;
 
                 .o_stat_value {
@@ -207,29 +224,44 @@ div.o_checkbox {
             }
         }
 
-        + .oe_title {
-            width: 400px;
-        }
-
-        + .oe_avatar {
-            > img {
-                max-width: 90px;
-                max-height: 90px;
-            }
-
+        &, & + .oe_avatar {
             + .oe_title {
                 width: 400px;
-                padding-left: 95px;
             }
         }
     }
 
-    .o_row > * {
-        width: auto!important; // oe_inline
+    .oe_avatar {
+        > img {
+            max-width: 90px;
+            max-height: 90px;
+        }
+
+        + .oe_title {
+            padding-left: 95px;
+        }
+    }
+
+    .o_row {
+        > * {
+            width: auto!important; // oe_inline
+        }
+        > div {
+            display: inline-block;
+            + div  {
+                margin-left: 5px;
+            }
+        }
     }
 
     .oe_form label {
         font-size: 13px;
+    }
+
+    .oe_form_group td:last-child {
+        .oe_form_label_help, .oe_form_label {
+            font-weight: normal;
+        }
     }
 
     .o_form_field_many2manytags {
@@ -343,5 +375,6 @@ div.o_checkbox {
     top: 35px;
     -webkit-box-shadow: 0 3px 9px #666666;
     box-shadow: 0 3px 9px #666666;
+    padding-bottom: 44px;
 }
 

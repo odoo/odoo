@@ -2,40 +2,6 @@
 <openerp>
     <data noupdate="1">
         
-        <!--  crm categories -->
-        <record model="crm.lead.tag" id="categ_oppor1">
-            <field name="name">Product</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
-        <record model="crm.lead.tag" id="categ_oppor2">
-            <field name="name">Software</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
-        <record model="crm.lead.tag" id="categ_oppor3">
-            <field name="name">Services</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
-        <record model="crm.lead.tag" id="categ_oppor4">
-            <field name="name">Information</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
-        <record model="crm.lead.tag" id="categ_oppor5">
-            <field name="name">Design</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
-        <record model="crm.lead.tag" id="categ_oppor6">
-            <field name="name">Training</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
-        <record model="crm.lead.tag" id="categ_oppor7">
-            <field name="name">Consulting</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
-        <record model="crm.lead.tag" id="categ_oppor8">
-            <field name="name">Other</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
-        </record>
-
         <!-- CRM-related subtypes for messaging / Chatter -->
         <record id="mt_lead_create" model="mail.message.subtype">
             <field name="name">Lead Created</field>

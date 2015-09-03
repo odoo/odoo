@@ -38,13 +38,13 @@
                     <field name="event_id" string="Event"/>
                     <field name="user_id"/>
                     <group expand="0" string="Extended Filters...">
-                        <field name="event_type" widget="selection"/>
+                        <field name="event_type_id" widget="selection"/>
                         <field name="event_date"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By">
                         <filter string="Attendee / Contact" context="{'group_by':'name_registration'}" help="Registration contact"/>
-                        <filter string="Event Type" context="{'group_by':'event_type'}"/>
+                        <filter string="Event Type" context="{'group_by':'event_type_id'}"/>
                         <filter string="Event" name="event" context="{'group_by':'event_id', 'max_reg_event_visible':0}"/>
                         <filter string="Event State" context="{'group_by':'event_state'}"/>
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>

@@ -17,7 +17,6 @@ This module allows the point of sale to connect to a scale using a USB HSM Seria
 such as the Mettler Toledo Ariva.
 
 """,
-    'author': 'OpenERP SA',
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['serial']},
     'test': [

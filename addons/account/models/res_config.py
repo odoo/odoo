@@ -69,9 +69,6 @@ class AccountConfigSettings(models.TransientModel):
     period_lock_date = fields.Date(string="Lock Date for Non-Advisers", related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date. Use it for period locking inside an open fiscal year, for example.")
     fiscalyear_lock_date = fields.Date(string="Lock Date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date. Use it for fiscal year locking for example.")
 
-    module_account_check_writing = fields.Boolean(string='Pay your vendors by check',
-        help='This allows you to check writing and printing.\n'
-             '-This installs the module account_check_writing.')
     module_account_accountant = fields.Boolean(string='Full accounting features: journals, legal statements, chart of accounts, etc.',
         help="""If you do not check this box, you will be able to do invoicing & payments,
              but not accounting (Journal Items, Chart of  Accounts, ...)""")
@@ -87,12 +84,8 @@ class AccountConfigSettings(models.TransientModel):
              'Once the master budgets and the budgets are defined, '
              'the project managers can set the planned amount on each analytic account.\n'
              '-This installs the module account_budget.')
-    module_account_bank_statement_import_ofx = fields.Boolean(string='Import of Bank Statements in .OFX Format',
-        help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
-            'This installs the module account_bank_statement_import_ofx.')
-    module_account_bank_statement_import_qif = fields.Boolean(string='Import of Bank Statements in .QIF Format.',
-        help='Get your bank statements from your bank and import them in Odoo in the .QIF format.\n'
-            'This installs the module account_bank_statement_import_qif.')
+    module_account_tax_cash_basis = fields.Boolean(string="Allow Tax Cash Basis",
+                                        help='Generate tax cash basis entrie when reconciliating entries')
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
         help="Allows you to put invoices in pro-forma state.")
@@ -183,14 +176,9 @@ class AccountConfigSettings(models.TransientModel):
         return True
 
     @api.multi
-    def open_company_form(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Configure your Company',
-            'res_model': 'res.company',
-            'res_id': self.company_id.id,
-            'view_mode': 'form',
-        }
+    def open_bank_accounts(self):
+        action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_account_bank_journal_form')
+        return action_rec.read([])[0]
 
     @api.multi
     def set_transfer_account(self):
@@ -232,3 +220,16 @@ class AccountConfigSettings(models.TransientModel):
     def onchange_analytic_accounting(self):
         if self.group_analytic_accounting:
             self.module_account_accountant = True
+
+    @api.multi
+    def open_company(self):
+        user = self.env['res.users'].browse(uid)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'My Company',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'res.company',
+            'res_id': user.company_id.id,
+            'target': 'current',
+        }

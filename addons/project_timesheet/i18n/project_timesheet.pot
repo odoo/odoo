@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-21 14:08+0000\n"
+"POT-Creation-Date: 2015-08-25 09:00+0000\n"
+"PO-Revision-Date: 2015-08-25 09:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,39 +16,40 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
-msgid "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a customer contract.\n"
-"              </p><p>\n"
-"                You will find here the contracts related to your customer\n"
-"                projects in order to track the invoicing progress.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:56
+#: code:addons/project_timesheet/project_timesheet.py:132
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Record your timesheets for the project '%s'.</p>"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
-msgid "<p>\n"
-"                You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.\n"
-"                If you want to record new jobs to invoice, you should use the timesheet menu instead.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:59
+#: code:addons/project_timesheet/project_timesheet.py:135
 #, python-format
 msgid "<p>Timesheets on this project may be invoiced to %s, according to the terms defined in the contract.</p>"
 msgstr ""
 
 #. module: project_timesheet
-#: view:account.analytic.line:project_timesheet.view_account_analytic_line_form_inherit_account_id
+#: model:ir.ui.view,arch_db:project_timesheet.view_project_kanban_inherit
+msgid "<span class=\"o_label\">Hours</span>"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,field_description:project_timesheet.field_project_config_settings_group_tasks_work_on_tasks
+msgid "Activity Log"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,help:project_timesheet.field_project_config_settings_group_tasks_work_on_tasks
+msgid "Allows you to compute work on tasks."
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_project_analytic_account
+#: model:ir.model.fields,field_description:project_timesheet.field_project_task_analytic_account_id
+msgid "Analytic Account"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.ui.view,arch_db:project_timesheet.view_account_analytic_line_form_inherit_account_id
 msgid "Analytic Account/Project"
 msgstr ""
 
@@ -58,38 +59,59 @@ msgid "Analytic Line"
 msgstr ""
 
 #. module: project_timesheet
-#: view:account.analytic.line:project_timesheet.view_account_analytic_line_search_account_inherit
-#: view:account.analytic.line:project_timesheet.view_account_analytic_line_tree_inherit_account_id
+#: model:ir.ui.view,arch_db:project_timesheet.view_account_analytic_line_search_account_inherit
+#: model:ir.ui.view,arch_db:project_timesheet.view_account_analytic_line_tree_inherit_account_id
 msgid "Analytic account/project"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "April"
+#: model:ir.model.fields,field_description:project_timesheet.field_report_project_task_user_hours_delay
+msgid "Avg. Plan.-Eff."
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "August"
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:82
-#: code:addons/project_timesheet/project_timesheet.py:86
-#: code:addons/project_timesheet/project_timesheet.py:90
-#: code:addons/project_timesheet/project_timesheet.py:97
-#, python-format
-msgid "Bad Configuration!"
-msgstr ""
-
-#. module: project_timesheet
-#: view:project.project:project_timesheet.project_invoice_search
+#: model:ir.ui.view,arch_db:project_timesheet.project_invoice_search
 msgid "Billable"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
-msgid "Contracts to Renew"
+#: selection:project.task,contract_state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,field_description:project_timesheet.field_project_project_charge_expenses
+msgid "Charge Expenses"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
+msgid "Click to add a customer contract."
+msgstr ""
+
+#. module: project_timesheet
+#: selection:project.task,contract_state:0
+msgid "Closed"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,help:project_timesheet.field_project_task_delay_hours
+msgid "Computed as difference between planned hours by the project manager and the total hours of the task."
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,help:project_timesheet.field_project_task_total_hours
+msgid "Computed as: Time Spent + Remaining Time."
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,help:project_timesheet.field_project_task_effective_hours
+msgid "Computed using the sum of the task work done."
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,field_description:project_timesheet.field_project_task_contract_state
+msgid "Contract Status"
 msgstr ""
 
 #. module: project_timesheet
@@ -98,108 +120,68 @@ msgid "Customer Projects"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
-#: field:report.timesheet.task.user,name:0
-msgid "Date"
+#: model:ir.model.fields,field_description:project_timesheet.field_project_task_delay_hours
+msgid "Delay Hours"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "December"
+#: selection:project.config.settings,group_tasks_work_on_tasks:0
+msgid "Do not log work activities on task"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "February"
+#: model:ir.ui.view,arch_db:project_timesheet.view_task_form2_inherited
+msgid "Duration"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
-msgid "Group By"
+#: model:ir.model.fields,field_description:project_timesheet.field_report_project_task_user_hours_effective
+msgid "Effective Hours"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
-msgid "Group by month of date"
+#: model:ir.model.fields,field_description:project_timesheet.field_project_project_est_expenses
+msgid "Estimation of Expenses to Invoice"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
-msgid "Group by year of date"
+#: model:ir.model.fields,field_description:project_timesheet.field_project_project_expense_invoiced
+msgid "Expenses invoiced"
 msgstr ""
 
 #. module: project_timesheet
-#: view:project.project:project_timesheet.view_project_kanban_inherited
-msgid "Hours"
+#: model:ir.model.fields,field_description:project_timesheet.field_project_project_expense_to_invoice
+msgid "Expenses to invoice"
 msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,id:0
-msgid "ID"
+#: model:ir.model.fields,field_description:project_timesheet.field_project_task_effective_hours
+msgid "Hours Spent"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid "Invalid Action!"
+#: model:ir.model.fields,help:project_timesheet.field_project_task_progress
+msgid "If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:321
-#, python-format
-msgid "Invalid Analytic Account!"
+#: selection:project.task,contract_state:0
+msgid "In Progress"
 msgstr ""
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
-#: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
 msgid "Invoice Tasks"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_project_billing
-msgid "Invoicing"
+#: selection:project.config.settings,group_tasks_work_on_tasks:0
+msgid "Log work activities on tasks"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "January"
-msgstr ""
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "July"
-msgstr ""
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "June"
-msgstr ""
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr ""
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "May"
-msgstr ""
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
-#: field:report.timesheet.task.user,month:0
-msgid "Month"
-msgstr ""
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "November"
-msgstr ""
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "October"
+#: selection:project.task,contract_state:0
+msgid "New"
 msgstr ""
 
 #. module: project_timesheet
@@ -208,30 +190,24 @@ msgid "Partner"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:83
-#, python-format
-msgid "Please define employee for user \"%s\". You must create one."
+#: model:ir.model.fields,help:project_timesheet.field_project_project_progress_rate
+msgid "Percent of tasks closed according to the total of tasks todo."
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:91
-#, python-format
-msgid "Please define journal on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
+#: model:ir.model.fields,field_description:project_timesheet.field_report_project_task_user_hours_planned
+msgid "Planned Hours"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:87
-#, python-format
-msgid "Please define product and product category property account on the related employee.\n"
-"Fill in the HR Settings tab of the employee form."
+#: model:ir.model.fields,field_description:project_timesheet.field_project_project_planned_hours
+msgid "Planned Time"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:98
-#, python-format
-msgid "Please define product and product category property account on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
+#: model:ir.model.fields,field_description:project_timesheet.field_project_project_progress_rate
+#: model:ir.model.fields,field_description:project_timesheet.field_report_project_task_user_progress
+msgid "Progress"
 msgstr ""
 
 #. module: project_timesheet
@@ -240,80 +216,141 @@ msgid "Project"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task_work
-msgid "Project Task Work"
+#: model:ir.model.fields,field_description:project_timesheet.field_project_project_remaining_expense
+msgid "Remaining Expenses"
 msgstr ""
 
 #. module: project_timesheet
-#: field:project.task.work,hr_analytic_timesheet_id:0
-msgid "Related Timeline Id"
+#: model:ir.model.fields,field_description:project_timesheet.field_report_project_task_user_remaining_hours
+#: model:ir.ui.view,arch_db:project_timesheet.view_task_tree2_inherited
+msgid "Remaining Hours"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "September"
+#: model:ir.ui.view,arch_db:project_timesheet.view_task_tree2_inherited
+msgid "Spent Hours"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
-msgid "Sign in / Sign out by Project"
+#: model:ir.model.fields,help:project_timesheet.field_project_project_planned_hours
+msgid "Sum of planned hours of all tasks related to this project and its child projects."
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,help:project_timesheet.field_project_project_effective_hours
+msgid "Sum of spent hours of all tasks related to this project and its child projects."
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,help:project_timesheet.field_project_project_total_hours
+msgid "Sum of total hours of all tasks related to this project and its child projects."
 msgstr ""
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task
+#: model:ir.model.fields,field_description:project_timesheet.field_account_analytic_line_task_id
 msgid "Task"
 msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,task_hrs:0
-msgid "Task Hours"
+#: model:ir.ui.view,arch_db:project_timesheet.view_task_project_user_graph_inherited
+msgid "Tasks Analysis"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
-#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
-#: view:report.timesheet.task.user:project_timesheet.view_task_hour_per_month_graph
-msgid "Task Hours Per Month"
+#: model:ir.model,name:project_timesheet.model_report_project_task_user
+msgid "Tasks by user and project"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
-msgid "Tasks by User"
+#: selection:project.task,contract_state:0
+msgid "Template"
 msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,timesheet_hrs:0
-msgid "Timesheet Hours"
+#: model:ir.model.fields,field_description:project_timesheet.field_project_project_effective_hours
+msgid "Time Spent"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:67
-#: view:project.project:project_timesheet.project_invoice_form
+#: model:ir.ui.view,arch_db:project_timesheet.view_task_form2_inherited
+msgid "Timesheet Activities"
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:143
+#: model:ir.model.fields,field_description:project_timesheet.field_project_task_timesheet_ids
+#: model:ir.ui.view,arch_db:project_timesheet.project_invoice_form
+#: model:ir.ui.view,arch_db:project_timesheet.view_task_form2_inherited
 #, python-format
 msgid "Timesheets"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
-#: field:report.timesheet.task.user,user_id:0
-msgid "User"
+#: selection:project.task,contract_state:0
+msgid "To Renew"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
+#: model:ir.ui.view,arch_db:project_timesheet.project_invoice_form
+msgid "To invoice or setup invoicing and renewal options, go to the related contract:"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
+#: model:ir.model.fields,field_description:project_timesheet.field_project_task_total_hours
+msgid "Total"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,field_description:project_timesheet.field_report_project_task_user_total_hours
+msgid "Total Hours"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,field_description:project_timesheet.field_project_project_total_hours
+msgid "Total Time"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.ui.view,arch_db:project_timesheet.view_task_form2_inherited
+msgid "Total cost"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.ui.view,arch_db:project_timesheet.view_task_form2_inherited
+msgid "Total time"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,field_description:project_timesheet.field_project_project_user_product_ids
+msgid "Users/Products Rel."
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model.fields,field_description:project_timesheet.field_project_task_progress
+msgid "Working Time Progress (%)"
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:246
 #, python-format
 msgid "You cannot delete a partner which is assigned to project, but you can uncheck the active box."
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:321
-#, python-format
-msgid "You cannot select a Analytic Account which is in Close or Cancelled state."
+#: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
+msgid "You will find here the contracts related to your customer\n"
+"                projects in order to track the invoicing progress."
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
+msgid "You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.\n"
+"                If you want to record new jobs to invoice, you should use the timesheet menu instead."
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_config_settings
+msgid "project.config.settings"
 msgstr ""
 

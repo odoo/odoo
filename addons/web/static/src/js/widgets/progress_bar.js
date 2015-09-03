@@ -84,13 +84,18 @@ var ProgressBar = Widget.extend({
                 if(this.edit_max_value) {
                     this.max_value = $(e.target).val();
                 } else {
-                    this.value = $(e.target).val();
+                    this.value = $(e.target).val() || 0;
                 }
 
                 this._render_value();
                 this.trigger('update', {value: this.value, max_value: this.max_value, changed_value: (this.edit_max_value)? this.max_value : this.value});
             }
         }
+    },
+
+    set_value: function(v) {
+        this.value = v;
+        this._render_value();
     },
 
     _render_value: function(v) {

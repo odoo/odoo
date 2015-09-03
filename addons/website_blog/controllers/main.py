@@ -8,7 +8,6 @@ from openerp import tools
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models.website import slug, unslug
-from openerp.addons.web.controllers.main import login_redirect
 from openerp.exceptions import UserError
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
@@ -280,10 +279,8 @@ class WebsiteBlog(http.Controller):
             context=context)
         return message_id
 
-    @http.route(['/blog/post_comment/<int:blog_post_id>'], type='http', auth="public", website=True)
+    @http.route(['/blog/post_comment/<int:blog_post_id>'], type='http', auth="user", methods=['POST'], website=True)
     def blog_post_comment(self, blog_post_id=0, **kw):
-        if not request.session.uid:
-            return login_redirect()
         cr, uid, context = request.cr, request.uid, request.context
         if kw.get('comment'):
             self._blog_post_message(blog_post_id, kw.get('comment'), **kw)

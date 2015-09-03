@@ -6,7 +6,7 @@
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
                 <form string="Model">
-                    <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+                    <field name="image_medium" widget='image' class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="modelname" class="oe_edit_only"/>
                         <h1>
@@ -98,7 +98,7 @@
                 <form string="Model Make">
                     <group>
                         <div>
-                            <field name="image_medium" widget="image" class="oe_left oe_avatar"/>
+                            <field name="image_medium" widget="image" class="oe_avatar"/>
                             <label for="name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name" class="oe_inline" />
@@ -232,7 +232,7 @@
                                 <field name="odometer_count" widget="statinfo" string="Odometer"/>
                             </button>
                         </div>
-                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+                        <field name="image_medium" widget='image' class="oe_avatar"/>
                         <div class="oe_title">
                             <label for="model_id" class="oe_edit_only"/>
                             <h1>
@@ -351,7 +351,7 @@
 
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="o_kanban_two_column_tags oe_kanban_global_click">
+                            <div class="oe_kanban_global_click">
                                 <div class="o_kanban_tags_section">
                                     <field name="tag_ids"/>
                                 </div>
@@ -371,10 +371,10 @@
                                         </li>
                                     </ul>
                                     <div class="o_kanban_button">
-                                        <a t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-warning" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
+                                        <a t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-warning" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
                                             <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
                                         </a>
-                                        <a t-if="record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-danger" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
+                                        <a t-if="record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-danger" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
                                             <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
                                         </a>
                                     </div>

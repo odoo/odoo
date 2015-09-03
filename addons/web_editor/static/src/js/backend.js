@@ -90,6 +90,10 @@ var FieldTextHtmlSimple = widget.extend({
         }
         return value;
     },
+    focus: function() {
+        var input = !this.get("effective_readonly") && this.$textarea;
+        return input ? input.focus() : false;
+    },
     render_value: function() {
         var value = this.get('value');
         this.$textarea.val(value || '');

@@ -99,7 +99,7 @@
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
             <filter name="salesperson" position="after">
-                <filter string="Activation" context="{'group_by' : 'activation'}" domain="[]" icon="terp-personal" />
+                <filter string="Activation" context="{'group_by' : 'activation'}" domain="[]"/>
             </filter>
             <field name="category_id" position="after">
                 <field name="grade_id"/>
@@ -133,7 +133,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='sale']" position="inside">
-                    <field name="assigned_partner_id"/>
+                    <field name="assigned_partner_id" groups="base.group_no_one"/>
                 </xpath>
             </data>
         </field>

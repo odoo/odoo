@@ -34,6 +34,8 @@ class ResCompany(models.Model):
     property_stock_account_input_categ_id = fields.Many2one('account.account', oldname="property_stock_account_input_categ")
     property_stock_account_output_categ_id = fields.Many2one('account.account', oldname="property_stock_account_output_categ")
     property_stock_valuation_account_id = fields.Many2one('account.account')
+    bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
+
 
     @api.multi
     def compute_fiscalyear_dates(self, date):
@@ -68,11 +70,12 @@ class ResCompany(models.Model):
     @api.multi
     def write(self, values):
         # Reflect the change on accounts
-        digits = values.get('accounts_code_digits') or self.accounts_code_digits
-        if values.get('bank_account_code_prefix') or values.get('accounts_code_digits'):
-            new_bank_code = values.get('bank_account_code_prefix') or self.bank_account_code_prefix
-            self.reflect_code_prefix_change(self.bank_account_code_prefix, new_bank_code, digits)
-        if values.get('cash_account_code_prefix') or values.get('accounts_code_digits'):
-            new_cash_code = values.get('cash_account_code_prefix') or self.cash_account_code_prefix
-            self.reflect_code_prefix_change(self.cash_account_code_prefix, new_cash_code, digits)
+        for company in self:
+            digits = values.get('accounts_code_digits') or company.accounts_code_digits
+            if values.get('bank_account_code_prefix') or values.get('accounts_code_digits'):
+                new_bank_code = values.get('bank_account_code_prefix') or company.bank_account_code_prefix
+                company.reflect_code_prefix_change(company.bank_account_code_prefix, new_bank_code, digits)
+            if values.get('cash_account_code_prefix') or values.get('accounts_code_digits'):
+                new_cash_code = values.get('cash_account_code_prefix') or company.cash_account_code_prefix
+                company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code, digits)
         return super(ResCompany, self).write(values)

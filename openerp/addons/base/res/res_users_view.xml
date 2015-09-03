@@ -10,9 +10,8 @@
                 <form string="Change Password">
                     <field name="user_ids"/>
                     <footer>
-                        <button string="Change Password" name="change_password_button" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button string="Change Password" name="change_password_button" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
             </field>
@@ -135,7 +134,7 @@
                         <div class="oe_form_box_info oe_text_center" style="margin-bottom: 10px" attrs="{'invisible': [('id', '>', 0)]}">
                             You are creating a new user. After saving, the user will receive an invite email containing a link to set its password.
                         </div>
-                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
@@ -145,8 +144,8 @@
                                 <field name="login" on_change="on_change_login(login)"
                                         placeholder="email@yourcompany.com"/>
                             </h2>
-                            <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
-                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
+                            <label for="company_id" class="oe_edit_only" groups="base.group_light_multi_company"/>
+                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_light_multi_company"/>
                         </div>
                         <group>
                             <label for="groups_id" string="Access Rights"
@@ -172,26 +171,28 @@
                     </header>
                     <sheet>
                         <field name="id" invisible="1"/>
-                        <div class="oe_button_box" name="button_box"/>
-                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
+                            </button>
+                        </div>
+                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
                             <field name="email" invisible="1"/>
                             <label for="login" class="oe_edit_only" string="Email Address"/>
                             <h2><field name="login" on_change="on_change_login(login)"/></h2>
-                            <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
-                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                             <group>
                                 <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"
                                         attrs="{'invisible': [('id', '=', False)]}"/>
-                                <field name="active"/>
                             </group>
                         </div>
                         <notebook colspan="4">
                             <page name="access_rights" string="Access Rights">
-                                <group string="Allowed Companies" groups="base.group_multi_company">
-                                    <field name="company_ids" nolabel="1" widget="many2many_tags"/>
+                                <group string="Multi Companies" groups="base.group_light_multi_company">
+                                    <field string="Allowed Companies" name="company_ids" widget="many2many_tags"/>
+                                    <field string="Current Company" name="company_id" context="{'user_preference': 0}"/>
                                 </group>
                                 <field name="groups_id"/>
                             </page>
@@ -234,9 +235,10 @@
             <field name="arch" type="xml">
                 <search string="Users">
                     <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('login','ilike',self), ('email','ilike',self)]" string="User"/>
-                    <field name="company_ids" string="Company" groups="base.group_multi_company"/>
+                    <field name="company_ids" string="Company" groups="base.group_light_multi_company"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Users" domain="[('share','=',False)]"/>
+                    <filter name="Inactive" string="Inactive Users" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>
@@ -249,6 +251,8 @@
                 <field name="groups_id" position="after"/>
             </field>
         </record>
+        <!-- dummy update on group, to force the view above to be update -->
+        <record model="res.groups" id="group_no_one"/>
         <record id="action_res_users" model="ir.actions.act_window">
             <field name="name">Users</field>
             <field name="type">ir.actions.act_window</field>
@@ -289,16 +293,15 @@
                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
                         <field name="tz_offset" invisible="1"/>
                         <field name="company_id" options="{'no_create': True}" readonly="0"
-                            groups="base.group_multi_company"/>
+                            groups="base.group_light_multi_company"/>
                     </group>
                     <group string="Email Preferences">
                         <field name="email" widget="email" readonly="0"/>
                         <field name="signature" readonly="0"/>
                     </group>
                     <footer>
-                        <button name="preference_save" type="object" string="Save" class="oe_highlight"/>
-                        or
-                        <button name="preference_cancel" string="Cancel" special="cancel" class="oe_link"/>
+                        <button name="preference_save" type="object" string="Save" class="btn-primary"/>
+                        <button name="preference_cancel" string="Cancel" special="cancel" class="btn-default"/>
                     </footer>
                 </form>
             </field>

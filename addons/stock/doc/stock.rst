@@ -127,7 +127,7 @@ Assigning stock moves to pickings
 
 When you want to give an assignment to a warehouse operator manually, you will create a picking and create the moves in it by specifying the different products and quantities.   When confirming a sale order however, Odoo will create procurements which will be solved bt creating moves.  First, these stock moves will be created without picking.  In a second step, they will be attributed to an existing picking or a picking will be created.
 
-In order to assign the move to a picking, Odoo will check if the move was assigned a picking type (e.g. Your Company: Delivery Orders) and if it does, it will search for a picking to assign the move to.  This picking should be in the correct state, picking type, procurement group (=group of procurements related to e.g. the same sale order) and source and destination locations.  If no picking can be found, it will create a new one.
+In order to assign the move to a picking, Odoo will check if the move was assigned a picking type (e.g. My Company: Delivery Orders) and if it does, it will search for a picking to assign the move to.  This picking should be in the correct state, picking type, procurement group (=group of procurements related to e.g. the same sale order) and source and destination locations.  If no picking can be found, it will create a new one.
 
 This mechanism allows for a lot of flexibility when for example some products have to go through the Packing zone for packing and some don't.  That way, the packing order will still group the moves that need packing from the sale order and the direct moves will be grouped in a separate picking also.  For the delivery order, everything will be together in one picking again.  
 
@@ -595,7 +595,7 @@ As modules, it is clear we need stock, point of sale, purchase, sale and manufac
 
 When we want to configure this in OpenERP, we will typically start by configuring the warehouses.  The logic for choosing the routes in OpenERP, is to first check those of the warehouse and then those of the product and product categories.  So, the logic for configuring, is to put the generic routes on the warehouses and to put exceptions on these general rules on product and product categories.  
 
-The default “Your Company” warehouse can be the main warehouse.  We skip this configuration as it is not our goal.  The only thing we know is that the coffee might be supplied from our distribution centre. 
+The default “My Company” warehouse can be the main warehouse.  We skip this configuration as it is not our goal.  The only thing we know is that the coffee might be supplied from our distribution centre. 
  
 Then we configure the “Distribution Centre”.  As products always pass through the docks, by default it will be two step input and 3-step output (pick-pack-ship).  Dry products will follow this simple flow.  
 

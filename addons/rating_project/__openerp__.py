@@ -6,7 +6,6 @@
     'description': """
 This module Allows a customer to give rating on Project.
 """,
-    'author': 'Odoo SA',
     'website': 'http://odoo.com',
     'depends': [
         'rating',

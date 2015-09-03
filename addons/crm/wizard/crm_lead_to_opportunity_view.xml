@@ -11,8 +11,8 @@
                         <field name="name" widget="radio"/>
                     </group>
                     <group string="Assign these opportunities to">
-                        <field name="user_id" on_change="on_change_user(user_id, team_id, context)"/>
-                        <field name="team_id"/>
+                        <field name="user_id" on_change="on_change_user(user_id, team_id, context)" widget="selection"/>
+                        <field name="team_id" widget="selection"/>
                     </group>
                     <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
                         <field name="opportunity_ids" nolabel="1">
@@ -37,8 +37,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="action_apply" string="Create Opportunity" type="object" class="oe_highlight"/>
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button name="action_apply" string="Create Opportunity" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -86,9 +86,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="mass_convert" string="Convert to Opportunities" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button name="mass_convert" string="Convert to Opportunities" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
             </field>

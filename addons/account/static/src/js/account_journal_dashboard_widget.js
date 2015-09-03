@@ -8,6 +8,7 @@ var JournalDashboardGraph = kanban_widgets.AbstractField.extend({
         this.graph_type = this.$node.attr('graph_type');
         this.data = JSON.parse(this.field.raw_value);
         this.display_graph();
+        return this._super();
     },
 
     display_graph : function() {
@@ -70,7 +71,7 @@ var JournalDashboardGraph = kanban_widgets.AbstractField.extend({
                 .transition().duration(1200)
                 .call(self.chart);
 
-            self.customize_chart(self.data);
+            self.customize_chart();
 
             nv.utils.windowResize(self.on_resize);
         });
@@ -78,17 +79,17 @@ var JournalDashboardGraph = kanban_widgets.AbstractField.extend({
 
     on_resize: function(){
         this.chart.update();
-        this.customize_chart(this.data);
+        this.customize_chart();
     },
 
     customize_chart: function(){
-
         if (this.graph_type === 'bar') {
             // Add classes related to time on each bar of the bar chart
             var bar_classes = _.map(this.data[0].values, function (v, k) {return v.type});
 
             _.each(this.$('.nv-bar'), function(v, k){
-                v.classList.add(bar_classes[k]);
+                // classList doesn't work with phantomJS & addClass doesn't work with a SVG element
+                $(v).attr('class', $(v).attr('class') + ' ' + bar_classes[k]);
             });
         }
     },

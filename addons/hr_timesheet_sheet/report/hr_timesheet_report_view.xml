@@ -6,9 +6,6 @@
             <field name="model">hr.timesheet.report</field>
             <field name="inherit_id" ref="hr_timesheet.view_hr_timesheet_report_graph"/>
             <field name="arch" type="xml">
-                <field name="user_id" position="after">
-                    <field name="to_invoice" type="row"/>
-                </field>
                 <field name="quantity" position="after">
                     <field name="total_diff" type="measure"/>
                     <field name="total_timesheet" type="measure"/>
@@ -30,7 +27,7 @@
             <field name="model_id">hr.timesheet.report</field>
             <field name="domain">[('state','=','done'), ('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;=',time.strftime('%Y-%m-01'))]</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['company_id', 'to_invoice'], 'col_group_by': ['user_id'], 'measures': ['time','cost']}</field>
+            <field name="context">{'group_by': ['company_id'], 'col_group_by': ['user_id'], 'measures': ['time','cost']}</field>
         </record>
 
         <record id="view_timesheet_report_search" model="ir.ui.view">
@@ -43,15 +40,13 @@
                     <filter string="Confirmed" domain="[('state','=','confirm')]"/>
                     <filter string="Done" domain="[('state','=','done')]"/>
                 </field>
-                <field name="general_account_id" position="after">
-                    <field name="to_invoice"/>
+                <field name="product_id" position="before">
                     <field name="department_id"/>
                     <field name="date_to"/>
                     <field name="date_from"/>
                 </field>
                 <filter name="group_user_id" position="after">
                     <filter string="Department" context="{'group_by':'department_id'}"/>
-                    <filter string="Type of Invoicing" context="{'group_by':'to_invoice'}"/>
                     <filter string="Status" context="{'group_by':'state'}"/>
                 </filter>
             </field>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- mail.shortcode -->
+        <record id="mail_shortcode_action" model="ir.actions.act_window">
+            <field name="name">Chat Shortcode</field>
+            <field name="res_model">mail.shortcode</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new chat shortcode.
+              </p><p>
+                A shortcode is a keyboard shortcut. For instance, you type #gm and it will be transformed into "Good Morning".
+              </p>
+            </field>
+        </record>
+
+        <record id="mail_shortcode_view_tree" model="ir.ui.view">
+            <field name="name">mail.shortcode.tree</field>
+            <field name="model">mail.shortcode</field>
+            <field name="arch" type="xml">
+                <tree string="Shortcodes">
+                    <field name="source"/>
+                    <field name="substitution"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mail_shortcode_view_form" model="ir.ui.view">
+            <field name="name">mail.shortcode.form</field>
+            <field name="model">mail.shortcode</field>
+            <field name="arch" type="xml">
+                <form string="Shortcodes">
+                    <sheet>
+                       <group>
+                            <field name="source"/>
+                            <field name="substitution"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

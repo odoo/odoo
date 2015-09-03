@@ -32,7 +32,7 @@ class TestProjectBase(TestMail):
         # Test 'Pigs' project
         cls.project_pigs = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs',
-            'privacy_visibility': 'public',
+            'privacy_visibility': 'portal',
             'alias_name': 'project+pigs',
             'partner_id': cls.partner_1.id})
         # Already-existing tasks in Pigs
@@ -44,3 +44,20 @@ class TestProjectBase(TestMail):
             'name': 'Pigs ManagerTask',
             'user_id': cls.user_projectmanager.id,
             'project_id': cls.project_pigs.id})
+
+        # Test 'Goats' project, same as 'Pigs', but with 2 stages
+        cls.project_goats = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Goats',
+            'privacy_visibility': 'portal',
+            'alias_name': 'project+goats',
+            'partner_id': cls.partner_1.id,
+            'type_ids': [
+                (0, 0, {
+                    'name': 'New',
+                    'sequence': 1,
+                }),
+                (0, 0, {
+                    'name': 'Won',
+                    'sequence': 10,
+                })]
+            })

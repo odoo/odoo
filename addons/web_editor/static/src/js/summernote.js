@@ -24,28 +24,30 @@ var options = $.summernote.options;
 
 dom.hasContentAfter = function (node) {
     var next;
+    if(dom.isEditable(node)) return;
     while (node.nextSibling) {
         next = node.nextSibling;
-        if (next.tagName || next.textContent.match(/\S|\u00A0/) || dom.isBR(next)) return next;
+        if (next.tagName || dom.isVisibleText(next) || dom.isBR(next)) return next;
         node = next;
     }
 };
 dom.hasContentBefore = function (node) {
     var prev;
+    if(dom.isEditable(node)) return;
     while (node.previousSibling) {
         prev = node.previousSibling;
-        if (prev.tagName || prev.textContent.match(/\S|\u00A0/) || dom.isBR(prev)) return prev;
+        if (prev.tagName || dom.isVisibleText(prev) || dom.isBR(prev)) return prev;
         node = prev;
     }
 };
 dom.ancestorHaveNextSibling = function (node, pred) {
     pred = pred || dom.hasContentAfter;
-    while (!node.nextSibling || !pred(node)) { node = node.parentNode; }
+    while (!dom.isEditable(node) && (!node.nextSibling || !pred(node))) { node = node.parentNode; }
     return node;
 };
 dom.ancestorHavePreviousSibling = function (node, pred) {
     pred = pred || dom.hasContentBefore;
-    while (!node.previousSibling || !pred(node)) { node = node.parentNode; }
+    while (!dom.isEditable(node) && (!node.previousSibling || !pred(node))) { node = node.parentNode; }
     return node;
 };
 dom.nextElementSibling = function (node) {
@@ -138,7 +140,7 @@ dom.mergeFilter = function (prev, cur, parent) {
     if (prev && prev.tagName === "P" && dom.isText(cur)) {
         return true;
     }
-    if (prev && dom.isText(cur) && !cur.textContent.match(/\S|\u00A0/) && (dom.isText(prev) || prev.textContent.match(/\S|\u00A0/))) {
+    if (prev && dom.isText(cur) && !dom.isVisibleText(cur) && (dom.isText(prev) || dom.isVisibleText(prev))) {
         return true;
     }
     if (prev && !dom.isBR(prev) && dom.isEqual(prev, cur) &&
@@ -369,6 +371,7 @@ dom.removeSpace = function (node, begin, so, end, eo) {
 
     (function __remove_space (node) {
         if (!node) return;
+        var t_begin, t_end;
         for (var k=0; k<node.childNodes.length; k++) {
             var cur = node.childNodes[k];
 
@@ -382,17 +385,23 @@ dom.removeSpace = function (node, begin, so, end, eo) {
             if (cur === end) add = false;
 
             // remove begin empty text node
-            if (node.childNodes.length > 1 && dom.isText(cur) && !cur.textContent.match(/\S|\u00A0/)) {
+            if (node.childNodes.length > 1 && dom.isText(cur) && !dom.isVisibleText(cur)) {
                 removed = true;
                 if (cur === begin) {
-                    so = 0;
-                    begin = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(cur)));
+                        t_begin = dom.hasContentBefore(dom.ancestorHavePreviousSibling(cur));
+                        if(t_begin) {
+                            so = 0;
+                            begin = dom.lastChild(t_begin);
+                        }
                 }
                 if (cur === end) {
-                    eo = 1;
-                    end = dom.firstChild(dom.hasContentAfter(dom.ancestorHaveNextSibling(cur)));
-                    if (dom.isText(end)) {
-                        eo = end.textContent.length;
+                        t_end = dom.hasContentAfter(dom.ancestorHaveNextSibling(cur));
+                        if(t_end) {
+                            eo = 1;
+                            end = dom.firstChild(t_end);
+                            if (dom.isText(end)) {
+                                eo = end.textContent.length;
+                            }
                     }
                 }
                 cur.parentNode.removeChild(cur);
@@ -429,7 +438,7 @@ dom.removeSpace = function (node, begin, so, end, eo) {
         sc: begin,
         ec: end,
         so: !dom.isBR(begin) && so > 0 ? so : 0,
-        eo: eo
+        eo: dom.isBR(end) ? 0 : eo
     };
 };
 dom.node = function (node) {
@@ -448,47 +457,61 @@ dom.pasteText = function (textNode, offset, text, isOnlyText) {
             data.sc = node.insertBefore(document.createTextNode(" "), data.sc);
         } else if (node.firstChild && !dom.isBR(dom.firstChild(node))) {
             data.sc = node.insertBefore(document.createTextNode(" "), dom.firstChild(node));
+        } else if (dom.isBR(node)) {
+            data.sc = node.parentNode.insertBefore(document.createTextNode(" "), node);
         } else {
             data.sc = node.appendChild(document.createTextNode(" "));
         }
         data.so = 0;
     }
-    data.sc.splitText(data.so);
     var first = data.sc;
-    var last = data.sc.nextSibling;
+    var try_to_clean = [first, first.splitText(data.so)];
 
     isOnlyText = isOnlyText || !text.match('\n');
-    
+
+    var sc, so, ec, eo;
+
     if (!isOnlyText) {
+        var paste_after = dom.isBR(node) ? node.parentElement : node;
+
         // tag to close and open
-        var tag = node.tagName.toLowerCase();
+        var tag = paste_after.tagName.toLowerCase();
         if(dom.pasteTextApply.indexOf(tag) === -1) {
             text = text.split('\n').join("<br/>");
+            paste_after = data.sc;
         } else {
             text = "<"+tag+">"+text.split('\n').join("</"+tag+"><"+tag+">")+"</"+tag+">";
+            try_to_clean.push(paste_after);
         }
 
-        var $text = $(text);
+        var nodes = _.toArray($('<div/>').html(text).prop('childNodes'));
+        sc = nodes[0];
+        so = 0;
+        ec = dom.lastChild(nodes[nodes.length - 1]);
+        eo = dom.nodeLength(ec);
 
         // split parent node and insert text
-        if(dom.pasteTextClose.indexOf(tag) !== -1) {
-            var $next = $(node).clone().empty();
-            $next.append( last );
-            $(node).after( $next );
-            $(node).after( $text );
+        if(!dom.isText(paste_after) && dom.pasteTextClose.indexOf(tag) !== -1) {
+            try_to_clean.push(dom.splitTree(paste_after, {node: first, offset: data.so}));
+            $(paste_after).after( nodes );
         } else {
-            $(data.sc).after( $text );
+            $(paste_after).after( nodes );
         }
     } else {
+        sc = ec = first;
+        so = dom.nodeLength(first);
+        eo = so + text.length;
         first.appendData( text );
     }
 
-    // clean the dom content
-    data = dom.merge(node.parentNode.parentNode, last, 0, last, 0, null, true);
-    data = dom.removeSpace(node.parentNode.parentNode, data.sc, data.so, data.ec, data.eo);
-
     // move caret
-    range.create(data.sc, data.so, data.ec, data.eo).select();
+    range.create(sc, so, ec, eo).clean().select();
+
+    _(try_to_clean).each(function(node){
+        _(dom.listDescendant(node).reverse().concat(node)).each(function(subnode){
+            if(dom.isEmpty(subnode) || (dom.isText(subnode) && !dom.isVisibleText(subnode))) $(subnode).remove();
+        });
+    });
 };
 dom.removeBetween = function (sc, so, ec, eo, towrite) {
     if (ec.tagName) {
@@ -503,12 +526,12 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
     if (sc.tagName) {
         sc = sc.childNodes[so] || dom.firstChild(ec);
         so = 0;
-        if (!dom.hasContentBefore(sc)) {
+        if (!dom.hasContentBefore(sc) && towrite) {
             sc.parentNode.insertBefore(document.createTextNode('\u00A0'), sc);
         }
     }
     if (!eo && sc !== ec) {
-        ec = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(ec)));
+        ec = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(ec)) || ec);
         eo = ec.textContent.length;
     }
 
@@ -555,21 +578,28 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
             }
         }
 
-        sc = before ? dom.lastChild(before) : dom.firstChild(after);
-        so = sc.textContent.length;
+        if (dom.listAncestor(after).length  <= dom.listAncestor(before).length) {
+            sc = dom.lastChild(before || ancestor);
+            so = dom.nodeLength(sc);
+        } else {
+            sc = dom.firstChild(after);
+            so = 0;
+        }
 
-        if (before) {
+        if (towrite && !node.firstChild && node.parentNode && !dom.isNotBreakable(node)) {
+            var br = $("<br/>")[0];
+            node.appendChild(sc);
+            sc = br;
+            so = 0;
+        } else if (!ancestor.children.length && !ancestor.textContent.match(/\S|\u00A0/)) {
+            sc = $("<br/>")[0];
+            so = 0;
+            $(ancestor).prepend(sc);
+        } else if (before) {
             var text = sc.textContent.replace(/[ \t\n\r]+$/, '\u00A0');
             so -= sc.textContent.length - text.length;
             sc.textContent = text;
         }
-        if (towrite && !node.firstChild && node.parentNode && !dom.isNotBreakable(node)) {
-            var br = $("<br/>")[0];
-            node.appendChild(br);
-            sc = br;
-            so = 0;
-        }
-        dom.autoMerge(sc, false);
 
     } else {
 
@@ -579,7 +609,7 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
     }
 
     eo = so;
-    if(!dom.isBR(sc) && !sc.textContent.match(/\S|\u00A0/) && !dom.isText(dom.hasContentBefore(sc)) && !dom.isText(dom.hasContentAfter(sc))) {
+    if(!dom.isBR(sc) && !dom.isVisibleText(sc) && !dom.isText(dom.hasContentBefore(sc)) && !dom.isText(dom.hasContentAfter(sc))) {
         ancestor = dom.node(sc);
         var text = document.createTextNode('\u00A0');
         $(sc).before(text);
@@ -699,13 +729,16 @@ dom.isContentEditable = function (node) {
     return $(node).closest('[contenteditable]').is('[contenteditable="true"]');
 };
 
+dom.isPre = function (node) {
+    return node.tagName === "PRE";
+};
 dom.isFont = function (node) {
     var nodeName = node && node.nodeName.toUpperCase();
     return node && (nodeName === "FONT" ||
         (nodeName === "SPAN" && (
             node.className.match(/(^|\s)fa(\s|$)/i) ||
             node.className.match(/(^|\s)(text|bg)-/i) ||
-            (node.attributes.style && node.attributes.style.value.match(/(^|\s)(color|background-color):/i)))) );
+            (node.attributes.style && node.attributes.style.value.match(/(^|\s)(color|background-color|font-size):/i)))) );
 };
 dom.isVisibleText = function (textNode) {
   return !!textNode.textContent.match(/\S|\u00A0/);
@@ -826,13 +859,13 @@ range.WrappedRange.prototype.reRange = function (keep_end, isNotBreakable) {
     if ($.contains(start, end)) {
 
         if (keep_end) {
-            sc = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(end)));
+                sc = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(end)) || sc);
             so = sc.textContent.length;
         } else if (!eo) {
-            ec = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(end)));
+                ec = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(end)) || ec);
             eo = ec.textContent.length;
         } else {
-            ec = dom.firstChild(dom.hasContentAfter(dom.ancestorHaveNextSibling(end)));
+                ec = dom.firstChild(dom.hasContentAfter(dom.ancestorHaveNextSibling(end)) || ec);
             eo = 0;
         }
     } else {
@@ -861,6 +894,7 @@ range.WrappedRange.prototype.deleteContents = function (towrite) {
 };
 range.WrappedRange.prototype.clean = function (mergeFilter, all) {
     var node = dom.node(this.sc === this.ec ? this.sc : this.commonAncestor());
+        node = node || $(this.sc).closest('[contenteditable]')[0];
     if (node.childNodes.length <=1) {
         return this;
     }
@@ -912,8 +946,7 @@ options.keyMap.pc['ESCAPE'] = 'cancel';
 options.keyMap.mac['SHIFT+TAB'] = 'untab';
 
 options.keyMap.mac['BACKSPACE'] = 'backspace';
-options.keyMap.mac['CMD+BACKSPACE'] = 'delete';
-options.keyMap.mac['SHIFT+BACKSPACE'] = 'delete';
+options.keyMap.mac['DELETE'] = 'delete';
 options.keyMap.mac['ENTER'] = 'enter';
 options.keyMap.mac['ESCAPE'] = 'cancel';
 
@@ -938,7 +971,7 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
     var r = range.create();
     var outdent = outdent || false;
 
-    if (r.isCollapsed()) {
+        if (r && r.isCollapsed()) {
         if (r.isOnCell() && r.isOnCellFirst()) {
             var td = dom.ancestor(r.sc, dom.isCell);
             if (!outdent && !dom.nextElementSibling(td) && !dom.nextElementSibling(td.parentNode)) {
@@ -1025,6 +1058,8 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
     }
 
     var node = dom.node(r.sc);
+    var exist = r.sc.childNodes[r.so] || r.sc;
+    exist = dom.isVisibleText(exist) || dom.isBR(exist) ? exist : dom.hasContentAfter(exist) || (dom.hasContentBefore(exist) || exist);
     var last = node;
     while (node && dom.isSplitable(node) && !dom.isList(node)) {
         last = node;
@@ -1042,7 +1077,7 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         } while (node && dom.isBR(node));
 
         // create an other br because the user can't see the new line with only br in a block
-        if (!node) {
+        if (!node && (!br.nextElementSibling || !dom.isBR(br.nextElementSibling))) {
             $(br).before($("<br/>")[0]);
         }
         node = br.nextSibling || br;
@@ -1051,7 +1086,11 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         node = br;
     } else if (!r.so && r.isOnList() && !r.sc.textContent.length && !dom.ancestor(r.sc, dom.isLi).nextElementSibling) {
         // double enter on the end of a list = new line out of the list
-        node = $('<p></p>').append(br).insertAfter(dom.ancestor(r.sc, dom.isList))[0];
+        $('<p></p>').append(br).insertAfter(dom.ancestor(r.sc, dom.isList));
+        node = br;
+    } else if (dom.isBR(exist) && $(r.sc).closest('blockquote, pre').length && !dom.hasContentAfter($(exist.parentNode).closest('blockquote *, pre *').length ? exist.parentNode : exist)) {
+        // double enter on the end of a blockquote & pre = new line out of the list
+        $('<p></p>').append(br).insertAfter($(r.sc).closest('blockquote, pre'));
         node = br;
     } else if (last === r.sc) {
         if (dom.isBR(last)) {
@@ -1071,7 +1110,7 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
                 $(cur).html(br);
             }
         }
-        if (!node.textContent.match(/\S|\u00A0/)) {
+        if (!dom.isVisibleText(node)) {
             node = dom.firstChild(node);
             $(dom.node( dom.isBR(node) ? node.parentNode : node )).html(br);
             node = br;
@@ -1095,7 +1134,9 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     $editable.data('NoteHistory').recordUndo($editable, "visible");
 
     var r = range.create();
-    if (r && !r.isCollapsed()) {
+        if (!r) return;
+
+        if (!r.isCollapsed()) {
         r = r.deleteContents(true);
         r.select();
     }
@@ -1105,7 +1146,7 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     while (node.parentNode) {
         if (dom.isForbiddenNode(node)) {
             var text = node.previousSibling;
-            if (text && dom.isText(text) && text.textContent.match(/\S|\u00A0/)) {
+            if (text && dom.isText(text) && dom.isVisibleText(text)) {
                 range.create(text, text.textContent.length, text, text.textContent.length).select();
             } else {
                 text = node.parentNode.insertBefore(document.createTextNode( "." ), node);
@@ -1153,9 +1194,11 @@ function remove_table_content(sc, ec) {
 $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
     var $editable = layoutInfo.editable();
     $editable.data('NoteHistory').recordUndo($editable, "delete");
-    
+
     var r = range.create();
+    if (!r) return;
     if (!r.isContentEditable()) {
+        event.preventDefault();
         return false;
     }
     if (!r.isCollapsed()) {
@@ -1164,8 +1207,6 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
         }
         r = r.deleteContents();
         r.select();
-        event.preventDefault();
-        return false;
     }
 
     var target = r.ec;
@@ -1194,21 +1235,25 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
     if (dom.isImg(node) || (!contentAfter && dom.isImg(dom.hasContentAfter(node)))) {
         var parent;
         var index;
+        var rng;
         if (!dom.isImg(node)) {
             node = dom.hasContentAfter(node);
         }
         while (dom.isImg(node)) {
             parent = node.parentNode;
-            index = dom.makeOffsetPath(parent, node)[0];
+            index = dom.position(node);
             if (index>0) {
                 var next = node.previousSibling;
-                range.create(next,next.textContent.length).select();
+                rng = range.create(next, next.textContent.length);
+            } else {
+                rng = range.create(parent, 0);
             }
             if (!dom.hasContentAfter(node) && !dom.hasContentBefore(node)) {
                 parent.appendChild($('<br/>')[0]);
             }
             parent.removeChild(node);
             node = parent;
+            rng.select();
         }
     }
     // empty tag
@@ -1280,6 +1325,7 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
     $editable.data('NoteHistory').recordUndo($editable, "backspace");
 
     var r = range.create();
+    if (!r) return;
     if (!r.isContentEditable()) {
         event.preventDefault();
         return false;
@@ -1290,8 +1336,6 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
         }
         r = r.deleteContents();
         r.select();
-        event.preventDefault();
-        return false;
     }
 
     var target = r.sc;
@@ -1304,10 +1348,15 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
     var node = dom.node(target);
     var data = dom.merge(node, target, offset, target, offset, null, true);
     data = dom.removeSpace(node.parentNode, data.sc, data.so, data.ec, data.eo);
-    r = range.create(data.sc, data.so);
+    r = dom.isVoid(data.sc) ? range.createFromNode(data.sc) : range.create(data.sc, data.so);
     r.select();
     target = r.sc;
     offset = r.so;
+    if (target.tagName && target.childNodes[offset]) {
+        target = target.childNodes[offset];
+        offset = 0;
+        node = dom.node(target);
+    }
 
     while (node.parentNode && !dom.hasContentAfter(node) && !dom.hasContentBefore(node) && !dom.isImg(node)) {node = node.parentNode;}
 
@@ -1715,7 +1764,7 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     // fix by odoo because if you select a style in a li with no p tag all the ul is wrapped by the style tag
     var nodes = dom.listBetween(r.sc, r.ec);
     for (var i=0; i<nodes.length; i++) {
-        if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && nodes[i].textContent.match(/\S|\u00A0/)) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
+        if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && dom.isVisibleText(nodes[i])) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
             var ancestor = dom.ancestor(nodes[i], isFormatNode);
             if (!ancestor) {
                 dom.wrap(nodes[i], sTagName);
@@ -1766,8 +1815,23 @@ eventHandler.toolbar.button.updateRecentColor = function (elBtn, sEvent, sValue)
             font.style.backgroundColor = sValue !== 'inherit' ? sValue : "";
         }
     }
-    event.preventDefault();
     return false;
+};
+
+$(document).on('click keyup', function () {
+    var $popover = $((range.create()||{}).sc).closest('[contenteditable]');
+    var popover_history = ($popover.data()||{}).NoteHistory;
+    if(!popover_history || popover_history == history) return;
+    var editor = $popover.parent('.note-editor');
+    $('button[data-event="undo"]', editor).attr('disabled', !popover_history.hasUndo());
+    $('button[data-event="redo"]', editor).attr('disabled', !popover_history.hasRedo());
+});
+
+eventHandler.editor.undo = function ($popover) {
+    if(!$popover.attr('disabled')) $popover.data('NoteHistory').undo();
+};
+eventHandler.editor.redo = function ($popover) {
+    if(!$popover.attr('disabled'))  $popover.data('NoteHistory').redo();
 };
 
 options.fontSizes = [_t('Default'), 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 62];
@@ -2174,9 +2238,11 @@ function summernote_paste (event) {
         if (!r.isCollapsed()) {
             r = r.deleteContents();
             r.select();
+            event.preventDefault();
+            return false;
         }
 
-        var text = clipboardData.getData("text/plain").replace(/</g, "&lt;");
+            var text = $('<div />').text(clipboardData.getData("text/plain").toString()).html();
         dom.pasteText(r.sc, r.so, text);
         event.preventDefault();
         return false;

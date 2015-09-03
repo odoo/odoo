@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <!-- the sequence of the configuration sub menu is 30 -->
 
-        <record model="ir.actions.act_window" id="base_partner_merge_automatic_act">
-            <field name="name">Deduplicate Contacts</field>
-            <field name="res_model">base.partner.merge.automatic.wizard</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{'active_test': False}</field>
-        </record>
-
-        <menuitem id='partner_merge_automatic_menu'
-            action='base_partner_merge_automatic_act'
-            groups='base.group_system'
-            parent='base.menu_config_address_book' 
-            sequence='4'/>
+        <act_window id="action_partner_deduplicate"
+            res_model="base.partner.merge.automatic.wizard"
+            src_model="res.partner"
+            target="new"
+            multi="True"
+            key2="client_action_multi"
+            view_mode="form"
+            name="Deduplicate Contact"
+            context="{'default_state': 'option'}"
+        />
 
         <record model='ir.ui.view' id='base_partner_merge_automatic_wizard_form'>
             <field name='name'>base.partner.merge.automatic.wizard.form</field>
@@ -26,7 +21,7 @@
                     <sheet>
                         <group attrs="{'invisible': [('state', '!=', 'finished')]}" col="1">
                             <h2>There is no more contacts to merge for this request...</h2>
-                            <button name="%(base_partner_merge_automatic_act)d" string="Deduplicate the other Contacts" class="oe_highlight"
+                            <button name="%(action_partner_deduplicate)d" string="Deduplicate the other Contacts" class="oe_highlight"
                             type="action"/>
                         </group>
                         <p class="oe_grey" attrs="{'invisible': [('state', '!=', ('option'))]}">
@@ -118,7 +113,7 @@
         </record>
         
         <act_window id="action_partner_merge" res_model="base.partner.merge.automatic.wizard" src_model="res.partner"
-            target="new" multi="True" key2="client_action_multi" view_mode="form" name="Automatic Merge"/>
+            target="new" multi="True" key2="client_action_multi" view_mode="form" name="Merge Selected Contacts"/>
 
     </data>
 

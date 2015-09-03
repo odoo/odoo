@@ -65,7 +65,7 @@
                 <search string="Views">
                     <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('model_data_id','ilike',self)]" string="View"/>
                     <filter string="Active" name="active" domain="[('active', '=',True)]"/>
-                    <filter string="Unactive" domain="[('active', '=',False)]"/>
+                    <filter string="Inactive" domain="[('active', '=',False)]"/>
                     <separator/>
                     <filter string="Form" domain="[('type', '=','form')]"/>
                     <filter string="Tree" domain="[('type', '=', 'tree')]"/>

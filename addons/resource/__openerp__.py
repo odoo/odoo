@@ -4,7 +4,6 @@
 {
     'name' : 'Resource',
     'version' : '1.1',
-    'author' : 'OpenERP SA',
     'category' : 'Hidden/Dependency',
     'website' : 'http://www.openerp.com',
     'description': """
@@ -15,8 +14,6 @@ A resource represent something that can be scheduled (a developer on a task or a
 work center on manufacturing orders). This module manages a resource calendar
 associated to every resource. It also manages the leaves of every resource.
     """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',

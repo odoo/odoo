@@ -21,14 +21,14 @@ class WebsiteSurvey(http.Controller):
 
     ## HELPER METHODS ##
 
-    def _check_bad_cases(self, cr, uid, request, survey_obj, survey, user_input_obj, context=None):
+    def _check_bad_cases(self, cr, uid, request, survey_obj, survey, user_input_obj, token=None, context=None):
         # In case of bad survey, redirect to surveys list
         if survey_obj.exists(cr, SUPERUSER_ID, survey.id, context=context) == []:
             return werkzeug.utils.redirect("/survey/")
 
         # In case of auth required, block public user
         if survey.auth_required and uid == request.website.user_id.id:
-            return request.website.render("survey.auth_required", {'survey': survey})
+            return request.website.render("survey.auth_required", {'survey': survey, 'token': token})
 
         # In case of non open surveys
         if survey.stage_id.closed:
@@ -74,7 +74,7 @@ class WebsiteSurvey(http.Controller):
         # END Test mode
 
         # Controls if the survey can be displayed
-        errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, context=context)
+        errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, token=token, context=context)
         if errpage:
             return errpage
 

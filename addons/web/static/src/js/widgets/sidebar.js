@@ -13,17 +13,19 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 var Sidebar = Widget.extend({
-    init: function(parent) {
+    init: function(parent, options) {
         var self = this;
         this._super(parent);
-        this.view = this.getParent();
-        this.sections = [
-            { 'name' : 'print', 'label' : _t('Print'), },
-            { 'name' : 'other', 'label' : _t('More'), }
+        this.options = _.defaults(options || {}, {
+            'editable': true
+        });
+        this.sections = options.sections || [
+            {name: 'print', label: _t('Print')},
+            {name: 'other', label: _t('More')},
         ];
-        this.items = {
-            'print' : [],
-            'other' : []
+        this.items = options.items || {
+            print: [],
+            other: [],
         };
         this.fileupload_id = _.uniqueId('oe_fileupload');
         $(window).on(this.fileupload_id, function() {
@@ -174,23 +176,21 @@ var Sidebar = Widget.extend({
         }
     },
     on_attachments_loaded: function(attachments) {
-        var self = this;
-        var prefix = session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'name'});
         _.each(attachments,function(a) {
             a.label = a.name;
             if(a.type === "binary") {
-                a.url = prefix  + '&id=' + a.id + '&t=' + (new Date().getTime());
+                a.url = '/web/content/'  + a.id + '?download=true&t=' + (new Date().getTime());
             }
         });
-        self.items.files = attachments;
-        self.redraw();
-        this.$('.oe_sidebar_add_attachment .oe_form_binary_file').change(this.on_attachment_changed);
+        this.items.files = attachments;
+        this.redraw();
+        this.$('.oe_sidebar_add_attachment .o_form_input_file').change(this.on_attachment_changed);
         this.$el.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
     },
     on_attachment_changed: function(e) {
         var $e = $(e.target);
         if ($e.val() !== '') {
-            this.$el.find('form.oe_form_binary_form').submit();
+            this.$el.find('form.o_form_binary_form').submit();
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
             this.$('.oe_sidebar_add_attachment a').text(_t('Uploading...'));

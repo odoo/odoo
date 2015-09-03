@@ -224,7 +224,8 @@ class Report(osv.Model):
         # Run wkhtmltopdf process
         return self._run_wkhtmltopdf(
             cr, uid, headerhtml, footerhtml, contenthtml, context.get('landscape'),
-            paperformat, specific_paperformat_args, save_in_attachment
+            paperformat, specific_paperformat_args, save_in_attachment,
+            context.get('set_viewport_size')
         )
 
     @api.v8
@@ -316,7 +317,7 @@ class Report(osv.Model):
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
 
-    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment={}):
+    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
@@ -329,9 +330,12 @@ class Report(osv.Model):
         :param save_in_attachment: dict of reports to save/load in/from the db
         :returns: Content of the pdf as a string
         """
+        if not save_in_attachment:
+            save_in_attachment = {}
+
         command_args = []
-        if wkhtmltopdf_state == "ok":
-            command_args.extend(['--viewport-size', '1024x768'])
+        if set_viewport_size:
+            command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         try:
@@ -354,7 +358,7 @@ class Report(osv.Model):
                     del command_args[index]
                     del command_args[index]
                     command_args.extend(['--orientation', 'landscape'])
-        elif landscape and not '--orientation' in command_args:
+        elif landscape and '--orientation' not in command_args:
             command_args.extend(['--orientation', 'landscape'])
 
         # Execute WKhtmltopdf
@@ -403,7 +407,7 @@ class Report(osv.Model):
 
                 if process.returncode not in [0, 1]:
                     raise UserError(_('Wkhtmltopdf failed (error code: %s). '
-                                        'Message: %s') % (str(process.returncode), err))
+                                      'Message: %s') % (str(process.returncode), err))
 
                 # Save the pdf in attachment if marked
                 if reporthtml[0] is not False and save_in_attachment.get(reporthtml[0]):
@@ -418,8 +422,7 @@ class Report(osv.Model):
                         try:
                             self.pool['ir.attachment'].create(cr, uid, attachment)
                         except AccessError:
-                            _logger.info("Cannot save PDF report %r as attachment",
-                                            attachment['name'])
+                            _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
                         else:
                             _logger.info('The PDF document %s is now saved in the database',
                                          attachment['name'])

@@ -288,6 +288,9 @@
                     <td class="faq-rep-item"><strong t-field="forum.karma_editor"/></td>
                     <td>insert text link, upload files</td>
                 </tr><tr>
+                    <td class="faq-rep-item"><strong t-field="forum.karma_user_bio"/></td>
+                    <td>your biography can be seen as tooltip</td>
+                </tr><tr>
                     <td class="faq-rep-item"><strong t-field="forum.karma_comment_unlink_own"/></td>
                     <td>delete own comment</td>
                 </tr><tr>
@@ -811,7 +814,12 @@
         </div>
         <div class="question-block">
             <div class="pull-right author-box">
-                <img class="pull-left img img-rounded img-avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
+                <div class="o_forum_user_bio_expand" t-if="answer.can_display_biography">
+                    <t t-call="website_forum.forum_user_tooltip"/>
+                </div>
+                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }" class="o_forum_user_info">
+                    <img class="pull-left img img-rounded o_forum_avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
+                </a>
                 <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
                     t-field="answer.create_uid"
                     t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
@@ -881,6 +889,24 @@
                 </t>
             </div>
         </div>
+    </div>
+</template>
+
+<!-- Template for user tooltip  -->
+<template id="forum_user_tooltip">
+    <div class="o_forum_user_bio text-left panel panel-body">
+        <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }">
+            <img class="pull-left img img-rounded o_forum_avatar_big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
+        </a>
+        <div class="o_forum_tooltip_header">
+            <h4 class="o_forum_tooltip_heading"><a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
+                t-field="answer.create_uid"
+                t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
+                style="display: inline-block;"/>
+            </h4>
+            <span t-field="answer.create_uid" t-field-options='{"widget": "contact", "UserBio": true, "badges": true, "fields": ["karma"]}'/>
+        </div>
+        <div t-field="answer.create_uid" t-field-options='{"widget": "contact", "website_description": true, "fields": ["partner_id"]}'/>
     </div>
 </template>
 
@@ -1012,7 +1038,7 @@
         </h4>
         <div class="row">
             <div class="col-sm-3 mt16" t-foreach="users" t-as="user">
-                <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
+                <img class="pull-left img img-circle o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                 </div>
@@ -1025,7 +1051,7 @@
     <t t-call="website_forum.header">
         <div t-foreach="users" t-as="row_users" class="row mt16">
             <div t-foreach="row_users" t-as="user" class="col-sm-4">
-                <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
+                <img class="pull-left img img-circle o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                     <t t-if="user.country_id">

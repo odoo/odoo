@@ -34,14 +34,15 @@ var QuickCreate = Dialog.extend({
             title: this.get_title(),
             size: 'small',
             buttons: this._buttons ? [
-                {text: _t("Create event"), classes: 'btn-primary', click: function (e) {
+                {text: _t("Create"), classes: 'btn-primary', click: function () {
                     if (!self.quick_add()) {
                         self.focus();
                     }
                 }},
-                {text: _t("Edit event"), click: function (e) {
+                {text: _t("Edit"), click: function () {
                     self.slow_add();
-                }}
+                }},
+                {text: _t("Cancel"), close: true},
             ] : [],
             $content: QWeb.render('CalendarView.quick_create', {widged: this})
         });

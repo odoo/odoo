@@ -34,7 +34,7 @@
 
 {
     'name': 'Costa Rica - Accounting',
-    'version': '0.1',
+    'version': '1.0',
     'url': 'http://launchpad.net/openerp-costa-rica',
     'author': 'ClearCorp S.A.',
     'website': 'http://clearcorp.co.cr',
@@ -45,7 +45,6 @@ Chart of accounts for Costa Rica.
 
 Includes:
 ---------
-    * account.type
     * account.account.template
     * account.tax.template
     * account.chart.template
@@ -53,16 +52,14 @@ Includes:
 Everything is in English with Spanish translation. Further translations are welcome,
 please go to http://translations.launchpad.net/openerp-costa-rica.
     """,
-    'depends': ['account', 'base'],
-    'demo': [],
+    'depends': ['account'],
     'data': [
-        'l10n_cr_base_data.xml',
-        'data/account_account_type.xml',
-        'data/account_account_template.xml',
+        'data/l10n_cr_base_data.xml',
         'data/account_chart_template.xml',
+        'data/account_account_template.xml',
+        'data/account_chart_template_after.xml',
         'data/account_tax_template.xml',
-        'l10n_wizard.xml',
+        'data/account.chart.template.yml',
     ],
-    'installable': False,
-    'auto_install': False,
+    'installable': True,
 }

@@ -9,7 +9,7 @@ import re
 import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.tools import html_escape as escape
+from openerp.tools import html_escape
 
 
 class website_event(http.Controller):
@@ -125,44 +125,23 @@ class website_event(http.Controller):
     def event_track_proposal_post(self, event, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
-        tobj = request.registry['event.track']
-
         tags = []
         for tag in event.allowed_track_tag_ids:
             if post.get('tag_'+str(tag.id)):
                 tags.append(tag.id)
 
-        track_description = '''<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <h2>%s</h2>
-            </div>
-            <div class="col-md-12">
-                <p>%s</p>
-            </div>
-            <div class="col-md-12">
-                <h3>About The Author</h3>
-                <p>%s</p>
-            </div>
-        </div>
-    </div>
-</section>''' % (escape(post['track_name']), 
-            escape(post['description']), escape(post['biography']))
-
-        track_id = tobj.create(cr, openerp.SUPERUSER_ID, {
+        track_obj = request.registry['event.track']
+        track_id = track_obj.create(cr, openerp.SUPERUSER_ID, {
             'name': post['track_name'],
+            'partner_name': post['partner_name'],
+            'partner_email': post['email_from'],
+            'partner_phone': post['phone'],
+            'partner_biography': html_escape(post['biography']),
             'event_id': event.id,
             'tag_ids': [(6, 0, tags)],
             'user_id': False,
-            'description': track_description
+            'description': html_escape(post['description']),
         }, context=context)
-
-        tobj.message_post(cr, openerp.SUPERUSER_ID, [track_id], body="""Proposed By: %s<br/>
-          Mail: <a href="mailto:%s">%s</a><br/>
-          Phone: %s""" % (escape(post['partner_name']), escape(post['email_from']), 
-            escape(post['email_from']), escape(post['phone'])), context=context)
-
-        track = tobj.browse(cr, uid, track_id, context=context)
-        values = {'track': track, 'event':event}
+        track = track_obj.browse(cr, uid, track_id, context=context)
+        values = {'track': track, 'event': event}
         return request.website.render("website_event_track.event_track_proposal_success", values)

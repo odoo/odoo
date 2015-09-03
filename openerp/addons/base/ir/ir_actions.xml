@@ -225,7 +225,7 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('res_model','ilike',self)]" string="Action"/>
                     <field name="view_type"/>
                     <group expand="0" string="Group By" colspan="4">
-                        <filter string="View Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'view_type'}"/>
+                        <filter string="View Type" domain="[]" context="{'group_by':'view_type'}"/>
                     </group>
                 </search>
             </field>
@@ -556,7 +556,7 @@
             <field name="name">ir.actions.todo.select</field>
             <field name="arch" type="xml">
                 <search string="Search Actions">
-                    <filter string="To Do" name="todo" icon="terp-camera_test" domain=" [('state','=','open')]" help="Wizards to be Launched"/>
+                    <filter string="To Do" name="todo" domain=" [('state','=','open')]" help="Wizards to be Launched"/>
                     <field name="action_id"/>
                     <field name="state"/>
                 </search>

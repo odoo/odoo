@@ -34,7 +34,8 @@
                     <separator/>
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
                         <filter string="Task" context="{'group_by':'name'}"/>
@@ -52,7 +53,7 @@
         <record id="act_project_project_2_project_task_all" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form,calendar,gantt,pivot,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
             <field name="context">{
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,
@@ -76,9 +77,6 @@
             <field name="arch" type="xml">
                 <form string="Project">
                 <header>
-                    <button name="set_template" string="Set as Template" type="object" states="open" groups="base.group_user"/>
-                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}" class="oe_highlight" groups="base.group_user"/>
-                    <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_highlight" groups="base.group_user"/>
                     <field name="state" widget="statusbar" clickable="True"/>
                 </header>
                 <sheet string="Project">
@@ -90,6 +88,13 @@
                         </button>
                         <button  class="oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
+                        </button>
+                        <button name="toggle_active" type="object"
+                                confirm="(Un)archiving a project automatically (un)archives its tasks and issues. Do you want to proceed?"
+                                class="oe_stat_button" icon="fa-archive"
+                                attrs="{'invisible':[('state','in',['open', 'pending'])]}">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -111,26 +116,16 @@
                                 <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
-                                        context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
+                                        context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"
+                                        groups="base.group_no_one"/>
                                 <field name="privacy_visibility" widget="radio"/>
                             </group>
                             <group name="misc">
                                 <group string="Time Scheduling" groups="project.group_time_work_estimation_tasks">
-                                    <field name="date_start" string="Start Date"
-                                        readonly="1"/>
-                                    <field name="date" string="End Date"
-                                        readonly="1"/>
                                     <field name="resource_calendar_id"/>
                                 </group>
                                 <group string="Configuration" groups="base.group_no_one">
                                     <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
-                                    <field name="currency_id" groups="base.group_multi_currency" required="1"/>
-                                    <field name="parent_id" string="Parent"
-                                        help="Append this project to another one using analytic accounts hierarchy"
-                                        domain="[('id','!=',analytic_account_id)]"
-                                        context="{'current_model': 'project.project'}"
-                                        groups="project.group_time_work_estimation_tasks"/>
                                 </group>
                             </group>
                         </page>
@@ -173,13 +168,13 @@
                     <filter string="Manager" domain="[('user_id','=',uid)]"/>
                     <filter string="Followed by Me" domain="[('message_is_follower','=',True)]"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Manager" name="Manager" context="{'group_by':'user_id'}"/>
                         <filter string="Contact" name="Partner" context="{'group_by':'partner_id'}"/>
-                        <filter string="Parent" name="Parent" help="Parent" context="{'group_by':'parent_id'}"/>
                     </group>
                 </search>
             </field>
@@ -190,14 +185,12 @@
             <field name="model">project.project</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-danger="date and (date&lt;current_date) and (state == 'open')" decoration-info="state in ('draft','pending')" decoration-muted="state in ('close','cancelled')" string="Projects">
+                <tree decoration-bf="message_needaction==True" decoration-info="state in ('draft','pending')" decoration-muted="state in ('close','cancelled')" string="Projects">
                     <field name="sequence" widget="handle"/>
-                    <field name="message_unread" invisible="1"/>
-                    <field name="date" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact"/>
-                    <field name="parent_id" string="Parent" invisible="1"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -208,9 +201,26 @@
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,form</field>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{'search_default_Current': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a new project.
+                </p><p>
+                    Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
+                </p>
+            </field>
+        </record>
+
+        <record id="open_view_project_all_config" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="view_type">form</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_project_project_filter"/>
+            <field name="context">{}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Create a new project.
@@ -240,6 +250,13 @@
                             options="{'fold_field': 'fold'}"/>
                     </header>
                     <sheet string="Task">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_user"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1 class="o_row">
                             <field name="priority" widget="priority"/>
@@ -250,8 +267,6 @@
                                 "states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
                         </h1>
                     </div>
-                    <label for="tag_ids" class="oe_edit_only"/>
-                    <field name="tag_ids" widget="many2many_tags"/>
                     <group>
                         <group>
                             <field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
@@ -264,6 +279,7 @@
                         </group>
                         <group>
                             <field name="date_deadline"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                     </group>
                     <notebook>
@@ -281,15 +297,6 @@
                                 <group col="2">
                                     <field name="date_assign" groups="base.group_no_one"/>
                                     <field name="date_last_stage_update" groups="base.group_no_one"/>
-                                </group>
-                            </group>
-                            <group groups="project.group_time_work_estimation_tasks">
-                                <group string="Gantt View">
-                                    <p class="oe_grey" colspan='2'>
-                                        Assign dates to make this task appear in the gantt chart ( <i class="fa fa-tasks"> </i> icon on the top right)
-                                    </p>
-                                    <field name="date_start"/>
-                                    <field name="date_end"/>
                                 </group>
                             </group>
                         </page>
@@ -318,9 +325,10 @@
                     <field name="sequence"/>
                     <field name="remaining_hours" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
-                    <field name="message_unread_counter"/>
+                    <field name="message_needaction_counter"/>
                     <field name="tag_ids"/>
                     <field name="displayed_image_id"/>
+                    <field name="active"/>
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -343,14 +351,14 @@
                                     <strong><field name="name"/></strong>
                                 </div>
                                 <div class="text-muted">
-                                    <field name="project_id" invisible="context.get('default_project_id', False)"/><br/>
+                                    <field name="project_id" invisible="context.get('default_project_id', False)"/>
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
                                 </div>
                                 <div class="oe_kanban_bottom_left">
                                     <field name="priority" widget="priority"/>
-                                    <t t-if="record.message_unread_counter.raw_value">
-                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                    <t t-if="record.message_needaction_counter.raw_value">
+                                        <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                     </t>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
@@ -377,8 +385,8 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks">
-                    <field name="message_unread" invisible="1"/>
+                <tree decoration-bf="message_needaction==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks">
+                    <field name="message_needaction" invisible="1"/>
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
                     <field name="name"/>
                     <field name="project_id" invisible="context.get('user_invisible', False)"/>
@@ -401,16 +409,6 @@
                     <field name="name"/>
                     <field name="project_id"/>
                 </calendar>
-            </field>
-        </record>
-
-        <record id="view_task_gantt" model="ir.ui.view">
-            <field name="name">project.task.gantt</field>
-            <field name="model">project.task</field>
-            <field eval="2" name="priority"/>
-            <field name="arch" type="xml">
-                <gantt date_start="date_start" date_stop="date_end" progress="progress" string="Tasks" default_group_by="project_id">
-                </gantt>
             </field>
         </record>
 
@@ -452,7 +450,7 @@
         <record id="action_view_task" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form,calendar,gantt,pivot,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p>
@@ -488,7 +486,7 @@
             <field name="res_model">project.task</field>
             <field name="name">Project's tasks</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,gantt,kanban</field>
+            <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('project_id', 'child_of', [active_id])]</field>
             <field name="context">{'project_id':active_id, 'active_test':False}</field>
         </record>
@@ -588,22 +586,10 @@
         <menuitem action="open_task_type_form" id="base.menu_project_config_project" name="Stages" parent="menu_project_config" sequence="3" groups="group_project_manager"/>
 
         <menuitem action="open_view_project_all" id="menu_projects" name="Dashboard" parent="base.menu_main_pm" sequence="1"/>
+        <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="10"/>
 
-         <record id="product_search_form_view_procurment_consume" model="ir.ui.view">
-            <field name="name">product.product.service.search</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_search_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//filter[@name='services']" position="replace">
-                    <filter string="Services" name="services" domain="[('type','=','service')]" invisible="context.get('consumable_services', False)"/>
-                 </xpath>
-                 <xpath expr="//filter[@name='consumable']" position="replace">
-                     <filter string="Consumable" name="consumable" domain="[('type','=','consu')]" help="Consumable products" invisible="context.get('consumable_services', False)"/>
-                 </xpath>
-            </field>
-        </record>
 
-         <record id="task_company" model="ir.ui.view">
+        <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form"/>
@@ -619,7 +605,7 @@
         <!-- User Form -->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
                     id="act_res_users_2_project_task_opened" name="Assigned Tasks"
-                    res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+                    res_model="project.task" src_model="res.users" view_mode="tree,form,calendar,graph" view_type="form"/>
 
         <!-- Tags -->
         <record model="ir.ui.view" id="project_tags_search_view">
@@ -653,6 +639,10 @@
             </field>
         </record>
         <menuitem action="project_tags_action" id="menu_project_tags_act" parent="menu_project_config" groups="base.group_no_one"/>
+
+        <!-- Portal menuitems -->
+        <menuitem name="Projects" id="portal_services_projects" parent="portal.portal_projects"     
+                  action="open_view_project_all" sequence="10"/>
 
     </data>
 </openerp>

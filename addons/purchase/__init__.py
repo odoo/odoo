@@ -5,8 +5,8 @@ import mail_mail
 import purchase
 import partner
 import stock
-import wizard
 import report
 import stock
 import company
 import res_config
+import invoice

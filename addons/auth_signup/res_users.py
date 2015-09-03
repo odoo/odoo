@@ -18,7 +18,7 @@ class SignupError(Exception):
 def random_token():
     # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    return ''.join(random.choice(chars) for i in xrange(20))
+    return ''.join(random.SystemRandom().choice(chars) for i in xrange(20))
 
 def now(**kwargs):
     dt = datetime.now() + timedelta(**kwargs)
@@ -162,7 +162,7 @@ class res_users(osv.Model):
 
     _columns = {
         'state': fields.function(_get_state, string='Status', type='selection',
-                    selection=[('new', 'Never Connected'), ('active', 'Activated')]),
+                    selection=[('new', 'Never Connected'), ('active', 'Connected')]),
     }
 
     def signup(self, cr, uid, values, token=None, context=None):

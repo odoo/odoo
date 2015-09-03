@@ -6,8 +6,7 @@
             <field name="model">ir.translation</field>
             <field name="arch" type="xml">
                 <search string="Translations">
-                    <filter icon="terp-gdu-smart-failing"
-                        string="Untranslated"
+                    <filter string="Untranslated"
                         domain="['|','|',('state','=','to_translate'),('value', '=', False),('value','=','')]"/>
                     <filter name="openerp-web"
                         string="Web-only translations"

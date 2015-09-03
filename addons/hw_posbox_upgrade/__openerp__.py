@@ -18,7 +18,6 @@ new version. This module is specific to the PosBox setup and environment
 and should not be installed on regular openerp servers.
 
 """,
-    'author': 'OpenERP SA',
     'depends': ['hw_proxy'],
     'test': [
     ],

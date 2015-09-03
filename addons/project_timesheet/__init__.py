@@ -3,3 +3,4 @@
 
 import project_timesheet
 import report
+import res_config

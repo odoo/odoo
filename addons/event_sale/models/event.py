@@ -88,8 +88,8 @@ class event_ticket(models.Model):
         [('limited', 'Limited'), ('unlimited', 'Unlimited')],
         'Available Seat', required=True, store=True, compute='_compute_seats', default="limited")
     seats_max = fields.Integer('Maximum Available Seats',
-                               help="Define the number of available tickets. If you have too much registrations you will"
-                                    "not BE able to sell tickets anymore. Set 0 to ignore this rule set as unlimited.")
+                               help="Define the number of available tickets. If you have too much registrations you will "
+                                    "not be able to sell tickets anymore. Set 0 to ignore this rule set as unlimited.")
     seats_reserved = fields.Integer(string='Reserved Seats', compute='_compute_seats', store=True)
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=True)
     seats_unconfirmed = fields.Integer(string='Unconfirmed Seat Reservations', compute='_compute_seats', store=True)

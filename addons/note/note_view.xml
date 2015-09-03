@@ -133,30 +133,9 @@
           <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
           <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
           <group expand="0" string="Group By">
-            <filter icon="terp-stock_symbol-selection" string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
+            <filter string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>
         </search>
-      </field>
-    </record>
-
-
-    <!-- general settings -->
-    <record model="ir.ui.view" id="view_general_settings_note_form">
-      <field name="name">note.view.general_settings.form</field>
-      <field name="model">base.config.settings</field>
-      <field name="inherit_id" ref="base_setup.view_general_configuration"/>
-      <field name="arch" type="xml">
-        <xpath expr="//group[@name='authentication']" position="after">
-          <group>
-              <label for="id" string="Notes"/>
-              <div name="note">
-                  <div>
-                      <field name="module_note_pad" class="oe_inline"/>
-                      <label for="module_note_pad"/>
-                  </div>
-              </div>
-          </group>
-        </xpath>
       </field>
     </record>
 

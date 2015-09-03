@@ -12,6 +12,13 @@
                         options="{'fold_field': 'fold'}"/>
                 </header>
                 <sheet string="Issue">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_no_one"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="row">
                         <h1 class="col-xs-11">
                             <field name="name" class="oe_inline" placeholder="Issue Summary..."/>
@@ -59,9 +66,6 @@
                                     <field name="inactivity_days"/>
                                     <field name="days_since_creation"/>
                                 </group>
-                                <group groups="base.group_no_one">
-                                    <field name="active"/>
-                                </group>
                             </group>
                         </page>
                     </notebook>
@@ -78,8 +82,8 @@
             <field name="name">Project Issue Tracker Tree</field>
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
-                <tree string="Issue Tracker Tree" decoration-bf="message_unread==True">
-                    <field name="message_unread" invisible="1"/>
+                <tree string="Issue Tracker Tree" decoration-bf="message_needaction==True">
+                    <field name="message_needaction" invisible="1"/>
                     <field name="id"/>
                     <field name="name"/>
                     <field name="partner_id"/>
@@ -111,7 +115,7 @@
                     <separator/>
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By" >
                         <filter string="Assigned to" name="Responsible" context="{'group_by':'user_id'}" />
                         <filter string="Project" name="project" context="{'group_by':'project_id'}" />
@@ -122,6 +126,7 @@
                         <separator/>
                         <filter string="Create Day" context="{'group_by':'create_date:day'}" help="Create Date"/>
                         <filter string="Last Message" name="group_message_last_post" context="{'group_by':'message_last_post:week'}"/>
+                        <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     </group>
                 </search>
             </field>
@@ -152,7 +157,8 @@
                     <field name="user_email"/>
                     <field name="user_id"/>
                     <field name="date_deadline"/>
-                    <field name="message_unread_counter"/>
+                    <field name="message_needaction_counter"/>
+                    <field name="active"/>
                     <templates>
                         <t t-name="kanban-tooltip">
                            <ul class="oe_kanban_tooltip">
@@ -174,16 +180,15 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                    <field name="tag_ids"/>
                                     <div>
                                         <b><field name="name"/></b> <br/>
                                         <field name="partner_id"/> <br/>
                                     </div>
-                                    <div class="oe_kanban_footer_left">
-                                        <field name="tag_ids"/>
-                                    </div>
                                     <div class="oe_kanban_bottom_left">
-                                        <t t-if="record.message_unread_counter.raw_value">
-                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                        <field name="priority" widget="priority"/>
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
@@ -191,7 +196,6 @@
                                         <div class="pull-left" groups="base.group_user">
                                             <field name="kanban_state" widget="kanban_state_selection"
                                                 options='{"states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
-                                            <field name="priority" widget="priority"/>
                                         </div>
                                     </div>
                                 </div>
@@ -231,9 +235,9 @@
             <field name="name">Project Issue- Feature Tracker Tree</field>
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
-                <tree string="Feature Tracker Tree" decoration-bf="message_unread==True">
+                <tree string="Feature Tracker Tree" decoration-bf="message_needaction==True">
                     <field name="id"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Feature description"/>
                     <field name="partner_id"/>
                     <field name="priority" string="Priority"/>
@@ -337,6 +341,30 @@
                 </div>
             </field>
         </record>
+
+        <!-- Portal -->
+        <record id="open_view_issue" model="ir.actions.act_window">     
+            <field name="name">Issues</field>      
+            <field name="res_model">project.issue</field>      
+            <field name="view_type">form</field>       
+            <field name="view_mode">tree,form</field>      
+            <field name="view_id" ref="project_issue.project_issue_tree_view"/>        
+            <field name="domain" eval=""/>     
+            <field name="context">{"search_default_user_id":'', "search_default_draft":'', "search_default_todo":'', "portal":'True'}</field>      
+            <field name="search_view_id" ref="project_issue.view_project_issue_filter"/>       
+            <field name="target">current</field>       
+            <field name="help" type="html">        
+              <p class="oe_view_nocontent_create">     
+                Click to create an issue.      
+              </p><p>      
+                You can track your issues from this menu and the action we     
+                will take.     
+              </p>     
+            </field>       
+        </record>
+        
+        <menuitem name="Issues" id="portal_services_issues" parent="portal.portal_projects"     
+                  action="open_view_issue" sequence="10"/>
 
     </data>
 </openerp>

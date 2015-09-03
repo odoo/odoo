@@ -144,6 +144,8 @@ editor.Class = Widget.extend({
                 d.resolve();
             }).on('hidden.bs.modal', function () {
                 d.reject();
+            }).on('keydown.dismiss.bs.modal', function (event) {
+                event.stopImmediatePropagation();
             });
             d.always(function () {
                 $dialog.remove();

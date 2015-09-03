@@ -64,7 +64,7 @@
             <field name="arch" type="xml">
                 <search string="Record Rules">
                     <field name="name" string="Record Rule"/>
-                    <filter string="Global" icon="terp-stage" domain="[('global','=',True)]"/>
+                    <filter string="Global" domain="[('global','=',True)]"/>
                     <separator/>
                     <filter string="Full Access Right" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
                     <filter string="Read Access Right" domain="[('perm_read','=',True)]"/>

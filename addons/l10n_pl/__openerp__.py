@@ -27,8 +27,7 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
               'account_tax.xml',
               'fiscal_position.xml',
               'country_pl.xml',
-              'l10n_chart_pl_wizard.xml'
+              'account_chart_template.yml'
     ],
-    'auto_install': False,
-    'installable': False,
+    'installable': True,
 }

@@ -18,8 +18,6 @@
 - 
   !record {model: purchase.order, id: purchase_order_average1}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_stock
-    pricelist_id: purchase.list0
     order_line:
       - product_id: product_average_icecream
         product_qty: 10.0
@@ -29,12 +27,13 @@
 - 
   I confirm the first purchase order
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_average1}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_average1")])
 - 
   I check the "Approved" status of purchase order 1
 -
   !assert {model: purchase.order, id: purchase_order_average1}:
-    - state == 'approved'
+    - state == 'purchase'
 - 
   Process the reception of purchase order 1
 -
@@ -53,8 +52,6 @@
 - 
   !record {model: purchase.order, id: purchase_order_average2}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_stock
-    pricelist_id: purchase.list0
     order_line:
       - product_id: product_average_icecream
         product_qty: 30.0
@@ -64,7 +61,8 @@
 - 
   I confirm the second purchase order
 - 
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_average2}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_average2")])
 -
   Process the reception of purchase order 2
 - 
@@ -108,8 +106,6 @@
 - 
   !record {model: purchase.order, id: purchase_order_average3}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_stock
-    pricelist_id: purchase.list0
     order_line:
       - product_id: product_average_icecream
         product_qty: 500.0
@@ -119,7 +115,8 @@
 - 
   I confirm the first purchase order
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_average3}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_average3")])
 - 
   Process the reception of purchase order 3 in grams
 - 

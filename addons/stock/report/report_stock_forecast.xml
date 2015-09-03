@@ -29,6 +29,7 @@
         <field name="arch" type="xml">
             <search string="Stock Level forecast">
                 <field name="product_id"/>
+                <field name="product_tmpl_id"/>
                 <field name="date"/>
                 <group expand="1" string="Group By">
                     <filter string="Pivot" name="pivot_by" context="{'pivot_row_groupby': ['product_id'], 'pivot_column_groupby': ['date:week'],'pivot_measures': ['quantity']}"/>
@@ -44,10 +45,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">pivot,graph</field>
         <field name="search_view_id" ref="view_stock_level_forecast_filter"/>
-        <field name="context">{'search_default_pivot_by':1,'search_default_graph_by':1}</field>
+        <field name="context">{'search_default_pivot_by':1, 'search_default_graph_by':1, 'search_default_product_tmpl_id': active_id}</field>
         <field name="view_id" ref="view_stock_level_forecast_pivot"/>
     </record>
-
-    <menuitem action="action_stock_level_forecast_report" id="menu_report_product_forecast" parent="menu_warehouse_report" sequence="3" />
 
 </odoo>

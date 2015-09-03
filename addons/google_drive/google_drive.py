@@ -46,9 +46,8 @@ class config(osv.Model):
     def get_access_token(self, cr, uid, scope=None, context=None):
         ir_config = self.pool['ir.config_parameter']
         google_drive_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_refresh_token')
-        user_is_admin = self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
         if not google_drive_refresh_token:
-            if user_is_admin:
+            if self.pool['res.users']._is_admin(cr, uid, [uid]):
                 model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base_setup', 'action_general_configuration')
                 msg = _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it .")
                 raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
@@ -63,7 +62,7 @@ class config(osv.Model):
                                      client_secret=google_drive_client_secret,
                                      grant_type="refresh_token",
                                      scope=scope or 'https://www.googleapis.com/auth/drive'))
-        headers = {"Content-type": "application/x-www-form-urlencoded", "Accept-Encoding": "gzip, deflate"}
+        headers = {"Content-type": "application/x-www-form-urlencoded"}
         try:
             req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
             content = urllib2.urlopen(req, timeout=TIMEOUT).read()
@@ -83,7 +82,7 @@ class config(osv.Model):
         access_token = self.get_access_token(cr, uid, context=context)
         # Copy template in to drive with help of new access token
         request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (template_id, access_token)
-        headers = {"Content-type": "application/x-www-form-urlencoded", "Accept-Encoding": "gzip, deflate"}
+        headers = {"Content-type": "application/x-www-form-urlencoded"}
         try:
             req = urllib2.Request(request_url, None, headers)
             parents = urllib2.urlopen(req, timeout=TIMEOUT).read()

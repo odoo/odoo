@@ -12,7 +12,6 @@ This module update memos inside OpenERP for using an external pad
 Use for update your text memo in real time with the following user that you invite.
 
 """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/notes',
     'summary': 'Sticky memos, Collaborative',
     'depends': [
@@ -25,5 +24,5 @@ Use for update your text memo in real time with the following user that you invi
     ],
     'installable': True,
     'application': False,
-    'auto_install': False,
+    'auto_install': True,
 }

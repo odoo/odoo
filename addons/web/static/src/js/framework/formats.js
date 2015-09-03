@@ -7,7 +7,6 @@ var utils = require('web.utils');
 
 var _t = core._t;
 
-
 /**
  * Formats a single atomic value based on a field descriptor
  *

@@ -316,6 +316,38 @@ class project_issue(osv.Model):
             return 'project_issue.mt_issue_stage'
         return super(project_issue, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    def _notification_group_recipients(self, cr, uid, ids, message, recipients, done_ids, group_data, context=None):
+        """ Override the mail.thread method to handle project users and officers
+        recipients. Indeed those will have specific action in their notification
+        emails: creating tasks, assigning it. """
+        group_project_user = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project.group_project_user')
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if recipient.user_ids and group_project_user in recipient.user_ids[0].groups_id.ids:
+                group_data['group_project_user'] |= recipient
+                done_ids.add(recipient.id)
+        return super(project_issue, self)._notification_group_recipients(cr, uid, ids, message, recipients, done_ids, group_data, context=context)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(project_issue, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+
+        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project_issue.project_issue_categ_act0')
+        take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, view_id=new_action_id)
+
+        task_record = self.browse(cr, uid, ids[0], context=context)
+        actions = []
+        if not task_record.user_id:
+            actions.append({'url': take_action, 'title': _('I take it')})
+        else:
+            actions.append({'url': new_action, 'title': _('New Issue')})
+
+        res['group_project_user'] = {
+            'actions': actions
+        }
+        return res
+
     @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
@@ -336,6 +368,13 @@ class project_issue(osv.Model):
             pass
         return recipients
 
+    def email_split(self, cr, uid, ids, msg, context=None):
+        email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
+        # check left-part is not already an alias
+        issue_ids = self.browse(cr, uid, ids, context=context)
+        aliases = [issue.project_id.alias_name for issue in issue_ids if issue.project_id]
+        return filter(lambda x: x.split('@')[0] not in aliases, email_list)
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
@@ -352,10 +391,23 @@ class project_issue(osv.Model):
             'user_id': False,
         }
         defaults.update(custom_values)
+
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        email_list = self.email_split(cr, uid, [res_id], msg, context=context)
+        partner_ids = self._find_partner_from_emails(cr, uid, [res_id], email_list, force_create=True, context=context)
+        self.message_subscribe(cr, uid, [res_id], partner_ids, context=context)
         return res_id
 
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Override to update the issue according to the email. """
+
+        email_list = self.email_split(cr, uid, ids, msg, context=context)
+        partner_ids = self._find_partner_from_emails(cr, uid, ids, email_list, force_create=True, context=context)
+        self.message_subscribe(cr, uid, ids, partner_ids, context=context)
+        return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+
     @api.cr_uid_ids_context
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, cr, uid, thread_id, subtype=None, context=None, **kwargs):
         """ Overrides mail_thread message_post so that we can set the date of last action field when
             a new message is posted on the issue.
@@ -386,6 +438,15 @@ class project(osv.Model):
         'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
                                     domain=[('stage_id.fold', '=', False)]),
     }
+
+    @api.multi
+    def write(self, vals):
+        res = super(project, self).write(vals)
+        if 'active' in vals:
+            # archiving/unarchiving a project does it on its issues, too
+            issues = self.with_context(active_test=False).mapped('issue_ids')
+            issues.write({'active': vals['active']})
+        return res
 
 
 class account_analytic_account(osv.Model):

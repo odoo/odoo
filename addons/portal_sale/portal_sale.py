@@ -20,7 +20,7 @@ class sale_order(osv.Model):
         result = dict.fromkeys(ids, False)
         payment_acquirer = self.pool['payment.acquirer']
         for this in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            if this.state not in ('draft', 'cancel') and not this.invoiced:
+            if this.state not in ('draft', 'cancel', 'done'):
                 result[this.id] = payment_acquirer.render_payment_block(
                     cr, uid, this.name, this.amount_total, this.pricelist_id.currency_id.id,
                     partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
@@ -44,7 +44,7 @@ class sale_order(osv.Model):
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
         partner = document.partner_id
-        if partner not in document.message_follower_ids:
+        if partner not in document.message_partner_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
         return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
 
@@ -103,7 +103,7 @@ class account_invoice(osv.Model):
         # fetch the partner's id and subscribe the partner to the invoice
         for invoice in self.browse(cr, uid, ids, context=context):
             partner = invoice.partner_id
-            if partner not in invoice.message_follower_ids:
+            if partner not in invoice.message_partner_ids:
                 self.message_subscribe(cr, uid, [invoice.id], [partner.id], context=context)
         return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
 

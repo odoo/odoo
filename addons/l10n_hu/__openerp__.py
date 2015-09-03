@@ -23,13 +23,15 @@ This module consists :
     'website': 'http://www.innopen.eu',
     'depends': ['account'],
     'data': [
+        'data/account_chart_template.xml',
         'data/account.account.template.csv',
-        'data/account.chart.template.csv',
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
         'data/res.bank.csv',
+        'data/account_chart_template_after.xml',
+        'data/account_chart_template.yml',
     ],
-    'installable': False,
+    'installable': True,
     'auto_install': False,
 }

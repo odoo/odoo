@@ -207,14 +207,28 @@
 
             <section class="row mt32">
                 <div class="col-md-8">
-                    <div t-field="track.description"/>
+                    <section>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <h2 t-field="track.name"/>
+                                    <small>Proposed by <span t-field="track.partner_name"/></small>
+                                </div>
+                                <div class="col-md-12">
+                                    <p t-field="track.description"/>
+                                </div>
+                                <div class="col-md-12">
+                                    <h3>About The Author</h3>
+                                    <p t-field="track.partner_biography"/>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     <div t-foreach="track.speaker_ids" t-as="speaker" class="well mt32">
                         <div class="row">
                             <div class="col-sm-2">
                                 <span t-field="speaker.sudo().image_medium"
                                     t-field-options='{"widget": "image", "class": "img-circle"}'/>
-                                    <!-- <span t-field="speaker.self" t-field-options='{"widget": "contact", "fields": ["name", "country_id"]}'
-                                        style="display: inline-block;"/> -->
                             </div><div class="col-sm-10">
                                <h4 t-field="speaker.name" class="mb4"/>
                                <div class="fa fa-home mb16" t-if="speaker.website">

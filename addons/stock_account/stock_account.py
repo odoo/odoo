@@ -51,7 +51,7 @@ class account_invoice_line(osv.osv):
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id.id
 
-        if i_line.product_id.type != 'service' and i_line.product_id.valuation == 'real_time':
+        if i_line.product_id.type == 'product' and i_line.product_id.valuation == 'real_time':
             # debit account dacc will be the output account
             # first check the product, if empty check the category
             dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
@@ -79,7 +79,7 @@ class account_invoice_line(osv.osv):
                         'price':self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
                         'account_id':dacc,
                         'product_id':i_line.product_id.id,
-                        'uos_id':i_line.uos_id.id,
+                        'uom_id':i_line.uom_id.id,
                         'account_analytic_id': False,
                         'taxes':i_line.invoice_line_tax_ids,
                     },
@@ -92,7 +92,7 @@ class account_invoice_line(osv.osv):
                         'price': -1 * self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
                         'account_id':cacc,
                         'product_id':i_line.product_id.id,
-                        'uos_id':i_line.uos_id.id,
+                        'uom_id':i_line.uom_id.id,
                         'account_analytic_id': False,
                         'taxes':i_line.invoice_line_tax_ids,
                     },
@@ -122,20 +122,6 @@ class account_invoice(osv.osv):
                                                                               fpos,
                                                                               counterpart_acct_id)
         return invoice_data
-
-
-class stock_inventory(osv.osv):
-    _inherit = "stock.inventory"
-    _columns = {
-        'date_account': fields.date('Force Valuation Account Date', help="Choose the accounting period where you want to value the stock moves created by the inventory instead of the default one (chosen by the inventory end date)"),
-    }
-    def post_inventory(self, cr, uid, inv, context=None):
-        if context is None:
-            context = {}
-        ctx = context.copy()
-        if inv.date:
-            ctx['force_period_date'] = inv.date
-        return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
 
 
 #----------------------------------------------------------

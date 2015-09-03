@@ -248,7 +248,7 @@ class base_action_rule(osv.osv):
             """ Instanciate an unlink method that processes action rules. """
             def unlink(self, cr, uid, ids, context=None, **kwargs):
                 if context and context.get('action'):
-                    return unlink.origin(self, cr, uid, ids, vals, context=context)
+                    return unlink.origin(self, cr, uid, ids, context=context)
 
                 # modify context
                 context = dict(context or {}, action=True)

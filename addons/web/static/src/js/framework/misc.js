@@ -241,6 +241,7 @@ $.fn.tooltip.Constructor.DEFAULTS.placement = 'auto top';
 $.fn.tooltip.Constructor.DEFAULTS.html = true;
 $.fn.tooltip.Constructor.DEFAULTS.trigger = 'hover focus click';
 $.fn.tooltip.Constructor.DEFAULTS.container = 'body';
+$.fn.tooltip.Constructor.DEFAULTS.delay = { show: 1000, hide: 0 };
 //overwrite bootstrap tooltip method to prevent showing 2 tooltip at the same time
 var bootstrap_show_function = $.fn.tooltip.Constructor.prototype.show;
 $.fn.modal.Constructor.prototype.enforceFocus = function () { };
@@ -357,12 +358,28 @@ function prepend ($target, content, trigger) {
     }
 }
 
+/**
+ * Returns the distance between a DOM element and the top-left corner of the window
+ * @param {element} [e] the DOM element
+ * @return {Object} the left and top distances in pixels
+ */
+function getPosition(e) {
+    var position = {left: 0, top: 0};
+    while (e) {
+        position.left += e.offsetLeft;
+        position.top += e.offsetTop;
+        e = e.offsetParent;
+    }
+    return position;
+}
+
 return {
     blockUI: blockUI,
     unblockUI: unblockUI,
     redirect: redirect,
     append: append,
     prepend: prepend,
+    getPosition: getPosition,
 };
 
 });

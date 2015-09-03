@@ -138,7 +138,7 @@ Tour.register({
         {
             waitFor:   '#editable_area > section .row > div:first:has( font:last:containsExact(i) )',
             element:   '.note-air-popover button[data-event="undo"]',
-            title:     "undo adain",
+            title:     "undo again",
         },
         {
             waitFor:   '#editable_area > section .row > div:first:not(:has(p font)) h1',

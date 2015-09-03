@@ -164,7 +164,7 @@ class HrExpense(models.Model):
             'ref': line.get('ref'),
             'quantity': line.get('quantity',1.00),
             'product_id': line.get('product_id'),
-            'product_uom_id': line.get('uos_id'),
+            'product_uom_id': line.get('uom_id'),
             'analytic_account_id': line.get('account_analytic_id'),
         }
 
@@ -272,7 +272,7 @@ class HrExpense(models.Model):
                     'price': expense.total_amount,
                     'account_id': account.id,
                     'product_id': expense.product_id.id,
-                    'uos_id': expense.product_uom_id.id,
+                    'uom_id': expense.product_uom_id.id,
                     'account_analytic_id': expense.analytic_account_id.id,
                 }
             account_move.append(move_line)

@@ -73,14 +73,14 @@ class AccountInvoiceReport(models.Model):
 
     _depends = {
         'account.invoice': [
-            'account_id', 'amount_total_signed', 'commercial_partner_id', 'company_id',
+            'account_id', 'amount_total_company_signed', 'commercial_partner_id', 'company_id',
             'currency_id', 'date_due', 'date_invoice', 'fiscal_position_id',
             'journal_id', 'partner_bank_id', 'partner_id', 'payment_term_id',
             'residual', 'state', 'type', 'user_id',
         ],
         'account.invoice.line': [
             'account_id', 'invoice_id', 'price_subtotal', 'product_id',
-            'quantity', 'uos_id', 'account_analytic_id',
+            'quantity', 'uom_id', 'account_analytic_id',
         ],
         'product.product': ['product_tmpl_id'],
         'product.template': ['categ_id'],
@@ -96,7 +96,7 @@ class AccountInvoiceReport(models.Model):
                 sub.fiscal_position_id, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
                 sub.product_qty, sub.price_total as price_total, sub.price_average as price_average,
-                cr.rate as currency_rate, sub.residual as residual, sub.commercial_partner_id as commercial_partner_id
+                COALESCE(cr.rate, 1) as currency_rate, sub.residual as residual, sub.commercial_partner_id as commercial_partner_id
         """
         return select_str
 
@@ -125,7 +125,7 @@ class AccountInvoiceReport(models.Model):
                                     END
                                ELSE 1::numeric
                           END AS price_average,
-                    ai.residual_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
+                    ai.residual_company_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
                     count(*) AS residual,
                     ai.commercial_partner_id as commercial_partner_id,
                     partner.country_id
@@ -139,7 +139,7 @@ class AccountInvoiceReport(models.Model):
                 JOIN res_partner partner ON ai.commercial_partner_id = partner.id
                 LEFT JOIN product_product pr ON pr.id = ail.product_id
                 left JOIN product_template pt ON pt.id = pr.product_tmpl_id
-                LEFT JOIN product_uom u ON u.id = ail.uos_id
+                LEFT JOIN product_uom u ON u.id = ail.uom_id
                 LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
         """
         return from_str
@@ -149,8 +149,8 @@ class AccountInvoiceReport(models.Model):
                 GROUP BY ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
                     ai.partner_id, ai.payment_term_id, u2.name, u2.id, ai.currency_id, ai.journal_id,
                     ai.fiscal_position_id, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
-                    ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual_signed,
-                    ai.amount_total_signed, ai.commercial_partner_id, partner.country_id
+                    ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual_company_signed,
+                    ai.amount_total_company_signed, ai.commercial_partner_id, partner.country_id
         """
         return group_by_str
 
@@ -171,7 +171,7 @@ class AccountInvoiceReport(models.Model):
             FROM (
                 %s %s %s
             ) AS sub
-            JOIN currency_rate cr ON
+            LEFT JOIN currency_rate cr ON
                 (cr.currency_id = sub.currency_id AND
                  cr.date_start <= COALESCE(sub.date, NOW()) AND
                  (cr.date_end IS NULL OR cr.date_end > COALESCE(sub.date, NOW())))

@@ -6,7 +6,7 @@
     'name': 'Purchase Management',
     'version': '1.1',
     'category': 'Purchase Management',
-    'sequence': 19,
+    'sequence': 60,
     'summary': 'Purchase Orders, Receipts, Vendor Bills',
     'description': """
 Manage goods requirement by Purchase Orders easily
@@ -25,19 +25,16 @@ Dashboard / Reports for Purchase Management will include:
 * Receipt Analysis
 * Purchase Analysis
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/purchase',
     'depends': ['stock_account', 'report', 'web_tip'],
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
-        'purchase_workflow.xml',
+        'invoice_view.xml',
         'purchase_sequence.xml',
         'company_view.xml',
         'purchase_data.xml',
         'purchase_data.yml',
-        'wizard/purchase_order_group_view.xml',
-        'wizard/purchase_line_invoice_view.xml',
         'purchase_report.xml',
         'purchase_view.xml',
         'stock_view.xml',
@@ -58,15 +55,9 @@ Dashboard / Reports for Purchase Management will include:
         'test/fifo_returns.yml',
         # 'test/costmethodchange.yml',
         'test/process/cancel_order.yml',
-        'test/process/rfq2order2done.yml',
-        'test/process/generate_invoice_from_reception.yml',
-        'test/process/merge_order.yml',
-        'test/process/invoice_on_poline.yml',
         'test/ui/duplicate_order.yml',
         'test/ui/delete_order.yml',
         'test/average_price.yml',
-        'test/anglo_saxon.yml',
-        'test/anglo_saxon_avg_fifo.yml',
     ],
     'demo': [
         'purchase_order_demo.yml',

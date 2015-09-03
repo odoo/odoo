@@ -82,6 +82,14 @@ class ir_cron(osv.osv):
         (_check_args, 'Invalid arguments', ['args']),
     ]
 
+    def method_direct_trigger(self, cr, uid, ids, context=None):
+        if context is None:
+            context={}
+        cron_obj = self.browse(cr, uid, ids, context=context)
+        for cron in cron_obj:
+            self._callback(cr, uid, cron_obj.model, cron_obj.function, cron_obj.args, cron_obj.id)
+        return True
+
     def _handle_callback_exception(self, cr, uid, model_name, method_name, args, job_id, job_exception):
         """ Method called when an exception is raised by a job.
 

@@ -159,8 +159,8 @@
                     <field name="name" filter_domain="[('name','ilike',self)]" string="Budget"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
-                    <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
+                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Budgets"/>
+                    <filter string="To Approve" domain="[('state','=','confirm')]" help="To Approve Budgets" />
                     <field name="state"/>
                 </search>
             </field>
@@ -256,7 +256,7 @@
             <field name="view_id" ref="view_crossovered_budget_line_tree"/>
         </record>
 
-        <menuitem parent="account.menu_finance_reports"
+        <menuitem parent="account.account_reports_management_menu"
             id="menu_act_crossovered_budget_lines_view"
             action="act_crossovered_budget_lines_view" sequence="20"/>
 

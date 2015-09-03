@@ -29,6 +29,7 @@
            view_mode='tree,form'
            view_id='view_currency_rate_tree'
            domain="[('currency_id','=', active_id)]"
+           context="{'default_currency_id': active_id}"
            res_model="res.currency.rate"/>
 
         <record id="view_currency_search" model="ir.ui.view">
@@ -38,6 +39,8 @@
                 <search string="Currencies">
                     <field name="name" string="Currency"/>
                     <field name="active"/>
+                    <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active currencies"/>
+                    <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive currencies"/>
                 </search>
             </field>
         </record>
@@ -46,14 +49,12 @@
             <field name="name">res.currency.tree</field>
             <field name="model">res.currency</field>
             <field name="arch" type="xml">
-                <tree string="Currencies">
+                <tree string="Currencies" decoration-muted="(not active)">
                     <field name="name"/>
-                     <field name="rate_ids" invisible="1"/>
+                    <field name="symbol"/>
+                    <field name="rate_ids" invisible="1"/>
                     <field name="date"/>
                     <field name="rate"/>
-                    <field name="rounding"/>
-                    <field name="decimal_places"/>
-                    <field name="position"/>
                     <field name="active"/>
                 </tree>
             </field>
@@ -95,6 +96,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_currency_search"/>
+            <field name="context">{'active_test': False}</field>
         </record>
 
         <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3" groups="base.group_multi_currency"/>

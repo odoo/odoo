@@ -83,7 +83,7 @@ class module_category(osv.osv):
         'name': fields.char("Name", required=True, translate=True, select=True),
         'parent_id': fields.many2one('ir.module.category', 'Parent Application', select=True),
         'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Applications'),
-        'module_nr': fields.function(_module_nbr, string='Number of Modules', type='integer'),
+        'module_nr': fields.function(_module_nbr, string='Number of Apps', type='integer'),
         'module_ids': fields.one2many('ir.module.module', 'category_id', 'Modules'),
         'description': fields.text("Description", translate=True),
         'sequence': fields.integer('Sequence'),
@@ -465,7 +465,7 @@ class module(osv.osv):
         ir_model_data = self.pool.get('ir.model.data')
         modules_to_remove = [m.name for m in self.browse(cr, uid, ids, context)]
         ir_model_data._module_data_uninstall(cr, uid, modules_to_remove, context)
-        self.write(cr, uid, ids, {'state': 'uninstalled'})
+        self.write(cr, uid, ids, {'state': 'uninstalled', 'latest_version': False})
         return True
 
     def downstream_dependencies(self, cr, uid, ids, known_dep_ids=None,

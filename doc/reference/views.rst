@@ -1162,10 +1162,6 @@ Possible children elements of the search view are:
         tooltip
     ``groups``
         makes a filter only available to specific users
-    ``icon``
-        an icon to display next to the label, if there's sufficient space
-
-        .. deprecated:: 7.0
 
     .. tip::
 

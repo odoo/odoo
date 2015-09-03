@@ -67,15 +67,12 @@
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="partner_id" domain="[('customer','=',True)]" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="pay_now" required="1"/>
-                            <field name="account_id" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}" 
-                                  domain="[('internal_type','=', 'receivable')]"/>
-                            <field name="account_id" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"
-                                  domain="[('internal_type','=', 'liquidity')]"/>
-                            <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
+                            <field name="account_id"/>
                         </group>
                         <group>
                             <field name="journal_id" domain="[('type','=','sale')]" widget="selection" groups="account.group_account_user"/>
                             <field name="date"/>
+                            <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
                             <field name="name" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
                             <field name="paid" invisible="1"/>
                         </group>
@@ -180,10 +177,7 @@
                         <group>
                             <field name="partner_id" domain="[('supplier','=',True)]" string="Vendor" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
                             <field name="pay_now" required="1"/>
-                            <field name="account_id" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}" 
-                                  domain="[('internal_type','=', 'payable')]"/>
-                            <field name="account_id" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"
-                                  domain="[('internal_type','=', 'liquidity')]"/>
+                            <field name="account_id"/>
                             <field name="name" colspan="2" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
                             <field name="reference"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>

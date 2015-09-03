@@ -734,7 +734,7 @@ class hr_salary_rule(osv.osv):
         'name':fields.char('Name', required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, help="The code of salary rules can be used as reference in computation of other rules. In that case, it is case sensitive."),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence', select=True),
-        'quantity': fields.char('Quantity', help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."),
+        'quantity': fields.char('Quantity', help=u"It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."),
         'category_id':fields.many2one('hr.salary.rule.category', 'Category', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used to display the salary rule on payslip."),
@@ -952,5 +952,5 @@ class hr_employee(osv.osv):
     _columns = {
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Payroll'), help="Sum of all current contract's wage of employee."),
-        'payslip_count': fields.function(_payslip_count, type='integer', string='Payslips'),
+        'payslip_count': fields.function(_payslip_count, type='integer', string='Payslips', groups="base.group_hr_user"),
     }

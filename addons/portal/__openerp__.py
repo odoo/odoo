@@ -8,7 +8,6 @@
         'base',
         'auth_signup',
     ],
-    'author': 'OpenERP SA',
     'category': 'Portal',
     'description': """
 Customize access to your OpenERP database to external users by creating portals.
@@ -22,7 +21,6 @@ The module also associates user groups to the portal users (adding a group in
 the portal automatically adds it to the portal users, etc).  That feature is
 very handy when used in combination with the module 'share'.
     """,
-    'website': 'https://www.odoo.com',
     'data': [
         'portal_data.xml',
         'portal_view.xml',

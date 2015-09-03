@@ -33,33 +33,54 @@
     -->
 
 
+        <record id="product_product_0" model="product.product">
+            <field name="name">Prepaid Consulting</field>
+            <field name="categ_id" ref="product_category_3"/>
+            <field name="standard_price">40</field>
+            <field name="list_price">90</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product_uom_hour"/>
+            <field name="uom_po_id" ref="product_uom_hour"/>
+            <field name="description">Example of product to invoice on order.</field>
+        </record>
+
         <record id="product_product_1" model="product.product">
-            <field name="name">On Site Monitoring</field>
+            <field name="name">GAP Analysis Service</field>
             <field name="categ_id" ref="product_category_3"/>
             <field name="standard_price">20.5</field>
             <field name="list_price">30.75</field>
             <field name="type">service</field>
             <field name="uom_id" ref="product_uom_hour"/>
             <field name="uom_po_id" ref="product_uom_hour"/>
-            <field name="description">This type of service include basic monitoring of products.</field>
-            <field name="description_sale">This type of service include basic monitoring of products.</field>
+            <field name="description">Example of products to invoice based on delivery.</field>
+        </record>
+
+        <record id="product_product_1b" model="product.product">
+            <field name="name">External Audit</field>
+            <field name="categ_id" ref="product_category_3"/>
+            <field name="standard_price">160</field>
+            <field name="list_price">180</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">Example of products to invoice based on cost.</field>
         </record>
 
 
         <record id="product_product_2" model="product.product">
-            <field name="name">On Site Assistance</field>
+            <field name="name">Support Services</field>
             <field name="categ_id" ref="product_category_3"/>
             <field name="standard_price">25.5</field>
             <field name="list_price">38.25</field>
             <field name="type">service</field>
             <field name="uom_id" ref="product_uom_hour"/>
             <field name="uom_po_id" ref="product_uom_hour"/>
-            <field name="description">This type of service include assistance for security questions, system configuration requirements, implementation or special needs.</field>
+            <field name="description">Example of product to invoice based on delivery.</field>
         </record>
 
 
         <record id="product_product_3" model="product.product">
-            <field name="name">PC Assemble SC234</field>
+            <field name="name">Computer SC234</field>
             <field name="categ_id" ref="product_category_5"/>
             <field name="list_price">450.0</field>
             <field name="standard_price">300.0</field>
@@ -183,14 +204,14 @@ FaceTime HD Camera, 1.2 MP Photos</field>
 
 
         <record id="product_product_5" model="product.product">
-            <field name="name">PC Assemble + Custom (PC on Demand) </field>
+            <field name="name">Custom Computer (kit)</field>
             <field name="categ_id" ref="product_category_5"/>
             <field name="standard_price">600.0</field>
             <field name="list_price">147.0</field>
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
-            <field name="description">Custom computer assembled on order based on customer's requirement.</field>
+            <field name="description">Custom computer shipped in kit.</field>
             <field name="default_code">B3424</field>
         </record>
 
@@ -309,7 +330,7 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         </record>
 
         <record id="product_product_14" model="product.product">
-            <field name="name">RAM SR2</field>
+            <field name="name">RAM SR2 (kit)</field>
             <field name="categ_id" ref="product_category_5"/>
             <field name="standard_price">87.0</field>
             <field name="list_price">95.0</field>
@@ -353,7 +374,7 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         </record>
 
         <record id="product_product_18" model="product.product">
-            <field name="name">HDD SH-2</field>
+            <field name="name">HDD SH-2 (mto)</field>
             <field name="categ_id" ref="product_category_5"/>
             <field name="standard_price">1020.0</field>
             <field name="list_price">1150.0</field>
@@ -870,6 +891,7 @@ QWERTY keyboard</field>
             <field name="name" ref="base.res_partner_1"/>
             <field name="delay">3</field>
             <field name="min_qty">1</field>
+            <field name="price">750</field>
         </record>
 
         <record id="product_supplierinfo_2" model="product.supplierinfo">
@@ -877,6 +899,15 @@ QWERTY keyboard</field>
             <field name="name" ref="base.res_partner_4"/>
             <field name="delay">3</field>
             <field name="min_qty">1</field>
+            <field name="price">790</field>
+        </record>
+
+        <record id="product_supplierinfo_2bis" model="product.supplierinfo">
+            <field name="product_tmpl_id" ref="product_product_6_product_template"/>
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="delay">3</field>
+            <field name="min_qty">3</field>
+            <field name="price">785</field>
         </record>
 
         <record id="product_supplierinfo_3" model="product.supplierinfo">
@@ -895,28 +926,28 @@ QWERTY keyboard</field>
 
         <record id="product_supplierinfo_5" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_8_product_template"/>
-            <field name="name" ref="base.res_partner_16"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">2</field>
             <field name="min_qty">5</field>
         </record>
 
         <record id="product_supplierinfo_6" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_8_product_template"/>
-            <field name="name" ref="base.res_partner_8"/>
+            <field name="name" ref="base.res_partner_12"/>
             <field name="delay">4</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_7" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_10_product_template"/>
-            <field name="name" ref="base.res_partner_16"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">2</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_8" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
-            <field name="name" ref="base.res_partner_16"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">2</field>
             <field name="min_qty">1</field>
         </record>
@@ -958,7 +989,7 @@ QWERTY keyboard</field>
 
         <record id="product_supplierinfo_14" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_17_product_template"/>
-            <field name="name" ref="base.res_partner_19"/>
+            <field name="name" ref="base.res_partner_2"/>
             <field name="delay">3</field>
             <field name="min_qty">1</field>
         </record>
@@ -972,7 +1003,7 @@ QWERTY keyboard</field>
 
         <record id="product_supplierinfo_16" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_20_product_template"/>
-            <field name="name" ref="base.res_partner_16"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">4</field>
             <field name="min_qty">5</field>
         </record>
@@ -986,28 +1017,28 @@ QWERTY keyboard</field>
 
         <record id="product_supplierinfo_18" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_21_product_template"/>
-            <field name="name" ref="base.res_partner_16"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">2</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_19" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_22_product_template"/>
-            <field name="name" ref="base.res_partner_19"/>
+            <field name="name" ref="base.res_partner_2"/>
             <field name="delay">3</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_20" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_23_product_template"/>
-            <field name="name" ref="base.res_partner_19"/>
+            <field name="name" ref="base.res_partner_2"/>
             <field name="delay">3</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_21" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_24_product_template"/>
-            <field name="name" ref="base.res_partner_19"/>
+            <field name="name" ref="base.res_partner_2"/>
             <field name="delay">3</field>
             <field name="min_qty">1</field>
         </record>
@@ -1028,7 +1059,7 @@ QWERTY keyboard</field>
 
         <record id="product_supplierinfo_24" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_28_product_template"/>
-            <field name="name" ref="base.res_partner_19"/>
+            <field name="name" ref="base.res_partner_2"/>
             <field name="delay">4</field>
             <field name="min_qty">1</field>
         </record>
@@ -1070,63 +1101,63 @@ QWERTY keyboard</field>
 
         <record id="product_supplierinfo_30" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_34_product_template"/>
-            <field name="name" ref="base.res_partner_16"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">2</field>
             <field name="min_qty">5</field>
         </record>
 
         <record id="product_supplierinfo_31" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_35_product_template"/>
-            <field name="name" ref="base.res_partner_8"/>
+            <field name="name" ref="base.res_partner_12"/>
             <field name="delay">2</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_32" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_36_product_template"/>
-            <field name="name" ref="base.res_partner_8"/>
+            <field name="name" ref="base.res_partner_12"/>
             <field name="delay">2</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_33" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_38_product_template"/>
-            <field name="name" ref="base.res_partner_22"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">4</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_34" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_39_product_template"/>
-            <field name="name" ref="base.res_partner_22"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">4</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_35" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_45_product_template"/>
-            <field name="name" ref="base.res_partner_22"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">5</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_36" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_46_product_template"/>
-            <field name="name" ref="base.res_partner_22"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">5</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_37" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_47_product_template"/>
-            <field name="name" ref="base.res_partner_8"/>
+            <field name="name" ref="base.res_partner_12"/>
             <field name="delay">7</field>
             <field name="min_qty">1</field>
         </record>
 
         <record id="product_supplierinfo_39" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_18_product_template"/>
-            <field name="name" ref="base.res_partner_19"/>
+            <field name="name" ref="base.res_partner_2"/>
             <field name="delay">4</field>
             <field name="min_qty">1</field>
         </record>
@@ -1140,7 +1171,7 @@ QWERTY keyboard</field>
 
         <record id="product_supplierinfo_41" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_19_product_template"/>
-            <field name="name" ref="base.res_partner_8"/>
+            <field name="name" ref="base.res_partner_12"/>
             <field name="delay">5</field>
             <field name="min_qty">0</field>
         </record>
@@ -1154,7 +1185,7 @@ QWERTY keyboard</field>
 
         <record id="product_supplierinfo_43" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_9_product_template"/>
-            <field name="name" ref="base.res_partner_8"/>
+            <field name="name" ref="base.res_partner_12"/>
             <field name="delay">4</field>
             <field name="min_qty">0</field>
         </record>
@@ -1168,14 +1199,14 @@ QWERTY keyboard</field>
 
         <record id="product_supplierinfo_45" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_12_product_template"/>
-            <field name="name" ref="base.res_partner_16"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">3</field>
             <field name="min_qty">0</field>
         </record>
 
         <record id="product_supplierinfo_46" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_37_product_template"/>
-            <field name="name" ref="base.res_partner_22"/>
+            <field name="name" ref="base.res_partner_1"/>
             <field name="delay">5</field>
             <field name="min_qty">0</field>
         </record>

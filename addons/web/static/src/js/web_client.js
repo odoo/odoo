@@ -315,7 +315,7 @@ var WebClient = Widget.extend({
                 return self.action_mutex.exec(function() {
                     if (options.needaction) {
                         result.context = new data.CompoundContext(result.context, {
-                            search_default_message_unread: true,
+                            search_default_message_needaction: true,
                             search_disable_custom_filters: true,
                         });
                     }

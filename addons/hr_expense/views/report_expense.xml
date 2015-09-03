@@ -29,7 +29,6 @@
                     <table class="table table-condensed">
                         <thead>
                             <tr>
-                                <th>Date</th>
                                 <th>Name</th>
                                 <th>Unit Price</th>
                                 <th class="text-center">Qty</th>
@@ -39,10 +38,9 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><span t-field="o.date"/></td>
                                 <td>
-                                    <span t-field="o.product_id.name"/> 
-                                    <span t-field="o.analytic_account_id.complete_name"/>
+                                    <span t-field="o.name"/> 
+                                    <span t-field="o.analytic_account.name"/>
                                 </td>
                                 <td>
                                     <span t-field="o.unit_amount"/>

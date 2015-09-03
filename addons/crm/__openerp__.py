@@ -6,7 +6,7 @@
     'name': 'CRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
-    'sequence': 2,
+    'sequence': 5,
     'summary': 'Leads, Opportunities, Activities',
     'description': """
 The generic OpenERP Customer Relationship Management
@@ -28,7 +28,6 @@ Dashboard for CRM will include:
 * Planned Revenue by Stage and User (graph)
 * Opportunities by Stage (graph)
 """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
     'depends': [
         'base_action_rule',
@@ -37,7 +36,6 @@ Dashboard for CRM will include:
         'mail',
         'calendar',
         'resource',
-        'board',
         'fetchmail',
         'utm',
         'web_tip',
@@ -54,6 +52,7 @@ Dashboard for CRM will include:
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
+        'wizard/crm_lead_lost_view.xml',
         'wizard/crm_lead_to_opportunity_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 

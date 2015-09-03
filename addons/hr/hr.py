@@ -3,6 +3,7 @@
 
 import logging
 
+from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.modules.module import get_module_resource
@@ -14,34 +15,14 @@ _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.Model):
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
-        return res
-
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
-
     _name = "hr.employee.category"
     _description = "Employee Category"
     _columns = {
         'name': fields.char("Employee Tag", required=True),
-        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
-        'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories'),
         'employee_ids': fields.many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', 'Employees'),
     }
-
-    _constraints = [
-        (osv.osv._check_recursion, _('Error! You cannot create recursive category.'), ['parent_id'])
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
 
 
@@ -122,6 +103,12 @@ class hr_job(osv.Model):
             'no_of_hired_employee': 0
         }, context=context)
         return True
+
+    # TDE note: done in new api, because called with new api -> context is a
+    # frozendict -> error when tryign to manipulate it
+    @api.model
+    def create(self, values):
+        return super(hr_job, self.with_context(mail_create_nosubscribe=True)).create(values)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -235,8 +222,8 @@ class hr_employee(osv.osv):
         address_id = False
         if company:
             company_id = self.pool.get('res.company').browse(cr, uid, company, context=context)
-            address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['default'])
-            address_id = address and address['default'] or False
+            address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['contact'])
+            address_id = address and address['contact'] or False
         return {'value': {'address_id': address_id}}
 
     def onchange_department_id(self, cr, uid, ids, department_id, context=None):
@@ -246,13 +233,13 @@ class hr_employee(osv.osv):
             value['parent_id'] = department.manager_id.id
         return {'value': value}
 
-    def onchange_user(self, cr, uid, ids, user_id, context=None):
+    def onchange_user(self, cr, uid, ids, name, image, user_id, context=None):
         if user_id:
             user = self.pool['res.users'].browse(cr, uid, user_id, context=context)
             values = {
-                'name': user.name,
+                'name': name or user.name,
                 'work_email': user.email,
-                'image': user.image,
+                'image': image or user.image,
             }
             return {'value': values}
 
@@ -328,6 +315,9 @@ class hr_department(osv.osv):
         return res
 
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        context['mail_create_nosubscribe'] = True
         # TDE note: auto-subscription of manager done by hand, because currently
         # the tracking allows to track+subscribe fields linked to a res.user record
         # An update of the limited behavior should come, but not currently done.

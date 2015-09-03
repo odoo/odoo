@@ -6,7 +6,7 @@
     'name': 'Timesheets',
     'version': '1.0',
     'category': 'Human Resources',
-    'sequence': 24,
+    'sequence': 80,
     'summary': 'Timesheets, Attendances, Activities',
     'description': """
 Record and validate timesheets and attendances easily
@@ -25,9 +25,8 @@ The validation can be configured in the company:
 * Period size (Day, Week, Month)
 * Maximal difference between timesheet and attendances
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
-    'depends': ['hr_timesheet', 'hr_timesheet_invoice'],
+    'depends': ['hr_timesheet'],
     'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_sheet_security.xml',
@@ -39,9 +38,6 @@ The validation can be configured in the company:
         'res_config_view.xml',
         'views/hr_timesheet_sheet.xml',
         'hr_dashboard.xml',
-    ],
-    'demo': [
-        'hr_timesheet_sheet_demo.xml',
     ],
     'test':['../account/test/account_minimal_test.xml', 'test/test_hr_timesheet_sheet.yml'],
     'installable': True,

@@ -192,6 +192,8 @@ eventHandler.popover.button.update = function ($container, oStyle) {
 
     fn_boutton_update.call(this, $container, oStyle);
 
+    $container.find('.note-color').removeClass("hidden");
+
     if (oStyle.image) {
         $container.find('[data-event]').parent().removeClass("active");
 
@@ -212,8 +214,8 @@ eventHandler.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="resizefa"][data-value="1"]').toggleClass("active", !$container.find('.active[data-event="resizefa"]').length);
 
             $container.find('button[data-event="imageShape"][data-value="fa-spin"]').toggleClass("active", $(oStyle.image).hasClass("fa-spin"));
-            
-            $container.find('.note-color').removeClass("hidden");
+            $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
+            $container.find('.btn-group:has(button[data-event="imageShape"])').removeClass("hidden");
 
         } else {
 
@@ -228,7 +230,7 @@ eventHandler.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="resize"][data-value="0.25"]').toggleClass("active", width === "25%");
 
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
-            
+
             if (!$(oStyle.image).is("img")) {
                 $container.find('.btn-group:has(button[data-event="imageShape"])').addClass("hidden");
             }
@@ -396,7 +398,7 @@ dom.isVoid = function (node) {
     return node && /^BR|^IMG|^HR/.test(node.nodeName.toUpperCase()) || dom.isImg(node);
 };
 dom.isImg = function (node) {
-    return dom.isImgFont(node) || (node && (node.nodeName === "IMG" || (node.className && node.className.match(/(^|\s)media_iframe_video(\s|$)/i)) ));
+    return dom.isImgFont(node) || (node && (node.nodeName === "IMG" || (node.className && node.className.match(/(^|\s)(media_iframe_video|o_image)(\s|$)/i)) ));
 };
 dom.isForbiddenNode = function (node) {
     return $(node).is(".media_iframe_video, .fa, img");
@@ -607,7 +609,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
     $(document).on('mousedown', summernote_mousedown);
     $(document).on('mouseup', summernote_mouseup);
     oLayoutInfo.editor.off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
-    oLayoutInfo.editor.on('dblclick', 'img, .media_iframe_video, span.fa, i.fa, span.fa', function (event) {
+    oLayoutInfo.editor.on('dblclick', 'img, .media_iframe_video, span.fa, i.fa, span.fa, a.o_image', function (event) {
         if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
             new widgets.MediaDialog(oLayoutInfo.editor, event.target).appendTo(document.body);
         }

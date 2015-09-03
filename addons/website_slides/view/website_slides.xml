@@ -49,7 +49,7 @@
                     <div class="well well-sm">
                         <div>
                             <a t-attf-href="/slides/#{slug(channel)}">
-                                <img t-if="channel.promoted_slide_id" t-attf-src="/web_editor/image/slide.slide/#{channel.promoted_slide_id.id}/image_medium" class="img-responsive oe_slides_channel_thumbnail"/>
+                                <img t-if="channel.promoted_slide_id" t-attf-src="/web/image/slide.slide/#{channel.promoted_slide_id.id}/image_medium" class="img-responsive oe_slides_channel_thumbnail"/>
                                 <img t-if="not channel.promoted_slide_id" src="/website_slides/static/description/channel-default.jpg" class="img-responsive oe_slides_opacity"/>
                             </a>
                         </div>
@@ -215,7 +215,7 @@
                     <div class="row">
                         <div class="col-md-5 mt16 mb16">
                             <a t-attf-href="/slides/slide/#{slug(channel.promoted_slide_id)}">
-                                <img t-attf-src="/web_editor/image/slide.slide/#{channel.promoted_slide_id.id}/image" class="img-responsive shadow oe_slides_promote_image"/>
+                                <img t-attf-src="/web/image/slide.slide/#{channel.promoted_slide_id.id}/image" class="img-responsive shadow oe_slides_promote_image"/>
                                 <span t-if="channel.promote_strategy in ['latest', 'most_viewed', 'most_voted', 'custom']"
                                     class="label label-primary pull-right" style="position: absolute;right: 50px;top: 7px;"
                                     t-field="channel.promote_strategy"/>
@@ -333,7 +333,7 @@
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 mt16 mb16" t-foreach="slides" t-as="slide">
         <div class="well well-sm oe_slides_thumbnail_container">
             <a t-attf-href="/slides/slide/#{slug(slide)}">
-                <img t-attf-src="/web_editor/image/slide.slide/#{slide.id}/image_thumb" class="img-responsive img-thumbnail oe_slides_grid_thumbnail"/>
+                <img t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" class="img-responsive img-thumbnail oe_slides_grid_thumbnail"/>
             </a>
             <span t-if="not slide.website_published" class="label label-danger" style="position: absolute;right: 20px;top: 7px;">Not Published</span>
             <a t-if="not is_public_user and slide.website_published and slide.channel_id.promote_strategy == 'custom' and slide.channel_id.promoted_slide_id.id != slide.id"
@@ -374,7 +374,7 @@
             <meta property="og:title" t-att-content="slide.name" />
             <meta property="og:type" content="website" />
             <meta property="og:url" t-att-content="slide.website_url" />
-            <meta property="og:image" t-attf-content="#{request.httprequest.host_url}/web_editor/image/slide.slide/#{slide.id}/image_thumb"/>
+            <meta property="og:image" t-attf-content="#{request.httprequest.host_url}/web/image/slide.slide/#{slide.id}/image_thumb"/>
             <meta property="og:description" t-att-content="slide.description" />
         </t>
     </t>
@@ -394,7 +394,7 @@
 
                     <div t-if="not private">
                             <t t-if="slide.datas and slide.slide_type == 'infographic'">
-                                <img t-attf-src="/web_editor/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%"/>
+                                <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%"/>
                             </t>
                         <div t-if="slide.slide_type in ('presentation', 'document')" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
                             <t t-raw="slide.embed_code"/>
@@ -544,7 +544,7 @@
                                         <div class="media">
                                             <span class="pull-left">
                                                 <img class="img img-circle media-object"
-                                                    t-att-src="'/web_editor/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)"
+                                                    t-att-src="'/web/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)"
                                                     style="width: 30px"/>
                                             </span>
                                             <div class="media-body">
@@ -569,7 +569,7 @@
                                         <li t-foreach="comments" t-as="message" class="media">
                                             <span class="pull-left">
                                                 <img class="media-object img img-circle"
-                                                    t-att-src="'/web_editor/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width: 30px"/>
+                                                    t-att-src="'/web/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width: 30px"/>
                                             </span>
                                             <div class="media-body">
                                                 <t t-call="website.publish_short">
@@ -708,7 +708,7 @@
 <template id="related_slides" name="Related Slide">
     <li class="media">
         <a class="media-left pull-left" t-attf-href="/slides/slide/#{slug(slide)}">
-                <img class="media-object oe_slides_apart_small" t-attf-src="/web_editor/image/slide.slide/#{slide.id}/image_thumb"/>
+                <img class="media-object oe_slides_apart_small" t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb"/>
         </a>
         <div class="media-body">
             <a t-attf-href="/slides/slide/#{slug(slide)}"><h5 class="media-heading" t-esc="slide.name"/></a>

@@ -24,7 +24,7 @@
     <t t-name="nothing_to_reconcile">
         <div class="oe_form_sheetbg o_form_view"><div class="oe_form_sheet o_form_sheet oe_form_sheet_width">
             <div class="notification_area"></div>
-            <div class="oe_view_nocontent o_view_nocontent"></div>
+            <div class="oe_view_nocontent"></div>
         </div></div>
     </t>
 
@@ -65,7 +65,7 @@
                 <td>
                     <div class="action_pane match">
                         <div class="match_controls">
-                            <input type="text" class="filter" placeholder="Filter" value="" />
+                            <input type="text" class="filter" placeholder="Filter..." value="" />
                             <span class="pager_control_right pull-right fa fa-chevron-right"></span>
                             <span class="pager_control_left pull-right fa fa-chevron-left"></span>
                         </div>
@@ -83,9 +83,9 @@
                             </div>
                         </div>
                         <div class="oe_form o_form create_form">
-                            <!-- here come some form_create_field -->
-                            <table class="create_field add_line_container"><tr><td><a href="javascript:void(0)" class="add_line"><i class="fa fa-plus-circle"></i> New Operation</a></td></tr></table>
-                            <div class='clearer'></div>
+                            <table class="o_group o_inner_group o_group_col_6 create_group_left"><!-- here come some form_create_field --></table>
+                            <table class="o_group o_inner_group o_group_col_6 create_group_right"><!-- here come some form_create_field --></table>
+                            <p class="add_line_container"><a href="javascript:void(0)" class="add_line"><i class="fa fa-plus-circle"></i> New Operation</a></p>
                         </div>
                     </div>
                 </td>
@@ -113,10 +113,10 @@
     </t>
 
     <t t-name="form_create_field">
-        <table t-att-class='"create_field create_"+id'><tr>
-            <th><t t-esc="label"/></th>
-            <td class="create_account_container" t-att-class='"create_"+id+"_container"'></td>
-        </tr></table>
+        <tr t-att-class='"create_" + id'>
+            <td class="o_td_label"><t t-esc="label"/></td>
+            <td t-att-class='"o_td_field create_" + id + "_container"'></td>
+        </tr>
     </t>
 
     <t t-name="filter_no_match">
@@ -125,7 +125,7 @@
 
     <t t-name="reconciliation_move_line">
         <tr t-att-class="'mv_line'+(line.already_paid ? ' already_reconciled' : '')" t-att-data-lineid="line.id" t-att-data-selected="selected">
-            <td class="cell_action"><span class="fa fa-add-remove"></span></td>
+            <td class="cell_action"><i class="fa fa-add-remove"></i></td>
             <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
             <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
             <td class="cell_label"><t t-esc="line.q_label"/></td>
@@ -200,7 +200,7 @@
     </t>
 
     <t t-name="bank_statement_nothing_to_reconcile" t-extend="nothing_to_reconcile">
-        <t t-jquery=".oe_view_nocontent, .o_view_nocontent" t-operation="inner">
+        <t t-jquery=".oe_view_nocontent" t-operation="inner">
             <p><b>Good Job!</b> Bank statements are fully reconciled.</p>
             <p>This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so.</p>
         </t>
@@ -304,7 +304,7 @@
     </t>
 
     <t t-name="manual_reconciliation_nothing_to_reconcile" t-extend="nothing_to_reconcile">
-        <t t-jquery=".oe_view_nocontent, .o_view_nocontent" t-operation="inner">
+        <t t-jquery=".oe_view_nocontent" t-operation="inner">
             <p><b>Good Job!</b> There is nothing to reconcile.</p>
             <p>All invoices and payments have been matched, your accounts' balances are clean.</p>
         </t>

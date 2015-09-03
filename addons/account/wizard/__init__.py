@@ -7,6 +7,5 @@ import account_unreconcile
 import account_invoice_refund
 import account_invoice_state
 import account_validate_account_move
-import account_log_followup_note
 import pos_box
 import account_move_reversal

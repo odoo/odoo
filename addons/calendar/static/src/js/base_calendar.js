@@ -86,10 +86,24 @@ CalendarView.include({
 });
 
 widgets.SidebarFilter.include({
+    events_loaded: function() {
+        this._super.apply(this, arguments);
+        this.reinitialize_m2o();
+    },
     add_favorite_calendar: function() {
-        var self = this;
         if (this.dfm)
             return;
+        this.initialize_m2o();
+    },
+    reinitialize_m2o: function() {
+        if (this.dfm) {
+            this.dfm.destroy();
+            this.dfm = undefined;
+        }
+        this.initialize_m2o();
+    },
+    initialize_m2o: function() {
+        var self = this;
         this.dfm = new form_common.DefaultFieldManager(self);
         this.dfm.extend_field_desc({
             partner_id: {
@@ -113,6 +127,7 @@ widgets.SidebarFilter.include({
     },
     add_filter: function() {
         var self = this;
+        var defs = [];
         new Model("res.users")
         .query(["partner_id"])
         .filter([["id", "=",this.view.dataset.context.uid]])
@@ -121,11 +136,13 @@ widgets.SidebarFilter.include({
             $.map(self.ir_model_m2o.display_value, function(element,index) {
                 if (result.partner_id[0] != index){
                     self.ds_message = new data.DataSetSearch(self, 'calendar.contacts');
-                    self.ds_message.call("create", [{'partner_id': index}]);
+                    defs.push(self.ds_message.call("create", [{'partner_id': index}]));
                 }
             });
         });
-        reload_favorite_list(this);
+        $.when.apply(null, defs).done(function() {
+            reload_favorite_list(self);
+        });
     },
     destroy_filter: function(e) {
         var self = this;

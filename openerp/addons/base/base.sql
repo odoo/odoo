@@ -34,12 +34,17 @@ CREATE TABLE ir_model_fields (
   ttype varchar,
   relation varchar,
   relation_field varchar,
-  select_level varchar,
+  index boolean,
+  copy boolean,
+  related varchar,
   readonly boolean default False,
   required boolean default False,
   selectable boolean default False,
   translate boolean default False,
-  serialization_field_id integer references ir_model_fields on delete cascade, 
+  serialization_field_id integer references ir_model_fields on delete cascade,
+  relation_table varchar,
+  column1 varchar,
+  column2 varchar,
   primary key(id)
 );
 
@@ -191,11 +196,11 @@ insert into res_currency (id, name) VALUES (1, 'EUR');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('EUR', 'base', 'res.currency', true, 1);
 select setval('res_currency_id_seq', 2);
 
-insert into res_company (id, name, partner_id, currency_id) VALUES (1, 'Your Company', 1, 1);
+insert into res_company (id, name, partner_id, currency_id) VALUES (1, 'My Company', 1, 1);
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_company', 'base', 'res.company', true, 1);
 select setval('res_company_id_seq', 2);
 
-insert into res_partner (id, name, company_id) VALUES (1, 'Your Company', 1);
+insert into res_partner (id, name, company_id) VALUES (1, 'My Company', 1);
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_partner', 'base', 'res.partner', true, 1);
 select setval('res_partner_id_seq', 2);
 

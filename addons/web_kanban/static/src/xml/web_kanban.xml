@@ -23,6 +23,10 @@
                         <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit</a></li>
                         <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
                     </t>
+                    <t t-if="widget.has_active_field and widget.data_records.length">
+                        <li><a class="o_column_archive" href="#">Archive Records</a></li>
+                        <li><a class="o_column_unarchive" href="#">Unarchive Records</a></li>
+                    </t>
                 </ul>
             </span>
             <t t-if="widget.quick_create">
@@ -47,8 +51,8 @@
         </div>
         <div class="o_kanban_quick_create">
             <input type="text" placeholder="Add"/>
-            <button class="btn btn-primary o_kanban_add">Add</button>
-            <button class="btn btn-default o_kanban_cancel">Discard</button>
+            <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
+            <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
         </div>
     </div>
 </t>
@@ -60,8 +64,8 @@
 <t t-name="KanbanView.QuickCreate">
     <div class="o_kanban_quick_create">
         <input type="text" placeholder="Add"/>
-        <button class="btn btn-primary o_kanban_add">Add</button>
-        <button class="btn btn-default o_kanban_cancel">Discard</button>
+        <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
+        <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
     </div>
 </t>
 
@@ -77,7 +81,7 @@
 </t>
 <t t-name="KanbanAttachmentImage">
     <div class="o_kanban_attachment_image">
-        <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + widget.field.raw_value[0]"/>
+        <img t-att-src="'/web/image/' + widget.field.raw_value[0] + '?unique=1'"/>
     </div>
 </t>
 </template>

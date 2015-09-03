@@ -94,10 +94,17 @@ def get_view_arch_from_file(filename, xmlid):
 
     doc = etree.parse(filename)
     node = None
-    for n in doc.xpath('//*[@id="%s"] | //*[@id="%s"]' % (xmlid, xmlid.split('.')[1])):
+    for n in doc.xpath('//*[@id="%s"]' % (xmlid)):
         if n.tag in ('template', 'record'):
             node = n
             break
+    if node is None:  
+        # fallback search on template with implicit module name
+        for n in doc.xpath('//*[@id="%s"]' % (xmlid.split('.')[1])):
+            if n.tag in ('template', 'record'):
+                node = n
+                break
+
     if node is not None:
         if node.tag == 'record':
             field = node.find('field[@name="arch"]')
@@ -200,11 +207,11 @@ class view(osv.osv):
             ('form','Form'),
             ('graph', 'Graph'),
             ('pivot', 'Pivot'),
-            ('timeline', 'Timeline'),
             ('calendar', 'Calendar'),
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
             ('kanban', 'Kanban'),
+            ('sales_team_dashboard', 'Sales Team Dashboard'),
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
         'arch': fields.function(_arch_get, fnct_inv=_arch_set, string='View Architecture', type="text", nodrop=True),
@@ -746,7 +753,7 @@ class view(osv.osv):
                     orm.transfer_field_to_modifiers(field, modifiers)
 
         elif node.tag in ('form', 'tree'):
-            result = Model.view_header_get(cr, user, False, node.tag, context)
+            result = Model.view_header_get(cr, user, False, node.tag, context=context)
             if result:
                 node.set('string', result)
             in_tree_view = node.tag == 'tree'
@@ -845,17 +852,17 @@ class view(osv.osv):
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
                 node_model = self.pool[node.getchildren()[0].get('object')]
-                node_fields = node_model.fields_get(cr, user, None, context)
+                node_fields = node_model.fields_get(cr, user, None, context=context)
                 fields.update(node_fields)
                 if not node.get("create") and \
                    not node_model.check_access_rights(cr, user, 'create', raise_exception=False) or \
                    not context.get("create", True):
                     node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
-                arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context)
+                arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context=context)
                 fields.update(arrow_fields)
         else:
-            fields = Model.fields_get(cr, user, None, context)
+            fields = Model.fields_get(cr, user, None, context=context)
 
         node = self.add_on_change(cr, user, model, node)
         fields_def = self.postprocess(cr, user, model, node, view_id, False, fields, context=context)
@@ -1006,7 +1013,7 @@ class view(osv.osv):
         def get_trans(text):
             if not text or not text.strip():
                 return None
-            text = h.unescape(text.strip())
+            text = text.strip()
             if len(text) < 2 or (text.startswith('<!') and text.endswith('>')):
                 return None
             return translate_func(text)

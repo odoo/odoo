@@ -13,17 +13,14 @@ try:
 except ImportError:
     import StringIO
 
-import zipfile
-import base64
-from openerp import addons
-
 from openerp.osv import fields, osv
-from openerp import tools, api
+from openerp import tools, api, SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 MAX_POP_MESSAGES = 50
+MAIL_TIMEOUT = 60
 
 # Workaround for Python 2.7.8 bug https://bugs.python.org/issue23906
 poplib._MAXLINE = 65536
@@ -137,6 +134,8 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
             #connection.user("recent:"+server.user)
             connection.user(server.user)
             connection.pass_(server.password)
+        # Add timeout on socket
+        connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
 
     def button_confirm_login(self, cr, uid, ids, context=None):
@@ -249,7 +248,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
 
         try:
             cron = self.pool['ir.model.data'].get_object(
-                cr, uid, 'fetchmail', 'ir_cron_mail_gateway_action', context=context)
+                cr, SUPERUSER_ID, 'fetchmail', 'ir_cron_mail_gateway_action', context=context)
         except ValueError:
             # Nevermind if default cron cannot be found
             return

@@ -6,7 +6,6 @@
     'summary': 'Payment Acquirer: Authorize.net Implementation',
     'version': '1.0',
     'description': """Authorize.Net Payment Acquirer""",
-    'author': 'Odoo SA',
     'depends': ['payment'],
     'data': [
         'views/authorize.xml',

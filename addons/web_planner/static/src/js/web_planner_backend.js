@@ -52,12 +52,15 @@ var PlannerLauncher = Widget.extend({
             this.need_reflow = true;
         } else {
             this.do_hide();
-            this.hide_dialog();
             this.need_reflow = true;
         }
         if (this.need_reflow) {
             core.bus.trigger('resize');
             this.need_reflow = false;
+        }
+
+        if (this.dialog) {
+            this.dialog.$el.modal('hide');
         }
     },
     setup: function(planner){
@@ -65,6 +68,7 @@ var PlannerLauncher = Widget.extend({
 
         this.planner = planner;
         if (this.dialog) {
+            this.dialog.$el.modal('hide');
             this.dialog.destroy();
         }
         this.dialog = new PlannerDialog(this, planner);
@@ -84,13 +88,8 @@ var PlannerLauncher = Widget.extend({
         this.do_show();
         this.$(".progress-bar").css('width', percent+"%");
     },
-    hide_dialog: function() {
-        if (this.dialog) {
-            this.dialog.do_hide();
-        }
-    },
     toggle_dialog: function() {
-        this.dialog.do_toggle();
+        this.dialog.$el.modal('toggle');
     }
 });
 

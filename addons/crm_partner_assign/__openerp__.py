@@ -15,7 +15,6 @@ This modules lets you geolocate Leads, Opportunities and Partners based on their
 Once the coordinates of the Lead/Opportunity is known, they can be automatically assigned
 to an appropriate local partner, based on the distance and the weight that was assigned to the partner.
     """,
-    'author': 'OpenERP SA',
     'depends': ['base_geolocalize', 'crm', 'account', 'portal'],
     'data': [
         'security/ir.model.access.csv',

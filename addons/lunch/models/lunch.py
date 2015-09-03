@@ -4,7 +4,7 @@ import datetime
 
 from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from openerp.exceptions import AccessError, UserError
 
 
 class LunchOrder(models.Model):
@@ -36,6 +36,8 @@ class LunchOrder(models.Model):
                                          compute='_compute_get_previous_order_ids')
     company_id = fields.Many2one('res.company', related='user_id.company_id', store=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
+    cash_move_balance = fields.Monetary(compute='_compute_cash_move_balance', multi='cash_move_balance')
+    balance_visible = fields.Boolean(compute='_compute_cash_move_balance', multi='cash_move_balance')
 
     @api.one
     @api.depends('order_line_ids')
@@ -80,13 +82,22 @@ class LunchOrder(models.Model):
         prev_cashmove = self.env['lunch.cashmove'].search([('user_id', '=', self.user_id.id)])
         balance = sum(cashmove.amount for cashmove in prev_cashmove)
 
-        if self.total > balance:
+        if self.total > 0 and self.total > balance:
             return {
                 'warning': {
                     'title': _('Insufficient balance'),
                     'message': ('%s (%s %s)' % (_('The total amount of the order is larger than the available balance'), balance, self.currency_id.name)),
                 },
             }
+
+    @api.one
+    @api.depends('user_id')
+    def _compute_cash_move_balance(self):
+        domain = [('user_id', '=', self.user_id.id)]
+        lunch_cash = self.env['lunch.cashmove'].read_group(domain, ['amount', 'user_id'], ['user_id'])
+        if len(lunch_cash):
+            self.cash_move_balance = lunch_cash[0]['amount']
+        self.balance_visible = (self.user_id == self.env.user) or self.user_has_groups('lunch.group_lunch_manager')
 
     @api.one
     @api.constrains('date')
@@ -262,9 +273,16 @@ class LunchAlert(models.Model):
         return : Message if can_display_alert is True else False
         """
 
+        days_codes = {'0': 'sunday',
+                      '1': 'monday',
+                      '2': 'tuesday',
+                      '3': 'wednesday',
+                      '4': 'thursday',
+                      '5': 'friday',
+                      '6': 'saturday'}
         can_display_alert = {
             'specific': (self.specific_day == fields.Date.context_today(self)),
-            'week': self[datetime.datetime.now().strftime('%A').lower()],
+            'week': self[days_codes[datetime.datetime.now().strftime('%w')]],
             'days': True
         }
 

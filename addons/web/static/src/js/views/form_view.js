@@ -35,6 +35,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
     view_type: "form",
     multi_record: false,
     accesskey: "F",
+    icon: 'fa-edit',
     /**
      * @constructs instance.web.FormView
      * @extends instance.web.View
@@ -152,7 +153,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         //bounce effect on red button when click on statusbar.
         this.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click', function (e) {
             if((self.get("actual_mode") == "view")) {
-                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','clear':'none'});
+                var $button = self.$el.find(".oe_highlight:not(.o_form_invisible)").css({'float':'left','clear':'none'});
                 $button.openerpBounce();
                 e.stopPropagation();
             }
@@ -201,7 +202,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
      **/
     render_sidebar: function($node) {
         if (!this.sidebar && this.options.sidebar) {
-            this.sidebar = new Sidebar(this);
+            this.sidebar = new Sidebar(this, {editable: this.is_action_enabled('edit')});
             if (this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
@@ -262,8 +263,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
     toggle_buttons: function() {
         var view_mode = this.get("actual_mode") === "view";
         if (this.$buttons) {
-            this.$buttons.find('.oe_form_buttons_view').toggle(view_mode);
-            this.$buttons.find('.oe_form_buttons_edit').toggle(!view_mode);
+            this.$buttons.find('.o_form_buttons_view').toggle(view_mode);
+            this.$buttons.find('.o_form_buttons_edit').toggle(!view_mode);
         }
     },
     /**
@@ -332,6 +333,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 }
                 var fields = _.keys(self.fields_view.fields);
                 fields.push('display_name');
+                fields.push('__last_update');
                 return self.dataset.read_index(fields, {
                     context: { 'bin_size': true }
                 }).then(function(r) {
@@ -615,7 +617,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     });
                 });
 
-                var args = _.toArray(arguments);
                 return mutex.def.then(function () { return self.onchanges_mutex.def; }).then(function() {
                     var save_obj = self.save_list.pop();
                     if (save_obj) {
@@ -793,14 +794,15 @@ var FormView = View.extend(common.FieldManagerMixin, {
         });
         return def.promise();
     },
-    can_be_discarded: function() {
+    can_be_discarded: function(message) {
         if (!this.$el.is('.oe_form_dirty')) {
             return $.Deferred().resolve();
         }
 
+        message = message || _t("The record has been modified, your changes will be discarded. Are you sure you want to leave this page ?");
+
         var self = this;
         var def = $.Deferred();
-        var message = _t("The record has been modified, your changes will be discarded. Are you sure you want to leave this page ?");
         var options = {
             title: _t("Warning"),
             confirm_callback: function() {
@@ -1357,6 +1359,9 @@ var FormRenderingEngine = FormRenderingEngineInterface.extend({
             args[0] = $tag;
             return fn.apply(self, args);
         } else {
+            if( tagname === 'header') {
+                $tag.addClass('o_statusbar_buttons');
+            }
             // generic tag handling, just process children
             $tag.children().each(function() {
                 self.process($(this));
@@ -1605,7 +1610,7 @@ var FormRenderingEngine = FormRenderingEngineInterface.extend({
             self.handle_common_properties($content, page.ref, common.NotebookInvisibilityChanger);
         });
         if (!pageid_to_display) {
-            pageid_to_display = $new_notebook.find('div[role="tabpanel"]:not(.oe_form_invisible):first').attr('id');
+            pageid_to_display = $new_notebook.find('div[role="tabpanel"]:not(.o_form_invisible):first').attr('id');
         }
 
         // Display page. Note: we can't use bootstrap's show function because it is looking for

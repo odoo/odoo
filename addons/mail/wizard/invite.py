@@ -27,6 +27,7 @@ class Invite(models.TransientModel):
     res_model = fields.Char('Related Document Model', required=True, select=1, help='Model of the followed resource')
     res_id = fields.Integer('Related Document ID', select=1, help='Id of the followed resource')
     partner_ids = fields.Many2many('res.partner', string='Recipients', help="List of partners that will be added as follower of the current document.")
+    channel_ids = fields.Many2many('mail.channel', string='Channels', help='List of channels that will be added as listeners of the current document.')
     message = fields.Html('Message')
     send_mail = fields.Boolean('Send Email', default=True, help="If checked, the partners will receive an email warning they have been added in the document's followers.")
 
@@ -38,18 +39,18 @@ class Invite(models.TransientModel):
             document = Model.browse(wizard.res_id)
 
             # filter partner_ids to get the new followers, to avoid sending email to already following partners
-            new_followers = wizard.partner_ids - document.message_follower_ids
-            document.message_subscribe(new_followers.ids)
+            new_partners = wizard.partner_ids - document.message_partner_ids
+            new_channels = wizard.channel_ids - document.message_channel_ids
+            document.message_subscribe(new_partners.ids, new_channels.ids)
 
             model_ids = self.env['ir.model'].search([('model', '=', wizard.res_model)])
             model_name = model_ids.name_get()[0][1]
-
             # send an email if option checked and if a message exists (do not send void emails)
             if wizard.send_mail and wizard.message and not wizard.message == '<br>':  # when deleting the message, cleditor keeps a <br>
+                # TDE FIXME: use a template + _notification methods
                 # add signature
-                # FIXME 8.0: use notification_email_send, send a wall message and let mail handle email notification + message box
-                signature_company = self.env['mail.notification'].get_signature_footer(user_id=self._uid, res_model=wizard.res_model, res_id=wizard.res_id)
-                wizard.message = tools.append_content_to_html(wizard.message, signature_company, plaintext=False, container_tag='div')
+                signature = self.env.user.signature
+                wizard.message = tools.append_content_to_html(wizard.message, signature, plaintext=False, container_tag='div')
 
                 # send mail to new followers
                 self.env['mail.mail'].create({
@@ -62,5 +63,5 @@ class Invite(models.TransientModel):
                     'body_html': '%s' % wizard.message,
                     'auto_delete': True,
                     'message_id': self.env['mail.message']._get_message_id({'no_auto_thread': True}),
-                    'recipient_ids': [(4, id) for id in new_followers.ids]}).send()
+                    'recipient_ids': [(4, id) for id in new_partners.ids]}).send()
         return {'type': 'ir.actions.act_window_close'}

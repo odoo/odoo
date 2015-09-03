@@ -14,7 +14,7 @@ class product_style(osv.Model):
 class product_pricelist(osv.Model):
     _inherit = "product.pricelist"
     _columns = {
-        'code': fields.char('Promotional Code'),
+        'code': fields.char('E-commerce Promotional Code'),
     }
 
 
@@ -84,7 +84,7 @@ class product_public_category(osv.osv):
     }
 
 class product_template(osv.Model):
-    _inherit = ["product.template", "website.seo.metadata", 'website.published.mixin']
+    _inherit = ["product.template", "website.seo.metadata", 'website.published.mixin', 'rating.mixin']
     _order = 'website_published desc, website_sequence desc, name'
     _name = 'product.template'
     _mail_post_access = 'read'
@@ -161,11 +161,18 @@ class product_template(osv.Model):
 class product_product(osv.Model):
     _inherit = "product.product"
 
-    # Wrapper for call_kw with inherits
+    # Wrappers for call_kw with inherits
     def open_website_url(self, cr, uid, ids, context=None):
         template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
         return self.pool['product.template'].open_website_url(cr, uid, [template_id], context=context)
 
+    def website_publish_button(self, cr, uid, ids, context=None):
+        template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
+        return self.pool['product.template'].website_publish_button(cr, uid, [template_id], context=context)
+
+    def website_publish_button(self, cr, uid, ids, context=None):
+        template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
+        return self.pool['product.template'].website_publish_button(cr, uid, [template_id], context=context)
 
 class product_attribute(osv.Model):
     _inherit = "product.attribute"

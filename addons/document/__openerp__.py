@@ -10,8 +10,6 @@ Attachments list and document indexation
 * Show attachment on the top of the forms
 * Document Indexation: odt
 """,
-    'author': 'OpenERP SA',
-    'website': 'https://www.odoo.com',
     'depends': ['web'],
     'data': [
         'views/document.xml',

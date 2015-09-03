@@ -333,7 +333,7 @@ var InvisibilityChangerMixin = {
         this._check_visibility();
     },
     _check_visibility: function() {
-        this.$el.toggleClass('oe_form_invisible', this.get("effective_invisible"));
+        this.$el.toggleClass('o_form_invisible', this.get("effective_invisible"));
     },
 };
 
@@ -362,7 +362,7 @@ var NotebookInvisibilityChanger = InvisibilityChanger.extend({
             // Remove this element as active and set a visible sibling active (if there is one)
             if (this.$el.hasClass('active')) {
                 this.$el.removeClass('active');
-                var visible_siblings = this.$el.siblings(':not(.oe_form_invisible)');
+                var visible_siblings = this.$el.siblings(':not(.o_form_invisible)');
                 if (visible_siblings.length) {
                     $(visible_siblings[0]).addClass('active');
                 }
@@ -372,7 +372,7 @@ var NotebookInvisibilityChanger = InvisibilityChanger.extend({
             // If there is no visible active sibling, set this element as active,
             // otherwise if that sibling hasn't autofocus and if we are in edit mode,
             //    remove that sibling as active and set this element as active
-            var visible_active_sibling = this.$el.siblings(':not(.oe_form_invisible).active');
+            var visible_active_sibling = this.$el.siblings(':not(.o_form_invisible).active');
             if (!(visible_active_sibling.length)) {
                 this.$el.addClass('active');
             } else if (!$(visible_active_sibling[0]).data('autofocus') && this._ic_field_manager.get('actual_mode') === "edit") {
@@ -461,7 +461,7 @@ var FormWidget = Widget.extend(InvisibilityChangerMixin, {
         widget = widget || this;
         trigger = trigger || this.$el;
         options = _.extend({
-                delay: { show: 500, hide: 0 },
+                delay: { show: 1000, hide: 0 },
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
@@ -756,11 +756,7 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         if (this.field.translate) {
             this.$el.find('.oe_field_translate').toggle(this.field_manager.get('actual_mode') !== "create");
         }
-        if (!this.disable_utility_classes) {
-            if (this.field_manager.get('display_invalid_fields')) {
-                this.$el.toggleClass('oe_form_invalid', !this.is_valid());
-            }
-        }
+        this.$el.toggleClass('oe_form_invalid', !this.disable_utility_classes && !!this.field_manager.get('display_invalid_fields') && !this.is_valid());
     },
     focus: function() {
         return false;

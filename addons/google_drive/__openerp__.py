@@ -4,8 +4,6 @@
 {
     'name': 'Google Drive™ integration',
     'version': '0.2',
-    'author': 'OpenERP SA',
-    'website': 'https://www.odoo.com',
     'category': 'Tools',
     'installable': True,
     'auto_install': False,

@@ -53,7 +53,7 @@
                                             </div>
                                             <div class="caption">
                                                 <p>
-                                                    <a t-att-href="'/project/rating/%s' % (slug(project),)" class="btn btn-primary btn-lg btn-block">
+                                                    <a t-att-href="'/project/rating/%s' % project.id" class="btn btn-primary btn-lg btn-block">
                                                         <i class="fa fa-arrow-circle-right "/> See the feedbacks
                                                     </a>
                                                 </p>
@@ -102,6 +102,13 @@
                     <div class="container oe_website_rating_project">
                         <h1 t-esc="project.name" class="text-center"/>
                         <div class="row mb32">
+                            <div id="website_published_button" class="" groups="project.group_project_manager">
+                                <t t-call="website.publish_management">
+                                  <t t-set="object" t-value="project"/>
+                                  <t t-set="publish_edit" t-value="True"/>
+                                  <t t-set="action" t-value="'project.open_view_project_all'"/>
+                                </t>
+                            </div>
                             <div class="col-md-8">
                                 <h3 class="page-header">Customer Satisfaction</h3>
                                 <div class="row">
@@ -126,17 +133,6 @@
                                 <t t-foreach="ratings" t-as="rating" class="media">
                                     <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name" t-att-title="rating.res_name"/>
                                 </t>
-                            </div>
-                            <div class="col-md-4">
-                                <h3 class="page-header">Team</h3>
-                                <div class="media" t-foreach="team" t-as="user">
-                                    <div class="pull-left">
-                                        <img t-att-src="website.image_url(user, 'image_small')" class="img-rounded" t-att-alt="user.name" style="width: 32px"/>
-                                    </div>
-                                    <div class="media-body">
-                                        <h5><t t-esc="user.name"/></h5>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

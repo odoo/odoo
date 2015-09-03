@@ -49,32 +49,17 @@ class sale_order(osv.Model):
                 domain += [('id', '=', line_id)]
             return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
 
-    def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, line_id=None, context=None):
-        so = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
-
-        values = self.pool.get('sale.order.line').product_id_change(
-            cr, SUPERUSER_ID, [],
-            pricelist=so.pricelist_id.id,
-            product=product_id,
-            partner_id=so.partner_id.id,
-            fiscal_position_id=so.fiscal_position_id.id,
-            qty=qty,
-            context=context
-        )['value']
-
-        if line_id:
-            line = self.pool.get('sale.order.line').browse(cr, SUPERUSER_ID, line_id, context=context)
-            values['name'] = line.name
-        else:
-            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            values['name'] = product.display_name
-            if product.description_sale:
-                values['name'] += '\n'+product.description_sale
-
-        values['product_id'] = product_id
-        values['order_id'] = order_id
-        if values.get('tax_id') is not None:
-            values['tax_id'] = [(6, 0, values['tax_id'])]
+    def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, context=None):
+        product = self.pool['product.product'].browse(cr, uid, product_id, context=context)
+        values = {
+            'product_id': product_id,
+            'name': product.display_name,
+            'product_uom_qty': qty,
+            'order_id': order_id,
+            'product_uom': product.uom_id.id,
+        }
+        if product.description_sale:
+            values['name'] += '\n' + product.description_sale
         return values
 
     def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
@@ -95,6 +80,7 @@ class sale_order(osv.Model):
             if not line_id:
                 values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=1, context=context)
                 line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
+                sol.product_id_change(cr, SUPERUSER_ID, [line_id], context=context)
                 if add_qty:
                     add_qty -= 1
 
@@ -109,7 +95,7 @@ class sale_order(osv.Model):
                 sol.unlink(cr, SUPERUSER_ID, [line_id], context=context)
             else:
                 # update line
-                values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=quantity, line_id=line_id, context=context)
+                values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=quantity, context=context)
                 values['product_uom_qty'] = quantity
                 sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
 
@@ -256,8 +242,8 @@ class website(orm.Model):
                     'team_id': w.salesteam_id.id,
                 }
                 sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
-                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner.id, context=context)['value']
-                values.update({'user_id': salesperson_id or w.salesperson_id.id})
+                sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], context=context)
+                values = {'user_id': salesperson_id or w.salesperson_id.id}
 
                 sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
                 request.session['sale_order_id'] = sale_order_id
@@ -281,7 +267,7 @@ class website(orm.Model):
                     flag_pricelist = True
                 fiscal_position = sale_order.fiscal_position_id and sale_order.fiscal_position_id.id or False
 
-                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], partner.id, context=context)['value']
+                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], context=context).get('value', {})
                 if values.get('pricelist_id'):
                     if values['pricelist_id'] != pricelist_id:
                         values['pricelist_id'] = pricelist_id
@@ -315,7 +301,6 @@ class website(orm.Model):
             # update the pricelist
             if update_pricelist:
                 values = {'pricelist_id': pricelist_id}
-                values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
                 sale_order.write(values)
                 for line in sale_order.order_line:
                     if line.exists():

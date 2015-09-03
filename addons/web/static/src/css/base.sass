@@ -266,45 +266,6 @@ $sheet-padding: 16px
         font-weight: bold
         font-size: inherit
     // }}}
-    // Button style {{{
-    a.button:link, a.button:visited, .oe_button, input[type='submit']
-        display: inline-block
-        border: 1px solid rgba(0,0,0,0.4)
-        color: #4c4c4c
-        margin: 0
-        padding: 3px 12px
-        font-size: 13px
-        text-align: center
-        @include vertical-gradient(#efefef, #d8d8d8)
-        @include radius(3px)
-        @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
-        text-shadow: 0 1px 1px rgba(255, 255, 255, .5)
-        -webkit-font-smoothing: antialiased
-        outline: none
-
-    a.button:hover,.oe_button:hover, input[type='submit']:hover
-        @include vertical-gradient(#f6f6f6, #e3e3e3)
-        cursor: pointer
-        background-position: 0
-
-    a.button:focus, .oe_button:focus, input[type='submit']:focus
-        border: 1px solid #80bfff
-        background-position: 0
-        @include vertical-gradient(#f6f6f6, #e3e3e3)
-        @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
-
-    a.button:active, a.button.active, .oe_button:active, .oe_button.active, input[type='submit']:active, input[type='submit'].active
-        @include vertical-gradient(#e3e3e3, #f6f6f6)
-        @include box-shadow(none)
-
-    a.button.disabled, .oe_button:disabled, input[type='submit']:disabled
-        background: #efefef !important
-        border: 1px solid #d1d1d1 !important
-        @include box-shadow(none !important)
-        color: #aaa !important
-        cursor: default
-        text-shadow: 0 1px 1px #fff !important
-    // }}}
     // Jquery ui Overrides {{{
     .ui-widget-content a
         color: $link-color
@@ -351,24 +312,9 @@ $sheet-padding: 16px
         font-weight: bold
     .oe_inline
         width: auto !important
-    .oe_highlight
-        color: white
-        background: #DC5F59
-    button.oe_highlight
-        @include vertical-gradient(#729fcf, #3465a4)
-        @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
-    button.oe_highlight:hover
-        @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
-    button.oe_highlight:active
-        @include vertical-gradient(lighten(#729fcf, 4%), lighten(#3465a4, 4%))
     .oe_background_grey
         background: #eee !important
 
-    .oe_form_dirty
-        .oe_highlight_on_dirty
-            color: white
-            background: #dc5f59
-            font-weight: bold
     .oe_warning_redirect
         border: none !important
         padding: 0 !important
@@ -384,7 +330,6 @@ $sheet-padding: 16px
         color: #666
         margin: 0px -1px -1px 0px
         padding: 0
-        border: 1px solid #dddddd
         border-radius: 0
         box-shadow: none
         background: white
@@ -394,7 +339,7 @@ $sheet-padding: 16px
             text-align: left
             padding: 0
             line-height: 120%
-        .stat_button_icon
+        .o_button_icon
             color: #7C7BAD
             font-size: 24px
             padding: 0px 3px
@@ -414,6 +359,11 @@ $sheet-padding: 16px
         text-align: right
         .oe_stat_button
             display: inline-table
+        // boolean_button rules: show the elements depending on hover status
+        .oe_stat_button:not(:hover) .o_stat_info > .o_hover
+            display: none !important
+        .oe_stat_button:hover .o_stat_info > .o_not_hover
+            display: none !important
     button.oe_toggle_button
         box-shadow: none
         white-space: nowrap
@@ -436,16 +386,6 @@ $sheet-padding: 16px
     .oe_image_medium > img
         max-width: 180px
         max-height: 180px
-    .oe_button.oe_link
-        @include reset()
-        img
-            display: inline-block
-        span
-            @include reset()
-            color: $link-color
-            font-weight: bold
-            &:hover
-                text-decoration: underline
     .oe_star_on, .oe_star_off
         color: #cccccc
         text-shadow: 0 0 2px black
@@ -509,11 +449,11 @@ $sheet-padding: 16px
         color: #eee
     .oe_form_field_radio
         &.oe_horizontal
-            white-space: nowrap
             label
                 display: inline-block
-                text-align: center
-                height: 16px
+                margin-left: 20px
+            > span > div
+                display: inline-block
         &.oe_vertical
             label
                 display: inline-block
@@ -793,8 +733,6 @@ $sheet-padding: 16px
                 color: #007bb6
     // }}}
     // ActionManager {{{
-    a.oe_form_uri:hover
-        text-decoration: underline
     .oe_application
         height: 100%
         width: 100%
@@ -905,35 +843,19 @@ $sheet-padding: 16px
         .oe-cp-switch-buttons
             button
                 width: 34px
-            .oe-cp-switch-kanban:before
-                content: "\f009"
-            .oe-cp-switch-list:before
-                content: ""
-            .oe-cp-switch-form:before
-                content: "\f044"
-            .oe-cp-switch-graph:before
-                content: "\f080"
-            .oe-cp-switch-calendar:before
-                content: "\f073"
-            .oe-cp-switch-gantt:before
-                content: "\f0ae"
-            .oe-cp-switch-pivot:before
-                content: "\f0ce"
-            .oe-cp-switch-tree:before
-                content: "\f036"
         .oe-cp-buttons
             display: inline-block
         .oe-cp-sidebar
             display: inline-block
             float: right
-            .oe_form_binary_form
+            .o_form_binary_form
                 cursor: pointer
                 span
                     padding: 3px 20px
-                input.oe_form_binary_file
+                input.o_form_input_file
                     width: 100%
 
-            .oe_form_binary_form:hover
+            .o_form_binary_form:hover
                 background-color: #f5f5f5
             .oe_file_attachment
                 padding: 3px 20px
@@ -948,7 +870,7 @@ $sheet-padding: 16px
                         width: 100%
         .oe_form_buttons
             padding: 0
-        .oe_form_buttons_view
+        .o_form_buttons_view
             > button
                 float: left
                 &:last-child
@@ -1309,20 +1231,7 @@ $sheet-padding: 16px
         input, select, textarea
             background-color: #F66 !important
             border: 1px solid #D00 !important
-    .oe_view_manager_current .oe_form_editable
-        .oe_highlight
-            color: #404040
-            background: none
-        button.oe_highlight
-            @include vertical-gradient(#efefef, #d8d8d8)
-            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
-        button.oe_highlight:active
-            @include vertical-gradient(#e3e3e3, #f6f6f6)
-            @include box-shadow(none)
-        button.oe_highlight:hover
-            @include vertical-gradient(#f6f6f6, #e3e3e3)
-            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
-    .oe_form_invisible
+    .o_form_invisible
         display: none !important
     .oe_form_editable
         .oe_read_only
@@ -1384,14 +1293,12 @@ $sheet-padding: 16px
     // }}}
     // FormView.header {{{
     .oe_form > :not(.oe_form_nosheet) header, .oe_form > .oe_form_nosheet header
-        padding-left: 2px
+        padding-left: 14px
         ul:not(.oe_tooltip_technical):not(.oe_dropdown_menu)
             display: inline-block
             float: right
-        .oe_button
-            margin: 3px 2px 1px
-            &:first-child
-                margin-left: 6px
+        > button
+            margin: 0 2px
 
     .oe_form  header
         border-bottom: 1px solid #cacaca
@@ -1414,7 +1321,6 @@ $sheet-padding: 16px
             max-width: $sheet-max-width + 2* $sheet-padding
             margin: 0 auto
             padding: 16px 16px 48px
-            background-color: #f0eeee
         div.oe_form_configuration
             p, ul, ol
                 color: #aaa
@@ -1665,7 +1571,7 @@ $sheet-padding: 16px
         // Position: relative is used for the hidden input[type=file]
         // Do not remove it anymore !
         position: relative
-        input.oe_form_binary_file
+        input.o_form_input_file
             z-index: 0
             line-height: 0
             font-size: 12px
@@ -1731,7 +1637,7 @@ $sheet-padding: 16px
                 .fa
                     position: relative
                     font-size: 18px
-            input.oe_form_binary_file
+            input.o_form_input_file
                 display: inline-block
                 margin-left: -85px
                 height: 22px
@@ -1748,14 +1654,29 @@ $sheet-padding: 16px
             border-radius: 2px
             border: solid 1px rgba(124,123,173,0.14)
             .oe_attachment
+                background-repeat: no-repeat
+                word-wrap: break-word
                 padding: 2px
                 padding-left: 4px
                 padding-right: 4px
-                .fa
+                overflow: hidden
+                a
+                    display: block
+                    background-repeat: no-repeat
+                    background-size: contain
+                    word-wrap: break-word
+                    width: 100px
+                    height: 80px
+                > .fa
                     font-size: 23px
-                    margin-top: -5px
-                .fa:hover
+                    position: absolute
+                    top: -5px
+                    right: -8px
+                > .fa:hover
                     text-decoration: none
+                .fa-inverse
+                    font-size: 1.15em
+                    margin-top: 1px
             .oe_attachment:nth-child(odd)
                 background: white
             .oe_attachment:nth-child(even)
@@ -2379,7 +2300,7 @@ body.oe_single_form
     .placeholder
         color: $tag-border !important
         font-style: italic !important
-    .oe_form_binary_file
+    .o_form_input_file
         width: 80px
     .oe_form_field_boolean input
         background: #fff
@@ -2392,25 +2313,8 @@ body.oe_single_form
     .oe_logo
         img
             border: none
-    .oe_header_row
-        button.oe_highlight
-            padding-top: 0
-            padding-bottom: 0
     .oe_view_manager_view_kanban
         display: table-cell
-    .oe_view_manager_buttons
-        button.oe_write_full
-            padding-top: 0
-            padding-bottom: 0
-        button.oe_highlight
-            padding-top: 0
-            padding-bottom: 0
-        button .oe_form_button_edit
-            padding-top: 0
-            padding-bottom: 0
-        button .oe_form_button_create
-            padding-top: 0
-            padding-bottom: 0
     .oe_kanban_image
         border: none
     .oe_msg_icon

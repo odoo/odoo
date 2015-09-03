@@ -43,15 +43,14 @@ https://github.com/OCA/l10n-switzerland
  'category': 'Localization/Account Charts',
  'website': 'http://www.camptocamp.com',
  'depends': ['account', 'l10n_multilang'],
- 'data': ['report/balance_sheet.xml',
-          'report/profit_and_loss.xml',
-          'chart/account.xml',
+ 'data': ['chart/account.xml',
           'chart/vat2011.xml',
           'chart/fiscal_position.xml',
+          'account_chart_template.yml',
 
           ],
  'demo': [],
  'test': [],
  'auto_install': False,
- 'installable': False,
+ 'installable': True,
  }

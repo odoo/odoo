@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <calendar string="Invoices" color="journal_id" date_start="date_invoice">
                     <field name="partner_id"/>
-                    <field name="amount_total"/>
+                    <field name="amount_total_signed"/>
                 </calendar>
             </field>
         </record>
@@ -20,7 +20,7 @@
             <field name="arch" type="xml">
                 <pivot string="Invoices" display_quantity="true">
                     <field name="partner_id"/>
-                    <field name="amount_total" type="measure"/>
+                    <field name="amount_total_signed" type="measure"/>
                 </pivot>
             </field>
         </record>
@@ -31,7 +31,7 @@
             <field name="arch" type="xml">
                 <graph string="Invoices">
                     <field name="partner_id"/>
-                    <field name="amount_total" type="measure"/>
+                    <field name="amount_total_signed" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -44,7 +44,7 @@
                     <field name="name"/>
                     <field name="account_id" groups="account.group_account_user"/>
                     <field name="quantity"/>
-                    <field name="uos_id" groups="product.group_uom"/>
+                    <field name="uom_id" groups="product.group_uom"/>
                     <field name="price_unit"/>
                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                     <field name="price_subtotal"/>
@@ -65,7 +65,7 @@
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/>
-                                <field name="uos_id" class="oe_inline" groups="product.group_uom"/>
+                                <field name="uom_id" class="oe_inline" groups="product.group_uom"/>
                             </div>
                             <field name="price_unit"/>
                             <field name="discount" groups="sale.group_discount_per_so_line"/>
@@ -74,7 +74,7 @@
                         <group>
                             <field domain="[('company_id', '=', parent.company_id)]" name="account_id" groups="account.group_account_user"/>
                             <field name="invoice_line_tax_ids" context="{'type':parent.get('type')}" domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]" widget="many2many_tags" options="{'no_create': True}"/>
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)], ('state','not in',('close','cancelled'))]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                            <field domain="[('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
@@ -108,7 +108,7 @@
                         <field name="name"/>
                         <field name="sequence"/>
                         <field name="account_id" groups="account.group_account_user"/>
-                        <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled')]" groups="analytic.group_analytic_accounting"/>
+                        <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                         <field name="manual"/>
                         <field name="amount"/>
                         <field name="currency_id" invisible="1"/>
@@ -133,8 +133,8 @@
                     <field name="user_id"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="amount_total_signed" sum="Total Amount"/>
-                    <field name="residual_signed" sum="Residual Amount"/>
+                    <field name="amount_total_signed"/>
+                    <field name="residual_signed"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state"/>
@@ -194,8 +194,8 @@
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="amount_total_signed" sum="Total Amount"/>
-                    <field name="residual_signed" sum="Residual Amount" string="To Pay"/>
+                    <field name="amount_total_signed"/>
+                    <field name="residual_signed" string="To Pay"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state"/>
@@ -213,13 +213,13 @@
                 <header>
                         <button name="invoice_open" states="draft,proforma2" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
                         <button name="%(action_account_invoice_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
-                        <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' states='open,paid' groups="account.group_account_invoice" attrs="{'invisible': [('type', '=', 'in_refund')]}"/>
+                        <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', '=', 'in_refund'),('state','not in',('open','paid'))]}"/>
                         <button name="invoice_cancel" states="draft,proforma2" string="Cancel Bill" groups="account.group_account_invoice"/>
                         <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <div class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('has_outstanding','=',False)]}">
-                    You have <bold><a class="alert-link" href="#outstanding">outstanding debits</a></bold> for this supplier. You can allocate them to mark this bill as paid.
+                    You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this supplier. You can allocate them to mark this bill as paid.
                 </div>
                 <field name="has_outstanding" invisible="1"/>
                 <sheet string="Vendor Bill">
@@ -228,7 +228,7 @@
                         <label string="Draft Refund" attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_refund')]}"/>
                         <label string="Bill " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_invoice')]}"/>
                         <label string="Refund " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_refund')]}"/>
-                        <h1>
+                        <h1 class="mt0">
                             <field name="number" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
                         </h1>
                     </div>
@@ -245,7 +245,7 @@
                             <field name="date_invoice" string="Bill Date"/>
                             <field name="date_due"/>
                             <field name="move_name" invisible="1"/>
-                            <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                            <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <field name="company_currency_id" invisible="1"/>
                         </group>
                     </group>
@@ -261,9 +261,9 @@
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other')]"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                                        domain="[('type','!=','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]"/>
+                                        domain="[('company_id', '=', parent.company_id)]"/>
                                     <field name="quantity"/>
-                                    <field name="uos_id" groups="product.group_uom"/>
+                                    <field name="uom_id" groups="product.group_uom"/>
                                     <field name="price_unit"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" context="{'type':parent.type}"
@@ -284,7 +284,7 @@
                                                 <field name="sequence" invisible="1"/>
                                                 <field name="manual" invisible="1"/>
                                                 <field name="account_id" groups="account.group_account_invoice"/>
-                                                <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                                <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                                                 <field name="amount"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </tree>
@@ -295,7 +295,6 @@
                                     <field name="amount_untaxed"/>
                                     <field name="amount_tax"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
-                                    <field name="amount_total_signed" groups="base.group_multi_currency" />
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                     <field name="reconciled" invisible="1"/>
@@ -356,17 +355,16 @@
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <div class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('has_outstanding','=',False)]}">
-                    You have <bold><a class="alert-link" href="#outstanding">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
+                    You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
                 </div>
                 <field name="has_outstanding" invisible="1"/>
                 <sheet string="Invoice">
-                    <label string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_invoice')]}"/>
-                    <label string="Draft Refund" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_refund')]}"/>
                     <label string="Pro Forma Invoice" attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}"/>
-                    <label string="Invoice " attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_invoice')]}"/>
-                    <label string="Refund " attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_refund')]}"/>
-                    <h1>
-                        <field name="number" readonly="1" class="oe_inline"/>
+                    <label string="Refund" attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_refund')]}"/>
+                    <h1 class="mt0">
+                        <label string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_invoice')]}"/>
+                        <label string="Draft Refund" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_refund')]}"/>
+                        <field name="number" readonly="1" class="oe_inline" attrs="{'invisible': [('state','in',('draft',))]}"/>
                     </h1>
                     <field name="type" invisible="1"/>
                     <group>
@@ -383,7 +381,7 @@
                             <field name="user_id" groups="base.group_user" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
                             <div groups="base.group_multi_currency">
-                                <field name="currency_id" options="{'no_create': True}" class="oe_inline"/>
+                                <field name="currency_id" options="{'no_create': True, 'no_open': True}" class="oe_inline"/>
                                 <field name="company_currency_id" invisible="1"/>
                             </div>
                         </group>
@@ -400,9 +398,9 @@
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other')]"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                                        domain="[('type','!=','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]"/>
+                                        domain="[('company_id', '=', parent.company_id)]"/>
                                     <field name="quantity"/>
-                                    <field name="uos_id" groups="product.group_uom"/>
+                                    <field name="uom_id" groups="product.group_uom"/>
                                     <field name="price_unit"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" context="{'type':parent.type}"
@@ -414,7 +412,7 @@
                                     <field name="product_id"/>
                                     <field name="price_subtotal"/>
                                     <field name="quantity"/>
-                                    <field name="uos_id" groups="product.group_uom"/>
+                                    <field name="uom_id" groups="product.group_uom"/>
                                     <templates>
                                         <t t-name="kanban-box">
                                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -425,7 +423,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-xs-8 text-muted">
-                                                        <span><t t-esc="record.quantity.value"/> <t t-esc="record.uos_id.value"/></span>
+                                                        <span><t t-esc="record.quantity.value"/> <t t-esc="record.uom_id.value"/></span>
                                                     </div>
                                                     <div class="col-xs-4 text-muted">
                                                         <span class="text-right"><t t-esc="record.price_subtotal.value"/></span>
@@ -440,7 +438,6 @@
                                 <field name="amount_untaxed"/>
                                 <field name="amount_tax"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator"/>
-                                <field name="amount_total_signed" groups="base.group_multi_currency" />
                                 <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                 <field name="residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 <field name="reconciled" invisible="1"/>
@@ -504,11 +501,13 @@
             <field name="arch" type="xml">
                 <search string="Search Invoice">
                     <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
-                    <filter name="draft" string="Draft" domain="[('state','in',('draft', 'proforma', 'proforma2'))]" help="Draft Invoices"/>
-                    <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
-                    <filter name="invoices" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
-                    <filter name="unpaid" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
-                    <filter name="late" string="Overdue" domain="[('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]" help="Overdue Invoices"/>
+                    <filter name="draft" string="Draft" domain="[('state','in',('draft', 'proforma'))]"/>
+                    <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]" groups="account.group_proforma_invoices"/>
+                    <filter name="invoices" string="Invoices" domain="[('state','in',['open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
+                    <filter name="refunds" string="Refunds" domain="[('state','in',['open','paid']),('type','in',('out_refund','in_refund'))]"/>
+                    <separator/>
+                    <filter name="unpaid" string="Not Paid" domain="[('state','=','open')]"/>
+                    <filter name="late" string="Overdue" domain="[('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id" string="Salesperson"/>
@@ -520,8 +519,8 @@
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>
                         <separator/>
-                        <filter string="Period" context="{'group_by':'date'}"/>
-                        <filter string="Due Month" context="{'group_by':'date_due'}"/>
+                        <filter string="Invoice Date" context="{'group_by':'date'}"/>
+                        <filter string="Due Date" context="{'group_by':'date_due'}"/>
                     </group>
                </search>
             </field>
@@ -541,7 +540,7 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,kanban,calendar,graph,pivot</field>
             <field name="view_id" ref="invoice_tree"/>
             <field name="domain">[('type','in', ['out_invoice', 'out_refund']), ('state', 'not in', ['draft', 'cancel'])]</field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
@@ -640,8 +639,7 @@
                 Click to record a new vendor bill.
               </p><p>
                 You can control the invoice from your vendor according to
-                what you purchased or received. Odoo can also generate
-                draft invoices automatically from purchase orders or receipts.
+                what you purchased or received.
               </p>
             </field>
         </record>

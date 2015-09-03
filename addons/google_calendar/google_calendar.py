@@ -212,8 +212,10 @@ class google_calendar(osv.AbstractModel):
             vstype = 'date'
         attendee_list = []
         for attendee in event.attendee_ids:
+            email = tools.email_split(attendee.email)
+            email = email[0] if email else 'NoEmail@mail.com'
             attendee_list.append({
-                'email': attendee.email or 'NoEmail@mail.com',
+                'email': email,
                 'displayName': attendee.partner_id.name,
                 'responseStatus': attendee.state or 'needsAction',
             })
@@ -919,7 +921,7 @@ class google_calendar(osv.AbstractModel):
         return url
 
     def can_authorize_google(self, cr, uid, context=None):
-        return self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
+        return self.pool['res.users']._is_admin(cr, uid, [uid])
 
     def set_all_tokens(self, cr, uid, authorization_code, context=None):
         gs_pool = self.pool['google.service']

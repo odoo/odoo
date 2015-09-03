@@ -11,7 +11,6 @@ This module adds the Timesheet support for the Issues/Bugs Management in Project
 
 Worklogs can be maintained to signify number of hours spent by users to handle an issue.
                 """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',
     'depends': [
         'project_issue',
@@ -21,6 +20,7 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
     'data': [
         'project_issue_sheet_view.xml',
         'security/ir.model.access.csv',
+        'security/portal_security.xml',
     ],
     'demo': [],
     'installable': True,

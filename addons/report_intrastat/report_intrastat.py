@@ -70,8 +70,8 @@ class report_intrastat(osv.osv):
                             else 0
                         end) as value,
                     sum(
-                        case when uom.category_id != puom.category_id then (pp.weight_net * inv_line.quantity)
-                        else (pp.weight_net * inv_line.quantity * uom.factor) end
+                        case when uom.category_id != puom.category_id then (pt.weight * inv_line.quantity)
+                        else (pt.weight * inv_line.quantity * uom.factor) end
                     ) as weight,
                     sum(
                         case when uom.category_id != puom.category_id then inv_line.quantity
@@ -91,7 +91,7 @@ class report_intrastat(osv.osv):
                     left join (product_template pt
                         left join product_product pp on (pp.product_tmpl_id = pt.id))
                     on (inv_line.product_id = pp.id)
-                    left join product_uom uom on uom.id=inv_line.uos_id
+                    left join product_uom uom on uom.id=inv_line.uom_id
                     left join product_uom puom on puom.id = pt.uom_id
                     left join report_intrastat_code intrastat on pt.intrastat_id = intrastat.id
                     left join (res_partner inv_address

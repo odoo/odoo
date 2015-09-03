@@ -395,23 +395,19 @@ FavoriteMenu.include({
             board = new Model('board.board'),
             name = self.$add_dashboard_input.val();
         
-        board.call('list', [board.context()])
-            .then(function (board_list) {
-                return self.rpc('/board/add_to_dashboard', {
-                    menu_id: board_list[0].id,                    
-                    action_id: self.action_id,
-                    context_to_save: c,
-                    domain: d,
-                    view_mode: self.view_manager.active_view.type,
-                    name: name,
-                });
-            }).then(function (r) {
-                if (r) {
-                    self.do_notify(_.str.sprintf(_t("'%s' added to dashboard"), name), '');
-                } else {
-                    self.do_warn(_t("Could not add filter to dashboard"));
-                }
-            });
+        return self.rpc('/board/add_to_dashboard', {
+            action_id: self.action_id,
+            context_to_save: c,
+            domain: d,
+            view_mode: self.view_manager.active_view.type,
+            name: name,
+        }).then(function (r) {
+            if (r) {
+                self.do_notify(_.str.sprintf(_t("'%s' added to dashboard"), name), '');
+            } else {
+                self.do_warn(_t("Could not add filter to dashboard"));
+            }
+        });
     },
 });
 

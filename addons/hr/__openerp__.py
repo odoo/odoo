@@ -4,10 +4,8 @@
 {
     'name': 'Employee Directory',
     'version': '1.1',
-    'author': 'OpenERP SA',
     'category': 'Human Resources',
-    'sequence': 21,
-    'website': 'https://www.odoo.com',
+    'sequence': 75,
     'summary': 'Jobs, Departments, Employees Details',
     'description': """
 Human Resources Management
@@ -22,7 +20,6 @@ You can manage:
 * HR Departments
 * HR Jobs
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
     'images': [
         'images/hr_department.jpeg',
@@ -34,7 +31,6 @@ You can manage:
         'base_setup',
         'mail',
         'resource',
-        'board',
         'web_kanban',
     ],
     'data': [
@@ -45,7 +41,6 @@ You can manage:
         'hr_data.xml',
         'hr_tip_data.xml',
         'res_config_view.xml',
-        'mail_hr_view.xml',
         'views/hr.xml',
         'hr_dashboard.xml',
     ],
