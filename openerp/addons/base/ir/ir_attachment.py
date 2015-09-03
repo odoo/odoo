@@ -471,7 +471,7 @@ class ir_attachment(osv.osv):
             cr, uid, 'base', 'action_attachment', context=context)
 
     def invalidate_bundle(self, cr, uid, type='%', xmlid=None, context=None):
-        assert type in ('%', 'css', 'js'), "Unhandled bundle type"
+        assert type in ('%', 'js') or type.startswith('css'), "Unhandled bundle type"
         xmlid = '%' if xmlid is None else xmlid + '%'
         domain = [('url', '=like', '/web/%s/%s/%%' % (type, xmlid))]
         ids = self.search(cr, uid, domain, context=context)
