@@ -22,6 +22,7 @@
 """
 
 import datetime
+import dateutil
 import functools
 import itertools
 import logging
@@ -64,6 +65,19 @@ regex_pg_name = re.compile(r'[a-z_][a-z0-9_$]*', re.I)
 onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
+
+# base environment for doing a safe eval
+SAFE_EVAL_BASE = {
+    'datetime': datetime,
+    'dateutil': dateutil,
+    'time': time,
+}
+
+def make_compute(text, deps):
+    """ Return a compute function from its code body and dependencies. """
+    func = lambda self: eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
+    deps = [arg.strip() for arg in (deps or "").split(",")]
+    return api.depends(*deps)(func)
 
 
 def check_object_name(name):
@@ -709,6 +723,9 @@ class BaseModel(object):
                 attrs['column1'] = field['column1'] or col1
                 attrs['column2'] = field['column2'] or col2
                 attrs['domain'] = eval(field['domain']) if field['domain'] else None
+            # add compute function if given
+            if field['compute']:
+                attrs['compute'] = make_compute(field['compute'], field['depends'])
             self._add_field(name, Field.by_type[field['ttype']](**attrs))
 
     @classmethod

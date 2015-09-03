@@ -245,6 +245,14 @@ class ir_model_fields(osv.osv):
         'relation_table': fields.char("Relation Table", help="Used for custom many2many fields to define a custom relation table name"),
         'column1': fields.char("Column 1", help="Column referring to the record in the model table"),
         'column2': fields.char("Column 2", help="Column referring to the record in the comodel table"),
+        'compute': fields.text("Compute", help="Code to compute the value of the field.\n"
+                        "Iterate on the recordset 'self' and assign the field's value:\n\n"
+                        "    for record in self:\n"
+                        "        record['size'] = len(record.name)\n\n"
+                        "Modules time, datetime, dateutil are available."),
+        'depends': fields.char("Dependencies", help="Dependencies of compute method; "
+                        "a list of comma-separated field names, like\n\n"
+                        "    name, partner_id.name"),
     }
     _rec_name='field_description'
     _defaults = {
@@ -319,6 +327,12 @@ class ir_model_fields(osv.osv):
                 return {'warning': {'title': _("Warning"), 'message': e.message}}
             self.ttype = field.type
             self.relation = field.comodel_name
+            self.readonly = True
+            self.copy = False
+
+    @api.onchange('compute')
+    def _onchange_compute(self):
+        if self.compute:
             self.readonly = True
             self.copy = False
 
