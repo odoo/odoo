@@ -10,7 +10,7 @@
                         <li role="presentation" class="text-center pull-right"><a href="https://www.odoo.com/apps/themes" target="_blank"><i class="fa fa-picture-o fa-2x text-muted"/> Theme store</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col"> 
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_invitations"></div>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
@@ -32,7 +32,7 @@
                 <t t-if="installed_apps > 1">Installed Apps</t>
             </t>
             <t t-if="! installed_apps">
-                No app installed 
+                No app installed
             </t>
         </div>
         <div>
@@ -93,10 +93,13 @@
             <t t-call="DashboardPlanner.PlannersList"/>
         </div>
     </t>
-    
+
     <t t-name="DashboardPlanner.PlannersList">
         <div class="row o_web_settings_dashboard_planners_list">
-            <t t-foreach="planners" t-as="p">
+            <t t-if="!planners.length">
+              <div>You need to install some apps first.</div>
+            </t>
+            <t t-if="planners.length" t-foreach="planners" t-as="p">
                 <div t-attf-class="col-xs-2 col-md-3 col-lg-2 o_web_settings_dashboard_planner_progress_text o_web_settings_dashboard_progress_#{p.progress}">
                     <t t-esc="p.progress"/>%
                 </div>
