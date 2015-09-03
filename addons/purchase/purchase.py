@@ -145,6 +145,7 @@ class PurchaseOrder(models.Model):
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     create_uid = fields.Many2one('res.users', 'Responsible')
     company_id = fields.Many2one('res.company', 'Company', required=True, select=1, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
+    po_double_validation = fields.Selection(related='company_id.po_double_validation', store=False, readonly=True)
 
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES, required=True, default=_default_picking_type,\
         help="This will determine picking type of incoming shipment")
@@ -242,7 +243,13 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_confirm(self):
-        return self.button_approve()
+        # Deal with double validation process
+        if self.user_has_groups('purchase.group_purchase_manager'):
+            return self.button_approve()
+        elif self.po_double_validation == 'two_step':
+            self.write({'state': 'to approve'})
+        else:
+            return self.button_approve()
 
     @api.multi
     def button_cancel(self):

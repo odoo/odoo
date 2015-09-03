@@ -143,14 +143,18 @@
                     <button name="print_quotation" string="Re-Print RFQ" type="object" states="sent" groups="base.group_user"/>
                     <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
                     <button name="button_confirm" type="object" states="sent" string="Confirm Order" class="oe_highlight" id="bid_confirm"/>
-                    <button name="button_approve" type="object" states="to approve" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
+                    <button name="button_approve" type="object" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"
+                        attrs="{'invisible': ['|', ('state', 'not in', ('to approve')), ('po_double_validation', '=', 'one_step')]}"/>
                     <button name="action_rfq_send" states="approved" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
                     <button name="%(purchase_open_picking)d" string="Receive Products" type="action" attrs="{'invisible': [('state','not in', ('purchase','done'))]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                     <button name="button_done" type="object" string="Set to Done" states="purchase"
                         help="If a purchase order is done, you can not modify it manually anymore. But you will still be able to bill or receive."/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1"
+                        attrs="{'invisible': [('po_double_validation', '=', 'two_step')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,to approve,purchase,done" readonly="1"
+                        attrs="{'invisible': [('po_double_validation', '=', 'one_step')]}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -183,6 +187,7 @@
                             <field name="date_order"/>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="po_double_validation" invisible='1'/>
                         </group>
                     </group>
                     <notebook>
