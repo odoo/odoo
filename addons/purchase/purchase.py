@@ -243,6 +243,22 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_confirm(self):
+        # Add the partner in the supplier list of the product if no supplier for this product
+        for line in self.order_line:
+            if not line.product_id.seller_ids:
+                supplierinfo = {
+                    'name': self.partner_id.id,
+                    'product_uom': line.product_uom.id,
+                    'min_qty': 0.0,
+                    'price': line.price_unit,
+                    'currency_id': self.partner_id.currency_id.id,
+                    'delay': 0,
+                }
+                vals = {
+                    'seller_ids': [(0, 0, supplierinfo)],
+                }
+                line.product_id.write(vals)
+
         # Deal with double validation process
         if self.user_has_groups('purchase.group_purchase_manager'):
             return self.button_approve()
