@@ -38,9 +38,8 @@ class account_bank_statement(osv.osv):
             res = super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
         return res
 
-    def button_confirm_bank(self, cr, uid, ids, context=None):
+    def confirm_statement_lines(self, cr, uid, ids, context=None):
         bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-        super(account_bank_statement, self).button_confirm_bank(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context=context):
             if st.line_ids:
                 line_ids = [l.id for l in st.line_ids]
@@ -49,6 +48,16 @@ class account_bank_statement(osv.osv):
                     (tuple(line_ids),))
                 bank_statement_line_obj.invalidate_cache(cr, uid, ['state'], line_ids, context=context)
         return True
+
+    def button_confirm_bank(self, cr, uid, ids, context=None):
+        res = super(account_bank_statement, self).button_confirm_bank(cr, uid, ids, context=context)
+        self.confirm_statement_lines(cr, uid, ids, context=context)
+        return res
+
+    def button_confirm_cash(self, cr, uid, ids, context=None):
+        res = super(account_bank_statement, self).button_confirm_cash(cr, uid, ids, context=context)
+        self.confirm_statement_lines(cr, uid, ids, context=context)
+        return res
 
     def button_cancel(self, cr, uid, ids, context=None):
         bank_statement_line_obj = self.pool.get('account.bank.statement.line')
