@@ -1,7 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <menuitem id="base.menu_aftersale" name="After-Sale"
             groups="base.group_sale_salesman"
             parent="base.menu_base_partner" sequence="5" />
@@ -10,7 +8,7 @@
             parent="base.menu_aftersale" sequence="2" />
 
         <!-- Claims Menu -->
-        <record model="ir.actions.act_window" id="crm_claim_category_claim0">
+        <record id="crm_claim_category_claim0" model="ir.actions.act_window">
             <field name="name">Claims</field>
             <field name="res_model">crm.claim</field>
             <field name="view_type">form</field>
@@ -25,21 +23,21 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_crm_tag_tree_claim0">
+        <record id="action_crm_tag_tree_claim0" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="crm_case_claims_tree_view"/>
             <field name="act_window_id" ref="crm_claim_category_claim0"/>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_claim0">
+        <record id="action_crm_tag_calendar_claim0" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">calendar</field>
             <field name="view_id" ref="crm_case_claims_calendar_view"/>
             <field name="act_window_id" ref="crm_claim_category_claim0"/>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_crm_tag_form_claim0">
+        <record id="action_crm_tag_form_claim0" model="ir.actions.act_window.view">
             <field name="sequence" eval="3"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="crm_case_claims_form_view"/>
@@ -47,11 +45,9 @@
         </record>
 
 
-        <menuitem name="Claims" id="menu_crm_case_claims"
+        <menuitem id="menu_crm_case_claims" name="Claims"
             parent="base.menu_services" action="crm_claim_category_claim0" sequence="1"/>
 
         <!-- Claim Stages -->
         <menuitem id="menu_claim_stage_view" name="Stages" action="crm_claim_stage_act" parent="menu_config_claim" sequence="20"/>
-
-    </data>
-</openerp>
+</odoo>

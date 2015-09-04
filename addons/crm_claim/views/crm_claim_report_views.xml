@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-
+<odoo>
 <!-- CRM Claim Report Pivot View -->
 
         <record id="view_report_crm_claim_pivot" model="ir.ui.view">
@@ -88,8 +86,6 @@
             <field name="help">Have a general overview of all claims processed in the system by sorting them with specific criteria.</field>
         </record>
 
-        <menuitem name="Claims" id="menu_report_crm_claim_tree"
+        <menuitem id="menu_report_crm_claim_tree" name="Claims" 
             action="action_report_crm_claim" parent="base.menu_sale_report" sequence="15"/>
-
-    </data>
-</openerp>
+</odoo>
