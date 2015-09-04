@@ -690,6 +690,9 @@ function openerp_picking_widgets(instance){
             }
 
             return loaded_picking.then(function(){
+                    if (!_.isEmpty(self.locations)){
+                        return $.when();
+                    }
                     return new instance.web.Model('stock.location').call('search',[[['usage','=','internal']]]).then(function(locations_ids){
                         return new instance.web.Model('stock.location').call('read',[locations_ids, []]).then(function(locations){
                             self.locations = locations;
