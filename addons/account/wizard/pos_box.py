@@ -41,7 +41,7 @@ class CashBox(osv.osv_memory):
 
     def _create_bank_statement_line(self, cr, uid, box, record, context=None):
         values = self._compute_values_for_statement_line(cr, uid, box, record, context=context)
-        return self.pool.get('account.bank.statement.line').create(cr, uid, values, context=context)
+        return self.pool.get('account.bank.statement').write(cr, uid, [record.id], {'line_ids': [(0, False, values)]}, context=context)
 
 
 class CashBoxIn(CashBox):
