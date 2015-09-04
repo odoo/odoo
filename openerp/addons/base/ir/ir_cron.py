@@ -32,6 +32,7 @@ from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp.tools import config
 from openerp.modules import load_information_from_description_file
 
 _logger = logging.getLogger(__name__)
@@ -195,6 +196,9 @@ class ir_cron(osv.osv):
 
         If a job was processed, returns True, otherwise returns False.
         """
+        if config['maintenance']:
+            _logger.info('In maintenance mode, not fetching jobs')
+            return False
         db = openerp.sql_db.db_connect(db_name)
         threading.current_thread().dbname = db_name
         cr = db.cursor()

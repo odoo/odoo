@@ -305,6 +305,8 @@ class configmanager(object):
                          help="Use the unaccent function provided by the database when available.")
         group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLiteCity.dat',
                          help="Absolute path to the GeoIP database file.")
+        group.add_option("--maintenance", dest="maintenance", my_default=False, action="store_true",
+                         help="Prevent cron and mail interaction")
         parser.add_option_group(group)
 
         if os.name == 'posix':
@@ -442,7 +444,7 @@ class configmanager(object):
             'list_db', 'xmlrpcs', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
-            'data_dir',
+            'data_dir', 'maintenance',
         ]
 
         posix_keys = [

@@ -30,6 +30,7 @@ from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp.tools import config
 
 _logger = logging.getLogger(__name__)
 
@@ -231,6 +232,9 @@ class mail_mail(osv.Model):
                 email sending process has failed
             :return: True
         """
+        if config['maintenance']:
+            _logger.info('In maintenance mode, not sending mail')
+            return True
         context = dict(context or {})
         ir_mail_server = self.pool.get('ir.mail_server')
         ir_attachment = self.pool['ir.attachment']
