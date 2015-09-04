@@ -1202,13 +1202,15 @@ class Date(Field):
     @staticmethod
     def from_string(value):
         """ Convert an ORM ``value`` into a :class:`date` value. """
+        if not value:
+            return None
         value = value[:DATE_LENGTH]
         return datetime.strptime(value, DATE_FORMAT).date()
 
     @staticmethod
     def to_string(value):
         """ Convert a :class:`date` value into the format expected by the ORM. """
-        return value.strftime(DATE_FORMAT)
+        return value.strftime(DATE_FORMAT) if value else False
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
@@ -1266,6 +1268,8 @@ class Datetime(Field):
     @staticmethod
     def from_string(value):
         """ Convert an ORM ``value`` into a :class:`datetime` value. """
+        if not value:
+            return None
         value = value[:DATETIME_LENGTH]
         if len(value) == DATE_LENGTH:
             value += " 00:00:00"
@@ -1274,7 +1278,7 @@ class Datetime(Field):
     @staticmethod
     def to_string(value):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
-        return value.strftime(DATETIME_FORMAT)
+        return value.strftime(DATETIME_FORMAT) if value else False
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
