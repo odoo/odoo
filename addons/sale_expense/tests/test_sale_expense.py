@@ -57,6 +57,7 @@ class TestSaleExpense(TestSale):
             'unit_amount': 0.15,
             'quantity': 100,
             'journal_id': journal.id,
+            'employee_id': employee.id,
         })
         # Submit to Manager
         exp.submit_expenses()
