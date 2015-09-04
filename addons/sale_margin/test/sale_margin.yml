@@ -22,7 +22,7 @@
   I confirm the sale order
 -
   !python {model: sale.order}: |
-    self.action_confirm(cr, uid, ref("sale_order_so11"), context=context)
+    self.action_confirm(cr, uid, [ref("sale_order_so11")], context=context)
 -
   I verify that margin field gets bind with the value
 -
