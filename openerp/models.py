@@ -1247,7 +1247,8 @@ class BaseModel(object):
         for fun, msg, names in self._constraints:
             try:
                 # validation must be context-independent; call ``fun`` without context
-                valid = not (set(names) & field_names) or fun(self._model, cr, uid, ids)
+                valid = names and not (set(names) & field_names)
+                valid = valid or fun(self._model, cr, uid, ids)
                 extra_error = None
             except Exception, e:
                 _logger.debug('Exception while validating constraint', exc_info=True)
