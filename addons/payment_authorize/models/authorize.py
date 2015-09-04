@@ -85,8 +85,6 @@ class PaymentAcquirerAuthorize(models.Model):
 class TxAuthorize(models.Model):
     _inherit = 'payment.transaction'
 
-    authorize_txnid = fields.Char(string='Transaction ID')
-
     _authorize_valid_tx_status = 1
     _authorize_pending_tx_status = 4
     _authorize_cancel_tx_status = 2
@@ -119,8 +117,8 @@ class TxAuthorize(models.Model):
     def _authorize_form_get_invalid_parameters(self, tx, data):
         invalid_parameters = []
 
-        if tx.authorize_txnid and data.get('x_trans_id') != tx.authorize_txnid:
-            invalid_parameters.append(('Transaction Id', data.get('x_trans_id'), tx.authorize_txnid))
+        if self.acquirer_reference and data.get('x_trans_id') != self.acquirer_reference:
+            invalid_parameters.append(('Transaction Id', data.get('x_trans_id'), self.acquirer_reference))
         # check what is buyed
         if float_compare(float(data.get('x_amount', '0.0')), tx.amount, 2) != 0:
             invalid_parameters.append(('Amount', data.get('x_amount'), '%.2f' % tx.amount))
@@ -135,22 +133,19 @@ class TxAuthorize(models.Model):
         if status_code == self._authorize_valid_tx_status:
             tx.write({
                 'state': 'done',
-                'authorize_txnid': data.get('x_trans_id'),
-                'acquirer_reference': data['x_invoice_num'],
+                'acquirer_reference': data.get('x_trans_id'),
             })
             return True
         elif status_code == self._authorize_pending_tx_status:
             tx.write({
                 'state': 'pending',
-                'authorize_txnid': data.get('x_trans_id'),
-                'acquirer_reference': data['x_invoice_num'],
+                'acquirer_reference': data.get('x_trans_id'),
             })
             return True
         elif status_code == self._authorize_cancel_tx_status:
             tx.write({
                 'state': 'cancel',
-                'authorize_txnid': data.get('x_trans_id'),
-                'acquirer_reference': data['x_invoice_num'],
+                'acquirer_reference': data.get('x_trans_id'),
             })
             return True
         else:
@@ -159,7 +154,6 @@ class TxAuthorize(models.Model):
             tx.write({
                 'state': 'error',
                 'state_message': error,
-                'authorize_txnid': data.get('x_trans_id'),
-                'acquirer_reference': data['x_invoice_num'],
+                'acquirer_reference': data.get('x_trans_id'),
             })
             return False

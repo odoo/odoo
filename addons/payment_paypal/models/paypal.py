@@ -175,7 +175,6 @@ class TxPaypal(osv.Model):
     _inherit = 'payment.transaction'
 
     _columns = {
-        'paypal_txn_id': fields.char('Transaction ID'),
         'paypal_txn_type': fields.char('Transaction type'),
     }
 

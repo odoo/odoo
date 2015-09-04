@@ -112,10 +112,6 @@ class TxBuckaroo(osv.Model):
     _buckaroo_error_tx_status = [490, 491, 492]
     _buckaroo_reject_tx_status = [690]
 
-    _columns = {
-         'buckaroo_txnid': fields.char('Transaction ID'),
-    }
-    
 
     # --------------------------------------------------
     # FORM RELATED METHODS
@@ -168,19 +164,19 @@ class TxBuckaroo(osv.Model):
         if status_code in self._buckaroo_valid_tx_status:
             tx.write({
                 'state': 'done',
-                'buckaroo_txnid': data.get('BRQ_TRANSACTIONS'),
+                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
             })
             return True
         elif status_code in self._buckaroo_pending_tx_status:
             tx.write({
                 'state': 'pending',
-                'buckaroo_txnid': data.get('BRQ_TRANSACTIONS'),
+                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
             })
             return True
         elif status_code in self._buckaroo_cancel_tx_status:
             tx.write({
                 'state': 'cancel',
-                'buckaroo_txnid': data.get('BRQ_TRANSACTIONS'),
+                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
             })
             return True
         else:
@@ -189,6 +185,6 @@ class TxBuckaroo(osv.Model):
             tx.write({
                 'state': 'error',
                 'state_message': error,
-                'buckaroo_txnid': data.get('BRQ_TRANSACTIONS'),
+                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
             })
             return False
