@@ -228,6 +228,11 @@ class WebsiteForum(http.Controller):
         if not question.can_view:
             raise werkzeug.exceptions.NotFound()
 
+        # Hide pending posts from non-moderators and non-creator
+        user = request.env.user
+        if question.state == 'pending' and user.karma < forum.karma_post and question.create_uid != user:
+            raise werkzeug.exceptions.NotFound()
+
         # increment view counter
         question.sudo().set_viewed()
         if question.parent_id:
@@ -260,11 +265,10 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", methods=['POST'], website=True)
     def question_ask_for_close(self, forum, question, **post):
-        reasons = request.env['forum.post.reason'].search([])
+        reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'basic')])
 
         values = self._prepare_forum_values(**post)
         values.update({
-            'question': question,
             'question': question,
             'forum': forum,
             'reasons': reasons,
@@ -418,6 +422,107 @@ class WebsiteForum(http.Controller):
         if not post.exists() or post.parent_id:
             return False
         return post.bump()
+
+    # Moderation Tools
+    # --------------------------------------------------
+
+    @http.route('/forum/<model("forum.forum"):forum>/validation_queue', type='http', auth="user", website=True)
+    def validation_queue(self, forum):
+        user = request.env.user
+        if user.karma < forum.karma_moderate:
+            raise werkzeug.exceptions.NotFound()
+
+        Post = request.env['forum.post']
+        domain = [('forum_id', '=', forum.id), ('state', '=', 'pending')]
+        posts_to_validate_ids = Post.search(domain)
+
+        values = self._prepare_forum_values(forum=forum)
+        values.update({
+            'posts_ids': posts_to_validate_ids,
+            'queue_type': 'validation',
+        })
+
+        return request.website.render("website_forum.moderation_queue", values)
+
+    @http.route('/forum/<model("forum.forum"):forum>/flagged_queue', type='http', auth="user", website=True)
+    def flagged_queue(self, forum):
+        user = request.env.user
+        if user.karma < forum.karma_moderate:
+            raise werkzeug.exceptions.NotFound()
+
+        Post = request.env['forum.post']
+        domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
+        flagged_posts_ids = Post.search(domain, order='write_date DESC')
+
+        values = self._prepare_forum_values(forum=forum)
+        values.update({
+            'posts_ids': flagged_posts_ids,
+            'queue_type': 'flagged',
+        })
+
+        return request.website.render("website_forum.moderation_queue", values)
+
+    @http.route('/forum/<model("forum.forum"):forum>/offensive_posts', type='http', auth="user", website=True)
+    def offensive_posts(self, forum):
+        user = request.env.user
+        if user.karma < forum.karma_moderate:
+            raise werkzeug.exceptions.NotFound()
+
+        Post = request.env['forum.post']
+        domain = [('forum_id', '=', forum.id), ('state', '=', 'offensive'), ('active', '=', False)]
+        offensive_posts_ids = Post.search(domain, order='write_date DESC')
+
+        values = self._prepare_forum_values(forum=forum)
+        values.update({
+            'posts_ids': offensive_posts_ids,
+            'queue_type': 'offensive',
+        })
+
+        return request.website.render("website_forum.moderation_queue", values)
+
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', auth="user", website=True)
+    def post_accept(self, forum, post):
+        url = "/forum/%s/validation_queue" % (slug(forum))
+        if post.state == 'flagged':
+            url = "/forum/%s/flagged_queue" % (slug(forum))
+        elif post.state == 'offensive':
+            url = "/forum/%s/offensive_posts" % (slug(forum))
+        post.validate()
+        return werkzeug.utils.redirect(url)
+
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/refuse', type='http', auth="user", website=True)
+    def post_refuse(self, forum, post):
+        post.refuse()
+        return self.question_ask_for_close(forum, post)
+
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/flag', type='json', auth="public", website=True)
+    def post_flag(self, forum, post, **kwargs):
+        if not request.session.uid:
+            return {'error': 'anonymous_user'}
+        return post.flag()[0]
+
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/ask_for_mark_as_offensive', type='http', auth="user", methods=['GET'], website=True)
+    def post_ask_for_mark_as_offensive(self, forum, post):
+        offensive_reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'offensive')])
+
+        values = self._prepare_forum_values(forum=forum)
+        values.update({
+            'question': post,
+            'forum': forum,
+            'reasons': offensive_reasons,
+            'offensive': True,
+        })
+        return request.website.render("website_forum.close_post", values)
+
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/mark_as_offensive', type='http', auth="user", methods=["POST"], website=True)
+    def post_mark_as_offensive(self, forum, post, **kwargs):
+        post.mark_as_offensive(reason_id=int(kwargs.get('reason_id', False)))
+        url = ''
+        if post.parent_id:
+            url = "/forum/%s/question/%s/#answer-%s" % (slug(forum), post.parent_id.id, post.id)
+        else:
+            url = "/forum/%s/question/%s" % (slug(forum), slug(post))
+        return werkzeug.utils.redirect(url)
 
     # User
     # --------------------------------------------------
