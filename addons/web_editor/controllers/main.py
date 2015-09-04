@@ -145,6 +145,7 @@ class Web_Editor(http.Controller):
                 'name': name,
                 'type': 'url',
                 'url': url,
+                'public': True,
                 'res_model': 'ir.ui.view',
             }, request.context)
             uploads += Attachments.read(request.cr, request.uid, [attachment_id], ['name', 'mimetype', 'checksum', 'url'], request.context)
@@ -169,6 +170,7 @@ class Web_Editor(http.Controller):
                         'name': c_file.filename,
                         'datas': data.encode('base64'),
                         'datas_fname': c_file.filename,
+                        'public': True,
                         'res_model': 'ir.ui.view',
                     }, request.context)
                     attachment_ids.append(attachment_id)

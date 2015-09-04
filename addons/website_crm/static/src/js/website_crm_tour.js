@@ -42,7 +42,7 @@ odoo.define('website_crm.tour', function(require) {
                 {
                     title:          "Complete Subject",
                     element:        "textarea[name=description]",
-                    sampleText:     "Even more useless message"
+                    sampleText:     "### TOUR DATA ###"
                 },
                 {
                     title:          "Send the form",
@@ -51,49 +51,6 @@ odoo.define('website_crm.tour', function(require) {
                 {
                     title:          "Check we were redirected to the success page",
                     waitFor:        "#wrap:has(h1:contains('Thanks')):has(div.alert-success)"
-                }
-            ]
-        });
-
-        Tour.register({
-            id:   'website_crm_tour_results',
-            name: "Test the contact us form created records",
-            path: '',
-            mode: 'test',
-            steps: [
-                {
-                    title:          "Check crm.lead record has been created",
-                    waitFor:        ".o-apps",
-                    onload: function (tour) {
-                        var leadDef = new Model("crm.lead").call(
-                            "search_read",
-                            [
-                                [
-                                    ['contact_name', '='   , 'John Smith'],
-                                    ['phone'       , '='   , '118.218'],
-                                    ['email_from'  , '='   , 'john@smith.com'],
-                                    ['partner_name', '='   , 'Odoo S.A.'],
-                                    ['name'        , '='   , 'Useless message'],
-                                    ['description' , 'like', 'Even more useless message']
-                                ],
-                                []
-                            ]
-                        );
-                        var success = function(model, data) {
-                            if(data.length) {
-                                $('body').append('<div id="website_form_success_test_tour_'+model+'"></div>');
-                            }
-                        };
-                        leadDef.then(_.bind(success, this, 'crm_lead'));
-                    }
-                },
-                {
-                    title:          "Check crm.lead record has been created",
-                    waitFor:        "#website_form_success_test_tour_crm_lead"
-                },
-                {
-                    title:          "Final Step",
-                    waitFor:        "html"
                 }
             ]
         });

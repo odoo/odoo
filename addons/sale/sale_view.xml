@@ -403,6 +403,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,pivot</field>
+            <field name="context">{'show_sale': True}</field>
             <field name="domain">[('invoice_status','=','to invoice')]</field>
         </record>
         <menuitem name="Invoicing"

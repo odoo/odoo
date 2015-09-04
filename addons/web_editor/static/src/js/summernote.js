@@ -2238,8 +2238,6 @@ function summernote_paste (event) {
         if (!r.isCollapsed()) {
             r = r.deleteContents();
             r.select();
-            event.preventDefault();
-            return false;
         }
 
             var text = $('<div />').text(clipboardData.getData("text/plain").toString()).html();

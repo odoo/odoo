@@ -741,9 +741,9 @@ class website_sale(http.Controller):
                     order.name,
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
-                    partner_id=shipping_partner_id,
-                    tx_values={
+                    values={
                         'return_url': '/shop/payment/validate',
+                        'partner_id': shipping_partner_id
                     },
                     context=render_ctx)
 
@@ -800,7 +800,7 @@ class website_sale(http.Controller):
 
         # confirm the quotation
         if tx.acquirer_id.auto_confirm == 'at_pay_now':
-            request.registry['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
+            request.registry['sale.order'].action_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         return tx_id
 
@@ -829,11 +829,11 @@ class website_sale(http.Controller):
             else:
                 tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
                 state = tx.state
-                flag = True if state == 'pending' and tx.acquirer_id.validation == 'automatic' else False
+                flag = state == 'pending'
                 values.update({
                     'tx_ids': True,
                     'state': state,
-                    'validation' : tx.acquirer_id.validation,
+                    'validation': tx.acquirer_id.auto_confirm == 'none',
                     'tx_post_msg': tx.acquirer_id.post_msg or None
                 })
 
@@ -868,7 +868,7 @@ class website_sale(http.Controller):
             if (not order.amount_total and not tx):
                 # Orders are confirmed by payment transactions, but there is none for free orders,
                 # (e.g. free events), so confirm immediately
-                order.with_context(dict(context, send_email=True)).action_button_confirm()
+                order.with_context(dict(context, send_email=True)).action_confirm()
         elif tx and tx.state == 'cancel':
             # cancel the quotation
             sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)

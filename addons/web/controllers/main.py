@@ -480,7 +480,7 @@ def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', un
 
     # mimetype
     if not mimetype:
-        if 'mimetype' in obj and obj.mimetype:
+        if 'mimetype' in obj and obj.mimetype and obj.mimetype != 'application/octet-stream':
             mimetype = obj.mimetype
         elif filename:
             mimetype = mimetypes.guess_type(filename)[0]
@@ -569,33 +569,6 @@ class Home(http.Controller):
         if not http.db_filter([db]):
             return werkzeug.utils.redirect('/', 303)
         return login_and_redirect(db, login, key, redirect_url=redirect)
-
-    @http.route([
-        '/web/js/<xmlid>',
-        '/web/js/<xmlid>/<version>',
-    ], type='http', auth='public')
-    def js_bundle(self, xmlid, version=None, **kw):
-        try:
-            bundle = AssetsBundle(xmlid)
-        except QWebTemplateNotFound:
-            return request.not_found()
-
-        response = request.make_response(bundle.js(), [('Content-Type', 'application/javascript')])
-        return make_conditional(response, bundle.last_modified, max_age=BUNDLE_MAXAGE)
-
-    @http.route([
-        '/web/css/<xmlid>',
-        '/web/css/<xmlid>/<version>',
-        '/web/css.<int:page>/<xmlid>/<version>',
-    ], type='http', auth='public')
-    def css_bundle(self, xmlid, version=None, page=None, **kw):
-        try:
-            bundle = AssetsBundle(xmlid)
-        except QWebTemplateNotFound:
-            return request.not_found()
-
-        response = request.make_response(bundle.css(page), [('Content-Type', 'text/css')])
-        return make_conditional(response, bundle.last_modified, max_age=BUNDLE_MAXAGE)
 
 class WebClient(http.Controller):
 
@@ -1064,6 +1037,8 @@ class Binary(http.Controller):
         '/web/content/<string:xmlid>/<string:filename>',
         '/web/content/<int:id>',
         '/web/content/<int:id>/<string:filename>',
+        '/web/content/<int:id>-<string:unique>',
+        '/web/content/<int:id>-<string:unique>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename=None, filename_field='datas_fname', unique=None, mimetype=None, download=None, data=None, token=None):
@@ -1085,14 +1060,18 @@ class Binary(http.Controller):
         '/web/image/<string:xmlid>/<string:filename>',
         '/web/image/<string:xmlid>/<int:width>x<int:height>',
         '/web/image/<string:xmlid>/<int:width>x<int:height>/<string:filename>',
-        '/web/image/<int:id>',
-        '/web/image/<int:id>/<string:filename>',
         '/web/image/<string:model>/<int:id>/<string:field>',
         '/web/image/<string:model>/<int:id>/<string:field>/<string:filename>',
+        '/web/image/<string:model>/<int:id>/<string:field>/<int:width>x<int:height>',
+        '/web/image/<string:model>/<int:id>/<string:field>/<int:width>x<int:height>/<string:filename>',
+        '/web/image/<int:id>',
+        '/web/image/<int:id>/<string:filename>',
         '/web/image/<int:id>/<int:width>x<int:height>',
         '/web/image/<int:id>/<int:width>x<int:height>/<string:filename>',
-        '/web/image/<string:model>/<int:id>/<string:field>/<int:width>x<int:height>',
-        '/web/image/<string:model>/<int:id>/<string:field>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
+        '/web/image/<int:id>-<string:unique>',
+        '/web/image/<int:id>-<string:unique>/<string:filename>',
+        '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
+        '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename_field='datas_fname', unique=None, filename=None, mimetype=None, download=None, width=0, height=0):
         status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype='image/png')
         if status == 304:

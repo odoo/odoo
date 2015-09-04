@@ -61,7 +61,7 @@ class crm_lead(format_address, osv.osv):
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context)
+        team_id = self.pool['crm.team']._get_default_team_id(cr, SUPERUSER_ID, context=context, user_id=uid)
         return self.stage_find(cr, uid, [], team_id, [('fold', '=', False)], context=context)
 
     def _resolve_type_from_context(self, cr, uid, context=None):
@@ -197,7 +197,6 @@ class crm_lead(format_address, osv.osv):
         # Only used for type opportunity
         'probability': fields.float('Probability', group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),
-        'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         # CRM Actions
         'last_activity_id': fields.many2one("crm.activity", "Last Activity", select=True),
@@ -237,7 +236,7 @@ class crm_lead(format_address, osv.osv):
         'type': lambda s, cr, uid, c: 'lead' if s.pool['res.users'].has_group(cr, uid, 'crm.group_use_lead') else 'opportunity',
         'user_id': lambda s, cr, uid, c: uid,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
-        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
+        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, SUPERUSER_ID, context=c, user_id=uid),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm_stage.AVAILABLE_PRIORITIES[0][0],
         'probability': 10,

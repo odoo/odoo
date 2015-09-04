@@ -1663,6 +1663,33 @@ class MailThread(models.AbstractModel):
             self.message_subscribe([new_message.author_id.id])
         return new_message
 
+    @api.multi
+    def message_post_with_template(self, template_id, **kwargs):
+        """ Helper method to send a mail with a template
+            :param template_id : the id of the template to render to create the body of the message
+            :param **kwargs : parameter to create a mail.compose.message woaerd (which inherit from mail.message)
+        """
+        # Get composition mode, or force it according to the number of record in self
+        composition_mode = kwargs.get('composition_mode')
+        if not composition_mode:
+            composition_mode = 'comment' if len(self.ids) == 1 else 'mass_mail'
+        res_id = self.ids[0] or 0
+        # Create the composer
+        composer = self.env['mail.compose.message'].with_context(
+            active_ids=self.ids,
+            active_model=self._name,
+            default_composition_mode=composition_mode,
+            default_model=self._name,
+            default_res_id=self.ids[0] or 0,
+            default_template_id=template_id,
+        ).create(kwargs)
+        # Simulate the onchange (like trigger in form the view) only
+        # when having a template in single-email mode
+        if template_id:
+            update_values = composer.onchange_template_id(template_id, composition_mode, self._name, res_id)['value']
+            composer.write(update_values)
+        return composer.send_mail()
+
     # ------------------------------------------------------
     # Followers API
     # ------------------------------------------------------

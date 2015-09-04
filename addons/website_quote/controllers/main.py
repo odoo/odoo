@@ -68,11 +68,11 @@ class sale_quote(http.Controller):
                     order.name,
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
-                    partner_id=order.partner_id.id,
-                    tx_values={
+                    values={
                         'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
                         'type': 'form',
-                        'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.')
+                        'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
+                        'partner_id': order.partner_id.id,
                     },
                     context=render_ctx)
         return request.website.render('website_quote.so_quotation', values)
@@ -190,12 +190,12 @@ class sale_quote(http.Controller):
                 'partner_country_id': order.partner_id.country_id.id,
                 'reference': order.name,
                 'sale_order_id': order.id,
-                's2s_cb_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
+                'callback_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
             }, context=context)
             tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
 
         # confirm the quotation
         if tx.acquirer_id.auto_confirm == 'at_pay_now':
-            request.registry['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
+            request.registry['sale.order'].action_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         return tx_id

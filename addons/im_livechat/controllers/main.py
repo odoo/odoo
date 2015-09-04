@@ -1,9 +1,21 @@
 # -*- coding: utf-8 -*-
 from openerp import http, _
 from openerp.http import request
+from openerp.addons.base.ir.ir_qweb import AssetsBundle
+from openerp.addons.web.controllers.main import binary_content
+import base64
 
 
 class LivechatController(http.Controller):
+
+    @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='none')
+    def livechat_lib(self, xmlid, ext, **kwargs):
+        asset = AssetsBundle("im_livechat.external_lib")
+        # can't use /web/content directly because we don't have attachment ids (attachments must be created)
+        status, headers, content = binary_content(id=getattr(asset, ext)().id, unique=asset.checksum)
+        content_base64 = base64.b64decode(content)
+        headers.append(('Content-Length', len(content_base64)))
+        return request.make_response(content_base64, headers)
 
     @http.route('/im_livechat/support/<int:channel_id>', type='http', auth='public')
     def support_page(self, channel_id, **kwargs):

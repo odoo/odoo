@@ -37,7 +37,7 @@
 <t t-name="mail.Followers.partner">
     <li class='o_partner'>
         <img t-att-src="record.avatar_url"/>
-        <a t-attf-href="#model=res.partner&amp;id=#{record.id}"
+        <a t-attf-href="#model=res.partner&amp;id=#{record.res_id}"
            t-att-title="record.name"
            t-att-data-res-model="record.res_model"
            t-att-data-res-id="record.res_id"
@@ -53,6 +53,9 @@
 <t t-name="mail.Followers.add_more">
     <li t-if="widget.view_is_editable" class="o_add_follower">
         <a href="#"> Add followers </a>
+    </li>
+    <li t-if="widget.view_is_editable" class="o_add_follower_channel">
+        <a href="#"> Add Channels </a>
     </li>
     <li t-if="widget.view_is_editable and (widget.followers.length > 0)" class="divider"/>
 </t>

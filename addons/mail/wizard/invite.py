@@ -5,7 +5,7 @@ from openerp import tools
 
 
 class Invite(models.TransientModel):
-    """ Wizard to invite partners and make them followers. """
+    """ Wizard to invite partners (or channels) and make them followers. """
     _name = 'mail.wizard.invite'
     _description = 'Invite wizard'
 
@@ -15,6 +15,8 @@ class Invite(models.TransientModel):
         user_name = self.env.user.name_get()[0][1]
         model = result.get('res_model')
         res_id = result.get('res_id')
+        if self._context.get('mail_invite_follower_channel_only'):
+            result['send_mail'] = False
         if 'message' in fields and model and res_id:
             model_name = self.env['ir.model'].search([('model', '=', self.pool[model]._name)]).name_get()[0][1]
             document_name = self.env[model].browse(res_id).name_get()[0][1]

@@ -229,6 +229,7 @@ var FieldTextHtml = widget.extend({
         this.document = this.$iframe.contents()[0];
         this.$body = $("body", this.document);
         this.$content = this.$body.find("#editable_area");
+        this._toggle_label();
         this.lang = this.$iframe.attr('src').match(/[?&]lang=([^&]+)/);
         this.lang = this.lang ? this.lang[1] : this.view.dataset.context.lang;
         this._dirty_flag = false;
