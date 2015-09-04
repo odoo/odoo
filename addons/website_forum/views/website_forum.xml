@@ -171,9 +171,9 @@
                             <h3 class="panel-title">Moderation Tools</h3>
                         </div>
                         <div class="panel-body text-center">
-                            <a t-attf-href="/forum/#{slug(forum)}/validation_queue"><strong><t t-esc="count_posts_to_validate"/></strong> waiting for validation</a>
+                            <a t-attf-href="/forum/#{slug(forum)}/validation_queue"><strong><t t-esc="forum.count_posts_waiting_validation"/></strong> waiting for validation</a>
                             <hr style="margin-top:4px;margin-bottom:0;padding-bottom:4px;" />
-                            <a t-attf-href="/forum/#{slug(forum)}/flagged_queue"><strong id="count_flagged_posts"><t t-esc="count_flagged_posts"/></strong> post<t t-if="count_flagged_posts&gt;1">s</t> flagged</a>
+                            <a t-attf-href="/forum/#{slug(forum)}/flagged_queue"><strong id="count_flagged_posts"><t t-esc="forum.count_flagged_posts"/></strong> post<t t-if="forum.count_flagged_posts&gt;1">s</t> flagged</a>
                         </div>
                     </div>
                     <div t-if="header.get('question_data')">
@@ -1148,6 +1148,7 @@
 <template id="moderation_queue">
     <t t-call="website_forum.header">
         <h2 class="page-header mt0">
+            <t t-set="count_posts" t-value="len(posts_ids)"/>
             <t t-esc="count_posts"/>
             <span class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">

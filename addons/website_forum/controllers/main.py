@@ -28,16 +28,6 @@ class WebsiteForum(http.Controller):
             msg = list()
         return msg
 
-    def _get_nb_posts_waiting_validation(self, forum):
-        Post = request.env['forum.post']
-        domain = [('forum_id', '=', forum.id), ('state', '=', 'pending')]
-        return Post.search_count(domain)
-
-    def _get_nb_flagged_posts(self, forum):
-        Post = request.env['forum.post']
-        domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
-        return Post.search_count(domain)
-
     def _prepare_forum_values(self, forum=None, **kwargs):
         values = {
             'user': request.env.user,
@@ -51,8 +41,6 @@ class WebsiteForum(http.Controller):
         }
         if forum:
             values['forum'] = forum
-            values['count_posts_to_validate'] = self._get_nb_posts_waiting_validation(forum)
-            values['count_flagged_posts'] = self._get_nb_flagged_posts(forum)
         elif kwargs.get('forum_id'):
             values['forum'] = request.env['forum.forum'].browse(kwargs.pop('forum_id'))
         values.update(kwargs)
@@ -451,7 +439,6 @@ class WebsiteForum(http.Controller):
         values = self._prepare_forum_values(forum=forum)
         values.update({
             'posts_ids': posts_to_validate_ids,
-            'count_posts': len(posts_to_validate_ids),
             'queue_type': 'validation',
         })
 
@@ -470,7 +457,6 @@ class WebsiteForum(http.Controller):
         values = self._prepare_forum_values(forum=forum)
         values.update({
             'posts_ids': flagged_posts_ids,
-            'count_posts': len(flagged_posts_ids),
             'queue_type': 'flagged',
         })
 
@@ -489,7 +475,6 @@ class WebsiteForum(http.Controller):
         values = self._prepare_forum_values(forum=forum)
         values.update({
             'posts_ids': offensive_posts_ids,
-            'count_posts': len(offensive_posts_ids),
             'queue_type': 'offensive',
         })
 

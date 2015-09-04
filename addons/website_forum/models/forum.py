@@ -92,6 +92,8 @@ class Forum(models.Model):
                                  help='After posting the user will be proposed to share its question'
                                       'or answer on social networks, enabling social network propagation'
                                       'of the forum content.')
+    count_posts_waiting_validation = fields.Integer(string="Number of posts waiting for validation", compute='_compute_count_posts_waiting_validation')
+    count_flagged_posts = fields.Integer(string='Number of flagged posts', compute='_compute_count_flagged_posts')
     # karma generation
     karma_gen_question_new = fields.Integer(string='Asking a question', default=2)
     karma_gen_question_upvote = fields.Integer(string='Question upvoted', default=5)
@@ -143,6 +145,15 @@ class Forum(models.Model):
         if self.default_post_type == 'link' and not self.allow_link or self.default_post_type == 'question' and not self.allow_question or self.default_post_type == 'discussion' and not self.allow_discussion:
             raise Warning(_('Post type in "Default post" must be activated'))
 
+    @api.one
+    def _compute_count_posts_waiting_validation(self):
+        domain = [('forum_id', '=', self.id), ('state', '=', 'pending')]
+        self.count_posts_waiting_validation = self.env['forum.post'].search_count(domain)
+
+    @api.one
+    def _compute_count_flagged_posts(self):
+        domain = [('forum_id', '=', self.id), ('state', '=', 'flagged')]
+        self.count_flagged_posts = self.env['forum.post'].search_count(domain)
 
     @api.model
     def create(self, values):
