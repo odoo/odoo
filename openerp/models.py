@@ -5363,7 +5363,11 @@ class BaseModel(object):
         """
         if self:
             vals = [func(rec) for rec in self]
-            return reduce(operator.or_, vals) if isinstance(vals[0], BaseModel) else vals
+            if isinstance(vals[0], BaseModel):
+                # return the union of all recordsets in O(n)
+                ids = set(itertools.chain(*[rec._ids for rec in vals]))
+                return vals[0].browse(ids)
+            return vals
         else:
             vals = func(self)
             return vals if isinstance(vals, BaseModel) else []
