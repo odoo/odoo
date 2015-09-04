@@ -1290,8 +1290,6 @@ class AssetsBundle(object):
                     page_selectors = selectors
             for idx, page in enumerate(pages):
                 attachments |= self.save_attachment("css", ' '.join(page), inc=idx)
-        elif len(attachments) > 1:
-            attachments = attachments[1:]
         return attachments
 
     def css_message(self, message):
