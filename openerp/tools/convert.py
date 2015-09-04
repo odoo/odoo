@@ -921,9 +921,8 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         encoding: utf-8'''
     if not idref:
         idref={}
-    model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
-    #remove folder path from model
-    head, model = os.path.split(model)
+    head, model = os.path.split(fname)
+    model = model[0:model.rfind('.')]
 
     input = cStringIO.StringIO(csvcontent) #FIXME
     reader = csv.reader(input, quotechar='"', delimiter=',')
