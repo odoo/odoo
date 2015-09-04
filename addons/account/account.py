@@ -2168,6 +2168,13 @@ class account_tax(osv.osv):
                 total += r['amount']
         return res
 
+    def _fix_tax_included_price(self, cr, uid, price, prod_taxes, line_taxes):
+        """Subtract tax amount from price when corresponding "price included" taxes do not apply"""
+        incl_tax = [tax for tax in prod_taxes if tax.id not in line_taxes and tax.price_include]
+        if incl_tax:
+            return self._unit_compute_inv(cr, uid, incl_tax, price)[0]['price_unit']
+        return price
+
     def _unit_compute_inv(self, cr, uid, taxes, price_unit, product=None, partner=None):
         taxes = self._applicable(cr, uid, taxes, price_unit,  product, partner)
         res = []

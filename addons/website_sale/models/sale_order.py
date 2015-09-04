@@ -52,7 +52,7 @@ class sale_order(osv.Model):
             partner_id=so.partner_id.id,
             fiscal_position=so.fiscal_position.id,
             qty=qty,
-            context=context
+            context=dict(context or {}, company_id=so.company_id.id)
         )['value']
 
         if line_id:

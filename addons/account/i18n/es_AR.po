@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-22 08:06+0000\n"
+"PO-Revision-Date: 2015-08-23 17:56+0000\n"
 "Last-Translator: Leonardo Germán Chianea <noamixcontenidos@gmail.com>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-8/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
@@ -337,7 +337,7 @@ msgid ""
 "                can generate it directly from the related customer invoice.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear una factura rectificativa de cliente.\n              </p><p>\nUna factura rectificativa es un documento que abona una factura completa o parcialmente.\n              </p><p>\nEn lugar de generar manualmente una factura rectificativa, puede generarla directamente\ndesde la factura de cliente relacionada.\n              </p>"
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear una nota de crédito al cliente.\n              </p><p>\nUna nota de crédito es un documento que abona una factura completa o parcialmente.\n              </p><p>\nEn lugar de generar manualmente una nota de crédito, puede generarla directamente\ndesde la factura de cliente relacionada.\n              </p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -2132,7 +2132,7 @@ msgstr "Cancelar las facturas seleccionadas"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr "Cancelar: crea la factura rectificativa y concilia"
+msgstr "Cancelar: crea la nota de crédito y concilia"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2203,7 +2203,7 @@ msgstr "No se ha podido encontrar un árbol de cuentas de esta compañía, deber
 msgid ""
 "Cannot find any account journal of \"%s\" type for this company, You should create one.\n"
 " Please go to Journal Configuration"
-msgstr "No se pudo encontrar ningún diario del tipo \"%s\" para esta compañía. Debería configurar uno. \nPor favor, vaya la configuración de diarios."
+msgstr "No se pudo encontrar ningún diario del tipo \"%s\" para esta compañía. Debería configurar uno. \nPor favor, vaya a la configuración de diarios."
 
 #. module: account
 #: code:addons/account/account_invoice.py:591
@@ -2211,7 +2211,7 @@ msgstr "No se pudo encontrar ningún diario del tipo \"%s\" para esta compañía
 msgid ""
 "Cannot find any account journal of type \"%s\" for this company, You should create one.\n"
 " Please go to Journal Configuration"
-msgstr "No se pudo encontrar ningún diario del tipo \"%s\" para esta compañía. Debería configurar uno. \nPor favor, vaya la configuración de diarios."
+msgstr "No se pudo encontrar ningún diario del tipo \"%s\" para esta compañía. Debería configurar uno. \nPor favor, vaya a la configuración de diarios."
 
 #. module: account
 #: code:addons/account/account.py:3455
@@ -3820,7 +3820,7 @@ msgstr "Facturas en borrador"
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 msgid "Draft Refund"
-msgstr "Borrador de factura rectificativa"
+msgstr "Borrador de nota de crédito"
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -8171,7 +8171,7 @@ msgstr "Firma del código base del impuesto"
 msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
-msgstr "Factura rectificativa basada en este tipo. No puede modificar o cancelar si la factura ya está conciliada"
+msgstr "Nota de crédito basada en este tipo. No puede modificar o cancelar si la factura ya está conciliada"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -9133,7 +9133,7 @@ msgstr "Impuestos del proveedor"
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_prefix:0
 msgid "Supplier credit note sequence"
-msgstr "Secuencia de factura de crédito de proveedor"
+msgstr "Secuencia de nota de crédito de proveedor"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
@@ -11095,7 +11095,7 @@ msgid ""
 "You can select here the journal to use for the credit note that will be "
 "created. If you leave that field empty, it will use the same journal as the "
 "current invoice."
-msgstr "Puede seleccionar aquí el diario a usar para la factura rectificativa que será creada. Si deja vacío este campo, se usará el mismo diario que el de la moneda actual."
+msgstr "Puede seleccionar aquí el diario a usar para la nota de crédito que será creada. Si deja vacío este campo, se usará el mismo diario que el de la moneda actual."
 
 #. module: account
 #: help:account.financial.report,style_overwrite:0
@@ -11489,7 +11489,7 @@ msgid ""
 "                                    credit note directly or keep it draft,\n"
 "                                    waiting for the document to be issued by\n"
 "                                    your supplier/customer."
-msgstr "Podrá editar y validar esta\n                                    factura rectificativa directamente o mantenerla como borrador,\n                                    esperando a que el documento sea expedido por\n                                    su cliente/proveedor."
+msgstr "Podrá editar y validar esta\n                                    nota de crédito directamente o mantenerla como borrador,\n                                    esperando a que el documento sea expedido por\n                                    su cliente/proveedor."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_line_extended_form

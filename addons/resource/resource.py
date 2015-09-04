@@ -328,6 +328,7 @@ class resource_calendar(osv.osv):
 
         # no calendar: try to use the default_interval, then return directly
         if id is None:
+            working_interval = []
             if default_interval:
                 working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0), start_dt.replace(hour=default_interval[1], minute=0, second=0))
             intervals = self.interval_remove_leaves(working_interval, work_limits)
@@ -528,10 +529,7 @@ class resource_calendar(osv.osv):
         intervals = []
         planned_days = 0
         iterations = 0
-        if backwards:
-            current_datetime = day_date.replace(hour=23, minute=59, second=59)
-        else:
-            current_datetime = day_date.replace(hour=0, minute=0, second=0)
+        current_datetime = day_date.replace(hour=0, minute=0, second=0)
 
         while planned_days < days and iterations < 1000:
             working_intervals = self.get_working_intervals_of_day(
