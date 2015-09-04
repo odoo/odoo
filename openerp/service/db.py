@@ -39,28 +39,16 @@ def check_super(passwd):
 # This should be moved to openerp.modules.db, along side initialize().
 def _initialize_db(id, db_name, demo, lang, user_password):
     try:
-        db = openerp.sql_db.db_connect(db_name)
-        with closing(db.cursor()) as cr:
-            # TODO this should be removed as it is done by RegistryManager.new().
-            openerp.modules.db.initialize(cr)
-            openerp.tools.config['lang'] = lang
-            cr.commit()
-
+        openerp.tools.config['load_language'] = lang
         registry = openerp.modules.registry.RegistryManager.new(
             db_name, demo, None, update_module=True)
 
-        with closing(db.cursor()) as cr:
-            if lang:
-                modobj = registry['ir.module.module']
-                mids = modobj.search(cr, SUPERUSER_ID, [('state', '=', 'installed')])
-                modobj.update_translations(cr, SUPERUSER_ID, mids, lang)
-
-            # update admin's password and lang
-            values = {'password': user_password, 'lang': lang}
-            registry['res.users'].write(cr, SUPERUSER_ID, [SUPERUSER_ID], values)
-
-            cr.execute('SELECT login, password FROM res_users ORDER BY login')
-            cr.commit()
+        with openerp.api.Environment.manage():
+            with registry.cursor() as cr:
+                # update admin's password and lang
+                values = {'password': user_password, 'lang': lang}
+                registry['res.users'].write(cr, SUPERUSER_ID, [SUPERUSER_ID], values)
+                cr.commit()
     except Exception, e:
         _logger.exception('CREATE DATABASE failed:')
 

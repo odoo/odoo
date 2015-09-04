@@ -140,6 +140,12 @@ def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
 
 class website(osv.osv):
+
+    def _default_lang(self, cr, uid, context=None):
+        context = context or {}
+        lang = context.get('lang') or 'en_US'
+        return self.pool.get('res.lang').load_language(cr, uid, lang)
+
     def _get_menu(self, cr, uid, ids, name, arg, context=None):
         res = {}
         menu_obj = self.pool.get('website.menu')
@@ -175,6 +181,8 @@ class website(osv.osv):
     _defaults = {
         'user_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
         'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
+        'language_ids': _default_lang,
+        'default_lang_id': lambda self, cr, uid, c: self._default_lang(cr, uid, c)[0],
         'compress_html': False,
         'cdn_activated': False,
         'cdn_url': '//localhost:8069/',

@@ -997,15 +997,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
     trans_obj = registry.get('ir.translation')
     iso_lang = misc.get_iso_codes(lang)
     try:
-        context = {'active_test': False}
-        languages = lang_obj.search_read(cr, SUPERUSER_ID, [('code', '=', lang)], ['active'], context=context)
-        for language in languages:
-            if language['active'] is False:
-                lang_obj.write(cr, SUPERUSER_ID, language['id'], {'active': True}, context=context)
-        if not languages:
-            # lets create the language with locale information
-            lang_obj.load_lang(cr, SUPERUSER_ID, lang=lang, lang_name=lang_name)
-
+        lang_obj.load_language(cr, SUPERUSER_ID, lang)
         # Parse also the POT: it will possibly provide additional targets.
         # (Because the POT comments are correct on Launchpad but not the
         # PO comments due to a Launchpad limitation. See LP bug 933496.)
@@ -1162,15 +1154,3 @@ def resetlocale():
             return locale.setlocale(locale.LC_ALL, ln)
         except locale.Error:
             continue
-
-def load_language(cr, lang):
-    """Loads a translation terms for a language.
-    Used mainly to automate language loading at db initialization.
-
-    :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
-    :type lang: str
-    """
-    registry = openerp.registry(cr.dbname)
-    language_installer = registry['base.language.install']
-    oid = language_installer.create(cr, SUPERUSER_ID, {'lang': lang})
-    language_installer.lang_install(cr, SUPERUSER_ID, [oid], context=None)

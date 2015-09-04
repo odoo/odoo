@@ -12,14 +12,6 @@
             <field name="field_parent">child_id</field>
         </record>
 
-        <record id="lang_en" model="res.lang">
-            <field name="code">en_US</field>
-            <field name="name">English</field>
-            <field name="translatable">True</field>
-        </record>
-
-        <function name="install_lang" model="res.lang"/>
-
         <record id="main_partner" model="res.partner" context="{'default_is_company': True}">
             <field name="name">My Company</field>
             <field name="company_id" eval="None"/>

@@ -432,7 +432,7 @@ class TestNoModel(ViewCase):
         Test if translations work correctly without a model
         """
         View = self.registry('ir.ui.view')
-        self.registry('res.lang').load_lang(self.cr, self.uid, 'fr_FR')
+        self.registry('res.lang').load_language(self.cr, self.uid, 'fr_FR')
         orig_text = "Copyright copyrighter"
         translated_text = u"Copyrighter, tous droits réservés"
         self.text_para.text = orig_text 
