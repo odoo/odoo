@@ -78,7 +78,7 @@ class AuthorizeForm(AuthorizeCommon):
         cr, uid, context = self.env.cr, self.env.uid, {}
         res = self.payment_acquirer.render(
             cr, uid, self.authorize_id, 'SO004', 320.0, self.currency_usd.id,
-            partner_id=None, partner_values=self.buyer_values, context=context)
+            values=self.buyer_values, context=context)
         # check form result
         tree = objectify.fromstring(res)
         self.assertEqual(tree.get('action'), 'https://test.authorize.net/gateway/transact.dll', 'Authorize: wrong form POST url')

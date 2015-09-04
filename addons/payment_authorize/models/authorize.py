@@ -43,14 +43,14 @@ class PaymentAcquirerAuthorize(models.Model):
         return hmac.new(str(values['x_trans_key']), data, hashlib.md5).hexdigest()
 
     @api.multi
-    def authorize_form_generate_values(self, partner_values, tx_values):
+    def authorize_form_generate_values(self, values):
         self.ensure_one()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        authorize_tx_values = dict(tx_values)
+        authorize_tx_values = dict(values)
         temp_authorize_tx_values = {
             'x_login': self.authorize_login,
             'x_trans_key': self.authorize_transaction_key,
-            'x_amount': str(tx_values['amount']),
+            'x_amount': str(values['amount']),
             'x_show_form': 'PAYMENT_FORM',
             'x_type': 'AUTH_CAPTURE',
             'x_method': 'CC',
@@ -60,21 +60,21 @@ class PaymentAcquirerAuthorize(models.Model):
             'x_fp_timestamp': str(int(time.time())),
             'x_relay_url': '%s' % urlparse.urljoin(base_url, AuthorizeController._return_url),
             'x_cancel_url': '%s' % urlparse.urljoin(base_url, AuthorizeController._cancel_url),
-            'x_currency_code': tx_values['currency'] and tx_values['currency'].name or '',
-            'address': partner_values['address'],
-            'city': partner_values['city'],
-            'country': partner_values['country'] and partner_values['country'].name or '',
-            'email': partner_values['email'],
-            'zip': partner_values['zip'],
-            'first_name': partner_values['first_name'],
-            'last_name': partner_values['last_name'],
-            'phone': partner_values['phone'],
-            'state': partner_values.get('state') and partner_values['state'].name or '',
+            'x_currency_code': values['currency'] and values['currency'].name or '',
+            'address': values.get('partner_address'),
+            'city': values.get('partner_city'),
+            'country': values.get('partner_country') and values.get('partner_country').name or '',
+            'email': values.get('partner_email'),
+            'zip_code': values.get('partner_zip'),
+            'first_name': values.get('partner_first_name'),
+            'last_name': values.get('partner_last_name'),
+            'phone': values.get('partner_phone'),
+            'state': values.get('partner_state') and values['partner_state'].name or '',
         }
         temp_authorize_tx_values['returndata'] = authorize_tx_values.pop('return_url', '')
         temp_authorize_tx_values['x_fp_hash'] = self._authorize_generate_hashing(temp_authorize_tx_values)
         authorize_tx_values.update(temp_authorize_tx_values)
-        return partner_values, authorize_tx_values
+        return authorize_tx_values
 
     @api.multi
     def authorize_get_form_action_url(self):

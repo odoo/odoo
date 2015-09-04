@@ -75,28 +75,25 @@ class AcquirerBuckaroo(osv.Model):
         return shasign
 
 
-    def buckaroo_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
+    def buckaroo_form_generate_values(self, cr, uid, id, values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
-        buckaroo_tx_values = dict(tx_values)
+        buckaroo_tx_values = dict(values)
         buckaroo_tx_values.update({
             'Brq_websitekey': acquirer.brq_websitekey,
-            'Brq_amount': tx_values['amount'],
-            'Brq_currency': tx_values['currency'] and tx_values['currency'].name or '',
-            'Brq_invoicenumber': tx_values['reference'],
+            'Brq_amount': values['amount'],
+            'Brq_currency': values['currency'] and values['currency'].name or '',
+            'Brq_invoicenumber': values['reference'],
             'brq_test': False if acquirer.environment == 'prod' else True,
             'Brq_return': '%s' % urlparse.urljoin(base_url, BuckarooController._return_url),
             'Brq_returncancel': '%s' % urlparse.urljoin(base_url, BuckarooController._cancel_url),
             'Brq_returnerror': '%s' % urlparse.urljoin(base_url, BuckarooController._exception_url),
             'Brq_returnreject': '%s' % urlparse.urljoin(base_url, BuckarooController._reject_url),
-            'Brq_culture': (partner_values.get('lang') or 'en_US').replace('_', '-'),
+            'Brq_culture': (values.get('partner_lang') or 'en_US').replace('_', '-'),
+            'add_returndata': {'return_url': '%s' % buckaroo_tx_values.pop('return_url')} if buckaroo_tx_values.get('return_url') else ''
         })
-        if buckaroo_tx_values.get('return_url'):
-            buckaroo_tx_values['add_returndata'] = {'return_url': '%s' % buckaroo_tx_values.pop('return_url')}
-        else: 
-            buckaroo_tx_values['add_returndata'] = ''
         buckaroo_tx_values['Brq_signature'] = self._buckaroo_generate_digital_sign(acquirer, 'in', buckaroo_tx_values)
-        return partner_values, buckaroo_tx_values
+        return buckaroo_tx_values
 
     def buckaroo_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
