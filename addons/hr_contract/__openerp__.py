@@ -21,9 +21,9 @@ You can assign several contracts per employee.
     'depends': ['base_action_rule', 'hr'],
     'data': [
         'security/ir.model.access.csv',
-        'hr_contract_view.xml',
-        'hr_contract_data.xml',
-        'base_action_rule_view.xml',
+        'views/hr_contract_views.xml',
+        'data/hr_contract_data.xml',
+        'views/base_action_rule_views.xml',
     ],
     'demo': [],
     'test': ['test/test_hr_contract.yml'],
