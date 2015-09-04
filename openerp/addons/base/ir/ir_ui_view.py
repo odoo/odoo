@@ -533,7 +533,9 @@ class view(osv.osv):
                         value = child.text or ''
                         if child.get('add') or child.get('remove'):
                             assert not child.text
-                            separator = child.get('separator', None)
+                            separator = child.get('separator', ',')
+                            if separator == ' ':
+                                separator = None    # squash spaces
                             to_add = map(str.strip, child.get('add', '').split(separator))
                             to_remove = map(str.strip, child.get('remove', '').split(separator))
                             values = map(str.strip, node.get(attribute, '').split(separator))

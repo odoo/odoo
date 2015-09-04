@@ -744,9 +744,9 @@ class test_views(ViewCase):
             'arch': """
                 <footer position="attributes">
                     <attribute name="thing">bob tata lolo</attribute>
-                    <attribute name="thing" add="bibi" remove="tata"/>
+                    <attribute name="thing" add="bibi and co" remove="tata" separator=" " />
                     <attribute name="otherthing">bob, tata,lolo</attribute>
-                    <attribute name="otherthing" add="bibi" remove="tata, bob" separator=","/>
+                    <attribute name="otherthing" add="bibi" remove="tata, bob"/>
                 </footer>
             """
         })
@@ -766,7 +766,7 @@ class test_views(ViewCase):
                 E.p("Replacement data"),
                 E.footer(
                     E.button(name="action_next", type="object", string="New button"),
-                    thing="bob lolo bibi", otherthing="lolo,bibi"
+                    thing="bob lolo bibi and co", otherthing="lolo,bibi"
                 ),
                 string="Replacement title", version="7.0"))
 
