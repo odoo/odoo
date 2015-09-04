@@ -8,6 +8,7 @@ from openerp.http import request
 
 from openerp.addons.website.models.website import slug
 
+
 class website_hr_recruitment(http.Controller):
     @http.route([
         '/jobs',
