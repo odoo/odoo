@@ -346,7 +346,7 @@ class purchase_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
-            vals['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'purchase.order') or '/'
+            vals['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'purchase.order', context=context) or '/'
         context = dict(context or {}, mail_create_nolog=True)
         order =  super(purchase_order, self).create(cr, uid, vals, context=context)
         self.message_post(cr, uid, [order], body=_("RFQ created"), context=context)
@@ -1642,7 +1642,7 @@ class procurement_order(osv.osv):
 
             value_lines = self._get_po_line_values_from_procs(cr, uid, procurements, partner, schedule_date, context=context)
             line_values += [(0, 0, value_lines[x]) for x in value_lines.keys()]
-            name = seq_obj.next_by_code(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
+            name = seq_obj.next_by_code(cr, uid, 'purchase.order', context=context) or _('PO: %s') % procurement.name
             gpo = procurement.rule_id.group_propagation_option
             group = (gpo == 'fixed' and procurement.rule_id.group_id.id) or (gpo == 'propagate' and procurement.group_id.id) or False
             fp = acc_pos_obj.get_fiscal_position(cr, uid, None, partner.id, context=context)

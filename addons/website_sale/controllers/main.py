@@ -138,24 +138,17 @@ class website_sale(http.Controller):
 
         return attribute_value_ids
 
-    @http.route(['/shop',
-        '/shop/page/<int:page>',
-        '/shop/category/<model("product.public.category"):category>',
-        '/shop/category/<model("product.public.category"):category>/page/<int:page>'
-    ], type='http', auth="public", website=True)
-    def shop(self, page=0, category=None, search='', **post):
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-
+    def _get_search_domain(self, search, category, attrib_values):
         domain = request.website.sale_product_domain()
+
         if search:
             for srch in search.split(" "):
-                domain += ['|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
+                domain += [
+                    '|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
                     ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)]
+
         if category:
             domain += [('public_categ_ids', 'child_of', int(category))]
-        attrib_list = request.httprequest.args.getlist('attrib')
-        attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
-        attrib_set = set([v[1] for v in attrib_values])
 
         if attrib_values:
             attrib = None
@@ -172,6 +165,23 @@ class website_sale(http.Controller):
                     ids = [value[1]]
             if attrib:
                 domain += [('attribute_line_ids.value_ids', 'in', ids)]
+
+        return domain
+
+    @http.route([
+        '/shop',
+        '/shop/page/<int:page>',
+        '/shop/category/<model("product.public.category"):category>',
+        '/shop/category/<model("product.public.category"):category>/page/<int:page>'
+    ], type='http', auth="public", website=True)
+    def shop(self, page=0, category=None, search='', **post):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+
+        attrib_list = request.httprequest.args.getlist('attrib')
+        attrib_values = [map(int, v.split("-")) for v in attrib_list if v]
+        attrib_set = set([v[1] for v in attrib_values])
+
+        domain = self._get_search_domain(search, category, attrib_values)
 
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list)
 

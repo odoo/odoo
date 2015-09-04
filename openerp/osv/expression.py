@@ -138,6 +138,7 @@ import traceback
 
 import openerp.modules
 from . import fields
+from .. import SUPERUSER_ID
 from ..models import MAGIC_COLUMNS, BaseModel
 import openerp.tools as tools
 
@@ -942,11 +943,16 @@ class expression(object):
                             call_null = False
                             push(create_substitution_leaf(leaf, FALSE_LEAF, model))
                     else:
-                        ids2 = select_from_where(cr, column._fields_id, comodel._table, 'id', ids2, operator)
-                        if ids2:
+                        # determine ids1 <-- column._fields_id --- ids2
+                        if comodel._fields[column._fields_id].store:
+                            ids1 = select_from_where(cr, column._fields_id, comodel._table, 'id', ids2, operator)
+                        else:
+                            recs = comodel.browse(cr, SUPERUSER_ID, ids2, {'prefetch_fields': False})
+                            ids1 = recs.mapped(column._fields_id).ids
+                        if ids1:
                             call_null = False
                             o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            push(create_substitution_leaf(leaf, ('id', o2m_op, ids2), model))
+                            push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
 
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'

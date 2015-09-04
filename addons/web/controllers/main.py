@@ -33,6 +33,7 @@ import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 from openerp.modules import get_module_resource
+from openerp.service import model as service_model
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
@@ -953,7 +954,10 @@ class DataSet(http.Controller):
         if method.startswith('_'):
             raise AccessError(_("Underscore prefixed methods cannot be remotely called"))
 
-        return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
+        @service_model.check
+        def checked_call(__dbname, *args, **kwargs):
+            return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
+        return checked_call(request.db, *args, **kwargs)
 
     @http.route('/web/dataset/call', type='json', auth="user")
     def call(self, model, method, args, domain_id=None, context_id=None):

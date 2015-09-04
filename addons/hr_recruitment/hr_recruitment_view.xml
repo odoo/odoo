@@ -389,7 +389,7 @@
                 </div>
                 <label for="address_id"/>
                 <div>
-                    <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]"/>
+                    <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]" options="{'always_reload': True}"/>
                 </div>
             </group>
             <xpath expr="//field[@name='department_id']" position="after">
