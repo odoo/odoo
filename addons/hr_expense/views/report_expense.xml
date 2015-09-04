@@ -32,6 +32,7 @@
                                 <th>Name</th>
                                 <th>Unit Price</th>
                                 <th class="text-center">Qty</th>
+                                <th groups="product.group_uom">UoM</th>
                                 <th>Taxe(s)</th>
                                 <th class="text-right">Price</th>
                             </tr>
@@ -40,7 +41,7 @@
                             <tr>
                                 <td>
                                     <span t-field="o.name"/> 
-                                    <span t-field="o.analytic_account.name"/>
+                                    <span t-field="o.analytic_account_id.name"/>
                                 </td>
                                 <td>
                                     <span t-field="o.unit_amount"/>
@@ -48,9 +49,17 @@
                                 <td class="text-center">
                                     <span t-field="o.quantity"/>
                                 </td>
+                                <td groups="product.group_uom">
+                                    <span t-field="product_uom_id"/>
+                                </td>
                                 <td>
                                     <t t-foreach="o.tax_ids" t-as="tax">
+                                      <t t-if="tax.description">
                                         <span t-field="tax.description"/>
+                                      </t>
+                                      <t t-if="not tax.description">
+                                        <span t-field="tax.name"/>
+                                      </t>
                                     </t>
                                 </td>
                                 <td class="text-right">

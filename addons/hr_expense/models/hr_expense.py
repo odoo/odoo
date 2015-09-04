@@ -61,8 +61,7 @@ class HrExpense(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            description = '%s %s' % (self.product_id.display_name, self.product_id.description or '')
-            self.name = description.strip()
+            self.name = '%s' % (self.product_id.display_name or '')
             self.unit_amount = self.env['product.template']._price_get(self.product_id, 'standard_price')[self.product_id.id]
             self.product_uom_id = self.product_id.uom_id
 
@@ -75,36 +74,34 @@ class HrExpense(models.Model):
     def _onchange_employee_id(self):
         self.department_id = self.employee_id.department_id
 
-    def _add_follower(self):
+    def _add_followers(self):
         user_ids = []
         employee = self.employee_id
         if employee.user_id:
             user_ids.append(employee.user_id.id)
         if employee.parent_id:
             user_ids.append(employee.parent_id.user_id.id)
-        if employee.parent_id != employee.department_id.manager_id:
+        if employee.department_id and employee.department_id.manager_id and employee.parent_id != employee.department_id.manager_id:
             user_ids.append(employee.department_id.manager_id.user_id.id)
-        self.message_subscribe_users(user_ids = user_ids)
+        self.message_subscribe_users(user_ids=user_ids)
 
     @api.model
     def create(self, vals):
-        employee_id = vals.get('employee_id')
         hr_expense = super(HrExpense, self).create(vals)
-        if employee_id:
-            hr_expense._add_follower()
+        if vals.get('employee_id'):
+            hr_expense._add_followers()
         return hr_expense
 
     @api.multi
     def write(self, vals):
-        employee_id = vals.get('employee_id')
-        hr_expense = super(HrExpense, self).write(vals)
-        if employee_id:
-            self._add_follower()
-        return hr_expense
+        res = super(HrExpense, self).write(vals)
+        if vals.get('employee_id'):
+            self._add_followers()
+        return res
 
     @api.multi
     def unlink(self):
-        if self.filtered(lambda e: e.state not in ['draft', 'cancel']):
+        if any(expense.state not in ['draft', 'cancel'] for expense in self):
             raise UserError(_('You can only delete draft or refused expenses!'))
         return super(HrExpense, self).unlink()
 
@@ -154,11 +151,11 @@ class HrExpense(models.Model):
             'partner_id': partner_id,
             'name': line['name'][:64],
             'date': self.date,
-            'debit': line['price']>0 and line['price'],
-            'credit': line['price']<0 and -line['price'],
+            'debit': line['price'] > 0 and line['price'],
+            'credit': line['price'] < 0 and -line['price'],
             'account_id': line['account_id'],
             'analytic_line_ids': line.get('analytic_line_ids'),
-            'amount_currency': line['price']>0 and abs(line.get('amount_currency')) or -abs(line.get('amount_currency')),
+            'amount_currency': line['price'] > 0 and abs(line.get('amount_currency')) or -abs(line.get('amount_currency')),
             'currency_id': line.get('currency_id'),
             'tax_line_id': line.get('tax_line_id'),
             'ref': line.get('ref'),
@@ -174,7 +171,7 @@ class HrExpense(models.Model):
         internal method used for computation of total amount of an expense in the company currency and
         in the expense currency, given the account_move_lines that will be created. It also do some small
         transformations at these account_move_lines (for multi-currency purposes)
-        
+
         :param account_move_lines: list of dict
         :rtype: tuple of 3 elements (a, b ,c)
             a: total in company currency
@@ -208,14 +205,14 @@ class HrExpense(models.Model):
 
         #create the move that will contain the accounting entries
         move = self.env['account.move'].create({
-            'journal_id': self.journal_id,
+            'journal_id': self.journal_id.id,
             'company_id': self.env.user.company_id.id,
         })
 
         for expense in self:
             company_currency = expense.company_id.currency_id
             diff_currency_p = expense.currency_id != company_currency
-            #one account.move.line per expense line (+taxes..)
+            #one account.move.line per expense (+taxes..)
             move_lines = expense._move_line_get()
 
             #create one more move line, a counterline for the total on payable account
@@ -242,7 +239,6 @@ class HrExpense(models.Model):
 
             #convert eml into an osv-valid format
             lines = map(lambda x:(0, 0, expense._prepare_move_line(x)), move_lines)
-            # post the journal entry if 'Skip 'Draft' State for Manual Entries' is checked
             move.write({'line_ids': lines})
             expense.write({'account_move_id': move.id, 'state': 'post'})
             if expense.payment_mode == 'company_account':
@@ -252,12 +248,9 @@ class HrExpense(models.Model):
     @api.multi
     def _move_line_get(self):
         account_move = []
-        Tax = self.env['account.tax']
         for expense in self:
             if expense.product_id:
-                account = expense.product_id.property_account_expense_id
-                if not account:
-                    account = expense.product_id.categ_id.property_account_expense_categ_id
+                account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
                 if not account:
                     raise UserError(_("No Expense account found for the product %s (or for it's category), please configure one.") % (expense.product_id.name))
             else:

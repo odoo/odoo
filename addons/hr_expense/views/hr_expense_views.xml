@@ -11,7 +11,7 @@
                     <field name="date"/>
                     <field name="name"/>
                     <field name="employee_id"/>
-                    <field name="analytic_account_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="total_amount" sum="Total Amount" widget="monetary"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
@@ -29,7 +29,7 @@
                 <tree string="Expenses" decoration-warning="state=='draft'" decoration-bf="message_unread == True">
                     <field name="date"/>
                     <field name="name"/>
-                    <field name="analytic_account_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="total_amount" sum="Total Amount" widget="monetary"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
@@ -40,8 +40,8 @@
             </field>
         </record>
 
-        <record id="hr_expense_my_form_view" model="ir.ui.view">
-            <field name="name">hr.expense.my.form</field>
+        <record id="hr_expense_form_view" model="ir.ui.view">
+            <field name="name">hr.expense.form</field>
             <field name="model">hr.expense</field>
             <field eval="25" name="priority"/>
             <field name="arch" type="xml">
@@ -66,25 +66,6 @@
                     </div>
                     <group>
                         <group>
-                            <field name="date"/>
-                            <field name="employee_id" invisible="1"/>
-                            <field name="department_id" invisible="1"/>
-                            <field name="analytic_account_id" string="Contract"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="currency_id" groups="base.group_multi_currency"/>
-                        </group>
-                        <group groups="account.group_account_user">
-                            <field name="journal_id" domain="[('type', '=', 'purchase'])]"/>
-                            <label for="payment_mode" string="Payment Done"/>
-                            <div>
-                                <field name="payment_mode" widget="radio"/>
-                                <field name="bank_journal_id" attrs="{'invisible': [('payment_mode', '=', 'own_account')], 'required': [('payment_mode', '=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]" class="oe_inline"/>
-                            </div>
-                            <field name="account_move_id" domain="[('type', '=', 'purchase'])]" readonly="1"/>
-                        </group>
-                    </group>
-                    <group string='Description'>
-                        <group>
                             <field name="product_id" context="{'default_can_be_expensed': 1}"/>
                             <field name="name"/>
                         </group>
@@ -104,80 +85,27 @@
                             <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                         </div>
                     </group>
-                    <div>
-                        <field name="description" placeholder="Free Notes"/>
-                    </div>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
-                </form>
-            </field>
-        </record>
-
-        <record id="view_expenses_form" model="ir.ui.view">
-            <field name="name">hr.expense.form</field>
-            <field name="model">hr.expense</field>
-            <field eval="25" name="priority"/>
-            <field name="arch" type="xml">
-                <form string="Expenses">
-                <header>
-                    <button name="submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
-                    <button name="approve_expenses" states="submit" string="Approve" type="object" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit" string="Refuse" type="action" groups="base.group_hr_user" />
-                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="approve" string="Refuse" type="action" groups="account.group_account_user" />
-                    <button name="reset_expenses" states="cancel" string="Set to Draft" type="object"/>
-                    <button name="action_move_create" states="approve" string="Generate Accounting Entries" type="object" groups="account.group_account_user" class="oe_highlight"/>
-                    <button name="action_view_move" states="post" string="Open Accounting Entries" type="object" groups="account.group_account_user"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done" statusbar_colors='{"submit":"blue","cancel":"red"}'/>
-                </header>
-                <sheet>
-                    <div class="oe_right oe_button_box">
-                        <button name="action_get_attachment_view" 
-                            class="oe_stat_button"
-                            icon="fa-book"
-                            type="object">
-                            <field name="attachment_number" widget="statinfo" string="Documents"/>
-                        </button>
-                    </div>
-                    <group>
+                    <group string="Extra Info">
                         <group>
                             <field name="date"/>
-                            <field name="employee_id"/>
-                            <field name="department_id" groups="account.group_account_user"/>
-                            <field name="analytic_account_id" string="Contract"/>
+                            <field name="employee_id" invisible="context.get('hide_employee',False)"/>
+                            <field name="department_id" invisible="context.get('hide_employee',False)"/>
+                            <field name="analytic_account_id" string="Contract" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                         </group>
-                        <group>
-                            <field name="product_id" context="{'default_can_be_expensed': 1}"/>
-                            <field name="name"/>
-                            <field name="unit_amount" required="1"/>
-                            <label for="quantity"/>
+                        <group groups="account.group_account_user">
+                            <field name="journal_id" domain="[('type', '=', 'purchase'])]"/>
+                            <label for="payment_mode" string="Payment Done"/>
                             <div>
-                                <field name="quantity" class="oe_inline"/> 
-                                <field name="product_uom_id" widget="selection" class="oe_inline" groups="product.group_uom"/>
+                                <field name="payment_mode" widget="radio"/>
+                                <field name="bank_journal_id" attrs="{'invisible': [('payment_mode', '=', 'own_account')], 'required': [('payment_mode', '=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]" class="oe_inline"/>
                             </div>
-                            <field name="tax_ids" widget="many2many_tags" groups="account.group_account_user"/>
+                            <field name="account_move_id" domain="[('type', '=', 'purchase'])]" readonly="1"/>
                         </group>
                     </group>
-                    <group class="oe_subtotal_footer oe_right">
-                        <label for="total_amount"  class="oe_subtotal_footer_separator" style="padding-top: 6px !important;"/>
-                        <div>
-                            <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                        </div>
-                    </group>
-                    <group groups="account.group_account_user">
-                        <label for="payment_mode" string="Payment Done"/>
-                        <div>
-                            <field name="payment_mode" widget="radio"/>
-                            <field name="journal_id" attrs="{'invisible': [('payment_mode', '=', 'own_account')], 'required': [('payment_mode', '=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]" class="oe_inline"/>
-                        </div>
-                    </group>
                     <div>
-                        <separator string="Description"/>
-                        <field name="description" placeholder="Free Notes" style="width: 65%"/>
+                        <field name="description" placeholder="Free Notes"/>
                     </div>
                 </sheet>
                 <div class="oe_chatter">
@@ -234,7 +162,7 @@
                     <field name="employee_id"/>
                     <field name="department_id" string="Department" context="{'invisible_department': False}"/>
                     <field name="product_id"/>
-                    <field name="analytic_account_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <filter domain="[('state', '=', 'draft')]" string="New" help="New Expense"/>
                     <filter domain="[('state', '=', 'submit')]" string="To Approve" name="submitted" help="Confirmed Expenses"/>
                     <filter domain="['|', ('state', '=', 'approve'), ('state', '=', 'post')]" string="To Pay" name="approved" help="Expenses to Invoice"/>
@@ -247,7 +175,7 @@
                         <filter string="Department" domain="[]" context="{'group_by': 'department_id'}" groups="hr.group_multi_departments"/>
                         <filter string="Company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
-                        <filter string="Contract" domain="[]" context="{'group_by': 'analytic_account_id'}"/>
+                        <filter string="Contract" domain="[]" context="{'group_by': 'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
                         <filter string="Expenses Month" domain="[]" context="{'group_by': 'date'}" help="Expenses by Month"/>
                     </group>
                     <separator />
@@ -262,6 +190,7 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+            <field name="context">{'hide_employee': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click here to create new expenses.
@@ -288,7 +217,7 @@
         <record id="hr_expense_form_action" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="hr_expense_my_form_view"/>
+            <field name="view_id" ref="hr_expense_form_view"/>
             <field name="act_window_id" ref="expense_all"/>
         </record>
 
