@@ -4791,9 +4791,9 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        if '__copy_data_seen' not in context:
-            context = dict(context, __copy_data_seen=defaultdict(list))
-        seen_map = context['__copy_data_seen']
+        if '__copy_translations_seen' not in context:
+            context = dict(context, __copy_translations_seen=defaultdict(list))
+        seen_map = context['__copy_translations_seen']
         if old_id in seen_map[self._name]:
             return
         seen_map[self._name].append(old_id)
