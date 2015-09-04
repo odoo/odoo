@@ -1,33 +1,25 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from openerp import tools
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
 
-class wizard_valuation_history(osv.osv_memory):
 
+class WizardValuationHistory(models.TransientModel):
     _name = 'wizard.valuation.history'
     _description = 'Wizard that opens the stock valuation history table'
-    _columns = {
-        'choose_date': fields.boolean('Inventory at Date'),
-        'date': fields.datetime('Date', required=True),
-    }
 
-    _defaults = {
-        'choose_date': False,
-        'date': fields.datetime.now,
-    }
+    choose_date = fields.Boolean('Inventory at Date')
+    date = fields.Datetime('Date', required=True, default=fields.Datetime.now)
 
-    def open_table(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        data = self.read(cr, uid, ids, context=context)[0]
-        ctx = context.copy()
-        ctx['history_date'] = data['date']
+    @api.multi
+    def open_table(self):
+        self.ensure_one()
+        ctx = self.env.context.copy()
+        ctx['history_date'] = self.date
         ctx['search_default_group_by_product'] = True
         ctx['search_default_group_by_location'] = True
         return {
-            'domain': "[('date', '<=', '" + data['date'] + "')]",
+            'domain': "[('date', '<=', '" + self.date + "')]",
             'name': _('Stock Value At Date'),
             'view_type': 'form',
             'view_mode': 'tree',
