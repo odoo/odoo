@@ -25,7 +25,6 @@ You can assign several contracts per employee.
         'views/hr_contract_views.xml',
     ],
     'demo': [],
-    'test': ['test/test_hr_contract.yml'],
     'installable': True,
     'auto_install': False,
 }
