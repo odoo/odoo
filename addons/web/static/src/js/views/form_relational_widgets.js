@@ -1350,7 +1350,10 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
     events: {
         'click .o_delete': function(e) {
             this.remove_id($(e.target).parent().data('id'));
-        }
+        },
+        'click .badge': 'open_color_picker',
+        'mousedown .o_colorpicker a': 'update_color',
+        'focusout .o_colorpicker': 'close_color_picker',
     },
 
     init: function(field_manager, node) {
@@ -1391,7 +1394,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         }
     },
     get_render_data: function(ids){
-        return this.dataset.name_get(ids);
+        return this.dataset.read_ids(ids, ['name', 'color']);
     },
     render_tag: function(data) {
         this.$('.badge').remove();
@@ -1405,7 +1408,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
                 return;
             var indexed = {};
             _.each(data, function(el) {
-                indexed[el[0]] = el;
+                indexed[el['id']] = el;
             });
             data = _.map(values, function(el) { return indexed[el]; });
             self.render_tag(data);
@@ -1434,7 +1437,34 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         if (!this.get("effective_readonly") && $input) {
             $input.css('height', height);
         }
-    }
+    },
+    open_color_picker: function(ev){
+        var self = this;
+
+        this.$color_picker = $(QWeb.render('FieldMany2ManyTag.colorpicker', {
+            'widget': this,
+            'tag_id': $(ev.currentTarget).data('id'),
+        }));
+
+        $(ev.currentTarget).append(this.$color_picker);
+        this.$color_picker.dropdown('toggle');
+        this.$color_picker.attr("tabindex", 1).focus();
+    },
+    close_color_picker: function(){
+        this.$color_picker.remove();
+    },
+    update_color: function(ev) {
+        ev.preventDefault();
+        var self = this;
+
+        var color = $(ev.currentTarget).data('color');
+        var id = $(ev.currentTarget).data('id');
+
+        this.dataset._model.call('write', [id, {'color': color}]).done(function(){
+            self.view.reload();
+        });
+    },
+
 });
 
 /**

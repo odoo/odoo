@@ -93,13 +93,18 @@
         }
 
         .o_kanban_tags {
-            margin-left: -8px;
+            margin: 0 0 8px -8px;
             height: 9px;
             .o_tag {
-                width: 50px;
+                width: 40px;
                 height: 9px;
                 display: inline-block;
                 vertical-align: top;
+                opacity: 0.7;
+
+                &:hover {
+                    opacity: 1;
+                }
             }
         }
         .o_form_field_many2manytags {

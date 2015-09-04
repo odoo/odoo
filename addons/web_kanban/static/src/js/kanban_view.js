@@ -533,14 +533,15 @@ var KanbanView = View.extend({
         });
        _.each(relations, function(rel, rel_name) {
             var dataset = new data.DataSetSearch(self, rel_name, self.dataset.get_context(rel.context));
-            dataset.name_get(_.uniq(rel.ids)).done(function(result) {
-                result.forEach(function(nameget) {
-                    // white color (0) should not be selected, 1 instead
-                    var color = KanbanRecord.prototype.kanban_getcolor(nameget[1]) + 1;
-                    var $tag = $('<span>')
-                        .addClass('o_tag oe_kanban_color_' + color)
-                        .attr('title', _.str.escapeHTML(nameget[1]));
-                    $(rel.elements[nameget[0]]).append($tag);
+            dataset.read_ids(_.uniq(rel.ids), ['name', 'color']).done(function(result) {
+                result.forEach(function(record) {
+                    // Does not display the tag if color = 0
+                    if (record['color']){
+                        var $tag = $('<span>')
+                            .addClass('o_tag o_tag_color_' + record['color'])
+                            .attr('title', _.str.escapeHTML(record['name']));
+                        $(rel.elements[record['id']]).append($tag);
+                    }
                 });
                 // we use boostrap tooltips for better and faster display
                 self.$('span.o_tag').tooltip();

@@ -270,10 +270,31 @@ div.o_checkbox {
         .o-align-items(flex-start);
 
         .badge {
+            cursor: pointer;
             .o-flex(0, 0, auto);
             margin: 0 3px 3px 0;
+            color: #FFF;
+            font-size: 12px;
             .o_delete {
                 cursor: pointer;
+            }
+            ul {
+                min-width: 230px;
+                li {
+                    float: left;
+                    color: black;
+                    a {
+                        border-radius: 6px;
+                        width: 28px;
+                        height: 30px;
+                        display: inline-block;
+                        border: 2px solid white;
+
+                        &:hover {
+                            opacity: 0.8;
+                        }
+                    }
+                }
             }
         }
 
@@ -330,6 +351,43 @@ div.o_checkbox {
         > .o_address_zip {
             width: 25%;
         }
+    }
+}
+
+// Many2many tags
+.o_form_field_many2manytags {
+    .o_tag_color_0 {
+        background-color: #B6BBBF;
+    }
+    .o_tag_color_1 {
+        background-color: #61BD4F;
+    }
+    .o_tag_color_2 {
+        background-color: #F2D600;
+    }
+    .o_tag_color_3 {
+        background-color: #FFAB4A;
+    }
+    .o_tag_color_4 {
+        background-color: #EB5A46;
+    }
+    .o_tag_color_5 {
+        background-color: #A24689;
+    }
+    .o_tag_color_6 {
+        background-color: #0079BF;
+    }
+    .o_tag_color_7 {
+        background-color: #00C2E0;
+    }
+    .o_tag_color_8 {
+        background-color: #4CD98E;
+    }
+    .o_tag_color_9 {
+        background-color: #FF80CE;
+    }
+    .o_tag_color_10 {
+        background-color: #4D4D4D;
     }
 }
 
