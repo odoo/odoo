@@ -1013,6 +1013,7 @@ class project_tags(osv.Model):
     _description = "Tags of project's tasks, issues..."
     _columns = {
         'name': fields.char('Name', required=True),
+        'color': fields.integer('Color Index'),
     }
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Tag name already exists !"),

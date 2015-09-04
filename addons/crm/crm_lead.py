@@ -1213,6 +1213,7 @@ class crm_lead_tag(osv.Model):
     _description = "Category of lead"
     _columns = {
         'name': fields.char('Name', required=True),
+        'color': fields.integer('Color Index'),
         'team_id': fields.many2one('crm.team', 'Sales Team'),
     }
     _sql_constraints = [

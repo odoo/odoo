@@ -84,6 +84,7 @@ class res_groups(osv.osv):
         'view_access': fields.many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', 'Views'),
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
+        'color': fields.integer('Color Index'),
         'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
         'share': fields.boolean('Share Group',
                     help="Group created to set access rights for sharing data with some users.")

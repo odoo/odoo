@@ -80,6 +80,7 @@ class Category(models.Model):
     _name = 'test_new_api.category'
 
     name = fields.Char(required=True)
+    color = fields.Integer('Color Index')
     parent = fields.Many2one('test_new_api.category')
     display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name')
     dummy = fields.Char(store=False)

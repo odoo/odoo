@@ -8,6 +8,7 @@ class account_analytic_tag(models.Model):
     _name = 'account.analytic.tag'
     _description = 'Analytic Tags'
     name = fields.Char(string='Analytic Tag', index=True, required=True)
+    color = fields.Integer('Color Index')
 
 
 class account_analytic_account(models.Model):
