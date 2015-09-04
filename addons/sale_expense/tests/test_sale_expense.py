@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from openerp.addons.sale.tests.test_sale_common import TestSale
-from openerp import workflow
 
 
 class TestSaleExpense(TestSale):
@@ -25,25 +24,22 @@ class TestSaleExpense(TestSale):
         company = self.env.ref('base.main_company')
         journal = self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'HRTPJ', 'type': 'purchase', 'company_id': company.id})
         account_payable = self.env['account.account'].create({'code': 'X1111', 'name': 'HR Expense - Test Payable Account', 'user_type_id': self.env.ref('account.data_account_type_payable').id, 'reconcile': True})
-        exp = self.env['hr.expense.expense'].create({
-            'name': 'Test Expense',
-            'user_id': self.user.id,
-            'line_ids': [(0, 0, {'product_id': prod_exp.id,
-                                 'name': 'Air Travel',
-                                 'analytic_account': so.project_id.id,
-                                 'unit_amount': 700.0,
-                                 })],
+        employee = self.env['hr.employee'].create({'name': 'Test employee', 'user_id': self.user.id, 'address_home_id': self.user.partner_id.id})
+        self.user.partner_id.property_account_payable_id = account_payable.id
+        exp = self.env['hr.expense'].create({
+            'name': 'Air Travel',
+            'product_id': prod_exp.id,
+            'analytic_account_id': so.project_id.id,
+            'unit_amount': 700.0,
             'journal_id': journal.id,
-            'employee_payable_account_id': account_payable.id,
+            'employee_id': employee.id,
         })
-        cr, uid = self.cr, self.uid
         # Submit to Manager
-        workflow.trg_validate(uid, 'hr.expense.expense', exp.id, 'confirm', cr)
+        exp.submit_expenses()
         # Approve
-        workflow.trg_validate(uid, 'hr.expense.expense', exp.id, 'validate', cr)
+        exp.approve_expenses()
         # Create Expense Entries
-        workflow.trg_validate(uid, 'hr.expense.expense', exp.id, 'done', cr)
-
+        exp.action_move_create()
         # expense should now be in sales order
         self.assertTrue(prod_exp in map(lambda so: so.product_id, so.order_line), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp.id)
@@ -53,26 +49,21 @@ class TestSaleExpense(TestSale):
         # create some expense and validate it (expense at sales price)
         init_price = so.amount_total
         prod_exp = self.env.ref('hr_expense.car_travel')
-        exp = self.env['hr.expense.expense'].create({
-            'name': 'Test Expense',
-            'user_id': self.user.id,
-            'line_ids': [(0, 0, {'product_id': prod_exp.id,
-                                 'name': 'Car Travel',
-                                 'analytic_account': so.project_id.id,
-                                 'uom_id': self.env.ref('product.product_uom_km').id,
-                                 'unit_amount': 0.15,
-                                 'unit_quantity': 100,
-                                 })],
+        exp = self.env['hr.expense'].create({
+            'name': 'Car Travel',
+            'product_id': prod_exp.id,
+            'analytic_account_id': so.project_id.id,
+            'product_uom_id': self.env.ref('product.product_uom_km').id,
+            'unit_amount': 0.15,
+            'quantity': 100,
             'journal_id': journal.id,
-            'employee_payable_account_id': account_payable.id,
         })
         # Submit to Manager
-        workflow.trg_validate(uid, 'hr.expense.expense', exp.id, 'confirm', cr)
+        exp.submit_expenses()
         # Approve
-        workflow.trg_validate(uid, 'hr.expense.expense', exp.id, 'validate', cr)
+        exp.approve_expenses()
         # Create Expense Entries
-        workflow.trg_validate(uid, 'hr.expense.expense', exp.id, 'done', cr)
-
+        exp.action_move_create()
         # expense should now be in sales order
         self.assertTrue(prod_exp in map(lambda so: so.product_id, so.order_line), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp.id)
@@ -83,4 +74,4 @@ class TestSaleExpense(TestSale):
         # both expenses should be invoiced
         inv_id = so.action_invoice_create()
         inv = self.env['account.invoice'].browse(inv_id)
-        self.assertEqual(inv.amount_total, 732.0, 'Sale Expense: invoicing of exepense is wrong')
+        self.assertEqual(inv.amount_total, 732.0, 'Sale Expense: invoicing of expense is wrong')

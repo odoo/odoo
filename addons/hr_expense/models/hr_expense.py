@@ -162,7 +162,7 @@ class HrExpense(models.Model):
             'quantity': line.get('quantity',1.00),
             'product_id': line.get('product_id'),
             'product_uom_id': line.get('uom_id'),
-            'analytic_account_id': line.get('account_analytic_id'),
+            'analytic_account_id': line.get('analytic_account_id'),
         }
 
     @api.multi
@@ -266,7 +266,7 @@ class HrExpense(models.Model):
                     'account_id': account.id,
                     'product_id': expense.product_id.id,
                     'uom_id': expense.product_uom_id.id,
-                    'account_analytic_id': expense.analytic_account_id.id,
+                    'analytic_account_id': expense.analytic_account_id.id,
                 }
             account_move.append(move_line)
 
