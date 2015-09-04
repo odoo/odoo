@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <template id="barcode_planner">
+
+        <t t-call="web_planner.pages">
+            <t t-call="web_planner.page">
+                <t t-set="page_title" t-value="'Welcome'"/>
+                <t t-set="hide_mark_as_done" t-value="True"/>
+                <i><p>
+                  You've decided to implement barcodes in your company? Great idea. This tool will help you setup the environment to make it work.
+                </p><p>
+                  Before we start, you should choose your working process. There are three suitable approaches to work with barcodes:</p>
+                <ul>
+                    <li><strong>Scan barcodes on products:</strong> suitable if all your products already have a barcode</li>
+                    <li><strong>Scan barcodes on picking lists:</strong> suitable if a significant percentage of your products do not have a barcode on them.</li>
+                    <li><strong>Scan lots or serial numbers:</strong> this is more time consuming, but allows for a full traceability of the parts. It's usually used by manufacturers of sensitive products.</li>
+                </ul>
+
+                <p>
+                  For help on any subject, don't hesitate to contact our Experts by using the <span class="fa fa-question-circle"/> icon on the top bar.
+                </p></i>
+                <img src="/web_planner/static/src/img/fabien_pinckaers.jpg" class="pull-left mb32"/>
+                <div class="pull-left" style="margin-left: 10px">
+                    <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
+                    <address>
+                        For the Odoo Team,<br/>
+                        Fabien Pinckaers, Founder
+                    </address>
+                </div>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Configuration'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-cog'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Choose Hardware'"/>
+                    <h4>USB, Wireless or Bluetooth?</h4>
+                    <p>Odoo supports most USB, Wireless and Bluetooth barcode scanners (as they all emulates a keyboard).</p>
+                    <ul>
+                        <li>Choose an USB barcode scanner if you plan to scan products at the computer station</li>
+                        <li>Go for a wireless scanner if you want to scan products at different locations</li>
+                        <li>Note that Bluetooth connections are suitable for maximum 30 feets (10 meters) so you will have to scan products nearby the computer station.</li>
+                    </ul>
+                    <h4>Which scanner format?</h4>
+                    <p>You can setup a computer station or have the worker use a mobile device connected through wireless (phone, tablet or scanner with integrated screen).</p>
+                    <ul>
+                        <li>If you have a static computer station, it's better to use 'pistols' formats as they are more practical to handle and aim.</li>
+                        <li>If you use a mobile device, you may prefer a smaller format that is connected in Bluetooth.</li>
+                    </ul>
+                    <div class="alert alert-info" role="alert">
+                        <strong>We've tested a few devices for you:</strong>
+                        <ul>
+                            <li><a href="https://www.google.com/#q=Inateck+BCST-20" target="_blank">Inateck BCST-20:</a> Wireless and USB, laser, rational choice, about 50$</li>
+                            <li><a href="https://www.google.com/#q=Motorola+DS4208-SR" target="_blank">Motorola DS4208-SR:</a> USB only, omnidirectional (eliminates the need to align bar code and scanner), rugged design, about 250$</li>
+                            <li><a href="https://www.google.com/#q=Motorola+CS3000" target="_blank">Motorola CS3000:</a> compact wireless, about 250$</li>
+                        </ul>
+                    </div>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Scanner Configuration'"/>
+                    <h4>Keyboard layout</h4>
+                    <p>Your barcode scanner needs to be configured to use the same keyboard layout as your operating system. Otherwise, your scanner won't translate characters correctly (replacing a 'A' with a 'Q' for example). Most scanners are configured by scanning the appropriate barcode in the user's manual.</p>
+                    <h4>Automatic carriage return</h4>
+                    <p>By default, Odoo has a 50 milliseconds delay between each successive scan (it helps avoid accidental double scanning). If you want to suppress this delay, you can configure your scanner to insert a carriage return symbol at the end of each barcode. This is usually done by scanning a specific barcode in your scanner user manual ('CR suffix ON')</p>
+                    <div class="alert alert-info" role="alert">
+                        <p><strong>Test your configuration:</strong> <a href="/point_of_sale/static/description/barcode.pdf" target="_blank">Print this barcode</a> then scan it, the result should be <i>YES IT WORKS.</i></p>
+                        <input type="text" placeholder="Scan the bracode here" class="form-control barcode-scanner"/>
+                        <span class="hide carriage-return">Automatic carriage return: <span class="label label-danger">OFF</span></span>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Product Configuration'"/>
+                    <p><strong>The next step is to assign barcodes to your products,</strong> by setting the right value in the Barcode field of the Product form.</p>
+                    <p>Here, you have three options:</p>
+                    <ul>
+                        <li>Set barcodes at the initial importation of your products or</li>
+                        <li>Scan or enter each barcode by manually editing the products or</li>
+                        <li>Use our fast scanning interface, accessible from the <a t-att-href="prepare_backend_url('stock.action_stock_config_settings')">Inventory Settings</a></li>
+                    </ul>
+                    <div class="alert alert-info" role="alert">
+                        <p><strong>Product variants:</strong> be careful to add barcodes directly on the variant, and not the template product (otherwise you won't be able to differentiate them).</p>
+                        <p>
+                            <strong>EAN-13 barcodes:</strong> used by most retail products, they cannot be made
+                            up without proper authorization: you must pay the International
+                            Article Numbering Association a fee in exchange for an EAN code
+                            sequence (that's why no two products in a store will ever have the
+                            same EAN code). Still, as Odoo supports any string as a barcode, so
+                            you can always define your own barcode format for internal use.
+                        </p>
+                    </div>
+                </t>
+
+                <t t-if="is_multi_location">
+                    <t t-call="web_planner.page">
+                        <t t-set="page_title" t-value="'Locations Barcodes'"/>
+                        <p>Naming the Locations within your Warehouse(s) is crucial for a good inventory management.</p>
+                        <p>But better yet is to transform this naming into a barcode that can be scanned easily and without error.</p>
+                        <p>
+                            <strong>To attribute a barcode to a Location,</strong> simply enter one on the Location form (accessible from your <a t-att-href="prepare_backend_url('stock.action_location_form')">List of Locations</a>).
+                            Then, print it via the <i>Print</i> menu and stick it in a visible and convenient place.
+                        </p>
+                        <div class="alert alert-info" role="alert">
+                            <p>
+                                <strong>Good Location nomenclature:</strong> <i>Warehouse Short name - Location short name - (Corridor X - Shelf Y - Height Z) </i><br/>
+                                Example: A032-025-133 (Note that you can use any string in the barcode field)
+                            </p>
+                        </div>
+                    </t>
+                </t>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Use Cases'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-magnet'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Delivery Orders'"/>
+                    <p>There are two approaches to process delivery orders: you can either work on printed documents, or directly on a screen (computer station or mobile device).</p>
+                    <p><strong>To process printed Delivery Orders:</strong></p>
+                    <ul>
+                        <li>Print delivery orders of the day by selecting all documents from the "To Do" list and print "Picking Lists" from the top menu.</li>
+                        <li>Once you start processing your delivery orders, scan the barcode on the top-right corner of the document to load the right record on the screen.</li>
+                        <li>Then, scan the barcode of every product, or scan the barcode of the product on the picking line if the barcode on the product is not easily accessible, visible or is missing.</li>
+                        <li>Once you scanned all products, scan the Validate barcode action to finish the operation.</li>
+                    </ul>
+                    <p><strong>To process Delivery Orders from a computer or mobile device:</strong></p>
+                    <ul>
+                        <li>Load all the Delivery Orders marked as "To Do", and open the first one.</li>
+                        <li>Pick up and scan each listed product.</li>
+                        <li>When you've picked all the items, click the Validate button or scan the Validate barcode action to finish the Operation.</li>
+                        <li>Move to the next Delivery Order to process by clicking on the top-right right arrow or scanning the Pager-Next barcode action.</li>
+                    </ul>
+                    <div class="alert alert-info" role="alert">
+                        <p>
+                            <strong>Actions barcodes:</strong> use the barcodes from <a href="/point_of_sale/static/description/barcodes_actions.pdf" target="_blank">this document</a> to launch actions in Odoo like Save, Edit and Validate instead of using your mouse or keyboard.
+                        </p>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Making an Inventory'"/>
+                    <p><strong>From the Barcode application:</strong></p>
+                    <ul>
+                        <li>Click on 'Inventory'</li>
+                        <li>Scan the Location's barcode (only if multiple locations are activated)</li>
+                        <li>Scan all the products of the location (if you have 5 identical articles, scan it 5 times, or use the keyboard to set the quantity)</li>
+                        <li>When you've scanned all the articles of the location, validate the Inventory manually or by scanning the 'Validate' barcode (<a href="/point_of_sale/static/description/barcodes_actions.pdf" target="_blank" class="pdf">available here</a>)</li>
+                    </ul>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Internal Transfers'"/>
+                    <p>In Odoo, there are two types of Internal Transfers:</p>
+                    <ul>
+                        <li>Those initiated automatically by the system (for example, after a Quality)</li>
+                        <li>Those created by a worker (for example, through the Internal Transfer area of the Dashboard).</li>
+
+                    </ul>
+                    <p><strong>To make an Internal Transfer:</strong></p>
+                    <ul>
+                        <li>Scan the source location, starting from the Barcode application</li>
+                        <li>Pick up and scan the products</li>
+                        <li>Validate the Transfer to finish it</li>
+                    </ul>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Lots / Serial Numbers'"/>
+                    <p><strong>Lots Numbers</strong> can be encoded from incoming shipments, internal moves and outgoing deliveries:</p>
+                    <ul>
+                        <li>In the barcode interface, scan the products you want create a lot from</li>
+                        <li>Click on the <span class="fa fa-cog"/> icon and select 'Create / Change Lot'</li>
+                        <li>Scan a lot barcode, type one manually or leave empty to generate one automatically</li>
+                        <li>Go to the Serial Numbers view to track the products of your newly created lot</li>
+                    </ul>
+                    <p><strong>Serials Numbers</strong> are slightly different: when scanning products in a lot, Odoo will ask you to scan each Serial Number.</p>
+                    <div class="alert alert-info" role="alert">
+                        <strong>What is the difference between Lots and Serial Numbers?</strong>
+                        <ul>
+                            <li>Lots Numbers are attributed to many products at once, so each time you scan a Lot Number, Odoo will add one on the product count.</li>
+                            <li>On the opposite, a Serial Number is unique, and represented by only one barcode, sticked on only one physical product. This means that Odoo won't accept scanning the same Serial Number more than once per operation.</li>
+                        </ul>
+                    </div>
+                </t>
+            </t>
+
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Go Live'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-video-camera'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'End'"/>
+                    <t t-set="hide_title" t-value="True"/>
+                    <t t-set="hide_from_menu" t-value="True"/>
+                    <t t-set="hide_mark_as_done" t-value="True"/>
+                    <h1 class="text-center o_planner_trophy" data-icon="&#xe006;" />
+                    <div class="text-center">
+                        <h1>Congratulations, you're ready to go live!</h1>
+                        <p>Now that all the flows have been tested and configured, it's time to go into production. Do a few Delivery Orders as an example with your workers and train them on your favorite process.</p>
+                        <p>Once it's fully working, give us some feedback: we love to hear from our customer. It would be great if you can send a photo of your warehouse to <a href="mailto:feedback@mail.odoo.com?subject=Barcode%20Planner" target="_blank">feedback@mail.odoo.com</a></p>
+                        <p><strong>Enjoy your Inventory management!</strong></p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!--Planner Data-->
+    <record id="planner_barcode" model="web.planner">
+        <field name="name">Barcode planner</field>
+        <field name="view_id" ref="barcode_planner"/>
+        <field name="menu_id" ref="menu_point_root"/>
+        <field name="planner_application">planner_barcode</field>
+        <field name="tooltip_planner"><![CDATA[Configure and learn how to use your Barcode Scanner.
+            ]]>
+        </field>
+    </record>
+
+</odoo>

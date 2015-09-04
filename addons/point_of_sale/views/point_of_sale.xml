@@ -21,5 +21,11 @@
             <script type="text/javascript" src="/point_of_sale/static/src/js/screens.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/tests.js"></script>
         </template>
+
+        <template id="assets_backend" name="point of sale assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/point_of_sale/static/src/js/web_planner_barcode.js"></script>
+            </xpath>
+        </template>
     </data>
 </openerp>
