@@ -106,3 +106,7 @@ class SaleOrderLine(models.Model):
         if not domain:
             domain = [('so_line', 'in', self.ids), '|', ('amount', '<', 0.0), ('is_timesheet', '=', True)]
         return super(SaleOrderLine, self)._compute_analytic(domain=domain)
+
+    @api.model
+    def _get_analytic_track_service(self):
+        return super(SaleOrderLine, self)._get_analytic_track_service() + ['timesheet']
