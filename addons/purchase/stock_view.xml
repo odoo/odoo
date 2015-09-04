@@ -34,5 +34,23 @@
             </field>
         </record>
 
+        <record id="stock_picking_form_view_inherited" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/div[@name='button_box']" position="inside">
+                    <button name="action_view_purchase_order" type="object"
+                            icon="fa-shopping-cart"
+                            class="oe_stat_button" help="Purchase Order"
+                            attrs="{'invisible': ['|',('picking_type_code', '!=', 'incoming'),('group_id', '=', False)]}">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Purchase</span>
+                                <span class="o_stat_text">Order</span>
+                            </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>
