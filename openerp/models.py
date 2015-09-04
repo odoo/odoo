@@ -4718,8 +4718,10 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_data_seen', {})
-        if id in seen_map.setdefault(self._name, []):
+        if '__copy_data_seen' not in context:
+            context = dict(context, __copy_data_seen=defaultdict(list))
+        seen_map = context['__copy_data_seen']
+        if id in seen_map[self._name]:
             return
         seen_map[self._name].append(id)
 
@@ -4789,8 +4791,10 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_translations_seen',{})
-        if old_id in seen_map.setdefault(self._name,[]):
+        if '__copy_data_seen' not in context:
+            context = dict(context, __copy_data_seen=defaultdict(list))
+        seen_map = context['__copy_data_seen']
+        if old_id in seen_map[self._name]:
             return
         seen_map[self._name].append(old_id)
 
