@@ -422,17 +422,17 @@ class account_bank_statement_line(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
 
-+       if not vals.get('sequence'):
-+            lines = self.search(
-+                cr, uid,
-+                [('statement_id', '=', vals.get('statement_id'))],
-+                order='sequence desc', limit=1)
-+            if lines:
-+                line = self.browse(cr, uid, lines[0], context=context)
-+                seq = line.sequence
-+            else:
-+                seq = 0
-+            vals['sequence'] = seq + 1
+        if not vals.get('sequence'):
+            lines = self.search(
+                cr, uid,
+                [('statement_id', '=', vals.get('statement_id'))],
+                order='sequence desc', limit=1)
+            if lines:
+                line = self.browse(cr, uid, lines[0], context=context)
+                seq = line.sequence
+            else:
+                seq = 0
+            vals['sequence'] = seq + 1
         
         if vals.get('amount_currency', 0) and not vals.get('amount', 0):
             raise osv.except_osv(_('Error!'), _('If "Amount Currency" is specified, then "Amount" must be as well.'))
