@@ -421,8 +421,8 @@ class account_bank_statement(osv.osv):
 class account_bank_statement_line(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
-        
-+        if not vals.get('sequence'):
+
++       if not vals.get('sequence'):
 +            lines = self.search(
 +                cr, uid,
 +                [('statement_id', '=', vals.get('statement_id'))],
