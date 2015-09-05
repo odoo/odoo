@@ -28,9 +28,17 @@ class crm_team(osv.Model):
                 'type': 'opportunity',
             }),
             (0, 0, {
-                'name': _('Proposition'),
+                'name': _('Proposal'),
                 'sequence': 3,
                 'probability': 70.0,
+                'on_change': True,
+                'fold': False,
+                'type': 'opportunity',
+            }),
+            (0, 0, {
+                'name': _('Negotiation'),
+                'sequence': 4,
+                'probability': 85.0,
                 'on_change': True,
                 'fold': False,
                 'type': 'opportunity',
