@@ -7,11 +7,9 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Import Bank Statements">
-                    <field name="data_file"/>
-                    <br/><br/><b> How to import your bank statement :</b>
-                    <br/><label string= "1. Download your bank statements from your bank website."/>
-                    <br/><label string= "2. Make sure you have installed the right module to support the file format."/>
-                    <br/><label string= "3. Select the file and click 'Import'."/>
+                    <h2>Select a bank statement file to import</h2>
+                    <p class="text-muted">Download a bank statement from your bank and import it here. (supported format: OFX, QIF, CODA)</p>
+                    <field name="data_file" placeholder="Choose a file to import..."/>
                     <footer>
                         <button name="import_file" string="_Import" type="object" class="btn-primary" />
                         <button string="Cancel" class="btn-default" special="cancel"/>
