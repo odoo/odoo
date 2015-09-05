@@ -228,7 +228,7 @@ var DashboardShare = Widget.extend({
         this.data = data;
         this.parent = parent;
         this.share_url = 'http://www.odoo.com/';
-        this.share_text = encodeURIComponent("#IamUsingOdoo, an Open-Source Web App that manages my Sales, Projects, Accounting, Website, Warehouse, Shop and more");
+        this.share_text = encodeURIComponent("Discover #Odoo, awesome open source business apps: crm, project management, accounting, website builder, etc. https://www.odoo.com");
     },
 
     share_twitter: function(){
