@@ -4718,8 +4718,10 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_data_seen', {})
-        if id in seen_map.setdefault(self._name, []):
+        if '__copy_data_seen' not in context:
+            context = dict(context, __copy_data_seen=defaultdict(list))
+        seen_map = context['__copy_data_seen']
+        if id in seen_map[self._name]:
             return
         seen_map[self._name].append(id)
 
@@ -4789,8 +4791,10 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_translations_seen',{})
-        if old_id in seen_map.setdefault(self._name,[]):
+        if '__copy_translations_seen' not in context:
+            context = dict(context, __copy_translations_seen=defaultdict(list))
+        seen_map = context['__copy_translations_seen']
+        if old_id in seen_map[self._name]:
             return
         seen_map[self._name].append(old_id)
 
@@ -5359,7 +5363,11 @@ class BaseModel(object):
         """
         if self:
             vals = [func(rec) for rec in self]
-            return reduce(operator.or_, vals) if isinstance(vals[0], BaseModel) else vals
+            if isinstance(vals[0], BaseModel):
+                # return the union of all recordsets in O(n)
+                ids = set(itertools.chain(*[rec._ids for rec in vals]))
+                return vals[0].browse(ids)
+            return vals
         else:
             vals = func(self)
             return vals if isinstance(vals, BaseModel) else []
