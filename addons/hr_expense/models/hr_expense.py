@@ -14,10 +14,10 @@ class HrExpense(models.Model):
     _description = "Expense"
     _order = "date"
 
-    name = fields.Char(string='Description', readonly=True, required=True, states={'draft': [('readonly', False)]})
-    date = fields.Date(readonly=True, states={'draft': [('readonly', False)]}, default=fields.Date.context_today)
+    name = fields.Char(string='Expense Description', readonly=True, required=True, states={'draft': [('readonly', False)]})
+    date = fields.Date(readonly=True, states={'draft': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1))
-    product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)]}, domain=[('can_be_expensed', '=', True)])
+    product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)]}, domain=[('can_be_expensed', '=', True)], required=True)
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['product.uom'].search([], limit=1, order='id'))
     unit_amount = fields.Float(string='Unit Price', readonly=True, required=True, states={'draft': [('readonly', False)]}, digits=dp.get_precision('Product Price'))
     quantity = fields.Float(required=True, readonly=True, states={'draft': [('readonly', False)]}, digits=dp.get_precision('Product Unit of Measure'), default=1)
@@ -29,7 +29,7 @@ class HrExpense(models.Model):
     analytic_account_id = fields.Many2one('account.analytic.account', string='Contract', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, oldname='analytic_account')
     department_id = fields.Many2one('hr.department', string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
     description = fields.Text()
-    payment_mode = fields.Selection([("own_account", "By Employee's payment method"), ("company_account", "By Company's payment method")], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)]})
+    payment_mode = fields.Selection([("own_account", "Employee (to reimburse)"), ("company_account", "Company")], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, string="Payment By")
     journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', '=', 'purchase')], limit=1), required=True, help="The journal used when the expense is done.")
     bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', 'in', ['case', 'bank'])], limit=1), help="The payment method used when the expense is paid by the company.")
     account_move_id = fields.Many2one('account.move', string='Journal Entry', copy=False, track_visibility="onchange")
@@ -61,9 +61,11 @@ class HrExpense(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            self.name = '%s' % (self.product_id.display_name or '')
+            if not self.name:
+                self.name = self.product_id.display_name or ''
             self.unit_amount = self.env['product.template']._price_get(self.product_id, 'standard_price')[self.product_id.id]
             self.product_uom_id = self.product_id.uom_id
+            self.tax_ids = self.product_id.supplier_taxes_id
 
     @api.onchange('product_uom_id')
     def _onchange_product_uom_id(self):

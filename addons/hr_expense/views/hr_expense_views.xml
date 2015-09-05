@@ -52,7 +52,7 @@
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit" string="Refuse" type="action" groups="base.group_hr_user" />
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="approve" string="Refuse" type="action" groups="account.group_account_user" />
                     <button name="reset_expenses" states="cancel" string="Set to Draft" type="object"/>
-                    <button name="action_move_create" states="approve" string="Generate Accounting Entries" type="object" groups="account.group_account_user" class="oe_highlight"/>
+                    <button name="action_move_create" states="approve" string="Post Journal Entries" type="object" groups="account.group_account_user" class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done" statusbar_colors='{"submit":"blue","cancel":"red"}'/>
                 </header>
                 <sheet>
@@ -64,48 +64,46 @@
                             <field name="attachment_number" widget="statinfo" string="Documents"/>
                         </button>
                     </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Business lunch with X"/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="product_id" context="{'default_can_be_expensed': 1}"/>
-                            <field name="name"/>
-                        </group>
-                        <group>
-                            <field name="unit_amount" required="1"/>
+                            <field name="product_id" context="{'default_can_be_expensed': 1}" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/>
                                 <field name="product_uom_id" widget="selection" class="oe_inline" groups="product.group_uom"/>
                             </div>
                             <field name="tax_ids" widget="many2many_tags" groups="account.group_account_user"/>
-                        </group>
-                    </group>
-                    <group class="oe_subtotal_footer oe_right">
-                        <label for="total_amount"  class="oe_subtotal_footer_separator" style="padding-top: 6px !important;"/>
-                        <div>
-                            <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                        </div>
-                    </group>
-                    <group string="Extra Info">
-                        <group>
+                        </group><group>
                             <field name="date"/>
-                            <field name="employee_id" invisible="context.get('hide_employee',False)"/>
-                            <field name="department_id" invisible="context.get('hide_employee',False)"/>
+                            <field name="employee_id"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="department_id" invisible="1"/>
                             <field name="analytic_account_id" string="Contract" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="currency_id" groups="base.group_multi_currency"/>
-                        </group>
-                        <group groups="account.group_account_user">
-                            <field name="journal_id" domain="[('type', '=', 'purchase'])]"/>
-                            <label for="payment_mode" string="Payment Done"/>
+                            <field name="journal_id" domain="[('type', '=', 'purchase'])]" groups="account.group_account_user"
+                                options="{'no_open': True, 'no_create': True}"/>
+                            <field name="account_move_id" domain="[('type', '=', 'purchase'])]" readonly="1"/>
+                        </group><group>
+                            <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            <label for="payment_mode"/>
                             <div>
                                 <field name="payment_mode" widget="radio"/>
-                                <field name="bank_journal_id" attrs="{'invisible': [('payment_mode', '=', 'own_account')], 'required': [('payment_mode', '=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]" class="oe_inline"/>
+                                <field name="bank_journal_id"
+                                    attrs="{'invisible': [('payment_mode', '=', 'own_account')], 'required': [('payment_mode', '=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]"
+                                    widget="selection"/>
                             </div>
-                            <field name="account_move_id" domain="[('type', '=', 'purchase'])]" readonly="1"/>
                         </group>
+
                     </group>
                     <div>
-                        <field name="description" placeholder="Free Notes"/>
+                        <field name="description" placeholder="Notes..."/>
                     </div>
                 </sheet>
                 <div class="oe_chatter">
@@ -190,7 +188,6 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="domain">[('employee_id.user_id', '=', uid)]</field>
-            <field name="context">{'hide_employee': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click here to create new expenses.
