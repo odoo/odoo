@@ -35,5 +35,16 @@
             <field name="placement">left</field>
         </record>
 
+        <record model="web.tip" id="crm_tip_6">
+            <field name="title"></field>
+            <field name="description"><![CDATA[<strong>Click to register a new business opportunity</strong>. Once the opportunity is created, you will be able to drag and drop it in your sales pipeline.]]></field>
+            <field name="model">crm.lead</field>
+            <field name="mode">kanban</field>
+            <field name="trigger_selector">.o_kanban_quick_add:visible</field>
+            <field name="highlight_selector">.o_kanban_quick_add:visible</field>
+            <field name="placement">bottom</field>
+        </record>
+
+
     </data>
 </openerp>

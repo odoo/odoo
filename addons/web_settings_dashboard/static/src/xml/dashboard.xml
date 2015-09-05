@@ -54,15 +54,15 @@
             </div>
             <hr/>
             <div class="o_web_settings_dashboard_invitation_form">
-                <strong>Add new users</strong> <small class="text-muted">(with default rights)</small>
-                <textarea rows="3" id="user_emails" placeholder="Enter e-mail addresses"></textarea>
-                <button class="btn btn-primary btn-block o_web_settings_dashboard_invitations" role="button"> <strong><i class="fa fa-cog fa-spin hidden"/> Add Users</strong></button>
+                <strong>Invite new users:</strong>
+                <textarea rows="3" id="user_emails" placeholder="Enter e-mail addresses (one per line)"></textarea>
+                <button class="btn btn-primary btn-block o_web_settings_dashboard_invitations" role="button"> <strong><i class="fa fa-cog fa-spin hidden"/> Invite</strong></button>
             </div>
             <div>
                 <small class="o_web_settings_dashboard_pending_users text-muted text-center">
                     <t t-if="pending_users.length">
                         <br/>
-                        <strong>Pending users:</strong><br/>
+                        <strong>Pending invitations:</strong><br/>
                         <t t-foreach="pending_users" t-as="pending">
                             <a href="#"><div class="o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/></div></a>
                         </t>
@@ -80,12 +80,14 @@
             </div>
             <div>
                 <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
-                    Follow these Implementation Guides to get the maximum value for your business.
+                    Follow these implementation guides to get the most out of Odoo.
                 </small>
             </div>
             <hr/>
             <t t-set="planners" t-value="widget.planners"/>
             <t t-call="DashboardPlanner.PlannersList"/>
+            <hr/>
+            Need more help? <a href="https://www.odoo.com/documentation/user">Browse the documentation.</a>
         </div>
     </t>
     
