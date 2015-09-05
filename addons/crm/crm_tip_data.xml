@@ -4,7 +4,7 @@
 
         <record model="web.tip" id="crm_tip_2">
             <field name="title"></field>
-            <field name="description">Zoom to the opportunities related to this customer. You will be able to come back to the customer using the breadcrumb.</field>
+            <field name="description">Click to view the opportunities related to this customer.</field>
             <field name="action_id" ref="base.action_partner_form"/>
             <field name="model">res.partner</field>
             <field name="mode">form</field>
@@ -14,8 +14,8 @@
         </record>
 
         <record model="web.tip" id="crm_tip_4">
-            <field name="title">Click on an Opportunity to edit it.</field>
-            <field name="description"><![CDATA[<b>Drag and drop</b> it to a column to change its stage, or use the upper right icon for advanced options.]]></field>
+            <field name="title"></field>
+            <field name="description"><![CDATA[<b>This is a business opportunity.</b> Drag and drop it to another column while you move forward in the sales cycle. Click to zoom in the opportunity.]]></field>
             <field name="model">crm.lead</field>
             <field name="mode">kanban</field>
             <field name="trigger_selector">.oe_kanban_content:visible</field>
@@ -26,7 +26,7 @@
 
         <record model="web.tip" id="crm_tip_5">
             <field name="title"></field>
-            <field name="description"><![CDATA[Use the graph view to have a clear reporting of your opportunity pipeline.]]></field>
+            <field name="description"><![CDATA[Switch to the graph view to get a clear reporting on your opportunities pipeline.]]></field>
             <field name="model">crm.lead</field>
             <field name="mode">kanban</field>
             <field name="trigger_selector">.o_kanban_record:eq(20):visible</field>
