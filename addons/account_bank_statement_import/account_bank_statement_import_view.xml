@@ -8,7 +8,10 @@
             <field name="arch" type="xml">
                 <form string="Import Bank Statements">
                     <h2>Select a bank statement file to import</h2>
-                    <p class="text-muted">Download a bank statement from your bank and import it here. (supported format: OFX, QIF, CODA)</p>
+                    <p>Download a bank statement from your bank and import it here. Supported formats:</p>
+                    <ul id="statement_format">
+
+                    </ul>
                     <field name="data_file" placeholder="Choose a file to import..."/>
                     <footer>
                         <button name="import_file" string="_Import" type="object" class="btn-primary" />
