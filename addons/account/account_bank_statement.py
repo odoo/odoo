@@ -428,7 +428,15 @@ class account_bank_statement(osv.osv):
 
 class account_bank_statement_line(osv.osv):
 
+    def _default_line_name(self, cr, uid, context=None):
+        name = self.pool['ir.sequence'].get(cr, uid, 'account.bank.statement.line', context=context)
+        return name or '/'
+
     def create(self, cr, uid, vals, context=None):
+        
+        if not vals.get('name'):
+            vals['name'] = self._default_line_name(cr, uid, context=context)
+        
         if vals.get('amount_currency', 0) and not vals.get('amount', 0):
             raise osv.except_osv(_('Error!'), _('If "Amount Currency" is specified, then "Amount" must be as well.'))
         return super(account_bank_statement_line, self).create(cr, uid, vals, context=context)
@@ -944,7 +952,7 @@ class account_bank_statement_line(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
     }
     _defaults = {
-        'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line', context=context),
+        'name': _default_line_name,
         'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
     }
 
