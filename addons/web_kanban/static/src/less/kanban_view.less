@@ -261,6 +261,7 @@
             }
         }
         .oe_kanban_avatar {
+            .img-rounded;
             margin-left: 2px;
         }
 
@@ -370,8 +371,13 @@
                     color: white !important;
                 }
             }
+            &:hover .o_kanban_config i {
+                visibility: visible;
+            }
             .o_kanban_config i {
                 .o-kanban-icon;
+                visibility: hidden;
+                color: #ccc;
                 &:hover {
                     background-color: darken(@gray-light, 10%);
                 }
