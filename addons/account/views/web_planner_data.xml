@@ -192,22 +192,29 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title" t-value="'Your Customers'"/>
                     <p class="text-muted">
-                        Unless you are starting a new business, you probably have a list of Customers and Vendors you'd like to import into Odoo.
+                        Unless you are starting a new business, you probably have a list of customers and vendors you'd like to import.
                     </p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <span class="panel-title">
-                                        <span class="fa fa-edit" />
+                                        <span class="fa" data-icon="&#xe060;"/>
                                         <strong> Create manually</strong><br/>
-                                        <span class="small">One by one</span>
+                                        <span class="small">&lt; 200 contacts</span>
                                     </span>
                                 </div>
-                                 <div class="panel-body">
+                                <div class="panel-body">
+                                    <p>
+                                        If you have less than 200 contacts, we recommand you
+                                        to create them manually.
+                                    </p>
                                     <ul>
-                                        <li><a t-att-href="prepare_backend_url('base.action_partner_customer_form', 'kanban')">Create Customer</a></li>
-                                        <li><a t-attf-href="/web#view_type=kanban&amp;model=res.partner&amp;menu_id=#{supplier_menu_id}">Create Vendor</a></li>
+                                        <li>
+                                            <a t-att-href="prepare_backend_url('base.action_partner_form','list')">Create Customers</a>
+                                        </li><li>
+                                            <a t-att-href="prepare_backend_url('base.action_partner_form','list')">Create Vendors</a>, if accounting or purchase is installed
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -216,37 +223,49 @@
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <span class="panel-title">
-                                        <span class="fa fa-copy" />
-                                        <strong> Use Importation</strong><br/>
-                                        <span class="small">from a CSV file</span>
+                                        <span class="fa" data-icon="&#xe040;"/>
+                                        <strong>Import</strong><br/>
+                                        <span class="small">&gt; 200 contacts</span>
                                     </span>
                                 </div>
-                                 <div class="panel-body">
-                                    <p>We can handle the whole importation process for you: simply send your Odoo Project Manager a CSV file containing all your data.</p>
+                                <div class="panel-body">
+                                    <p>
+                                        We can handle the whole import process
+                                        for you: simply send your Odoo project
+                                        manager a CSV file containing all your
+                                        data.
+                                    </p><p>
+                                        If you want to do it yourself:
+                                    </p>
+                                    <ul>
+                                        <li>Download the <a href="/base_import/static/csv/customers.xls">Excel template</a></li>
+                                        <li>Import using the top left button in <a t-att-href="prepare_backend_url('base.action_partner_form','list')">the list of customers</a></li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="alert alert-info info_icon" role="alert">
-                        <span class="fa fa-lightbulb-o fa-lg"/>
-                        <p>You can also use our API to load data automatically through scripts: read the <a href="https://www.odoo.com/documentation/8.0/" target="_blank">Technical Documentation</a>.</p>
-                    </div>
                 </t>
                 <t t-call="web_planner.page">
                     <t t-set="page_title" t-value="'Your Products'"/>
+                    <p>A product in Odoo is something you sell or buy. It could
+                    be a goods, consumable or services. Choose how you want to
+                    create your products:
+                    </p>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <span class="panel-title">
-                                        <span class="fa fa-edit" />
+                                        <span class="fa" data-icon="&#xe060;"/>
                                         <strong> Create manually</strong><br/>
-                                        <span class="small">Each product one by one</span>
+                                        <span class="small">Recommanded if &lt;100 products</span>
                                     </span>
                                 </div>
-                                 <div class="panel-body">
+                                <div class="panel-body">
                                     <ul>
-                                        <li><a t-att-href="prepare_backend_url('product.product_template_action', 'from')">Create Products</a></li>
+                                        <li><a t-att-href="prepare_backend_url('product.product_template_action', 'from', 'sale')">Create your products</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -255,20 +274,27 @@
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <span class="panel-title">
-                                        <span class="fa fa-copy" />
-                                        <strong> Use Importation</strong><br/>
-                                        <span class="small">from a CSV file</span>
+                                        <span class="fa" data-icon="&#xe040;"/>
+                                        <strong>Import a file</strong><br/>
+                                        <span class="small">Recommanded if &gt;100 products</span>
                                     </span>
                                 </div>
-                                 <div class="panel-body">
-                                    <p>We can handle the whole importation process for you: simply send your Odoo Project Manager a CSV file containing all your data.</p>
+                                <div class="panel-body">
+                                    <p>
+                                        We can handle the whole import process
+                                        for you: simply send your Odoo project
+                                        manager a CSV file containing all your
+                                        products.
+                                    </p><p>
+                                        If you want to do it yourself:
+                                    </p>
+                                    <ul>
+                                        <li>Download the <a href="/base_import/static/csv/products.xls">Excel template</a></li>
+                                        <li>Import using the top left button in <a t-att-href="prepare_backend_url('product.product_template_action','list')">the list of products</a></li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="alert alert-info info_icon" role="alert">
-                        <span class="fa fa-lightbulb-o fa-lg"/>
-                        <p>You can also use our API to load data automatically through scripts: read the <a href="https://www.odoo.com/documentation/8.0/" target="_blank">Technical Documentation</a>.</p>
                     </div>
                 </t>
 
