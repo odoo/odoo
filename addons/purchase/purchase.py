@@ -187,9 +187,9 @@ class PurchaseOrder(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'state' in init_values and self.state == 'approved':
+        if 'state' in init_values and self.state == 'purchase':
             return 'purchase.mt_rfq_approved'
-        elif 'state' in init_values and self.state == 'confirmed':
+        elif 'state' in init_values and self.state == 'to approve':
             return 'purchase.mt_rfq_confirmed'
         elif 'state' in init_values and self.state == 'done':
             return 'purchase.mt_rfq_done'
