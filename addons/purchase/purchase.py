@@ -152,6 +152,26 @@ class PurchaseOrder(models.Model):
     group_id = fields.Many2one('procurement.group', string="Procurement Group")
 
     @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('name', operator, name), ('partner_ref', operator, name)]
+        pos = self.search(domain + args, limit=limit)
+        return pos.name_get()
+
+    @api.multi
+    @api.depends('name', 'partner_ref')
+    def name_get(self):
+        result = []
+        for po in self:
+            name = po.name
+            if po.partner_ref:
+                name += ' ('+po.partner_ref+')'
+            result.append((po.id, name))
+        return result
+
+    @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
             vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order') or '/'
@@ -798,7 +818,7 @@ class ProductTemplate(models.Model):
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
     purchase_count = fields.Integer(compute='_purchase_count', string='# Purchases')
     purchase_method = fields.Selection([
-        ('purchase', 'On purchased quantities'),
+        ('purchase', 'On ordered quantities'),
         ('receive', 'On received quantities'),
         ], string="Control Purchase Bills", default="receive")
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
