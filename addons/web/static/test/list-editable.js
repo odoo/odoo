@@ -62,8 +62,7 @@ odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
         return e.appendTo($fix)
             .done(function () {
                 ok(!e.is_editing(), "should not be editing");
-                ok(e.form instanceof FormView,
-                   "should use default form type");
+                ok(e.form instanceof FormView, "should use default form type");
             });
     });
 
@@ -93,7 +92,9 @@ odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
             .then(function (form) {
                 assert.ok(e.is_editing(), "should be editing");
                 assert.equal(counter, 3, "should have configured all fields");
-                return e.save();
+                return e.save().then(function() {
+                    return e.cancel();
+                });
             })
             .done(function (record) {
                 assert.ok(!e.is_editing(), "should have stopped editing");
@@ -133,7 +134,7 @@ odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
         assert.expect(2);
 
         var warnings = 0;
-        
+
         var e = new ListEditor({
             dataset: new data.DataSetSearch(null, 'test.model'),
             prepends_on_create: function () { return false; },
@@ -157,7 +158,9 @@ odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
                 });
             })
             .then(function (form) {
-                return e.save();
+                return e.save().then(function() {
+                    return e.cancel();
+                });
             })
             .done(function () { assert.ok(false, "cancel should not succeed"); })
             .fail(function () {
