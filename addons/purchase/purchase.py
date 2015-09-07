@@ -111,7 +111,7 @@ class PurchaseOrder(models.Model):
     currency_id = fields.Many2one('res.currency', 'Currency', required=True, states=READONLY_STATES,\
         default=lambda self: self.env.user.company_id.currency_id.id)
     state = fields.Selection([
-        ('draft', 'Draft RFQ'),
+        ('draft', 'Draft PO'),
         ('sent', 'RFQ Sent'),
         ('to approve', 'To Approve'),
         ('purchase', 'Purchase Order'),
