@@ -12,7 +12,7 @@ class crm_team(osv.Model):
     def _get_default_stage_ids(self, cr, uid, context=None):
         return [
             (0, 0, {
-                'name': _('New'),
+                'name': _('Incoming'),
                 'sequence': 1,
                 'probability': 10.0,
                 'on_change': True,
