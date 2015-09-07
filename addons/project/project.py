@@ -155,7 +155,7 @@ class project(osv.osv):
             help="Link this project to an analytic account if you need financial management on projects. "
                  "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
             ondelete="cascade", required=True, auto_join=True),
-        'label_tasks': fields.char('Use Tasks as', help="Gives label to tasks on project's kanaban view."),
+        'label_tasks': fields.char('Use Tasks as', help="Gives label to tasks on project's kanban view."),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
