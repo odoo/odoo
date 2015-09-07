@@ -61,7 +61,7 @@ class LunchOrder(models.Model):
                      for alert in self.env['lunch.alert'].search([])
                      if alert.display]
 
-        if self.state == 'new':
+        if self.state == 'new' and alert_msg:
             self.alerts = '\n'.join(alert_msg)
 
     @api.depends('state')
