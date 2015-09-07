@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-19 09:27+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-08-23 19:49+0000\n"
+"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +106,7 @@ msgstr "* Tilaa \"Ehdotus\" käytetään, kun käyttäjä on luonut uuden vahvis
 #: code:addons/account/account.py:1468
 #, python-format
 msgid " Centralisation"
-msgstr ""
+msgstr "Keskitys"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -148,7 +148,7 @@ msgstr "Tapahtumien määrä"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name|safe} Lasku (Viite ${object.number or '-'})"
 
 #. module: account
 #: code:addons/account/account.py:1861
@@ -323,7 +323,7 @@ msgid ""
 "                the bottom of each invoice.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi asiakkaalle laskun.\n</p><p>\nOdoon sähköinen laskutus mahdollistaa helpon ja nopean\nasiakkaiden maksusuoritusten keruun. Asiakaasi saa laskun \nsähköpostilla ja hän voi maksaa sen verkossa ja/tai lukea sen\nomaan tietojärjestelmäänsä.\n</p><p>\nAsiakkaan kanssa käydyt keskustelut näytetään automaattisesti kunkin laskun alapuolella.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -338,7 +338,7 @@ msgid ""
 "                can generate it directly from the related customer invoice.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi asiakkaalle hyvityksen. \n</p><p>\nHyvitys on dokumentti, joka hyvittää laskun joko kokonaan tai osittain.\n</p><p>\nSen sijaan että loisit hyvityksen manuaalisesti, \nvoit luoda sen suoraan asiakkaan laskusta.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -355,7 +355,7 @@ msgid ""
 "                for miscellaneous operations.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi päiväkirjaviennin.\n</p><p>\nPäiväkirjavienti koostuu useista päiväkirjatapahtumista\n</p><p>\nOdoo luo automaattisesti yhden päiväkirjatapahtuman tiliöintitapahtumaa kohden: laskut, hyvitykset, toimittajan maksut, pankin tiliotteet, yms. Päiväkirjatapahtumia ei yleensä tarvitse luoda manuaalisesti kuin satunnaisille toiminnoille.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -1821,7 +1821,7 @@ msgstr "Tase (Vastattavaa)"
 #. module: account
 #: help:account.bank.statement,balance_end:0
 msgid "Balance as calculated based on Opening Balance and transaction lines"
-msgstr ""
+msgstr "Saldo lasketaan perustuen avaussaldoon ja tapahtumariveihin"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -2196,7 +2196,7 @@ msgstr ""
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
-msgstr ""
+msgstr "Tälle yritykselle ei löydy tilikarttaa. Määrittele tilikartta kirjanpidon hallinnasta."
 
 #. module: account
 #: code:addons/account/account_move_line.py:551
@@ -2204,7 +2204,7 @@ msgstr ""
 msgid ""
 "Cannot find any account journal of \"%s\" type for this company, You should create one.\n"
 " Please go to Journal Configuration"
-msgstr ""
+msgstr "Tälle yritykselle ei löydy \"%s\"-tyyppistä päiväkirjaa. Luo päiväkirja päiväkirjojen hallinnasta"
 
 #. module: account
 #: code:addons/account/account_invoice.py:591
@@ -4435,7 +4435,7 @@ msgstr "Verokanta"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Fiscal Position Remark:"
-msgstr ""
+msgstr "Tilikausiposition huomautus:"
 
 #. module: account
 #: view:account.fiscal.position.template:account.view_account_position_template_form
@@ -8275,12 +8275,12 @@ msgstr "Jäännös"
 #: view:account.invoice:account.invoice_tree
 #: field:account.move.line,amount_residual:0
 msgid "Residual Amount"
-msgstr ""
+msgstr "Jäännöksen määrä"
 
 #. module: account
 #: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount in Currency"
-msgstr ""
+msgstr "Jäännöksen määrä valuutassa"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -8308,7 +8308,7 @@ msgstr "Juuriverokoodi"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_view
 msgid "Root/View"
-msgstr ""
+msgstr "Juuri/Näkymä"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
@@ -8835,7 +8835,7 @@ msgstr "Järjestä"
 #. module: account
 #: view:website:account.report_generalledger
 msgid "Sorted By:"
-msgstr ""
+msgstr "Järjestys:"
 
 #. module: account
 #: field:account.invoice,origin:0 field:account.invoice.line,origin:0

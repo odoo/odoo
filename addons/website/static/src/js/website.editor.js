@@ -423,7 +423,14 @@
          * Saves an RTE content, which always corresponds to a view section (?).
          */
         saveElement: function ($el) {
-            var markup = $el.prop('outerHTML');
+            // escape text nodes for xml saving
+            var escaped_el = $el.clone();
+            escaped_el.find('*').addBack().not('script,style').contents().each(function(){
+                if(this.nodeType == 3) {
+                    this.nodeValue = _.escape(this.nodeValue);
+                }
+            });
+            var markup = escaped_el.prop('outerHTML');
             return openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'save',
