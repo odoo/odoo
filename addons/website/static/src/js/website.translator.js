@@ -160,8 +160,8 @@
                     trans[data.oeTranslationViewId] = [];
                 }
                 trans[data.oeTranslationViewId].push({
-                    initial_content: self.getInitialContent(this),
-                    new_content: $node.text(),
+                    initial_content: openerp.qweb.tools.html_escape(self.getInitialContent(this)),
+                    new_content: openerp.qweb.tools.html_escape($node.text()),
                     translation_id: data.oeTranslationId || null
                 });
             });
