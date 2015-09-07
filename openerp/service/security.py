@@ -31,7 +31,7 @@ def login(db, login, password):
     return user_obj.login(db, login, password)
 
 def check_super(passwd):
-    if passwd == tools.config['admin_passwd']:
+    if passwd and passwd == tools.config['admin_passwd']:
         return True
     else:
         raise openerp.exceptions.AccessDenied()
