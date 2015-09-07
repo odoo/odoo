@@ -30,7 +30,7 @@ class HrExpense(models.Model):
     department_id = fields.Many2one('hr.department', string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
     description = fields.Text()
     payment_mode = fields.Selection([("own_account", "Employee (to reimburse)"), ("company_account", "Company")], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, string="Payment By")
-    journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', '=', 'purchase')], limit=1), required=True, help="The journal used when the expense is done.")
+    journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', '=', 'purchase')], limit=1), help="The journal used when the expense is done.")
     bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', 'in', ['case', 'bank'])], limit=1), help="The payment method used when the expense is paid by the company.")
     account_move_id = fields.Many2one('account.move', string='Journal Entry', copy=False, track_visibility="onchange")
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
@@ -204,6 +204,9 @@ class HrExpense(models.Model):
 
         if any(expense.employee_id != self[0].employee_id for expense in self):
             raise UserError(_("Expenses must belong to the same Employee."))
+
+        if any(not expense.journal_id for expense in self):
+            raise UserError(_("Expenses must have an expense journal specified to generate accounting entries."))
 
         #create the move that will contain the accounting entries
         move = self.env['account.move'].create({
