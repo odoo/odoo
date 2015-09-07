@@ -57,7 +57,6 @@
             <field name="context">{
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,
-                'active_test': False,
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -91,8 +90,7 @@
                         </button>
                         <button name="toggle_active" type="object"
                                 confirm="(Un)archiving a project automatically (un)archives its tasks and issues. Do you want to proceed?"
-                                class="oe_stat_button" icon="fa-archive"
-                                attrs="{'invisible':[('state','in',['open', 'pending'])]}">
+                                class="oe_stat_button" icon="fa-archive">
                             <field name="active" widget="boolean_button"
                                 options='{"terminology": "archive"}'/>
                         </button>
@@ -488,7 +486,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('project_id', 'child_of', [active_id])]</field>
-            <field name="context">{'project_id':active_id, 'active_test':False}</field>
+            <field name="context">{'project_id':active_id}</field>
         </record>
 
         <record id="ir_project_task_open" model="ir.values">
