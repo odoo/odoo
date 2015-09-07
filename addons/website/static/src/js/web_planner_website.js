@@ -35,7 +35,7 @@ var WebsitePlannerLauncher = Widget.extend({
         var self = this;
         this.dialog = new planner.PlannerDialog(this, this.planner);
         this.dialog.appendTo($('<div>'));
-        this.$(".o_planner_progress").tooltip({html: true, title: this.planner.tooltip_planner, placement: 'bottom', container: 'body', delay: {'show': 700}});
+        this.$(".progress").tooltip({html: true, title: this.planner.tooltip_planner, placement: 'bottom', container: 'body', delay: {'show': 700}});
         this.dialog.on("planner_progress_changed", this, function(percent) {
             self.update_parent_progress_bar(percent);
         });
