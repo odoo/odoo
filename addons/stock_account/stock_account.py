@@ -12,7 +12,7 @@ class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
     _columns = {
-        'move_id': fields.many2one('stock.move', string="Move line", help="If the invoice was generated from a stock.picking, reference to the related move line."),
+        'move_id': fields.many2one('stock.move', string="Move line", help="If the invoice was generated from a stock transfer, specify the reference to the related stock move."),
     }
 
     def move_line_get(self, cr, uid, invoice_id, context=None):
