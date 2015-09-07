@@ -21,7 +21,7 @@ var Sidebar = Widget.extend({
         });
         this.sections = options.sections || [
             {name: 'print', label: _t('Print')},
-            {name: 'other', label: _t('More')},
+            {name: 'other', label: _t('Action')},
         ];
         this.items = options.items || {
             print: [],
