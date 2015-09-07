@@ -147,13 +147,6 @@
                         </page>
                         <page string="Attendances" groups="base.group_hr_attendance">
                             <group>
-                                <field context="{'default_employee_id': employee_id, 'user_id':user_id}" name="attendances_ids" nolabel="1">
-                                    <tree string="Attendances" editable="bottom">
-                                        <field name="name"/>
-                                        <field name="action"/>
-                                        <field invisible="1" name="employee_id"/>
-                                    </tree>
-                                </field>
                                 <group>
                                     <label for="state_attendance"/>
                                     <div>
