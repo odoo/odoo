@@ -18,15 +18,30 @@ class AccountInvoice(models.Model):
             return {}
         if not self.partner_id:
             self.partner_id = self.purchase_id.partner_id.id
-        done = False
+
+        # Keep existing lines. We want to be able to add several PO on the same invoice.
+        for line in self.invoice_line_ids:
+            result.append({
+                'purchase_line_id': line.purchase_line_id.id,
+                'name': line.name,
+                'origin': line.origin,
+                'uom_id': line.uom_id.id,
+                'product_id': line.product_id.id,
+                'account_id': line.account_id.id,
+                'price_unit': line.price_unit,
+                'quantity': line.quantity,
+                'discount': line.discount,
+                'account_analytic_id': line.account_analytic_id.id,
+                'invoice_line_tax_ids': line.invoice_line_tax_ids.ids,
+            })
+
         for line in self.purchase_id.order_line:
             if line.product_id.purchase_method == 'purchase':
                 qty = line.product_qty - line.qty_invoiced
             else:
                 qty = line.qty_received - line.qty_invoiced
             if float_compare(qty, 0.0, precision_rounding=line.product_uom.rounding) <= 0:
-                continue
-            done = True
+                qty = 0.0
             account = self.env['account.invoice.line'].get_invoice_line_account('in_invoice', line.product_id, self.purchase_id.fiscal_position_id, self.env.user.company_id)
             taxes = line.taxes_id or line.product_id.supplier_taxes_id
             invoice_line_tax_ids = self.purchase_id.fiscal_position_id.map_tax(taxes)
@@ -36,20 +51,15 @@ class AccountInvoice(models.Model):
                 'origin': self.purchase_id.origin,
                 'uom_id': line.product_uom.id,
                 'product_id': line.product_id.id,
-                'account_id': account,
+                'account_id': account.id,
                 'price_unit': line.price_unit,
                 'quantity': qty,
                 'discount': 0.0,
                 'account_analytic_id': line.account_analytic_id.id,
-                'invoice_line_tax_ids': invoice_line_tax_ids
+                'invoice_line_tax_ids': invoice_line_tax_ids.ids
             })
         self.invoice_line_ids = result
-        if not done:
-            warning = {
-                'title': _('Bill Control Warning!'),
-                'message' : _('None of the products from this purchase order can be billed. You should control the purchase order.')
-            }
-            return {'warning': warning}
+        return {}
 
 
 class AccountInvoiceLine(models.Model):

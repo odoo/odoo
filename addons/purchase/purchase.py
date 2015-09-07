@@ -145,7 +145,6 @@ class PurchaseOrder(models.Model):
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     create_uid = fields.Many2one('res.users', 'Responsible')
     company_id = fields.Many2one('res.company', 'Company', required=True, select=1, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
-    po_double_validation = fields.Selection(related='company_id.po_double_validation', store=False, readonly=True)
 
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES, required=True, default=_default_picking_type,\
         help="This will determine picking type of incoming shipment")
@@ -263,11 +262,14 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_confirm(self):
-        # Add the partner in the supplier list of the product if no supplier for this product
+        # Add the partner in the supplier list of the product if the supplier is not registered for
+        # this product. We limit to 10 the number of suppliers for a product to avoid the mess that
+        # could be caused for some generic products ("Miscellaneous").
         for line in self.order_line:
-            if not line.product_id.seller_ids:
+            if self.partner_id not in line.product_id.seller_ids.mapped('name') and len(line.product_id.seller_ids) <= 10:
                 supplierinfo = {
                     'name': self.partner_id.id,
+                    'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
                     'product_uom': line.product_uom.id,
                     'min_qty': 0.0,
                     'price': line.price_unit,
@@ -280,8 +282,8 @@ class PurchaseOrder(models.Model):
                 line.product_id.write(vals)
 
         # Deal with double validation process
-        if self.po_double_validation == 'one_step'\
-                or (self.po_double_validation == 'two_step'\
+        if self.company_id.po_double_validation == 'one_step'\
+                or (self.company_id.po_double_validation == 'two_step'\
                     and self.amount_total < self.env.user.company_id.currency_id.compute(self.company_id.po_double_validation_amount, self.currency_id))\
                 or self.user_has_groups('purchase.group_purchase_manager'):
             return self.button_approve()
