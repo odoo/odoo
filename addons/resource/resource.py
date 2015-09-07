@@ -25,7 +25,7 @@ from dateutil import rrule
 import math
 from faces import *
 from openerp.osv import fields, osv
-from openerp.tools.float_utils import float_compare
+from openerp.tools.float_utils import float_compare, float_round as f_round
 from openerp.tools.translate import _
 
 from itertools import groupby
@@ -152,18 +152,21 @@ class resource_calendar(osv.osv):
 
         for d, hours, id in date_and_hours_by_cal:
             dt_from = datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
+            tzinfo = fields.datetime.context_timestamp(cr, uid, dt_from, context={}).tzinfo
             if not id:
                 td = int(hours)*3
                 results[(d, hours, id)] = [(dt_from, dt_from + timedelta(hours=td))]
                 continue
 
             dt_leave = self._get_leaves(cr, uid, id, resource)
-            todo = hours
+            todo = hours + f_round(float(dt_from.minute)/60, 2)
             result = []
             maxrecur = 100
             current_hour = dt_from.hour
             while float_compare(todo, 0, 4) and maxrecur:
                 for (hour_from,hour_to) in [(item['hour_from'], item['hour_to']) for item in hours_by_cal[id] if item['dayofweek'] == str(dt_from.weekday())]:
+                    hour_from = dt_from.replace(hour=int(hour_from)).replace(tzinfo=tzinfo).astimezone(pytz.UTC).hour
+                    hour_to = dt_from.replace(hour=int(hour_to)).replace(tzinfo=tzinfo).astimezone(pytz.UTC).hour
                     leave_flag  = False
                     if (hour_to>current_hour) and float_compare(todo, 0, 4):
                         m = max(hour_from, current_hour)
