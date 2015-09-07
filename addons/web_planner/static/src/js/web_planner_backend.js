@@ -21,7 +21,7 @@ var PlannerLauncher = Widget.extend({
         var self = this;
         core.bus.on("change_menu_section", self, self.on_menu_clicked);
         var res =  self._super.apply(this, arguments).then(function() {
-            self.$el.filter('.o_planner_systray').on('click', self, self.toggle_dialog.bind(self));
+            self.$el.filter('.o_planner_systray').on('click', self, self.show_dialog.bind(self));
             return self.fetch_application_planner();
         }).then(function(apps) {
             self.do_hide();  // hidden by default
@@ -61,9 +61,10 @@ var PlannerLauncher = Widget.extend({
 
         if (this.dialog) {
             this.dialog.$el.modal('hide');
+            this.dialog.$el.detach();
         }
     },
-    setup: function(planner){
+    setup: function(planner) {
         var self = this;
 
         this.planner = planner;
@@ -72,8 +73,7 @@ var PlannerLauncher = Widget.extend({
             this.dialog.destroy();
         }
         this.dialog = new PlannerDialog(this, planner);
-        this.dialog.$el.remove();
-        this.dialog.appendTo(webclient.$el);
+        this.dialog.appendTo($('<div>'));
         this.$(".o_planner_progress").tooltip({html: true, title: this.planner.tooltip_planner, placement: 'bottom', delay: {'show': 500}});
         this.dialog.on("planner_progress_changed", this, function(percent){
             self.update_parent_progress_bar(percent);
@@ -88,8 +88,9 @@ var PlannerLauncher = Widget.extend({
         this.do_show();
         this.$(".progress-bar").css('width', percent+"%");
     },
-    toggle_dialog: function() {
-        this.dialog.$el.modal('toggle');
+    show_dialog: function() {
+        this.dialog.$el.appendTo(webclient.$el);
+        this.dialog.$el.modal('show');
     }
 });
 

@@ -396,6 +396,7 @@ var PlannerDialog = Widget.extend({
     close_modal: function(ev) {
         ev.preventDefault();
         this.$el.modal('hide');
+        this.$el.detach();
     }
 });
 
