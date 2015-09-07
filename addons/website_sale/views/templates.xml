@@ -383,7 +383,7 @@
 
 <template id="product_quantity" inherit_id="website_sale.product" customize_show="True" name="Select Quantity">
   <xpath expr="//a[@id='add_to_cart']" position="before">
-    <div class="css_quantity input-group oe_website_spinner">
+    <div class="css_quantity input-group oe_website_spinner" contenteditable="false">
         <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
             <i class="fa fa-minus"></i>
         </a>
