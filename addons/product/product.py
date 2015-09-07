@@ -325,7 +325,7 @@ class product_attribute_value(osv.osv):
         ctx = dict(context or {}, active_test=False)
         product_ids = self.pool['product.product'].search(cr, uid, [('attribute_value_ids', 'in', ids)], context=ctx)
         if product_ids:
-            raise UserError(_('The operation cannot be completed:\nYou trying to delete an attribute value with a reference on a product variant.'))
+            raise UserError(_('The operation cannot be completed:\nYou are trying to delete an attribute value with a reference on a product variant.'))
         return super(product_attribute_value, self).unlink(cr, uid, ids, context=context)
 
 class product_attribute_price(osv.osv):
