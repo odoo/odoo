@@ -230,7 +230,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
                 self.uned_def.reject();
                 self.ed_def = $.Deferred();
                 self.ed_def.done(function() {
-                    self.can_create && self.show_error_displayer();
+                    self.can_create && self.$input && self.show_error_displayer();
                     ignore_blur = false;
                     self.trigger('focused');
                 });
