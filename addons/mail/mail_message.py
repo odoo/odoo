@@ -752,6 +752,7 @@ class mail_message(osv.Model):
         for model, doc_ids in model_record_ids.items():
             model_obj = self.pool[model]
             mids = model_obj.exists(cr, uid, list(doc_ids))
+            document_deleted_ids = doc_ids.difference(mids)
             if hasattr(model_obj, 'check_mail_message_access'):
                 model_obj.check_mail_message_access(cr, uid, mids, operation, context=context)
             else:
@@ -760,7 +761,7 @@ class mail_message(osv.Model):
                                      if message.get('model') == model and message.get('res_id') in mids]
 
         # Calculate remaining ids: if not void, raise an error
-        other_ids = other_ids.difference(set(document_related_ids))
+        other_ids = other_ids.difference(set(document_related_ids).union(document_deleted_ids))
         if not other_ids:
             return
         raise orm.except_orm(_('Access Denied'),
