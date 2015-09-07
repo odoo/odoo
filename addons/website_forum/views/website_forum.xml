@@ -1331,7 +1331,19 @@
             <div class="col-sm-10">
                 <table class="table table-condensed">
                 <tr>
-                    <td rowspan="2" valign="top"><span class="text-muted">contributions</span></td>
+                    <td rowspan="4" valign="top"><span class="text-muted">stats</span></td>
+                    <td>karma</td>
+                    <td><span t-field="user.karma"/></td>
+                </tr><tr>
+                    <td>votes</td>
+                    <td>
+                        <span class="fa fa-thumbs-up"/>
+                        <span t-esc="up_votes"/>
+                        <span class="fa fa-thumbs-down"/>
+                        <span t-esc="down_votes"/>
+                    </td>
+                </tr>
+                <tr>
                     <td>member since</td>
                     <td><span t-field="user.create_date" t-field-options='{"format": "short"}'/></td>
                 </tr><tr>
@@ -1354,19 +1366,6 @@
                         <span t-field="user.country_id"/>
                         <t t-if="user.country_id"> <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class": "country_flag"}'/></t>
 
-                    </td>
-                </tr>
-                <tr>
-                    <td rowspan="2" valign="top"><span class="text-muted">stats</span></td>
-                    <td>karma</td>
-                    <td><span t-field="user.karma"/></td>
-                </tr><tr>
-                    <td>votes</td>
-                    <td>
-                        <span class="fa fa-thumbs-up"/>
-                        <span t-esc="up_votes"/>
-                        <span class="fa fa-thumbs-down"/>
-                        <span t-esc="down_votes"/>
                     </td>
                 </tr>
                 </table>
