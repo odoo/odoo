@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 {
-    'name' : 'Live Chat',
+    'name' : 'Website Live Chat',
     'version': '1.0',
     'sequence': 170,
-    'summary': 'Live Chat with Visitors/Customers',
+    'summary': 'Website Live Chat with Visitors/Customers',
     'category': 'Tools',
     'complexity': 'easy',
     'website': 'https://www.odoo.com/page/live-chat',
     'description':
         """
-Live Chat Support
-=================
+Website Live Chat Support
+==========================
 
 Allow to drop instant messaging widgets on any web page that will communicate
 with the current server and dispatch visitors request amongst several live

@@ -3,15 +3,15 @@
     <data>
 
         <record id="im_livechat_channel_action" model="ir.actions.act_window">
-            <field name="name">Live Chat Channels</field>
+            <field name="name">Website Live Chat Channels</field>
             <field name="res_model">im_livechat.channel</field>
             <field name="view_mode">kanban,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to define a new live chat channel.
+                Click to define a new website live chat channel.
               </p><p>
                 You can create channels for each website on which you want
-                to integrate the live chat widget, allowing you website
+                to integrate the website live chat widget, allowing you website
                 visitors to talk in real time with your operators.
               </p><p>
                 Each channel has it's own URL that you can send by email to
@@ -113,7 +113,7 @@
                     </group>
 
                     <div attrs='{"invisible": [["web_page", "=", False]]}'>
-                        <separator string="How to use the Live Chat widget?"/>
+                        <separator string="How to use the Website Live Chat widget?"/>
                         <p>
                             Copy and paste this code into your website, within the &amp;lt;head&amp;gt; tag:
                         </p>
@@ -122,7 +122,7 @@
                             or copy this url and send it by email to your customers or suppliers:
                         </p>
                         <field name="web_page" readonly="1" class="badge" widget="url"/>
-                        <p>For website built with Odoo CMS, please install the website_livechat module. Then go to Settings > Website Settings and select the Live Chat Channel you want to add on your website.</p>
+                        <p>For website built with Odoo CMS, please install the website_livechat module. Then go to Settings > Website Settings and select the Website Live Chat Channel you want to add on your website.</p>
                     </div>
 
                     <group string="Channel Rules">
@@ -175,7 +175,7 @@
         <!-- Menu items -->
         <menuitem
             id="menu_livechat_root"
-            name="Live Chat"
+            name="Website Live Chat"
             web_icon="im_livechat,static/description/icon.png"
             groups="im_livechat_group_user"
             sequence="205"/>
