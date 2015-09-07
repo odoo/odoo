@@ -1528,6 +1528,8 @@ class stock_picking(models.Model):
         data_obj = self.pool['ir.model.data']
         for pick in self.browse(cr, uid, ids, context=context):
             to_delete = []
+            if not pick.move_lines and not pick.pack_operation_ids:
+                raise UserError(_('Please create some Initial Demand or Mark as Todo and create some Operations. '))
             # In draft or with no pack operations edited yet, ask if we can just do everything
             if pick.state == 'draft' or all([x.qty_done == 0.0 for x in pick.pack_operation_ids]):
                 # If no lots when needed, raise error
@@ -2155,7 +2157,7 @@ class stock_move(osv.osv):
         @return: Dictionary of values
         """
         if not prod_id:
-            return {}
+            return {'domain': {'product_uom': []}}
         user = self.pool.get('res.users').browse(cr, uid, uid)
         lang = user and user.lang or False
         if partner_id:
@@ -2174,7 +2176,10 @@ class stock_move(osv.osv):
             result['location_id'] = loc_id
         if loc_dest_id:
             result['location_dest_id'] = loc_dest_id
-        return {'value': result}
+        res = {'value': result,
+               'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}
+               }
+        return res
 
     def _prepare_picking_assign(self, cr, uid, move, context=None):
         """ Prepares a new picking for this move as it could not be assigned to
@@ -4239,7 +4244,9 @@ class stock_pack_operation(osv.osv):
             res['value']['product_uom_id'] = product.uom_id.id
         if product:
             res['value']['lots_visible'] = (product.tracking != 'none')
-            res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
+            res['domain'] = {'product_uom_id': [('category_id','=',product.uom_id.category_id.id)]}
+        else:
+            res['domain'] = {'product_uom_id': []}
         return res
 
     def on_change_tests(self, cr, uid, ids, product_id, product_uom_id, product_qty, context=None):
@@ -4410,7 +4417,6 @@ class stock_pack_operation(osv.osv):
         view = data_obj.xmlid_to_res_id(cr, uid, 'stock.view_pack_operation_lot_form')
         only_create = picking_type.use_create_lots and not picking_type.use_existing_lots
         show_reserved = any([x for x in pack.pack_lot_ids if x.qty_todo > 0.0])
-
         ctx.update({'serial': serial,
                     'only_create': only_create,
                     'show_reserved': show_reserved})
