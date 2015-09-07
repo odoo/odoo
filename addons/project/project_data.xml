@@ -135,12 +135,13 @@
             <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
-        <record id="project_task_data_1" model="project.task">
+        <record id="project_stage_data_1" model="project.task">
             <field name="sequence">2</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
-            <field name="name">This is a card</field>
+            <field name="name">Try to play with the search bar. Use the filters</field>
+            <field name="description">Come back to the tasks view to play with the filters. They are up to the form</field>
             <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
@@ -159,8 +160,8 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
-            <field name="name">Guess what happens if you set this task in high priority?</field>
-            <field name="description">Click on the star to change the priority and come back in the tasks view. You task is now at the top.</field>
+            <field name="name">Guess what happens if you set this task as favorite?</field>
+            <field name="description">Click on the top left star to change the priority and come back in the tasks view. You task is now at the top of the column.</field>
             <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
@@ -169,6 +170,7 @@
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
             <field name="name">Use the chatter to collaborate with your members</field>
+            <field name="description">The chatter is right below</field>
             <field name="stage_id" ref="project_stage_data_2"/>
         </record>
 
@@ -203,7 +205,9 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
+            <field name="color">3</field>
             <field name="name">Try to customize this card. Change its background.</field>
+            <field name="description">Use the edit icon on the card to customize the background.</field>
             <field name="stage_id" ref="project_stage_data_1"/>
         </record>
 
@@ -250,9 +254,8 @@
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
             <field name="name">Finished with this stage? Archive it !</field>
-            <field name="color">3</field>
             <field name="stage_id" ref="project_stage_data_2"/>
-            <field name="description">Click on the gear icon on the column, to archive the stage, with all the tasks in it</field>
+            <field name="description">Click on the gear icon on the column, to archive the stage, with all the tasks in it. You can also archive one card only, by clicking on the button in the task form view.</field>
         </record>
 
         <record id="project_task_data_9" model="project.task">
@@ -262,14 +265,6 @@
             <field name="name">You want to add a stage? Add a new column !</field>
             <field name="stage_id" ref="project_stage_data_2"/>
             <field name="description">Click on the last column to create a stage. The name depends on the process. For example, in a customer service process, a stage name may be 'Backlog', 'Waiting Customer Feedback' or 'Done'.</field>
-        </record>
-
-        <record id="project_task_data_10" model="project.task">
-            <field name="user_id" ref="base.user_root"/>
-            <field name="priority">0</field>
-            <field name="project_id" ref="project.project_project_data"/>
-            <field name="name">Send an email in the chatter with an attachment to see what happen !</field>
-            <field name="stage_id" ref="project_stage_data_1"/>
         </record>
 
         <record id="project_task_data_11" model="project.task">
@@ -285,9 +280,9 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
-            <field name="name">Send an message with a picture in attachement, and see what happen!</field>
+            <field name="name">Send an message with a picture in attachment, and see what happen!</field>
             <field name="stage_id" ref="project_stage_data_2"/>
-            <field name="description">In the chatter, sending an email with an attachment will display the picture on the card.</field>
+            <field name="description">In the chatter, sending an email with an attachment will display the picture on the card. When there are several image attachments, you can choose which one you want to display.</field>
         </record>
 
         <record id="msg_task_data_14_attach" model="ir.attachment">
