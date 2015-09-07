@@ -93,7 +93,9 @@ var CalendarView = View.extend({
     },
 
     destroy: function() {
-        this.$calendar.fullCalendar('destroy');
+        if (this.$calendar) {
+            this.$calendar.fullCalendar('destroy');
+        }
         if (this.$small_calendar) {
             this.$small_calendar.datepicker('destroy');
         }
