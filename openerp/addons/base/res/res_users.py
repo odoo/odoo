@@ -30,6 +30,7 @@ from openerp import tools
 import openerp.exceptions
 from openerp.osv import fields,osv, expression
 from openerp.osv.orm import browse_record
+from openerp.service.security import check_super
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -422,10 +423,7 @@ class res_users(osv.osv):
         return dataobj.browse(cr, uid, data_id, context=context).res_id
 
     def check_super(self, passwd):
-        if passwd == tools.config['admin_passwd']:
-            return True
-        else:
-            raise openerp.exceptions.AccessDenied()
+        return check_super(passwd)
 
     def check_credentials(self, cr, uid, password):
         """ Override this method to plug additional authentication methods"""
