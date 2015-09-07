@@ -909,14 +909,13 @@ class ir_model_data(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('External Identifier', required=True, select=1,
+        'name': fields.char('External Identifier', required=True,
                             help="External Key/Identifier that can be used for "
                                  "data integration with third-party systems"),
         'complete_name': fields.function(_complete_name_get, type='char', string='Complete ID'),
-        'model': fields.char('Model Name', required=True, select=1),
-        'module': fields.char('Module', required=True, select=1),
-        'res_id': fields.integer('Record ID', select=1,
-                                 help="ID of the target record in the database"),
+        'model': fields.char('Model Name', required=True),
+        'module': fields.char('Module', required=True),
+        'res_id': fields.integer('Record ID', help="ID of the target record in the database"),
         'noupdate': fields.boolean('Non Updatable'),
         'date_update': fields.datetime('Update Date'),
         'date_init': fields.datetime('Init Date')
@@ -927,9 +926,6 @@ class ir_model_data(osv.osv):
         'noupdate': False,
         'module': ''
     }
-    _sql_constraints = [
-        ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same external ID in the same module!'),
-    ]
 
     def __init__(self, pool, cr):
         osv.osv.__init__(self, pool, cr)
@@ -943,7 +939,8 @@ class ir_model_data(osv.osv):
         super(ir_model_data, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_model_data_module_name_index\'')
         if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
+            cr.execute('CREATE UNIQUE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
+            cr.execute('CREATE INDEX ir_model_data_model_res_id_index ON ir_model_data (model, res_id)')
 
     # NEW V8 API
     @tools.ormcache('xmlid')
