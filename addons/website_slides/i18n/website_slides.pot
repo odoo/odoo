@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 09:00+0000\n"
-"PO-Revision-Date: 2015-08-25 09:00+0000\n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-07 14:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -135,11 +135,6 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "/ <span id=\"page_count\"/>"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
 msgstr ""
 
@@ -220,7 +215,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-info-circle\"/>\n"
-"                                        Publish a presentation to enable social sharing feature"
+"                                        The social sharing module will be unlocked when a moderator will allow your publication."
 msgstr ""
 
 #. module: website_slides
@@ -299,16 +294,6 @@ msgid "<span class=\"text-muted\">Sort by:</span>"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
-msgid "<span class=\"text-muted\">|</span>"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<span> / </span>"
-msgstr ""
-
-#. module: website_slides
 #: sql_constraint:slide.tag:0
 msgid "A tag must be unique!"
 msgstr ""
@@ -343,8 +328,8 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:246
-#: code:addons/website_slides/static/src/xml/website_slides.xml:50
+#: code:addons/website_slides/static/src/js/slides_upload.js:251
+#: code:addons/website_slides/static/src/xml/website_slides.xml:54
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_category_id
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 #: model:ir.ui.view,arch_db:website_slides.view_slides_category_form
@@ -403,7 +388,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:18
+#: code:addons/website_slides/static/src/xml/website_slides.xml:20
 #, python-format
 msgid "Content Preview"
 msgstr ""
@@ -423,19 +408,19 @@ msgid "Could not fetch data from url. Document or access right not available:\n"
 msgstr ""
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:216
-#, python-format
-msgid "Create New %s '%s'"
-msgstr ""
-
-#. module: website_slides
 #: model:slide.slide,description:website_slides.slide_1
 msgid "Create enterprise grade website with our super easy builder. Use finely designed building blocks and edit everything inline. Benefit from out-of-the-box business features; e-Commerce, events, blogs, jobs announces, customer references, call-to-actions, etc.\n"
 "\n"
 "This is a new open source application in Python/Javascript based on Bootstrap and OpenERP.\n"
 "\n"
 "Download or use online on http://openerp.com"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:220
+#, python-format
+msgid "Create new tag '%s'"
 msgstr ""
 
 #. module: website_slides
@@ -469,8 +454,8 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:56
-#: code:addons/website_slides/static/src/xml/website_slides.xml:58
+#: code:addons/website_slides/static/src/xml/website_slides.xml:60
+#: code:addons/website_slides/static/src/xml/website_slides.xml:62
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_description
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_description
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -480,7 +465,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:68
+#: code:addons/website_slides/static/src/xml/website_slides.xml:72
 #, python-format
 msgid "Discard"
 msgstr ""
@@ -872,10 +857,8 @@ msgid "No channel created or published yet."
 msgstr ""
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:201
-#, python-format
-msgid "No matches found. Type to create new %s"
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "No presentation available."
 msgstr ""
 
 #. module: website_slides
@@ -1005,7 +988,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:24
+#: code:addons/website_slides/static/src/xml/website_slides.xml:28
 #, python-format
 msgid "PDF or Image File"
 msgstr ""
@@ -1022,7 +1005,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:47
+#: code:addons/website_slides/static/src/js/slides.js:55
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
@@ -1110,6 +1093,11 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
+msgid "Results for"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
 msgid "Review your channel settings to promote your most viewed or recent published presentation"
 msgstr ""
 
@@ -1122,14 +1110,14 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:66
+#: code:addons/website_slides/static/src/xml/website_slides.xml:70
 #, python-format
 msgid "Save and Publish"
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:65
+#: code:addons/website_slides/static/src/xml/website_slides.xml:69
 #, python-format
 msgid "Save as Draft"
 msgstr ""
@@ -1233,8 +1221,8 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:269
-#: code:addons/website_slides/static/src/xml/website_slides.xml:44
+#: code:addons/website_slides/static/src/js/slides_upload.js:274
+#: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_tag_ids
 #: model:ir.ui.menu,name:website_slides.menu_slide_tag
@@ -1303,8 +1291,8 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:38
-#: code:addons/website_slides/static/src/xml/website_slides.xml:40
+#: code:addons/website_slides/static/src/xml/website_slides.xml:42
+#: code:addons/website_slides/static/src/xml/website_slides.xml:44
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
 #, python-format
 msgid "Title"
@@ -1333,7 +1321,7 @@ msgid "Type"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:139
+#: code:addons/website_slides/controllers/main.py:140
 #, python-format
 msgid "Uncategorized"
 msgstr ""
@@ -1344,7 +1332,7 @@ msgid "Uncategorized presentation"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:448
+#: code:addons/website_slides/models/slides.py:453
 #, python-format
 msgid "Unknown document"
 msgstr ""
@@ -1488,7 +1476,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:56
+#: code:addons/website_slides/static/src/js/slides.js:64
 #, python-format
 msgid "You have already voted for this slide"
 msgstr ""
@@ -1500,14 +1488,14 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:32
+#: code:addons/website_slides/static/src/xml/website_slides.xml:36
 #, python-format
 msgid "Youtube Video URL"
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:30
+#: code:addons/website_slides/static/src/xml/website_slides.xml:34
 #, python-format
 msgid "Youtube or Google Doc URL"
 msgstr ""
@@ -1556,7 +1544,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:66
+#: code:addons/website_slides/static/src/xml/website_slides.xml:70
 #, python-format
 msgid "or"
 msgstr ""

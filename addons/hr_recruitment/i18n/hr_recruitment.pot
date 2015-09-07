@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 08:59+0000\n"
-"PO-Revision-Date: 2015-08-25 08:59+0000\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 14:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -132,16 +132,6 @@ msgid "<span class=\"o_stat_text\">Trackers</span>"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-msgid "<span class=\"oe_inline\" attrs=\"{'invisible':[('salary_expected_extra','=',False)]}\"> + </span>"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-msgid "<span class=\"oe_inline\" attrs=\"{'invisible':[('salary_proposed_extra','=',False)]}\"> + </span>"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>New</span>"
 msgstr ""
@@ -187,11 +177,6 @@ msgid "Alias Contact Security"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_alias_domain
-msgid "Alias Domain"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
 msgid "Alias ID"
 msgstr ""
@@ -227,11 +212,6 @@ msgid "Applicant"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_new
-msgid "Applicant Created"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
 msgid "Applicant Hired"
@@ -258,7 +238,7 @@ msgid "Applicant's Name"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:86
+#: code:addons/hr_recruitment/models/hr_recruitment.py:85
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
 #, python-format
@@ -331,6 +311,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_priority
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_priority
 msgid "Appreciation"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Archived"
 msgstr ""
 
 #. module: hr_recruitment
@@ -418,6 +403,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Click here to create a new job. You can remove the \"In Recruitment\" filter to display all the job positions."
 msgstr ""
 
@@ -467,14 +453,14 @@ msgid "Configure Recruitment"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:425
+#: code:addons/hr_recruitment/models/hr_recruitment.py:382
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_id
 #, python-format
 msgid "Contact"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:427
+#: code:addons/hr_recruitment/models/hr_recruitment.py:384
 #, python-format
 msgid "Contact Email"
 msgstr ""
@@ -567,18 +553,8 @@ msgid "Days to Open"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_alias_prefix
-msgid "Default Alias Name for Jobs"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_defaults
 msgid "Default Values"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
-msgid "Default job email address"
 msgstr ""
 
 #. module: hr_recruitment
@@ -595,6 +571,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Define job position profile and manage recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe"
 msgstr ""
 
@@ -1000,6 +977,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_config
 msgid "Job Positions"
 msgstr ""
 
@@ -1178,7 +1156,7 @@ msgid "New Applications"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:471
+#: code:addons/hr_recruitment/models/hr_recruitment.py:428
 #, python-format
 msgid "New Employee %s Hired"
 msgstr ""
@@ -1191,13 +1169,6 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_new_hired_employee
 msgid "New Hired Employee"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:278
-#: code:addons/hr_recruitment/models/hr_recruitment.py:302
-#, python-format
-msgid "New application from %s"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1231,7 +1202,7 @@ msgid "No Interview Form"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:438
+#: code:addons/hr_recruitment/models/hr_recruitment.py:395
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -1292,6 +1263,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_6
 msgid "Office location"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.client,name:hr_recruitment.action_client_hr_recruitment_menu
+msgid "Open HR Menu"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1832,7 +1808,7 @@ msgid "With just a quick glance on the Odoo employee screen, you\n"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:475
+#: code:addons/hr_recruitment/models/hr_recruitment.py:432
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
@@ -1848,7 +1824,7 @@ msgid "hr.recruitment.config.settings"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:343
+#: code:addons/hr_recruitment/models/hr_recruitment.py:300
 #, python-format
 msgid "job applicants"
 msgstr ""

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-27 14:00+0000\n"
-"PO-Revision-Date: 2015-08-27 14:00+0000\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 14:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,14 +47,23 @@ msgid "Allows to configure inventory valuations on products and product categori
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_asset_category_id
+msgid "Asset Type"
+msgstr ""
+
+#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Average Price"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
+msgid "Can be expensed"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
-#: model:ir.ui.view,arch_db:stock_account.view_stock_invoice_onshipping
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
 msgstr ""
@@ -82,6 +91,11 @@ msgid "Choose your date"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
+msgid "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * coeff"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Company"
@@ -105,65 +119,13 @@ msgid "Costing Method"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_invoice_onshipping
-msgid "Create"
-msgstr ""
-
-#. module: stock_account
-#: selection:stock.invoice.onshipping,invoice_type:0
-msgid "Create Customer Invoice"
-msgstr ""
-
-#. module: stock_account
-#: selection:stock.invoice.onshipping,invoice_type:0
-msgid "Create Customer Refund"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_stock_invoice_onshipping
-msgid "Create Draft Invoices"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_picking_inherit_form2
-msgid "Create Invoice"
-msgstr ""
-
-#. module: stock_account
-#: selection:stock.invoice.onshipping,invoice_type:0
-msgid "Create Vendor Bill"
-msgstr ""
-
-#. module: stock_account
-#: selection:stock.invoice.onshipping,invoice_type:0
-msgid "Create Vendor Refund"
-msgstr ""
-
-#. module: stock_account
-#: selection:stock.config.settings,module_stock_invoice_directly:0
-msgid "Create and open the invoice when the user finishes a delivery order"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_invoice_onshipping
-msgid "Create invoice"
-msgstr ""
-
-#. module: stock_account
-#: selection:stock.config.settings,module_stock_invoice_directly:0
-msgid "Create invoices in batch"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
-#: model:ir.model.fields,field_description:stock_account.field_stock_invoice_onshipping_create_uid
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_date
-#: model:ir.model.fields,field_description:stock_account.field_stock_invoice_onshipping_create_date
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_create_date
 msgid "Created on"
 msgstr ""
@@ -174,14 +136,13 @@ msgid "Date"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_invoice_onshipping_journal_id
-msgid "Destination Journal"
+#: model:ir.model.fields,field_description:stock_account.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
 msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_invoice_onshipping_display_name
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_display_name
 msgid "Display Name"
 msgstr ""
@@ -192,14 +153,8 @@ msgid "Group By"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_invoice_onshipping_group
-msgid "Group by partner"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_id
-#: model:ir.model.fields,field_description:stock_account.field_stock_invoice_onshipping_id
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_id
 msgid "ID"
 msgstr ""
@@ -223,7 +178,7 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_invoice_line_move_id
-msgid "If the invoice was generated from a stock.picking, reference to the related move line."
+msgid "If the invoice was generated from a stock transfer, specify the reference to the related stock move."
 msgstr ""
 
 #. module: stock_account
@@ -268,46 +223,8 @@ msgid "Invoice"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_procurement_order_invoice_state
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_invoice_state
-#: model:ir.model.fields,field_description:stock_account.field_stock_picking_invoice_state
-msgid "Invoice Control"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_invoice_onshipping_invoice_date
-msgid "Invoice Date"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_procurement_rule_invoice_state
-#: model:ir.model.fields,field_description:stock_account.field_stock_location_path_invoice_state
-msgid "Invoice Status"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_invoice_onshipping_invoice_type
-msgid "Invoice type"
-msgstr ""
-
-#. module: stock_account
-#: selection:procurement.order,invoice_state:0
-#: selection:procurement.rule,invoice_state:0
-#: selection:stock.location.path,invoice_state:0
-#: selection:stock.move,invoice_state:0
-#: selection:stock.picking,invoice_state:0
-msgid "Invoiced"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_module_stock_invoice_directly
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_invoice_state
-msgid "Invoicing"
 msgstr ""
 
 #. module: stock_account
@@ -318,21 +235,18 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
 #: model:ir.model.fields,field_description:stock_account.field_stock_history___last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_invoice_onshipping___last_update
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history___last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
-#: model:ir.model.fields,field_description:stock_account.field_stock_invoice_onshipping_write_uid
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_date
-#: model:ir.model.fields,field_description:stock_account.field_stock_invoice_onshipping_write_date
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_date
 msgid "Last Updated on"
 msgstr ""
@@ -359,40 +273,14 @@ msgid "Move line"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/product.py:125
+#: code:addons/stock_account/product.py:124
 #, python-format
 msgid "No difference between standard price and new price!"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:99
-#, python-format
-msgid "No invoice created!"
-msgstr ""
-
-#. module: stock_account
-#: selection:stock.return.picking,invoice_state:0
-msgid "No invoicing"
-msgstr ""
-
-#. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "No landed costs"
-msgstr ""
-
-#. module: stock_account
-#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:90
-#, python-format
-msgid "None of these picking lists require invoicing."
-msgstr ""
-
-#. module: stock_account
-#: selection:procurement.order,invoice_state:0
-#: selection:procurement.rule,invoice_state:0
-#: selection:stock.location.path,invoice_state:0
-#: selection:stock.move,invoice_state:0
-#: selection:stock.picking,invoice_state:0
-msgid "Not Applicable"
 msgstr ""
 
 #. module: stock_account
@@ -428,20 +316,15 @@ msgid "Price"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_procurement_order
-msgid "Procurement"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_procurement_rule
-msgid "Procurement Rule"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
+msgid "Product Alert Time"
 msgstr ""
 
 #. module: stock_account
@@ -452,8 +335,18 @@ msgid "Product Category"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
+msgid "Product Life Time"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
+msgid "Product Removal Time"
 msgstr ""
 
 #. module: stock_account
@@ -464,8 +357,8 @@ msgid "Product Template"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_location_path
-msgid "Pushed Flows"
+#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
+msgid "Product Use Time"
 msgstr ""
 
 #. module: stock_account
@@ -490,11 +383,6 @@ msgid "Retrieve the curent stock valuation."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_return_picking
-msgid "Return Picking"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Serial Number"
@@ -506,14 +394,24 @@ msgid "Source"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
+msgid "Specify a unit of measure here if invoicing is made in another unit of measure than inventory. Keep empty to use the default unit of measure."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
+msgid "Specify whether the product can be selected in an HR expense."
+msgstr ""
+
+#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Standard Price"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/product.py:146
-#: code:addons/stock_account/product.py:153
+#: code:addons/stock_account/product.py:145
+#: code:addons/stock_account/product.py:152
 #, python-format
 msgid "Standard Price changed"
 msgstr ""
@@ -538,11 +436,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
 msgid "Stock Input Account"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_invoice_onshipping
-msgid "Stock Invoice Onshipping"
 msgstr ""
 
 #. module: stock_account
@@ -596,46 +489,18 @@ msgid "Templates for Account Chart"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_picking_type
-msgid "The picking type determines the picking view"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_invoice_directly
-msgid "This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
-"-This installs the module stock_invoice_directly."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_picking_tree_invoice
-#: model:ir.ui.view,arch_db:stock_account.view_picking_search_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_stock_picking_kanban_inherit
-#: selection:procurement.order,invoice_state:0
-#: selection:procurement.rule,invoice_state:0
-#: selection:stock.location.path,invoice_state:0
-#: selection:stock.move,invoice_state:0
-#: selection:stock.picking,invoice_state:0
-msgid "To Be Invoiced"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_picking_search_inherit
-msgid "To Be Invoiced Moves"
-msgstr ""
-
-#. module: stock_account
-#: selection:stock.return.picking,invoice_state:0
-msgid "To be refunded/invoiced"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "Total Value"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_picking
-msgid "Transfer"
+#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
+msgid "Unit of Measure -> UOS Coeff"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
+msgid "Unit of Sale"
 msgstr ""
 
 #. module: stock_account
@@ -651,6 +516,26 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
 msgid "Value"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
+msgid "When a new a Serial Number is issued, this is the number of days before an alert should be notified."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_life_time
+msgid "When a new a Serial Number is issued, this is the number of days before the goods may become dangerous and must not be consumed."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
+msgid "When a new a Serial Number is issued, this is the number of days before the goods should be removed from the stock."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_use_time
+msgid "When a new a Serial Number is issued, this is the number of days before the goods starts deteriorating, without being dangerous yet."
 msgstr ""
 
 #. module: stock_account
@@ -710,7 +595,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
-#: model:ir.model.fields,field_description:stock_account.field_stock_picking_type_count_picking_invoiced
 msgid "unknown"
 msgstr ""
 

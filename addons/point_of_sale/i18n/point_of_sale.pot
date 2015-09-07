@@ -6,24 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-27 14:00+0000\n"
-"PO-Revision-Date: 2015-08-27 14:00+0000\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 14:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_claim_count
-msgid "# Claims"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_issue_count
-msgid "# Issues"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_supplier_invoice_count
@@ -38,11 +28,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_purchase_order_count
 msgid "# of Purchase Order"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_sale_order_count
-msgid "# of Sales Order"
 msgstr ""
 
 #. module: point_of_sale
@@ -449,11 +434,6 @@ msgid "A globally unique identifier for this pos configuration, used to prevent 
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_associate_member
-msgid "A member with whom you want to associate your membership.It will consider the membership state of the associated member."
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_login_number
 msgid "A sequence number that is incremented each time a user resumes the pos session"
 msgstr ""
@@ -670,11 +650,6 @@ msgid "Are you sure that the customer wants to  pay"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_associate_member
-msgid "Associate Member"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_google_drive
 msgid "Attach Google documents to any record"
 msgstr ""
@@ -819,11 +794,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 #, python-format
 msgid "Cancel"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_membership_cancel
-msgid "Cancel Membership Date"
 msgstr ""
 
 #. module: point_of_sale
@@ -991,13 +961,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_auth_oauth_google_client_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_ga_client_id
 msgid "Client ID"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_ga_client_secret
-msgid "Client Secret"
 msgstr ""
 
 #. module: point_of_sale
@@ -1139,11 +1103,6 @@ msgid "Could not close the point of sale."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_payment_method_count
-msgid "Count Payment Method"
-msgstr ""
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:322
 #, python-format
@@ -1196,11 +1155,6 @@ msgid "Currency"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_membership_state
-msgid "Current Membership Status"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_id
 msgid "Current Session"
 msgstr ""
@@ -1217,14 +1171,9 @@ msgid "Customer"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1157
+#: code:addons/point_of_sale/point_of_sale.py:1155
 #, python-format
 msgid "Customer Invoice"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_stock_customer
-msgid "Customer Location"
 msgstr ""
 
 #. module: point_of_sale
@@ -1257,21 +1206,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_date_start
 msgid "Date Start"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_membership_start
-msgid "Date from which membership becomes active."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_membership_cancel
-msgid "Date on which membership has been cancelled"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_membership_stop
-msgid "Date until which membership remains active."
 msgstr ""
 
 #. module: point_of_sale
@@ -1330,7 +1264,7 @@ msgid "Delete Unpaid Orders ?"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_delivery_carrier
+#: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_delivery_carrier_id
 msgid "Delivery Method"
 msgstr ""
 
@@ -1566,7 +1500,7 @@ msgid "Error ! You cannot create recursive categories."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1541
+#: code:addons/point_of_sale/point_of_sale.py:1539
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -1674,11 +1608,6 @@ msgid "For imprecise industrial touchscreens"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_free_member
-msgid "Free Member"
-msgstr ""
-
-#. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruits_vegetables
 msgid "Fruits and Vegetables"
 msgstr ""
@@ -1709,21 +1638,6 @@ msgid "Generate all sale journal entries for non invoiced orders linked to a clo
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_localization
-msgid "Geo Localization Date"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_portal
 msgid "Give your customers access to their documents."
 msgstr ""
@@ -1742,11 +1656,6 @@ msgstr ""
 #: model:product.product,name:point_of_sale.pomme_golden_perlim
 #: model:product.template,name:point_of_sale.pomme_golden_perlim_product_template
 msgid "Golden Apples Perlim"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_google_management_authorization
-msgid "Google authorization"
 msgstr ""
 
 #. module: point_of_sale
@@ -1969,17 +1878,6 @@ msgid "Invoicing"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_membership_state
-msgid "It indicates the membership state.\n"
-"-Non Member: A partner who has not applied for any membership.\n"
-"-Cancelled Member: A member who has cancelled his membership.\n"
-"-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
-"-Invoiced Member: A member whose invoice has been created.\n"
-"-Paying member: A member who has paid the membership fee."
-msgstr ""
-
-#. module: point_of_sale
 #: model:product.product,name:point_of_sale.pomme_jonagold
 #: model:product.template,name:point_of_sale.pomme_jonagold_product_template
 msgid "Jonagold apples"
@@ -2030,11 +1928,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_month___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos___last_update
 msgid "Last Modified on"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_last_website_so_id
-msgid "Last Online Sale Order"
 msgstr ""
 
 #. module: point_of_sale
@@ -2192,26 +2085,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_image_medium
 msgid "Medium-sized image of the category. It is automatically resized as a 128x128px image, with aspect ratio preserved. Use this field in form views or some kanban views."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_member_lines
-msgid "Membership"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_membership_amount
-msgid "Membership Amount"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_membership_stop
-msgid "Membership End Date"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_membership_start
-msgid "Membership Start Date"
 msgstr ""
 
 #. module: point_of_sale
@@ -2678,7 +2551,6 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_account_journal_form
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_payment_method_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_action_account_journal_form_open
 msgid "Payment Methods"
 msgstr ""
@@ -2759,13 +2631,13 @@ msgid "Please Confirm Large Amount"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1284
+#: code:addons/point_of_sale/point_of_sale.py:1282
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1105
+#: code:addons/point_of_sale/point_of_sale.py:1102
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr ""
@@ -3015,11 +2887,6 @@ msgid "Public Category"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_product_pricelist_purchase
-msgid "Purchase Pricelist"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_in
 msgid "Put Money In"
 msgstr ""
@@ -3153,7 +3020,7 @@ msgid "Resume"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1075
+#: code:addons/point_of_sale/point_of_sale.py:1072
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
@@ -3202,11 +3069,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
 msgid "Sales Lines"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_sale_order_ids
-msgid "Sales Order"
 msgstr ""
 
 #. module: point_of_sale
@@ -3347,12 +3209,7 @@ msgid "Select User"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_free_member
-msgid "Select if you want to give free membership."
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1192
+#: code:addons/point_of_sale/point_of_sale.py:1190
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr ""
@@ -3506,11 +3363,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_google_cal_sync
 msgid "Show Tutorial"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_ga_sync
-msgid "Show tutorial to know how to get my 'Client ID' and my 'Client Secret'"
 msgstr ""
 
 #. module: point_of_sale
@@ -3683,6 +3535,11 @@ msgid "Summary by Payment Methods"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_purchase_currency_id
+msgid "Supplier Currency"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:760
 #, python-format
@@ -3695,7 +3552,7 @@ msgid "Take Money Out"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1314
+#: code:addons/point_of_sale/point_of_sale.py:1312
 #, python-format
 msgid "Tax"
 msgstr ""
@@ -3742,7 +3599,7 @@ msgid "Tendered"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1271
+#: code:addons/point_of_sale/point_of_sale.py:1269
 #, python-format
 msgid "The POS order must have lines when calling this method"
 msgstr ""
@@ -3817,11 +3674,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_start_categ_id
 msgid "The point of sale will display this product category by default. If no category is specified, all available products will be shown"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_membership_amount
-msgid "The price negotiated by the partner"
 msgstr ""
 
 #. module: point_of_sale
@@ -3902,13 +3754,13 @@ msgid "There is no cash register for this PoS Session"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1022
+#: code:addons/point_of_sale/point_of_sale.py:1019
 #, python-format
 msgid "There is no receivable account defined to make payment for the partner: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1020
+#: code:addons/point_of_sale/point_of_sale.py:1017
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr ""
@@ -3926,7 +3778,12 @@ msgid "This allows users to trigger a password reset from the Login page."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_property_delivery_carrier
+#: model:ir.model.fields,help:point_of_sale.field_res_users_property_purchase_currency_id
+msgid "This currency will be used, instead of the default one, for purchases from the current partner"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_res_users_property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
 
@@ -3992,23 +3849,8 @@ msgid "This operation will permanently destroy all unpaid orders from all sessio
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_property_product_pricelist_purchase
-msgid "This pricelist will be used, instead of the default one, for purchases from the current partner"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_sequence_id
 msgid "This sequence is automatically created by Odoo but you can change it to customize the reference numbers of your orders."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_property_stock_customer
-msgid "This stock location will be used, instead of the default one, as the destination location for goods you send to this partner"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_property_stock_supplier
-msgid "This stock location will be used, instead of the default one, as the source location for goods you receive from the current partner"
 msgstr ""
 
 #. module: point_of_sale
@@ -4040,7 +3882,7 @@ msgid "To Weigh With Scale"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1059
+#: code:addons/point_of_sale/point_of_sale.py:1056
 #, python-format
 msgid "To return product(s), you need to open a session that will be used to register the refund."
 msgstr ""
@@ -4123,7 +3965,7 @@ msgid "Total:"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1326
+#: code:addons/point_of_sale/point_of_sale.py:1324
 #, python-format
 msgid "Trade Receivables"
 msgstr ""
@@ -4139,7 +3981,7 @@ msgid "URI for tuto"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:985
+#: code:addons/point_of_sale/point_of_sale.py:982
 #, python-format
 msgid "Unable to cancel the picking."
 msgstr ""
@@ -4257,11 +4099,6 @@ msgid "Vauxoo.com"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_stock_supplier
-msgid "Vendor Location"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_vkeyboard
 msgid "Virtual KeyBoard"
 msgstr ""
@@ -4336,7 +4173,7 @@ msgid "You cannot create two active sessions with the same responsible!"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1542
+#: code:addons/point_of_sale/point_of_sale.py:1540
 #, python-format
 msgid "You cannot delete a product saleable in point of sale while a session is still opened."
 msgstr ""
@@ -4361,19 +4198,19 @@ msgid "You have to define which payment method must be available in the point of
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1036
+#: code:addons/point_of_sale/point_of_sale.py:1033
 #, python-format
 msgid "You have to open at least one cashbox."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1422
+#: code:addons/point_of_sale/point_of_sale.py:1420
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1407
+#: code:addons/point_of_sale/point_of_sale.py:1405
 #, python-format
 msgid "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-27 14:02+0000\n"
-"PO-Revision-Date: 2015-08-27 14:02+0000\n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-07 14:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,7 +40,7 @@ msgid "%<br/>\n"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:623
+#: code:addons/mass_mailing/models/mass_mailing.py:628
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -529,6 +529,12 @@ msgid "AB Testing"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_active
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_active
+msgid "Active"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.mass_mail_theme_list
 msgid "Airmail"
 msgstr ""
@@ -585,6 +591,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets_sunday
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets_zenflat
 msgid "April 3, 2014"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
+msgid "Archived"
 msgstr ""
 
 #. module: mass_mailing
@@ -660,7 +672,7 @@ msgid "Bounced Ratio"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_7425
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_7265
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Campaign"
 msgstr ""
@@ -756,6 +768,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_color
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_color
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_color
 msgid "Color Index"
 msgstr ""
 
@@ -1166,11 +1179,6 @@ msgid "Good news!"
 msgstr ""
 
 #. module: mass_mailing
-#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
-msgid "Great stories are for everyone even when only written for just one person. If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If itâs genuine for the one, itâs genuine for the rest."
-msgstr ""
-
-#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets_airmail
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets_cleave
@@ -1180,6 +1188,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets_skyline
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets_sunday
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets_zenflat
+#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Great stories are for everyone even when only written for just one person. If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest."
 msgstr ""
 
@@ -1482,13 +1491,18 @@ msgid "Mailing"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:431
+#: code:addons/mass_mailing/models/mass_mailing.py:434
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_list
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_list_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_name
 #, python-format
 msgid "Mailing List"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form
+msgid "Mailing List Name"
 msgstr ""
 
 #. module: mass_mailing
@@ -1798,8 +1812,8 @@ msgid "Open Date"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.actions.client,name:mass_mailing.action_client_marketing_menu
-msgid "Open Marketing Menu"
+#: model:ir.actions.client,name:mass_mailing.action_client_mass_mailing_menu
+msgid "Open Mass Mailing Menu"
 msgstr ""
 
 #. module: mass_mailing
@@ -1897,7 +1911,7 @@ msgid "Plan"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:751
+#: code:addons/mass_mailing/models/mass_mailing.py:756
 #, python-format
 msgid "Please select recipients."
 msgstr ""
@@ -2345,7 +2359,7 @@ msgid "Templates"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:703
+#: code:addons/mass_mailing/models/mass_mailing.py:708
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Test Mailing"
@@ -2374,7 +2388,7 @@ msgid "The contact has chosen not to receive mails anymore from this list"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_7425
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_7265
 msgid "This is a name that helps you keep track of your different campaign efforts Ex: Fall_Drive, Christmas_Special"
 msgstr ""
 

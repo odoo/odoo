@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 08:59+0000\n"
-"PO-Revision-Date: 2015-08-25 08:59+0000\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 14:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,11 +33,6 @@ msgid "Analytic Account"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_journal_id
-msgid "Analytic Journal"
-msgstr ""
-
-#. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
 msgid "Analytic Line"
 msgstr ""
@@ -48,13 +43,6 @@ msgid "Analytic account"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:103
-#, python-format
-msgid "Changing the date will let this entry appear in the timesheet of the new date."
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_account_analytic_account_invoice_on_timesheets
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_account_use_timesheets
 msgid "Check this field if this project manages timesheets"
 msgstr ""
@@ -62,6 +50,11 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 msgid "Click to record activities."
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_res_company
+msgid "Companies"
 msgstr ""
 
 #. module: hr_timesheet
@@ -81,29 +74,8 @@ msgid "Cost"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.account_analytic_account_timesheet_form
-msgid "Cost/Revenue"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
-msgid "Costs & Revenues"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
-msgid "Costs will be created automatically when you register supplier\n"
-"                invoices, expenses or timesheets."
-msgstr ""
-
-#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_date
 msgid "Date"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_hr_employee_uom_id
-msgid "Default Unit of Measure used for all stock operation."
 msgstr ""
 
 #. module: hr_timesheet
@@ -128,18 +100,8 @@ msgid "Duration"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_employee
-msgid "Employee"
-msgstr ""
-
-#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
 msgid "Extended Filters..."
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_general_account_id
-msgid "General Account"
 msgstr ""
 
 #. module: hr_timesheet
@@ -159,30 +121,13 @@ msgid "ID"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_hr_employee_product_id
-msgid "If you want to reinvoice working time of employees, link this employee to a service to determinate the cost price of the job."
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
-msgid "In Odoo, contracts and projects are implemented using\n"
-"                analytic account. So, you can track costs and revenues to analyse\n"
-"                your margins easily."
-msgstr ""
-
-#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
 msgid "Information"
 msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_is_timesheet
-msgid "Is timesheet"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_journal_id
-msgid "Journal"
+msgid "Is a Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
@@ -196,12 +141,6 @@ msgid "Month"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
-msgid "No activity yet on this contract."
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_product_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_product_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -211,14 +150,6 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
 msgid "Reports"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
-msgid "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
-"                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 
 #. module: hr_timesheet
@@ -269,26 +200,14 @@ msgid "Timesheet by Month"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account_invoice_on_timesheets
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account_use_timesheets
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_department_view_kanban
-#: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_employee_extd_form
 msgid "Timesheets"
 msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
-msgid "Total cost"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
 msgid "Total time"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_uom_id
-msgid "Unit of Measure"
 msgstr ""
 
 #. module: hr_timesheet

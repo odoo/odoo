@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 08:59+0000\n"
-"PO-Revision-Date: 2015-08-25 08:59+0000\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 14:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,49 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: analytic
-#: code:addons/analytic/models/analytic.py:279
-#, python-format
-msgid "%s (copy)"
-msgstr ""
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "(Keep empty to open the current situation)"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticjournal
-msgid "<strong>Currency:</strong>"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledger
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledgerquantity
-#: model:ir.ui.view,arch_db:analytic.report_analyticjournal
-msgid "<strong>Period From:</strong>"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledger
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledgerquantity
-#: model:ir.ui.view,arch_db:analytic.report_analyticjournal
-msgid "<strong>Period To:</strong>"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledger
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledgerquantity
-msgid "<strong>Printing Date:</strong>"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_invertedanalyticbalance
-msgid "<strong>Total</strong>"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_balance
-msgid "Account Analytic Balance"
 msgstr ""
 
 #. module: analytic
@@ -67,66 +26,19 @@ msgid "Account Analytic Chart"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_cost_ledger
-msgid "Account Analytic Cost Ledger"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_cost_ledger_journal_report
-msgid "Account Analytic Cost Ledger For Journal Report"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_inverted_balance
-msgid "Account Analytic Inverted Balance"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_child_complete_ids
-msgid "Account Hierarchy"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticbalance
-#: model:ir.ui.view,arch_db:analytic.report_invertedanalyticbalance
-msgid "Account Name"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticjournal
-msgid "Account n°"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_name
-msgid "Account/Contract Name"
-msgstr ""
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.act_account_renew_view
-msgid "Accounts to Renew"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_active
-msgid "Active"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
+msgid "Account Currency"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
-#: model:ir.ui.view,arch_db:analytic.account_analytic_line_extended_form
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticjournal
-msgid "Analytic"
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
 #: model:ir.model,name:analytic.model_account_analytic_account
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_account_id
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -137,12 +49,6 @@ msgstr ""
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "Analytic Account Charts"
-msgstr ""
-
-#. module: analytic
-#: code:addons/analytic/models/analytic.py:206
-#, python-format
-msgid "Analytic Account Created"
 msgstr ""
 
 #. module: analytic
@@ -157,20 +63,8 @@ msgid "Analytic Accounts"
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_balance
-#: model:ir.actions.report.xml,name:analytic.action_report_analytic_balance
-msgid "Analytic Balance"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticbalance
-msgid "Analytic Balance -"
-msgstr ""
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_journal_open_form
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_line_form
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Entries"
@@ -182,45 +76,28 @@ msgid "Analytic Entry"
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_tree1
-msgid "Analytic Items"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_journal
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_journal_id
-#: model:ir.ui.view,arch_db:analytic.report_analyticjournal
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_journal_form
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_journal_tree
-#: model:ir.ui.view,arch_db:analytic.view_analytic_journal_search
-msgid "Analytic Journal"
-msgstr ""
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_journal_form
-#: model:ir.ui.view,arch_db:analytic.view_analytic_journal_search
-msgid "Analytic Journals"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
+msgid "Analytic Lines"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
+msgid "Analytic Tag"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_tag
+msgid "Analytic Tags"
+msgstr ""
+
+#. module: analytic
+#: selection:account.analytic.account,account_type:0
 msgid "Analytic View"
-msgstr ""
-
-#. module: analytic
-#: code:addons/analytic/models/analytic.py:204
-#, python-format
-msgid "Analytic View Created"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_tree
-msgid "Analytic account"
 msgstr ""
 
 #. module: analytic
@@ -230,81 +107,39 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
-#: model:ir.ui.view,arch_db:analytic.report_analyticbalance
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledger
-#: model:ir.ui.view,arch_db:analytic.report_invertedanalyticbalance
 msgid "Balance"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_line_amount
-msgid "Calculated by multiplying the quantity and the price given in the Product's cost price. Always expressed in the company main currency."
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_balance_view
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_cost_ledger_journal_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_cost_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_invert_balance_view
 msgid "Cancel"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.journal,type:0
-msgid "Cash"
-msgstr ""
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_account_tree2
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
+#: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_balance_empty_acc
-msgid "Check if you want to display Accounts with 0 balance too."
+#: model:ir.actions.act_window,help:analytic.action_analytic_account_form
+msgid "Click to add an analytic account."
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_child_ids
-msgid "Child Accounts"
-msgstr ""
-
-#. module: analytic
-#: model:ir.actions.act_window,help:analytic.action_account_analytic_account_tree2
-msgid "Click to add a new analytic account."
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
 #: model:mail.message.subtype,description:analytic.mt_account_closed
 msgid "Closed"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticbalance
-#: model:ir.ui.view,arch_db:analytic.report_analyticjournal
-#: model:ir.ui.view,arch_db:analytic.report_invertedanalyticbalance
-msgid "Code"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
+msgid "Color Index"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_company_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_company_id
 msgid "Company"
-msgstr ""
-
-#. module: analytic
-#: code:addons/analytic/models/analytic.py:202
-#, python-format
-msgid "Contract Created"
 msgstr ""
 
 #. module: analytic
@@ -318,74 +153,45 @@ msgid "Contract Opened"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Contract or Project"
-msgstr ""
-
-#. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_pending
 msgid "Contract to Renew"
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/models/analytic.py:236
-#, python-format
-msgid "Contract: "
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "Cost/Revenue"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_res_partner_contract_ids
-msgid "Contracts"
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Costs & Revenues"
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_cost
-#: model:ir.actions.report.xml,name:analytic.action_report_cost_ledger
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledger
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledgerquantity
-msgid "Cost Ledger"
-msgstr ""
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_cost_ledger_journal
-#: model:ir.actions.report.xml,name:analytic.action_report_cost_ledgerquantity
-msgid "Cost Ledger (Only quantities)"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_cost_ledger_journal_view
-msgid "Cost Ledger for Period"
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid "Costs will be created automatically when you register supplier\n"
+"                invoices, expenses or timesheets."
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_balance_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_journal_report_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_inverted_balance_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_balance_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_journal_report_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_inverted_balance_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
 msgid "Created on"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
-#: model:ir.ui.view,arch_db:analytic.report_analyticbalance
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledger
-#: model:ir.ui.view,arch_db:analytic.report_invertedanalyticbalance
 msgid "Credit"
 msgstr ""
 
@@ -395,18 +201,12 @@ msgid "Currency"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-msgid "Current Accounts"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_partner_id
 msgid "Customer"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_date
-#: model:ir.ui.view,arch_db:analytic.report_analyticjournal
 msgid "Date"
 msgstr ""
 
@@ -416,69 +216,21 @@ msgid "Date of the last message posted on the record."
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledger
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledgerquantity
-msgid "Date/Code"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
-#: model:ir.ui.view,arch_db:analytic.report_analyticbalance
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledger
-#: model:ir.ui.view,arch_db:analytic.report_invertedanalyticbalance
 msgid "Debit"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_description
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_name
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Description"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_balance_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_journal_report_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_inverted_balance_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticbalance_display_name
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticcostledger_display_name
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticcostledgerquantity_display_name
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticjournal_display_name
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_invertedanalyticbalance_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_balance_empty_acc
-msgid "Empty Accounts ? "
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-msgid "End Date"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_balance_date2
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_date2
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_journal_report_date2
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_inverted_balance_date2
-msgid "End of period"
-msgstr ""
-
-#. module: analytic
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_date
-msgid "Expiration Date"
 msgstr ""
 
 #. module: analytic
@@ -502,42 +254,16 @@ msgid "From"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_complete_name
-msgid "Full Name"
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.journal,type:0
-#: model:ir.ui.view,arch_db:analytic.report_analyticjournal
-msgid "General"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_journal_type
-msgid "Gives the type of the analytic journal. When it needs for a document (eg: an invoice) to create analytic entries, Odoo will look for a matching journal of the same type."
-msgstr ""
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-#: model:ir.ui.view,arch_db:analytic.view_analytic_journal_search
 msgid "Group By..."
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_balance_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_journal_report_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_inverted_balance_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticbalance_id
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticcostledger_id
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticcostledgerquantity_id
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticjournal_id
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_invertedanalyticbalance_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
 msgid "ID"
 msgstr ""
 
@@ -548,74 +274,16 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_journal_active
-msgid "If the active field is set to False, it will allow you to hide the analytic journal without removing it."
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_type
-msgid "If you select the View Type, it means you won't allow to create journal entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
-msgstr ""
-
-#. module: analytic
-#: code:addons/analytic/models/analytic.py:145
-#, python-format
-msgid "If you set a company, the currency selected has to be the same as it's currency. \n"
-"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "In Progress"
-msgstr ""
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_invert_balance
-#: model:ir.actions.report.xml,name:analytic.action_account_analytic_account_inverted_balance
-msgid "Inverted Analytic Balance"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_invertedanalyticbalance
-msgid "Inverted Analytic Balance -"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-msgid "Invoice Tasks by Month"
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid "In Odoo, sale orders and projects are implemented using\n"
+"                analytic accounts. You can track costs and revenues to analyse\n"
+"                your margins easily."
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_is_follower
 msgid "Is Follower"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledger
-msgid "J.C. /Move"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledgerquantity
-msgid "J.C./Move"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_code
-msgid "Journal Code"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_name
-msgid "Journal Name"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_journal_report_journal
-msgid "Journals"
 msgstr ""
 
 #. module: analytic
@@ -625,53 +293,26 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_balance___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_journal_report___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_inverted_balance___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticbalance___last_update
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticcostledger___last_update
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticcostledgerquantity___last_update
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_analyticjournal___last_update
-#: model:ir.model.fields,field_description:analytic.field_report_account_report_invertedanalyticbalance___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_balance_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_journal_report_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_inverted_balance_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_balance_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_journal_report_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_inverted_balance_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
 msgid "Last Updated on"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_line_ids
-msgid "Lines"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledgerquantity
-msgid "Max quantity :"
 msgstr ""
 
 #. module: analytic
@@ -685,22 +326,6 @@ msgid "Messages and communication history"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticjournal
-msgid "Move Name"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-msgid "My Entries"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledger
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledgerquantity
-msgid "Name"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
 msgid "Need Action"
 msgstr ""
@@ -711,8 +336,13 @@ msgid "Need Action Counter"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "New"
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+msgid "No activity yet on this account."
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid "No activity yet."
 msgstr ""
 
 #. module: analytic
@@ -726,11 +356,6 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-msgid "Open"
-msgstr ""
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "Open Charts"
 msgstr ""
@@ -741,79 +366,19 @@ msgid "Opened"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-msgid "Parent Account"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_parent_id
-msgid "Parent Analytic Account"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_res_partner
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
 msgid "Partner"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:mail.message.subtype,description:analytic.mt_account_pending
 msgid "Pending"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-msgid "Pending Accounts"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_quantity_max
-msgid "Prepaid Service Units"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_balance_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_cost_ledger_journal_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_cost_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_invert_balance_view
-msgid "Print"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_line_extended_form
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
-msgid "Product Information"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_user_id
-msgid "Project Manager"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_line_extended_form
-msgid "Project line"
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.journal,type:0
-msgid "Purchase"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_quantity
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_unit_amount
-#: model:ir.ui.view,arch_db:analytic.report_analyticbalance
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledgerquantity
-#: model:ir.ui.view,arch_db:analytic.report_invertedanalyticbalance
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
-msgstr ""
-
-#. module: analytic
-#: code:addons/analytic/models/analytic.py:271
-#, python-format
-msgid "Quick account creation disallowed."
 msgstr ""
 
 #. module: analytic
@@ -822,13 +387,12 @@ msgid "Reference"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.journal,type:0
-msgid "Sale"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_manager_id
-msgid "Sales Rep"
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid "Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 
 #. module: analytic
@@ -837,54 +401,14 @@ msgid "Search Analytic Lines"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_balance_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_cost_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_invert_balance_view
-msgid "Select Period"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_cost_ledger_journal_view
-msgid "Select period"
-msgstr ""
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "Select the Period for Analysis"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_quantity_max
-msgid "Sets the higher limit of time to work on the contract, based on the timesheet. (for instance, number of hours in a limited support contract.)"
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.journal,type:0
-msgid "Situation"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_line_unit_amount
-msgid "Specifies the amount of quantity to count."
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_date_start
-msgid "Start Date"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_balance_date1
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_date1
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_cost_ledger_journal_report_date1
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_inverted_balance_date1
-msgid "Start of period"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_state
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-msgid "Status"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
+msgid "Tags"
 msgstr ""
 
 #. module: analytic
@@ -893,36 +417,8 @@ msgid "Tasks Month"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-msgid "Template"
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_template_id
-msgid "Template of Contract"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-msgid "Terms and Conditions"
-msgstr ""
-
-#. module: analytic
-#: model:ir.actions.act_window,help:analytic.action_account_analytic_account_tree2
-msgid "The normal chart of accounts has a structure defined by the\n"
-"                legal requirement of the country. The analytic chart of\n"
-"                accounts structure should reflect your own business needs in\n"
-"                term of costs/revenues reporting."
-msgstr ""
-
-#. module: analytic
-#: model:ir.actions.act_window,help:analytic.action_account_analytic_account_tree2
-msgid "They are usually structured by contracts, projects, products or\n"
-"                departements. Most of the Odoo operations (invoices,\n"
-"                timesheets, expenses, etc) generate analytic entries on the\n"
-"                related account."
+#: model:ir.model.fields,help:analytic.field_account_analytic_line_currency_id
+msgid "The related account currency if not equal to the company one."
 msgstr ""
 
 #. module: analytic
@@ -931,43 +427,13 @@ msgid "To"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "To Renew"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticbalance
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledgerquantity
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
-msgid "Total Quantity"
-msgstr ""
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledger
-#: model:ir.ui.view,arch_db:analytic.report_analyticcostledgerquantity
-msgid "Total:"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_journal_type
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model:ir.ui.view,arch_db:analytic.view_analytic_journal_search
-msgid "Type"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_type
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
 msgid "Type of Account"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_contract_type
-msgid "Type of Contract"
 msgstr ""
 
 #. module: analytic
@@ -982,42 +448,6 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "User"
-msgstr ""
-
-#. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_account_line_extended_form
-msgid "account.analytic.line.extended"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_report_account_report_analyticbalance
-msgid "report.account.report_analyticbalance"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_report_account_report_analyticcostledger
-msgid "report.account.report_analyticcostledger"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_report_account_report_analyticcostledgerquantity
-msgid "report.account.report_analyticcostledgerquantity"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_report_account_report_analyticjournal
-msgid "report.account.report_analyticjournal"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_report_account_report_invertedanalyticbalance
-msgid "report.account.report_invertedanalyticbalance"
 msgstr ""
 

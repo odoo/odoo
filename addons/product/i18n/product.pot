@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-27 14:01+0000\n"
-"PO-Revision-Date: 2015-08-27 14:01+0000\n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-07 14:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,31 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: product
+#: selection:product.pricelist.item,applied_on:0
+msgid " Product Category"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
 msgid "# of Product Variants"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:742
-#: code:addons/product/product.py:1134
+#: code:addons/product/pricelist.py:288
+#, python-format
+msgid "%s %% discount"
+msgstr ""
+
+#. module: product
+#: code:addons/product/pricelist.py:290
+#, python-format
+msgid "%s %% discount and %s surcharge"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:752
+#: code:addons/product/product.py:1148
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -114,6 +131,12 @@ msgid "8-port Switch"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "<span>kg</span>"
+msgstr ""
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
 msgstr ""
@@ -141,7 +164,7 @@ msgid "<strong>Warning</strong>: adding or deleting attributes\n"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:980
+#: code:addons/product/product.py:994
 #: sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
@@ -177,14 +200,6 @@ msgid "A precise description of the Product, used only for internal information 
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
-msgid "A price list contains rules to be evaluated in order to compute\n"
-"                the purchase price. The default price list has only one rule; use\n"
-"                the cost price defined on the product form, so that you do not have to\n"
-"                worry about supplier pricelists if you have very simple needs."
-msgstr ""
-
-#. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products."
@@ -201,15 +216,13 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
-msgid "About the size of a credit card â and just 5.4 mm thin â iPod nano is the thinnest iPod ever made.\n"
+msgid "About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
 "                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
 "                                    so you can see more of the music, photos, and videos you love."
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_type_active
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_active
 #: model:ir.model.fields,field_description:product.field_product_product_active
 #: model:ir.model.fields,field_description:product.field_product_template_active
 #: model:ir.model.fields,field_description:product.field_product_uom_active
@@ -219,6 +232,12 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_all
 msgid "All"
+msgstr ""
+
+#. module: product
+#: code:addons/product/pricelist.py:283
+#, python-format
+msgid "All Products"
 msgstr ""
 
 #. module: product
@@ -248,7 +267,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4b_product_template
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
-msgid "And because itâs so easy to use, itâs easy to love."
+msgid "And because it’s so easy to use, it’s easy to love."
 msgstr ""
 
 #. module: product
@@ -264,6 +283,21 @@ msgid "Apple Wireless Keyboard"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Applicable On"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
+msgid "Apply On"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Archived"
+msgstr ""
+
+#. module: product
 #: model:product.product,name:product.product_assembly
 #: model:product.template,name:product.product_assembly_product_template
 msgid "Assembly Service Cost"
@@ -272,18 +306,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_price_type_field
-msgid "Associated field in the product form."
-msgstr ""
-
-#. module: product
-#: code:addons/product/pricelist.py:200
-#, python-format
-msgid "At least one pricelist has no active version !\n"
-"Please create or activate one."
 msgstr ""
 
 #. module: product
@@ -338,15 +360,10 @@ msgid "Barcode"
 msgstr ""
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Base Price"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_base
 msgid "Base price for computation. \n"
 " Public Price: The base price will be the Sale/public Price. \n"
-" Vendor Section on Product or Cost Price : The base price will be the vendor price if it is set, otherwise it will be the cost price. \n"
+" Cost Price : The base price will be the cost price. \n"
 " Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
 
@@ -370,7 +387,7 @@ msgstr ""
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
-msgid "Beautiful 7.9âinch display."
+msgid "Beautiful 7.9‑inch display."
 msgstr ""
 
 #. module: product
@@ -442,20 +459,13 @@ msgid "Brilliance onscreen. And behind it."
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
-msgid "But you can also import complex price lists form your supplier\n"
-"                that may depends on the quantities ordered or the current\n"
-"                promotions."
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_11
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
 "                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
-"                                    And iPod nano wouldnât be iPod nano without gorgeous, hard-to-choose-from color."
+"                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
 msgstr ""
 
 #. module: product
@@ -498,6 +508,12 @@ msgid "Category Type"
 msgstr ""
 
 #. module: product
+#: code:addons/product/pricelist.py:277
+#, python-format
+msgid "Category: %s"
+msgstr ""
+
+#. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Characteristics"
@@ -532,13 +548,7 @@ msgid "Click to add a new unit of measure."
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid "Click to add a pricelist version."
-msgstr ""
-
-#. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
-#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
 msgid "Click to create a pricelist."
 msgstr ""
 
@@ -554,13 +564,6 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Codes"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_uos_coeff
-#: model:ir.model.fields,help:product.field_product_template_uos_coeff
-msgid "Coefficient to convert default Unit of Measure to Unit of Sale\n"
-" uos = uom * coeff"
 msgstr ""
 
 #. module: product
@@ -590,7 +593,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_company_id
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_company_id
 #: model:ir.model.fields,field_description:product.field_product_product_company_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_company_id
 #: model:ir.model.fields,field_description:product.field_product_template_company_id
@@ -603,9 +605,20 @@ msgid "Components"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Compute Price"
+msgstr ""
+
+#. module: product
 #: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Computer Case"
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.product_product_3
+#: model:product.template,name:product.product_product_3_product_template
+msgid "Computer SC234"
 msgstr ""
 
 #. module: product
@@ -637,27 +650,23 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_cost
+#: model:ir.model.fields,field_description:product.field_product_product_standard_price
+#: model:ir.model.fields,field_description:product.field_product_template_standard_price
+#: selection:product.pricelist.item,base:0
 msgid "Cost"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_standard_price
-#: model:ir.model.fields,field_description:product.field_product_template_standard_price
-msgid "Cost Price"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
-msgid "Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. Expressed in the default unit of measure of the product."
+msgid "Cost of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. Expressed in the default unit of measure of the product."
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
-msgid "Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. Expressed in the default unit of measure of the product.."
+msgid "Cost of the product, in the default unit of measure of the product."
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_pricelist_partnerinfo_create_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_create_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_create_uid
@@ -666,11 +675,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_packaging_create_uid
 #: model:ir.model.fields,field_description:product.field_product_price_history_create_uid
 #: model:ir.model.fields,field_description:product.field_product_price_list_create_uid
-#: model:ir.model.fields,field_description:product.field_product_price_type_create_uid
 #: model:ir.model.fields,field_description:product.field_product_pricelist_create_uid
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_create_uid
-#: model:ir.model.fields,field_description:product.field_product_pricelist_type_create_uid
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_create_uid
 #: model:ir.model.fields,field_description:product.field_product_product_create_uid
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_create_uid
 #: model:ir.model.fields,field_description:product.field_product_template_create_uid
@@ -680,7 +686,6 @@ msgid "Created by"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_pricelist_partnerinfo_create_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_create_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_create_date
@@ -689,11 +694,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_packaging_create_date
 #: model:ir.model.fields,field_description:product.field_product_price_history_create_date
 #: model:ir.model.fields,field_description:product.field_product_price_list_create_date
-#: model:ir.model.fields,field_description:product.field_product_price_type_create_date
 #: model:ir.model.fields,field_description:product.field_product_pricelist_create_date
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_create_date
-#: model:ir.model.fields,field_description:product.field_product_pricelist_type_create_date
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_create_date
 #: model:ir.model.fields,field_description:product.field_product_product_create_date
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_create_date
 #: model:ir.model.fields,field_description:product.field_product_template_create_date
@@ -705,16 +707,23 @@ msgstr ""
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
-msgid "Creating such a stunningly thin design took some equally stunning feats of technological innovation. We refined,re-imagined,or re-engineered everything about iMac from the inside out. The result is an advanced, elegant all-in-one computer thatâs as much a work of art as it is state of the art."
+msgid "Creating such a stunningly thin design took some equally stunning feats of technological innovation. We refined,re-imagined,or re-engineered everything about iMac from the inside out. The result is an advanced, elegant all-in-one computer that’s as much a work of art as it is state of the art."
 msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
-#: model:ir.model.fields,field_description:product.field_product_price_type_currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
 #: model:ir.model.fields,field_description:product.field_product_product_currency_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template_currency_id
 msgid "Currency"
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.product_product_5
+#: model:product.template,name:product.product_product_5_product_template
+msgid "Custom Computer (kit)"
 msgstr ""
 
 #. module: product
@@ -726,7 +735,7 @@ msgstr ""
 #. module: product
 #: model:product.product,description:product.product_product_5
 #: model:product.template,description:product.product_product_5_product_template
-msgid "Custom computer assembled on order based on customer's requirement."
+msgid "Custom computer shipped in kit."
 msgstr ""
 
 #. module: product
@@ -757,11 +766,6 @@ msgid "Day(s)"
 msgstr ""
 
 #. module: product
-#: model:product.pricelist.version,name:product.ver0
-msgid "Default Public Pricelist Version"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_id
 #: model:ir.model.fields,help:product.field_product_template_uom_id
 msgid "Default Unit of Measure used for all stock operation."
@@ -771,12 +775,6 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_uom_po_id
 #: model:ir.model.fields,help:product.field_product_template_uom_po_id
 msgid "Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_uom_rel_id
-#: model:ir.model.fields,field_description:product.field_product_template_uom_rel_id
-msgid "Default UoM"
 msgstr ""
 
 #. module: product
@@ -791,7 +789,6 @@ msgid "Dell Inspiron Laptop without OS"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_pricelist_partnerinfo_name
 #: model:ir.model.fields,field_description:product.field_product_product_description
 #: model:ir.model.fields,field_description:product.field_product_template_description
 msgid "Description"
@@ -839,7 +836,6 @@ msgid "Devices"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_pricelist_partnerinfo_display_name
 #: model:ir.model.fields,field_description:product.field_product_attribute_display_name
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_display_name
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_display_name
@@ -848,11 +844,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_packaging_display_name
 #: model:ir.model.fields,field_description:product.field_product_price_history_display_name
 #: model:ir.model.fields,field_description:product.field_product_price_list_display_name
-#: model:ir.model.fields,field_description:product.field_product_price_type_display_name
 #: model:ir.model.fields,field_description:product.field_product_pricelist_display_name
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_display_name
-#: model:ir.model.fields,field_description:product.field_product_pricelist_type_display_name
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_display_name
 #: model:ir.model.fields,field_description:product.field_product_product_display_name
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_display_name
 #: model:ir.model.fields,field_description:product.field_product_template_display_name
@@ -875,19 +868,37 @@ msgid "Dvorak keyboard \n"
 msgstr ""
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid "Each rule include a set of applicability criteria (date range,\n"
+"                product category...) and a computation that easily helps to achieve\n"
+"                any kind of pricing."
+msgstr ""
+
+#. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Efficient, high-quality audio"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_date_end
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_end
 msgid "End Date"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
+msgid "End date for this vendor price"
 msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
+msgid "Ending valid for the pricelist item validation"
 msgstr ""
 
 #. module: product
@@ -929,10 +940,10 @@ msgstr ""
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
-msgid "Everything you love about iPad â the beautiful\n"
+msgid "Everything you love about iPad — the beautiful\n"
 "                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
 "                                    But what really makes it stand out is its size. At 7.9 inches,\n"
-"                                    itâs perfectly sized to deliver an experience every bit as big as iPad."
+"                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
 msgstr ""
 
 #. module: product
@@ -944,25 +955,56 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4b_product_template
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
-msgid "Everything you love about iPad â the beautiful\n"
+msgid "Everything you love about iPad — the beautiful\n"
 "                                    screen, fast and fluid performance, FaceTime and\n"
 "                                    iSight cameras, thousands of amazing apps, 10-hour\n"
-"                                    battery life* â is everything youâll love about\n"
+"                                    battery life* — is everything you’ll love about\n"
 "                                    iPad mini, too. And you can hold it in one hand."
 msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
-msgid "Everything you love about iPad â the beautiful screen,\n"
+msgid "Everything you love about iPad — the beautiful screen,\n"
 "                                        fast and fluid performance, FaceTime and iSight cameras, \n"
-"                                        thousands of amazing apps, 10-hour battery life* â is everything\n"
-"                                        youâll love about iPad mini, too. And you can hold it in one hand."
+"                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
+"                                        you’ll love about iPad mini, too. And you can hold it in one hand."
+msgstr ""
+
+#. module: product
+#: model:product.product,description:product.product_product_2
+#: model:product.template,description:product.product_product_2_product_template
+msgid "Example of product to invoice based on delivery."
+msgstr ""
+
+#. module: product
+#: model:product.product,description:product.product_product_0
+#: model:product.template,description:product.product_product_0_product_template
+msgid "Example of product to invoice on order."
+msgstr ""
+
+#. module: product
+#: model:product.product,description:product.product_product_1b
+#: model:product.template,description:product.product_product_1b_product_template
+msgid "Example of products to invoice based on cost."
+msgstr ""
+
+#. module: product
+#: model:product.product,description:product.product_product_1
+#: model:product.template,description:product.product_product_1_product_template
+msgid "Example of products to invoice based on delivery."
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_name
+#: model:ir.model.fields,help:product.field_product_pricelist_item_price
 msgid "Explicit rule name for this pricelist line."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.product_product_1b
+#: model:product.template,name:product.product_product_1b_product_template
+msgid "External Audit"
 msgstr ""
 
 #. module: product
@@ -983,13 +1025,13 @@ msgid "Fast connections.The world over."
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_version_date_start
-msgid "First valid date for the version."
+#: selection:product.pricelist.item,compute_price:0
+msgid "Fix Price"
 msgstr ""
 
 #. module: product
-#: selection:product.template,mes_type:0
-msgid "Fixed"
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
+msgid "Fixed Price"
 msgstr ""
 
 #. module: product
@@ -1017,6 +1059,11 @@ msgid "For the rule to apply, bought/sold quantity must be greater than or equal
 msgstr ""
 
 #. module: product
+#: selection:product.pricelist.item,compute_price:0
+msgid "Formula"
+msgstr ""
+
+#. module: product
 #: model:product.product,description_sale:product.product_product_7
 #: model:product.template,description_sale:product.product_product_7_product_template
 msgid "Frequency: 5Hz to 21kHz\n"
@@ -1038,6 +1085,12 @@ msgstr ""
 #: model:product.product,description_sale:product.product_product_44
 #: model:product.template,description_sale:product.product_product_44_product_template
 msgid "Full featured image editing software."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.product_product_1
+#: model:product.template,name:product.product_product_1_product_template
+msgid "GAP Analysis Service"
 msgstr ""
 
 #. module: product
@@ -1076,6 +1129,11 @@ msgid "Gives the sequence order when displaying a product list"
 msgstr ""
 
 #. module: product
+#: selection:product.pricelist.item,applied_on:0
+msgid "Global"
+msgstr ""
+
+#. module: product
 #: model:product.product,name:product.product_product_44
 #: model:product.template,name:product.product_product_44_product_template
 msgid "GrapWorks Software"
@@ -1102,7 +1160,7 @@ msgstr ""
 #. module: product
 #: model:product.product,name:product.product_product_18
 #: model:product.template,name:product.product_product_18_product_template
-msgid "HDD SH-2"
+msgid "HDD SH-2 (mto)"
 msgstr ""
 
 #. module: product
@@ -1203,7 +1261,6 @@ msgid "How to get your groove on."
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_pricelist_partnerinfo_id
 #: model:ir.model.fields,field_description:product.field_product_attribute_id
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_id
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_id
@@ -1212,11 +1269,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_packaging_id
 #: model:ir.model.fields,field_description:product.field_product_price_history_id
 #: model:ir.model.fields,field_description:product.field_product_price_list_id
-#: model:ir.model.fields,field_description:product.field_product_price_type_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_id
-#: model:ir.model.fields,field_description:product.field_product_pricelist_type_id
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_id_3842
 #: model:ir.model.fields,field_description:product.field_product_product_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_id
 #: model:ir.model.fields,field_description:product.field_product_template_id
@@ -1298,7 +1352,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Inside each earpiece is a stainless steel mesh cap that protects the precision acoustic\n"
 "                                    components from dust and debris. You can remove the caps for cleaning or replace\n"
-"                                    them with an extra set thatâs included in the box."
+"                                    them with an extra set that’s included in the box."
 msgstr ""
 
 #. module: product
@@ -1343,19 +1397,9 @@ msgid "Is a product variant"
 msgstr ""
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_version_form_view
-msgid "Item List"
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Keep it clean."
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_type_key
-msgid "Key"
 msgstr ""
 
 #. module: product
@@ -1399,7 +1443,6 @@ msgid "Last Message Date"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_pricelist_partnerinfo___last_update
 #: model:ir.model.fields,field_description:product.field_product_attribute___last_update
 #: model:ir.model.fields,field_description:product.field_product_attribute_line___last_update
 #: model:ir.model.fields,field_description:product.field_product_attribute_price___last_update
@@ -1408,11 +1451,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_packaging___last_update
 #: model:ir.model.fields,field_description:product.field_product_price_history___last_update
 #: model:ir.model.fields,field_description:product.field_product_price_list___last_update
-#: model:ir.model.fields,field_description:product.field_product_price_type___last_update
 #: model:ir.model.fields,field_description:product.field_product_pricelist___last_update
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item___last_update
-#: model:ir.model.fields,field_description:product.field_product_pricelist_type___last_update
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version___last_update
 #: model:ir.model.fields,field_description:product.field_product_product___last_update
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo___last_update
 #: model:ir.model.fields,field_description:product.field_product_template___last_update
@@ -1423,7 +1463,6 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_pricelist_partnerinfo_write_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_write_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_write_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_write_uid
@@ -1432,10 +1471,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_packaging_write_uid
 #: model:ir.model.fields,field_description:product.field_product_price_history_write_uid
 #: model:ir.model.fields,field_description:product.field_product_price_list_write_uid
-#: model:ir.model.fields,field_description:product.field_product_price_type_write_uid
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_write_uid
-#: model:ir.model.fields,field_description:product.field_product_pricelist_type_write_uid
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_write_uid
 #: model:ir.model.fields,field_description:product.field_product_pricelist_write_uid
 #: model:ir.model.fields,field_description:product.field_product_product_write_uid
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_write_uid
@@ -1446,7 +1482,6 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_pricelist_partnerinfo_write_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_write_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_write_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_write_date
@@ -1455,10 +1490,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_packaging_write_date
 #: model:ir.model.fields,field_description:product.field_product_price_history_write_date
 #: model:ir.model.fields,field_description:product.field_product_price_list_write_date
-#: model:ir.model.fields,field_description:product.field_product_price_type_write_date
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_write_date
-#: model:ir.model.fields,field_description:product.field_product_pricelist_type_write_date
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_write_date
 #: model:ir.model.fields,field_description:product.field_product_pricelist_write_date
 #: model:ir.model.fields,field_description:product.field_product_product_write_date
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_write_date
@@ -1466,11 +1498,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom_categ_write_date
 #: model:ir.model.fields,field_description:product.field_product_uom_write_date
 msgid "Last Updated on"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_version_date_end
-msgid "Last valid date for the version."
 msgstr ""
 
 #. module: product
@@ -1534,6 +1561,11 @@ msgid "Manage Multiple Units of Measure"
 msgstr ""
 
 #. module: product
+#: model:res.groups,name:product.group_pricelist_item
+msgid "Manage Pricelist Items"
+msgstr ""
+
+#. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
 msgstr ""
@@ -1562,12 +1594,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_max_margin
 msgid "Max. Price Margin"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_mes_type
-#: model:ir.model.fields,field_description:product.field_product_template_mes_type
-msgid "Measure Type"
 msgstr ""
 
 #. module: product
@@ -1672,17 +1698,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_attribute_name
 #: model:ir.model.fields,field_description:product.field_product_category_complete_name
 #: model:ir.model.fields,field_description:product.field_product_category_name
-#: model:ir.model.fields,field_description:product.field_product_pricelist_type_name
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_name
 #: model:ir.model.fields,field_description:product.field_product_product_name
 #: model:ir.model.fields,field_description:product.field_product_template_name
 #: model:ir.model.fields,field_description:product.field_product_uom_categ_name
 msgid "Name"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_price_type_name
-msgid "Name of this kind of price."
 msgstr ""
 
 #. module: product
@@ -1748,46 +1768,31 @@ msgid "Office Suite"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_2
-#: model:product.template,name:product.product_product_2_product_template
-msgid "On Site Assistance"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_1
-#: model:product.template,name:product.product_product_1_product_template
-msgid "On Site Monitoring"
-msgstr ""
-
-#. module: product
 #: model:product.product,description:product.product_product_19
 #: model:product.template,description:product.product_product_19_product_template
 msgid "On demand hard-disk having capacity based on requirement."
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:413
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "Other Information"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base_pricelist_id
-#, python-format
+#: selection:product.pricelist.item,base:0
 msgid "Other Pricelist"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Other Pricelist  -"
 msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Over 375,000 apps."
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_5
-#: model:product.template,name:product.product_product_5_product_template
-msgid "PC Assemble + Custom (PC on Demand) "
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_3
-#: model:product.template,name:product.product_product_3_product_template
-msgid "PC Assemble SC234"
 msgstr ""
 
 #. module: product
@@ -1819,11 +1824,6 @@ msgid "Partner"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_pricelist_partnerinfo_suppinfo_id
-msgid "Partner Information"
-msgstr ""
-
-#. module: product
 #: model:product.public.category,name:product.Pen_Drive
 msgid "Pen Drive"
 msgstr ""
@@ -1838,6 +1838,16 @@ msgstr ""
 #: model:product.product,name:product.product_product_30
 #: model:product.template,name:product.product_product_30_product_template
 msgid "Pen drive, SP-4"
+msgstr ""
+
+#. module: product
+#: selection:product.pricelist.item,compute_price:0
+msgid "Percentage (discount)"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
+msgid "Percentage Price"
 msgstr ""
 
 #. module: product
@@ -1866,8 +1876,19 @@ msgid "Powered by fourth-generation Intel Core processors, this iMac is the fast
 msgstr ""
 
 #. module: product
+#: model:product.product,name:product.product_product_0
+#: model:product.template,name:product.product_product_0_product_template
+msgid "Prepaid Consulting"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price
 #: model:ir.model.fields,field_description:product.field_product_product_price
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_price
 #: model:ir.model.fields,field_description:product.field_product_template_price
+#: model:ir.ui.view,arch_db:product.product_pricelist_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Price"
 msgstr ""
 
@@ -1894,25 +1915,10 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
 #: model:ir.model,name:product.model_product_price_list
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_pricelist_id
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.report_pricelist
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Price List"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_items_id
-msgid "Price List Items"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_version_id
-msgid "Price List Version"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_type_name
-msgid "Price Name"
 msgstr ""
 
 #. module: product
@@ -1923,25 +1929,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_surcharge
 msgid "Price Surcharge"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_price_type
-msgid "Price Type"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_price_type_action
-#: model:ir.ui.menu,name:product.menu_product_price_type
-msgid "Price Types"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action2
-msgid "Price lists may have several versions (2010, 2011, Promotion of\n"
-"                February 2010, etc.) and each version may have several rules.\n"
-"                (e.g. the customer price of a product category will be based on\n"
-"                the supplier price multiplied by 1.80)."
 msgstr ""
 
 #. module: product
@@ -1958,36 +1945,32 @@ msgstr ""
 #. module: product
 #: model:ir.actions.report.xml,name:product.action_report_pricelist
 #: model:ir.model,name:product.model_product_pricelist
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_pricelist_id
 #: model:ir.model.fields,field_description:product.field_product_product_pricelist_id
 #: model:ir.model.fields,field_description:product.field_product_template_pricelist_id
-#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
+msgid "Pricelist Item applicable on selected option"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
+#: model:ir.model.fields,field_description:product.field_product_product_item_ids
+#: model:ir.model.fields,field_description:product.field_product_template_item_ids
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Pricelist Items"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
 msgid "Pricelist Name"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_type
-#: model:ir.model.fields,field_description:product.field_product_pricelist_type
-msgid "Pricelist Type"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_version
-#: model:ir.ui.view,arch_db:product.product_pricelist_version_form_view
-#: model:ir.ui.view,arch_db:product.product_pricelist_version_tree_view
-#: model:ir.ui.view,arch_db:product.product_pricelist_view
-msgid "Pricelist Version"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_pricelist_action
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_id
-#: model:ir.ui.menu,name:product.menu_product_pricelist_action
-msgid "Pricelist Versions"
 msgstr ""
 
 #. module: product
@@ -1997,10 +1980,14 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
-#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:product.menu_product_pricelist_main
 msgid "Pricelists"
+msgstr ""
+
+#. module: product
+#: model:res.groups,name:product.group_product_pricelist
+msgid "Pricelists On Product"
 msgstr ""
 
 #. module: product
@@ -2009,6 +1996,7 @@ msgid "Pricelists are managed on"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Pricing"
 msgstr ""
@@ -2046,9 +2034,13 @@ msgstr ""
 #: model:ir.model,name:product.model_product_product
 #: model:ir.model.fields,field_description:product.field_product_packaging_product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_product_id
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:ir.ui.view,arch_db:product.product_template_tree_view
+#: selection:product.pricelist.item,applied_on:0
 #: model:res.request.link,name:product.req_link_product
 msgid "Product"
 msgstr ""
@@ -2082,11 +2074,6 @@ msgstr ""
 #: model:ir.model,name:product.model_product_category
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_categ_id
 msgid "Product Category"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_type_field
-msgid "Product Field"
 msgstr ""
 
 #. module: product
@@ -2126,6 +2113,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: selection:product.pricelist.item,applied_on:0
 msgid "Product Variant"
 msgstr ""
 
@@ -2159,12 +2148,6 @@ msgid "Products Labels"
 msgstr ""
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
-msgid "Products Listprices Items"
-msgstr ""
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price"
 msgstr ""
@@ -2181,17 +2164,12 @@ msgid "Products Price Search"
 msgstr ""
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_price_type_view
-msgid "Products Price Type"
-msgstr ""
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:845
+#: code:addons/product/product.py:859
 #, python-format
 msgid "Products: "
 msgstr ""
@@ -2199,8 +2177,13 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_lst_price
 #: model:ir.model.fields,field_description:product.field_product_template_lst_price
-#: model:product.price.type,name:product.list_price
+#: selection:product.pricelist.item,base:0
 msgid "Public Price"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Public Price  -"
 msgstr ""
 
 #. module: product
@@ -2215,18 +2198,18 @@ msgid "Purchase Description"
 msgstr ""
 
 #. module: product
-#: model:res.groups,name:product.group_purchase_pricelist
-msgid "Purchase Pricelists"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template_uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_pricelist_partnerinfo_min_quantity
+#: model:ir.model.fields,help:product.field_product_product_seller_price
+#: model:ir.model.fields,help:product.field_product_template_seller_price
+msgid "Purchase price from from Main Vendor."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_qty
 msgid "Quantity"
 msgstr ""
@@ -2264,7 +2247,7 @@ msgstr ""
 #. module: product
 #: model:product.product,name:product.product_product_14
 #: model:product.template,name:product.product_product_14_product_template
-msgid "RAM SR2"
+msgid "RAM SR2 (kit)"
 msgstr ""
 
 #. module: product
@@ -2304,7 +2287,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Right from the start, apps made for iPad also work with iPad mini.\n"
-"                                    Theyâre immersive, full-screen apps that let you do almost anything\n"
+"                                    They’re immersive, full-screen apps that let you do almost anything\n"
 "                                    you can imagine. And with automatic updates,\n"
 "                                    you're always getting the best experience possible."
 msgstr ""
@@ -2318,8 +2301,8 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4b_product_template
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
-msgid "Right from the start, thereâs a lot to love about\n"
-"                                    iPad. Itâs simple yet powerful. Thin and light yet\n"
+msgid "Right from the start, there’s a lot to love about\n"
+"                                    iPad. It’s simple yet powerful. Thin and light yet\n"
 "                                    full-featured. It can do just about everything and\n"
 "                                    be just about anything."
 msgstr ""
@@ -2327,10 +2310,10 @@ msgstr ""
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
-msgid "Right from the start, thereâs a lot to love about iPad.\n"
-"                                   Itâs simple yet powerful. Thin and light yet full-\n"
+msgid "Right from the start, there’s a lot to love about iPad.\n"
+"                                   It’s simple yet powerful. Thin and light yet full-\n"
 "                                   featured. It can do just about everything and be just\n"
-"                                   about anything.And because itâs so easy to use, itâs\n"
+"                                   about anything.And because it’s so easy to use, it’s\n"
 "                                   easy to love."
 msgstr ""
 
@@ -2348,11 +2331,6 @@ msgstr ""
 #: model:product.product,name:product.product_product_45
 #: model:product.template,name:product.product_product_45_product_template
 msgid "Router R430"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_name
-msgid "Rule Name"
 msgstr ""
 
 #. module: product
@@ -2374,7 +2352,6 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
-#: model:product.pricelist.type,name:product.pricelist_type_sale
 msgid "Sale Pricelist"
 msgstr ""
 
@@ -2398,12 +2375,12 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
-msgid "Say youâre listening to a song you love and you want to stay in the mood.\n"
+msgid "Say you’re listening to a song you love and you want to stay in the mood.\n"
 "                                        Just tap Genius. It finds other songs on iPod nano that go great together\n"
 "                                        and makes a Genius playlist for you. For more song combinations\n"
-"                                        you wouldnât have thought of yourself, create Genius Mixes in iTunes\n"
+"                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
 "                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
-"                                        rediscover songs you havenât heard in a while â or find music you forgot you even had."
+"                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
 msgstr ""
 
 #. module: product
@@ -2415,6 +2392,12 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_categ_id
 #: model:ir.model.fields,help:product.field_product_template_categ_id
 msgid "Select category for the current product"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_selected_seller_id
+#: model:ir.model.fields,field_description:product.field_product_template_selected_seller_id
+msgid "Selected Seller"
 msgstr ""
 
 #. module: product
@@ -2517,12 +2500,6 @@ msgid "Specify a template if this rule only applies to one product template. Kee
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_uos_id
-#: model:ir.model.fields,help:product.field_product_template_uos_id
-msgid "Specify a unit of measure here if invoicing is made in another unit of measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product_sale_ok
 #: model:ir.model.fields,help:product.field_product_template_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
@@ -2544,14 +2521,36 @@ msgid "Specify the minimum amount of margin over the base price."
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_version_date_start
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_start
 msgid "Start Date"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
+msgid "Start date for this vendor price"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
+msgid "Starting date for the pricelist item validation"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_state
 #: model:ir.model.fields,field_description:product.field_product_template_state
 msgid "Status"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
+msgid "Supplier Pricelist"
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.product_product_2
+#: model:product.template,name:product.product_product_2_product_template
+msgid "Support Contract (on timesheet)"
 msgstr ""
 
 #. module: product
@@ -2565,7 +2564,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
-msgid "Sync to your heartâs content."
+msgid "Sync to your heart’s content."
 msgstr ""
 
 #. module: product
@@ -2577,6 +2576,12 @@ msgid "Tap to play your favorite songs. Or entire albums.\n"
 "                                    Or everything by one artist. You can even browse by genres or composers.\n"
 "                                    Flip through your music: Album art looks great on the bigger screen.\n"
 "                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_selected_seller_id
+#: model:ir.model.fields,help:product.field_product_template_selected_seller_id
+msgid "Technical field that selects a seller based on priority (sequence) and an optional partner and/or a minimal quantity in the context"
 msgstr ""
 
 #. module: product
@@ -2598,7 +2603,7 @@ msgstr ""
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
-msgid "The BoseÂ® SoundLinkÂ® mini is Bose's smallest portable Bluetooth speaker. Its ultra-compact size fits in the \n"
+msgid "The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its ultra-compact size fits in the \n"
 "                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
 "                                    full-featured. It can do just about everything and\n"
 "                                    experience music just about anywhere."
@@ -2607,7 +2612,7 @@ msgstr ""
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
-msgid "The SoundLinkÂ® Mini speaker is small and light enough\n"
+msgid "The SoundLink® Mini speaker is small and light enough\n"
 "                                        to tuck into your bag. It weighs in at just 1.5 pounds.\n"
 "                                        Its low profile lets you place it almost anywhere and\n"
 "                                        provides a low center of gravity that makes it nearly\n"
@@ -2627,11 +2632,6 @@ msgstr ""
 #. module: product
 #: sql_constraint:product.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_price_type_currency_id
-msgid "The currency the field is expressed in."
 msgstr ""
 
 #. module: product
@@ -2663,30 +2663,25 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_9
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
-"                                    which makes it compatible with iPad. And youâre free to type wherever\n"
-"                                    you like â with the keyboard in front of your iPad or on your lap."
+"                                    which makes it compatible with iPad. And you’re free to type wherever\n"
+"                                    you like — with the keyboard in front of your iPad or on your lap."
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_min_qty
-msgid "The minimal quantity to purchase to this vendor, expressed in the vendor Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_pricelist_partnerinfo_min_quantity
-msgid "The minimal quantity to trigger this rule, expressed in the vendor Unit of Measure if any or in the default Unit of Measure of the product otherrwise."
+msgid "The minimal quantity to purchase from this vendor, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise."
 msgstr ""
 
 #. module: product
 #: code:addons/product/product.py:328
 #, python-format
 msgid "The operation cannot be completed:\n"
-"You trying to delete an attribute value with a reference on a product variant."
+"You are trying to delete an attribute value with a reference on a product variant."
 msgstr ""
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
-msgid "The prices below will only be taken into account when your pricelist is set as based on vendor prices."
+#: model:ir.model.fields,help:product.field_product_supplierinfo_price
+msgid "The price to purchase a product"
 msgstr ""
 
 #. module: product
@@ -2707,7 +2702,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n"
-"                                    And at home, you can listen even longerâthe charging cradle lets\n"
+"                                    And at home, you can listen even longer—the charging cradle lets\n"
 "                                    you listen while it charges."
 msgstr ""
 
@@ -2723,7 +2718,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "The speaker has a range of about 30 feet, so you can enjoy\n"
 "                                    the sound you want without wires. It pairs easily with your\n"
-"                                    smartphone, iPadÂ® or other Bluetooth device.\n"
+"                                    smartphone, iPad® or other Bluetooth device.\n"
 "                                    And it remembers the most recent six devices you've used,\n"
 "                                    so reconnecting is even simpler."
 msgstr ""
@@ -2743,14 +2738,6 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid "There can be more than one version of a pricelist, each of\n"
-"                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer Sales,\n"
-"                etc."
 msgstr ""
 
 #. module: product
@@ -2776,10 +2763,10 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
-msgid "Thereâs another way to get a good mix of music on iPod: Let Genius do the work.\n"
+msgid "There’s another way to get a good mix of music on iPod: Let Genius do the work.\n"
 "                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
 "                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
-"                                        Itâs the perfect way to rediscover songs you havenât listened to in forever."
+"                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
 msgstr ""
 
 #. module: product
@@ -2840,27 +2827,8 @@ msgid "This note will be displayed on the quotations."
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_pricelist_partnerinfo_price
-msgid "This price will be considered as a price for the vendor Unit of Measure if any or the default Unit of Measure of the product otherwise"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
 msgid "This pricelist will be used, instead of the default one, for sales to the current partner"
-msgstr ""
-
-#. module: product
-#: model:product.product,description:product.product_product_2
-#: model:product.template,description:product.product_product_2_product_template
-msgid "This type of service include assistance for security questions, system configuration requirements, implementation or special needs."
-msgstr ""
-
-#. module: product
-#: model:product.product,description:product.product_product_1
-#: model:product.product,description_sale:product.product_product_1
-#: model:product.template,description:product.product_product_1_product_template
-#: model:product.template,description_sale:product.product_product_1_product_template
-msgid "This type of service include basic monitoring of products."
 msgstr ""
 
 #. module: product
@@ -2926,22 +2894,10 @@ msgid "Unit"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_pricelist_partnerinfo_price
-msgid "Unit Price"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_uom_id
 #: model:ir.model.fields,field_description:product.field_product_template_uom_id
 #: model:ir.model.fields,field_description:product.field_product_uom_name
-#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Unit of Measure"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_uos_coeff
-#: model:ir.model.fields,field_description:product.field_product_template_uos_coeff
-msgid "Unit of Measure -> UOS Coeff"
 msgstr ""
 
 #. module: product
@@ -2953,12 +2909,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_category_id
 msgid "Unit of Measure Category"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_uos_id
-#: model:ir.model.fields,field_description:product.field_product_template_uos_id
-msgid "Unit of Sale"
 msgstr ""
 
 #. module: product
@@ -2998,11 +2948,11 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Unlike many small headphones, each earpiece of the Apple In-Ear Headphones\n"
-"                                    contains two separate high-performance drivers â a woofer to handle bass and\n"
+"                                    contains two separate high-performance drivers — a woofer to handle bass and\n"
 "                                    mid-range sounds and a tweeter for high-frequency audio. These dedicated\n"
 "                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n"
-"                                    The result: youâre immersed in the music and hear details you never knew existed.\n"
-"                                    Even when listening to an old favorite, you may feel like youâre hearing it for the first time."
+"                                    The result: you’re immersed in the music and hear details you never knew existed.\n"
+"                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time."
 msgstr ""
 
 #. module: product
@@ -3018,8 +2968,8 @@ msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_type_key
-msgid "Used in the code to select specific prices based on the context. Keep unchanged."
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "Validity"
 msgstr ""
 
 #. module: product
@@ -3030,11 +2980,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_ids
 msgid "Values"
-msgstr ""
-
-#. module: product
-#: selection:product.template,mes_type:0
-msgid "Variable"
 msgstr ""
 
 #. module: product
@@ -3065,12 +3010,8 @@ msgid "Variant Values"
 msgstr ""
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_template_kanban_view
-msgid "Variant(s)"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
+#: model:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
 msgstr ""
@@ -3079,6 +3020,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_name
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
 msgstr ""
 
@@ -3095,8 +3037,9 @@ msgid "Vendor Lead Time"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_pricelist_ids
-msgid "Vendor Pricelist"
+#: model:ir.model.fields,field_description:product.field_product_product_seller_price
+#: model:ir.model.fields,field_description:product.field_product_template_seller_price
+msgid "Vendor Price"
 msgstr ""
 
 #. module: product
@@ -3113,11 +3056,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_seller_qty
 #: model:ir.model.fields,field_description:product.field_product_template_seller_qty
 msgid "Vendor Quantity"
-msgstr ""
-
-#. module: product
-#: model:product.price.type,name:product.standard_price
-msgid "Vendor Section on Product or Cost Price"
 msgstr ""
 
 #. module: product
@@ -3183,16 +3121,11 @@ msgid "Weights"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_version_active
-msgid "When a version is duplicated it is set to non active, so that the dates do not overlaps with original version. You should change the dates and reactivate the pricelist"
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_11
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
-msgid "When one playlist isnât enough."
+msgid "When one playlist isn’t enough."
 msgstr ""
 
 #. module: product
@@ -3234,7 +3167,7 @@ msgstr ""
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
-msgid "With advanced WiâFi thatâs up to twice as fast as\n"
+msgid "With advanced Wi‑Fi that’s up to twice as fast as\n"
 "                                   any previous-generation iPad and access to fast\n"
 "                                   cellular data networks around the world, iPad mini\n"
 "                                   lets you download content, stream video,\n"
@@ -3249,11 +3182,6 @@ msgstr ""
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
-msgstr ""
-
-#. module: product
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
 msgstr ""
 
 #. module: product
@@ -3285,7 +3213,7 @@ msgid "You probably have multiple playlists in iTunes on your computer.\n"
 "                                        One for your commute. One for the gym. Sync those playlists\n"
 "                                        to iPod, and you can play the perfect mix for whatever\n"
 "                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
-"                                        so itâs easy to switch between them and find the one you want without looking."
+"                                        so it’s easy to switch between them and find the one you want without looking."
 msgstr ""
 
 #. module: product
@@ -3302,6 +3230,11 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
 msgid "cm"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "days"
 msgstr ""
 
 #. module: product
@@ -3412,11 +3345,6 @@ msgid "oz(s)"
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_pricelist_partnerinfo
-msgid "pricelist.partnerinfo"
-msgstr ""
-
-#. module: product
 #: model:ir.model,name:product.model_product_attribute_line
 msgid "product.attribute.line"
 msgstr ""
@@ -3472,7 +3400,13 @@ msgid "the product template"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "to"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_company_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr ""
 

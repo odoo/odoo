@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 09:00+0000\n"
-"PO-Revision-Date: 2015-08-25 09:00+0000\n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-07 14:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -65,27 +65,12 @@ msgstr ""
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
-msgid "(The above section was adapted from Stackoverflowâs FAQ.)"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.header
-msgid "(k:"
+msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
 msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "(votes - 1) **"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.new_question
-msgid "),"
-msgstr ""
-
-#. module: website_forum
-#: selection:forum.post.vote,vote:0
-msgid "-1"
 msgstr ""
 
 #. module: website_forum
@@ -109,15 +94,22 @@ msgid "65% more chance to get an\n"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.display_post
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Closed]</b>"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.display_post
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Deleted]</b>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<b> [Offensive]</b>"
 msgstr ""
 
 #. module: website_forum
@@ -186,7 +178,7 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "<b>Before you ask - please make sure to search for a similar question.</b> You can\n"
-"    search questions by their title or tags.  Itâs also OK to\n"
+"    search questions by their title or tags.  It’s also OK to\n"
 "    answer your own question."
 msgstr ""
 
@@ -220,9 +212,8 @@ msgid "<b>Share</b> Something Awesome."
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.contact
-msgid "<b>|</b>\n"
-"                    <span class=\"fa fa-circle badge-gold\"/>"
+#: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+msgid "<b>[Answer]</b>"
 msgstr ""
 
 #. module: website_forum
@@ -236,15 +227,22 @@ msgid "<i class=\"text-muted\">awarded users</i>"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:391
+#: code:addons/website_forum/models/forum.py:419
 #, python-format
 msgid "<p>A new answer for <i>%s</i> has been posted. <a href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:397
+#: code:addons/website_forum/models/forum.py:425
 #, python-format
 msgid "<p>A new question <i>%s</i> has been asked on %s. <a href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+msgid "<small class=\"text-muted\">\n"
+"                    Flagged\n"
+"                </small>"
 msgstr ""
 
 #. module: website_forum
@@ -276,11 +274,6 @@ msgid "<span class=\"text-muted\">bio</span>"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "<span class=\"text-muted\">contributions</span>"
-msgstr ""
-
-#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted\">or</span>"
 msgstr ""
@@ -296,13 +289,13 @@ msgid "<span> on </span>"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.display_post
-#: model:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<span> • </span>"
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "<span> • </span>\n"
+"                Flagged"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.display_post
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span>By </span>"
 msgstr ""
@@ -317,6 +310,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "About This Community"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Accept <i class=\"fa fa-check\"/>"
 msgstr ""
 
 #. module: website_forum
@@ -396,13 +394,13 @@ msgstr ""
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:94
-#: model:ir.ui.view,arch_db:website_forum.display_post
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #, python-format
 msgid "Answer"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:449
+#: code:addons/website_forum/models/forum.py:478
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -488,6 +486,11 @@ msgid "Ask questions"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_post
+msgid "Ask questions without validation"
+msgstr ""
+
+#. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:56
 #, python-format
@@ -530,8 +533,8 @@ msgid "Back to"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:319
-#: code:addons/website_forum/controllers/main.py:382
+#: code:addons/website_forum/controllers/main.py:323
+#: code:addons/website_forum/controllers/main.py:386
 #, python-format
 msgid "Bad Request"
 msgstr ""
@@ -594,6 +597,11 @@ msgid "Can Ask"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_post
+msgid "Can Automatically be Validated"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_close
 msgid "Can Close"
 msgstr ""
@@ -616,6 +624,16 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_edit
 msgid "Can Edit"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_flag
+msgid "Can Flag"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_moderate
+msgid "Can Moderate"
 msgstr ""
 
 #. module: website_forum
@@ -711,11 +729,6 @@ msgid "Close"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.close_post
-msgid "Close Post"
-msgstr ""
-
-#. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:123
 #, python-format
@@ -730,11 +743,6 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_own
 msgid "Close own posts"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.close_post
-msgid "Close post"
 msgstr ""
 
 #. module: website_forum
@@ -753,8 +761,9 @@ msgid "Closing Reason"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.display_post
 #: model:ir.ui.view,arch_db:website_forum.display_post_answer
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Comment"
@@ -779,6 +788,7 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_answer
+#: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
 msgid "Comments"
 msgstr ""
 
@@ -1124,7 +1134,19 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_flag
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_flag
 msgid "Flag a post as offensive"
+msgstr ""
+
+#. module: website_forum
+#: selection:forum.post,state:0
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Flagged"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_flag_user_id
+msgid "Flagged by"
 msgstr ""
 
 #. module: website_forum
@@ -1370,10 +1392,17 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "If you fit in one of these example or if your motivation for asking the\n"
-"    question is âI would like to participate in a discussion about ______â, then\n"
+"    question is “I would like to participate in a discussion about ______”, then\n"
 "    you should not be asking here but on our mailing lists.\n"
-"    However, if your motivation is âI would like others to explain ______ to meâ,\n"
+"    However, if your motivation is “I would like others to explain ______ to me”,\n"
 "    then you are probably OK."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "If you mark this post as offensive, it will be hidden for most users. Only\n"
+"            users having a high karma can see offensive posts to moderate\n"
+"            them."
 msgstr ""
 
 #. module: website_forum
@@ -1532,6 +1561,16 @@ msgid "Messages and communication history"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_moderate
+msgid "Moderate posts"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Moderation Tools"
+msgstr ""
+
+#. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "More over:"
 msgstr ""
@@ -1641,10 +1680,6 @@ msgstr ""
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_8
-msgid "Nice Quesiotn"
-msgstr ""
-
-#. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_nice_question
 msgid "Nice Question"
 msgstr ""
@@ -1655,8 +1690,8 @@ msgid "Nofollow links"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:675
-#: code:addons/website_forum/models/forum.py:695
+#: code:addons/website_forum/models/forum.py:781
+#: code:addons/website_forum/models/forum.py:801
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr ""
@@ -1683,9 +1718,19 @@ msgid "Number of answers"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_flagged_posts
+msgid "Number of flagged posts"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_needaction_counter
 #: model:ir.model.fields,help:website_forum.field_forum_post_message_needaction_counter
 msgid "Number of needaction messages"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_posts_waiting_validation
+msgid "Number of posts waiting for validation"
 msgstr ""
 
 #. module: website_forum
@@ -1696,6 +1741,7 @@ msgstr ""
 
 #. module: website_forum
 #: selection:forum.post,state:0
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Offensive"
 msgstr ""
 
@@ -1731,6 +1777,11 @@ msgstr ""
 #: model:gamification.challenge,name:website_forum.challenge_peer_pressure
 #: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
 msgid "Peer Pressure"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Pending"
 msgstr ""
 
 #. module: website_forum
@@ -1776,6 +1827,7 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_post_id
+#: model:ir.ui.view,arch_db:website_forum.close_post
 #: model:ir.ui.view,arch_db:website_forum.new_link
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -1833,7 +1885,7 @@ msgid "Post Your Topic"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:142
+#: code:addons/website_forum/models/forum.py:146
 #, python-format
 msgid "Post type in \"Default post\" must be activated"
 msgstr ""
@@ -1844,7 +1896,7 @@ msgid "Post:"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:380
+#: code:addons/website_forum/models/forum.py:406
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
 msgstr ""
@@ -1915,7 +1967,7 @@ msgid "Question"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:452
+#: code:addons/website_forum/models/forum.py:481
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -1935,7 +1987,7 @@ msgid "Question downvoted"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.display_post
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Question has accepted answer"
 msgstr ""
 
@@ -1963,7 +2015,7 @@ msgid "Questions"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:393
+#: code:addons/website_forum/models/forum.py:421
 #, python-format
 msgid "Re: %s"
 msgstr ""
@@ -1984,13 +2036,23 @@ msgid "Reason"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_reason_type
+msgid "Reason Type"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "Reason:"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.display_post
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Redirect to external link"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reject <i class=\"fa fa-times\"/>"
 msgstr ""
 
 #. module: website_forum
@@ -2020,6 +2082,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.404
 #: model:ir.ui.view,arch_db:website_forum.private_profile
 msgid "Return to the question list."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_moderator_id
+msgid "Reviewed by"
 msgstr ""
 
 #. module: website_forum
@@ -2113,14 +2180,21 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:62
+#: code:addons/website_forum/static/src/js/website_forum.js:58
+#, python-format
+msgid "Sorry you must be logged to flag a post"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:106
 #, python-format
 msgid "Sorry you must be logged to vote"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:93
+#: code:addons/website_forum/static/src/js/website_forum.js:137
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr ""
@@ -2132,7 +2206,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:57
+#: code:addons/website_forum/static/src/js/website_forum.js:101
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
 msgstr ""
@@ -2243,9 +2317,24 @@ msgid "The"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "The flagged queue is empty."
+msgstr ""
+
+#. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "The goal of this site is create a relevant knowledge base that would answer\n"
 "    questions related to Odoo."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "The offensive queue is empty."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "The validation queue is empty."
 msgstr ""
 
 #. module: website_forum
@@ -2273,7 +2362,7 @@ msgid "This formula is used in order to sort by relevance. The variable 'votes' 
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:357
+#: code:addons/website_forum/models/forum.py:383
 #, python-format
 msgid "This forum does not allow %s"
 msgstr ""
@@ -2300,6 +2389,20 @@ msgid "This page contains all the information related to the new forum."
 msgstr ""
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:68
+#, python-format
+msgid "This post can not be flagged"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:63
+#, python-format
+msgid "This post is already flagged"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.private_profile
 msgid "This profile is private!"
 msgstr ""
@@ -2321,8 +2424,8 @@ msgid "Title must not be empty"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:319
-#: code:addons/website_forum/controllers/main.py:382
+#: code:addons/website_forum/controllers/main.py:323
+#: code:addons/website_forum/controllers/main.py:386
 #, python-format
 msgid "Title should not be empty."
 msgstr ""
@@ -2340,7 +2443,7 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "To prevent your question from being flagged and possibly removed, avoid asking\n"
-"    subjective questions where â¦"
+"    subjective questions where …"
 msgstr ""
 
 #. module: website_forum
@@ -2458,7 +2561,9 @@ msgid "Users can answer only once per question. Contributors can edit answers an
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.display_post
+#: code:addons/website_forum/models/forum.py:726
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+#, python-format
 msgid "View"
 msgstr ""
 
@@ -2478,6 +2583,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_ids
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Votes"
+msgstr ""
+
+#. module: website_forum
+#: selection:forum.post,state:0
+msgid "Waiting Validation"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Waiting for validation"
 msgstr ""
 
 #. module: website_forum
@@ -2561,7 +2676,7 @@ msgid "Why can other people edit my questions/answers?"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:136
+#: code:addons/website_forum/models/forum.py:140
 #, python-format
 msgid "You cannot choose %s as default post since the forum does not allow it."
 msgstr ""
@@ -2696,12 +2811,17 @@ msgstr ""
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
-msgid "every answer is equally valid: âWhatâs your favorite ______?â"
+msgid "every answer is equally valid: “What’s your favorite ______?”"
 msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "flag offensive, close own questions"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "flagged"
 msgstr ""
 
 #. module: website_forum
@@ -2760,13 +2880,23 @@ msgid "if your\n"
 msgstr ""
 
 #. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_13
+msgid "inappropriate and unacceptable statements"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "insert text link, upload files"
 msgstr ""
 
 #. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_11
+msgid "insulting and offensive language"
+msgstr ""
+
+#. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
-msgid "it is a rant disguised as a question: â______ sucks, am I right?â"
+msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
 msgstr ""
 
 #. module: website_forum
@@ -2826,6 +2956,16 @@ msgid "on social networks get an answer within\n"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "post"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_15
+msgid "racist and hate speech"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.badge_user
 msgid "received this badge:"
 msgstr ""
@@ -2847,7 +2987,12 @@ msgstr ""
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
-msgid "there is no actual problem to be solved: âIâm curious if other people feel like I do.â"
+msgid "there is no actual problem to be solved: “I’m curious if other people feel like I do.”"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_14
+msgid "threatening language"
 msgstr ""
 
 #. module: website_forum
@@ -2891,13 +3036,23 @@ msgid "views"
 msgstr ""
 
 #. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_12
+msgid "violent language"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "votes"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "waiting for validation"
+msgstr ""
+
+#. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
-msgid "we are being asked an open-ended, hypothetical question: âWhat if ______ happened?â"
+msgid "we are being asked an open-ended, hypothetical question: “What if ______ happened?”"
 msgstr ""
 
 #. module: website_forum
@@ -2912,7 +3067,7 @@ msgstr ""
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
-msgid "your answer is provided along with the question, and you expect more answers: âI use ______ for ______, what do you use?â"
+msgid "your answer is provided along with the question, and you expect more answers: “I use ______ for ______, what do you use?”"
 msgstr ""
 
 #. module: website_forum

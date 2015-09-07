@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 09:00+0000\n"
-"PO-Revision-Date: 2015-08-25 09:00+0000\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 14:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_s2s_cb_eval
+#: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid "            Will be safe_eval with `self` being the current transaction. i.e.:\n"
 "                self.env['my.model'].payment_validated(self)"
 msgstr ""
@@ -67,13 +67,13 @@ msgid "Acquirer Account"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
-msgid "Acquirer Order Reference"
+#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_ref
+msgid "Acquirer Ref."
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_ref
-msgid "Acquirer Ref."
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
+msgid "Acquirer Reference"
 msgstr ""
 
 #. module: payment
@@ -88,6 +88,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Address"
 msgstr ""
 
@@ -98,12 +99,8 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
-msgid "Amount"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_amount
-msgid "Amount in cents"
+msgid "Amount"
 msgstr ""
 
 #. module: payment
@@ -114,11 +111,6 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment with acquirer confirmation"
-msgstr ""
-
-#. module: payment
-#: selection:payment.acquirer,validation:0
-msgid "Automatic"
 msgstr ""
 
 #. module: payment
@@ -138,6 +130,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "City"
 msgstr ""
 
@@ -163,6 +156,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Country"
 msgstr ""
 
@@ -176,12 +170,11 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_date
 #: model:ir.model.fields,field_description:payment.field_payment_method_create_date
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_date
 msgid "Created on"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_date_create
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_date
 msgid "Creation Date"
 msgstr ""
 
@@ -191,13 +184,18 @@ msgid "Credentials"
 msgstr ""
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
+msgid "Credit card(s)"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
 msgid "Currency"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_message_last_post
-msgid "Date of the last message posted on the record."
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Customer Details"
 msgstr ""
 
 #. module: payment
@@ -225,6 +223,11 @@ msgstr ""
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Draft"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "E-mail"
 msgstr ""
 
 #. module: payment
@@ -273,21 +276,6 @@ msgid "Fixed international fees"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_message_follower_ids
-msgid "Followers"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form"
 msgstr ""
@@ -320,24 +308,18 @@ msgid "ID"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_message_needaction
-#: model:ir.model.fields,help:payment.field_payment_transaction_message_unread
-msgid "If checked new messages require your attention."
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
+msgid "Image"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_message_is_follower
-msgid "Is Follower"
+#: model:ir.model.fields,help:payment.field_payment_transaction_reference
+msgid "Internal reference of the TX"
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
-msgid "Lang"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_message_last_post
-msgid "Last Message Date"
+msgid "Language"
 msgstr ""
 
 #. module: payment
@@ -367,12 +349,18 @@ msgid "Make this payment acquirer available (Customer invoices, etc.)"
 msgstr ""
 
 #. module: payment
-#: selection:payment.acquirer,validation:0
-msgid "Manual"
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
+msgid "Medium-sized image"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image_medium
+msgid "Medium-sized image of this provider. It is automatically resized as a 128x128px image, with aspect ratio preserved. Use this field in form views or some kanban views."
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Message"
 msgstr ""
 
@@ -407,19 +395,15 @@ msgid "Message displayed, if order is in pending state after having done the pay
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_message_ids
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Messages"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_message_ids
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
 #: model:ir.model.fields,field_description:payment.field_payment_method_name
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Name"
 msgstr ""
 
@@ -429,28 +413,8 @@ msgid "Name of the payment method"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "No automatic confirmation"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_message_unread_counter
-msgid "Number of unread messages"
 msgstr ""
 
 #. module: payment
@@ -464,11 +428,6 @@ msgid "Order Confirmation"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
-msgid "Order Reference"
-msgstr ""
-
-#. module: payment
 #: model:ir.model,name:payment.model_res_partner
 #: model:ir.model.fields,field_description:payment.field_payment_method_partner_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
@@ -478,17 +437,6 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_name
 msgid "Partner Name"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_reference
-msgid "Partner Reference"
-msgstr ""
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:322
-#, python-format
-msgid "Pay safely online"
 msgstr ""
 
 #. module: payment
@@ -505,10 +453,15 @@ msgid "Payment Acquirers"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_method_id
+msgid "Payment Method"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_ids
+#: model:ir.ui.view,arch_db:payment.payment_method_form_view
+#: model:ir.ui.view,arch_db:payment.payment_method_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_method_view_search
-#: model:ir.ui.view,arch_db:payment.payment_method_view_tree
-#: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "Payment Methods"
 msgstr ""
 
@@ -519,6 +472,10 @@ msgstr ""
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
+#: model:ir.actions.act_window,name:payment.action_payment_tx_ids
+#: model:ir.actions.act_window,name:payment.payment_transaction_action_child
+#: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
+#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -526,7 +483,10 @@ msgid "Payment Transactions"
 msgstr ""
 
 #. module: payment
+#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.payment_method_form_view
 msgid "Payments"
 msgstr ""
 
@@ -551,11 +511,6 @@ msgid "Phone"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_validation
-msgid "Process Method"
-msgstr ""
-
-#. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Production"
 msgstr ""
@@ -567,13 +522,13 @@ msgid "Provider"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
-msgid "Reference of the TX as stored in the acquirer database"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
+msgid "Reference"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_partner_reference
-msgid "Reference of the customer in the acquirer database"
+#: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
+msgid "Reference of the TX as stored in the acquirer database"
 msgstr ""
 
 #. module: payment
@@ -582,7 +537,7 @@ msgid "Required fields not filled"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_s2s_cb_eval
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_eval
 msgid "S2S Callback"
 msgstr ""
 
@@ -593,13 +548,9 @@ msgstr ""
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_method_action
+#: model:ir.ui.menu,name:payment.finance_pay_method_menu
 #: model:ir.ui.menu,name:payment.payment_method_menu
 msgid "Saved Payment Data"
-msgstr ""
-
-#. module: payment
-#: model:ir.ui.view,arch_db:payment.transaction_form
-msgid "Send a message to the group"
 msgstr ""
 
 #. module: payment
@@ -613,8 +564,13 @@ msgid "Server To Server"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_validation
-msgid "Static payments are payments like transfer, that require manual steps."
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
+msgid "Small-sized image"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
+msgid "Small-sized image of this provider. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
 msgstr ""
 
 #. module: payment
@@ -643,6 +599,11 @@ msgid "The payment transaction reference must be unique!"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image
+msgid "This field holds the image used for this provider, limited to 1024x1024px"
+msgstr ""
+
+#. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "This template renders the acquirer button with all necessary values.\n"
 "                                            It is be rendered with qWeb with the following evaluation context:"
@@ -651,16 +612,6 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
 msgid "Type"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_message_unread
-msgid "Unread Messages"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_message_unread_counter
-msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: payment
@@ -684,18 +635,13 @@ msgid "Visible in Portal / Website"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_transfer
 msgid "Wire Transfer"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "ZIP"
 msgstr ""
 
 #. module: payment
