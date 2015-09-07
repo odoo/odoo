@@ -387,7 +387,7 @@ class PurchaseOrderLine(models.Model):
             line.qty_received = total
 
     name = fields.Text(string='Description', required=True)
-    product_qty = fields.Float(string='Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, default=0.0)
+    product_qty = fields.Float(string='Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, select=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes')
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
