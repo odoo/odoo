@@ -1343,7 +1343,7 @@
                             <field name="partner_id" context="{'contact_display':'partner'}" />
                             <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                         </group>
-                        <group name="quants_grp" string="Reserved Quants" colspan="2" groups="base.group_no_one">
+                        <group name="quants_grp" string="Reserved Quants" colspan="2" groups="base.group_no_one" attrs="{'invisible': [('state', '=', 'done')]}">
                             <field name="string_availability_info"/>
                         </group>
                         <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
@@ -1984,21 +1984,35 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Quants" create="false" edit="false">
-                    <div class="oe_button_box" name="button_box">
-                        <button name="action_view_quant_history" type="object" string="Quant History"/>
-                    </div>
                     <group>
-                        <field name="product_id"/>
-                        <field name="qty"/>
-                        <field name="product_uom_id" groups="product.group_uom"/>
-                        <field name="lot_id" groups="stock.group_production_lot"/>
-                        <field name="package_id" groups="stock.group_tracking_lot"/>
-                        <field name="location_id"/>
-                        <field name="in_date"/>
-                        <field name="reservation_id"/>
-                        <field name="propagated_from_id"/>
-                        <field name="owner_id" groups="stock.group_tracking_owner"/>
-                        <field name="inventory_value"/>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="qty"/>
+                            <field name="product_uom_id" groups="product.group_uom"/>
+                            <field name="lot_id" groups="stock.group_production_lot"/>
+                            <field name="package_id" groups="stock.group_tracking_lot"/>
+                            <field name="location_id"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner"/>
+                        </group>
+                        <group>
+                            <field name="in_date"/>
+                            <field name="reservation_id"/>
+                            <field name="propagated_from_id"/>
+                            <field name="inventory_value"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="history_ids" string="History">
+                            <tree readonly="1" default_order="date">
+                                <field name="picking_id"/>
+                                <button type="object" name="show_picking" icon="fa-list-alt" attrs="{'invisible': [('picking_id', '=', False)]}"/>
+                                <field name="product_uom_qty"/>
+                                <field name="date"/>
+                                <field name="location_id" groups="stock.group_locations" string="Source Location Zone"/>
+                                <field name="location_dest_id" groups="stock.group_locations" string="Destination Location Zone"/>
+                                <field name="state" invisible="1"/>
+                            </tree>
+                        </field>
                     </group>
                 </form>
             </field>
