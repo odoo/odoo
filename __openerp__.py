@@ -19,4 +19,5 @@ Allows you to build web forms on the website using the website builder.
     ],
     'installable': True,
     'auto_install': False,
+    'license': 'OEEL-1',
 }
