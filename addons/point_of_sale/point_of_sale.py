@@ -179,7 +179,7 @@ class pos_config(osv.osv):
         return res and res[0] or False
 
     def _default_pricelist(self, cr, uid, context=None):
-        res = self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')], limit=1, context=context)
+        res = self.pool.get('product.pricelist').search(cr, uid, [], limit=1, context=context)
         return res and res[0] or False
 
     def _get_default_location(self, cr, uid, context=None):
@@ -521,7 +521,7 @@ class pos_session(osv.osv):
         }) for journal in pos_config.journal_ids]
 
         values.update({
-            'name': self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session'),
+            'name': self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session', context=context),
             'statement_ids': statements,
             'config_id': config_id
         })
@@ -939,7 +939,6 @@ class pos_order(osv.osv):
                     'company_id': order.company_id.id,
                     'move_type': 'direct',
                     'note': order.note or "",
-                    'invoice_state': 'none',
                     'location_id': location_id,
                     'location_dest_id': destination_id,
                 }, context=context)
@@ -947,17 +946,15 @@ class pos_order(osv.osv):
 
             move_list = []
             for line in order.lines:
-                if line.product_id and line.product_id.type == 'service':
+                if line.product_id and line.product_id.type not in ['product', 'consu']:
                     continue
 
                 move_list.append(move_obj.create(cr, uid, {
                     'name': line.name,
                     'product_uom': line.product_id.uom_id.id,
-                    'product_uos': line.product_id.uom_id.id,
                     'picking_id': picking_id,
                     'picking_type_id': picking_type.id, 
                     'product_id': line.product_id.id,
-                    'product_uos_qty': abs(line.qty),
                     'product_uom_qty': abs(line.qty),
                     'state': 'draft',
                     'location_id': location_id if line.qty >= 0 else destination_id,
@@ -1143,6 +1140,7 @@ class pos_order(osv.osv):
                 invoice_line.invoice_line_tax_ids = [tax.id for tax in invoice_line.invoice_line_tax_ids if tax.company_id.id == company_id]
                 # We convert a new id object back to a dictionary to write to bridge between old and new api
                 inv_line = invoice_line._convert_to_write(invoice_line._cache)
+                inv_line.update(price_unit=line.price_unit, discount=line.discount)
                 inv_line_ref.create(cr, SUPERUSER_ID, inv_line, context=local_context)
             inv_ref.compute_taxes(cr, SUPERUSER_ID, [inv_id], context=local_context)
             self.signal_workflow(cr, uid, [order.id], 'invoice')

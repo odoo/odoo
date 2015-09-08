@@ -4,11 +4,11 @@
 
         <template id="transfer_acquirer_button">
             <form t-if="acquirer" t-att-action="tx_url" method="post" target="_self">
-                <t t-if="tx_values.get('return_url')">
-                    <input type='hidden' name='return_url' t-att-value='tx_values["return_url"]'/>
+                <t t-if="return_url">
+                    <input type='hidden' name='return_url' t-att-value='return_url'/>
                 </t>
                 <input type='hidden' name='reference' t-att-value='reference'/>
-                <input type='hidden' name='amount' t-att-value='amount or "0.0"'/>
+                <input type='hidden' name='amount' t-att-value='amount'/>
                 <input type='hidden' name='currency' t-att-value='currency.name'/>
                 <!-- submit -->
                 <button type="submit" width="100px"

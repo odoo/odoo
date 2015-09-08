@@ -17,31 +17,6 @@
             <field name="name">Purchase Order</field>
             <field name="object">purchase.order</field>
         </record>
-        
-        <record id="pricelist_type_purchase" model="product.pricelist.type">
-            <field name="name">Purchase Pricelist</field>
-            <field name="key">purchase</field>
-        </record>
-        
-        <record id="list0" model="product.pricelist">
-            <field name="name">Default Purchase Pricelist</field>
-            <field name="type">purchase</field>
-        </record>
-        <record id="ver0" model="product.pricelist.version">
-            <field name="pricelist_id" ref="list0"/>
-            <field name="name">Default Purchase Pricelist Version</field>
-        </record>
-        <record id="item0" model="product.pricelist.item">
-            <field name="price_version_id" ref="ver0"/>
-            <field name="base" ref="product.standard_price"/>
-            <field name="name">Default Purchase Pricelist Line</field>
-        </record>
-        
-        <record forcecreate="True" id="property_product_pricelist_purchase" model="ir.property">
-            <field name="name">property_product_pricelist_purchase</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist_purchase')]"/>
-            <field eval="'product.pricelist,'+str(list0)" name="value"/>
-        </record>
 
         <!-- Purchase-related subtypes for messaging / Chatter -->
         <record id="mt_rfq_confirmed" model="mail.message.subtype">

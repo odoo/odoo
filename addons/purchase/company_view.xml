@@ -10,6 +10,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='logistics_grp']" position="inside">
                         <field name="po_lead"/>
+                        <field name="po_double_validation" widget="radio"/>
+                        <field name="po_double_validation_amount" attrs="{'invisible': [('po_double_validation', '=', 'one_step')]}"/>
                 </xpath>
             </field>
         </record>

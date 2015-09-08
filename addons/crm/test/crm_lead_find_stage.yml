@@ -11,7 +11,7 @@
   I check default stage of lead.
 -
   !python {model: crm.lead}: |
-    stage = self.pool.get('crm.stage').search_read(cr, uid, [], ['id'], context)[0]
+    stage = self.pool.get('crm.stage').search_read(cr, uid, [('team_ids', '=', ref('sales_team.team_sales_department'))], ['id'], context=context)[0]
     lead = self.browse(cr, uid, ref('test_crm_lead_new'))
     assert lead.stage_id.id == stage['id'], "Default stage of lead is incorrect!"
 -

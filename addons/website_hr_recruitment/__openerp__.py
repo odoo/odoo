@@ -8,7 +8,7 @@ OpenERP Contact Form
 ====================
 
         """,
-    'depends': ['website_partner', 'hr_recruitment', 'website_mail'],
+    'depends': ['website_partner', 'hr_recruitment', 'website_mail', 'website_form'],
     'data': [
         'security/ir.model.access.csv',
         'security/website_hr_recruitment_security.xml',

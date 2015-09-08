@@ -392,8 +392,13 @@ class product_template(osv.osv):
             res[product_tmpl_id]['reordering_max_qty'] = data['product_max_qty']
         return res
 
+    def _get_product_template_type(self, cr, uid, context=None):
+        res = super(product_template, self)._get_product_template_type(cr, uid, context=context)
+        if 'product' not in [item[0] for item in res]:
+            res.append(('product', 'Stockable Product'))
+        return res
+
     _columns = {
-        'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
         'property_stock_procurement': fields.property(
             type='many2one',
             relation='stock.location',
@@ -476,14 +481,7 @@ class product_template(osv.osv):
         result = mod_obj.xmlid_to_res_id(cr, uid, name, raise_if_not_found=True)
         result = act_obj.read(cr, uid, [result], context=context)[0]
         return result
-    
-    def action_open_quants(self, cr, uid, ids, context=None):
-        products = self._get_products(cr, uid, ids, context=context)
-        result = self._get_act_window_dict(cr, uid, 'stock.product_open_quants', context=context)
-        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
-        result['context'] = "{'search_default_locationgroup': 1, 'search_default_internal_loc': 1}"
-        return result
-    
+
     def action_view_orderpoints(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'stock.product_open_orderpoint', context=context)
@@ -497,14 +495,9 @@ class product_template(osv.osv):
     def action_view_stock_moves(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'stock.act_product_stock_move_open', context=context)
-        if len(ids) == 1 and len(products) == 1:
-            ctx = "{'tree_view_ref':'stock.view_move_tree', \
-                  'default_product_id': %s, 'search_default_product_id': %s}" \
-                  % (products[0], products[0])
-            result['context'] = ctx
-        else:
-            result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
-            result['context'] = "{'tree_view_ref':'stock.view_move_tree'}"
+        if products:
+            result['context'] = "{'default_product_id': %d}" % products[0]
+        result['domain'] = "[('product_id.product_tmpl_id','in',[" + ','.join(map(str,ids)) + "])]"
         return result
 
     def write(self, cr, uid, ids, vals, context=None):

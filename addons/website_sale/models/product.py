@@ -14,7 +14,7 @@ class product_style(osv.Model):
 class product_pricelist(osv.Model):
     _inherit = "product.pricelist"
     _columns = {
-        'code': fields.char('Promotional Code'),
+        'code': fields.char('E-commerce Promotional Code'),
     }
 
 
@@ -84,7 +84,7 @@ class product_public_category(osv.osv):
     }
 
 class product_template(osv.Model):
-    _inherit = ["product.template", "website.seo.metadata", 'website.published.mixin']
+    _inherit = ["product.template", "website.seo.metadata", 'website.published.mixin', 'rating.mixin']
     _order = 'website_published desc, website_sequence desc, name'
     _name = 'product.template'
     _mail_post_access = 'read'

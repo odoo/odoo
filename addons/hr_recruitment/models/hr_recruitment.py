@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
 from datetime import datetime
 
 from openerp import api, fields, models, tools
@@ -271,13 +270,7 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if 'stage_id' in vals:
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
-        applicant = super(Applicant, self.with_context(mail_create_nolog=True)).create(vals)
-        if applicant.job_id:
-            name = applicant.partner_name if applicant.partner_name else applicant.name
-            applicant.job_id.message_post(
-                body=_('New application from %s') % name,
-                subtype="hr_recruitment.mt_job_applicant_new")
-        return applicant
+        return super(Applicant, self.with_context(mail_create_nolog=True)).create(vals)
 
     @api.multi
     def write(self, vals):
@@ -294,47 +287,11 @@ class Applicant(models.Model):
         else:
             res = super(Applicant, self).write(vals)
 
-        # post processing: if job changed, post a message on the job
-        if vals.get('job_id'):
-            for applicant in self:
-                name = applicant.partner_name if applicant.partner_name else applicant.name
-                self.env['hr.job'].browse([vals['job_id']]).message_post(
-                    body=_('New application from %s') % name,
-                    subtype="hr_recruitment.mt_job_applicant_new")
-
         # post processing: if stage changed, post a message in the chatter
         if vals.get('stage_id'):
             if self.stage_id.template_id:
-                # TDENOTE: probably factorize me in a message_post_with_template generic method FIXME
-                composer = self.env['mail.compose.message'].with_context(active_ids=self.ids).create(
-                    {
-                        'model': self._name,
-                        'composition_mode': 'mass_mail',
-                        'template_id': self.stage_id.template_id.id,
-                        'notify': True,
-                    })
-                values = composer.onchange_template_id(
-                    self.stage_id.template_id.id, 'mass_mail', self._name, False)['value']
-                if values.get('attachment_ids'):
-                    values['attachment_ids'] = [(6, 0, values['attachment_ids'])]
-                composer.write(values)
-                composer.send_mail()
+                self.message_post_with_template(self.stage_id.template_id.id, notify=True, composition_mode='mass_mail')
         return res
-
-    @api.model
-    def _broadcast_welcome(self):
-        """ Broadcast the welcome message to all users in the employee company. """
-        IrModelData = self.env['ir.model.data']
-        channel_all_employees = IrModelData.xmlid_to_object('mail.channel_all_employees')
-        template_new_employee = IrModelData.xmlid_to_object('hr_recruitment.hr_welcome_new_employee')
-        if template_new_employee:
-            MailTemplate = self.env['mail.template']
-            body_html = MailTemplate.render_template(template_new_employee.body_html, 'hr.employee', self.id)
-            subject = MailTemplate.render_template(template_new_employee.subject, 'hr.employee', self.id)
-            channel_all_employees.message_post(
-                body=body_html, subject=subject,
-                subtype='mail.mt_comment')
-        return True
 
     @api.model
     def get_empty_list_help(self, help):

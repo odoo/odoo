@@ -17,20 +17,5 @@
             </field>
         </record>
 
-        <record id="transaction_form_buckaroo" model="ir.ui.view">
-            <field name="name">acquirer.transaction.form.buckaroo</field>
-            <field name="model">payment.transaction</field>
-            <field name="inherit_id" ref="payment.transaction_form"/>
-            <field name="arch" type="xml">
-                <xpath expr='//notebook' position='inside'>
-                    <page string="Buckaroo TX Details">
-                        <group>
-                            <field name="buckaroo_txnid"/>
-                        </group>
-                    </page>
-                </xpath>
-            </field>
-        </record>
-
     </data>
 </openerp>

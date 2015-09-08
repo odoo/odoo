@@ -140,7 +140,7 @@ var BuildingBlock = Widget.extend({
     _get_snippet_url: function () {
         return '/web_editor/snippets';
     },
-    _add_check_selector : function (selector, no_check) {
+    _add_check_selector : function (selector, no_check, is_children) {
         var self = this;
         var selector = selector.split(/\s*,/).join(":not(.o_snippet_not_selectable), ") + ":not(.o_snippet_not_selectable)";
 
@@ -172,7 +172,9 @@ var BuildingBlock = Widget.extend({
                         return false;
                     });
                 },
-                all: function ($from) {
+                all: is_children ? function ($from) {
+                    return ($from || self.$editable).find(selector);
+                } : function ($from) {
                     return $from ? $from.find(selector) : self.$editable.filter(selector).add(self.$editable.find(selector));
                 },
                 is: function ($from) {
@@ -237,7 +239,7 @@ var BuildingBlock = Widget.extend({
                 'base_selector': $style.data('selector'),
                 'selector': self._add_check_selector($style.data('selector'), no_check),
                 '$el': $style,
-                'drop-near': $style.data('drop-near') && self._add_check_selector($style.data('drop-near'), no_check),
+                'drop-near': $style.data('drop-near') && self._add_check_selector($style.data('drop-near'), no_check, true),
                 'drop-in': $style.data('drop-in') && self._add_check_selector($style.data('drop-in'), no_check),
                 'data': $style.data()
             };
@@ -343,7 +345,7 @@ var BuildingBlock = Widget.extend({
 
         $html.find('.o_not_editable').attr("contentEditable", false);
 
-        $left_bar.append($html);
+        $left_bar.html($html);
 
         // animate for list of snippet blocks
         $left_bar.on('click', '.scroll-link', function (event) {
@@ -507,7 +509,13 @@ var BuildingBlock = Widget.extend({
         for (var k in template) {
             var Option = opt[template[k]['option']];
             if (Option && Option.prototype.clean_for_save !== dummy) {
-                template[k].selector.all().filter(".o_dirty").each(function () {
+                template[k].selector.all().filter(function () {
+                        var node = this;
+                        while (!/o_dirty|o_editable/.test(node.className) && node !== document) {
+                            node = node.parentNode;
+                        }
+                        return node.className.indexOf("o_dirty") !== -1;
+                    }).each(function () {
                     new Option(self, null, $(this), k).clean_for_save();
                 });
             }
@@ -987,7 +995,7 @@ var Editor = Class.extend({
 
         self.get_parent_block();
         setTimeout(function () {
-            self.BuildingBlock.cover_target(self.$target.data('overlay'), self.$target);
+            self.buildingBlock.cover_target(self.$target.data('overlay'), self.$target);
         },0);
     },
 
@@ -1064,7 +1072,7 @@ var Editor = Class.extend({
         this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
 
         this.$target.after($clone);
-        this.BuildingBlock.call_for_all_snippets($clone, function (editor, $snippet) {
+        this.buildingBlock.call_for_all_snippets($clone, function (editor, $snippet) {
             for (var i in editor.styles){
                 editor.styles[i].on_clone($snippet);
             }
@@ -1079,7 +1087,7 @@ var Editor = Class.extend({
         this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
 
         var index = _.indexOf(this.buildingBlock.snippets, this.$target.get(0));
-        this.BuildingBlock.call_for_all_snippets(this.$target, function (editor, $snippet) {
+        this.buildingBlock.call_for_all_snippets(this.$target, function (editor, $snippet) {
             for (var i in editor.styles){
                 editor.styles[i].on_remove();
             }

@@ -544,11 +544,11 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <group name="website_and_pos" position="inside">
+                <group name="sale_condition" position="after">
                     <group name="pos" string="Point of Sale">
-                        <field name="pos_categ_id"/>
                         <field name="available_in_pos"/>
-                        <field name="to_weight" />
+                        <field name="pos_categ_id" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
+                        <field name="to_weight" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
                     </group>
                 </group>
             </field>

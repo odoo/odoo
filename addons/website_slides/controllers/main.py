@@ -4,7 +4,7 @@ import logging
 import werkzeug
 
 from openerp.addons.web import http
-from openerp.exceptions import AccessError
+from openerp.exceptions import AccessError, UserError
 from openerp.http import request
 from openerp.tools.translate import _
 
@@ -127,6 +127,7 @@ class website_slides(http.Controller):
             'user': user,
             'pager': pager,
             'is_public_user': user == request.website.user_id,
+            'display_channel_settings': not request.httprequest.cookies.get('slides_channel_%s' % (channel.id), False) and channel.can_see_full,
         }
         if search:
             values['search'] = search
@@ -173,7 +174,6 @@ class website_slides(http.Controller):
         right partner. Their comments are not published by default. Logged
         users can post as usual. """
         # TDE TODO :
-        # - fix _find_partner_from_emails -> is an api.one + strange results + should work as public user
         # - subscribe partner instead of user writing the message ?
         # - public user -> cannot create mail.message ?
         if not post.get('comment'):
@@ -187,7 +187,7 @@ class website_slides(http.Controller):
             # be investigated - using SUPERUSER_ID meanwhile
             contextual_slide = slide.sudo().with_context(mail_create_nosubcribe=True)
             # TDE FIXME: check in mail_thread, find partner from emails should maybe work as public user
-            partner_id = slide.sudo()._find_partner_from_emails([post.get('email')])[0][0]
+            partner_id = slide.sudo()._find_partner_from_emails([post.get('email')])[0]
             if partner_id:
                 partner = request.env['res.partner'].sudo().browse(partner_id)
             else:
@@ -313,7 +313,7 @@ class website_slides(http.Controller):
         # otherwise client slide create dialog box continue processing even server fail to create a slide.
         try:
             slide_id = request.env['slide.slide'].create(values)
-        except AccessError as e:
+        except (UserError, AccessError) as e:
             _logger.error(e)
             return {'error': e.name}
         except Exception as e:

@@ -50,6 +50,7 @@ Wizards provided by this module:
         'account_fiscal_position_tax_template.xml',
         'account_chart_template.yml',
         'security/ir.model.access.csv',
+        'menuitem.xml'
     ],
     'demo': [
         'demo/l10n_be_demo.yml',

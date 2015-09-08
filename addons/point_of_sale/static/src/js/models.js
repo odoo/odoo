@@ -315,7 +315,7 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'product.product',
         fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'barcode', 'default_code', 
-                 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
+                 'to_weight', 'uom_id', 'description_sale', 'description',
                  'product_tmpl_id'],
         order:  ['sequence','name'],
         domain: [['sale_ok','=',true],['available_in_pos','=',true]],
@@ -1275,13 +1275,13 @@ exports.Orderline = Backbone.Model.extend({
             return base_amount >= 0 ? ret : ret * -1;
         }
         if ((tax.amount_type === 'percent' && !tax.price_include) || (tax.amount_type === 'division' && tax.price_include)){
-            return base_amount * tax.amount / 100;
+            return (base_amount * tax.amount / 100) * quantity;
         }
         if (tax.amount_type === 'percent' && tax.price_include){
-            return base_amount - (base_amount / (1 + tax.amount / 100));
+            return (base_amount - (base_amount / (1 + tax.amount / 100))) * quantity;
         }
         if (tax.amount_type === 'division' && !tax.price_include) {
-            return base_amount / (1 - tax.amount / 100) - base_amount;
+            return (base_amount / (1 - tax.amount / 100) - base_amount) * quantity;
         }
         return false;
     },
@@ -1721,6 +1721,10 @@ exports.Order = Backbone.Model.extend({
         this.select_orderline(this.get_last_orderline());
     },
     add_product: function(product, options){
+        if(this._printed){
+            this.destroy();
+            return this.pos.get_order().add_product(product, options);
+        }
         this.assert_editable();
         options = options || {};
         var attr = JSON.parse(JSON.stringify(product));

@@ -5,15 +5,12 @@
             <input type="hidden" name="session_id"
                t-att-value="widget.session.session_id"/>
             <input type="hidden" name="import_id"/>
-            <p>Select the <a
-                    href="http://en.wikipedia.org/wiki/Comma-separated_values"
-                    target="_blank">.CSV</a>
-            file to import. If you need a sample importable file, you
+            <p>Select the file to import. If you need a sample importable file, you
             can use the export tool to generate one.</p>
             <div class="oe_import_box">
-                <label t-attf-for="file_#{_id}" autofocus="autofocus">CSV File:</label>
+                <label t-attf-for="file_#{_id}" autofocus="autofocus">File:</label>
                 <input type="file" id-attf-id="file_#{_id}"
-                       name="file" class="oe_import_file" accept=".csv"/>
+                       name="file" class="oe_import_file" accept=".csv, .xls, .xlsx, .ods"/>
                 <button type="button" class="oe_import_file_reload"
                         disabled="disabled"
                         title="Reload data to check changes.">
@@ -21,7 +18,7 @@
                 </button>
                 <div class="oe_import_with_file">
                     <a href="#" class="oe_import_toggle">
-                        File Format Options…</a>
+                        CSV Format Options…</a>
                     <div class="oe_import_toggled oe_import_options">
                         <p t-foreach="widget.opts" t-as="option">
                             <!-- no @name, avoid submission when file_update called -->
@@ -363,11 +360,11 @@
     </t>
     <t t-name="ImportView.preview.error">
         <div class="oe_import_report oe_import_report_error">
-            <p>Import preview failed due to: <t t-esc="error"/>. The issue is
-                usually an incorrect file encoding.</p>
-            <p>Here is the start of the file we could not import:</p>
+            <p>Import preview failed due to: <t t-esc="error"/>.</p>
+            <p>For CSV files, the issue could be an incorrect encoding.</p>
+            <p t-if="preview">Here is the start of the file we could not import:</p>
         </div>
-        <pre><t t-esc="preview"/></pre>
+        <pre t-if="preview"><t t-esc="preview"/></pre>
     </t>
     <ul t-name="ImportView.error">
         <li t-foreach="errors" t-as="error"

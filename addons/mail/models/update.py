@@ -8,7 +8,6 @@ import urllib2
 
 from openerp import release, SUPERUSER_ID
 from openerp.models import AbstractModel
-from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.tools.config import config
 from openerp.tools import misc

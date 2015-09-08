@@ -24,12 +24,10 @@
             <field name="model">payment.acquirer</field>
             <field name="inherit_id" ref="payment.acquirer_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='acquirer_base']" position="before">
-                    <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" name="website_publish_button" type="object" icon="fa-globe">
-                            <field name="website_published" widget="website_button"/>
-                        </button>
-                    </div>
+                <xpath expr="//div[@class='oe_button_box']/*[1]" position="before">
+                    <button class="oe_stat_button" name="website_publish_button" type="object" icon="fa-globe">
+                        <field name="website_published" widget="website_button"/>
+                    </button>
                 </xpath>
             </field>
         </record>

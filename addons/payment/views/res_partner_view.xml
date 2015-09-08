@@ -6,15 +6,13 @@
         <record id="view_partners_form_payment_defaultcreditcard" model="ir.ui.view">
                 <field name="name">view.res.partner.form.payment.defaultcreditcard</field>
                 <field name="model">res.partner</field>
-                <field name="inherit_id" ref="base.view_partner_form"/>
+                <field name="inherit_id" ref="account.partner_view_buttons"/>
                 <field name="arch" type="xml">
-                    <xpath expr='//div[@name="button_box"]' position="inside">
-                        <button type="action" class="oe_stat_button"
+                    <xpath expr='//group[@name="banks"]' position="inside">
+                        <button type="action" class="btn-link"
                             name="%(payment.payment_method_action)d"
-                            groups="base.group_sale_salesman"
-                            icon="fa-credit-card"
                             context="{'search_default_partner_id': active_id}">
-                            <field name="payment_method_count" widget="statinfo" string="Payment Methods"/>
+                            <field name="payment_method_count" widget="statinfo" string="Credit card(s)"/>
                         </button>
                     </xpath>
                 </field>

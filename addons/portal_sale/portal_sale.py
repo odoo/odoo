@@ -9,23 +9,6 @@ from openerp import SUPERUSER_ID
 class sale_order(osv.Model):
     _inherit = 'sale.order'
 
-    # make the real method inheritable
-    _payment_block_proxy = lambda self, *a, **kw: self._portal_payment_block(*a, **kw)
-
-    _columns = {
-        'portal_payment_options': fields.function(_payment_block_proxy, type="html", string="Portal Payment Options"),
-    }
-
-    def _portal_payment_block(self, cr, uid, ids, fieldname, arg, context=None):
-        result = dict.fromkeys(ids, False)
-        payment_acquirer = self.pool['payment.acquirer']
-        for this in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            if this.state not in ('draft', 'cancel') and not this.invoiced:
-                result[this.id] = payment_acquirer.render_payment_block(
-                    cr, uid, this.name, this.amount_total, this.pricelist_id.currency_id.id,
-                    partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
-        return result
-
     def action_quotation_send(self, cr, uid, ids, context=None):
         '''  Override to use a modified template that includes a portal signup link '''
         action_dict = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context)
@@ -39,14 +22,14 @@ class sale_order(osv.Model):
             pass
         return action_dict
 
-    def action_button_confirm(self, cr, uid, ids, context=None):
+    def action_confirm(self, cr, uid, ids, context=None):
         # fetch the partner's id and subscribe the partner to the sale order
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
         partner = document.partner_id
         if partner not in document.message_partner_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
-        return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
+        return super(sale_order, self).action_confirm(cr, uid, ids, context=context)
 
     def get_signup_url(self, cr, uid, ids, context=None):
         assert len(ids) == 1
@@ -68,23 +51,6 @@ class sale_order(osv.Model):
 
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
-
-    # make the real method inheritable
-    _payment_block_proxy = lambda self, *a, **kw: self._portal_payment_block(*a, **kw)
-
-    _columns = {
-        'portal_payment_options': fields.function(_payment_block_proxy, type="html", string="Portal Payment Options"),
-    }
-
-    def _portal_payment_block(self, cr, uid, ids, fieldname, arg, context=None):
-        result = dict.fromkeys(ids, False)
-        payment_acquirer = self.pool.get('payment.acquirer')
-        for this in self.browse(cr, uid, ids, context=context):
-            if this.type == 'out_invoice' and this.state not in ('draft', 'done') and not this.reconciled:
-                result[this.id] = payment_acquirer.render_payment_block(
-                    cr, uid, this.number, this.residual, this.currency_id.id,
-                    partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
-        return result
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
         '''  Override to use a modified template that includes a portal signup link '''

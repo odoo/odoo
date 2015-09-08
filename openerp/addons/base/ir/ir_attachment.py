@@ -237,9 +237,8 @@ class ir_attachment(osv.osv):
         """ compute the checksum for the given datas
             :param bin_data : datas in its binary form
         """
-        if bin_data:
-            return hashlib.sha1(bin_data).hexdigest()
-        return False
+        # an empty file has a checksum too (for caching)
+        return hashlib.sha1(bin_data or '').hexdigest()
 
     def _compute_mimetype(self, values):
         """ compute the mimetype of the given values
@@ -291,6 +290,7 @@ class ir_attachment(osv.osv):
         'checksum': fields.char("Checksum/SHA1", size=40, select=True, readonly=True),
         'mimetype': fields.char('Mime Type', readonly=True),
         'index_content': fields.text('Indexed Content', readonly=True),
+        'public': fields.boolean('Is public document'),
     }
 
     _defaults = {
@@ -317,8 +317,10 @@ class ir_attachment(osv.osv):
         if ids:
             if isinstance(ids, (int, long)):
                 ids = [ids]
-            cr.execute('SELECT DISTINCT res_model, res_id, create_uid FROM ir_attachment WHERE id = ANY (%s)', (ids,))
-            for rmod, rid, create_uid in cr.fetchall():
+            cr.execute('SELECT res_model, res_id, create_uid, public FROM ir_attachment WHERE id = ANY (%s)', (ids,))
+            for rmod, rid, create_uid, public in cr.fetchall():
+                if public and mode == 'read':
+                    continue
                 if not (rmod and rid):
                     if create_uid != uid:
                         require_employee = True
@@ -369,11 +371,11 @@ class ir_attachment(osv.osv):
         # the linked document.
         # Use pure SQL rather than read() as it is about 50% faster for large dbs (100k+ docs),
         # and the permissions are checked in super() and below anyway.
-        cr.execute("""SELECT id, res_model, res_id FROM ir_attachment WHERE id = ANY(%s)""", (list(ids),))
+        cr.execute("""SELECT id, res_model, res_id, public FROM ir_attachment WHERE id = ANY(%s)""", (list(ids),))
         targets = cr.dictfetchall()
         model_attachments = {}
         for target_dict in targets:
-            if not target_dict['res_model']:
+            if not target_dict['res_model'] or target_dict['public']:
                 continue
             # model_attachments = { 'model': { 'res_id': [id1,id2] } }
             model_attachments.setdefault(target_dict['res_model'],{}).setdefault(target_dict['res_id'] or 0, set()).add(target_dict['id'])
@@ -452,11 +454,3 @@ class ir_attachment(osv.osv):
     def action_get(self, cr, uid, context=None):
         return self.pool.get('ir.actions.act_window').for_xml_id(
             cr, uid, 'base', 'action_attachment', context=context)
-
-    def invalidate_bundle(self, cr, uid, type='%', xmlid=None, context=None):
-        assert type in ('%', 'css', 'js'), "Unhandled bundle type"
-        xmlid = '%' if xmlid is None else xmlid + '%'
-        domain = [('url', '=like', '/web/%s/%s/%%' % (type, xmlid))]
-        ids = self.search(cr, uid, domain, context=context)
-        if ids:
-            self.unlink(cr, uid, ids, context=context)

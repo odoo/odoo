@@ -198,7 +198,7 @@ var SlideDialog = Widget.extend({
             width: '100%',
             placeholder: tag,
             allowClear: true,
-            formatNoMatches: _.str.sprintf(_t("No matches found. Type to create new %s"), tag),
+            formatNoMatches: false,
             multiple: multi,
             selection_data: false,
             fetch_rpc_fnc : fetch_fnc,
@@ -208,13 +208,18 @@ var SlideDialog = Widget.extend({
                 }
                 return data.text;
             },
-            createSearchChoice: function (term) {
-                return {
-                    id: _.uniqueId('tag_'),
-                    create: true,
-                    tag: term,
-                    text: _.str.sprintf(_t("Create New %s '%s'"), tag, term)
-                };
+            createSearchChoice: function(term, data) {
+                var added_tags = $(this.opts.element).select2('data');
+                if (_.filter(_.union(added_tags, data), function(tag) {
+                    return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
+                }).length === 0) {
+                    return {
+                        id: _.uniqueId('tag_'),
+                        create: true,
+                        tag: term,
+                        text: _.str.sprintf(_t("Create new tag '%s'"), term),
+                    };
+                }
             },
             fill_data: function (query, data) {
                 var that = this,
@@ -290,6 +295,15 @@ var SlideDialog = Widget.extend({
             });
         return res;
     },
+    //Python PIL does not support SVG, so converting SVG to PNG
+    svg_to_png: function() {
+        var img = this.$el.find("img#slide-image")[0];
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext("2d").drawImage(img, 0, 0);
+        return canvas.toDataURL("image/png").split(',')[1];
+    },
     // Values and save
     get_value: function () {
         var canvas = this.$('#data_canvas')[0],
@@ -313,8 +327,8 @@ var SlideDialog = Widget.extend({
         if (/^image\/.*/.test(this.file.type)) {
             _.extend(values, {
                 'slide_type': 'infographic',
-                'mime_type': this.file.type,
-                'datas': this.file.data
+                'mime_type': this.file.type === 'image/svg+xml' ? 'image/png' : this.file.type,
+                'datas': this.file.type === 'image/svg+xml' ? this.svg_to_png() : this.file.data
             });
         }
         return values;

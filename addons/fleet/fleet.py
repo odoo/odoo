@@ -78,6 +78,7 @@ class fleet_vehicle_tag(osv.Model):
     _name = 'fleet.vehicle.tag'
     _columns = {
         'name': fields.char('Name', required=True),
+        'color': fields.integer('Color Index'),
     }
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -344,7 +345,7 @@ class fleet_vehicle(osv.Model):
         'image_medium': fields.related('model_id', 'image_medium', type="binary", string="Logo (medium)"),
         'image_small': fields.related('model_id', 'image_small', type="binary", string="Logo (small)"),
         'contract_renewal_due_soon': fields.function(_get_contract_reminder_fnc, fnct_search=_search_contract_renewal_due_soon, type="boolean", string='Has Contracts to renew', multi='contract_info'),
-        'contract_renewal_overdue': fields.function(_get_contract_reminder_fnc, fnct_search=_search_get_overdue_contract_reminder, type="boolean", string='Has Contracts Overdued', multi='contract_info'),
+        'contract_renewal_overdue': fields.function(_get_contract_reminder_fnc, fnct_search=_search_get_overdue_contract_reminder, type="boolean", string='Has Contracts Overdue', multi='contract_info'),
         'contract_renewal_name': fields.function(_get_contract_reminder_fnc, type="text", string='Name of contract to renew soon', multi='contract_info'),
         'contract_renewal_total': fields.function(_get_contract_reminder_fnc, type="integer", string='Total of contracts due or overdue minus one', multi='contract_info'),
         'car_value': fields.float('Car Value', help='Value of the bought vehicle'),

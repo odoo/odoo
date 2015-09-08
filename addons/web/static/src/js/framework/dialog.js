@@ -82,11 +82,12 @@ var Dialog = Widget.extend({
             var $b = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': classes} }}}));
             $b.prop('disabled', b.disabled);
             $b.on('click', function(e) {
+                var click_def;
                 if(b.click) {
-                    b.click.call(self, e);
+                    click_def = b.click.call(self, e);
                 }
                 if(b.close) {
-                    self.close();
+                    $.when(click_def).always(self.close.bind(self));
                 }
             });
             self.$footer.append($b);

@@ -18,18 +18,19 @@
                     <field name="state" widget="statusbar"/>
                 </xpath>
 
-                <xpath expr="//header" position="after">
-                    <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('signup_valid', '!=', True)]}">
-                        <p attrs="{'invisible': [('state', '!=', 'active')]}">
-                            <b>A password reset has been requested for this user. An email containing the following link has been sent:</b>
-                        </p>
-                        <p attrs="{'invisible': [('state', '!=', 'new')]}">
-                            <b>An invitation email containing the following subscription link has been sent:</b>
-                        </p>
-                        <p><field class="oe_inline" name="signup_url" widget="url"/></p>
-                        <field name="signup_valid" invisible="1"/>
-                    </div>
-                </xpath>
+                <xpath expr="//sheet/div[@name='button_box']" position="before">
+                    <div class="alert alert-success text-center o_form_header" attrs="{'invisible': [('signup_valid', '!=', True)]}">
+                        <a class="close" data-dismiss="alert" href="#" aria-hidden="true">x</a>
+                        <div attrs="{'invisible': [('state', '!=', 'active')]}">
+                            <strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>
+                        </div>
+                        <div attrs="{'invisible': [('state', '!=', 'new')]}">
+                            <strong>An invitation email containing the following subscription link has been sent:</strong>
+                        </div>
+                        <div><field name="signup_url" widget="url"/></div>
+                         <field name="signup_valid" invisible="1"/>
+                     </div>
+                 </xpath>
             </field>
         </record>
 

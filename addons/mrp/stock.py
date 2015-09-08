@@ -19,8 +19,8 @@ class StockMove(osv.osv):
         'consumed_for': fields.many2one('stock.move', 'Consumed for', help='Technical field used to make the traceability of produced products'),
     }
 
-    def check_tracking(self, cr, uid, move, lot_id, context=None):
-        super(StockMove, self).check_tracking(cr, uid, move, lot_id, context=context)
+    def check_tracking(self, cr, uid, move, ops, context=None):
+        super(StockMove, self).check_tracking(cr, uid, move, ops, context=context)
         if move.raw_material_production_id and move.product_id.tracking!='none' and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.tracking != 'none' and not move.consumed_for:
             raise UserError(_("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
 
@@ -47,14 +47,12 @@ class StockMove(osv.osv):
 
             for line in res[0]:
                 product = prod_obj.browse(cr, uid, line['product_id'], context=context)
-                if product.type != 'service':
+                if product.type in ['product', 'consu']:
                     valdef = {
                         'picking_id': move.picking_id.id if move.picking_id else False,
                         'product_id': line['product_id'],
                         'product_uom': line['product_uom'],
                         'product_uom_qty': line['product_qty'],
-                        'product_uos': line['product_uos'],
-                        'product_uos_qty': line['product_uos_qty'],
                         'state': 'draft',  #will be confirmed below
                         'name': line['name'],
                         'procurement_id': move.procurement_id.id,
@@ -63,7 +61,7 @@ class StockMove(osv.osv):
                     mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
                     to_explode_again_ids.append(mid)
                 else:
-                    if prod_obj.need_procurement(cr, uid, [product.id], context=context):
+                    if prod_obj.type in ('consu','product'):
                         valdef = {
                             'name': move.rule_id and move.rule_id.name or "/",
                             'origin': move.origin,
@@ -72,8 +70,6 @@ class StockMove(osv.osv):
                             'product_id': line['product_id'],
                             'product_qty': line['product_qty'],
                             'product_uom': line['product_uom'],
-                            'product_uos_qty': line['product_uos_qty'],
-                            'product_uos': line['product_uos'],
                             'group_id': move.group_id.id,
                             'priority': move.priority,
                             'partner_dest_id': move.partner_id.id,

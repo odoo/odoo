@@ -271,7 +271,7 @@ def xml_translate(callback, value):
         return trans.get_done()
     except etree.ParseError:
         wrapped = "<div>%s</div>" % encode(value)
-        root = etree.fromstring(wrapped, etree.HTMLParser())
+        root = etree.fromstring(wrapped, etree.HTMLParser(encoding='utf-8'))
         # html > body > div
         trans.process(root[0][0])
         return trans.get_done()[5:-6]
@@ -767,7 +767,18 @@ def trans_generate(lang, modules, cr):
     def push_translation(module, type, name, id, source, comments=None):
         # empty and one-letter terms are ignored, they probably are not meant to be
         # translated, and would be very hard to translate anyway.
-        if not source or len(source.strip()) <= 1:
+        sanitized_term = (source or '').strip()
+        try:
+            # verify the minimal size without eventual xml tags
+            # wrap to make sure html content like '<a>b</a><c>d</c>' is accepted by lxml
+            wrapped = "<div>%s</div>" % sanitized_term
+            node = etree.fromstring(wrapped)
+            sanitized_term = etree.tostring(node, encoding='UTF-8', method='text')
+        except etree.ParseError:
+            pass
+        # remove non-alphanumeric chars
+        sanitized_term = re.sub(r'\W+', '', sanitized_term)
+        if not sanitized_term or len(sanitized_term) <= 1:
             return
 
         tnx = (module, source, name, id, type, tuple(comments or ()))
@@ -1017,7 +1028,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     # and we try to find the corresponding
                     # /path/to/xxx/i18n/xxx.pot file.
                     # (Sometimes we have 'i18n_extra' instead of just 'i18n')
-                    addons_module_i18n, _ = os.path.split(fileobj.name)
+                    addons_module_i18n, _ignored = os.path.split(fileobj.name)
                     addons_module, i18n_dir = os.path.split(addons_module_i18n)
                     addons, module = os.path.split(addons_module)
                     pot_handle = misc.file_open(os.path.join(
@@ -1028,7 +1039,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
         else:
             _logger.info('Bad file format: %s', fileformat)
-            raise Exception(_('Bad file format'))
+            raise Exception(_('Bad file format: %s') % fileformat)
 
         # Read the POT references, and keep them indexed by source string.
         class Target(object):
@@ -1038,7 +1049,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 self.comments = None
 
         pot_targets = defaultdict(Target)
-        for type, name, res_id, src, _, comments in pot_reader:
+        for type, name, res_id, src, _ignored, comments in pot_reader:
             if type is not None:
                 target = pot_targets[src]
                 target.targets.add((type, name, res_id))

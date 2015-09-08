@@ -630,6 +630,43 @@ var FieldBoolean = common.AbstractField.extend({
 });
 
 /**
+    This widget is intended to be used on stat button boolean fields.
+    It is a read-only field that will display a simple string "<label of value>".
+*/
+var FieldBooleanButton = common.AbstractField.extend({
+    className: 'o_stat_info',
+    init: function() {
+        this._super.apply(this, arguments);
+        switch (this.options["terminology"]) {
+            case "active":
+                this.string_true = _t("Active");
+                this.hover_true = _t("Deactivate");
+                this.string_false = _t("Inactive");
+                this.hover_false = _t("Activate");
+                break;
+            case "archive":
+                this.string_true = _t("Not Archived");
+                this.hover_true = _t("Archive");
+                this.string_false = _t("Archived");
+                this.hover_false = _t("Unarchive");
+                break;
+            default:
+                this.string_true = _t("On");
+                this.hover_true = _t("Switch Off");
+                this.string_false = _t("Off");
+                this.hover_false = _t("Switch On");
+        }
+    },
+    render_value: function() {
+        this._super();
+        this.$el.html(QWeb.render("BooleanButton", {widget: this}));
+    },
+    is_false: function() {
+        return false;
+    },
+});
+
+/**
     The progressbar field expect a float from 0 to 100.
 */
 var FieldProgressBar = common.AbstractField.extend(common.ReinitializeFieldMixin, {
@@ -1097,11 +1134,11 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     },
     initialize_content: function() {
         var self= this;
-        this.$el.find('input.oe_form_binary_file').change(this.on_file_change);
-        this.$el.find('button.oe_form_binary_file_save').click(this.on_save_as);
-        this.$el.find('.oe_form_binary_file_clear').click(this.on_clear);
-        this.$el.find('.oe_form_binary_file_edit').click(function(event){
-            self.$el.find('input.oe_form_binary_file').click();
+        this.$('input.o_form_input_file').change(this.on_file_change);
+        this.$('button.oe_form_binary_file_save').click(this.on_save_as);
+        this.$('.oe_form_binary_file_clear').click(this.on_clear);
+        this.$('.oe_form_binary_file_edit').click(function() {
+            self.$('input.o_form_input_file').click();
         });
     },
     on_file_change: function(e) {
@@ -1123,8 +1160,8 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
                     self.on_file_uploaded(file.size, file.name, file.type, data);
                 };
             } else {
-                this.$el.find('form.oe_form_binary_form input[name=session_id]').val(this.session.session_id);
-                this.$el.find('form.oe_form_binary_form').submit();
+                this.$el.find('form.o_form_binary_form input[name=session_id]').val(this.session.session_id);
+                this.$el.find('form.o_form_binary_form').submit();
             }
             this.$el.find('.oe_form_binary_progress').show();
             this.$el.find('.oe_form_binary').hide();
@@ -1597,6 +1634,7 @@ core.form_widget_registry
     .add('radio', FieldRadio)
     .add('reference', FieldReference)
     .add('boolean', FieldBoolean)
+    .add('boolean_button', FieldBooleanButton)
     .add('toggle_button', FieldToggleBoolean)
     .add('float', FieldFloat)
     .add('percentpie', FieldPercentPie)
@@ -1625,7 +1663,9 @@ core.form_tag_registry.add('button', WidgetButton);
 
 return {
     FieldChar: FieldChar,
-    FieldMonetary: FieldMonetary
+    FieldFloat: FieldFloat,
+    FieldMonetary: FieldMonetary,
+    WidgetButton: WidgetButton
 };
 
 });

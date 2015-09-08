@@ -1,6 +1,6 @@
 <templates id="template" xml:space="preserve">
     <t t-name="website_mail.thread_message">
-        <li class="media">
+        <li class="media" t-att-id="'message-' + id">
             <div class="media-body">
                 <img class="media-object pull-left" t-att-src="image_url" style="width: 50px; margin-right: 10px;"/>
                 <div class="media-body">

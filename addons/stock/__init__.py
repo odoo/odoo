@@ -8,5 +8,6 @@ import procurement
 import report
 import wizard
 import res_config
+import web_planner
 
 import controllers

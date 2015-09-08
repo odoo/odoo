@@ -10,7 +10,7 @@
           }
           self._update(cr, uid, 'account.budget.post', 'account_budget', vals, 'account_budget_post_sales0')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_consultancy'),
+              'analytic_account_id': ref('analytic.analytic_partners_camp_to_camp'),
               'general_budget_id': ref('account_budget_post_sales0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-01-01',
               'date_to': str(time.localtime(time.time())[0]+1)+'-01-31',
@@ -19,7 +19,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_2')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_consultancy'),
+              'analytic_account_id': ref('analytic.analytic_partners_camp_to_camp'),
               'general_budget_id': ref('account_budget_post_sales0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-02-07',
               'date_to': str(time.localtime(time.time())[0]+1)+'-02-28',
@@ -28,7 +28,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_3')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_consultancy'),
+              'analytic_account_id': ref('analytic.analytic_partners_camp_to_camp'),
               'general_budget_id': ref('account_budget_post_sales0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-03-01',
               'date_to': str(time.localtime(time.time())[0]+1)+'-03-15',
@@ -37,7 +37,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_4')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_super_product_trainings'),
+              'analytic_account_id': ref('analytic.analytic_our_super_product'),
               'general_budget_id': ref('account_budget_post_sales0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-03-16',
               'paid_date': str(time.localtime(time.time())[0]+1)+'-12-03',
@@ -47,7 +47,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_5')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_super_product_trainings'),
+              'analytic_account_id': ref('analytic.analytic_our_super_product'),
               'general_budget_id': ref('account_budget_post_sales0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-05-01',
               'paid_date': str(time.localtime(time.time())[0]+1)+'-12-03',
@@ -57,7 +57,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_7')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_seagate_p1'),
+              'analytic_account_id': ref('analytic.analytic_seagate_p2'),
               'general_budget_id': ref('account_budget_post_sales0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-07-16',
               'date_to': str(time.localtime(time.time())[0]+1)+'-07-31',
@@ -66,7 +66,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_11')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_seagate_p1'),
+              'analytic_account_id': ref('analytic.analytic_seagate_p2'),
               'general_budget_id': ref('account_budget_post_sales0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-02-01',
               'date_to': str(time.localtime(time.time())[0]+1)+'-02-28',
@@ -101,7 +101,7 @@
           }
           self._update(cr, uid, 'account.budget.post', 'account_budget', vals, 'account_budget_post_purchase0')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_consultancy'),
+              'analytic_account_id': ref('analytic.analytic_partners_camp_to_camp'),
               'general_budget_id': ref('account_budget_post_purchase0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-01-01',
               'date_to': str(time.localtime(time.time())[0]+1)+'-01-31',
@@ -110,7 +110,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_0')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_consultancy'),
+              'analytic_account_id': ref('analytic.analytic_partners_camp_to_camp'),
               'general_budget_id': ref('account_budget_post_purchase0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-02-01',
               'date_to': str(time.localtime(time.time())[0]+1)+'-02-28',
@@ -119,7 +119,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_1')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_super_product_trainings'),
+              'analytic_account_id': ref('analytic.analytic_our_super_product'),
               'general_budget_id': ref('account_budget_post_purchase0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-04-01',
               'date_to': str(time.localtime(time.time())[0]+1)+'-04-30',
@@ -128,7 +128,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_6')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_seagate_p1'),
+              'analytic_account_id': ref('analytic.analytic_seagate_p2'),
               'general_budget_id': ref('account_budget_post_purchase0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-06-01',
               'date_to': str(time.localtime(time.time())[0]+1)+'-06-15',
@@ -137,7 +137,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_8')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_seagate_p1'),
+              'analytic_account_id': ref('analytic.analytic_seagate_p2'),
               'general_budget_id': ref('account_budget_post_purchase0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-06-16',
               'date_to': str(time.localtime(time.time())[0]+1)+'-06-30',
@@ -146,7 +146,7 @@
           }
           self._update(cr, uid, 'crossovered.budget.lines', 'account_budget', vals, 'crossovered_budget_lines_9')
           vals = {
-              'analytic_account_id': ref('analytic.analytic_seagate_p1'),
+              'analytic_account_id': ref('analytic.analytic_seagate_p2'),
               'general_budget_id': ref('account_budget_post_purchase0'),
               'date_from': str(time.localtime(time.time())[0]+1)+'-07-01',
               'date_to': str(time.localtime(time.time())[0]+1)+'-07-15',

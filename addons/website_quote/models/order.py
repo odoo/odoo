@@ -22,7 +22,10 @@ class sale_quote_template(osv.osv):
         'note': fields.text('Terms and conditions'),
         'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True),
         'number_of_days': fields.integer('Quotation Duration', help='Number of days for the validity date computation of the quotation'),
-        'require_payment': fields.boolean('Immediate Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
+        'require_payment': fields.selection([
+            (0, 'Not mandatory on website quote validation'),
+            (1, 'Immediate after website order validation')
+            ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
     }
     def open_template(self, cr, uid, quote_id, context=None):
         return {
@@ -146,7 +149,10 @@ class sale_order(osv.osv):
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float", digits=0),
         'quote_viewed': fields.boolean('Quotation Viewed'),
-        'require_payment': fields.boolean('Immediate Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
+        'require_payment': fields.selection([
+            (0, 'Not mandatory on website quote validation'),
+            (1, 'Immediate after website order validation')
+            ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
     }
 
     def _get_template_id(self, cr, uid, context=None):

@@ -12,12 +12,36 @@ class crm_team(osv.Model):
     def _get_default_stage_ids(self, cr, uid, context=None):
         return [
             (0, 0, {
-                'name': _('New'),
+                'name': _('Incoming'),
                 'sequence': 1,
                 'probability': 10.0,
                 'on_change': True,
                 'fold': False,
                 'type': 'both',
+            }),
+            (0, 0, {
+                'name': _('Qualified'),
+                'sequence': 2,
+                'probability': 30.0,
+                'on_change': True,
+                'fold': False,
+                'type': 'opportunity',
+            }),
+            (0, 0, {
+                'name': _('Proposal'),
+                'sequence': 3,
+                'probability': 70.0,
+                'on_change': True,
+                'fold': False,
+                'type': 'opportunity',
+            }),
+            (0, 0, {
+                'name': _('Negotiation'),
+                'sequence': 4,
+                'probability': 85.0,
+                'on_change': True,
+                'fold': False,
+                'type': 'opportunity',
             }),
             (0, 0, {
                 'name': _('Won'),

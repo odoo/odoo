@@ -31,6 +31,7 @@ class event_event(models.Model):
     name = fields.Char(
         string='Name', translate=True, required=True,
         readonly=False, states={'done': [('readonly', True)]})
+    active = fields.Boolean(default=True, track_visibility="onchange")
     user_id = fields.Many2one(
         'res.users', string='Responsible',
         default=lambda self: self.env.user,

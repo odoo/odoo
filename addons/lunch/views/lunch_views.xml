@@ -394,7 +394,9 @@
                                 </div>
                             </group>
                         </group>
-                        <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline alert alert-danger"/>
+                        <div attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline alert alert-danger">
+                            <field name='alerts'/>
+                        </div>
                         <field name='previous_order_ids' widget='previous_order'/>
                         <separator string='Select your order'/>
                         <field name='order_line_ids' nolabel='1'>

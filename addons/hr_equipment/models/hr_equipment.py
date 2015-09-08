@@ -327,21 +327,6 @@ class HrEquipmentRequest(models.Model):
     }
 
     @api.model
-    def get_empty_list_help(self, help):
-        res = super(HrEquipmentRequest, self).get_empty_list_help(help)
-        alias_record = self.env.ref('hr_equipment.mail_alias_equipment')
-        check_alias_manage = self.env['ir.values'].get_default('hr.config.settings', 'alias_manage')
-        if alias_record and alias_record.alias_domain and alias_record.alias_name and res and check_alias_manage:
-            return _("""<p class="oe_view_nocontent_create">
-                            Click to add a new maintenance request or send an email to: <a>%(alias_name)s</a>
-                        </p>
-                        <p>
-                            Follow the process of the request and communicate with the collaborator.
-                        </p>"""
-                     ) % {'alias_name': alias_record.alias_name + '@' + alias_record.alias_domain}
-        return res
-
-    @api.model
     def message_new(self, msg, custom_values=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.

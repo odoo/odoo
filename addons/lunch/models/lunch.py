@@ -62,7 +62,7 @@ class LunchOrder(models.Model):
                      if alert.display]
 
         if self.state == 'new':
-            self.alerts = '\n'.join(alert_msg)
+            self.alerts = alert_msg and '\n'.join(alert_msg) or False
 
     @api.depends('state')
     def _compute_get_previous_order_ids(self):

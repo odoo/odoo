@@ -33,6 +33,11 @@
 
     .o_kanban_record {
         .clearfix();
+        &:after, &:before {
+            width: 0;
+            height: 0;
+        }
+
         position: relative;
         min-width: 150px;
         margin: 4px;
@@ -70,6 +75,7 @@
         .o_kanban_footer {
             .o-flex-display();
             .o-justify-content(space-between);
+            .o-align-items(center);
             > * {
                 .o-flex(0, 0, auto);
             }
@@ -88,17 +94,26 @@
         }
 
         .o_kanban_tags {
-            margin-left: -8px;
+            margin: 0 0 8px -8px;
             height: 9px;
             .o_tag {
-                width: 50px;
+                width: 40px;
                 height: 9px;
                 display: inline-block;
                 vertical-align: top;
+                opacity: 0.7;
+
+                &:hover {
+                    opacity: 1;
+                }
             }
         }
         .o_form_field_many2manytags {
             display: block;
+        }
+        .oe_kanban_text_red {
+            color: #A61300;
+            font-weight: bold;
         }
     }
 
@@ -136,7 +151,7 @@
             .o-flex(1, 1, @o-kanban-default-record-width);
             @media (max-width: @screen-xs-max) {
                 margin: 0 0 1px 0;
-                width: 100%;
+                .o-flex(1, 0, 100%);
                 box-shadow: none;
             }
 
@@ -149,7 +164,6 @@
                 padding: 0;
             }
         }
-
     }
 
     &.o_kanban_grouped {
@@ -258,7 +272,6 @@
         }
         .oe_kanban_avatar {
             .img-rounded;
-            border: 1px solid @odoo-main-color-muted;
             margin-left: 2px;
         }
 
@@ -268,8 +281,16 @@
             box-shadow: 0 1px 4px @gray-light;
         }
 
+        .o_kanban_attachment_image {
+            // The image should take the whole card
+            margin: 0 -8px -8px;
+            > img {
+                width: 100%;
+            }
+        }
         .o_progressbar {
             .o-flex-display();
+            height: 20px;
 
             .o_progressbar_title {
                 .o-flex(0, 0, auto);
@@ -280,23 +301,31 @@
             }
             .o_progressbar_value {
                 .o-flex(0, 0, auto);
-                width: auto;
                 text-align: right;
+                width: auto;
+                height: 100%;
+            }
+            input.o_progressbar_value {
+                width: 15%;
+                margin-left: 8px;
             }
         }
 
         .oe_kanban_colorpicker {
-            li {
-                float: left;
-                &:first-child a {
-                    border: 1px solid #ccc;
+            margin: 0;
+
+            > li {
+                display: inline-block;
+                margin-right: 1px;
+
+                > a {
+                    width: 15px;
+                    height: 15px;
+                    display: block;
                 }
 
-                a {
-                    width: 15px;
-                    height: 16px;
-                    display: inline-block;
-                    border: 1px solid white;
+                &:first-child > a {
+                    border: 1px solid #ccc;
                 }
             }
         }
@@ -342,15 +371,23 @@
                 white-space: nowrap;
                 padding-top: 5px;
             }
-
+            .o_kanban_quick_add.oe_tip_show_element i {
+                color: @odoo-brand-optional;
+            }
             .o_kanban_quick_add i {
                 .o-kanban-icon;
                 &:hover {
                     background-color: @odoo-brand-optional;
+                    color: white !important;
                 }
+            }
+            &:hover .o_kanban_config i {
+                visibility: visible;
             }
             .o_kanban_config i {
                 .o-kanban-icon;
+                visibility: hidden;
+                color: #ccc;
                 &:hover {
                     background-color: darken(@gray-light, 10%);
                 }

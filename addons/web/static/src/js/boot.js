@@ -189,8 +189,11 @@
                 if (!_.isEmpty(rejected))       log.push('\nRejected modules:       ', rejected);
                 if (!_.isEmpty(rejected_linked))log.push('\nRejected linked modules:', rejected_linked);
                 if (!_.isEmpty(unloaded))       log.push('\nNon loaded modules:     ', _.pluck(unloaded, 'name'));
-                if (!_.isEmpty(debug_jobs))     log.push('\nDebug:                  ', JSON.stringify(debug_jobs));
-                console[_.isEmpty(unloaded) ? 'info' : 'error'].apply(console, log);
+                if (odoo.debug && !_.isEmpty(debug_jobs)) log.push('\nDebug:                  ', debug_jobs);
+
+                if (odoo.debug || !_.isEmpty(failed) || !_.isEmpty(unloaded)) {
+                    console[_.isEmpty(unloaded) ? 'info' : 'error'].apply(console, log);
+                }
             }
         },
         process_jobs: function (jobs, services) {

@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Author: Goran Kliska
@@ -15,7 +15,7 @@ Croatian localisation.
 ======================
 
 Author: Goran Kliska, Slobodni programi d.o.o., Zagreb
-        http://www.slobodni-programi.hr
+        https://www.slobodni-programi.hr
 
 Contributions:
   Tomislav Bošnjaković, Storm Computers: tipovi konta
@@ -30,12 +30,12 @@ Vrste konta
 Kontni plan prema RRIF-u, dorađen u smislu kraćenja naziva i dodavanja analitika
 Porezne grupe prema poreznoj prijavi
 Porezi PDV obrasca
-Ostali porezi 
+Ostali porezi
 Osnovne fiskalne pozicije
 
 Izvori podataka:
- http://www.rrif.hr/dok/preuzimanje/rrif-rp2011.rar
- http://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar
+ https://www.rrif.hr/dok/preuzimanje/rrif-rp2011.rar
+ https://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar
 
 """,
     "version": "12.2",
@@ -44,18 +44,19 @@ Izvori podataka:
     "website": "https://code.launchpad.net/openobject-croatia",
 
     'depends': [
-                'account',
-                ],
+        'account',
+    ],
     'data': [
-                'data/account.account.type.csv',
-                'data/account.account.template.csv',
-                'l10n_hr_chart_template.xml',
-                'l10n_hr_wizard.xml',
-                'data/account.tax.template.csv',
-                'data/fiscal_position_template.xml',
-            ],
+        'data/account_chart_template.xml',
+        'data/account.account.type.csv',
+        'data/account.account.template.csv',
+        'data/account_chart_tag.xml',
+        'data/account.tax.template.csv',
+        'data/fiscal_position_template.xml',
+        'data/account_chart_template.yml',
+    ],
     "demo": [],
     'test': [],
     "active": False,
-    "installable": False,
+    "installable": True,
 }

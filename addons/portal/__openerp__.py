@@ -26,7 +26,6 @@ very handy when used in combination with the module 'share'.
         'portal_view.xml',
         'wizard/portal_wizard_view.xml',
         'security/ir.model.access.csv',
-        'views/portal.xml',
     ],
     'demo': ['portal_demo.xml'],
     'auto_install': True,

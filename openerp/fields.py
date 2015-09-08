@@ -15,7 +15,7 @@ import xmlrpclib
 from openerp.tools import float_round, frozendict, html_sanitize, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
-from openerp.exceptions import UserError
+from openerp.tools.translate import xml_translate
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -1227,6 +1227,12 @@ class Html(_String):
         'strip_style': False,           # whether to strip style attributes
     }
 
+    def _setup_attrs(self, model, name):
+        super(Html, self)._setup_attrs(model, name)
+        # Translated sanitized html fields must use xml_translate or a callable.
+        if self.translate and not callable(self.translate) and self.sanitize:
+            self.translate = xml_translate
+
     _column_sanitize = property(attrgetter('sanitize'))
     _related_sanitize = property(attrgetter('sanitize'))
     _description_sanitize = property(attrgetter('sanitize'))
@@ -1881,6 +1887,9 @@ class Many2many(_RelationalMulti):
             column = self.to_column()
             if isinstance(column, fields.many2many):
                 self.relation, self.column1, self.column2 = column._sql_names(model)
+        elif self.store:
+            # check validity of table name
+            check_pg_name(self.relation)
 
     def _setup_regular_full(self, model):
         super(Many2many, self)._setup_regular_full(model)
@@ -1936,5 +1945,5 @@ class Id(Field):
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID, registry
 from .exceptions import Warning, AccessError, MissingError
-from .models import BaseModel, MAGIC_COLUMNS
+from .models import check_pg_name, BaseModel, MAGIC_COLUMNS
 from .osv import fields

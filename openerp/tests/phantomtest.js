@@ -2,6 +2,7 @@
 // jshint evil: true, loopfunc: true
 
 var system = require('system');
+var HOST = '127.0.0.1';
 
 function waitFor (condition, callback, timeout, timeoutMessageCallback) {
     timeout = timeout || 10000;
@@ -24,14 +25,14 @@ function PhantomTest() {
     this.options = JSON.parse(system.args[system.args.length-1]);
     this.inject = this.options.inject || [];
     this.timeout = this.options.timeout ? Math.round(parseFloat(this.options.timeout)*1000 - 5000) : 10000;
-    this.origin = 'http://localhost';
+    this.origin = 'http://' + HOST;
     this.origin += this.options.port ? ':' + this.options.port : '';
 
     // ----------------------------------------------------
     // configure phantom and page
     // ----------------------------------------------------
     phantom.addCookie({
-        'domain': 'localhost',
+        'domain': HOST,
         'name': 'session_id',
         'value': this.options.session_id,
     });

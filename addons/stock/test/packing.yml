@@ -49,7 +49,7 @@
     #Create package for each line and assign it as result_package_id
     #create pack operation
     stock_pack.write(cr, uid, record.pack_operation_ids[0].id, {'result_package_id': package1, 'product_qty': 120})
-    new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'lot_id': lot_a, 'result_package_id': package2, 'product_qty': 120, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
+    new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'pack_lot_ids': [(0, 0, {'lot_id': lot_a, 'qty': 120})], 'result_package_id': package2, 'product_qty': 120, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
     new_pack2 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'result_package_id': package3, 'product_qty': 60, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
 - 
   Transfer the receipt
@@ -106,7 +106,7 @@
     for rec in delivery_id.pack_operation_ids:
       if rec.package_id.name == 'Pallet 2':
         lot_ids = self.pool.get("stock.production.lot").search(cr, uid, [('product_id', '=', ref('product1')), ('name','=','Lot A')])
-        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'), 'product_qty': 20, 'lot_id': lot_ids[0], 'product_uom_id': ref('product.product_uom_unit')}, context=context)
+        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'), 'product_qty': 20, 'pack_lot_ids': [(0, 0, {'lot_id': lot_ids[0], 'qty': 20})],  'product_uom_id': ref('product.product_uom_unit')}, context=context)
       if rec.package_id.name == 'Pallet 3':
         stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'),'product_qty': 10, 'product_uom_id': ref('product.product_uom_unit')}, context=context)
 - 

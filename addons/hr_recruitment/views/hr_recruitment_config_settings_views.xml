@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
-        <!-- After installation of the module, open the related menu -->
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="hr.action_client_hr_menu"/>
-            <field name="state">open</field>
-        </record>
-    </data>
     <data>
         <record id="view_hr_recruitment_configuration" model="ir.ui.view">
             <field name="name">Configure Recruitment</field>
@@ -19,12 +12,6 @@
                     </header>
                     <group string="Recruitment">
                         <field name="module_document" widget="radio"/>
-
-                        <label string="Default job email address" for="alias_prefix" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                        <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                            <field name="alias_prefix" class="oe_inline" attrs="{'required': [('alias_domain', '!=', False)]}"/>
-                            @<field name="alias_domain" class="oe_inline" readonly="1"/>
-                        </div>
                     </group>
                 </form>
             </field>

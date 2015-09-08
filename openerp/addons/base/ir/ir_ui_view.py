@@ -94,10 +94,17 @@ def get_view_arch_from_file(filename, xmlid):
 
     doc = etree.parse(filename)
     node = None
-    for n in doc.xpath('//*[@id="%s"] | //*[@id="%s"]' % (xmlid, xmlid.split('.')[1])):
+    for n in doc.xpath('//*[@id="%s"]' % (xmlid)):
         if n.tag in ('template', 'record'):
             node = n
             break
+    if node is None:  
+        # fallback search on template with implicit module name
+        for n in doc.xpath('//*[@id="%s"]' % (xmlid.split('.')[1])):
+            if n.tag in ('template', 'record'):
+                node = n
+                break
+
     if node is not None:
         if node.tag == 'record':
             field = node.find('field[@name="arch"]')
@@ -200,11 +207,11 @@ class view(osv.osv):
             ('form','Form'),
             ('graph', 'Graph'),
             ('pivot', 'Pivot'),
-            ('timeline', 'Timeline'),
             ('calendar', 'Calendar'),
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
             ('kanban', 'Kanban'),
+            ('sales_team_dashboard', 'Sales Team Dashboard'),
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
         'arch': fields.function(_arch_get, fnct_inv=_arch_set, string='View Architecture', type="text", nodrop=True),

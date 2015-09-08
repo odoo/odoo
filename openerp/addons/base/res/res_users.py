@@ -84,6 +84,7 @@ class res_groups(osv.osv):
         'view_access': fields.many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', 'Views'),
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
+        'color': fields.integer('Color Index'),
         'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
         'share': fields.boolean('Share Group',
                     help="Group created to set access rights for sharing data with some users.")
@@ -775,6 +776,7 @@ class groups_view(osv.osv):
             user_context.update(self.pool['res.users'].context_get(cr, uid))
         view = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.user_groups_view', context=user_context)
         if view and view.exists() and view._name == 'ir.ui.view':
+            group_no_one = view.env.ref('base.group_no_one')
             xml1, xml2 = [], []
             xml1.append(E.separator(string=_('Application'), colspan="2"))
             for app, kind, gs in self.get_groups_by_application(cr, uid, user_context):
@@ -791,7 +793,11 @@ class groups_view(osv.osv):
                     xml2.append(E.separator(string=app_name, colspan="4", **attrs))
                     for g in gs:
                         field_name = name_boolean_group(g.id)
-                        xml2.append(E.field(name=field_name, **attrs))
+                        if g == group_no_one:
+                            # make the group_no_one invisible in the form view
+                            xml2.append(E.field(name=field_name, invisible="1", **attrs))
+                        else:
+                            xml2.append(E.field(name=field_name, **attrs))
 
             xml2.append({'class': "o_label_nowrap"})
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")

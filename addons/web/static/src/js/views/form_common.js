@@ -756,11 +756,7 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         if (this.field.translate) {
             this.$el.find('.oe_field_translate').toggle(this.field_manager.get('actual_mode') !== "create");
         }
-        if (!this.disable_utility_classes) {
-            if (this.field_manager.get('display_invalid_fields')) {
-                this.$el.toggleClass('oe_form_invalid', !this.is_valid());
-            }
-        }
+        this.$el.toggleClass('oe_form_invalid', !this.disable_utility_classes && !!this.field_manager.get('display_invalid_fields') && !this.is_valid());
     },
     focus: function() {
         return false;

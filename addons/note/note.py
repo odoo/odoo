@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
+from openerp import _, SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 
@@ -26,7 +26,8 @@ class note_tag(osv.osv):
     _name = "note.tag"
     _description = "Note Tag"
     _columns = {
-        'name' : fields.char('Tag Name', required=True),
+        'name': fields.char('Tag Name', required=True),
+        'color': fields.integer('Color Index'),
     }
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -155,6 +156,13 @@ class note_note(osv.osv):
         else:
             return super(note_note, self).read_group(cr, uid, domain, fields, groupby,
                 offset=offset, limit=limit, context=context, orderby=orderby,lazy=lazy)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(note_note, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+        res['user'] = {
+            'actions': [{'url': self._notification_link_helper(cr, uid, ids, 'new', context=context), 'title': _('New Note')}]
+        }
+        return res
 
 
 class res_users(osv.Model):

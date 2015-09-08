@@ -299,12 +299,14 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
      **/
     render_sidebar: function($node) {
         if (!this.sidebar && this.options.sidebar) {
-            this.sidebar = new Sidebar(this);
+            this.sidebar = new Sidebar(this, {editable: this.is_action_enabled('edit')});
             if (this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
             this.sidebar.add_items('other', _.compact([
                 { label: _t("Export"), callback: this.on_sidebar_export },
+                this.fields_view.fields.active && {label: _t("Archive"), callback: this.do_archive_selected},
+                this.fields_view.fields.active && {label: _t("Unarchive"), callback: this.do_unarchive_selected},
                 this.is_action_enabled('delete') && { label: _t('Delete'), callback: this.do_delete_selected }
             ]));
 
@@ -552,7 +554,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
                     return r.tag === 'field';
                 }), 'name'),
             {check_access_rule: true}
-        ).done(function (records) {
+        ).then(function (records) {
             var values = records[0];
             if (!values) {
                 self.records.remove(record);
@@ -564,6 +566,15 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
                 record.set(key, value, {silent: true});            
             });
             record.trigger('change', record);
+
+            /* When a record is reloaded, there is a rendering lag because of the addition/suppression of 
+            a table row. Since the list view editable need to wait for the end of this rendering lag before
+            computing the position of the editable fields, a 100ms delay is added. */
+            var def = $.Deferred();
+            setTimeout(function() {
+                def.resolve(records);
+            }, 100);
+            return def;
         });
     },
 
@@ -743,6 +754,30 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             this.do_delete(this.groups.get_selection().ids);
         } else {
             this.do_warn(_t("Warning"), _t("You must select at least one record."));
+        }
+    },
+    /**
+     * Handles archiving/unarchiving of selected lines
+     */
+    do_archive_selected: function () {
+        var records = this.groups.get_selection().records;
+        this.do_archive(records, true);
+    },
+    do_unarchive_selected: function () {
+        var records = this.groups.get_selection().records;
+        this.do_archive(records, false);
+    },
+    do_archive: function (records, archive) {
+        var active_value = !archive;
+        var record_ids = [];
+        _.each(records, function(record) {
+            if (record.active != active_value) {
+                record_ids.push(record.id);
+            }
+        });
+        if (record_ids.length) {
+            this.dataset.call('write', [record_ids, {active: active_value}])
+                        .done(_.bind(this.reload, this));
         }
     },
     /**
@@ -1117,12 +1152,14 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
                 var ids;
                 // they come in two shapes:
                 if (value[0] instanceof Array) {
-                    var command = value[0];
-                    // 1. an array of m2m commands (usually (6, false, ids))
-                    if (command[0] !== 6) {
-                        throw new Error(_.str.sprintf( _t("Unknown m2m command %s"), command[0]));
-                    }
-                    ids = command[2];
+                    _.each(value, function(command) {
+                        switch (command[0]) {
+                            case 4: ids.push(command[1]); break;
+                            case 5: ids = []; break;
+                            case 6: ids = command[2]; break;
+                            default: throw new Error(_.str.sprintf( _t("Unknown m2m command %s"), command[0]));
+                        }
+                    });
                 } else {
                     // 2. an array of ids
                     ids = value;

@@ -20,7 +20,7 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
-            <field name="model">im_chat.session</field>
+            <field name="model">mail.channel</field>
             <field name="function">cron_remove_empty_session</field>
             <field name="active" eval="True"/>
         </record>
@@ -28,47 +28,20 @@
     </data>
 
     <data>
-        <!-- Custom Filters -->
-        <record id="im_livechat_report_filter_session_by_day" model="ir.filters">
-            <field name="name">Sessions by day</field>
-            <field name="model_id">im_livechat.report</field>
-            <field name="domain">[('nbr_speakers','&gt;', 1)]</field>
-            <field name="context">{'group_by': ['start_date:day', 'session_name']}</field>
-            <field name="is_default">v</field>
-            <field name="user_id" eval="False"/>
-        </record>
-
-        <record id="im_livechat_report_filter_session_last_24h" model="ir.filters">
-            <field name="name">Last 24h stats</field>
-            <field name="model_id">im_livechat.report</field>
-            <field name="domain">[('start_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d') )]</field>
-            <field name="context">{'group_by': ['start_date:day', 'session_name']}</field>
-            <field name="user_id" eval="False"/>
-        </record>
-
-        <record id="im_livechat_report_filter_operator_stats" model="ir.filters">
-            <field name="name">Operators stats</field>
-            <field name="model_id">im_livechat.report</field>
-            <field name="domain">[('nbr_speakers','&gt;', 1), ('user_id', '!=', False)]</field>
-            <field name="context">{'group_by': ['start_date:month',  'user_id', 'uuid']}</field>
-            <field name="user_id" eval="False"/>
-        </record>
-
-
         <!-- Smiley for rating to be displayed in the conversation -->
-        <record id="im_chat_shortcode_rating_0" model="im_chat.shortcode">
+        <record id="mail_shortcode_rating_0" model="mail.shortcode">
             <field name="source">:rating_0</field>
             <field name="substitution">&lt;img src='/rating/static/src/img/rating_0.png'/&gt;</field>
             <field name="description">Rating Smiley Bad</field>
         </record>
 
-        <record id="im_chat_shortcode_rating_5" model="im_chat.shortcode">
+        <record id="mail_shortcode_rating_5" model="mail.shortcode">
             <field name="source">:rating_5</field>
             <field name="substitution">&lt;img src='/rating/static/src/img/rating_5.png'/&gt;</field>
             <field name="description">Rating Smiley Okay</field>
         </record>
 
-        <record id="im_chat_shorcode_rating_10" model="im_chat.shortcode">
+        <record id="mail_shorcode_rating_10" model="mail.shortcode">
             <field name="source">:rating_10</field>
             <field name="substitution">&lt;img src='/rating/static/src/img/rating_10.png'/&gt;</field>
             <field name="description">Rating Smiley Good</field>

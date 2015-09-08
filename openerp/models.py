@@ -22,6 +22,7 @@
 """
 
 import datetime
+import dateutil
 import functools
 import itertools
 import logging
@@ -60,9 +61,23 @@ _unlink = logging.getLogger(__name__ + '.unlink')
 
 regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
+regex_pg_name = re.compile(r'[a-z_][a-z0-9_$]*', re.I)
 onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
+
+# base environment for doing a safe eval
+SAFE_EVAL_BASE = {
+    'datetime': datetime,
+    'dateutil': dateutil,
+    'time': time,
+}
+
+def make_compute(text, deps):
+    """ Return a compute function from its code body and dependencies. """
+    func = lambda self: eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
+    deps = [arg.strip() for arg in (deps or "").split(",")]
+    return api.depends(*deps)(func)
 
 
 def check_object_name(name):
@@ -91,6 +106,13 @@ def raise_on_invalid_object_name(name):
     if not check_object_name(name):
         msg = "The _name attribute %s is not valid." % name
         raise ValueError(msg)
+
+def check_pg_name(name):
+    """ Check whether the given name is a valid PostgreSQL identifier name. """
+    if not regex_pg_name.match(name):
+        raise ValueError("Invalid characters in table name %r" % name)
+    if len(name) > 63:
+        raise ValueError("Table name %r is too long" % name)
 
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -701,6 +723,9 @@ class BaseModel(object):
                 attrs['column1'] = field['column1'] or col1
                 attrs['column2'] = field['column2'] or col2
                 attrs['domain'] = eval(field['domain']) if field['domain'] else None
+            # add compute function if given
+            if field['compute']:
+                attrs['compute'] = make_compute(field['compute'], field['depends'])
             self._add_field(name, Field.by_type[field['ttype']](**attrs))
 
     @classmethod
@@ -779,6 +804,8 @@ class BaseModel(object):
         if not hasattr(cls, '_log_access'):
             # If _log_access is not specified, it is the same value as _auto.
             cls._log_access = cls._auto
+
+        check_pg_name(cls._table)
 
         # Transience
         if cls.is_transient():
@@ -1339,8 +1366,17 @@ class BaseModel(object):
            :return: True if the current user is a member of one of the
                     given groups
         """
-        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id)
-                   for group_ext_id in groups.split(','))
+        from openerp.http import request
+        Users = self.pool['res.users']
+        for group_ext_id in groups.split(','):
+            if group_ext_id == 'base.group_no_one':
+                # check: the group_no_one is effective in debug mode only
+                if Users.has_group(cr, uid, group_ext_id) and request and request.debug:
+                    return True
+            else:
+                if Users.has_group(cr, uid, group_ext_id):
+                    return True
+        return False
 
     def _get_default_form_view(self, cr, user, context=None):
         """ Generates a default single-line form view using all fields
@@ -2758,8 +2794,8 @@ class BaseModel(object):
             if not cr.fetchall():
                 self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade')
 
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col1, m2m_tbl, col1))
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col2, m2m_tbl, col2))
+            cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col1))
+            cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col2))
             cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, ref))
             cr.commit()
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
@@ -4000,18 +4036,22 @@ class BaseModel(object):
 
         done = {}
         recs.env.recompute_old.extend(result)
-        for order, model_name, ids_to_update, fields_to_recompute in sorted(recs.env.recompute_old):
-            key = (model_name, tuple(fields_to_recompute))
-            done.setdefault(key, {})
-            # avoid to do several times the same computation
-            todo = []
-            for id in ids_to_update:
-                if id not in done[key]:
-                    done[key][id] = True
-                    if id not in deleted_related[model_name]:
-                        todo.append(id)
-            self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
-        recs.env.clear_recompute_old()
+        while recs.env.recompute_old:
+            sorted_recompute_old = sorted(recs.env.recompute_old)
+            recs.env.clear_recompute_old()
+            for __, model_name, ids_to_update, fields_to_recompute in \
+                    sorted_recompute_old:
+                key = (model_name, tuple(fields_to_recompute))
+                done.setdefault(key, {})
+                # avoid to do several times the same computation
+                todo = []
+                for id in ids_to_update:
+                    if id not in done[key]:
+                        done[key][id] = True
+                        if id not in deleted_related[model_name]:
+                            todo.append(id)
+                self.pool[model_name]._store_set_values(
+                    cr, user, todo, fields_to_recompute, context)
 
         # recompute new-style fields
         if recs.env.recompute and context.get('recompute', True):
@@ -4268,11 +4308,15 @@ class BaseModel(object):
 
         if recs.env.recompute and context.get('recompute', True):
             done = []
-            for order, model_name, ids, fields2 in sorted(recs.env.recompute_old):
-                if not (model_name, ids, fields2) in done:
-                    self.pool[model_name]._store_set_values(cr, user, ids, fields2, context)
-                    done.append((model_name, ids, fields2))
-            recs.env.clear_recompute_old()
+            while recs.env.recompute_old:
+                sorted_recompute_old = sorted(recs.env.recompute_old)
+                recs.env.clear_recompute_old()
+                for __, model_name, ids, fields2 in sorted_recompute_old:
+                    if not (model_name, ids, fields2) in done:
+                        self.pool[model_name]._store_set_values(
+                            cr, user, ids, fields2, context)
+                        done.append((model_name, ids, fields2))
+
             # recompute new-style fields
             recs.recompute()
 
@@ -5184,6 +5228,12 @@ class BaseModel(object):
         # reorder read
         index = dict((r['id'], r) for r in result)
         return [index[x] for x in record_ids if x in index]
+
+    @api.multi
+    def toggle_active(self):
+        """ Inverse the value of the field ``active`` on the records in ``self``. """
+        for record in self:
+            record.active = not record.active
 
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """

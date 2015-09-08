@@ -135,7 +135,7 @@ class Category(models.Model):
     _order = "sequence, id"
 
     name = fields.Char('Name', translate=True, required=True)
-    channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
+    channel_id = fields.Many2one('slide.channel', string="Channel", required=True, ondelete='cascade')
     sequence = fields.Integer(default=10, help='Display order')
     slide_ids = fields.One2many('slide.slide', 'category_id', string="Slides")
     nbr_presentations = fields.Integer("Number of Presentations", compute='_count_presentations', store=True)
@@ -213,7 +213,7 @@ class Slide(models.Model):
     _description = 'Slides'
 
     _PROMOTIONAL_FIELDS = [
-        '__last_update', 'name', 'image_thumb', 'slide_type', 'total_views', 'category_id',
+        '__last_update', 'name', 'image_thumb', 'image_medium', 'slide_type', 'total_views', 'category_id',
         'channel_id', 'description', 'tag_ids', 'write_date', 'create_date',
         'website_published', 'website_url', 'website_meta_title', 'website_meta_description', 'website_meta_keywords']
 
@@ -239,8 +239,8 @@ class Slide(models.Model):
     def _get_image(self):
         for record in self:
             if record.image:
-                record.image_medium = image.crop_image(record.image, thumbnail_ratio=3)
-                record.image_thumb = image.crop_image(record.image, thumbnail_ratio=4)
+                record.image_medium = image.crop_image(record.image, type='top', ratio=(4, 3), thumbnail_ratio=4)
+                record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), thumbnail_ratio=6)
             else:
                 record.image_medium = False
                 record.iamge_thumb = False
@@ -314,7 +314,12 @@ class Slide(models.Model):
     def _website_url(self, name, arg):
         res = super(Slide, self)._website_url(name, arg)
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        res.update({(slide.id, '%s/slides/slide/%s' % (base_url, slug(slide))) for slide in self})
+        #link_tracker is not in dependencies, so use it to shorten url only if installed.
+        if self.env.registry.get('link.tracker'):
+            LinkTracker = self.env['link.tracker']
+            res.update({(slide.id, LinkTracker.sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url) for slide in self})
+        else:
+            res.update({(slide.id, '%s/slides/slide/%s' % (base_url, slug(slide))) for slide in self})
         return res
 
 
@@ -354,13 +359,13 @@ class Slide(models.Model):
     def check_field_access_rights(self, operation, fields):
         """ As per channel access configuration (visibility)
          - public  ==> no restriction on slides access
-         - private ==> restrict all slides of channel base on access group defined on channel group_ids field
+         - private ==> restrict all slides of channel based on access group defined on channel group_ids field
          - partial ==> show channel, but presentations based on groups means any user can see channel but not slide's content.
         For private: implement using record rule
         For partial: user can see channel, but channel gridview have slide detail so we have to implement
         partial field access mechanism for public user so he can have access of promotional field (name, view_count) of slides,
         but not all fields like data (actual pdf content)
-        all fields should be accessible only for user group define on channel group_ids
+        all fields should be accessible only for user group defined on channel group_ids
         """
         if self.env.uid == SUPERUSER_ID:
             return fields or list(self._fields)

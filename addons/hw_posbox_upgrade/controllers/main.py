@@ -6,6 +6,7 @@ import time
 import openerp
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import threading
+import subprocess
 from openerp import http
 from openerp.http import request
 from openerp.tools.translate import _
@@ -74,6 +75,14 @@ upgrade_template = """
         <p>
         To upgrade the posbox, click on the upgrade button. The upgrade will take a few minutes. <b>Do not reboot</b> the PosBox during the upgrade.
         </p>
+        <p>
+        Latest patch:
+        </p>
+        <pre>
+"""
+upgrade_template += subprocess.check_output("git --work-tree=/home/pi/odoo/ --git-dir=/home/pi/odoo/.git log -1", shell=True).replace("\n", "<br/>")
+upgrade_template += """
+        </pre>
         <div class='centering'>
             <a href='#' id='upgrade'>Upgrade</a>
         </div>
@@ -95,7 +104,7 @@ class PosboxUpgrader(hw_proxy.Proxy):
     def perform_upgrade(self):
         self.upgrading.acquire()
 
-        os.system('/home/pi/posbox_update.sh')
+        os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
         
         self.upgrading.release()
         return 'SUCCESS'

@@ -363,6 +363,9 @@ class gamification_challenge(osv.Model):
 
         Create goals that haven't been created yet (eg: if added users)
         Recompute the current value for each goal related"""
+        goal_obj = self.pool['gamification.goal']
+        goal_ids = goal_obj.search(cr, uid, [('challenge_id', 'in', ids), ('state', '=', 'inprogress')], context=context)
+        goal_obj.unlink(cr, uid, goal_ids, context=context)
         return self._update_all(cr, uid, ids=ids, context=context)
 
     def action_report_progress(self, cr, uid, ids, context=None):
@@ -737,7 +740,7 @@ class gamification_challenge(osv.Model):
                     user_names = self.pool['res.users'].name_get(cr, uid, rewarded_users, context=context)
                     message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s." % (challenge.reward_id.name, ", ".join([name for (user_id, name) in user_names])))
                 else:
-                    message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewared for this challenge.")
+                    message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
 
                 # reward bests
                 if challenge.reward_first_id:

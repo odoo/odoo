@@ -10,7 +10,7 @@
                     <group>
                          <group>
                              <field name="refund_only" invisible="1"/>
-                             <field name="filter_refund" attrs="{'invisible': [('refund_only','=',True)]}"/>
+                             <field name="filter_refund" attrs="{'invisible': [('refund_only','=',True)]}" widget="radio"/>
                          </group>
                          <group>
                              <div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','&lt;&gt;','refund')]}" class="oe_grey" colspan="4">

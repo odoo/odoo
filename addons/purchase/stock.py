@@ -6,6 +6,14 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
+class stock_picking(osv.osv):
+    _inherit = 'stock.picking'
+    _columns = {
+        'purchase_id': fields.related('move_lines', 'purchase_line_id', 'order_id', string="Purchase Orders",
+            readonly=True, relation="many2one"),
+    }
+
+
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
@@ -18,33 +26,7 @@ class stock_move(osv.osv):
         """ Returns the unit price to store on the quant """
         if move.purchase_line_id:
             return move.price_unit
-
         return super(stock_move, self).get_price_unit(cr, uid, move, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
-        from openerp import workflow
-        if vals.get('state') in ['done', 'cancel']:
-            po_to_check = []
-            for move in self.browse(cr, uid, ids, context=context):
-                if move.purchase_line_id and move.purchase_line_id.order_id:
-                    order = move.purchase_line_id.order_id
-                    order_id = order.id
-                    # update linked purchase order as superuser as the warehouse
-                    # user may not have rights to access purchase.order
-                    if self.pool.get('purchase.order').test_moves_done(cr, uid, [order_id], context=context):
-                        workflow.trg_validate(SUPERUSER_ID, 'purchase.order', order_id, 'picking_done', cr)
-                    if self.pool.get('purchase.order').test_moves_except(cr, uid, [order_id], context=context):
-                        workflow.trg_validate(SUPERUSER_ID, 'purchase.order', order_id, 'picking_cancel', cr)
-                    if order_id not in po_to_check and vals['state'] == 'cancel' and order.invoice_method == 'picking':
-                        po_to_check.append(order_id)
-            # Some moves which are cancelled might be part of a PO line which is partially
-            # invoiced, so we check if some PO line can be set on "invoiced = True".
-            if po_to_check:
-                self.pool.get('purchase.order')._set_po_lines_invoiced(cr, uid, po_to_check, context=context)
-        return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
@@ -53,150 +35,6 @@ class stock_move(osv.osv):
             #we don't want to propagate the link to the purchase order line except in case of move split
             default['purchase_line_id'] = False
         return super(stock_move, self).copy(cr, uid, id, default, context)
-
-    def _get_master_data(self, cr, uid, move, inv_type, context=None):
-        if inv_type == 'in_invoice' and move.purchase_line_id:
-            purchase_order = move.purchase_line_id.order_id
-            return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
-        if inv_type == 'in_refund' and move.origin_returned_move_id.purchase_line_id:
-            purchase_order = move.origin_returned_move_id.purchase_line_id.order_id
-            return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
-        elif inv_type in ('in_invoice', 'in_refund') and move.picking_id:
-            # In case of an extra move, it is better to use the data from the original moves
-            for purchase_move in move.picking_id.move_lines:
-                if purchase_move.purchase_line_id:
-                    purchase_order = purchase_move.purchase_line_id.order_id
-                    return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
-
-            partner = move.picking_id and move.picking_id.partner_id or False
-            code = self.get_code_from_locs(cr, uid, move, context=context)
-            if partner and partner.property_product_pricelist_purchase and code == 'incoming':
-                currency = partner.property_product_pricelist_purchase.currency_id.id
-                return partner, uid, currency
-        return super(stock_move, self)._get_master_data(cr, uid, move, inv_type, context=context)
-
-    def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
-        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
-        purchase_line = False
-        if inv_type == 'in_invoice' and move.purchase_line_id:
-            purchase_line = move.purchase_line_id
-        elif inv_type == 'in_refund' and move.origin_returned_move_id.purchase_line_id:
-            purchase_line = move.origin_returned_move_id.purchase_line_id
-        if purchase_line:
-            res['invoice_line_tax_ids'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
-            res['price_unit'] = purchase_line.price_unit
-            res['account_analytic_id'] = purchase_line.account_analytic_id.id
-            res['purchase_line_ids'] = [(4, purchase_line.id)]
-        return res
-
-    def _get_moves_taxes(self, cr, uid, moves, inv_type, context=None):
-        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, inv_type, context=context)
-        if inv_type == 'in_invoice':
-            for move in moves:
-                if move.purchase_line_id:
-                    is_extra_move[move.id] = False
-                    extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.purchase_line_id.taxes_id])]
-                elif move.product_id.product_tmpl_id.supplier_taxes_id:
-                    mov_id = self.search(cr, uid, [('purchase_line_id', '!=', False), ('picking_id', '=', move.picking_id.id)], limit=1, context=context)
-                    if mov_id:
-                        mov = self.browse(cr, uid, mov_id[0], context=context)
-                        fp = mov.purchase_line_id.order_id.fiscal_position
-                        res = self.pool.get("account.invoice.line").product_id_change(cr, uid, [], move.product_id.id, None, partner_id=move.picking_id.partner_id.id, fposition_id=(fp and fp.id), type='in_invoice', context=context)
-                        extra_move_tax[0, move.product_id] = [(6, 0, res['value']['invoice_line_tax_ids'])]
-        return (is_extra_move, extra_move_tax)
-
-
-    def attribute_price(self, cr, uid, move, context=None):
-        """
-            Attribute price to move, important in inter-company moves or receipts with only one partner
-        """
-        # The method attribute_price of the parent class sets the price to the standard product
-        # price if move.price_unit is zero. We don't want this behavior in the case of a purchase
-        # order since we can purchase goods which are free of charge (e.g. 5 units offered if 100
-        # are purchased).
-        if move.purchase_line_id:
-            return
-
-        code = self.get_code_from_locs(cr, uid, move, context=context)
-        if not move.purchase_line_id and code == 'incoming' and not move.price_unit:
-            partner = move.picking_id and move.picking_id.partner_id or False
-            price = False
-            # If partner given, search price in its purchase pricelist
-            if partner and partner.property_product_pricelist_purchase:
-                pricelist_obj = self.pool.get("product.pricelist")
-                pricelist = partner.property_product_pricelist_purchase.id
-                price = pricelist_obj.price_get(cr, uid, [pricelist],
-                                    move.product_id.id, move.product_uom_qty, partner.id, {
-                                                                                'uom': move.product_uom.id,
-                                                                                'date': move.date,
-                                                                                })[pricelist]
-                if price:
-                    return self.write(cr, uid, [move.id], {'price_unit': price}, context=context)
-        super(stock_move, self).attribute_price(cr, uid, move, context=context)
-
-    def _get_taxes(self, cr, uid, move, context=None):
-        if move.origin_returned_move_id.purchase_line_id.taxes_id:
-            return [tax.id for tax in move.origin_returned_move_id.purchase_line_id.taxes_id]
-        return super(stock_move, self)._get_taxes(cr, uid, move, context=context)
-
-class stock_picking(osv.osv):
-    _inherit = 'stock.picking'
-    
-    def _get_to_invoice(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for picking in self.browse(cr, uid, ids, context=context):
-            res[picking.id] = False
-            for move in picking.move_lines:
-                if move.purchase_line_id and move.purchase_line_id.order_id.invoice_method == 'picking':
-                    if not move.move_orig_ids:
-                        res[picking.id] = True
-        return res
-
-    def _get_picking_to_recompute(self, cr, uid, ids, context=None):
-        picking_ids = set()
-        for move in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
-            if move.picking_id and move.purchase_line_id:
-                picking_ids.add(move.picking_id.id)
-        return list(picking_ids)
-
-    _columns = {
-        'reception_to_invoice': fields.function(_get_to_invoice, type='boolean', string='Invoiceable on incoming shipment',
-               help='Does the picking contain some moves related to a purchase order invoiceable on the receipt?',
-               store={
-                   'stock.move': (_get_picking_to_recompute, ['purchase_line_id', 'picking_id'], 10),
-               }),
-    }
-
-    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, moves, context=None):
-        inv_vals = super(stock_picking, self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, moves, context=context)
-        purchases = []
-        for move in moves:
-            if move.purchase_line_id or move.origin_returned_move_id.purchase_line_id:
-                purchase = move.purchase_line_id.order_id or move.origin_returned_move_id.purchase_line_id.order_id
-                inv_vals.update({
-                    'fiscal_position_id': purchase.fiscal_position_id.id,
-                    'payment_term_id': purchase.payment_term_id.id,
-                    })
-                purchases.append(purchase.id)
-        if purchases:
-            inv_vals['purchase_ids'] = [(6, 0, list(set(purchases)))]
-        return inv_vals
-
-    def get_service_line_vals(self, cr, uid, moves, partner, inv_type, context=None):
-        purchase_obj = self.pool['purchase.order']
-        purchase_line_obj = self.pool['purchase.order.line']
-        res = super(stock_picking, self).get_service_line_vals(cr, uid, moves, partner, inv_type, context=context)
-        # Add service lines for purchases
-        if inv_type == 'in_invoice':
-            purchase_ids = list(set([x.purchase_line_id.order_id.id for x in moves if x.purchase_line_id]))
-            purchase_line_ids = purchase_line_obj.search(cr, uid, [('order_id', 'in', purchase_ids), ('invoice_lines', '=', False), '|', ('product_id', '=', False),
-                                                                   ('product_id.type', '=', 'service')], context=context)
-            for po_line in purchase_line_obj.browse(cr, uid, purchase_line_ids, context=context):
-                acc_id = purchase_obj._choose_account_from_po_line(cr, uid, po_line, context=context)
-                inv_line_data = purchase_obj._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
-                inv_line_data['purchase_line_ids'] = [(4, po_line.id)]
-                res += [(0, 0, inv_line_data)]
-        return res
 
 
 class stock_warehouse(osv.osv):

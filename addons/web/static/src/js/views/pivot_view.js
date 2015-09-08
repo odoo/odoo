@@ -118,7 +118,7 @@ var PivotView = View.extend({
      **/
     render_sidebar: function($node) {
         if (this.xlwt_installed && $node && this.options.sidebar) {
-            this.sidebar = new Sidebar(this);
+            this.sidebar = new Sidebar(this, {editable: this.is_action_enabled('edit')});
             this.sidebar.add_items('other', [{
                 label: _t("Download xls"),
                 callback: this.download_table.bind(this),

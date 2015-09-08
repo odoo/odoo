@@ -9,6 +9,7 @@ import threading
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp import api, tools
+from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
@@ -23,15 +24,15 @@ class ir_ui_menu(osv.osv):
         self.pool['ir.model.access'].register_cache_clearing_method(self._name, 'clear_caches')
 
     @api.model
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)')
-    def _visible_menu_ids(self):
+    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
+    def _visible_menu_ids(self, debug=False):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
         context = {'ir.ui.menu.full_list': True}
         menus = self.with_context(context).search([])
 
+        groups = self.env.user.groups_id if debug else self.env.user.groups_id - self.env.ref('base.group_no_one')
         # first discard all menus with groups the user does not have
-        groups = self.env.user.groups_id
         menus = menus.filtered(
             lambda menu: not menu.groups_id or menu.groups_id & groups)
 
@@ -68,7 +69,7 @@ class ir_ui_menu(osv.osv):
             the menu hierarchy of the current user.
             Uses a cache for speeding up the computation.
         """
-        visible_ids = self._visible_menu_ids()
+        visible_ids = self._visible_menu_ids(request.debug if request else False)
         return self.filtered(lambda menu: menu.id in visible_ids)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -271,8 +272,8 @@ class ir_ui_menu(osv.osv):
         }
 
     @api.cr_uid_context
-    @tools.ormcache_context('uid', keys=('lang',))
-    def load_menus(self, cr, uid, context=None):
+    @tools.ormcache_context('uid', 'debug', keys=('lang',))
+    def load_menus(self, cr, uid, debug, context=None):
         """ Loads all menu items (all applications and their sub-menus).
 
         :return: the menu root

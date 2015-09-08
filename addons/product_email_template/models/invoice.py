@@ -17,19 +17,7 @@ class account_invoice(osv.Model):
                 self.message_subscribe(cr, uid, [invoice.id], [invoice.partner_id.id], context=context)
             for line in invoice.invoice_line_ids:
                 if line.product_id.email_template_id:
-                    # CLEANME: should define and use a clean API: message_post with a template
-                    composer_id = Composer.create(cr, uid, {
-                        'model': 'account.invoice',
-                        'res_id': invoice.id,
-                        'template_id': line.product_id.email_template_id.id,
-                        'composition_mode': 'comment',
-                    }, context=context)
-                    template_values = Composer.onchange_template_id(
-                        cr, uid, composer_id, line.product_id.email_template_id.id, 'comment', 'account.invoice', invoice.id
-                    )['value']
-                    template_values['attachment_ids'] = [(4, id) for id in template_values.get('attachment_ids', [])]
-                    Composer.write(cr, uid, [composer_id], template_values, context=context)
-                    Composer.send_mail(cr, uid, [composer_id], context=context)
+                    invoice.message_post_with_template(line.product_id.email_template_id.id, composition_mode='comment')
         return True
 
     def invoice_validate(self, cr, uid, ids, context=None):

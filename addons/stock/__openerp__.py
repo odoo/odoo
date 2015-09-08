@@ -32,7 +32,7 @@ Dashboard / Reports for Inventory Management will include:
 * Moves Analysis
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['product', 'procurement', 'barcodes'],
+    'depends': ['product', 'procurement', 'barcodes', 'web_planner'],
     'category': 'Inventory Management',
     'sequence': 13,
     'demo': [
@@ -56,8 +56,7 @@ Dashboard / Reports for Inventory Management will include:
         'wizard/stock_return_picking_view.xml',
         'wizard/make_procurement_view.xml',
         'wizard/orderpoint_procurement_view.xml',
-        'wizard/stock_pack_details.xml',
-        'wizard/stock_lot_split.xml',
+        'report/report_stock_forecast.xml',
         'stock_incoterms.xml',
         'stock_report.xml',
         'stock_view.xml',
@@ -72,10 +71,10 @@ Dashboard / Reports for Inventory Management will include:
         'views/report_stockpicking_operations.xml',
         'views/report_deliveryslip.xml',
         'views/report_stockinventory.xml',
-        'report/report_stock_forecast.xml',
         'stock_dashboard.xml',
         'wizard/stock_immediate_transfer.xml',
         'wizard/stock_backorder_confirmation.xml',
+        'data/web_planner_data.xml',
     ],
     'test': [
         'test/inventory.yml',

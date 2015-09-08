@@ -3,10 +3,10 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp.tests import common
+from openerp.addons.account.tests.account_test_classes import AccountingTestCase
 
 
-class TestMembershipCommon(common.TransactionCase):
+class TestMembershipCommon(AccountingTestCase):
 
     def setUp(self):
         super(TestMembershipCommon, self).setUp()

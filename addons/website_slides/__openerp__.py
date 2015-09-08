@@ -14,7 +14,7 @@ Share and Publish Videos, Presentations and Documents'
  * Filters and Tagging
  * Statistics of Presentation
  * Channel Subscription
- * Supported document types supported: PDF, images, YouTube videos and Google Drive documents)
+ * Supported document types : PDF, images, YouTube videos and Google Drive documents)
 """,
     'depends': ['website', 'website_mail','marketing'],
     'data': [

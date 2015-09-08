@@ -6,6 +6,7 @@ helpers and classes to write tests.
 """
 import errno
 import glob
+import importlib
 import json
 import logging
 import os
@@ -19,6 +20,7 @@ import urllib2
 import xmlrpclib
 from contextlib import contextmanager
 from datetime import datetime, timedelta
+from pprint import pformat
 
 import werkzeug
 
@@ -250,7 +252,7 @@ class HttpCase(TransactionCase):
 
     def url_open(self, url, data=None, timeout=10):
         if url.startswith('/'):
-            url = "http://localhost:%s%s" % (PORT, url)
+            url = "http://%s:%s%s" % (HOST, PORT, url)
         return self.opener.open(url, data, timeout)
 
     def authenticate(self, user, password):
@@ -305,10 +307,12 @@ class HttpCase(TransactionCase):
                     line, buf = buf.split('\n', 1)
                 line = str(line)
 
-                if line.startswith("error"):
+                lline = line.lower()
+                if lline.startswith(("error", "server application error")):
                     try:
                         # when errors occur the execution stack may be sent as a JSON
-                        _logger.error("phantomjs: %s", json.loads(line[6:]))
+                        prefix = lline.index('error') + 6
+                        _logger.error("phantomjs: %s", pformat(json.loads(line[prefix:])))
                     except ValueError:
                         line_ = line.split('\n\n')
                         _logger.error("phantomjs: %s", line_[0])
@@ -317,7 +321,7 @@ class HttpCase(TransactionCase):
                             _logger.info("phantomjs: \n%s", line.split('\n\n', 1)[1])
                         pass
                     break
-                elif line.startswith("warning"):
+                elif lline.startswith("warning"):
                     _logger.warn("phantomjs: %s", line)
                 else:
                     _logger.info("phantomjs: %s", line)
@@ -328,7 +332,7 @@ class HttpCase(TransactionCase):
     def phantom_run(self, cmd, timeout):
         _logger.info('phantom_run executing %s', ' '.join(cmd))
 
-        ls_glob = os.path.expanduser('~/.qws/share/data/Ofi Labs/PhantomJS/http_localhost_%s.*'%PORT)
+        ls_glob = os.path.expanduser('~/.qws/share/data/Ofi Labs/PhantomJS/http_%s_%s.*' % (HOST, PORT))
         for i in glob.glob(ls_glob):
             _logger.info('phantomjs unlink localstorage %s', i)
             os.unlink(i)
@@ -392,3 +396,18 @@ class HttpCase(TransactionCase):
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
         cmd = ['phantomjs', phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)
+
+def can_import(module):
+    """ Checks if <module> can be imported, returns ``True`` if it can be,
+    ``False`` otherwise.
+
+    To use with ``unittest.skipUnless`` for tests conditional on *optional*
+    dependencies, which may or may be present but must still be tested if
+    possible.
+    """
+    try:
+        importlib.import_module(module)
+    except ImportError:
+        return False
+    else:
+        return True

@@ -32,8 +32,9 @@ class AccountAccountTag(models.Model):
     _name = 'account.account.tag'
     _description = 'Account Tag'
 
-    name = fields.Char(translate=True, required=True)
+    name = fields.Char(required=True)
     applicability = fields.Selection([('accounts', 'Accounts'), ('taxes', 'Taxes')], required=True, default='accounts')
+    color = fields.Integer('Color Index')
 
 #----------------------------------------------------------
 # Accounts
@@ -224,7 +225,6 @@ class AccountJournal(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id,
         help="Company related to this journal")
 
-    analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
     refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal", default=True)
 
     inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
@@ -486,7 +486,7 @@ class AccountTax(models.Model):
     children_tax_ids = fields.Many2many('account.tax', 'account_tax_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
-    amount = fields.Float(required=True, digits=(16, 3))
+    amount = fields.Float(required=True, digits=(16, 4))
     account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account', ondelete='restrict',
         help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.", oldname='account_collected_id')
     refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account on Refunds', ondelete='restrict',
@@ -501,7 +501,7 @@ class AccountTax(models.Model):
     tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True)
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
+        ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
     ]
 
     @api.one
@@ -662,6 +662,14 @@ class AccountTax(models.Model):
         recs = self.browse(cr, uid, ids, context=context)
         return recs.compute_all(price_unit, currency, quantity, product, partner)
 
+    @api.model
+    def _fix_tax_included_price(self, price, prod_taxes, line_taxes):
+        """Subtract tax amount from price when corresponding "price included" taxes do not apply"""
+        # FIXME get currency in param?
+        incl_tax = prod_taxes.filtered(lambda tax: tax.id not in line_taxes and tax.price_include)
+        if incl_tax:
+            return incl_tax.compute_all(price)['total_excluded']
+        return price
 
 class AccountOperationTemplate(models.Model):
     _name = "account.operation.template"

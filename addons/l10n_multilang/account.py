@@ -72,9 +72,3 @@ class account_analytic_account(osv.osv):
         'name': fields.char('Account Name', required=True, translate=True),
     }
 
-
-class account_analytic_journal(osv.osv):
-    _inherit = 'account.analytic.journal'
-    _columns = {
-        'name': fields.char('Journal Name', required=True, translate=True),
-    }

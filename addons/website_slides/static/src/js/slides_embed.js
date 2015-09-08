@@ -73,7 +73,7 @@ $(document).ready(function () {
                     }
                 });
             },
-            previous: function (ev) {
+            previous: function () {
                 var self = this;
                 this.pdf_viewer.previousPage().then(function(page_num){
                     if(page_num){
@@ -82,14 +82,14 @@ $(document).ready(function () {
                     self.$("#slide_suggest").hide();
                 });
             },
-            first: function (ev) {
+            first: function () {
                 var self = this;
                 this.pdf_viewer.firstPage().then(function(page_num){
                     self.on_rendered_page(page_num);
                     self.$("#slide_suggest").hide();
                 });
             },
-            last: function (ev) {
+            last: function () {
                 var self = this;
                 this.pdf_viewer.lastPage().then(function(page_num){
                     self.on_rendered_page(page_num);
@@ -97,8 +97,13 @@ $(document).ready(function () {
                 });
             },
             // full screen mode
-            fullscreen: function (ev) {
+            fullscreen: function () {
                 this.pdf_viewer.toggleFullScreen();
+            },
+            fullScreenFooter: function (ev) {
+                if (ev.target.id === "PDFViewerCanvas") {
+                    this.pdf_viewer.toggleFullScreenFooter();
+                }
             },
             // display suggestion displayed after last slide
             display_suggested_slides: function () {
@@ -127,6 +132,9 @@ $(document).ready(function () {
         });
         $('#fullscreen').on('click',function(){
             embedded_viewer.fullscreen();
+        });
+        $('#PDFViewer').on('click',function (ev){
+            embedded_viewer.fullScreenFooter(ev);
         });
 
         // switching slide with keyboard
@@ -160,7 +168,7 @@ $(document).ready(function () {
         );
 
         // embed widget page selector
-        $('.oe_slide_js_embed_code_widget input').on('change', function (e) {
+        $('.oe_slide_js_embed_code_widget input').on('change', function () {
             var page = parseInt($(this).val());
             if (!(page > 0 && page <= embedded_viewer.pdf_viewer.pdf_page_total)) {
                 page = 1;

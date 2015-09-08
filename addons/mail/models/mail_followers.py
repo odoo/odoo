@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import _, api, fields, models
-from openerp import tools
+from openerp import api, fields, models
 
 
 class Followers(models.Model):

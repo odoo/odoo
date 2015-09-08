@@ -71,7 +71,7 @@ class AcquirerAdyen(osv.Model):
         key = acquirer.adyen_skin_hmac_key.encode('ascii')
         return base64.b64encode(hmac.new(key, sign, sha1).digest())
 
-    def adyen_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
+    def adyen_form_generate_values(self, cr, uid, id, values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
         # tmp
@@ -79,22 +79,20 @@ class AcquirerAdyen(osv.Model):
         from dateutil import relativedelta
         tmp_date = datetime.date.today() + relativedelta.relativedelta(days=1)
 
-        adyen_tx_values = dict(tx_values)
-        adyen_tx_values.update({
-            'merchantReference': tx_values['reference'],
-            'paymentAmount': '%d' % int(float_round(tx_values['amount'], 2) * 100),
-            'currencyCode': tx_values['currency'] and tx_values['currency'].name or '',
+        values.update({
+            'merchantReference': values['reference'],
+            'paymentAmount': '%d' % int(float_round(values['amount'], 2) * 100),
+            'currencyCode': values['currency'] and values['currency'].name or '',
             'shipBeforeDate': tmp_date,
             'skinCode': acquirer.adyen_skin_code,
             'merchantAccount': acquirer.adyen_merchant_account,
-            'shopperLocale': partner_values['lang'],
+            'shopperLocale': values.get('partner_lang'),
             'sessionValidity': tmp_date,
             'resURL': '%s' % urlparse.urljoin(base_url, AdyenController._return_url),
+            'merchantReturnData': json.dumps({'return_url': '%s' % values.pop('return_url')}) if values.get('return_url') else False,
+            'merchantSig': self._adyen_generate_merchant_sig(acquirer, 'in', values),
         })
-        if adyen_tx_values.get('return_url'):
-            adyen_tx_values['merchantReturnData'] = json.dumps({'return_url': '%s' % adyen_tx_values.pop('return_url')})
-        adyen_tx_values['merchantSig'] = self._adyen_generate_merchant_sig(acquirer, 'in', adyen_tx_values)
-        return partner_values, adyen_tx_values
+        return values
 
     def adyen_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
@@ -103,10 +101,6 @@ class AcquirerAdyen(osv.Model):
 
 class TxAdyen(osv.Model):
     _inherit = 'payment.transaction'
-
-    _columns = {
-        'adyen_psp_reference': fields.char('Adyen PSP Reference'),
-    }
 
     # --------------------------------------------------
     # FORM RELATED METHODS
@@ -160,7 +154,7 @@ class TxAdyen(osv.Model):
         if status == 'AUTHORISED':
             tx.write({
                 'state': 'done',
-                'adyen_psp_reference': data.get('pspReference'),
+                'acquirer_reference': data.get('pspReference'),
                 # 'date_validate': data.get('payment_date', fields.datetime.now()),
                 # 'paypal_txn_type': data.get('express_checkout')
             })
@@ -168,7 +162,7 @@ class TxAdyen(osv.Model):
         elif status == 'PENDING':
             tx.write({
                 'state': 'pending',
-                'adyen_psp_reference': data.get('pspReference'),
+                'acquirer_reference': data.get('pspReference'),
             })
             return True
         else:

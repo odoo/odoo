@@ -16,10 +16,12 @@ var View = Widget.extend({
     },
     // name displayed in view switchers
     display_name: '',
-    /**
-     * Define a view type for each view to allow automatic call to fields_view_get.
-     */
+    // define a view type for each view to allow automatic call to fields_view_get.
     view_type: undefined,
+    // used by views that need a searchview.
+    searchable: true,
+    // used by views that need a searchview but don't want it to be displayed.
+    searchview_hidden: false,
     // multi_record is used to distinguish views displaying a single record
     // (e.g. FormView) from those that display several records (e.g. ListView)
     multi_record: true,
