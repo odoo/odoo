@@ -27,6 +27,7 @@ import openerp.http
 import openerp.tools
 from openerp.tools.func import lazy_property
 import openerp.tools.lru
+from openerp.fields import Datetime
 from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
@@ -1252,7 +1253,7 @@ class AssetsBundle(object):
 
     def js(self):
         attachments = self.get_attachments('js')
-        if not attachments or attachments[0]['__last_update'] < max([asset.last_modified for asset in self.javascripts]):
+        if not attachments or attachments[0]['__last_update'] < Datetime.to_string(max([asset.last_modified for asset in self.javascripts])):
             content = ';\n'.join(asset.minify() for asset in self.javascripts)
             return self.save_attachment('js', content)
         return attachments[0]
