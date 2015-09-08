@@ -37,5 +37,17 @@
             <field name="placement">bottom</field>
         </record>
 
+        <!-- Generic tip on archive stat button -->
+        <record model="web.tip" id="web_tip_4">
+            <field name="title">Archive an item</field>
+            <field name="description"><![CDATA[If you're done with this item, click here to archive it. It won't appear again, but you can display it with the 'Archived' filter, and reactivate it if necessary.]]></field>
+            <field name="model"></field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">button > .fa-archive</field>
+            <field name="highlight_selector">button > .fa-archive</field>
+            <field name="end_event">mousedown</field>
+            <field name="placement">bottom</field>
+        </record>
+
     </data>
 </openerp>
