@@ -76,8 +76,6 @@ class mail_compose_message(osv.TransientModel):
             # store them in the context to avoid falling back to default values
             if template.mail_server_id:
                 email_context['mail_server_id'] = template.mail_server_id.id
-            if template.email_from:
-                email_context['email_from'] = template.email_from
             new_attachment_ids = []
             for attachment in wizard.attachment_ids:
                 if attachment in template.attachment_ids:
@@ -91,7 +89,7 @@ class mail_compose_message(osv.TransientModel):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html', 'attachment_ids'], context)
+            values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html', 'attachment_ids', 'email_from'], context)
             values.pop('id')
         elif template_id:
             values = self.generate_email_for_composer(cr, uid, template_id, res_id, context=context)
@@ -110,7 +108,7 @@ class mail_compose_message(osv.TransientModel):
                 }
                 values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
-            values = self.default_get(cr, uid, ['body', 'subject', 'partner_ids', 'attachment_ids'], context=context)
+            values = self.default_get(cr, uid, ['body', 'subject', 'partner_ids', 'attachment_ids', 'email_from'], context=context)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
@@ -148,7 +146,7 @@ class mail_compose_message(osv.TransientModel):
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
-        fields = ['body_html', 'subject', 'email_to', 'email_recipients', 'email_cc', 'attachment_ids', 'attachments']
+        fields = ['body_html', 'subject', 'email_to', 'email_recipients', 'email_cc', 'attachment_ids', 'attachments', 'email_from']
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
 
