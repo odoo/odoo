@@ -73,7 +73,8 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         this.updating = true;
 
         var commands = [form_common.commands.delete_all()];
-        _(this.get("sheets")).each(function (data) {
+        _.each(this.get("sheets"), function (_data) {
+            var data = _.clone(_data);
             if(data.id) {
                 commands.push(form_common.commands.link_to(data.id));
                 commands.push(form_common.commands.update(data.id, data));
@@ -125,7 +126,8 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                 start = m_start.toDate();
             }
             // group by account
-            accounts = _(self.get("sheets")).chain()
+            accounts = _.chain(self.get("sheets"))
+            .map(_.clone)
             .each(function(el) {
                 // much simpler to use only the id in all cases
                 if (typeof(el.account_id) === "object") {
