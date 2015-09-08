@@ -78,7 +78,7 @@ OERP_WEBSITE_HTML_1 = """
                 <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg">
                 <h4 class="mt16">Enterprise Social Network</h4>
                 <p>Break down information silos. Share knowledge and best practices amongst all employees. Follow specific people or documents and join groups of interests to share expertise and documents.</p>
-                <p>Interact with your collegues in real time with live chat.</p>
+                <p>Interact with your collegues in real time with website live chat.</p>
             </div>
             <div class="col-md-4">
                 <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg">

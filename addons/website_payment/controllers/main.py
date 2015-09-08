@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-import werkzeug
-
 from openerp import http
 from openerp.http import request
-from openerp import tools
 from openerp.tools.translate import _
 
 
@@ -27,3 +24,63 @@ class website_payment(http.Controller):
             pay_meth = request.env['payment.method'].browse(int(delete_pm_id))
             pay_meth.unlink()
         return request.redirect('/my/payment_method')
+
+    @http.route(['/website_payment/pay'], type='http', auth='public', website=True)
+    def pay(self, reference='', amount=False, currency_id=None, acquirer_id=None, **kw):
+        env = request.env
+        user = env.user.sudo()
+
+        currency_id = currency_id and int(currency_id) or user.company_id.currency_id.id
+        currency = env['res.currency'].browse(currency_id)
+
+        # Try default one then fallback on first
+        acquirer_id = acquirer_id and int(acquirer_id) or \
+            env['ir.values'].get_default('payment.acquirer', 'acquirer_id') or \
+            env['payment.acquirer'].search([('website_published', '=', True)])[0].id
+
+        acquirer = env['payment.acquirer'].with_context(submit_class='btn btn-primary pull-right',
+                                                        submit_txt=_('Pay Now')).browse(acquirer_id)
+        # auto-increment reference with a number suffix if the reference already exists
+        ref_suffix = 1
+        init_ref = reference
+        while request.env['payment.transaction'].sudo().search_count([('reference', '=', reference)]):
+            reference = init_ref + '-' + str(ref_suffix)
+            ref_suffix += 1
+
+        partner_id = user.partner_id.id if user.partner_id.id != request.website.partner_id.id else False
+
+        payment_form = acquirer.render(reference, float(amount), currency.id, values={'return_url': '/website_payment/confirm', 'partner_id': partner_id})[0]
+        values = {
+            'reference': reference,
+            'acquirer': acquirer,
+            'currency': currency,
+            'amount': amount,
+            'payment_form': payment_form,
+        }
+        return request.website.render('website_payment.pay', values)
+
+    @http.route(['/website_payment/transaction'], type='json', auth="public", website=True)
+    def transaction(self, reference, amount, currency_id, acquirer_id):
+        partner_id = request.env.user.partner_id.id if request.env.user.partner_id != request.website.partner_id else False
+        values = {
+            'acquirer_id': int(acquirer_id),
+            'reference': reference,
+            'amount': float(amount),
+            'currency_id': int(currency_id),
+            'partner_id': partner_id,
+        }
+
+        tx = request.env['payment.transaction'].sudo().create(values)
+        request.session['website_payment_tx_id'] = tx.id
+        return tx.id
+
+    @http.route(['/website_payment/confirm'], type='http', auth='public', website=True)
+    def confirm(self, **kw):
+        tx_id = request.session.pop('website_payment_tx_id', False)
+        if tx_id:
+            tx = request.env['payment.transaction'].browse(tx_id)
+            status = (tx.state == 'done' and 'success') or 'danger'
+            message = (tx.state == 'done' and 'Your payment was successful! It may take some time to be validated on our end.') or 'OOps! There was a problem with your payment.'
+            return request.website.render('website_payment.confirm', {'tx': tx, 'status': status, 'message': message})
+        else:
+            return request.redirect('/my/home')

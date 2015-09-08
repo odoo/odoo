@@ -19,5 +19,6 @@ class PlannerCrm(models.Model):
         values = {
             'alias_domain': sales_team.alias_domain,
             'alias_name': sales_team.alias_name,
+            'pipeline_menu_id': self.env.ref('crm.menu_crm_opportunities').id,
         }
         return values

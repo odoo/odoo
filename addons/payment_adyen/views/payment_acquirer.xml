@@ -18,20 +18,5 @@
             </field>
         </record>
 
-        <record id="transaction_form_adyen" model="ir.ui.view">
-            <field name="name">acquirer.transaction.form.adyen</field>
-            <field name="model">payment.transaction</field>
-            <field name="inherit_id" ref="payment.transaction_form"/>
-            <field name="arch" type="xml">
-                <xpath expr='//notebook' position='inside'>
-                    <page string="Adyen TX Details">
-                        <group>
-                            <field name="adyen_psp_reference"/>
-                        </group>
-                    </page>
-                </xpath>
-            </field>
-        </record>
-
     </data>
 </openerp>

@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Account Tags -->
+
+    <record id="tag_itax_21_out" model="account.account.tag">
+        <field name="name">ITAX_21-OUT</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_otax_21_in" model="account.account.tag">
+        <field name="name">OTAX_21-IN</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_itax_27_out" model="account.account.tag">
+        <field name="name">ITAX_27-OUT</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_otax_27_in" model="account.account.tag">
+        <field name="name">OTAX_27-IN</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_itax_105_out" model="account.account.tag">
+        <field name="name">ITAX_105-OUT</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_otax_105_in" model="account.account.tag">
+        <field name="name">OTAX_105-IN</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_otax_02_in" model="account.account.tag">
+        <field name="name">OTAX_02-IN</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+
     <record id="ITAX_21" model="account.tax.template">
       <field name="chart_template_id" ref="ar_chart_template"/>
       <field name="name">IVA 21% Venta</field>
@@ -10,6 +42,7 @@
       <field name="type_tax_use">sale</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_itax_21_out')])]"/>
     </record>
 
     <record id="OTAX_21" model="account.tax.template">
@@ -21,6 +54,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_otax_21_in')])]"/>
     </record>
 
     <record id="ITAX_27" model="account.tax.template">
@@ -32,6 +66,7 @@
       <field name="type_tax_use">sale</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_itax_27_out')])]"/>
     </record>
 
     <record id="OTAX_27" model="account.tax.template">
@@ -43,6 +78,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_otax_27_in')])]"/>
     </record>
 
     <record id="ITAX_105" model="account.tax.template">
@@ -54,6 +90,7 @@
       <field name="type_tax_use">sale</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_itax_105_out')])]"/>
     </record>
 
     <record id="OTAX_105" model="account.tax.template">
@@ -65,6 +102,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_otax_105_in')])]"/>
     </record>
 
     <record id="OTAX_02" model="account.tax.template">
@@ -76,6 +114,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_otax_02_in')])]"/>
     </record>
 
 </odoo>

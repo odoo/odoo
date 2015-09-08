@@ -137,51 +137,11 @@ class MailMail(models.Model):
     # ------------------------------------------------------
 
     @api.multi
-    def _get_partner_access_link(self, partner=None):
-        """Generate URLs for links in mails: partner has access (is user):
-        link to action_mail_redirect action that will redirect to doc or Inbox """
-        self.ensure_one()
-        if partner and partner.user_ids:
-            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            mail_model = self.model or 'mail.thread'
-            if not hasattr(self.env[mail_model], '_get_access_link'):
-                return None
-            url = urljoin(base_url, self.env[mail_model]._get_access_link(self, partner))
-            return "<span class='oe_mail_footer_access'><small>%(access_msg)s <a style='color:inherit' href='%(portal_link)s'>%(portal_msg)s</a></small></span>" % {
-                'access_msg': _('about') if self.record_name else _('access'),
-                'portal_link': url,
-                'portal_msg': '%s %s' % (self._context.get('model_name', ''), self.record_name) if self.record_name else _('your messages'),
-            }
-        else:
-            return None
-
-    @api.multi
-    def send_get_mail_subject(self, force=False, partner=None):
-        """If subject is void, set the subject as 'Re: <Resource>' or
-        'Re: <mail.parent_id.subject>'
-
-            :param boolean force: force the subject replacement
-        """
-        self.ensure_one()
-        if (force or not self.subject) and self.record_name:
-            return 'Re: %s' % (self.record_name)
-        elif (force or not self.subject) and self.parent_id and self.parent_id.subject:
-            return 'Re: %s' % (self.parent_id.subject)
-        return self.subject
-
-    @api.multi
     def send_get_mail_body(self, partner=None):
         """Return a specific ir_email body. The main purpose of this method
         is to be inherited to add custom content depending on some module."""
         self.ensure_one()
         body = self.body_html or ''
-
-        # generate access links for notifications or emails linked to a specific document with auto threading
-        link = None
-        if self.notification or (self.model and self.res_id and not self.no_auto_thread):
-            link = self._get_partner_access_link(partner)
-        if link:
-            body = tools.append_content_to_html(body, link, plaintext=False, container_tag='div')
         return body
 
     @api.multi
@@ -210,7 +170,6 @@ class MailMail(models.Model):
         res = {
             'body': body,
             'body_alternative': body_alternative,
-            'subject': self.send_get_mail_subject(partner=partner),
             'email_to': self.send_get_mail_to(partner=partner),
         }
         return res
@@ -286,7 +245,7 @@ class MailMail(models.Model):
                     msg = IrMailServer.build_email(
                         email_from=mail.email_from,
                         email_to=email.get('email_to'),
-                        subject=email.get('subject'),
+                        subject=mail.subject,
                         body=email.get('body'),
                         body_alternative=email.get('body_alternative'),
                         email_cc=tools.email_split(mail.email_cc),

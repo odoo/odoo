@@ -166,7 +166,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             request.website.get_template('website.info').name
         except Exception, e:
             return request.registry['ir.http']._handle_exception(e, 404)
-        irm = request.env()['ir.module.module'].sudo()
+        irm = request.env['ir.module.module'].sudo()
         apps = irm.search([('state','=','installed'),('application','=',True)])
         modules = irm.search([('state','=','installed'),('application','=',False)])
         values = {

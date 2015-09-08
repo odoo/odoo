@@ -3,6 +3,5 @@
 
 import product
 import stock_account
-import stock
 import wizard
 import res_config

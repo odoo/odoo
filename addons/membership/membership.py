@@ -293,7 +293,7 @@ class Partner(osv.osv):
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state', 'invoice_line_ids', 'payment_ids'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10, ),
-                        'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
+                        'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="Date from which membership becomes active."),
         'membership_stop': fields.function(
                     _membership_date,
@@ -301,7 +301,7 @@ class Partner(osv.osv):
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state', 'invoice_line_ids', 'payment_ids'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
-                        'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
+                        'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="Date until which membership remains active."),
         'membership_cancel': fields.function(
                     _membership_date,
@@ -309,7 +309,7 @@ class Partner(osv.osv):
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state', 'invoice_line_ids', 'payment_ids'], 11),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
-                        'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
+                        'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="Date on which membership has been cancelled"),
     }
 

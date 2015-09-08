@@ -53,7 +53,6 @@ class ImBus(models.Model):
                 "message": json_dump(message)
             }
             self.sudo().create(values)
-            self.env.cr.commit()
             if random.random() < 0.01:
                 self.gc()
         if channels:

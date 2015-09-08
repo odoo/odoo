@@ -370,6 +370,9 @@ var SearchView = Widget.extend(/** @lends instance.web.SearchView# */{
     init: function(parent, dataset, view_id, defaults, options) {
         this.options = _.defaults(options || {}, {
             hidden: false,
+            disable_filters: false,
+            disable_groupby: false,
+            disable_favorites: false,
             disable_custom_filters: false,
         });
         this._super(parent);
@@ -416,25 +419,29 @@ var SearchView = Widget.extend(/** @lends instance.web.SearchView# */{
         return this.title;
     },
     view_loaded: function (r) {
-        var custom_filters_ready;
+        var menu_defs = [];
         this.fields_view_get = r;
         this.view_id = this.view_id || r.view_id;
         this.prepare_search_inputs();
         if (this.$buttons) {
-
             var fields_def = new Model(this.dataset.model).call('fields_get', {
                     context: this.dataset.get_context()
                 });
 
-            this.groupby_menu = new GroupByMenu(this, this.groupbys, fields_def);
-            this.filter_menu = new FilterMenu(this, this.filters, fields_def);
-            this.favorite_menu = new FavoriteMenu(this, this.query, this.dataset.model, this.action_id);
-
-            this.filter_menu.appendTo(this.$buttons);
-            this.groupby_menu.appendTo(this.$buttons);
-            custom_filters_ready = this.favorite_menu.appendTo(this.$buttons);
+            if (!this.options.disable_filters) {
+                this.filter_menu = new FilterMenu(this, this.filters, fields_def);
+                menu_defs.push(this.filter_menu.appendTo(this.$buttons));
+            }
+            if (!this.options.disable_groupby) {
+                this.groupby_menu = new GroupByMenu(this, this.groupbys, fields_def);
+                menu_defs.push(this.groupby_menu.appendTo(this.$buttons));
+            }
+            if (!this.options.disable_favorites) {
+                this.favorite_menu = new FavoriteMenu(this, this.query, this.dataset.model, this.action_id);
+                menu_defs.push(this.favorite_menu.appendTo(this.$buttons));
+            }
         }
-        return $.when(custom_filters_ready).then(this.proxy('set_default_filters'));
+        return $.when.apply($, menu_defs).then(this.proxy('set_default_filters'));
     },
     set_default_filters: function () {
         var self = this,

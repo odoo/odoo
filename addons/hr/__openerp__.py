@@ -41,7 +41,6 @@ You can manage:
         'hr_data.xml',
         'hr_tip_data.xml',
         'res_config_view.xml',
-        'mail_hr_view.xml',
         'views/hr.xml',
         'hr_dashboard.xml',
     ],

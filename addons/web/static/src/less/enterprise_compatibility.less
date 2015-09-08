@@ -8,19 +8,26 @@
 // The problem is that we have two web clients in parallel, and every
 // addons should behave properly with both.
 
-@odoo-brand-optional-disabled: #6ED0BC; // Specifically used for status bar status arrows
 @odoo-brand-primary: #337ab7;
 @odoo-brand-optional: @odoo-brand-primary;
 @odoo-brand-secondary: #8f8f8f;
-@odoo-form-group-cols: 12;
-@odoo-horizontal-padding: 16px;
-@odoo-list-grey: #e2e2e0;  // FIXME: listview thead background color
-@odoo-main-color-muted: #a8a8a8;
-@odoo-main-text-color: #555555;
+@odoo-brand-lightsecondary: #e2e2e0;
+@odoo-list-grey: @odoo-brand-lightsecondary; // FIXME: listview thead background color
 @odoo-webclient-background-color: #F0EEEE;
 @odoo-view-background-color: white;
 @odoo-shadow-color: #303030;
 @brand-primary: @odoo-brand-primary;
+
+@odoo-font-size-base: 13px;
+@odoo-font-size-base-touch: 15px;
+@odoo-main-text-color: #555555;
+@odoo-main-color-muted: #a8a8a8;
+
+@odoo-form-group-cols: 12;
+@odoo-horizontal-padding: 16px;
+
+@screen-xs-min: 475px;
+@screen-xxs-max: (@screen-xs-min - 1);
 
 .oe-view-manager {
     background-color: @odoo-webclient-background-color !important;
@@ -263,10 +270,31 @@ div.o_checkbox {
         .o-align-items(flex-start);
 
         .badge {
+            cursor: pointer;
             .o-flex(0, 0, auto);
             margin: 0 3px 3px 0;
+            color: #FFF;
+            font-size: 12px;
             .o_delete {
                 cursor: pointer;
+            }
+            ul {
+                min-width: 230px;
+                li {
+                    float: left;
+                    color: black;
+                    a {
+                        border-radius: 6px;
+                        width: 28px;
+                        height: 30px;
+                        display: inline-block;
+                        border: 2px solid white;
+
+                        &:hover {
+                            opacity: 0.8;
+                        }
+                    }
+                }
             }
         }
 
@@ -323,6 +351,43 @@ div.o_checkbox {
         > .o_address_zip {
             width: 25%;
         }
+    }
+}
+
+// Many2many tags
+.o_form_field_many2manytags {
+    .o_tag_color_0 {
+        background-color: #B6BBBF;
+    }
+    .o_tag_color_1 {
+        background-color: #61BD4F;
+    }
+    .o_tag_color_2 {
+        background-color: #F2D600;
+    }
+    .o_tag_color_3 {
+        background-color: #FFAB4A;
+    }
+    .o_tag_color_4 {
+        background-color: #EB5A46;
+    }
+    .o_tag_color_5 {
+        background-color: #A24689;
+    }
+    .o_tag_color_6 {
+        background-color: #0079BF;
+    }
+    .o_tag_color_7 {
+        background-color: #00C2E0;
+    }
+    .o_tag_color_8 {
+        background-color: #4CD98E;
+    }
+    .o_tag_color_9 {
+        background-color: #FF80CE;
+    }
+    .o_tag_color_10 {
+        background-color: #4D4D4D;
     }
 }
 

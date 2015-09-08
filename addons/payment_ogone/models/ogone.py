@@ -145,39 +145,38 @@ class PaymentAcquirerOgone(osv.Model):
         shasign = sha1(sign).hexdigest()
         return shasign
 
-    def ogone_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
+    def ogone_form_generate_values(self, cr, uid, id, values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
-        ogone_tx_values = dict(tx_values)
+        ogone_tx_values = dict(values)
         temp_ogone_tx_values = {
             'PSPID': acquirer.ogone_pspid,
-            'ORDERID': tx_values['reference'],
-            'AMOUNT': float_repr(float_round(tx_values['amount'], 2) * 100, 0),
-            'CURRENCY': tx_values['currency'] and tx_values['currency'].name or '',
-            'LANGUAGE':  partner_values['lang'],
-            'CN':  partner_values['name'],
-            'EMAIL':  partner_values['email'],
-            'OWNERZIP':  partner_values['zip'],
-            'OWNERADDRESS':  partner_values['address'],
-            'OWNERTOWN':  partner_values['city'],
-            'OWNERCTY':  partner_values['country'] and partner_values['country'].code or '',
-            'OWNERTELNO': partner_values['phone'],
+            'ORDERID': values['reference'],
+            'AMOUNT': float_repr(float_round(values['amount'], 2) * 100, 0),
+            'CURRENCY': values['currency'] and values['currency'].name or '',
+            'LANGUAGE': values.get('partner_lang'),
+            'CN': values.get('partner_name'),
+            'EMAIL': values.get('partner_email'),
+            'OWNERZIP': values.get('partner_zip'),
+            'OWNERADDRESS': values.get('partner_address'),
+            'OWNERTOWN': values.get('partner_city'),
+            'OWNERCTY': values.get('partner_country') and values.get('partner_country').code or '',
+            'OWNERTELNO': values.get('partner_phone'),
             'ACCEPTURL': '%s' % urlparse.urljoin(base_url, OgoneController._accept_url),
             'DECLINEURL': '%s' % urlparse.urljoin(base_url, OgoneController._decline_url),
             'EXCEPTIONURL': '%s' % urlparse.urljoin(base_url, OgoneController._exception_url),
             'CANCELURL': '%s' % urlparse.urljoin(base_url, OgoneController._cancel_url),
+            'PARAMPLUS': 'return_url=%s' % ogone_tx_values.pop('return_url') if ogone_tx_values.get('return_url') else False,
         }
-        if tx_values.get('type') == 'form_save':
+        if values.get('type') == 'form_save':
             temp_ogone_tx_values.update({
                 'ALIAS': 'ODOO-NEW-ALIAS-%s' % time.time(),    # something unique,
-                'ALIASUSAGE': tx_values.get('alias_usage') or acquirer.ogone_alias_usage,
+                'ALIASUSAGE': values.get('alias_usage') or acquirer.ogone_alias_usage,
             })
-        if ogone_tx_values.get('return_url'):
-            temp_ogone_tx_values['PARAMPLUS'] = 'return_url=%s' % ogone_tx_values.pop('return_url')
         shasign = self._ogone_generate_shasign(acquirer, 'in', temp_ogone_tx_values)
         temp_ogone_tx_values['SHASIGN'] = shasign
         ogone_tx_values.update(temp_ogone_tx_values)
-        return partner_values, ogone_tx_values
+        return ogone_tx_values
 
     def ogone_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
@@ -294,8 +293,8 @@ class PaymentTxOgone(osv.Model):
                 'date_validate': datetime.datetime.strptime(data['TRXDATE'],'%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': data['PAYID'],
             })
-            if tx.s2s_cb_eval:
-                safe_eval(tx.s2s_cb_eval, {'self': tx})
+            if tx.callback_eval:
+                safe_eval(tx.callback_eval, {'self': tx})
             return True
         elif status in self._ogone_cancel_tx_status:
             tx.write({
@@ -390,8 +389,8 @@ class PaymentTxOgone(osv.Model):
                 'date_validate': datetime.date.today().strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': tree.get('PAYID'),
             })
-            if tx.s2s_cb_eval:
-                safe_eval(tx.s2s_cb_eval, {'self': tx})
+            if tx.callback_eval:
+                safe_eval(tx.callback_eval, {'self': tx})
             return True
         elif status in self._ogone_cancel_tx_status:
             tx.write({

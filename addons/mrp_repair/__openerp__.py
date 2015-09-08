@@ -5,9 +5,10 @@
 {
     'name': 'Repairs Management',
     'version': '1.0',
-    'sequence': 14,
+    'sequence': 200,
     'category': 'Manufacturing',
-    'description': """
+    'description': """,
+    'summary': 'Repair broken or damaged products',
 The aim is to have a complete module to manage all products repairs.
 ====================================================================
 
@@ -35,7 +36,8 @@ The following topics should be covered by this module:
         'views/report_mrprepairorder.xml',
     ],
     'demo': ['mrp_repair_demo.yml'],
-    'test': ['test/mrp_repair_users.yml',
+    'test': ['../account/test/account_minimal_test.xml',
+             'test/mrp_repair_users.yml',
              'test/test_mrp_repair_noneinv.yml',
              'test/test_mrp_repair_b4inv.yml',
              'test/test_mrp_repair_afterinv.yml',

@@ -107,6 +107,11 @@
                         attrs="{'invisible': [('emp_id', '=', False)]}">
                         <field name="employee_name" widget="statinfo" string="Employee"/>
                     </button>
+                    <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                        <field name="active" widget="boolean_button"
+                            options='{"terminology": "archive"}'/>
+                    </button>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -142,7 +147,6 @@
                         <field name="medium_id" groups="base.group_no_one" />
                         <field name="source_id"/>
                         <field name="reference"/>
-                        <field name="active" invisible="1"/>
                     </group>
                     <group string="Job">
                         <field name="survey" invisible="1"/>
@@ -214,6 +218,7 @@
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
                 <separator/>
                 <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
@@ -269,6 +274,7 @@
                 <field name="categ_ids"/>
                 <field name="message_needaction_counter"/>
                 <field name="attachment_number"/>
+                <field name="active"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -278,7 +284,7 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_applicant_kanaban oe_semantic_html_override">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
                             <div class="o_dropdown_kanban dropdown">
 
                                 <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
@@ -450,7 +456,7 @@
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,form</field>
             <field name="context">{'search_default_in_recruitment': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -461,6 +467,24 @@
               </p>
             </field>
         </record>
+
+        <!-- hr related job position menu action -->
+         <record model="ir.actions.act_window" id="action_hr_job_config">
+            <field name="name">Job Positions</field>
+            <field name="res_model">hr.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_in_recruitment': 1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                 Click here to create a new job. You can remove the "In Recruitment" filter to display all the job positions.
+              </p>
+              <p>
+                Define job position profile and manage recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe
+              </p>
+            </field>
+        </record>
+
     ######################## JOB OPPORTUNITIES (menu) ###########################
     <record model="ir.actions.act_window" id="crm_case_categ0_act_job">
         <field name="name">Applications</field>
@@ -521,6 +545,7 @@
 
     <!-- ALL JOBS REQUESTS -->
     <menuitem parent="menu_hr_recruitment_root" id="hr.menu_hr_job_position" action="action_hr_job" sequence="1"/>
+    <menuitem parent="menu_hr_recruitment_configuration" id="hr.menu_hr_job_position_config" action="action_hr_job_config" sequence="10"/>
     <menuitem
         name="Applications"
         parent="menu_hr_recruitment_root"
@@ -702,5 +727,17 @@
         <field name="search_view_id" ref="hr_employee_view_search"/>
     </record>
 
+    </data>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_hr_recruitment_menu" model="ir.actions.client">
+            <field name="name">Open HR Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('menu_hr_recruitment_root')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_hr_recruitment_menu"/>
+            <field name="state">open</field>
+        </record>
     </data>
 </openerp>

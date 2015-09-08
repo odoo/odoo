@@ -17,7 +17,7 @@ import time
 import xmlrpclib
 from email.message import Message
 from email.utils import formataddr
-from urllib import urlencode
+from werkzeug import url_encode
 
 from openerp import _, api, fields, models
 from openerp import exceptions
@@ -346,6 +346,9 @@ class MailThread(models.AbstractModel):
                         ('res_model', 'in', [False, self._name]),
                         ('internal', '=', True)], ['name', 'description', 'sequence'])
                     options['internal_subtypes'] = internal_subtypes
+                # emoji list
+                options['emoji_list'] = self.env['mail.shortcode'].search([('shortcode_type', '=', 'image')]).read(['source', 'description', 'substitution'])
+                # save options on the node
                 node.set('options', json.dumps(options))
             res['arch'] = etree.tostring(doc)
         return res
@@ -501,68 +504,131 @@ class MailThread(models.AbstractModel):
         """ When redirecting towards the Inbox, choose which action xml_id has
             to be fetched. This method is meant to be inherited, at least in portal
             because portal users have a different Inbox action than classic users. """
-        return 'mail.mail_message_action_inbox'
+        return 'mail.mail_channel_action_client_chat'
 
-    @api.model
-    def message_redirect_action(self):
-        """ For a given message, return an action that either
-            - opens the form view of the related document if model, res_id, and
-              read access to the document
-            - opens the Inbox with a default search on the conversation if model,
-              res_id
-            - opens the Inbox with context propagated
+    @api.multi
+    def _notification_link_helper(self, link_type, **kwargs):
+        if kwargs.get('message_id'):
+            base_params = {
+                'message_id': kwargs.pop('message_id')
+            }
+        else:
+            self.ensure_one()
+            base_params = {
+                'model': self._name,
+                'res_id': self.ids[0],
+            }
 
+        link = False
+        if link_type in ['view', 'assign', 'follow', 'unfollow']:
+            params = dict(base_params)
+            link = '/mail/view?%s' % url_encode(params)
+        elif link_type == 'workflow':
+            params = dict(base_params, signal=kwargs['signal'])
+            link = '/mail/workflow?%s' % url_encode(params)
+        elif link_type == 'method':
+            method = kwargs.pop('method')
+            params = dict(base_params, method=method, params=kwargs)
+            link = '/mail/method?%s' % url_encode(params)
+        elif link_type == 'new':
+            params = dict(base_params, view_id=kwargs.get('view_id'))
+            link = '/mail/new?%s' % url_encode(params)
+        return link
+
+    @api.multi
+    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
+        """ Given the categories of partners to emails in group_data, set the
+        right group for the recipients. The basic behavior is simply to
+        distinguish users from partners.
+
+        Inherit this method to group recipients according to specific criterions
+        allowing to tune the notification email. Generally this will be based
+        on user groups (res.groups), but not necessarily.
+
+        Example: having defined a group_hr_user entry, store HR users and
+        officers. """
+        # TDE note: recipients is normally sudo-ed
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if not recipient.user_ids:
+                group_data['partner'] |= recipient
+            else:
+                group_data['user'] |= recipient
+        return group_data
+
+    @api.multi
+    def _notification_get_recipient_groups(self, message, recipients):
+        """ Give the categories of recipients for notification emails. As emails
+        are generated once for group of recipients to work in batch, the first
+        thing to do is to categorize them. The basic behavior is simply
+        to distinguish users from partners.
+
+        Specific values :
+
+         - button_access: used to display 'View Document' in email, if set
+         - button_follow: used to display 'Follow' in email, if set
+         - button unfollow: used to display 'Unfollow' in email, if set
         """
-        # default action is the Inbox action
-        action = self.env.ref(self._get_inbox_action_xml_id()).read()[0]
-        params = self._context.get('params')
-        msg_id = model = res_id = None
-
-        if params:
-            msg_id = params.get('message_id')
-            model = params.get('model')
-            res_id = params.get('res_id', params.get('id'))  # signup automatically generated id instead of res_id
-        if not msg_id and not (model and res_id):
-            return action
-        if msg_id and not (model and res_id):
-            msg = self.env['mail.message'].browse(msg_id).exists()
-            try:
-                model, res_id = msg.model, msg.res_id
-            except exceptions.AccessError:
-                pass
-
-        # if model + res_id found: try to redirect to the document or fallback on the Inbox
-        if model and res_id:
-            RecordModel = self.env[model]
-            if RecordModel.check_access_rights('read', raise_exception=False):
-                try:
-                    # TDE FIXME: clean that copde
-                    RecordModel.browse(res_id).check_access_rule('read')
-                    action = RecordModel.browse(res_id).get_access_action()[0]
-                except exceptions.AccessError:
-                    pass
-            action.update({
-                'context': {
-                    'search_default_model': model,
-                    'search_default_res_id': res_id,
-                }
-            })
-        return action
-
-    @api.model
-    def _get_access_link(self, mail, partner):
-        # the parameters to encode for the query and fragment part of url
-        query = {'db': self._cr.dbname}
-        fragment = {
-            'login': partner.user_ids[0].login,
-            'action': 'mail.action_mail_redirect',
+        # TDE note: recipients is normally sudo-ed
+        return {
+            'partner': {
+                'button_access': None,
+                'button_follow': False,
+                'button_unfollow': False,
+            },
+            'user': {
+            }
         }
-        if mail.notification:
-            fragment['message_id'] = mail.mail_message_id.id
-        elif mail.model and mail.res_id:
-            fragment.update(model=mail.model, res_id=mail.res_id)
 
-        return "/web?%s#%s" % (urlencode(query), urlencode(fragment))
+    @api.multi
+    def _message_notification_recipients(self, message, recipients):
+        # At this point, all access rights should be ok. We sudo everything to
+        # access rights checks and speedup the computation.
+        recipients_sudo = recipients.sudo()
+        # message_sudo = message.sudo()
+
+        access_link = self._notification_link_helper('view', message_id=message.id)
+
+        if message.model:
+            model_name = self.env['ir.model'].sudo().search([('model', '=', self.env[message.model]._name)]).name_get()[0][1]
+            view_title = '%s %s' % (_('View'), model_name)
+        else:
+            view_title = _('View')
+
+        result = {}
+        group_data = {}
+
+        for category, data in self._notification_get_recipient_groups(message, recipients).iteritems():
+            result[category] = {
+                'followers': self.env['res.partner'],
+                'not_followers': self.env['res.partner'],
+                'button_access': {'url': access_link, 'title': view_title},
+                'button_follow': {'url': '/mail/follow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Follow')},
+                'button_unfollow': {'url': '/mail/unfollow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Unfollow')},
+                'actions': list(),
+            }
+            group_data[category] = self.env['res.partner']
+            result[category].update(data)
+
+        doc_followers = self.env['mail.followers']
+        if message.model and message.res_id:
+            doc_followers = self.env['mail.followers'].sudo().search([
+                ('res_model', '=', message.model),
+                ('res_id', '=', message.res_id),
+                ('partner_id', 'in', recipients_sudo.ids)])
+        partner_followers = doc_followers.mapped('partner_id')
+
+        # classify recipients, then set them in followers / not followers
+        group_data = self._notification_group_recipients(message, recipients, set(), group_data)
+        for category, recipients in group_data.iteritems():
+            for recipient in recipients:
+                if recipient in partner_followers:
+                    result[category]['followers'] |= recipient
+                else:
+                    result[category]['not_followers'] |= recipient
+
+        return result
 
     # ------------------------------------------------------
     # Email specific
@@ -1328,17 +1394,19 @@ class MailThread(models.AbstractModel):
                 obj._message_add_suggested_recipient(result, partner=obj.user_id.partner_id, reason=self._fields['user_id'].string)
         return result
 
-    @api.model
-    def _find_partner_from_emails(self, emails, res_model=None, res_id=None, check_followers=True):
+    @api.multi
+    def _find_partner_from_emails(self, emails, res_model=None, res_id=None, check_followers=True, force_create=False):
         """ Utility method to find partners from email addresses. The rules are :
             1 - check in document (model | self, id) followers
             2 - try to find a matching partner that is also an user
             3 - try to find a matching partner
+            4 - create a new one if force_create = True
 
             :param list emails: list of email addresses
             :param string model: model to fetch related record; by default self
                 is used.
             :param boolean check_followers: check in document followers
+            :param boolean force_create: create a new partner if not found
         """
         if res_model is None:
             res_model = self._name
@@ -1386,6 +1454,8 @@ class MailThread(models.AbstractModel):
                     partners = Partner.search([('email', 'ilike', email_brackets)], limit=1)
                 if partners:
                     partner_id = partners[0].id
+            if not partner_id and force_create:
+                partner_id = self.env['res.partner'].name_create(contact)[0]
             partner_ids.append(partner_id)
         return partner_ids
 
@@ -1593,6 +1663,33 @@ class MailThread(models.AbstractModel):
             self.message_subscribe([new_message.author_id.id])
         return new_message
 
+    @api.multi
+    def message_post_with_template(self, template_id, **kwargs):
+        """ Helper method to send a mail with a template
+            :param template_id : the id of the template to render to create the body of the message
+            :param **kwargs : parameter to create a mail.compose.message woaerd (which inherit from mail.message)
+        """
+        # Get composition mode, or force it according to the number of record in self
+        composition_mode = kwargs.get('composition_mode')
+        if not composition_mode:
+            composition_mode = 'comment' if len(self.ids) == 1 else 'mass_mail'
+        res_id = self.ids[0] or 0
+        # Create the composer
+        composer = self.env['mail.compose.message'].with_context(
+            active_ids=self.ids,
+            active_model=self._name,
+            default_composition_mode=composition_mode,
+            default_model=self._name,
+            default_res_id=self.ids[0] or 0,
+            default_template_id=template_id,
+        ).create(kwargs)
+        # Simulate the onchange (like trigger in form the view) only
+        # when having a template in single-email mode
+        if template_id:
+            update_values = composer.onchange_template_id(template_id, composition_mode, self._name, res_id)['value']
+            composer.write(update_values)
+        return composer.send_mail()
+
     # ------------------------------------------------------
     # Followers API
     # ------------------------------------------------------
@@ -1788,9 +1885,9 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def message_set_read(self):
-        # Nothing done here currently. Will be implemented with the final
-        # slack modeling.
-        return True
+        messages = self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids), ('needaction', '=', True)])
+        messages.write({'needaction_partner_ids': [(3, self.env.user.partner_id.id)]})
+        return messages.ids
 
     @api.multi
     def message_change_thread(self, new_thread):

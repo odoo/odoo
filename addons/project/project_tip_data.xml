@@ -2,7 +2,7 @@
 <odoo>
     <record model="web.tip" id="project_tip_1">
         <field name="title"><![CDATA[<b>Create new tasks</b>]]></field>
-        <field name="description">By clicking here, you can access the stages view of this project where you will be able to manage all your tasks.</field>
+        <field name="description">Click to view all the tasks related to this project.</field>
         <field name="action_id" ref="open_view_project_all"/> 
         <field name="model">project.project</field>
         <field name="mode">form</field>
@@ -11,34 +11,13 @@
         <field name="placement">bottom</field>
     </record>
     
-    <record model="web.tip" id="project_tip_2">
-        <field name="description">You can drag and drop tasks from one stage to another.</field>
-        <field name="action_id" ref="action_view_task"/> 
-        <field name="model">project.task</field>
-        <field name="mode">kanban</field>
-        <field name="trigger_selector">.oe_kanban_content:visible</field>
-        <field name="highlight_selector">.oe_kanban_content:visible</field>
-        <field name="end_event">mousedown</field>
-        <field name="placement">top</field>
-    </record>
-    
     <record model="web.tip" id="project_tip_3">
-        <field name="description">Every event on a task is logged in this section. Send a new message to notify followers or log an internal note to store information without notifying the followers.</field>
+        <field name="description">Every event on a task is logged in this section. Send a new message to notify followers or log an internal note.</field>
         <field name="action_id" ref="action_view_task"/>
         <field name="model">project.task</field>
         <field name="mode">form</field>
-        <field name="trigger_selector">.o_form_buttons_view:visible,div.o_timeline_chatter div.oe_thread:visible</field>
-        <field name="highlight_selector">div.o_timeline_chatter .o_timeline_msg_composer_compact .o_timeline_compact</field>
+        <field name="trigger_selector">.o_form_buttons_view:visible,div.oe_chatter div.o_mail_thread:visible</field>
+        <field name="highlight_selector">div.oe_chatter .o_mail_thread</field>
         <field name="placement">top</field>
     </record>
-    
-    <record model="web.tip" id="project_tip_4">
-         <field name="description">Use the breadcrumb to easily go back to your tasks pipeline.</field>
-         <field name="action_id" ref="action_view_task"/>
-         <field name="model">project.task</field>
-         <field name="mode">form</field>
-         <field name="trigger_selector">.o_form_buttons_view:visible,ol.breadcrumb a</field>
-         <field name="highlight_selector">ol.breadcrumb:visible a:last</field>
-         <field name="placement">bottom</field>
-     </record>   
 </odoo>

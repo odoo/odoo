@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 08:59+0000\n"
-"PO-Revision-Date: 2015-08-25 08:59+0000\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 14:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr
-#: code:addons/hr/hr.py:111
+#: code:addons/hr/hr.py:118
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -103,28 +103,17 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
-#: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Active"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_group_hr_attendance
-msgid "Allocates attendance group to all users."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_sale_contract
-msgid "Allow invoicing based on timesheets (the sale application will be installed)"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_timesheet_sheet
-msgid "Allow timesheets validation by managers"
 msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Analyse needs, write specification documents and quotation"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Archived"
 msgstr ""
 
 #. module: hr
@@ -182,6 +171,7 @@ msgid "City"
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
 msgstr ""
@@ -271,7 +261,6 @@ msgid "Create Your Departments"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -280,7 +269,6 @@ msgid "Created by"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_date
@@ -344,7 +332,6 @@ msgid "Departments"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -355,11 +342,6 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Divorced"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_gamification
-msgid "Drive engagement with challenges and badges"
 msgstr ""
 
 #. module: hr
@@ -396,6 +378,11 @@ msgid "Employee bank salary account"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee's Name"
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.act_window,name:hr.act_employee_from_department
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
@@ -421,14 +408,14 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:291
+#: code:addons/hr/hr.py:298
 #: constraint:hr.department:0
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:261
+#: code:addons/hr/hr.py:268
 #: constraint:hr.employee:0
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
@@ -528,7 +515,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
-msgid "Good language skills in an other langages"
+msgid "Good language skills in another language"
 msgstr ""
 
 #. module: hr
@@ -588,7 +575,6 @@ msgid "Human Resources Manager"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_id
 #: model:ir.model.fields,field_description:hr.field_hr_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_id
@@ -656,11 +642,6 @@ msgid "Increase the visibility of the product"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_attendance
-msgid "Install attendances feature"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_is_follower
@@ -691,8 +672,14 @@ msgid "Job Position"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Job Position Name"
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job_position
+#: model:ir.ui.menu,name:hr.menu_hr_job_position_config
 msgid "Job Positions"
 msgstr ""
 
@@ -723,7 +710,6 @@ msgid "Last Message Date"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_department___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
@@ -732,7 +718,6 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
@@ -741,7 +726,6 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
@@ -781,31 +765,6 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_expense
-msgid "Manage employees expenses"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_holidays
-msgid "Manage holidays, leaves and allocation requests"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_payroll
-msgid "Manage payroll"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_recruitment
-msgid "Manage the recruitment process"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_timesheet
-msgid "Manage timesheets"
 msgstr ""
 
 #. module: hr
@@ -972,11 +931,6 @@ msgid "Open HR Menu"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_evaluation
-msgid "Organize employees periodic evaluation"
-msgstr ""
-
-#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Other"
 msgstr ""
@@ -1051,11 +1005,6 @@ msgid "Public Information"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_website_hr_recruitment
-msgid "Publish jobs on your website"
-msgstr ""
-
-#. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Quantify and negotiate the resources required"
 msgstr ""
@@ -1063,11 +1012,6 @@ msgstr ""
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Quick and autonomous learner"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_contract
-msgid "Record contracts per employee"
 msgstr ""
 
 #. module: hr
@@ -1247,73 +1191,8 @@ msgid "This field holds the image used as photo for the employee, limited to 102
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_hr_attendance
-msgid "This installs the module hr_attendance."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_hr_contract
-msgid "This installs the module hr_contract."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_hr_evaluation
-msgid "This installs the module hr_evaluation."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_hr_expense
-msgid "This installs the module hr_expense."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_hr_gamification
-msgid "This installs the module hr_gamification."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_hr_holidays
-msgid "This installs the module hr_holidays."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_hr_payroll
-msgid "This installs the module hr_payroll."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_hr_recruitment
-msgid "This installs the module hr_recruitment."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_hr_timesheet
-msgid "This installs the module hr_timesheet."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_hr_timesheet_sheet
-msgid "This installs the module hr_timesheet_sheet."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_sale_contract
-msgid "This installs the module sale_contract, which will install sales management too."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_config_settings_module_website_hr_recruitment
-msgid "This installs the module website_hr_recruitment"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
 msgid "Total Forecasted Employees"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_group_hr_attendance
-msgid "Track attendances for all employees"
 msgstr ""
 
 #. module: hr
@@ -1408,6 +1287,7 @@ msgid "Will report to the Head of Professional Services"
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
@@ -1422,7 +1302,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
-msgid "With our product, which is a suite of 3000 business apps. It is fully open source, full featured and itâs online offer is 3 times cheaper than traditional competitors. We have 2.000.000 users, and we're growing fast."
+msgid "With our product, which is a suite of 3000 business apps. It is fully open source, full featured and it’s online offer is 3 times cheaper than traditional competitors. We have 2.000.000 users, and we're growing fast."
 msgstr ""
 
 #. module: hr
@@ -1633,10 +1513,5 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_config_settings
-msgid "hr.config.settings"
 msgstr ""
 

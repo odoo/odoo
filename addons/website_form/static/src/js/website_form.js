@@ -131,7 +131,7 @@ odoo.define('website_form.animation', function (require) {
 
                 // Validate inputs for this field
                 var field_valid = true;
-                var inputs = $field.find('.o_website_form_input');
+                var inputs = $field.find('.o_website_form_input:not(#editable_select)');
                 var invalid_inputs = inputs.toArray().filter(function(input, k, inputs) {
                     // Special check for multiple required checkbox for same
                     // field as it seems checkValidity forces every required

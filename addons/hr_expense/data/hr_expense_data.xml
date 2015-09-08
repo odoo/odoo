@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <record id="module_install_notification" model="mail.message">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="mail.channel_all_employees"/>
+            <field name="message_type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Expense Management application installed!</field>
+            <field name="body"><![CDATA[<p>Manage your employees' expenses, after due validation by their manager and the accountant, then generate and pay the corresponding invoices.</p>
+<p>This feature is also linked to analytic accounting and compatible with timesheet invoices, so you will be able to automatically re-invoice project-related expenses to your customers.</p>]]></field>
+        </record>
+
+        <!-- Resource: product.uom.categ -->
+        <record id="cat_expense" model="product.category">
+            <field name="parent_id" ref="product.product_category_all"/>
+            <field name="name">Expenses</field>
+        </record>
+
+        <!-- Expense-related subtypes for messaging / Chatter -->
+        <record id="mt_expense_approved" model="mail.message.subtype">
+            <field name="name">Approved</field>
+            <field name="res_model">hr.expense</field>
+            <field name="default" eval="False"/>
+            <field name="description">Expense approved</field>
+        </record>
+        <record id="mt_expense_refused" model="mail.message.subtype">
+            <field name="name">Refused</field>
+            <field name="res_model">hr.expense</field>
+            <field name="default" eval="True"/>
+            <field name="description">Expense refused</field>
+        </record>
+        <record id="mt_expense_confirmed" model="mail.message.subtype">
+            <field name="name">To Approve</field>
+            <field name="res_model">hr.expense</field>
+            <field name="description">Expense confirmed, waiting confirmation</field>
+            <field name="default" eval="True"/>
+        </record>
+        <!-- Department (Parent) related subtypes for messaging / Chatter -->
+        <record id="mt_department_expense_confirmed" model="mail.message.subtype">
+            <field name="name">Expenses To Approve</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" eval="ref('mt_expense_confirmed')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="10"/>
+        </record>
+
+    </data>
+</odoo>

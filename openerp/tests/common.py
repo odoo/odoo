@@ -20,6 +20,7 @@ import urllib2
 import xmlrpclib
 from contextlib import contextmanager
 from datetime import datetime, timedelta
+from pprint import pformat
 
 import werkzeug
 
@@ -306,10 +307,12 @@ class HttpCase(TransactionCase):
                     line, buf = buf.split('\n', 1)
                 line = str(line)
 
-                if line.startswith("error"):
+                lline = line.lower()
+                if lline.startswith(("error", "server application error")):
                     try:
                         # when errors occur the execution stack may be sent as a JSON
-                        _logger.error("phantomjs: %s", json.loads(line[6:]))
+                        prefix = lline.index('error') + 6
+                        _logger.error("phantomjs: %s", pformat(json.loads(line[prefix:])))
                     except ValueError:
                         line_ = line.split('\n\n')
                         _logger.error("phantomjs: %s", line_[0])
@@ -318,7 +321,7 @@ class HttpCase(TransactionCase):
                             _logger.info("phantomjs: \n%s", line.split('\n\n', 1)[1])
                         pass
                     break
-                elif line.startswith("warning"):
+                elif lline.startswith("warning"):
                     _logger.warn("phantomjs: %s", line)
                 else:
                     _logger.info("phantomjs: %s", line)

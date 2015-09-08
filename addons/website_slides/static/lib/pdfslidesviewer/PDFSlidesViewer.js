@@ -145,6 +145,12 @@ var PDFSlidesViewer = (function(){
         return this.queueRenderPage(this.pdf_page_total);
     }
 
+    PDFSlidesViewer.prototype.toggleFullScreenFooter = function(){
+        if(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+            $('div#PDFViewer > div.navbar-fixed-bottom').toggleClass('oe_show_footer');
+        }
+    }
+
     PDFSlidesViewer.prototype.toggleFullScreen = function(){
         var el = this.canvas;
 

@@ -123,8 +123,8 @@
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
-        <menuitem id="menu_general_configuration" parent="base.menu_config"
-            sequence="100" action="action_general_configuration"/>
+        <menuitem id="base.menu_config" name="General Settings" parent="base.menu_administration" sequence="1" action="action_general_configuration"/>
+
 
         <!-- Sale config wizard -->
         <record id="view_sale_config_settings" model="ir.ui.view">

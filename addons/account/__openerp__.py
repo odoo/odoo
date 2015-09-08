@@ -47,6 +47,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'report/account_invoice_report_view.xml',
         'report/inherited_layouts.xml',
         'views/account_journal_dashboard_view.xml',
+        'views/report_overdue.xml',
         'views/web_planner_data.xml',
         'views/report_overdue.xml',
         'wizard/account_report_common_view.xml',
@@ -76,4 +77,5 @@ You could use this simplified accounting in case you work with an (external) acc
     'installable': True,
     'application': True,
     'auto_install': False,
+    'post_init_hook': '_auto_install_l10n',
 }

@@ -245,6 +245,27 @@ class BlogPost(osv.Model):
         self._check_for_publication(cr, uid, ids, vals, context=context)
         return result
 
+    def get_access_action(self, cr, uid, id, context=None):
+        """ Override method that generated the link to access the document. Instead
+        of the classic form view, redirect to the post on the website directly """
+        post = self.browse(cr, uid, id, context=context)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/blog/%s/post/%s' % (post.blog_id.id, post.id),
+            'target': 'self',
+            'res_id': self.id,
+        }
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        """ Override to set the access button: everyone can see an access button
+        on their notification email. It will lead on the website view of the
+        post. """
+        res = super(BlogPost, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+        access_action = self._notification_link_helper('view', model=message.model, res_id=message.res_id)
+        for category, data in res.iteritems():
+            res[category]['button_access'] = {'url': access_action, 'title': _('View Blog Post')}
+        return res
+
 
 class Website(osv.Model):
     _inherit = "website"

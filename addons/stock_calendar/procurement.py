@@ -1,5 +1,6 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -32,6 +33,13 @@ class procurement_order(osv.osv):
                     self.write(cr, uid, {'next_delivery_date': self._convert_to_UTC(cr, uid, delivery_date, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                                          'next_purchase_date': self._convert_to_UTC(cr, uid, purchase_date, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT),}, context=context)
 
+    @api.v8
+    def _get_purchase_order_date(self, schedule_date):
+        if self.next_purchase_date:
+            return datetime.strptime(self.next_purchase_date, DEFAULT_SERVER_DATETIME_FORMAT)
+        return super(procurement_order, self)._get_purchase_order_date(schedule_date)
+
+    @api.v7
     def _get_purchase_order_date(self, cr, uid, procurement, company, schedule_date, context=None):
         """Return the datetime value to use as Order Date (``date_order``) for the
            Purchase Order created to satisfy the given procurement.
@@ -46,18 +54,31 @@ class procurement_order(osv.osv):
             return datetime.strptime(procurement.next_purchase_date, DEFAULT_SERVER_DATETIME_FORMAT)
         return super(procurement_order, self)._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
 
-    def _get_purchase_schedule_date(self, cr, uid, procurement, company, context=None):
+    @api.v8
+    def _get_purchase_schedule_date(self):
+        if self.next_delivery_date:
+            return datetime.strptime(self.next_delivery_date, DEFAULT_SERVER_DATETIME_FORMAT)
+        return super(procurement_order, self)._get_purchase_schedule_date()
+
+    @api.v7
+    def _get_purchase_schedule_date(self, cr, uid, procurement, context=None):
         """Return the datetime value to use as Schedule Date (``date_planned``) for the
            Purchase Order Lines created to satisfy the given procurement.
 
            :param browse_record procurement: the procurement for which a PO will be created.
-           :param browse_report company: the company to which the new PO will belong to.
            :rtype: datetime
            :return: the desired Schedule Date for the PO lines
         """
         if procurement.next_delivery_date:
             return datetime.strptime(procurement.next_delivery_date, DEFAULT_SERVER_DATETIME_FORMAT)
-        return super(procurement_order, self)._get_purchase_schedule_date(cr, uid, procurement, company, context=context)
+        return super(procurement_order, self)._get_purchase_schedule_date(cr, uid, procurement, context=context)
+
+    def _prepare_purchase_order_line(self, cr, uid, ids, po, supplier, context=None):
+        res = super(procurement_order, self)._prepare_purchase_order_line(cr, uid, ids, po, supplier, context=context)
+        procurement = self.browse(cr, uid, ids, context=context)
+        if procurement.next_delivery_date:
+            res.update({'date_planned': procurement.next_delivery_date})
+        return res
 
     def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, date=False, purchase_date = False, group=False, context=None):
         return {

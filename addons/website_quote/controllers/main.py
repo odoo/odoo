@@ -36,7 +36,7 @@ class sale_quote(http.Controller):
             days = (datetime.datetime.strptime(order.validity_date, '%Y-%m-%d') - datetime.datetime.now()).days + 1
         if pdf:
             report_obj = request.registry['report']
-            pdf = report_obj.get_pdf(request.cr, SUPERUSER_ID, [order_id], 'website_quote.report_quote', data=None, context=request.context)
+            pdf = report_obj.get_pdf(request.cr, SUPERUSER_ID, [order_id], 'website_quote.report_quote', data=None, context=dict(request.context, set_viewport_size=True))
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
@@ -68,11 +68,11 @@ class sale_quote(http.Controller):
                     order.name,
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
-                    partner_id=order.partner_id.id,
-                    tx_values={
+                    values={
                         'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
                         'type': 'form',
-                        'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.')
+                        'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
+                        'partner_id': order.partner_id.id,
                     },
                     context=render_ctx)
         return request.website.render('website_quote.so_quotation', values)
@@ -86,7 +86,7 @@ class sale_quote(http.Controller):
         if order.require_payment:
             return request.website.render('website.404')
         attachments=sign and [('signature.png', sign.decode('base64'))] or []
-        order_obj.action_button_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
+        order_obj.action_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
         message = _('Order signed by %s') % (signer,)
         _message_post_helper(message=message, res_id=order_id, res_model='sale.order', attachments=attachments, **({'token': token, 'token_field': 'access_token'} if token else {}))
         return True
@@ -138,27 +138,18 @@ class sale_quote(http.Controller):
         option_obj = request.registry.get('sale.order.option')
         option = option_obj.browse(request.cr, SUPERUSER_ID, option_id)
 
-        res = request.registry.get('sale.order.line').product_id_change(request.cr, SUPERUSER_ID, order_id,
-            False, option.product_id.id, option.quantity, option.uom_id.id, option.quantity, option.uom_id.id,
-            option.name, order.partner_id.id, False, True, time.strftime('%Y-%m-%d'),
-            False, order.fiscal_position_id.id, True, request.context)
-        vals = res.get('value', {})
-        if 'tax_id' in vals:
-            vals['tax_id'] = [(6, 0, vals['tax_id'])]
-
-        vals.update({
+        vals = {
             'price_unit': option.price_unit,
             'website_description': option.website_description,
             'name': option.name,
             'order_id': order.id,
-            'product_id' : option.product_id.id,
-            'product_uos_qty': option.quantity,
-            'product_uos': option.uom_id.id,
+            'product_id': option.product_id.id,
             'product_uom_qty': option.quantity,
             'product_uom': option.uom_id.id,
             'discount': option.discount,
-        })
+        }
         line = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
+        request.registry.get('sale.order.line')._compute_tax_id(request.cr, SUPERUSER_ID, [line], context=request.context)
         option_obj.write(request.cr, SUPERUSER_ID, [option.id], {'line_id': line}, context=request.context)
         return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (order.id, token))
 
@@ -199,12 +190,12 @@ class sale_quote(http.Controller):
                 'partner_country_id': order.partner_id.country_id.id,
                 'reference': order.name,
                 'sale_order_id': order.id,
-                's2s_cb_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
+                'callback_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
             }, context=context)
             tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
 
         # confirm the quotation
         if tx.acquirer_id.auto_confirm == 'at_pay_now':
-            request.registry['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
+            request.registry['sale.order'].action_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         return tx_id

@@ -20,27 +20,19 @@
             <field name="arch" type="xml">
                 <form string="Employee">
                     <sheet>
-                        <div class="oe_button_box" name="button_box"/>
+                        <div class="oe_button_box" name="button_box" groups="base.group_hr_user">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name"/>
+                                <field name="name" placeholder="Employee's Name"/>
                             </h1>
-                            <div class="o_row">
-                                <div>
-                                    <label for="work_email" class="oe_edit_only"/>
-                                    <field name="work_email" widget="email"/>
-                                </div>
-                                <div>
-                                    <label for="work_phone" class="oe_edit_only"/>
-                                    <field name="work_phone"/>
-                                </div>
-                                <div groups="base.group_hr_user">
-                                    <label for="category_ids" class="oe_edit_only"/>
-                                    <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
-                                </div>
-                            </div>
                         </div>
                         <notebook>
                             <page name="public" string="Public Information">
@@ -51,6 +43,9 @@
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                         <field name="mobile_phone"/>
                                         <field name="work_location"/>
+                                        <field name="work_email" widget="email"/>
+                                        <field name="work_phone"/>
+                                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
                                     </group>
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
@@ -86,7 +81,6 @@
                             <page string="HR Settings" groups="base.group_hr_user">
                                 <group>
                                     <group string='Status' name="active_group">
-                                        <field name="active"/>
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
                                         <field name="user_id" on_change="onchange_user(name, image, user_id)" string="Related User"
                                             context="{'default_groups_ref': ['base.group_user']}"/>
@@ -131,6 +125,7 @@
                     <field name="category_ids" groups="base.group_hr_user"/>
                     <field name="job_id" />
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Coach" domain="[]" context="{'group_by':'coach_id'}"/>
@@ -166,7 +161,7 @@
                                 <span title='Followers'><i class='fa fa-users'/><t t-esc="record.message_follower_ids.raw_value.length"/></span>
                             </div>
                         </div>
-                        <div class="oe_kanban_details oe_employee_details_content">
+                        <div class="oe_kanban_details">
                             <strong>
                                 <field name="name"/>
                             </strong>
@@ -323,7 +318,7 @@
                         <div class="oe_button_box" name="button_box"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
+                            <h1><field name="name" placeholder="Job Position Name"/></h1>
                         </div>
                         <group name="employee_data">
                             <group>
@@ -414,6 +409,15 @@
                 "search_default_department_id": [active_id],
                 "default_department_id": active_id}
             </field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new employee.
+              </p><p>
+                With just a quick glance on the Odoo employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
         </record>
 
         <!-- hr.department -->
@@ -465,7 +469,7 @@
             <field name="name">Departments</field>
             <field name="res_model">hr.department</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,form</field>
             <field name="search_view_id" ref="view_department_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

@@ -128,7 +128,7 @@ class stock_location(osv.osv):
         'return_location': fields.boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.'),
         'removal_strategy_id': fields.many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."),
         'putaway_strategy_id': fields.many2one('product.putaway', 'Put Away Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to store the products. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."),
-        'barcode': fields.char('Barcode', oldname='loc_barcode'),
+        'barcode': fields.char('Barcode', copy=False, oldname='loc_barcode'),
     }
     _defaults = {
         'active': True,
@@ -200,12 +200,16 @@ class stock_location_route(osv.osv):
         'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Procurement Rules', copy=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the route without removing it."),
         'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules', copy=True),
-        'product_selectable': fields.boolean('Applicable on Product'),
-        'product_categ_selectable': fields.boolean('Applicable on Product Category'),
-        'warehouse_selectable': fields.boolean('Applicable on Warehouse'),
+        'product_selectable': fields.boolean('Applicable on Product', help="When checked, the route will be selectable in the Inventory tab of the Product form.  It will take priority over the Warehouse route. "),
+        'product_categ_selectable': fields.boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.  It will take priority over the Warehouse route. "),
+        'warehouse_selectable': fields.boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.  This behaviour can be overridden by the routes on the Product/Product Categories or by the Preferred Routes on the Procurement"),
         'supplied_wh_id': fields.many2one('stock.warehouse', 'Supplied Warehouse'),
-        'supplier_wh_id': fields.many2one('stock.warehouse', 'Vendor Warehouse'),
-        'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this route is shared between all companies'),
+        'supplier_wh_id': fields.many2one('stock.warehouse', 'Supplying Warehouse'),
+        'company_id': fields.many2one('res.company', 'Company', select=1, help='Leave this field empty if this route is shared between all companies'),
+        #Reverse many2many fields:
+        'product_ids': fields.many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products'),
+        'categ_ids': fields.many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories'),
+        'warehouse_ids': fields.many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses'),
     }
 
     _defaults = {
@@ -233,6 +237,27 @@ class stock_location_route(osv.osv):
             if pull_ids:
                 self.pool.get('procurement.rule').write(cr, uid, pull_ids, {'active': vals['active']}, context=context)
         return res
+
+    def view_product_ids(self, cr, uid, ids, context=None):
+        return {
+            'name': _('Products'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'product.template',
+            'type': 'ir.actions.act_window',
+            'domain': [('route_ids', 'in', ids[0])],
+        }
+
+    def view_categ_ids(self, cr, uid, ids, context=None):
+        return {
+            'name': _('Product Categories'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'product.category',
+            'type': 'ir.actions.act_window',
+            'domain': [('route_ids', 'in', ids[0])],
+        }
+
 
 #----------------------------------------------------------
 # Quants
@@ -524,7 +549,6 @@ class stock_quant(osv.osv):
             'owner_id': owner_id,
             'package_id': dest_package_id,
         }
-
         if move.location_id.usage == 'internal':
             #if we were trying to move something from an internal location and reach here (quant creation),
             #it means that a negative quant has to be created as well.
@@ -852,13 +876,24 @@ class stock_picking(models.Model):
             packop_ids = [op.id for op in picking.pack_operation_ids]
             self.pool.get('stock.pack.operation').write(cr, uid, packop_ids, {'owner_id': picking.owner_id.id}, context=context)
 
-    def onchange_picking_type(self, cr, uid, ids, picking_type_id):
+    def onchange_picking_type(self, cr, uid, ids, picking_type_id, partner_id):
         res = {}
         if picking_type_id:
             picking_type = self.pool['stock.picking.type'].browse(cr, uid, picking_type_id)
-            res['value'] = {'location_id': picking_type.default_location_src_id.id,
-                            'location_dest_id': picking_type.default_location_dest_id.id,
-                         }
+            if not picking_type.default_location_src_id and partner_id:
+                partner = self.pool['res.partner'].browse(cr, uid, partner_id)
+                location_id = partner.property_stock_supplier.id
+            else:
+                location_id = picking_type.default_location_src_id.id
+
+            if not picking_type.default_location_dest_id and partner_id:
+                partner = self.pool['res.partner'].browse(cr, uid, partner_id)
+                location_dest_id = partner.property_stock_customer.id
+            else:
+                location_dest_id = picking_type.default_location_dest_id.id
+
+            res['value'] = {'location_id': location_id,
+                            'location_dest_id': location_dest_id,}
         return res
 
     def _default_location_destination(self):
@@ -891,8 +926,8 @@ class stock_picking(models.Model):
                 ('waiting', 'Waiting Another Operation'),
                 ('confirmed', 'Waiting Availability'),
                 ('partially_available', 'Partially Available'),
-                ('assigned', 'Ready to Transfer'),
-                ('done', 'Transferred'),
+                ('assigned', 'Available'),
+                ('done', 'Done'),
                 ], string='Status', readonly=True, select=True, track_visibility='onchange',
             help="""
                 * Draft: not confirmed yet and will not be scheduled until confirmed\n
@@ -1854,8 +1889,6 @@ class stock_move(osv.osv):
                 "the product reservation, and should be done with care."
         ),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, states={'done': [('readonly', True)]}),
-        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product UoS'), states={'done': [('readonly', True)]}),
-        'product_uos': fields.many2one('product.uom', 'Product UOS', states={'done': [('readonly', True)]}),
         'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product Template'),
 
         'product_packaging': fields.many2one('product.packaging', 'preferred Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
@@ -1992,8 +2025,6 @@ class stock_move(osv.osv):
             'product_id': move.product_id.id,
             'product_qty': move.product_uom_qty,
             'product_uom': move.product_uom.id,
-            'product_uos_qty': (move.product_uos and move.product_uos_qty) or move.product_uom_qty,
-            'product_uos': (move.product_uos and move.product_uos.id) or move.product_uom.id,
             'location_id': move.location_id.id,
             'move_dest_id': move.id,
             'group_id': group_id,
@@ -2048,7 +2079,7 @@ class stock_move(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         # Check that we do not modify a stock.move which is done
-        frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
+        frozen_fields = set(['product_qty', 'product_uom', 'location_id', 'location_dest_id', 'product_id'])
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'done':
                 if frozen_fields.intersection(vals):
@@ -2088,26 +2119,21 @@ class stock_move(osv.osv):
                         self.write(cr, uid, [move.move_dest_id.id], propagated_changes_dict, context=context)
         return super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
-    def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom, product_uos):
-        """ On change of product quantity finds UoM and UoS quantities
+    def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom):
+        """ On change of product quantity finds UoM
         @param product_id: Product id
         @param product_qty: Changed Quantity of product
         @param product_uom: Unit of measure of product
-        @param product_uos: Unit of sale of product
         @return: Dictionary of values
         """
-        result = {
-            'product_uos_qty': 0.00
-        }
         warning = {}
+        result = {}
 
         if (not product_id) or (product_qty <= 0.0):
             result['product_qty'] = 0.0
             return {'value': result}
 
         product_obj = self.pool.get('product.product')
-        uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
-
         # Warn if the quantity was decreased
         if ids:
             for move in self.read(cr, uid, ids, ['product_qty']):
@@ -2118,47 +2144,10 @@ class stock_move(osv.osv):
                                 "new quantity as complete: Odoo will not "
                                 "automatically generate a back order.")})
                 break
-
-        if product_uos and product_uom and (product_uom != product_uos):
-            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product UoS')
-            result['product_uos_qty'] = float_round(product_qty * uos_coeff['uos_coeff'], precision_digits=precision)
-        else:
-            result['product_uos_qty'] = product_qty
-
-        return {'value': result, 'warning': warning}
-
-    def onchange_uos_quantity(self, cr, uid, ids, product_id, product_uos_qty,
-                          product_uos, product_uom):
-        """ On change of product quantity finds UoM and UoS quantities
-        @param product_id: Product id
-        @param product_uos_qty: Changed UoS Quantity of product
-        @param product_uom: Unit of measure of product
-        @param product_uos: Unit of sale of product
-        @return: Dictionary of values
-        """
-        result = {
-            'product_uom_qty': 0.00
-        }
-
-        if (not product_id) or (product_uos_qty <= 0.0):
-            result['product_uos_qty'] = 0.0
-            return {'value': result}
-
-        product_obj = self.pool.get('product.product')
-        uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
-
-        # No warning if the quantity was decreased to avoid double warnings:
-        # The clients should call onchange_quantity too anyway
-
-        if product_uos and product_uom and (product_uom != product_uos):
-            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Unit of Measure')
-            result['product_uom_qty'] = float_round(product_uos_qty / uos_coeff['uos_coeff'], precision_digits=precision)
-        else:
-            result['product_uom_qty'] = product_uos_qty
-        return {'value': result}
+        return {'warning': warning}
 
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False, partner_id=False):
-        """ On change of product id, if finds UoM, UoS, quantity and UoS quantity.
+        """ On change of product id, if finds UoM, quantity
         @param prod_id: Changed Product id
         @param loc_id: Source location id
         @param loc_dest_id: Destination location id
@@ -2176,13 +2165,10 @@ class stock_move(osv.osv):
         ctx = {'lang': lang}
 
         product = self.pool.get('product.product').browse(cr, uid, [prod_id], context=ctx)[0]
-        uos_id = product.uos_id and product.uos_id.id or False
         result = {
             'name': product.partner_ref,
             'product_uom': product.uom_id.id,
-            'product_uos': uos_id,
             'product_uom_qty': 1.00,
-            'product_uos_qty': self.pool.get('stock.move').onchange_quantity(cr, uid, ids, prod_id, 1.00, product.uom_id.id, uos_id)['value']['product_uos_qty'],
         }
         if loc_id:
             result['location_id'] = loc_id
@@ -2696,11 +2682,9 @@ class stock_move(osv.osv):
                 #restrict to scrap from a virtual location because it's meaningless and it may introduce errors in stock ('creating' new products from nowhere)
                 #raise UserError(_('Forbidden operation: it is not allowed to scrap products from a virtual location.'))
             move_qty = move.product_qty
-            uos_qty = quantity / move_qty * move.product_uos_qty
             default_val = {
                 'location_id': source_location.id,
                 'product_uom_qty': quantity,
-                'product_uos_qty': uos_qty,
                 'state': move.state,
                 'scrapped': True,
                 'location_dest_id': location_id,
@@ -2757,11 +2741,8 @@ class stock_move(osv.osv):
 
         #HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
         uom_qty = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, qty, move.product_uom, rounding_method='HALF-UP', context=context)
-        uos_qty = uom_qty * move.product_uos_qty / move.product_uom_qty
-
         defaults = {
             'product_uom_qty': uom_qty,
-            'product_uos_qty': uos_qty,
             'procure_method': 'make_to_stock',
             'restrict_lot_id': restrict_lot_id,
             'restrict_partner_id': restrict_partner_id,
@@ -2778,7 +2759,6 @@ class stock_move(osv.osv):
         ctx['do_not_propagate'] = True
         self.write(cr, uid, [move.id], {
             'product_uom_qty': move.product_uom_qty - uom_qty,
-            'product_uos_qty': move.product_uos_qty - uos_qty,
         }, context=ctx)
 
         if move.move_dest_id and move.propagate and move.move_dest_id.state not in ('done', 'cancel'):
@@ -3741,6 +3721,16 @@ class stock_warehouse(osv.osv):
         #create routes and push/procurement rules
         new_objects_dict = self.create_routes(cr, uid, new_id, warehouse, context=context)
         self.write(cr, uid, warehouse.id, new_objects_dict, context=context)
+
+        # If partner assigned
+        if vals.get('partner_id'):
+            comp_obj = self.pool['res.company']
+            if vals.get('company_id'):
+                transit_loc = comp_obj.browse(cr, uid, vals.get('company_id'), context=context).internal_transit_location_id.id
+            else:
+                transit_loc = comp_obj.browse(cr, uid, comp_obj._company_default_get(cr, uid, 'stock.warehouse', context=context)).internal_transit_location_id.id
+            self.pool['res.partner'].write(cr, uid, [vals['partner_id']], {'property_stock_customer': transit_loc,
+                                                                            'property_stock_supplier': transit_loc}, context=context)
         return new_id
 
     def _format_rulename(self, cr, uid, obj, from_loc, dest_loc, context=None):
@@ -3903,6 +3893,15 @@ class stock_warehouse(osv.osv):
                 for inter_wh_route_id in to_assign_route_ids:
                     self.write(cr, uid, [warehouse.id], {'route_ids': [(4, inter_wh_route_id)]})
 
+        # If another partner assigned
+        if vals.get('partner_id'):
+            if not vals.get('company_id'):
+                company = self.browse(cr, uid, ids[0], context=context).company_id
+            else:
+                company = self.pool['res.company'].browse(cr, uid, vals['company_id'])
+            transit_loc = company.internal_transit_location_id.id
+            self.pool['res.partner'].write(cr, uid, [vals['partner_id']], {'property_stock_customer': transit_loc,
+                                                                            'property_stock_supplier': transit_loc}, context=context)
         return super(stock_warehouse, self).write(cr, uid, ids, vals=vals, context=context)
 
     def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
@@ -3945,21 +3944,22 @@ class stock_location_path(osv.osv):
         'name': fields.char('Operation Name', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'route_id': fields.many2one('stock.location.route', 'Route'),
-        'location_from_id': fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1, required=True),
-        'location_dest_id': fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1, required=True),
-        'delay': fields.integer('Delay (days)', help="Number of days to do this transition"),
-        'picking_type_id': fields.many2one('stock.picking.type', 'Type of the new Operation', required=True, help="This is the picking type associated with the different pickings"), 
+        'location_from_id': fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1, required=True,
+                                            help="This rule can be applied when a move is confirmed that has this location as destination location"),
+        'location_dest_id': fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1, required=True,
+                                            help="The new location where the goods need to go"),
+        'delay': fields.integer('Delay (days)', help="Number of days needed to transfer the goods"),
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True,
+                                           help="This is the picking type that will be put on the stock moves"),
         'auto': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
             'Automatic Move',
             required=True, select=1,
-            help="This is used to define paths the product has to follow within the location tree.\n" \
-                "The 'Automatic Move' value will create a stock move after the current one that will be "\
-                "validated automatically. With 'Manual Operation', the stock move has to be validated "\
-                "by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+            help="The 'Automatic Move' / 'Manual Operation' value will create a stock move after the current one.  " \
+                 "With 'Automatic No Step Added', the location is replaced in the original move."
             ),
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when the previous move is cancelled or split, the move generated by this move will too'),
-        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the rule without removing it."),
+        'active': fields.boolean('Active'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'route_sequence': fields.related('route_id', 'sequence', string='Route Sequence',
             store={
@@ -4233,7 +4233,9 @@ class stock_pack_operation(osv.osv):
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         if product_id and not product_uom_id or uom_obj.browse(cr, uid, product_uom_id, context=context).category_id.id != product.uom_id.category_id.id:
             res['value']['product_uom_id'] = product.uom_id.id
-        res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
+        if product:
+            res['value']['lots_visible'] = (product.tracking != 'none')
+            res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
         return res
 
     def on_change_tests(self, cr, uid, ids, product_id, product_uom_id, product_qty, context=None):
@@ -4327,8 +4329,8 @@ class stock_pack_operation(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True),
         'picking_source_location_id': fields.related('picking_id', 'location_id', type='many2one', relation='stock.location'),
         'picking_destination_location_id': fields.related('picking_id', 'location_dest_id', type='many2one', relation='stock.location'),
-        'from_loc': fields.function(_compute_location_description, type='char', string='From', multi='loc', readonly=True),
-        'to_loc': fields.function(_compute_location_description, type='char', string='To', multi='loc', readonly=True),
+        'from_loc': fields.function(_compute_location_description, type='char', string='From', multi='loc'),
+        'to_loc': fields.function(_compute_location_description, type='char', string='To', multi='loc'),
         'fresh_record': fields.boolean('Newly created pack operation'),
         'lots_visible': fields.function(_compute_lots_visible, type='boolean'),
         'state': fields.related('picking_id', 'state', type='selection', selection=[
@@ -4337,8 +4339,8 @@ class stock_pack_operation(osv.osv):
                 ('waiting', 'Waiting Another Operation'),
                 ('confirmed', 'Waiting Availability'),
                 ('partially_available', 'Partially Available'),
-                ('assigned', 'Ready to Transfer'),
-                ('done', 'Transferred'),
+                ('assigned', 'Available'),
+                ('done', 'Done'),
                 ]),
     }
 
@@ -4351,6 +4353,15 @@ class stock_pack_operation(osv.osv):
         'from_loc': _get_default_from_loc,
         'to_loc': _get_default_to_loc,
     }
+
+    def split_quantities(self, cr, uid, ids, context=None):
+        for pack in self.browse(cr, uid, ids, context=context):
+            if pack.product_qty - pack.qty_done > 0.0 and pack.qty_done < pack.product_qty:
+                pack2 = self.copy(cr, uid, pack.id, default={'qty_done': 0.0, 'product_qty': pack.product_qty - pack.qty_done}, context=context)
+                self.write(cr, uid, [pack.id], {'product_qty': pack.qty_done}, context=context)
+            else:
+                raise UserError(_('The quantity to split should be smaller than the quantity To Do.  '))
+        return True
 
     def write(self, cr, uid, ids, vals, context=None):
         vals['fresh_record'] = False
@@ -4375,7 +4386,7 @@ class stock_pack_operation(osv.osv):
                 if ops.product_id.tracking == 'serial':
                     for opslot in ops.pack_lot_ids:
                         if opslot.qty not in (1.0, 0.0):
-                            raise UserError(_('You should provide a different Lot for each piece'))
+                            raise UserError(_('You should provide a different serial number for each piece'))
 
     def save(self, cr, uid, ids, context=None):
         for pack in self.browse(cr, uid, ids, context=context):
@@ -4400,7 +4411,7 @@ class stock_pack_operation(osv.osv):
                     'only_create': only_create,
                     'show_reserved': show_reserved})
         return {
-             'name': _('Split Lot'),
+             'name': _('Lot Details'),
              'type': 'ir.actions.act_window',
              'view_type': 'form',
              'view_mode': 'form',
@@ -4410,6 +4421,23 @@ class stock_pack_operation(osv.osv):
              'target': 'new',
              'res_id': pack.id,
              'context': ctx,
+        }
+
+    def show_details(self, cr, uid, ids, context=None):
+        data_obj = self.pool['ir.model.data']
+        view = data_obj.xmlid_to_res_id(cr, uid, 'stock.view_pack_operation_details_form_save')
+        pack = self.browse(cr, uid, ids[0], context=context)
+        return {
+             'name': _('Operation Details'),
+             'type': 'ir.actions.act_window',
+             'view_type': 'form',
+             'view_mode': 'form',
+             'res_model': 'stock.pack.operation',
+             'views': [(view, 'form')],
+             'view_id': view,
+             'target': 'new',
+             'res_id': pack.id,
+             'context': context,
         }
 
 
@@ -4743,8 +4771,8 @@ class stock_picking_type(osv.osv):
         'color': fields.integer('Color'),
         'sequence': fields.integer('Sequence', help="Used to order the 'All Operations' kanban view"),
         'sequence_id': fields.many2one('ir.sequence', 'Reference Sequence', required=True),
-        'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'),
-        'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
+        'default_location_src_id': fields.many2one('stock.location', 'Default Source Location', help="This is the default source location when you create a picking manually with this picking type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the supplier location on the partner. "),
+        'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location', help="This is the default destination location when you create a picking manually with this picking type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the customer location on the partner. "),
         'code': fields.selection([('incoming', 'Suppliers'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Type of Operation', required=True),
         'return_picking_type_id': fields.many2one('stock.picking.type', 'Picking Type for Returns'),
         'show_entire_packs': fields.boolean('Allow moving packs'),

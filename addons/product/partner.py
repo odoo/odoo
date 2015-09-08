@@ -11,7 +11,6 @@ class res_partner(osv.osv):
         'property_product_pricelist': fields.property(
             type='many2one', 
             relation='product.pricelist', 
-            domain=[('type','=','sale')],
             string="Sale Pricelist", 
             help="This pricelist will be used, instead of the default one, for sales to the current partner"),
     }

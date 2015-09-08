@@ -40,7 +40,7 @@
                <sheet string="Repairs order">
                     <label for="name"/>
                     <h1>
-                        <field name="name" class="oe_inline"/>
+                        <field name="name"/>
                     </h1>
                     <group>
                         <group>
@@ -250,7 +250,8 @@
             </field>
         </record>
 
-        <menuitem action="action_repair_order_tree" id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="36"/>
+        <menuitem action="action_repair_order_tree" id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="36"
+            web_icon="mrp_repair,static/description/icon.png"/>
 
     </data>
 </openerp>

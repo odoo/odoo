@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 08:59+0000\n"
-"PO-Revision-Date: 2015-08-25 08:59+0000\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 14:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -67,12 +67,6 @@ msgid "Add a Line"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_config_settings_timesheet_max_difference
-msgid "Allow a difference of time between timesheets and attendances of (in hours)"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_config_settings_timesheet_max_difference
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_res_company_timesheet_max_difference
 msgid "Allowed difference in hours between the sign in/out and the timesheet computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
@@ -185,7 +179,6 @@ msgid "Date to"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
 #: selection:res.company,timesheet_range:0
 msgid "Day"
 msgstr ""
@@ -241,12 +234,17 @@ msgid "Employee"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Employee's Name"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Employees"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:81
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:77
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
@@ -311,21 +309,14 @@ msgid "In Draft"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:56
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:72
-#, python-format
-msgid "In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like 'Timesheet Journal'."
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:54
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
 #, python-format
 msgid "In order to create a timesheet for this employee, you must link him/her to a user."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:70
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:68
 #, python-format
 msgid "In order to create a timesheet for this employee, you must link the employee to a product."
 msgstr ""
@@ -333,11 +324,6 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
 msgid "Internal Timesheet"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_invoice_rate
-msgid "Invoice rate"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -386,7 +372,6 @@ msgid "Messages and communication history"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
 #: selection:res.company,timesheet_range:0
 msgid "Month"
 msgstr ""
@@ -446,6 +431,11 @@ msgid "Open"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: model:ir.actions.client,name:hr_timesheet_sheet.action_client_hr_timesheet_sheet_menu
+msgid "Open HR Menu"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:30
 #, python-format
 msgid "Open Timesheet"
@@ -459,13 +449,12 @@ msgid "Period"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_config_settings_timesheet_range
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_res_company_timesheet_range
 msgid "Periodicity on which you validate your timesheets."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:112
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:108
 #, python-format
 msgid "Please verify that the total difference of the sheet is lower than %.2f."
 msgstr ""
@@ -679,12 +668,6 @@ msgid "Total Timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_to_invoice
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Type of Invoicing"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
 msgid "Unread Messages"
 msgstr ""
@@ -705,11 +688,6 @@ msgid "User"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_config_settings_timesheet_range
-msgid "Validate timesheets every"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_timesheet_confirmed
 msgid "Waiting Approval"
@@ -726,13 +704,12 @@ msgid "Website communication history"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
 #: selection:res.company,timesheet_range:0
 msgid "Week"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:225
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:221
 #, python-format
 msgid "Week "
 msgstr ""
@@ -743,25 +720,25 @@ msgid "Weekly"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:461
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:454
 #, python-format
 msgid "You can not enter an attendance date outside the current timesheet dates."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:459
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:452
 #, python-format
 msgid "You can not enter an attendance in a submitted timesheet. Ask your manager to reset it before adding attendance."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:235
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:231
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:233
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:229
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
 msgstr ""
@@ -773,7 +750,7 @@ msgid "You cannot duplicate a timesheet."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:480
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:473
 #, python-format
 msgid "You cannot enter an attendance date outside the current timesheet dates."
 msgstr ""
@@ -785,20 +762,20 @@ msgid "You cannot have 2 timesheets that overlap!\n"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:68
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
 #, python-format
 msgid "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:487
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:480
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:347
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:343
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr ""
@@ -815,11 +792,6 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:53
 #, python-format
 msgid "You will be able to register your working hours and activities."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_config_settings
-msgid "hr.config.settings"
 msgstr ""
 
 #. module: hr_timesheet_sheet

@@ -20,6 +20,7 @@ class MassMailingTag(osv.Model):
 
     _columns = {
         'name': fields.char('Name', required=True),
+        'color': fields.integer('Color Index'),
     }
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -40,6 +41,7 @@ class MassMailingList(osv.Model):
 
     _columns = {
         'name': fields.char('Mailing List', required=True),
+        'active': fields.boolean('Active'),
         'create_date': fields.datetime('Creation Date'),
         'contact_nbr': fields.function(
             _get_contact_nbr, type='integer',
@@ -61,6 +63,7 @@ class MassMailingList(osv.Model):
 <p class="o_message_paragraph">Join our Marketing newsletter and get <strong>this white paper instantly</strong></p>"""
 
     _defaults = {
+        'active': True,
         'popup_content': _get_default_popup_content,
     }
 
@@ -475,6 +478,7 @@ class MassMailing(osv.Model):
 
     _columns = {
         'name': fields.char('Subject', required=True),
+        'active': fields.boolean('Active'),
         'email_from': fields.char('From', required=True),
         'create_date': fields.datetime('Creation Date'),
         'sent_date': fields.datetime('Sent Date', oldname='date', copy=False),
@@ -597,6 +601,7 @@ class MassMailing(osv.Model):
         return res
 
     _defaults = {
+        'active': True,
         'state': 'draft',
         'email_from': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
         'reply_to': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),

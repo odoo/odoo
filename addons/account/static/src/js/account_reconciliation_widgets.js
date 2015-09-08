@@ -1832,9 +1832,11 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
 
     changePartnerClickHandler: function() {
         var self = this;
+        var partner_name = self.st_line.partner_name;
         $.when(self.changePartner(false)).then(function(){
             self.$(".change_partner_container").show();
             self.$(".partner_name").hide();
+            self.$(".change_partner_container").find("input").attr("placeholder", partner_name);
             self.change_partner_field.$dropdown.trigger("click");
         });
     },

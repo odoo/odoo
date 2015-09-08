@@ -50,8 +50,9 @@ class TestMailTemplate(TestMail):
         }).create({'subject': 'Forget me subject', 'body': 'Dummy body'})
 
         values = composer.onchange_template_id(self.email_template.id, 'comment', 'mail.channel', self.group_pigs.id)['value']
-        recipients = self.env['res.partner'].browse(values['partner_ids'])
-        attachments = self.env['ir.attachment'].browse(values['attachment_ids'])
+        # this onchange return command [(6, 0, ids)] for x2many fields
+        recipients = self.env['res.partner'].browse(values['partner_ids'][0][2])
+        attachments = self.env['ir.attachment'].browse(values['attachment_ids'][0][2])
         test_recipients = self.env['res.partner'].search([('email', 'in', ['test1@example.com', 'test2@example.com'])]) | self.partner_1 | self.partner_2 | self.user_employee.partner_id
         test_attachments = self.env['ir.attachment'].search([('name', 'in', ['_Test_First', '_Test_Second'])])
         self.assertEqual(values['subject'], self.group_pigs.name)
@@ -64,13 +65,7 @@ class TestMailTemplate(TestMail):
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_composer_template_send(self):
-        composer = self.env['mail.compose.message'].with_context({
-            'default_composition_mode': 'comment',
-            'default_model': 'mail.channel',
-            'default_res_id': self.group_pigs.id,
-            'default_use_template': False,
-            'default_template_id': self.email_template.id,
-        }).create({}).send_mail()
+        self.group_pigs.with_context(use_template=False).message_post_with_template(self.email_template.id, composition_mode='comment')
 
         message = self.group_pigs.message_ids[0]
         test_recipients = self.env['res.partner'].search([('email', 'in', ['test1@example.com', 'test2@example.com'])]) | self.partner_1 | self.partner_2 | self.user_employee.partner_id

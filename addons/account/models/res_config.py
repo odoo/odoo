@@ -84,6 +84,8 @@ class AccountConfigSettings(models.TransientModel):
              'Once the master budgets and the budgets are defined, '
              'the project managers can set the planned amount on each analytic account.\n'
              '-This installs the module account_budget.')
+    module_account_tax_cash_basis = fields.Boolean(string="Allow Tax Cash Basis",
+                                        help='Generate tax cash basis entrie when reconciliating entries')
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
         help="Allows you to put invoices in pro-forma state.")
@@ -218,3 +220,16 @@ class AccountConfigSettings(models.TransientModel):
     def onchange_analytic_accounting(self):
         if self.group_analytic_accounting:
             self.module_account_accountant = True
+
+    @api.multi
+    def open_company(self):
+        user = self.env['res.users'].browse(uid)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'My Company',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'res.company',
+            'res_id': user.company_id.id,
+            'target': 'current',
+        }

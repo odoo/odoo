@@ -197,6 +197,26 @@
 }
 
 // ------------------------------------------------------------------
+// Animation
+// ------------------------------------------------------------------
+.o-animation(@name: none, @duration: 0s, @timing-function: ease, @delay: 0s, @iteration-count: 1, @direction: normal, @fill-mode: none, @play-state: running) {
+    -webkit-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+    -moz-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+    -o-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+    animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+}
+
+// ------------------------------------------------------------------
+// Transition
+// ------------------------------------------------------------------
+.o-transition(@property: all, @duration: 0s, @timing-function: easy, @transition-delay: 0s) {
+    -webkit-transition: @property @duration @timing-function @transition-delay;
+    -moz-transition: @property @duration @timing-function @transition-delay;
+    -o-transition: @property @duration @timing-function @transition-delay;
+    transition: @property @duration @timing-function @transition-delay;
+}
+
+// ------------------------------------------------------------------
 // Position absolute
 // ------------------------------------------------------------------
 .o-position-absolute(@top: auto, @right: auto, @bottom: auto, @left: auto) {

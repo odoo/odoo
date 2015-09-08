@@ -12,6 +12,13 @@
                         options="{'fold_field': 'fold'}"/>
                 </header>
                 <sheet string="Issue">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_no_one"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="row">
                         <h1 class="col-xs-11">
                             <field name="name" class="oe_inline" placeholder="Issue Summary..."/>
@@ -58,9 +65,6 @@
                                     <field name="working_hours_close" widget="float_time"/>
                                     <field name="inactivity_days"/>
                                     <field name="days_since_creation"/>
-                                </group>
-                                <group groups="base.group_no_one">
-                                    <field name="active"/>
                                 </group>
                             </group>
                         </page>
@@ -122,6 +126,7 @@
                         <separator/>
                         <filter string="Create Day" context="{'group_by':'create_date:day'}" help="Create Date"/>
                         <filter string="Last Message" name="group_message_last_post" context="{'group_by':'message_last_post:week'}"/>
+                        <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     </group>
                 </search>
             </field>
@@ -153,6 +158,7 @@
                     <field name="user_id"/>
                     <field name="date_deadline"/>
                     <field name="message_needaction_counter"/>
+                    <field name="active"/>
                     <templates>
                         <t t-name="kanban-tooltip">
                            <ul class="oe_kanban_tooltip">
@@ -274,7 +280,7 @@
                         <field name="use_issues" class="oe_inline" string="Use Issues"
                                 on_change="on_change_use_tasks_or_issues(use_tasks, use_issues)"/>
                         <label for="use_issues" class="oe_inline"/>
-                        <span attrs="{'invisible':[('use_issues', '=', False)]}">as</span>
+                        <span attrs="{'invisible':[('use_issues', '=', False)]}">as </span>
                         <field name="label_issues" class="oe_inline oe_input_align" attrs="{'invisible': [('use_issues', '=', False)]}"/>
                     </div>
                 </xpath>

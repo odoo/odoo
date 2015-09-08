@@ -32,7 +32,7 @@ odoo.define('website_hr_recruitment.tour', function(require) {
                 {
                     title:          "Complete Subject",
                     element:        "textarea[name=description]",
-                    sampleText:     "A completely useless message"
+                    sampleText:     "### HR RECRUITMENT TEST DATA ###"
                 },
                 // TODO: Upload a file ?
                 {
@@ -42,47 +42,6 @@ odoo.define('website_hr_recruitment.tour', function(require) {
                 {
                     title:          "Check the form is submited without errors",
                     waitFor:        ".oe_structure:has(h1:contains('Thank you!'))"
-                }
-            ]
-        });
-
-        Tour.register({
-            id:   'website_hr_recruitment_tour_results',
-            name: "Check the hr applicants form created records",
-            path: '',
-            mode: 'test',
-            steps: [
-                {
-                    title:          "Check hr.applicant record has been created",
-                    waitFor:        ".o-apps",
-                    onload: function (tour) {
-                        var hrDef = new Model("hr.applicant").call(
-                            "search_read",
-                            [
-                                [
-                                    ['partner_name'    , '='   , 'John Smith'],
-                                    ['partner_phone'   , '='   , '118.218'],
-                                    ['email_from'      , '='   , 'john@smith.com'],
-                                    ['description'     , 'like', 'A completely useless message']
-                                ],
-                                []
-                            ]
-                        );
-                        var success = function(model, data) {
-                            if(data.length) {
-                                $('body').append('<div id="website_form_success_test_tour_'+model+'"></div>');
-                            }
-                        };
-                        hrDef.then(_.bind(success, this, 'hr_applicant'));
-                    }
-                },
-                {
-                    title:          "Check hr.applicant record has been created",
-                    waitFor:        "#website_form_success_test_tour_hr_applicant"
-                },
-                {
-                    title:          "Final Step",
-                    waitFor:        "html"
                 }
             ]
         });

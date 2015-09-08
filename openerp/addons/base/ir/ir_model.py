@@ -83,7 +83,7 @@ class ir_model(osv.osv):
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type', readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
         'transient': fields.boolean(string="Transient Model"),
-        'modules': fields.function(_in_modules, type='char', string='In Modules', help='List of modules in which the object is defined or inherited'),
+        'modules': fields.function(_in_modules, type='char', string='In Apps', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, type='one2many', obj='ir.ui.view', string='Views'),
     }
 
@@ -205,7 +205,7 @@ class ir_model_fields(osv.osv):
     _rec_name = 'field_description'
 
     _columns = {
-        'name': fields.char('Name', required=True, select=1),
+        'name': fields.char('Field Name', required=True, select=1),
         'complete_name': fields.char('Complete Name', select=1),
         'model': fields.char('Object Name', required=True, select=1,
             help="The technical name of the model this field belongs to"),
@@ -236,7 +236,7 @@ class ir_model_fields(osv.osv):
             "For example: [('color','=','red')]"),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'selectable': fields.boolean('Selectable'),
-        'modules': fields.function(_in_modules, type='char', string='In Modules', help='List of modules in which the field is defined'),
+        'modules': fields.function(_in_modules, type='char', string='In Apps', help='List of modules in which the field is defined'),
         'serialization_field_id': fields.many2one('ir.model.fields', 'Serialization Field', domain = "[('ttype','=','serialized')]",
                                                   ondelete='cascade', help="If set, this field will be stored in the sparse "
                                                                            "structure of the serialization field, instead "
@@ -245,6 +245,14 @@ class ir_model_fields(osv.osv):
         'relation_table': fields.char("Relation Table", help="Used for custom many2many fields to define a custom relation table name"),
         'column1': fields.char("Column 1", help="Column referring to the record in the model table"),
         'column2': fields.char("Column 2", help="Column referring to the record in the comodel table"),
+        'compute': fields.text("Compute", help="Code to compute the value of the field.\n"
+                        "Iterate on the recordset 'self' and assign the field's value:\n\n"
+                        "    for record in self:\n"
+                        "        record['size'] = len(record.name)\n\n"
+                        "Modules time, datetime, dateutil are available."),
+        'depends': fields.char("Dependencies", help="Dependencies of compute method; "
+                        "a list of comma-separated field names, like\n\n"
+                        "    name, partner_id.name"),
     }
     _rec_name='field_description'
     _defaults = {
@@ -319,6 +327,19 @@ class ir_model_fields(osv.osv):
                 return {'warning': {'title': _("Warning"), 'message': e.message}}
             self.ttype = field.type
             self.relation = field.comodel_name
+            self.readonly = True
+            self.copy = False
+
+    @api.onchange('compute')
+    def _onchange_compute(self):
+        if self.compute:
+            self.readonly = True
+            self.copy = False
+
+    @api.one
+    @api.constrains('relation_table')
+    def _check_relation_table(self):
+        models.check_pg_name(self.relation_table)
 
     @api.model
     def _custom_many2many_names(self, model_name, comodel_name):
@@ -669,7 +690,7 @@ class ir_model_access(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, select=True),
         'active': fields.boolean('Active', help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module.'),
-        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)], select=True, ondelete='cascade'),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('transient','=', False)], select=True, ondelete='cascade'),
         'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade', select=True),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),

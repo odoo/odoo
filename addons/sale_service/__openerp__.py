@@ -28,10 +28,9 @@ order line, the sale order line will be considered delivered when the task is
 completed.
 """,
     'website': 'https://www.odoo.com/page/crm',
-    'depends': ['project', 'sale'],
+    'depends': ['project', 'sale', 'project_timesheet', 'sale_timesheet'],
     'data': ['views/sale_service_view.xml'],
     'demo': ['demo/sale_service_demo.xml'],
-    'test': ['test/project_task_procurement.yml'],
     'installable': True,
     'auto_install': True,
 }

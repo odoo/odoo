@@ -268,12 +268,12 @@
                     </t>
                     <a class="oe_file_attachment" t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
                         <t t-raw="item.label"/>
-                        <span t-if="widget.view.is_action_enabled('edit') &amp;&amp; section.name == 'files' and !item.callback" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">
+                        <span t-if="section.name == 'files' and widget.options.editable and !item.callback" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">
                             <i class="fa fa-trash-o"/>
                         </span>
                     </a>
                 </li>
-                <li t-if="widget.view.is_action_enabled('edit') &amp;&amp; section.name == 'files'" class="oe_sidebar_add_attachment">
+                <li t-if="section.name == 'files' and widget.options.editable" class="oe_sidebar_add_attachment">
                     <t t-call="HiddenInputFile">
                         <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                         <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
@@ -666,6 +666,7 @@
     <span t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
         <t t-if="!widget.get('effective_readonly')">
             <input t-att-type="widget.password ? 'password' : 'text'"
+                t-att-barcode_events="widget.options.barcode_events"
                 t-att-id="widget.id_for_label"
                 t-att-tabindex="widget.node.attrs.tabindex"
                 t-att-autofocus="widget.node.attrs.autofocus"
@@ -820,6 +821,7 @@
                 class="oe_m2o_cm_button fa fa-external-link" draggable="false"/>
             <div>
                 <input type="text"
+                    t-att-barcode_events="widget.options.barcode_events"
                     t-att-id="widget.id_for_label"
                     t-att-tabindex="widget.node.attrs.tabindex"
                     t-att-autofocus="widget.node.attrs.autofocus"
@@ -838,12 +840,25 @@
 <t t-name="FieldMany2ManyTag">
     <t t-set="i" t-value="0"/>
     <t t-foreach="elements" t-as="el">
-        <span class="badge" t-att-data-index="i" t-att-data-id="el[0]">
-            <t t-esc="el[1]"/>
+        <span t-attf-class="badge dropdown #{'o_tag_color_' + el['color']}" t-att-data-index="i" t-att-data-id="el['id']">
+            <t t-esc="el['name']"/>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
         <t t-set="i" t-value="i + 1"/>
     </t>
+</t>
+<t t-name="FieldMany2ManyTag.colorpicker">
+    <ul class="o_colorpicker dropdown-menu" role="menu">
+        <li t-foreach="10" t-as="color">
+            <a href="#" t-att-data-id="tag_id" t-att-data-color="color_index + 1" t-attf-class="o_tag_color_#{color + 1}"/>
+        </li>
+        <li>
+            <a href="#" t-att-data-id="tag_id" t-att-data-color="0" class="o_tag_color_0"/>
+        </li>
+        <li style="margin-top: 7px">
+            No color (hidden in kanban)
+        </li>
+    </ul>
 </t>
 <t t-name="FieldReference">
     <table class="oe_form_field oe_form_field_reference" border="0" cellpadding="0" cellspacing="0" t-att-style="widget.node.attrs.style">
@@ -992,13 +1007,13 @@
 </t>
 <t t-name="HiddenInputFile">
     <div t-attf-class="oe_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
-        <form class="oe_form_binary_form" t-att-target="fileupload_id"
+        <form class="o_form_binary_form" t-att-target="fileupload_id"
             method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
             <input type="hidden" name="session_id" value="" t-if="widget.session.override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <t t-raw="0"/>
-            <input type="file" class="oe_form_binary_file" name="ufile" t-if="widget.widget!='image'"/>
-            <input type="file" class="oe_form_binary_file" name="ufile" accept="image/*" t-if="widget.widget=='image'"/>
+            <input type="file" class="o_form_input_file" name="ufile" t-if="widget.widget!='image'"/>
+            <input type="file" class="o_form_input_file" name="ufile" accept="image/*" t-if="widget.widget=='image'"/>
         </form>
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
     </div>
@@ -1435,5 +1450,16 @@
     t-att-title="widget.string" class="oe_toggle_button">
     <img t-attf-src="#{_s}/web/static/src/img/icons/#{widget.icon}" t-att-alt="widget.string"/>
 </button>
+
+<t t-name="BooleanButton">
+    <t t-if="widget.get_value()">
+        <span class="o_stat_text o_not_hover text-success"><t t-esc="widget.string_true"/></span>
+        <span class="o_stat_text o_hover text-danger"><t t-esc="widget.hover_true"/></span>
+    </t>
+    <t t-if="!widget.get_value()">
+        <span class="o_stat_text o_not_hover text-danger"><t t-esc="widget.string_false"/></span>
+        <span class="o_stat_text o_hover text-success"><t t-esc="widget.hover_false"/></span>
+    </t>
+</t>
 
 </templates>

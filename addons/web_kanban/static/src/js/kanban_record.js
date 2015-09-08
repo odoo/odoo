@@ -96,7 +96,7 @@ var KanbanRecord = Widget.extend({
     transform_record: function(record) {
         var self = this;
         var new_record = {};
-        _.each(record, function(value, name) {
+        _.each(_.extend(_.object(_.keys(this.fields), []), record), function(value, name) {
             var r = _.clone(self.fields[name] || {});
             if ((r.type === 'date' || r.type === 'datetime') && value) {
                 r.raw_value = time.auto_str_to_date(value);

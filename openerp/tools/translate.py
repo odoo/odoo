@@ -271,7 +271,7 @@ def xml_translate(callback, value):
         return trans.get_done()
     except etree.ParseError:
         wrapped = "<div>%s</div>" % encode(value)
-        root = etree.fromstring(wrapped, etree.HTMLParser())
+        root = etree.fromstring(wrapped, etree.HTMLParser(encoding='utf-8'))
         # html > body > div
         trans.process(root[0][0])
         return trans.get_done()[5:-6]

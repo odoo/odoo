@@ -204,17 +204,24 @@
                             - A button corresponding to the bank_statements_source, if it wasn't configured, a button for each of them
                             - If there are statements to reconcile, a link to reconcile them -->
                         <div class="col-xs-6 o_kanban_primary_left">
+                            <t t-if="dashboard.number_to_reconcile > 0">
+                                <button type="object" name="action_open_reconcile" class="btn btn-primary btn-sm"> Reconcile <t t-esc="dashboard.number_to_reconcile"/> Items</button>
+                            </t>
                             <t t-if="journal_type == 'bank'">
                                 <div name="bank_journal_default_cta" t-if="! dashboard.bank_statements_source">
-                                    <button type="object" name="create_bank_statement" class="btn btn-primary btn-sm">New Statement</button>
+                                    <button t-if="dashboard.number_to_reconcile == 0" type="object" name="create_bank_statement" class="btn btn-primary btn-sm">New Statement</button>
+                                    <a t-if="dashboard.number_to_reconcile > 0" type="object" name="create_bank_statement" class="oe_inline">New Statement</a>
                                 </div>
                                 <div name="bank_journal_cta" t-if="dashboard.bank_statements_source">
-                                    <button t-if="dashboard.bank_statements_source == 'manual'" type="object" name="create_bank_statement" class="btn btn-primary btn-sm">New Statement</button>
+                                    <button t-if="dashboard.bank_statements_source == 'manual' &amp;&amp; dashboard.number_to_reconcile == 0" type="object" name="create_bank_statement" class="btn btn-primary btn-sm">New Statement</button>
+                                    <a t-if="dashboard.bank_statements_source == 'manual' &amp;&amp; dashboard.number_to_reconcile > 0" type="object" name="create_bank_statement" class="oe_inline">New Statement</a>
                                 </div>
                             </t>
-                            <button t-if="journal_type == 'cash'" type="object" name="create_cash_statement" class="btn btn-primary btn-sm">New Transactions</button>
                             <t t-if="dashboard.number_to_reconcile > 0">
-                                <a type="object" name="action_open_reconcile" class="oe_inline"> Reconcile <t t-esc="dashboard.number_to_reconcile"/> Items</a>
+                                <a t-if="journal_type == 'cash'" type="object" name="create_cash_statement" class="oe_inline">New Transactions</a>
+                            </t>
+                            <t t-if="dashboard.number_to_reconcile == 0">
+                                <button t-if="journal_type == 'cash'" type="object" name="create_cash_statement" class="btn btn-primary btn-sm">New Transactions</button>
                             </t>
                         </div>
                         <!-- On the right, show other common informations/actions -->
@@ -270,10 +277,8 @@
                         </div>
                     </t>
                     <t t-name="JournalBodyGraph">
-                        <div class="row">
-                            <div class="o_kanban_graph_section">
-                                <field name="kanban_dashboard_graph" t-att-graph_type="_.contains(['cash','bank'],journal_type) ? 'line' : 'bar'" widget="dashboard_graph"></field>
-                            </div>
+                        <div class="o_kanban_graph_section">
+                            <field name="kanban_dashboard_graph" t-att-graph_type="_.contains(['cash','bank'],journal_type) ? 'line' : 'bar'" widget="dashboard_graph"/>
                         </div>
                     </t>
             </templates>
@@ -282,7 +287,7 @@
     </record>
 
     <record id="open_account_journal_dashboard_kanban" model="ir.actions.act_window">
-        <field name="name">Accounting</field>
+        <field name="name">Accounting Dashboard</field>
         <field name="res_model">account.journal</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,form</field>
@@ -299,4 +304,17 @@
     </record>
 
     <menuitem id="menu_board_journal_1" name="Dashboard" action="open_account_journal_dashboard_kanban" parent="menu_finance" sequence="1"/>
+
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_account_menu" model="ir.actions.client">
+            <field name="name">Open account dashboard menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_board_journal_1')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_account_menu"/>
+            <field name="state">open</field>
+        </record>
+    </data>
 </odoo>

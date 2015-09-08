@@ -192,11 +192,11 @@
                             </field>
                         </page>
                         <page string="Misc" groups="base.group_no_one">
-                            <label string="Owner"/>
-                            <field name="user_id" />
-                            
+                            <group>
+                                <label for="user_id" string="Owner"/>
+                                <field name="user_id" nolabel="1"/>
+                            </group>
                         </page>
-
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -257,7 +257,7 @@
 
     <!-- CRM Meeting Calendar -->
     <record model="ir.ui.view" id="view_calendar_event_calendar">
-        <field name="name">Meetings Calendar</field>
+        <field name="name">Meeting</field>
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -269,16 +269,6 @@
                 <field name="color_partner_id"/>
                 <field name="partner_ids"/>
             </calendar>
-        </field>
-    </record>
-
-    <!-- CRM Meeting Gantt  -->
-
-    <record id="view_calendar_event_gantt" model="ir.ui.view">
-        <field name="name">CRM - Meetings Gantt</field>
-        <field name="model">calendar.event</field>
-        <field name="arch" type="xml">
-            <gantt date_delay="duration" date_start="start" string="Meetings"/>
         </field>
     </record>
 
@@ -310,7 +300,7 @@
     <record id="action_calendar_event" model="ir.actions.act_window">
         <field name="name">Meetings</field>
         <field name="res_model">calendar.event</field>
-        <field name="view_mode">calendar,tree,form,gantt</field>
+        <field name="view_mode">calendar,tree,form</field>
         <field name="view_id" ref="view_calendar_event_calendar"/>
         <field name="search_view_id" ref="view_calendar_event_search"/>
         <field name="help" type="html">
@@ -341,12 +331,6 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_view_calendar_event_gantt">
-        <field name="act_window_id" ref="action_calendar_event"/>
-        <field name="sequence" eval="4"/>
-        <field name="view_mode">gantt</field>
-        <field name="view_id" ref="view_calendar_event_gantt"/>
-    </record>
 
 
 
@@ -359,7 +343,7 @@
     <record id="action_calendar_event_notify" model="ir.actions.act_window">
         <field name="name">Meetings</field>
         <field name="res_model">calendar.event</field>
-        <field name="view_mode">form,calendar,tree,gantt</field>
+        <field name="view_mode">form,calendar,tree</field>
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
        

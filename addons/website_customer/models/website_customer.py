@@ -7,7 +7,7 @@ class res_partner(osv.Model):
     _inherit = 'res.partner'
 
     _columns = {
-        'tag_ids': fields.many2many('res.partner.tag', id1='partner_id', id2='tag_id', string='Tags'),
+        'website_tag_ids': fields.many2many('res.partner.tag', id1='partner_id', id2='tag_id', string='Website tags', oldname="tag_ids"),
     }
 
 
@@ -23,7 +23,7 @@ class res_partner_tags(osv.Model):
     _columns = {
         'name': fields.char('Category Name', required=True, translate=True),
         'partner_ids': fields.many2many('res.partner', 'res_partner_res_partner_tag_rel', id1='tag_id', id2='partner_id', string='Partners'),
-        'classname': fields.selection(get_selection_class, 'Class', help="Bootstrap class to customize the color of the tag", required=True),
+        'classname': fields.selection(get_selection_class, 'Class', help="Bootstrap class to customize the color", required=True),
         'active': fields.boolean('Active'),
     }
     _defaults = {

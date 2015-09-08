@@ -108,20 +108,20 @@ class res_partner_category(osv.Model):
     def _name_get_fnc(self, field_name, arg):
         return dict(self.name_get())
 
-    _description = 'Partner Categories'
+    _description = 'Partner Tags'
     _name = 'res.partner.category'
     _columns = {
         'name': fields.char('Category Name', required=True, translate=True),
-        'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True, ondelete='cascade'),
+        'parent_id': fields.many2one('res.partner.category', 'Parent Tag', select=True, ondelete='cascade'),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Full Name'),
-        'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Child Categories'),
+        'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Child Tag'),
         'active': fields.boolean('Active', help="The active field allows you to hide the category without removing it."),
         'parent_left': fields.integer('Left parent', select=True),
         'parent_right': fields.integer('Right parent', select=True),
         'partner_ids': fields.many2many('res.partner', id1='category_id', id2='partner_id', string='Partners'),
     }
     _constraints = [
-        (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You can not create recursive tags.', ['parent_id'])
     ]
     _defaults = {
         'active': 1,
@@ -226,7 +226,7 @@ class res_partner(osv.Model, format_address):
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website', help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
-        'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Categories'),
+        'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
         'barcode': fields.char('Barcode', oldname='ean13'),
         'active': fields.boolean('Active'),
