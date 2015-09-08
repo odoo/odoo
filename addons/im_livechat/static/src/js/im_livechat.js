@@ -38,6 +38,7 @@ mail_chat_common.Conversation.include({
         // set manually the new state
         if(state === 'closed'){
             this.destroy();
+            utils.set_cookie('im_livechat_session', "", -1);
         }else{
             if(state === 'open'){
                 this.show();
@@ -50,10 +51,10 @@ mail_chat_common.Conversation.include({
                     this.show();
                 }
             }
+            this._super(state);
             // session and cookie update
             utils.set_cookie('im_livechat_session', JSON.stringify(this.get('session')), 60*60);
         }
-        this._super(state);
     },
     on_click_close: function(event) {
         var self = this;
@@ -173,6 +174,11 @@ var LivechatButton = Widget.extend({
         var self = this;
         // set the mail_channel and create the Conversation Window
         this.mail_channel = mail_channel;
+        // force open conversation window
+        if(mail_channel['state'] == 'closed'){
+            mail_channel['state'] = 'open';
+        }
+
         this.conv = this.manager.session_apply(mail_channel, {
             'load_history': !welcome_message,
             'focus': welcome_message
@@ -181,7 +187,6 @@ var LivechatButton = Widget.extend({
             bus.bus.stop_polling();
             delete self.conv;
             delete self.mail_channel;
-            utils.set_cookie('im_livechat_session', "", -1); // delete the session cookie
         });
         // setup complet when the conversation window is appended
         this.manager._session_defs[mail_channel.id].then(function(){
