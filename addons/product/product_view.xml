@@ -125,11 +125,9 @@
                                         <field name="categ_id" string="Internal Category"/>
                                     </group>
                                     <group name="group_lots_and_weight">
-                                        <label for="weight"/>
-                                        <div class="o_row" name="weight">
-                                            <field digits="(14, 3)" name="weight" string="Weight"
-                                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
-                                            <span>kg</span>
+                                        <label for="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
+                                        <div class="o_row" name="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                            <field name="weight" string="Weight"/>
                                         </div>
                                     </group>
                                 </group>
@@ -265,7 +263,7 @@
                                     </div>
                                     <label for="weight"/>
                                     <div class="o_row">
-                                        <field digits="(14, 3)" name="weight"/>
+                                        <field name="weight"/>
                                         <span>kg</span>
                                     </div>
                                 </group>
@@ -482,12 +480,12 @@
                     <field name="standard_price" attrs="{'invisible':[('product_variant_count','=', 1)]}"
                             widget='monetary' options="{'currency_field': 'currency_id'}"/>
                 </field>
-                <field name="weight" position="replace">
-                    <field digits="(14, 3)" name="volume"
-                        attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']),('product_variant_count','=',1)]}"/>
-                    <field digits="(14, 3)" name="weight"
-                        attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']),('product_variant_count','=',1)]}"/>
-                </field>
+                <label for="weight" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
+                </label>
+                <div name="weight" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
+                </div>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                 </xpath>
