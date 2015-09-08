@@ -288,11 +288,20 @@ class PaymentTxOgone(osv.Model):
 
         status = int(data.get('STATUS', '0'))
         if status in self._ogone_valid_tx_status:
-            tx.write({
+            vals = {
                 'state': 'done',
-                'date_validate': datetime.datetime.strptime(data['TRXDATE'],'%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date_validate': datetime.datetime.strptime(data['TRXDATE'], '%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': data['PAYID'],
-            })
+            }
+            if data.get('ALIAS') and tx.partner_id and tx.type == 'form_save':
+                pm_id = self.pool['payment.method'].create(cr, uid, {
+                    'partner_id': tx.partner_id.id,
+                    'acquirer_id': tx.acquirer_id.id,
+                    'acquirer_ref': data.get('ALIAS'),
+                    'name': '%s - %s' % (data.get('CARDNO'), data.get('CN'))
+                }, context=context)
+                vals.update(payment_method_id=pm_id)
+            tx.write(vals)
             if tx.callback_eval:
                 safe_eval(tx.callback_eval, {'self': tx})
             return True
