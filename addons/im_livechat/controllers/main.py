@@ -9,7 +9,7 @@ import base64
 class LivechatController(http.Controller):
 
     @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='none')
-    def livechat_lib(self, xmlid, ext, **kwargs):
+    def livechat_lib(self, ext, **kwargs):
         asset = AssetsBundle("im_livechat.external_lib")
         # can't use /web/content directly because we don't have attachment ids (attachments must be created)
         status, headers, content = binary_content(id=getattr(asset, ext)().id, unique=asset.checksum)
