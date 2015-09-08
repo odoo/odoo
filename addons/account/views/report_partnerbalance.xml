@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_partnerbalance">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <h2>Partner Balance</h2>
+
+                <div class="row">
+                    <div class="col-xs-3">
+                        <strong>Journals:</strong>
+                        <p t-esc="', '.join([ lt or '' for lt in print_journal ])"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Partner's</strong>
+                        <p>
+                            <span t-if="data['result_selection'] == 'customer'">Receivable Accounts</span>
+                            <span t-if="data['result_selection'] == 'supplier'">Payable Accounts</span>
+                            <span t-if="data['result_selection'] == 'customer_supplier'">Receivable and Payable Accounts</span>
+                        </p>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Target Moves:</strong>
+                        <p>
+                            <span t-if="data['target_move'] == 'all'">All Entries</span>
+                            <span t-if="data['target_move'] == 'posted'">All Posted Entries</span>
+                        </p>
+                    </div>
+                    <div class="col-xs-3">
+                        <t t-if="data['date_from']"><strong>Date from :</strong> <span t-esc="data['date_from']"/><br/></t>
+                        <t t-if="data['date_to']"><strong>Date to :</strong> <span t-esc="data['date_to']"/></t>
+                    </div>
+                </div>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>(Account/Partner) Name</th>
+                            <th class="text-right">Debit</th>
+                            <th class="text-right">Credit</th>
+                            <th class="text-right">Balance</th>
+                            <th class="text-right">In dispute</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td></td>
+                            <td class="text-right">
+                                <strong t-esc="sum_debit" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                            <td class="text-right">
+                                <strong t-esc="sum_credit" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                            <td class="text-right">
+                                <strong t-esc="sum_debit-sum_credit" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                            <td class="text-right">
+                                <strong t-esc="sum_litige" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                        </tr>
+                        <tr t-foreach="partner_lines" t-as="line">
+                            <td t-if="line['type'] == 3">
+                                <strong t-esc="line['ref']"/>
+                                <span t-esc="line['code']"/>
+                            </td>
+                            <td t-if="line['type'] != 3">
+                                <span t-esc="line['ref']"/>
+                            </td>
+                            <td t-if="line['type'] == 3">
+                                <strong t-esc="line['name']"/>
+                            </td>
+                            <td t-if="line['type'] != 3">
+                                <span t-esc="line['name']"/>
+                            </td>
+                            <td t-if="line['type'] == 3" class="text-right">
+                                <strong t-esc="line['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                            <td t-if="line['type']!=3" class="text-right">
+                                <span t-esc="line['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                            <td t-if="line['type']==3" class="text-right">
+                                <strong t-esc="line['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                            <td t-if="line['type']!=3" class="text-right">
+                                <span t-esc="line['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                            <td t-if="line['type']==3" class="text-right">
+                                <strong t-esc="line['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                            <td t-if="line['type']!=3" class="text-right">
+                                <span t-esc="line['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                            <td t-if="line['type'] == 3" class="text-right">
+                                <strong t-esc="line['litigiated'] or 0.0" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                            <td t-if="line['type']!=3" class="text-right">
+                                <span t-esc="line['litigiated'] or 0.0" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</odoo>
