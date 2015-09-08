@@ -338,7 +338,7 @@ class PaymentTxOgone(osv.Model):
             'CURRENCY': tx.currency_id.name,
             'OPERATION': 'SAL',
             'ECI': 2,   # Recurring (from MOTO)
-            'ALIAS': tx.partner_reference,
+            'ALIAS': tx.payment_method_id.acquirer_ref,
             'RTIMEOUT': 30,
         }
 

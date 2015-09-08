@@ -47,11 +47,6 @@ var Editor = Widget.extend({
             $buttons: $(),
             $pager: $(),
         });
-
-        // FIXME
-        // this.on('warning', this, function(e) {
-        //     e.stop_propagation();
-        // });
     },
     start: function () {
         var self = this;
@@ -115,7 +110,7 @@ var Editor = Widget.extend({
                 if(result.created && !self.record.id) {
                     self.record.id = result.result;
                 }
-                return self.cancel();
+                return self.record;
             });
     },
     cancel: function (force) {
@@ -305,23 +300,12 @@ ListView.include(/** @lends instance.web.ListView# */{
     },
     do_button_action: function (name, id, callback) {
         var self = this;
-        this.ensure_saved().done(function (data) {
+        this.save_edition().done(function (data) {
             if(!id && data.created) {
                 id = data.record.get('id');
             }
             self.handle_button(name, id, callback);
         });
-    },
-    /**
-     * Ensures the editable list is saved (saves any pending edition if
-     * needed, or tries to)
-     *
-     * Returns a deferred to the end of the saving.
-     *
-     * @returns {$.Deferred}
-     */
-    ensure_saved: function () {
-        return this.save_edition();
     },
     /**
      * Builds a record with the provided id (``false`` for a creation),
@@ -358,10 +342,8 @@ ListView.include(/** @lends instance.web.ListView# */{
             this.records.add(record, {at: (this.prepends_on_create())? 0 : null});
         }
 
-        return this.ensure_saved().then(function() {
+        return this.save_edition().then(function() {
             return $.when.apply($, self.editor.form.render_value_defs);
-        }, function() {
-            return self.cancel_edition();
         }).then(function () {
             var $recordRow = self.groups.get_row_for(record);
             var cells = self.get_cells_for($recordRow);
@@ -406,7 +388,7 @@ ListView.include(/** @lends instance.web.ListView# */{
                 }
             });
         }, function() {
-            return $.Deferred().resolve(); // Here the cancel edition failed so the start_edition is considered as done and succeeded
+            return $.Deferred().resolve(); // Here the save/cancel edition failed so the start_edition is considered as done and succeeded
         });
     },
     get_cells_for: function ($row) {
@@ -478,13 +460,18 @@ ListView.include(/** @lends instance.web.ListView# */{
                     // onwrite callback could be altering & reloading the
                     // record which has *just* been saved, so first perform all
                     // onwrites then do a final reload of the record
-                    return self.handle_onwrite(record)
+                    return self.cancel_edition(true)
+                        .then(function() {
+                            return self.handle_onwrite(record);
+                        })
                         .then(function () {
                             return self.reload_record(record);
                         })
                         .then(function () {
                             return {created: created, record: record};
                         });
+                }, function() {
+                    return self.cancel_edition();
                 });
             });
         });

@@ -6,7 +6,9 @@
         <field name="arch" type="xml">
             <form string="Backorder creation">
                 <group>
-                    Do we need to create a backorder?
+                    <p>
+                    You supplied less products than provided in the Initial Demand.  Do you want a backorder?
+                    </p>
                 </group>
                 <footer>
                     <button name="process" string="Create Backorder" type="object" class="oe_highlight"/>
