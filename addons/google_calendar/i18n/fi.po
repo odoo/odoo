@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-09-05 07:24+0000\n"
+"POT-Creation-Date: 2015-09-07 12:39+0000\n"
+"PO-Revision-Date: 2015-09-08 13:39+0000\n"
 "Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -23,28 +23,23 @@ msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"/google_account/authentication\""
-msgstr "\"/google_account/authentication\""
+msgid "\"Authorized redirect URI\""
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Calendar API\""
-msgstr "\"Kalenteri API/rajapinta\""
+msgid "'/google_account/authentication'"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Consent Screen\""
-msgstr "\"Hyväksymisnäkymä\""
+msgid "'Calendar API'"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Create Project\""
-msgstr "\"Luo projekti\""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Redirect RI\""
-msgstr "\"Uudelleenohjaus URI\""
+msgid "'Configure consent screen'"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -53,13 +48,23 @@ msgstr "'Create Client ID'"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "'Create New Client ID'"
-msgstr "'Create New Client ID'"
+msgid "'Create Project'"
+msgstr ""
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "'Create new Client ID'"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid "'Credentials'"
 msgstr "'Credentials'"
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "'Enable API'"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -73,8 +78,13 @@ msgstr "(päävalinnasta APIs and auth) ja paina nappulaa"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid ") that you need to insert in the 2 fields below !"
-msgstr "). Sinun tulee lisätä nämä kaksi kenttää alapuolella oleviin kenttiin."
+msgid ") that you need to insert in the 2 fields below!"
+msgstr ""
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid ", then click on"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
@@ -85,6 +95,11 @@ msgstr "API asetukset"
 #: model:ir.ui.menu,name:google_calendar.menu_calendar_google_tech_config
 msgid "API Credentials"
 msgstr "API tunnisteet"
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "Activate the Calendar API by clicking on the blue button"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
@@ -130,6 +145,11 @@ msgstr "Calendar ID"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "Check that the Application type is set on"
+msgstr ""
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid "Click on"
 msgstr "Klikkaa"
 
@@ -169,11 +189,6 @@ msgstr "Tahdotko tehdä tämän nyt?"
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Event"
 msgstr "Tapahtuma"
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "Fill in the Name of application and check that the platform is well on"
-msgstr "Täytä sovelluksen nimi ja tarkista että järjestelmä toimii."
 
 #. module: google_calendar
 #. openerp-web
@@ -225,8 +240,8 @@ msgstr "Valitse vasemmalla olevasta valikosta alavalikko"
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid ""
 "In the menu on left side, select the sub menu APIs (from menu APIs and auth)"
-" and activate"
-msgstr "Valitse vasemmalla olevasta sivuvalikosta alivalikko APIs (valikko APIs and auth) ja aktivoi"
+" and click on"
+msgstr ""
 
 #. module: google_calendar
 #: help:res.users,google_calendar_cal_id:0
@@ -271,6 +286,11 @@ msgid "Show tutorial to know how to get my 'Client ID' and my 'Client Secret'"
 msgstr "Näytä ohjeet kuinka hankin tarvitsemani  'ClientID' ja 'ClientSecret\"-arvot."
 
 #. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "Specify an email address and a product name, then save."
+msgstr ""
+
+#. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/xml/web_calendar.xml:8
 #, python-format
@@ -294,11 +314,6 @@ msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
 msgstr "Tili (%s), jota yrität synkronoida ei ole sama kuin viimeksi käytetty tili (%s)!"
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "To finish, you just need to create a \"consent screen\" by clicking on"
-msgstr "Lopuksi sinun täytyy luoda  \"hyväksymisruutu\" klikkaamalla"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -329,8 +344,8 @@ msgstr "Käyttäjät"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "When it's done, check that the button of"
-msgstr "Kun olet valmis, valitse  painike"
+msgid "When it's done, the Calendar API overview will be available"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -353,13 +368,6 @@ msgstr "Sinut ohjataan nyt Googlen sivulle, jotta voit valtuuttaa pääsyn kalen
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid ""
-"You will need to accept again the \"Google APIs Terms of services\" and "
-"\"Calendar API Terms of service\""
-msgstr "Sinun tulee hyväksyä uudelleen käyttöehdot \"Google APIs Terms of services\" ja \"Calendar API Terms of service\""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid "and"
 msgstr "ja"
 
@@ -377,20 +385,5 @@ msgstr "ja aseta arvoksi (oma domain/host-osoitteesi ja vakio-osoite"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "by clicking on button \"OFF\"."
-msgstr "klikkaamalla \"OFF\"-painiketta."
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "https://cloud.google.com/console"
-msgstr "https://cloud.google.com/console"
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "in the left menu."
-msgstr "vasemmalla valikossa."
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "is well in green and with text \"ON\""
+msgid "https://console.developers.google.com/"
 msgstr ""

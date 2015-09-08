@@ -150,6 +150,18 @@ class TransactionCase(BaseCase):
         self.cr.rollback()
         self.cr.close()
 
+    def patch_order(self, model, order):
+        m_e = self.env[model]
+        m_r = self.registry(model)
+
+        old_order = m_e._order
+
+        @self.addCleanup
+        def cleanup():
+            m_r._order = type(m_e)._order = old_order
+
+        m_r._order = type(m_e)._order = order
+
 
 class SingleTransactionCase(BaseCase):
     """ TestCase in which all test methods are run in the same transaction,

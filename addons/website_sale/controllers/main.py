@@ -906,15 +906,29 @@ class website_sale(http.Controller):
         """ Transforms a list of order lines into a dict for google analytics """
         ret = []
         for line in order_lines:
+            product = line.product_id
             ret.append({
                 'id': line.order_id and line.order_id.id,
-                'sku': line.product_id.id,
-                'name': line.product_id.name or '-',
-                'category': line.product_id.categ_id and line.product_id.categ_id.name or '-',
+                'sku': product.ean13 or product.id,
+                'name': product.name or '-',
+                'category': product.categ_id and product.categ_id.name or '-',
                 'price': line.price_unit,
                 'quantity': line.product_uom_qty,
             })
         return ret
+
+    def order_2_return_dict(self, order):
+        """ Returns the tracking_cart dict of the order for Google analytics basically defined to be inherited """
+        return {
+            'transaction': {
+                'id': order.id,
+                'affiliation': order.company_id.name,
+                'revenue': order.amount_total,
+                'tax': order.amount_tax,
+                'currency': order.currency_id.name
+            },
+            'lines': self.order_lines_2_google_api(order.order_line)
+        }
 
     @http.route(['/shop/tracking_last_order'], type='json', auth="public")
     def tracking_cart(self, **post):
@@ -924,13 +938,7 @@ class website_sale(http.Controller):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-            ret['transaction'] = {
-                'id': sale_order_id,
-                'affiliation': order.company_id.name,
-                'revenue': order.amount_total,
-                'currency': order.currency_id.name
-            }
-            ret['lines'] = self.order_lines_2_google_api(order.order_line)
+            ret = self.order_2_return_dict(order)
         return ret
 
     @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
