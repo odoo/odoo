@@ -7,15 +7,15 @@ class hr_timesheet_report(models.Model):
     _name = "hr.timesheet.report"
     _description = "Timesheet"
     _auto = False
+    _rec_name = "date"
 
     date = fields.Date('Date', readonly=True)
-    name = fields.Char('Description', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     user_id = fields.Many2one('res.users', 'User', readonly=True)
     account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     cost = fields.Float('Cost', readonly=True, digits_compute=dp.get_precision('Account'))
-    quantity = fields.Float('Time', readonly=True)  # TDE FIXME master: rename into time
+    quantity = fields.Float('Time', readonly=True)
 
     def _select(self):
         select_str = """
