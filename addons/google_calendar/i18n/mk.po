@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-31 10:51+0000\n"
-"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"POT-Creation-Date: 2015-09-07 12:39+0000\n"
+"PO-Revision-Date: 2015-09-08 08:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,28 +21,23 @@ msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"/google_account/authentication\""
-msgstr "\"/google_account/authentication\""
+msgid "\"Authorized redirect URI\""
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Calendar API\""
-msgstr "\"Calendar API\""
+msgid "'/google_account/authentication'"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Consent Screen\""
-msgstr "\"Consent Screen\""
+msgid "'Calendar API'"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Create Project\""
-msgstr "\"Create Project\""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Redirect RI\""
-msgstr "\"Redirect RI\""
+msgid "'Configure consent screen'"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -51,13 +46,23 @@ msgstr "'Create Client ID'"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "'Create New Client ID'"
-msgstr "'Create New Client ID'"
+msgid "'Create Project'"
+msgstr ""
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "'Create new Client ID'"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid "'Credentials'"
 msgstr "'Credentials'"
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "'Enable API'"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -71,8 +76,13 @@ msgstr "(from menu APIs and auth) and click on button"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid ") that you need to insert in the 2 fields below !"
-msgstr ") што треба да го внесете во двете полиња подолу !"
+msgid ") that you need to insert in the 2 fields below!"
+msgstr ""
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid ", then click on"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
@@ -83,6 +93,11 @@ msgstr "Конфигурација на API"
 #: model:ir.ui.menu,name:google_calendar.menu_calendar_google_tech_config
 msgid "API Credentials"
 msgstr "API Креденцијали"
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "Activate the Calendar API by clicking on the blue button"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
@@ -128,6 +143,11 @@ msgstr "ID на календар"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "Check that the Application type is set on"
+msgstr ""
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid "Click on"
 msgstr "Кликнете на"
 
@@ -167,11 +187,6 @@ msgstr "Дали сакате да го направите ова сега?"
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Event"
 msgstr "Настан"
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "Fill in the Name of application and check that the platform is well on"
-msgstr "Пополнете го името на апликација и проверете дека платформата е"
 
 #. module: google_calendar
 #. openerp-web
@@ -223,8 +238,8 @@ msgstr "Од менито на левата страна изберете го �
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid ""
 "In the menu on left side, select the sub menu APIs (from menu APIs and auth)"
-" and activate"
-msgstr "На левата страна од менито, Изберето го подменито API-а (од менито API-а и авторизација) и активирајте"
+" and click on"
+msgstr ""
 
 #. module: google_calendar
 #: help:res.users,google_calendar_cal_id:0
@@ -269,6 +284,11 @@ msgid "Show tutorial to know how to get my 'Client ID' and my 'Client Secret'"
 msgstr "Покажи прирачник да знаете како да ги добиете 'ID на клиент' и 'Лозинка на Клиент'"
 
 #. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "Specify an email address and a product name, then save."
+msgstr ""
+
+#. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/xml/web_calendar.xml:8
 #, python-format
@@ -292,11 +312,6 @@ msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
 msgstr "Налогот што се обидувате да го синхронизирате (%s) не е исти со последниот што е користен (%s)!"
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "To finish, you just need to create a \"consent screen\" by clicking on"
-msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -327,8 +342,8 @@ msgstr "Корисници"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "When it's done, check that the button of"
-msgstr "Кога ќе заврши проверете дали копчето"
+msgid "When it's done, the Calendar API overview will be available"
+msgstr ""
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -351,13 +366,6 @@ msgstr "Ќе бидете пренасочени кон Google за да го а
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid ""
-"You will need to accept again the \"Google APIs Terms of services\" and "
-"\"Calendar API Terms of service\""
-msgstr "Ќе мора повторно да ги прифатите \"Google APIs Услови за услуга\" и \"Календар API Услови за услуга\""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid "and"
 msgstr "и"
 
@@ -375,20 +383,5 @@ msgstr "и поставете како вредност  (вашиот доме�
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "by clicking on button \"OFF\"."
-msgstr "со кликање на копчето \"ИСКЛУЧИ\"."
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "https://cloud.google.com/console"
-msgstr "https://cloud.google.com/console"
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "in the left menu."
-msgstr "ве левото мени."
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "is well in green and with text \"ON\""
-msgstr "е во зелена боја со текст \"ВКЛУЧИ\""
+msgid "https://console.developers.google.com/"
+msgstr ""
