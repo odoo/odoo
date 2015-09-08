@@ -48,6 +48,8 @@ class res_partner(osv.Model):
             'single_related_company_id', type='many2one', obj='res.company'),
     }
 
+    _order = 'commercial_partner_id,company_id,name'
+
 
 class TestFunctionCounter(osv.Model):
     _name = 'test_old_api.function_counter'
@@ -236,3 +238,17 @@ class MixedModel(models.Model):
         return [(model.model, model.name)
                 for model in models
                 if not model.model.startswith('ir.')]
+
+
+class ResUsers(models.Model):
+    _name = 'res.users'
+    _inherit = 'res.users'
+
+    _order = 'partner_id'
+
+
+class ResCompany(models.Model):
+    _name = 'res.company'
+    _inherit = 'res.company'
+
+    _order = 'parent_id'
