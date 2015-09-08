@@ -15,70 +15,61 @@
                     <t t-if="o.ref">Customer ref: <span t-field="o.ref"/></t>
                 </p>
 
-                <p t-if="Lines[o.id]">
+                <t t-if="Lines[o.id]">
                     <span t-field="res_company.overdue_msg"/>
-                </p>
-
-                <table class="table table-condensed" t-if="Lines[o.id]">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Description</th>
-                            <th class="text-center">Ref</th>
-                            <th class="text-center">Maturity Date</th>
-                            <th class="text-right">Due</th>
-                            <th class="text-right">Paid</th>
-                            <th class="text-right">Maturity</th>
-                            <th class="text-center">Excl.</th>
+                    <table class="table table-condensed" t-foreach="Lines[o.id]" t-as="currency">
+                        <thead>
+                            <tr>
+                                <th>Reference number</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Due Date</th>
+                                <th>Communication</th>
+                                <th class="text-right">Due</th>
+                                <th class="text-right">Paid</th>
+                                <th class="text-center">Litigation</th>
+                            </tr>
+                        </thead>
+                        <tr t-foreach="Lines[o.id][currency]" t-as="line">
+                            <td>
+                                <span t-esc="line['move_id']"/>
+                            </td>
+                            <td>
+                                <span t-esc="line['date']"/>
+                            </td>
+                            <td>
+                                <span t-esc="line['date_maturity']"/>
+                            </td>
+                            <td>
+                                <t t-if="line['name'] != '/'"><span t-esc="line['name']"/></t>
+                                <span t-esc="line['ref']"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="line['debit']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="line['credit']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                            </td>
+                            <td class="text-center">
+                                <span t-if="line['blocked']">x</span>
+                            </td>
                         </tr>
-                    </thead>
-                    <tr t-foreach="Lines[o.id]" t-as="line">
-                        <td>
-                            <span t-esc="line['date']"/>
-                        </td>
-                        <td>
-                            <span t-esc="line['name']"/>
-                        </td>
-                        <td>
-                            <span t-esc="line['ref']"/>
-                        </td>
-                        <td>
-                            <span t-esc="line['date_maturity']"/>
-                        </td>
-                        <td class="text-right">
-                            <span t-esc="line['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
-                        </td>
-                        <td class="text-right">
-                            <span t-esc="line['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
-                        </td>
-                        <td class="text-right">
-                            <span t-esc="line['mat']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
-                        </td>
-                        <td class="text-center">
-                            <span t-if="line['blocked']">x</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"></td>
-                        <td><strong>Sub-Total :</strong></td>
-                        <td class="text-right"><span t-esc="Totals[o.id]['due']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
-                        <td class="text-right"><span t-esc="Totals[o.id]['paid']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
-                        <td class="text-right"><span t-esc="Totals[o.id]['mat']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"></td>
-                        <td><strong>Balance :</strong></td>
-                        <td class="text-right">
-                            <span t-esc="Totals[o.id]['due'] - Totals[o.id]['paid']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
-                        </td>
-                    </tr>
-                </table>
-                <p t-if="Totals[o.id]['total']">
-                    Total amount due:
-                    <span t-esc="Totals[o.id]['total']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
-                </p>
-
+                        <tr>
+                            <td colspan="3"></td>
+                            <td><strong>Sub-Total :</strong></td>
+                            <td class="text-right"><span t-esc="Totals[o.id][currency]['due']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/></td>
+                            <td class="text-right"><span t-esc="Totals[o.id][currency]['paid']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/></td>
+                            <td class="text-right"><span t-esc="Totals[o.id][currency]['mat']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td><strong>Balance :</strong></td>
+                            <td class="text-right">
+                                <span t-esc="Totals[o.id][currency]['due'] - Totals[o.id][currency]['paid']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                            </td>
+                        </tr>
+                    </table>
+                </t>
                 <p t-if="not Lines[o.id]">
                     <strong>There is nothing due with this customer.</strong>
                 </p>
