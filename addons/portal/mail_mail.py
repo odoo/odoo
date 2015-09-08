@@ -43,7 +43,7 @@ class mail_mail(osv.Model):
                                                                 model=mail.model, res_id=mail.res_id,
                                                                 context=contex_signup)[partner.id]
             return ", <span class='oe_mail_footer_access'><small>%(access_msg)s <a style='color:inherit' href='%(portal_link)s'>%(portal_msg)s</a></small></span>" % {
-                'access_msg': _('access directly to'),
+                'access_msg': _('access directly at'),
                 'portal_link': signup_url,
                 'portal_msg': '%s %s' % (context.get('model_name', ''), mail.record_name) if mail.record_name else _('your messages '),
             }
