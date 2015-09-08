@@ -16,6 +16,7 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         // Hardcoded barcode actions
         this.map_barcode_method = {
             'O-CMD.NEW': _.bind(this.form_view.on_button_new, this.form_view),
+            'O-CMD.EDIT': _.bind(this.form_view.on_button_edit, this.form_view),
             'O-CMD.CANCEL': _.bind(this.form_view.on_button_cancel, this.form_view),
             // FIXME: on_button_save shouldn't mix view and model concerns (it expects to be used as onclick handler)
             'O-CMD.SAVE': _.bind(this.form_view.on_button_save, this.form_view, {target: $('.o_cp_buttons .o_form_button_save')}),
