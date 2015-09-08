@@ -278,22 +278,29 @@ div.o_checkbox {
             .o_delete {
                 cursor: pointer;
             }
-            ul {
-                min-width: 230px;
-                li {
+            > ul {
+                @colored-tag-width: 45px;
+                width: 5*@colored-tag-width + 2px;
+                > li {
                     float: left;
                     color: black;
-                    a {
+                    > span {
                         border-radius: 6px;
-                        width: 28px;
+                        width: @colored-tag-width;
                         height: 30px;
                         display: inline-block;
                         border: 2px solid white;
+                        cursor: pointer;
+                        padding: 0;
 
                         &:hover {
                             opacity: 0.8;
                         }
                     }
+                }
+                > li:last-child {
+                    margin-top: 7px;
+                    cursor: auto;
                 }
             }
         }

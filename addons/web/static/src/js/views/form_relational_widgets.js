@@ -1359,7 +1359,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
             this.remove_id($(e.target).parent().data('id'));
         },
         'click .badge': 'open_color_picker',
-        'mousedown .o_colorpicker a': 'update_color',
+        'mousedown .o_colorpicker span': 'update_color',
         'focusout .o_colorpicker': 'close_color_picker',
     },
 
@@ -1368,6 +1368,12 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         common.CompletionFieldMixin.init.call(this);
         this.set({"value": []});
         this._display_orderer = new utils.DropMisordered();
+
+        var self = this;
+        // We need to know if the field 'color' exists on the model
+        this.dataset.call('fields_get', []).then(function(fields) {
+            self.fields = fields;
+        });
     },
     initialize_content: function() {
         if(!this.get("effective_readonly")) {
@@ -1401,7 +1407,8 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         }
     },
     get_render_data: function(ids){
-        return this.dataset.read_ids(ids, ['name', 'color']);
+        var fields = this.fields.color ? ['name', 'color'] : ['name'];
+        return this.dataset.read_ids(ids, fields);
     },
     render_tag: function(data) {
         this.$('.badge').remove();
@@ -1446,29 +1453,34 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         }
     },
     open_color_picker: function(ev){
-        var self = this;
 
-        this.$color_picker = $(QWeb.render('FieldMany2ManyTag.colorpicker', {
-            'widget': this,
-            'tag_id': $(ev.currentTarget).data('id'),
-        }));
+        if (this.fields.color) {
+            this.$color_picker = $(QWeb.render('FieldMany2ManyTag.colorpicker', {
+                'widget': this,
+                'tag_id': $(ev.currentTarget).data('id'),
+            }));
 
-        $(ev.currentTarget).append(this.$color_picker);
-        this.$color_picker.dropdown('toggle');
-        this.$color_picker.attr("tabindex", 1).focus();
+            $(ev.currentTarget).append(this.$color_picker);
+            this.$color_picker.dropdown('toggle');
+            this.$color_picker.attr("tabindex", 1).focus();
+        }
     },
     close_color_picker: function(){
         this.$color_picker.remove();
     },
     update_color: function(ev) {
         ev.preventDefault();
-        var self = this;
 
         var color = $(ev.currentTarget).data('color');
         var id = $(ev.currentTarget).data('id');
 
+        var self = this;
         this.dataset._model.call('write', [id, {'color': color}]).done(function(){
-            self.view.reload();
+            var tag = self.$el.find("span.badge[data-id='" + id + "']");
+            var old_color = tag.data('color');
+            tag.removeClass('o_tag_color_' + old_color);
+            tag.data('color', color);
+            tag.addClass('o_tag_color_' + color);
         });
     },
 
