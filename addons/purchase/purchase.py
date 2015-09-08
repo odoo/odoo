@@ -252,7 +252,7 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_approve(self):
         self.write({'state': 'purchase'})
-        self._action_picking_create()
+        self._create_picking()
         return {}
 
     @api.multi
@@ -262,34 +262,17 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_confirm(self):
-        # Add the partner in the supplier list of the product if the supplier is not registered for
-        # this product. We limit to 10 the number of suppliers for a product to avoid the mess that
-        # could be caused for some generic products ("Miscellaneous").
-        for line in self.order_line:
-            if self.partner_id not in line.product_id.seller_ids.mapped('name') and len(line.product_id.seller_ids) <= 10:
-                supplierinfo = {
-                    'name': self.partner_id.id,
-                    'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
-                    'product_uom': line.product_uom.id,
-                    'min_qty': 0.0,
-                    'price': line.price_unit,
-                    'currency_id': self.partner_id.currency_id.id,
-                    'delay': 0,
-                }
-                vals = {
-                    'seller_ids': [(0, 0, supplierinfo)],
-                }
-                line.product_id.write(vals)
-
-        # Deal with double validation process
-        if self.company_id.po_double_validation == 'one_step'\
-                or (self.company_id.po_double_validation == 'two_step'\
-                    and self.amount_total < self.env.user.company_id.currency_id.compute(self.company_id.po_double_validation_amount, self.currency_id))\
-                or self.user_has_groups('purchase.group_purchase_manager'):
-            return self.button_approve()
-        else:
-            self.write({'state': 'to approve'})
-            return {}
+        for order in self:
+            order._add_supplier_to_product()
+            # Deal with double validation process
+            if order.company_id.po_double_validation == 'one_step'\
+                    or (order.company_id.po_double_validation == 'two_step'\
+                        and order.amount_total < self.env.user.company_id.currency_id.compute(order.company_id.po_double_validation_amount, order.currency_id))\
+                    or order.user_has_groups('purchase.group_purchase_manager'):
+                order.button_approve()
+            else:
+                order.write({'state': 'to approve'})
+        return {}
 
     @api.multi
     def button_cancel(self):
@@ -322,31 +305,53 @@ class PurchaseOrder(models.Model):
         return self.picking_type_id.default_location_dest_id.id
 
     @api.model
-    def _create_picking(self):
+    def _prepare_picking(self):
         if not self.group_id:
             self.group_id = self.group_id.create({
                 'name': self.name,
                 'partner_id': self.partner_id.id
             })
-        return self.env['stock.picking'].create({
+        return {
             'picking_type_id': self.picking_type_id.id,
             'partner_id': self.partner_id.id,
             'date': self.date_order,
             'origin': self.name,
             'location_dest_id': self._get_destination_location(),
             'location_id': self.partner_id.property_stock_supplier.id
-        })
+        }
 
     @api.multi
-    def _action_picking_create(self):
+    def _create_picking(self):
         for order in self:
             ptypes = order.order_line.mapped('product_id.type')
             if ('product' in ptypes) or ('consu' in ptypes):
-                picking = order._create_picking()
+                res = order._prepare_picking()
+                picking = self.env['stock.picking'].create(res)
                 moves = order.order_line._create_stock_moves(picking)
                 moves.action_confirm()
                 moves.force_assign()
         return True
+
+    @api.multi
+    def _add_supplier_to_product(self):
+        # Add the partner in the supplier list of the product if the supplier is not registered for
+        # this product. We limit to 10 the number of suppliers for a product to avoid the mess that
+        # could be caused for some generic products ("Miscellaneous").
+        for line in self.order_line:
+            if self.partner_id not in line.product_id.seller_ids.mapped('name') and len(line.product_id.seller_ids) <= 10:
+                supplierinfo = {
+                    'name': self.partner_id.id,
+                    'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
+                    'product_uom': line.product_uom.id,
+                    'min_qty': 0.0,
+                    'price': line.price_unit,
+                    'currency_id': self.partner_id.currency_id.id,
+                    'delay': 0,
+                }
+                vals = {
+                    'seller_ids': [(0, 0, supplierinfo)],
+                }
+                line.product_id.write(vals)
 
 
 class PurchaseOrderLine(models.Model):
