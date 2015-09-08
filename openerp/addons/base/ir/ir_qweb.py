@@ -1251,7 +1251,7 @@ class AssetsBundle(object):
         return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_id, context=self.context)
 
     def js(self):
-        attachments = self.get_attachments(type)
+        attachments = self.get_attachments('js')
         if not attachments or attachments[0].__last_update < max([asset.last_modified for asset in self.javascripts]):
             content = ';\n'.join(asset.minify() for asset in self.javascripts)
             return self.save_attachment('js', content)
