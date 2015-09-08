@@ -48,7 +48,7 @@
         <t t-foreach="menu_categories" t-as="menu_category">
             <h4><i t-att-class="'fa ' + menu_category.classes"/><t t-esc="menu_category.name"/></h4>
             <li t-foreach="menu_category.menu_items" t-as="menu_item">
-                <a t-att-href="'#' + menu_item_page_map[menu_item]"><span class="fa fa-fw"/><t t-esc="menu_item"/></a>
+                <a t-att-href="'#' + menu_item_page_map[menu_item]" disable_anchor="true"><span class="fa fa-fw"/><t t-esc="menu_item"/></a>
             </li>
         </t>
     </t>
