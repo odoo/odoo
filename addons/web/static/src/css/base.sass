@@ -2276,7 +2276,8 @@ div.ui-widget-overlay
     top: 50%
     width: $width
     /* Set margins to offset 50% of the w/h */
-    margin-top: -($width / 2)
+    margin-top: -25% // fallback for browsers without support for calc()
+    margin-top: calc(-25% + 30px)
     margin-left: -($width / 2)
 
 body.oe_single_form
