@@ -4,7 +4,7 @@
 # Copyright (c) 2011 Cubic ERP - Teradata SAC. (http://cubicerp.com).
 
 {
-    "name": "Panama Localization Chart Account",
+    "name": "Panama - Accounting",
     "version": "1.0",
     "description": """
 Panamenian accounting chart and tax localization.
