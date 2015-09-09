@@ -49,4 +49,4 @@ class AccountAgedTrialBalance(models.TransientModel):
                 }
                 start = stop + relativedelta(days=1)
         data['form'].update(res)
-        return self.env['report'].get_action(self, 'account.report_agedpartnerbalance', data=data)
+        return self.env['report'].with_context(landscape=True).get_action(self, 'account.report_agedpartnerbalance', data=data)
