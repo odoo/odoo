@@ -19,10 +19,12 @@ Yannick Vaucher yannick.vaucher@camptocamp.com https://github.com/yvaucher
 Nicolas Bessi nicolas.bessi@camptocamp.com https://github.com/nbessi
 Frédéric Clementi frederic.clementi@camptocamp.com https://github.com/fclementic2c
 Laurent Meuwly laurent.meuwly@camptocamp.com https://github.com/laurentmeuwly
-Vincent Renaville vincet.renaville@camptocamp.com https://github.com/vrenaville
+Vincent Renaville vincent.renaville@camptocamp.com https://github.com/vrenaville
 Matthieu Dietrich matthieu.dietrich@camptocamp.com https://github.com/mdietrichc2c
 Alexandre Fayolle alexandre.fayolle@camptocamp.com https://github.com/gurneyalex
 Leonardo Pistone leonardo.pistone@camptocamp.com https://github.com/lepistone
 Romain Deheele romain.deheele@camptocamp.com https://github.com/rdeheele
 Maxime Wiot maxime.wiot@camptocamp.com https://github.com/maxime-c2c
+Ferdinand Gassauer ferdinand.gassauer@camptocamp.com https://github.com/ferdiga
+Jean-Baptiste Aubort jean-baptiste.aubort@camptocamp.com
 
