@@ -8,15 +8,11 @@
         <field name="arch" type="xml">
         <data>
         <xpath expr="//field[@name='target_move']" position="after">
-            <field name="landscape"/>
             <field name="sortby" widget="radio"/>
             <field name="display_account" widget="radio"/>
-            <field name="amount_currency"/>
+            <field name="initial_balance"/>
             <newline/>
         </xpath>
-        <field name="date_to" position="after">
-            <field name="initial_balance"/>
-        </field>
         </data>
         </field>
     </record>

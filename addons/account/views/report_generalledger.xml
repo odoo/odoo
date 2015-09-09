@@ -54,7 +54,7 @@
                             <th>Debit</th>
                             <th>Credit</th>
                             <th>Balance</th>
-                            <th t-if="data['amount_currency']">Currency</th>
+                            <th groups="base.group_multi_currency">Currency</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,9 +74,7 @@
                                 <td class="text-right">
                                     <span t-esc="account['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
-                                <td class="text-right" t-if="data['amount_currency']">
-                                    <span t-esc="account['amount_currency'] if account['amount_currency'] > 0.00 else ''"/>
-                                </td>
+                                <td groups="base.group_multi_currency"/>
                             </tr>
                             <tr t-foreach="account['move_lines']" t-as="line">
                                 <td><span t-esc="line['ldate']"/></td>
@@ -94,7 +92,7 @@
                                 <td class="text-right">
                                     <span t-esc="line['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
-                                <td class="text-right" t-if="data['amount_currency']">
+                                <td class="text-right" groups="base.group_multi_currency">
                                     <span t-esc="line['amount_currency'] if line['amount_currency'] > 0.00 else ''"/>
                                     <span t-esc="line['currency_code'] if line['amount_currency'] > 0.00 else ''"/>
                                 </td>

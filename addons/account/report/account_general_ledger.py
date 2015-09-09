@@ -37,7 +37,7 @@ class ReportGeneralLedger(models.AbstractModel):
                 init_wheres.append(init_where_clause.strip())
             init_filters = " AND ".join(init_wheres)
             filters = init_filters.replace('account_move_line__move_id', 'm').replace('account_move_line', 'l')
-            sql = ("SELECT 0 AS lid, l.account_id AS account_id, '' AS ldate, '' AS lcode, COALESCE(SUM(l.amount_currency),0.0) AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance, '' AS lpartner_id,\
+            sql = ("SELECT 0 AS lid, l.account_id AS account_id, '' AS ldate, '' AS lcode, NULL AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance, '' AS lpartner_id,\
                 '' AS move_name, '' AS mmove_id, '' AS currency_code,\
                 NULL AS currency_id,\
                 '' AS invoice_id, '' AS invoice_type, '' AS invoice_number,\
@@ -90,7 +90,7 @@ class ReportGeneralLedger(models.AbstractModel):
         account_res = []
         for account in accounts:
             currency = account.currency_id and account.currency_id or account.company_id.currency_id
-            res = dict((fn, 0.0) for fn in ['credit', 'debit', 'balance', 'amount_currency'])
+            res = dict((fn, 0.0) for fn in ['credit', 'debit', 'balance'])
             res['code'] = account.code
             res['name'] = account.name
             res['move_lines'] = move_lines[account.id]
@@ -98,7 +98,6 @@ class ReportGeneralLedger(models.AbstractModel):
                 res['debit'] += line['debit']
                 res['credit'] += line['credit']
                 res['balance'] = line['balance']
-                res['amount_currency'] += line['amount_currency']
             if display_account == 'all':
                 account_res.append(res)
             if display_account == 'movement' and res.get('move_lines'):
