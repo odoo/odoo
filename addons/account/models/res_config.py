@@ -223,7 +223,7 @@ class AccountConfigSettings(models.TransientModel):
 
     @api.multi
     def open_company(self):
-        user = self.env['res.users'].browse(uid)
+        user = self.env['res.users'].browse(self.env.uid)
         return {
             'type': 'ir.actions.act_window',
             'name': 'My Company',
