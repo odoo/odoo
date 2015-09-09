@@ -1371,8 +1371,10 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
 
         var self = this;
         // We need to know if the field 'color' exists on the model
-        this.dataset.call('fields_get', []).then(function(fields) {
-            self.fields = fields;
+        this.mutex.exec(function(){
+            return self.dataset.call('fields_get', []).then(function(fields) {
+               self.fields = fields;
+            });
         });
     },
     initialize_content: function() {
@@ -1407,8 +1409,11 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
         }
     },
     get_render_data: function(ids){
-        var fields = this.fields.color ? ['name', 'color'] : ['name'];
-        return this.dataset.read_ids(ids, fields);
+        var self = this;
+        return this.mutex.exec(function(){
+            var fields = self.fields.color ? ['name', 'color'] : ['name'];
+            return self.dataset.read_ids(ids, fields);
+        });
     },
     render_tag: function(data) {
         this.$('.badge').remove();
