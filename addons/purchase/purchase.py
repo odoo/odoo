@@ -1466,7 +1466,7 @@ class procurement_order(osv.osv):
         if qty != po_line.product_qty:
             pricelist_obj = self.pool.get('product.pricelist')
             pricelist_id = po_line.order_id.partner_id.property_product_pricelist_purchase.id
-            price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, po_line.order_id.partner_id.id, {'uom': procurement.product_uom.id})[pricelist_id]
+            price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, po_line.order_id.partner_id.id, {'uom': procurement.product_id.uom_po_id.id})[pricelist_id]
 
         return qty, price
 
