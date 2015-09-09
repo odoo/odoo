@@ -1,16 +1,15 @@
-from openerp.osv import fields, osv
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import fields, models
 
 
-class stock_picking(osv.osv):
+class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    def _claim_count_out(self, cr, uid, ids, field_name, arg, context=None):
-        Claim = self.pool['crm.claim']
-        return {
-            id: Claim.search_count(cr, uid, [('ref', '=',('stock.picking,' + str(ids[0])))], context=context)
-            for id in ids
-        }
+    claim_count_out = fields.Integer(compute='_compute_claim_count_out', string='Claims')
 
-    _columns = {
-        'claim_count_out': fields.function(_claim_count_out, string='Claims', type='integer'),    
-    }
+    def _compute_claim_count_out(self):
+        claim = self.env['crm.claim']
+        for picking in self:
+            picking.claim_count_out = claim.search_count([('ref', '=', ('stock.picking,' + str(picking.id)))])
