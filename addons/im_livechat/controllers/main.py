@@ -36,7 +36,7 @@ class LivechatController(http.Controller):
             anonymous_name = anonymous_name + " ("+request.session.geoip.get('country_name', "")+")"
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
         if request.session.uid:
-            anonymous_name = False
+            anonymous_name = request.env.user.name
         return request.env["im_livechat.channel"].get_mail_channel(channel_id, anonymous_name)
 
     @http.route('/im_livechat/feedback', type='json', auth='public')
