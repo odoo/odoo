@@ -193,7 +193,11 @@ class ir_http(osv.AbstractModel):
             _logger.info("Generating routing map")
             cr = request.cr
             m = request.registry.get('ir.module.module')
-            ids = m.search(cr, openerp.SUPERUSER_ID, [('state', '=', 'installed'), ('name', '!=', 'web')], context=request.context)
+            ids = m.search(
+                cr, openerp.SUPERUSER_ID,
+                [('state', 'in', ('installed', 'to remove', 'to upgrade')),
+                 ('name', '!=', 'web')],
+                context=request.context)
             installed = set(x['name'] for x in m.read(cr, 1, ids, ['name'], context=request.context))
             if openerp.tools.config['test_enable']:
                 installed.add(openerp.modules.module.current_test)
