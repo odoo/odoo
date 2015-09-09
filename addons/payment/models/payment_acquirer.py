@@ -437,7 +437,11 @@ class PaymentTransaction(osv.Model):
 
         tx_find_method_name = '_%s_form_get_tx_from_data' % acquirer_name
         if hasattr(self, tx_find_method_name):
-            tx = getattr(self, tx_find_method_name)(cr, uid, data, context=context)
+            try:
+                tx = getattr(self, tx_find_method_name)(cr, uid, data, context=context)
+            except ValidationError:
+                _logger.exception('Troubles to find the transaction')
+                return False
 
         invalid_param_method_name = '_%s_form_get_invalid_parameters' % acquirer_name
         if hasattr(self, invalid_param_method_name):
