@@ -61,6 +61,7 @@
                     <field name="amount_total"/>
                     <field name="date_order"/>
                     <field name="state"/>
+                    <field name="currency_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -68,8 +69,8 @@
                                     <div class="col-xs-6">
                                         <strong><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <strong><span class="pull-right text-right"><t t-esc="record.amount_total.value"/></span></strong>
+                                    <div class="col-xs-6 pull-right text-right">
+                                        <strong><field name="amount_total" widget="monetary"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">

@@ -352,6 +352,7 @@
                     <field name="is_product_variant"/>
                     <field name="product_variant_count"/>
                     <field name="product_variant_ids"/>
+                    <field name="currency_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -370,7 +371,7 @@
                                     </div>
                                     <div name="tags"/>
                                     <ul>
-                                        <li>Price: <field name="lst_price"></field></li>
+                                        <li>Price: <field name="lst_price" widget="monetary"></field></li>
                                     </ul>
                                     <div name="tags"/>
                                 </div>
