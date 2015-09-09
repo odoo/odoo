@@ -430,9 +430,9 @@
                                     </p>
                                     <ul>
                                         <li>
-                                            <a t-att-href="prepare_backend_url('base.action_partner_form','list')">Create Customers</a>
+                                            <a t-att-href="prepare_backend_url('base.action_partner_form','kanban')">Create Customers</a>
                                         </li><li>
-                                            <a t-att-href="prepare_backend_url('base.action_partner_form','list')">Create Vendors</a>, if accounting or purchase is installed
+                                            <a t-att-href="prepare_backend_url('base.action_partner_supplier_form','kanban')">Create Vendors</a>, if accounting or purchase is installed
                                         </li>
                                     </ul>
                                 </div>
@@ -491,7 +491,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a t-att-href="prepare_backend_url('product.product_template_action', 'from', 'sale')">Create your products</a></li>
+                                        <li><a t-att-href="prepare_backend_url('product.product_template_action', 'form')">Create your products</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -525,7 +525,7 @@
                     <div class="alert alert-info info_icon" role="alert">
                         <span class="fa fa-lightbulb-o fa-lg"/>
                         <strong>Tip:</strong>
-                        You can also use our API to load data automatically through scripts: read this <a href="https://www.odoo.com/documentation/8.0/" target="_blank">technical documentation</a>.
+                        You can also use our API to load data automatically through scripts: read this <a href="https://www.odoo.com/documentation/8.0/api_integration.html" target="_blank">technical documentation</a>.
                     </div>
                 </t>
 
