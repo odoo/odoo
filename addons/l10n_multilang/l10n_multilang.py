@@ -1,132 +1,98 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-import os
-from openerp.tools.translate import _
+from openerp import api, models, SUPERUSER_ID
 import logging
 _logger = logging.getLogger(__name__)
 
-class wizard_multi_charts_accounts(osv.osv_memory):
-    """
-    Change wizard that a new account chart for a company.
-        * Add option to install languages during the setup
-        * Copy translations for COA, Tax, Tax Code and Fiscal Position from templates to target objects.
-    """
-    _inherit = 'wizard.multi.charts.accounts'
+class AccountChartTemplate(models.Model):
+    _inherit = 'account.chart.template'
 
-    # FIXME: in trunk, drop the force_write param entirely
-    def process_translations(self, cr, uid, langs, in_obj, in_field, in_ids, out_obj, out_ids, force_write=False, context=None):
+    def _register_hook(self, cr):
+        """ Patch models in order to copy l10n template translation after module has been installed.
+        """
+        self.process_coa_translations(cr, SUPERUSER_ID, [], {})
+
+    @api.multi
+    def process_translations(self, langs, in_field, in_ids, out_ids):
         """
         This method copies translations values of templates into new Accounts/Taxes/Journals for languages selected
 
-        :param cr: A database cursor
-        :param uid: ID of the user currently logged in
         :param langs: List of languages to load for new records
         :param in_field: Name of the translatable field of source templates
-        :param in_obj: Name of source object of templates.
-        :param in_ids: List of ids of source object
-        :param out_obj: Destination object for which translation is to be copied
-        :param out_ids: List of ids of destination object
-        :param force_write: Deprecated as of 7.0, do not use
-        :param context: usual context information. May contain the key 'lang', which is the language of the user running
-            the wizard, that will be used if force_write is True
+        :param in_ids: Recordset of ids of source object
+        :param out_ids: Recordset of ids of destination object
 
         :return: True
         """
-        if context is None:
-            context = {}
-        src = {}
-        xlat_obj = self.pool.get('ir.translation')
+        xlat_obj = self.env['ir.translation']
         #find the source from Account Template
-        for x in in_obj.browse(cr, uid, in_ids):
-            src.update({x.id: x.name})
         for lang in langs:
             #find the value from Translation
-            value = xlat_obj._get_ids(cr, uid, in_obj._name + ',' + in_field, 'model', lang, in_ids)
-            for j in range(len(in_ids)):
-                in_id = in_ids[j]
-                if value[in_id]:
+            value = xlat_obj._get_ids(in_ids._name + ',' + in_field, 'model', lang, in_ids.ids)
+            counter = 0
+            for element in in_ids:
+                if value[element.id]:
                     #copy Translation from Source to Destination object
-                    xlat_obj.create(cr, uid, {
-                        'name': out_obj._name + ',' + in_field,
+                    xlat_obj.create({
+                        'name': out_ids._name + ',' + in_field,
                         'type': 'model',
-                        'res_id': out_ids[j],
+                        'res_id': out_ids[counter].id,
                         'lang': lang,
-                        'src': src[in_id],
-                        'value': value[in_id],
+                        'src': element.name,
+                        'value': value[element.id],
                     })
                 else:
-                    _logger.info('Language: %s. Translation from template: there is no translation available for %s!' %(lang,  src[in_id]))#out_obj._name))
+                    _logger.info('Language: %s. Translation from template: there is no translation available for %s!' %(lang,  element.name))
+                counter += 1
         return True
 
-    def execute(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
-        # remove the lang to get the untranslated value
-        ctx = dict(context, lang=None)
-        res = super(wizard_multi_charts_accounts, self).execute(cr, uid, ids, context=ctx)
+    @api.multi
+    def process_coa_translations(self):
+        #This method is called by _register_hook(), meaning that self is probably an empty recordset
+        installed_lang_ids = self.env['res.lang'].search([])
+        installed_langs = [x.code for x in installed_lang_ids]
+        #Search for companies that have installed a chart_template
+        company_ids = self.env['res.company'].search([('chart_template_id', '!=', False)])
+        for company in company_ids:
+                
+            langs = []
+            if company.chart_template_id.spoken_languages:
+                for lang in company.chart_template_id.spoken_languages.split(';'):
+                    if lang not in installed_langs:
+                        # the language is not installed, so we don't need to load its translations
+                        continue
+                    else:
+                        # the language is already installed, we have two use case now, if we already have copied
+                        # the translations of templates, do nothing. Otherwise we have to copy the translations
+                        # of templates to the right objects
+                        if self.env['ir.translation'].search([('name', '=', 'account.account,name'), ('type', '=', 'model'), ('lang', '=', lang)]):
+                            continue
+                        else:
+                            langs.append(lang)
+                if langs:
+                    # write account.account translations in the real COA
+                    company.chart_template_id._process_accounts_translations(company.id, langs, 'name')
+                    # copy account.tax translations
+                    company.chart_template_id._process_taxes_translations(company.id, langs, 'name')
+                    # copy account.fiscal.position translations
+                    company.chart_template_id._process_fiscal_pos_translations(company.id, langs, 'name')
+        return True
 
-        obj_multi = self.browse(cr, uid, ids[0], context=context)
-        company_id = obj_multi.company_id.id
+    @api.multi
+    def _process_accounts_translations(self, company_id, langs, field):
+        in_ids = self.env['account.account.template'].search([('chart_template_id', '=', self.id)], order='id')
+        out_ids = self.env['account.account'].search([('company_id', '=', company_id)], order='id')
+        return self.process_translations(langs, field, in_ids, out_ids)
 
-        # load languages
-        langs = []
-        res_lang_obj = self.pool.get('res.lang')
-        installed_lang_ids = res_lang_obj.search(cr, uid, [])
-        installed_langs = [x.code for x in res_lang_obj.browse(cr, uid, installed_lang_ids, context=context)]
-        if obj_multi.chart_template_id.spoken_languages:
-            for lang in obj_multi.chart_template_id.spoken_languages.split(';'):
-                if lang not in installed_langs:
-                    # the language is not installed, so we don't need to load its translations
-                    continue
-                else: 
-                    # the language was already installed, so the po files have been loaded at the installation time
-                    # and now we need to copy the translations of templates to the right objects
-                    langs.append(lang)
-        if langs:
-            # write account.account translations in the real COA
-            self._process_accounts_translations(cr, uid, obj_multi, company_id, langs, 'name', context=context)
+    @api.multi
+    def _process_taxes_translations(self, company_id, langs, field):
+        in_ids = self.tax_template_ids
+        out_ids = self.env['account.tax'].search([('company_id', '=', company_id)], order='id')
+        return self.process_translations(langs, field, in_ids, out_ids)
 
-            # copy account.tax.code translations
-            self._process_tax_codes_translations(cr, uid, obj_multi, company_id, langs, 'name', context=context)
-
-            # copy account.tax translations
-            self._process_taxes_translations(cr, uid, obj_multi, company_id, langs, 'name', context=context)
-
-            # copy account.fiscal.position translations
-            self._process_fiscal_pos_translations(cr, uid, obj_multi, company_id, langs, 'name', context=context)
-
-        return res
-
-    def _process_accounts_translations(self, cr, uid, obj_multi, company_id, langs, field, context=None):
-        obj_acc_template = self.pool.get('account.account.template')
-        obj_acc = self.pool.get('account.account')
-        acc_template_root_id = obj_multi.chart_template_id.account_root_id.id
-        acc_root_id = obj_acc.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', None)])[0]
-        in_ids = obj_acc_template.search(cr, uid, [('id', 'child_of', [acc_template_root_id])], order='id')[1:]
-        out_ids = obj_acc.search(cr, uid, [('id', 'child_of', [acc_root_id])], order='id')[1:]
-        return self.process_translations(cr, uid, langs, obj_acc_template, field, in_ids, obj_acc, out_ids, context=context)
-
-    def _process_tax_codes_translations(self, cr, uid, obj_multi, company_id, langs, field, context=None):
-        obj_tax_code_template = self.pool.get('account.tax.code.template')
-        obj_tax_code = self.pool.get('account.tax.code')
-        tax_code_template_root_id = obj_multi.chart_template_id.tax_code_root_id.id
-        tax_code_root_id = obj_tax_code.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', None)])[0]
-        in_ids = obj_tax_code_template.search(cr, uid, [('id', 'child_of', [tax_code_template_root_id])], order='id')[1:]
-        out_ids = obj_tax_code.search(cr, uid, [('id', 'child_of', [tax_code_root_id])], order='id')[1:]
-        return self.process_translations(cr, uid, langs, obj_tax_code_template, field, in_ids, obj_tax_code, out_ids, context=context)
-
-    def _process_taxes_translations(self, cr, uid, obj_multi, company_id, langs, field, context=None):
-        obj_tax_template = self.pool.get('account.tax.template')
-        obj_tax = self.pool.get('account.tax')
-        in_ids = [x.id for x in obj_multi.chart_template_id.tax_template_ids]
-        out_ids = obj_tax.search(cr, uid, [('company_id', '=', company_id)], order='id')
-        return self.process_translations(cr, uid, langs, obj_tax_template, field, in_ids, obj_tax, out_ids, context=context)
-
-    def _process_fiscal_pos_translations(self, cr, uid, obj_multi, company_id, langs, field, context=None):
-        obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
-        obj_fiscal_position = self.pool.get('account.fiscal.position')
-        in_ids = obj_fiscal_position_template.search(cr, uid, [('chart_template_id', '=', obj_multi.chart_template_id.id)], order='id')
-        out_ids = obj_fiscal_position.search(cr, uid, [('company_id', '=', company_id)], order='id')
-        return self.process_translations(cr, uid, langs, obj_fiscal_position_template, field, in_ids, obj_fiscal_position, out_ids, context=context)
+    @api.multi
+    def _process_fiscal_pos_translations(self, company_id, langs, field):
+        in_ids = self.env['account.fiscal.position.template'].search([('chart_template_id', '=', self.id)], order='id')
+        out_ids = self.env['account.fiscal.position'].search([('company_id', '=', company_id)], order='id')
+        return self.process_translations(langs, field, in_ids, out_ids)
