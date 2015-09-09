@@ -1,49 +1,45 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from odoo import api, fields, models
 
 
-class hr_employee(osv.osv):
-    _name = "hr.employee"
+class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    def _get_employee_goals(self, cr, uid, ids, field_name, arg, context=None):
-        """Return the list of goals assigned to the employee"""
-        res = {}
-        for employee in self.browse(cr, uid, ids, context=context):
-            res[employee.id] = self.pool.get('gamification.goal').search(cr,uid,[('user_id', '=', employee.user_id.id), ('challenge_id.category', '=', 'hr')], context=context)
-        return res
+    goal_ids = fields.One2many('gamification.goal', string='Employee HR Goals', compute='_compute_employee_goals')
+    badge_ids = fields.One2many(
+        'gamification.badge.user', string='Employee Badges', compute='_compute_employee_badges',
+        help="All employee badges, linked to the employee either directly or through the user"
+    )
+    has_badges = fields.Boolean(compute='_compute_employee_badges')
+    # necessary for correct dependencies of badge_ids and has_badges
+    direct_badge_ids = fields.One2many(
+        'gamification.badge.user', 'employee_id',
+        help="Badges directly linked to the employee")
 
-    def _get_employee_badges(self, cr, uid, ids, field_name, arg, context=None):
-        """Return the list of badge_users assigned to the employee"""
-        res = {}
-        for employee in self.browse(cr, uid, ids, context=context):
-            res[employee.id] = self.pool.get('gamification.badge.user').search(cr, uid, [
-                '|',
-                    ('employee_id', '=', employee.id),
-                    '&',
-                        ('employee_id', '=', False),
-                        ('user_id', '=', employee.user_id.id)
-                ], context=context)
-        return res
+    @api.depends('user_id.goal_ids.challenge_id.category')
+    def _compute_employee_goals(self):
+        for employee in self:
+            employee.goal_ids = self.env['gamification.goal'].search([
+                ('user_id', '=', employee.user_id.id),
+                ('challenge_id.category', '=', 'hr'),
+            ])
 
-    def _has_badges(self, cr, uid, ids, field_name, arg, context=None):
-        """Return the list of badge_users assigned to the employee"""
-        res = {}
-        for employee in self.browse(cr, uid, ids, context=context):
-            employee_badge_ids = self.pool.get('gamification.badge.user').search(cr, uid, [
-                '|',
-                    ('employee_id', '=', employee.id),
-                    '&',
-                        ('employee_id', '=', False),
-                        ('user_id', '=', employee.user_id.id)
-                ], context=context)
-            res[employee.id] = len(employee_badge_ids) > 0
-        return res
+    @api.depends('direct_badge_ids', 'user_id.badge_ids.employee_id')
+    def _compute_employee_badges(self):
+        for employee in self:
+            badge_ids = self.env['gamification.badge.user'].search([
+                '|', ('employee_id', '=', employee.id),
+                     '&', ('employee_id', '=', False),
+                          ('user_id', '=', employee.user_id.id)
+            ])
+            employee.has_badges = bool(badge_ids)
+            employee.badge_ids = badge_ids
 
-    _columns = {
-        'goal_ids': fields.function(_get_employee_goals, type="one2many", obj='gamification.goal', string="Employee HR Goals"),
-        'badge_ids': fields.function(_get_employee_badges, type="one2many", obj='gamification.badge.user', string="Employee Badges"),
-        'has_badges': fields.function(_has_badges, type="boolean", string="Has Badges"),
-    }
+
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    goal_ids = fields.One2many('gamification.goal', 'user_id')
+    badge_ids = fields.One2many('gamification.badge.user', 'user_id')
