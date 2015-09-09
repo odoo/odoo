@@ -29,7 +29,7 @@ class TestSale(TestMail):
         account_recv_id = account_obj.create({'code': 'X1012', 'name': 'Sales - Test Reicv Account', 'user_type_id': user_type_id, 'reconcile': True})
 
         # Add account to product
-        product_template_id = self.env.ref('sale.advance_product_0').product_tmpl_id
+        product_template_id = self.env.ref('sale.advance_product_1')
         product_template_id.write({'property_account_income_id': account_rev_id})
 
         # Create Sale Journal

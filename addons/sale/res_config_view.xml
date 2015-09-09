@@ -29,6 +29,12 @@
                             <field name="group_product_pricelist" class="oe_inline" invisible="1"/>
                         </div>
                     </group>
+                    <group string="Deposit" name="deposit" id="deposit">
+                        <group>
+                            <field name="deposit_property_account_income_id"/>
+                            <field name="deposit_taxes_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
                 </div>
             </field>
         </record>
