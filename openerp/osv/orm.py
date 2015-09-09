@@ -592,6 +592,10 @@ def get_pg_type(f, type_override=None):
         else:
             pg_type = get_pg_type(f, getattr(fields, f._type))
     else:
+        # for known_type in FIELDS_TO_PGTYPES:
+            # if issubclass(field_type, known_type):
+                # _logger.warning('%s type considered as %s field, subclass must be handled explicitly (in orm.py) !', field_type, known_type)
+                # pg_type =  (FIELDS_TO_PGTYPES[known_type], FIELDS_TO_PGTYPES[known_type])
         _logger.warning('%s type not supported!', field_type)
         pg_type = None
 
@@ -3500,17 +3504,23 @@ class BaseModel(object):
             cols = [x for x in intersect(self._inherit_fields.keys(), fields_to_read) if x not in self._columns.keys()]
             if not cols:
                 continue
-            res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
-
+            table_obj = self.pool.get(table)
+            res2 = table_obj.read(cr, user, [x[col] for x in res], cols, context, load)
+            res2_default = {}.fromkeys(cols, False)
             res3 = {}
             for r in res2:
                 res3[r['id']] = r
                 del r['id']
 
             for record in res:
-                if not record[col]: # if the record is deleted from _inherits table?
-                    continue
-                record.update(res3[record[col]])
+                if record[col]:
+                    record.update(res3[record[col]])
+                else:  # if the record is deleted from _inherits table?
+                    # continue
+                    _logger.warning('%s (#%s) is missing "%s" (%s) value, set default value for inherited fields' %
+                                    (self._table, str(record.get('id', 0)),
+                                     col, table))
+                    record.update(res2_default)
                 if col not in fields_to_read:
                     del record[col]
 
@@ -3973,7 +3983,7 @@ class BaseModel(object):
 
             v = {}
             for val in updend:
-                if self._inherit_fields[val][0] == table:
+                if self._inherit_fields.get(val, ['', ''])[0] == table:
                     v[val] = vals[val]
                     unknown_fields.remove(val)
             if v:
