@@ -28,7 +28,7 @@
             <field name="name">Norway's Chart of Accounts</field>
             <field name="cash_account_code_prefix">1900</field>
             <field name="bank_account_code_prefix">1920</field>
-            <field name="code_digits">6</field>
+            <field name="code_digits">4</field>
             <field name="currency_id" ref="base.NOK"/>
             <field name="transfer_account_id" ref="chart1940"/>
         </record>
@@ -556,6 +556,7 @@
             <field name="user_type_id" ref="account.data_account_type_current_assets" />
             <field name="name">Andre markedsbaserte finansielle instrumenter</field>
             <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
         </record>
         <record id="chart1880" model="account.account.template">
             <field name="code">1880</field>
@@ -563,6 +564,7 @@
             <field name="user_type_id" ref="account.data_account_type_current_assets" />
             <field name="name">Andre finansielle instrumenter</field>
             <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
         </record>
         <record id="chart1910" model="account.account.template">
             <field name="code">1910</field>
@@ -1039,6 +1041,7 @@
             <field name="user_type_id" ref="account.data_account_type_revenue" />
             <field name="name">Salgsinntekt handelsvarer avgiftspl. høy sats</field>
             <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
         </record>
         <record id="chart3010" model="account.account.template">
             <field name="code">3010</field>
@@ -1046,6 +1049,7 @@
             <field name="user_type_id" ref="account.data_account_type_revenue" />
             <field name="name">Salgsinntekt egentilv. varer avgiftspl. høy sats</field>
             <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
         </record>
         <record id="chart3020" model="account.account.template">
             <field name="code">3020</field>
@@ -1136,12 +1140,14 @@
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_revenue" />
             <field name="name">Salgsinntekt handelsvarer avgiftsfri</field>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
             <field name="chart_template_id" ref="no_chart_template"/>
         </record>
         <record id="chart3110" model="account.account.template">
             <field name="code">3110</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_revenue" />
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
             <field name="name">Salgsinntekt egentilvirkede varer avgiftsfri</field>
             <field name="chart_template_id" ref="no_chart_template"/>
         </record>
@@ -1150,12 +1156,14 @@
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_revenue" />
             <field name="name">Salgsinntekt tjenester avgiftsfri</field>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
             <field name="chart_template_id" ref="no_chart_template"/>
         </record>
         <record id="chart3160" model="account.account.template">
             <field name="code">3160</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_revenue" />
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
             <field name="name">Uttak av varer avgiftsfritt</field>
             <field name="chart_template_id" ref="no_chart_template"/>
         </record>
@@ -2299,6 +2307,7 @@
             <field name="user_type_id" ref="account.data_account_type_expenses" />
             <field name="name">Annen finansinntekt</field>
             <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
         </record>
         <record id="chart8080" model="account.account.template">
             <field name="code">8080</field>
@@ -2306,6 +2315,7 @@
             <field name="user_type_id" ref="account.data_account_type_expenses" />
             <field name="name">Verdiøkning finanseille omløpsmidler</field>
             <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
         </record>
         <record id="chart8100" model="account.account.template">
             <field name="code">8100</field>
@@ -2313,12 +2323,14 @@
             <field name="user_type_id" ref="account.data_account_type_expenses" />
             <field name="name">Verdired. av markedsbas.finans. omløps.</field>
             <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
         </record>
         <record id="chart8110" model="account.account.template">
             <field name="code">8110</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_expenses" />
             <field name="name">Nedskrivn. av andre finansielle omløps.</field>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
             <field name="chart_template_id" ref="no_chart_template"/>
         </record>
         <record id="chart8120" model="account.account.template">
@@ -2326,6 +2338,7 @@
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_expenses" />
             <field name="name">Nedskrivning av finansielle anleggsmidl.</field>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
             <field name="chart_template_id" ref="no_chart_template"/>
         </record>
         <record id="chart8130" model="account.account.template">
