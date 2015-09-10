@@ -16,7 +16,7 @@ class PurchaseOrder(models.Model):
     _description = "Purchase Order"
     _order = 'date_order desc, id desc'
 
-    @api.depends('order_line.product_qty', 'order_line.price_unit', 'order_line.taxes_id')
+    @api.depends('order_line.price_total')
     def _amount_all(self):
         amount_untaxed = amount_tax = 0.0
         for line in self.order_line:
@@ -117,7 +117,7 @@ class PurchaseOrder(models.Model):
         ('purchase', 'Purchase Order'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')
-        ], string='Status', readonly=True, select=True, copy=False, default='draft')
+        ], string='Status', readonly=True, select=True, copy=False, default='draft', track_visibility='onchange')
     order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', states=READONLY_STATES, copy=True)
     notes = fields.Text('Terms and Conditions')
 
