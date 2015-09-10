@@ -25,6 +25,7 @@ This module consists :
     'data': [
         'data/account_chart_template.xml',
         'data/account.account.template.csv',
+        'data/account.account.tag.csv',
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
