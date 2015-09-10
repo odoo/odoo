@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
 
-    @api.depends('order_line.product_uom_qty', 'order_line.discount', 'order_line.price_unit', 'order_line.tax_id')
+    @api.depends('order_line.price_total')
     def _amount_all(self):
         amount_untaxed = amount_tax = 0.0
         for line in self.order_line:
