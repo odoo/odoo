@@ -38,10 +38,10 @@
     Exch $R2
 !macroend
 
-!define PUBLISHER 'OpenERP S.A.'
+!define PUBLISHER 'Odoo S.A.'
 
 !ifndef MAJOR_VERSION
-    !define MAJOR_VERSION '8'
+    !define MAJOR_VERSION '9'
 !endif
 
 !ifndef MINOR_VERSION
