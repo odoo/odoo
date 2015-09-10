@@ -143,7 +143,7 @@
                             <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
                                 <div name="pricelist_item" groups="product.group_product_pricelist">
                                     <separator string="Pricing"/>
-                                    <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1'}">
+                                    <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
                                         <tree string="Pricelist Items" editable="bottom">
                                             <field name="pricelist_id" string="Pricelist" required='1'/>
                                             <field name="fixed_price" string="Price" required='1'/>
