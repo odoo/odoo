@@ -9,7 +9,7 @@ class HrEquipmentStage(models.Model):
     """ Model for case stages. This models the main stages of a Maintenance Request management flow. """
 
     _name = 'hr.equipment.stage'
-    _description = 'Equipment Stage'
+    _description = 'Maintenance Stage'
     _order = 'sequence, id'
 
     name = fields.Char('Name', required=True, translate=True)
@@ -22,7 +22,7 @@ class HrEquipmentCategory(models.Model):
     _name = 'hr.equipment.category'
     _inherits = {"mail.alias": "alias_id"}
     _inherit = ['mail.thread']
-    _description = 'Equipment Category'
+    _description = 'Asset Category'
 
     @api.one
     @api.depends('equipment_ids')
@@ -76,7 +76,7 @@ class HrEquipmentCategory(models.Model):
 class HrEquipment(models.Model):
     _name = 'hr.equipment'
     _inherit = ['mail.thread']
-    _description = 'Equipment'
+    _description = 'IT Assets'
 
     @api.multi
     def _track_subtype(self, init_values):
@@ -105,11 +105,11 @@ class HrEquipment(models.Model):
             recs = self.search([('name', operator, name)] + args, limit=limit)
         return recs.name_get()
 
-    name = fields.Char('Equipment Name', required=True, translate=True)
+    name = fields.Char('Asset Name', required=True, translate=True)
     user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange')
     employee_id = fields.Many2one('hr.employee', string='Assigned to Employee', track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string='Assigned to Department', track_visibility='onchange')
-    category_id = fields.Many2one('hr.equipment.category', string='Equipment Category', track_visibility='onchange')
+    category_id = fields.Many2one('hr.equipment.category', string='Asset Category', track_visibility='onchange')
     partner_id = fields.Many2one('res.partner', string='Vendor', domain="[('supplier', '=', 1)]")
     partner_ref = fields.Char('Vendor Reference')
     model = fields.Char('Model')
@@ -149,7 +149,7 @@ class HrEquipment(models.Model):
         self.user_id = self.category_id.user_id
 
     _sql_constraints = [
-        ('serial_no', 'unique(serial_no)', "The serial number of this equipment must be unique !"),
+        ('serial_no', 'unique(serial_no)', "Another asset already exists with this serial number!"),
     ]
 
     @api.model
@@ -210,7 +210,7 @@ class HrEquipment(models.Model):
 class HrEquipmentRequest(models.Model):
     _name = 'hr.equipment.request'
     _inherit = ['mail.thread']
-    _description = 'Equipment Request'
+    _description = 'Maintenance Requests'
 
     @api.returns('self')
     def _default_employee_get(self):
@@ -235,7 +235,7 @@ class HrEquipmentRequest(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', default=_default_employee_get)
     department_id = fields.Many2one('hr.department', string='Department')
     category_id = fields.Many2one('hr.equipment.category', string='Category')
-    equipment_id = fields.Many2one('hr.equipment', string='Equipment', select=True)
+    equipment_id = fields.Many2one('hr.equipment', string='Asset', select=True)
     user_id = fields.Many2one('res.users', string='Assigned to', track_visibility='onchange')
     stage_id = fields.Many2one('hr.equipment.stage', string='Stage', track_visibility='onchange', default=_default_stage)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
