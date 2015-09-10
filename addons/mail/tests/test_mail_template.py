@@ -50,9 +50,11 @@ class TestMailTemplate(TestMail):
         }).create({'subject': 'Forget me subject', 'body': 'Dummy body'})
 
         values = composer.onchange_template_id(self.email_template.id, 'comment', 'mail.channel', self.group_pigs.id)['value']
-        # this onchange return command [(6, 0, ids)] for x2many fields
-        recipients = self.env['res.partner'].browse(values['partner_ids'][0][2])
-        attachments = self.env['ir.attachment'].browse(values['attachment_ids'][0][2])
+        # use _convert_to_cache to return a browse record list from command list or id list for x2many fields
+        values = self.env['mail.compose.message']._convert_to_cache(values)
+        recipients = values['partner_ids']
+        attachments = values['attachment_ids']
+
         test_recipients = self.env['res.partner'].search([('email', 'in', ['test1@example.com', 'test2@example.com'])]) | self.partner_1 | self.partner_2 | self.user_employee.partner_id
         test_attachments = self.env['ir.attachment'].search([('name', 'in', ['_Test_First', '_Test_Second'])])
         self.assertEqual(values['subject'], self.group_pigs.name)
