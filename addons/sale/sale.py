@@ -182,7 +182,6 @@ class SaleOrder(models.Model):
             vals['partner_shipping_id'] = vals.setdefault('partner_shipping_id', addr['delivery'])
             vals['pricelist_id'] = vals.setdefault('pricelist_id', partner.property_product_pricelist and partner.property_product_pricelist.id)
         result = super(SaleOrder, self).create(vals)
-        self.message_post(body=_("Quotation created"))
         return result
 
     @api.multi
