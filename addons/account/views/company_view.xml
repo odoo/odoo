@@ -14,6 +14,12 @@
                     <field name="cash_account_code_prefix" groups="base.group_no_one"/>
                     <field name="accounts_code_digits" groups="base.group_no_one"/>
                 </xpath>
+                <notebook position="inside">
+                    <page string="Overdue Payments">
+                        <separator string="Overdue Payments Message" colspan="4"/>
+                        <field name="overdue_msg" nolabel="1" colspan ="4"/>
+                    </page>
+                </notebook>
             </field>
         </record>
 
