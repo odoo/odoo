@@ -60,7 +60,9 @@ class TestIntegerExport(TestBasicExport):
 class TestFloatExport(TestBasicExport):
     def setUp(self):
         super(TestFloatExport, self).setUp()
-        self.registry('res.lang').write(self.cr, self.uid, [1], {
+        Lang = self.registry('res.lang')
+        lang_ids = Lang.load_language(self.cr, self.uid, 'en_US')
+        Lang.write(self.cr, self.uid, lang_ids, {
             'grouping': '[3,0]'
         })
 
@@ -288,6 +290,7 @@ class TestHTMLExport(TestBasicExport):
 class TestDatetimeExport(TestBasicExport):
     def setUp(self):
         super(TestDatetimeExport, self).setUp()
+        self.registry('res.lang').load_language(self.cr, self.uid, 'fr_FR')
         # set user tz to known value
         Users = self.registry('res.users')
         Users.write(self.cr, self.uid, self.uid, {
@@ -308,7 +311,15 @@ class TestDatetimeExport(TestBasicExport):
         value = converter('2011-05-03 11:12:13')
 
         # default lang/format is US
-        self.assertEqual(value, '05/03/2011 00:12:13')
+        self.assertEqual(value, '05/03/2011 12:12:13 AM')
+
+    def test_fr_datetime(self):
+        converter = self.get_converter('datetime')
+
+        value = converter('2011-05-03 11:12:13', {}, {'lang': 'fr_FR'})
+
+        # check with fr_FR lang
+        self.assertEqual(value, '03/05/2011 00:12:13')
 
     def test_custom_format(self):
         converter = self.get_converter('datetime')
