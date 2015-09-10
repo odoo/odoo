@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2015-09-10 10:19+0000\n"
+"PO-Revision-Date: 2015-09-10 10:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -784,11 +784,6 @@ msgid "Create %s"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
-msgid "Create Date"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_alias_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_uid
@@ -807,6 +802,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_alias_create_date
+#: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_mail_create_date
@@ -907,6 +903,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_description
 msgid "Description that will be added in the message posted for this subtype. If void, the name will be added instead."
+msgstr ""
+
+#. module: mail
+#: model:ir.actions.client,help:mail.mail_channel_action_client_chat
+msgid "Did you know ? Type '@someone' in the composer to cite someone in your message, and make it appear in his own inbox."
 msgstr ""
 
 #. module: mail
@@ -1086,6 +1087,11 @@ msgstr ""
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a partner cannot follow twice the same object."
+msgstr ""
+
+#. module: mail
+#: sql_constraint:mail.followers:0
+msgid "Error: A follower must be either a partner or a channel (but not both)."
 msgstr ""
 
 #. module: mail
@@ -1572,11 +1578,6 @@ msgid "Listeners"
 msgstr ""
 
 #. module: mail
-#: selection:mail.channel,channel_type:0
-msgid "Livechat Conversation"
-msgstr ""
-
-#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail_chatter.xml:61
 #, python-format
@@ -1871,6 +1872,11 @@ msgid "New Value Integer"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_monetary
+msgid "New Value Monetary"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_text
 msgid "New Value Text"
 msgstr ""
@@ -1985,6 +1991,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_integer
 msgid "Old Value Integer"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_monetary
+msgid "Old Value Monetary"
 msgstr ""
 
 #. module: mail
@@ -2117,12 +2128,12 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_parent_model_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_parent_model_id
 #: model:ir.model.fields,help:mail.field_res_users_alias_parent_model_id
-msgid "Parent model holding the alias. The model holding the alias referenceis not necessarily the model given by alias_model_id(example: project (parent_model) and task (model))"
+msgid "Parent model holding the alias. The model holding the alias reference is not necessarily the model given by alias_model_id (example: project (parent_model) and task (model))"
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_parent_id
-msgid "Parent subtype, used for automatic subscription. This field is notcorrectly named. For example on a project, project subtypes haveparent_id to task-related subtypes."
+msgid "Parent subtype, used for automatic subscription. This field is not correctly named. For example on a project, the parent_id of project subtypes refers to task-related subtypes."
 msgstr ""
 
 #. module: mail
@@ -2602,7 +2613,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_subtype_id
 #: model:ir.model.fields,field_description:mail.field_mail_followers_subtype_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_subtype_id
-#: model:ir.model.fields,field_description:mail.field_mail_message_subtype_id_2097
+#: model:ir.model.fields,field_description:mail.field_mail_message_subtype_id_1654
 #: model:ir.ui.view,arch_db:mail.view_message_subtype_tree
 msgid "Subtype"
 msgstr ""

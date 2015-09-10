@@ -25,7 +25,7 @@ class CrmActivity(models.Model):
     _order = "sequence"
 
     days = fields.Integer('Number of days', default=0,
-                          help='Number of days before doing fulfilling the action, allowing to plan the action date.')
+                          help='Number of days before executing the action, allowing you to plan the date of the action.')
     sequence = fields.Integer('Sequence', default=0)
     team_id = fields.Many2one('crm.team', string='Sales Team')
     subtype_id = fields.Many2one('mail.message.subtype', string='Message Subtype', required=True, ondelete='cascade')

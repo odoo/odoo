@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2015-09-10 10:19+0000\n"
+"PO-Revision-Date: 2015-09-10 10:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -192,7 +192,7 @@ msgstr ""
 msgid "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
 "                                        <strong>Import a file</strong><br/>\n"
-"                                        <span class=\"small\">Recommanded if &gt;100 products</span>\n"
+"                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
 
@@ -219,7 +219,7 @@ msgstr ""
 msgid "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
 "                                        <strong> Create manually</strong><br/>\n"
-"                                        <span class=\"small\">Recommanded if &lt;100 products</span>\n"
+"                                        <span class=\"small\">Recommended if &lt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
 
@@ -368,12 +368,12 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "<strong>Automated documents sending:</strong> automatically print, send and deliver your invoices &amp; letters by regular mail or email."
+msgid "<strong>Automated documents sending:</strong> automatically send your invoices by email or regular mail,"
 msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "<strong>Bank interface:</strong> your bank statements are automatically synchronized with your bank."
+msgid "<strong>Bank interface:</strong> with bank feeds synchronization or bank statement import."
 msgstr ""
 
 #. module: account
@@ -394,7 +394,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "<strong>Clean customer invoices:</strong> easy to create, beautiful and fully featured invoices (payment terms, multiple taxes, discounts, etc)."
+msgid "<strong>Clean customer invoices:</strong> easy to create, beautiful and full featured invoices,"
 msgstr ""
 
 #. module: account
@@ -471,7 +471,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "<strong>On-the-fly payment reconciliation:</strong> automatic suggestion of outstanding payments when creating an invoice."
+msgid "<strong>On-the-fly payment reconciliation:</strong> automatic suggestion of outstanding payments when creating an invoice,"
 msgstr ""
 
 #. module: account
@@ -526,7 +526,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "<strong>Reduced data entry:</strong> no need to manually create every invoice, register bank statements, follow-up payments, etc."
+msgid "<strong>Reduced data entry:</strong> no need to manually create invoices, register bank statements, follow-up payments,"
 msgstr ""
 
 #. module: account
@@ -919,7 +919,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
-#: model:ir.ui.menu,name:account.menu_finance
 #: model:ir.ui.view,arch_db:account.product_template_form_view
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting"
@@ -1351,9 +1350,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_asset
-msgid "Asset management: This allows you to manage the assets owned by a company or a person.It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
+msgid "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product.It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
+"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr ""
 
@@ -2236,6 +2235,11 @@ msgid "Configuration error!\n"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Configuration menu"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_account_config
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Configure Accounting"
@@ -2576,6 +2580,11 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_unaffected_earnings
 msgid "Current Year Earnings"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Current account balances"
 msgstr ""
 
 #. module: account
@@ -3370,6 +3379,11 @@ msgid "For the Odoo Team,<br/>\n"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "For the setup, you will need to get access to the following information:"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_currency_id
 msgid "Forces all moves for this account to have this account currency."
 msgstr ""
@@ -3639,7 +3653,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "If you have less than 200 contacts, we recommand you\n"
+msgid "If you have less than 200 contacts, we recommend you\n"
 "                                        to create them manually."
 msgstr ""
 
@@ -3693,7 +3707,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "If you'd like some help on any subject dont hesitate to contact our Accounting experts by using the <span class=\"fa fa-question-circle\"/> icon on the top bar."
+msgid "If you'd like some help on any subject dont hesitate to\n"
+"                    contact our Accounting experts by using the <span class=\"fa fa-question-circle\"/>\n"
+"                    icon on the top bar."
 msgstr ""
 
 #. module: account
@@ -4005,6 +4021,11 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to validate"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_finance
+msgid "Invoicing"
 msgstr ""
 
 #. module: account
@@ -5009,11 +5030,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "Once you're done, you'll benefit from:"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
 msgid "Once your bank accounts are registered, you will be able to\n"
 "                        get your bank statements from the Accounting dashboard.\n"
 "                        The available methods to sync your bank accounts are:"
@@ -5169,6 +5185,11 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:112
 #, python-format
 msgid "Outstanding debits"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Outstanding invoices, payments and undeposited funds"
 msgstr ""
 
 #. module: account
@@ -5835,12 +5856,6 @@ msgid "Put Money In"
 msgstr ""
 
 #. module: account
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Python Code"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_quantity
 #: model:ir.model.fields,field_description:account.field_account_move_line_quantity
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -6140,6 +6155,7 @@ msgid "Residual Amount in Currency"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_user_id
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Responsible"
 msgstr ""
@@ -6189,7 +6205,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "Review the list of available currencies (from the Configuration menu)"
+msgid "Review the list of available currencies (from the"
 msgstr ""
 
 #. module: account
@@ -7221,7 +7237,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "This guide will help you get started with Odoo Accounting."
+msgid "This guide will help you get started with Odoo Accounting.\n"
+"                    Once you're done, you'll benefit from:"
 msgstr ""
 
 #. module: account
@@ -7657,11 +7674,6 @@ msgid "Used to register a profit when the ending balance of a cash register diff
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_user_id
-msgid "User"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_journal_currency_id
 #: model:ir.model.fields,help:account.field_account_move_line_company_currency_id
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_company_currency_id
@@ -7809,18 +7821,6 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "We hope this tool helped you implement our accounting application."
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_website_message_ids
-#: model:ir.model.fields,field_description:account.field_account_invoice_website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_bank_statement_website_message_ids
-#: model:ir.model.fields,help:account.field_account_invoice_website_message_ids
-msgid "Website communication history"
 msgstr ""
 
 #. module: account
@@ -8085,6 +8085,26 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "You will find more options in your company details: address for the header and footer, overdue payments texts, etc."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Your bank accounts: one statement per bank account"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Your company: legal name, Tax ID, address, logo."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Your usual payment terms"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Your usual tax rates"
 msgstr ""
 
 #. module: account
