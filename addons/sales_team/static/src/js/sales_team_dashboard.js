@@ -2,8 +2,10 @@ odoo.define('sales_team.dashboard', function (require) {
 "use strict";
 
 var core = require('web.core');
-var KanbanView = require('web_kanban.KanbanView');
+var formats = require('web.formats');
 var Model = require('web.Model');
+var session = require('web.session');
+var KanbanView = require('web_kanban.KanbanView');
 
 var QWeb = core.qweb;
 
@@ -33,6 +35,7 @@ var SalesTeamDashboardView = KanbanView.extend({
             self.show_demo = result && result['nb_opportunities'] == 0;
 
             var sales_dashboard = QWeb.render('sales_team.SalesDashboard', {
+                widget: self,
                 show_demo: self.show_demo,
                 values: result,
             });
@@ -113,6 +116,21 @@ var SalesTeamDashboardView = KanbanView.extend({
         });
         $target.replaceWith($input);
         $input.focus().select();
+    },
+
+    render_monetary_field: function(value, currency_id) {
+
+        var currency = session.get_currency(currency_id);
+        var digits_precision = currency && currency.digits;
+        value = formats.format_value(value || 0, {type: "float", digits: digits_precision});
+        if (currency) {
+            if (currency.position === "after") {
+                value += currency.symbol;
+            } else {
+                value = currency.symbol + value;
+            }
+        }
+        return value;
     },
 });
 
