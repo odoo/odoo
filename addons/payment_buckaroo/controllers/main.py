@@ -6,6 +6,7 @@ except ImportError:
 
 import logging
 import pprint
+from urllib import unquote_plus
 import werkzeug
 
 from openerp import http, SUPERUSER_ID
@@ -33,6 +34,6 @@ class BuckarooController(http.Controller):
         return_url = post.pop('return_url', '')
         if not return_url:
             data ='' + post.pop('ADD_RETURNDATA', '{}').replace("'", "\"")
-            custom = json.loads(data)
+            custom = json.loads(unquote_plus(data))
             return_url = custom.pop('return_url', '/')
         return werkzeug.utils.redirect(return_url)

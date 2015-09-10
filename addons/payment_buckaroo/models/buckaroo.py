@@ -1,6 +1,7 @@
 # -*- coding: utf-'8' "-*-"
 from hashlib import sha1
 import logging
+from urllib import unquote_plus
 import urlparse
 
 from openerp.addons.payment.models.payment_acquirer import ValidationError
@@ -68,8 +69,8 @@ class AcquirerBuckaroo(osv.Model):
             sign = ''.join('%s=%s' % (k,get_value(k)) for k in keys)
         #Add the pre-shared secret key at the end of the signature
         sign = sign + acquirer.brq_secretkey
-        if isinstance(sign, str):
-            sign = urlparse.parse_qsl(sign)
+        if isinstance(sign, (str, unicode)):
+            sign = unquote_plus(sign)
         shasign = sha1(sign).hexdigest()
         return shasign
 
