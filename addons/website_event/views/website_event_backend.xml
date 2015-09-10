@@ -18,14 +18,16 @@
             <xpath expr="//field[@name='organizer_id']" position="after">
                 <field name="twitter_hashtag"/>
             </xpath>
-            <xpath expr="//div[@name='button_box']/button" position="before">
+            <xpath expr="//button[@name='button_done']" position="before">
                 <button name="action_open_badge_editor"
                     type="object"
-                    class="oe_stat_button"
-                    icon="fa-newspaper-o"
-                    string="Badge"
-                    help="Edit Event Badge">
-                </button>
+                    states="confirm"
+                    string="Print Badges"
+                    class="oe_highlight"/>
+                <button name="action_open_badge_editor"
+                    type="object"
+                    states="done"
+                    string="Print Badges"/>
             </xpath>
         </field>
     </record>
