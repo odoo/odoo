@@ -199,6 +199,10 @@
         <field name="model">hr.equipment</field>
         <field name="arch" type="xml">
             <form string="Equipments">
+                <header>
+                    <field name="category_id" widget="statusbar" clickable="True"
+                            options="{'fold_field': 'fold'}"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(hr_equipment_request_action_from_equipment)d"
@@ -209,7 +213,7 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Name"/>
+                        <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" string="Name" placeholder="Equipment Name"/></h1>
                         <label for="serial_no" class="oe_edit_only"/>
                         <field name="serial_no"/>
@@ -232,10 +236,15 @@
                             <field name="note"/>
                         </page>
                         <page string="Product Information">
-                            <group col="4">
-                                <field name="partner_id"/>
-                                <field name="cost" groups="base.group_hr_user"/>
-                                <field name="model"/>
+                            <group>
+                                <group>
+                                    <field name="partner_id"/>
+                                    <field name="partner_ref"/>
+                                    <field name="model"/>
+                                </group><group>
+                                    <field name="cost" groups="base.group_hr_user"/>
+                                    <field name="warranty"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>
@@ -260,6 +269,7 @@
                 <field name="serial_no"/>
                 <field name="model"/>
                 <field name="maintenance_ids"/>
+                <field name="maintenance_open_count"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -291,10 +301,8 @@
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="27" height="27" class="oe_kanban_avatar"/>
                                 </div>
-                                <div class="oe_kanban_footer_left mt4">
-                                    <a t-if="record.maintenance_ids.raw_value" type="action" name="%(hr_equipment_request_action_from_equipment)d">
-                                        <t t-raw="record.maintenance_ids.raw_value.length"/> Maintenance Request
-                                    </a>
+                                <div class="oe_kanban_footer_left mt4 label label-danger" t-if="record.maintenance_open_count.raw_value" >
+                                    <t t-raw="record.maintenance_open_count.raw_value"/> Request
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -328,17 +336,16 @@
         <field name="model">hr.equipment</field>
         <field name="arch" type="xml">
             <search string="Search">
-                <field name="name"/>
-                <field name="serial_no"/>
+                <field name="name"  filter_domain="['|','|','|',('name','ilike',self),('model','ilike',self),('serial_no','ilike',self),('partner_ref', 'ilike', self)]"/>
                 <field name="category_id"/>
                 <field name="employee_id"/>
                 <field name="department_id"/>
-                <field name="model"/>
-                <filter string="New" help="Unassigned" domain="[('employee_id', '=', False), ('department_id', '=', False)]"/>
-                <filter string="To Do" help="Under Maintenance" domain="[('maintenance_ids', '!=', False), ('maintenance_ids.stage_id.fold', '=', False)]"/>
-                <filter string="Assigned" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
+                <filter string="Under Maintenance"  domain="[('maintenance_open_count', '&gt;', 0)]"/>
                 <separator/>
-                <filter string="My Equipments" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
+                <filter string="Assigned" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
+                <filter string="Available" domain="[('employee_id', '=', False), ('department_id', '=', False)]"/>
+                <separator/>
+                <filter string="My Equipments" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <group  expand='0' string='Group by...'>
@@ -498,6 +505,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="fold"/>
+                <field name="done"/>
             </tree>
         </field>
     </record>
@@ -537,7 +545,7 @@
         parent="menu_equipment_title"
         action="hr_equipment_request_action"
         groups="base.group_hr_manager,base.group_hr_user,base.group_user"
-        sequence="1"/>
+        sequence="2"/>
 
     <menuitem
         id="menu_hr_equipment_form"
@@ -545,7 +553,7 @@
         parent="menu_equipment_title"
         action="hr_equipment_action"
         groups="base.group_hr_manager,base.group_hr_user,base.group_user"
-        sequence="2"/>
+        sequence="1"/>
 
     <menuitem
         id="menu_equipment_global_settings"

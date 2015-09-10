@@ -15,6 +15,7 @@ class HrEquipmentStage(models.Model):
     name = fields.Char('Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=20)
     fold = fields.Boolean('Folded in Recruitment Pipe')
+    done = fields.Boolean('Request Done')
 
 
 class HrEquipmentCategory(models.Model):
@@ -34,7 +35,7 @@ class HrEquipmentCategory(models.Model):
     note = fields.Text('Comments', translate=True)
     equipment_ids = fields.One2many('hr.equipment', 'category_id', string='Equipments', copy=False)
     equipment_count = fields.Integer(string="Equipment", compute='_compute_equipment_count')
-    maintenance_ids = fields.One2many('hr.equipment.request', 'category_id', copy=False, domain=[('stage_id.fold', '=', False)])
+    maintenance_ids = fields.One2many('hr.equipment.request', 'category_id', copy=False)
     maintenance_count = fields.Integer(string="Maintenance", compute='_compute_maintenance_count')
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete='cascade', required=True,
@@ -104,32 +105,36 @@ class HrEquipment(models.Model):
             recs = self.search([('name', operator, name)] + args, limit=limit)
         return recs.name_get()
 
-    name = fields.Char('Name', required=True, translate=True)
+    name = fields.Char('Equipment Name', required=True, translate=True)
     user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange')
     employee_id = fields.Many2one('hr.employee', string='Assigned to Employee', track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string='Assigned to Department', track_visibility='onchange')
     category_id = fields.Many2one('hr.equipment.category', string='Equipment Category', track_visibility='onchange')
     partner_id = fields.Many2one('res.partner', string='Vendor', domain="[('supplier', '=', 1)]")
+    partner_ref = fields.Char('Vendor Reference')
     model = fields.Char('Model')
     serial_no = fields.Char('Serial Number', copy=False)
     assign_date = fields.Date('Assigned Date', track_visibility='onchange')
     cost = fields.Float('Cost')
     note = fields.Text('Note')
+    warranty = fields.Date('Warranty')
     color = fields.Integer('Color Index')
     scrap_date = fields.Date('Scrap Date')
     equipment_assign_to = fields.Selection(
-        [('department', 'By Department'), ('employee', 'By Employee')],
-        string='Allocate To',
-        help='By Employee: equipment assigned to individual Employee, By Department: equipment assigned to group of employees in department',
+        [('department', 'Department'), ('employee', 'Employee')],
+        string='Used By',
         required=True,
         default='employee')
-    maintenance_ids = fields.One2many('hr.equipment.request', 'equipment_id', domain=[('stage_id.fold', '=', False)])
-    maintenance_count = fields.Integer(compute='_compute_maintenance_count', string="Maintenance")
+    maintenance_ids = fields.One2many('hr.equipment.request', 'equipment_id')
+    maintenance_count = fields.Integer(compute='_compute_maintenance_count', string="Maintenance", store=True)
+    maintenance_open_count = fields.Integer(compute='_compute_maintenance_count', string="Current Maintenance", store=True)
 
     @api.one
-    @api.depends('maintenance_ids')
+    @api.depends('maintenance_ids.stage_id.done')
     def _compute_maintenance_count(self):
         self.maintenance_count = len(self.maintenance_ids)
+        self.maintenance_open_count = len(self.maintenance_ids.filtered(lambda x: not x.stage_id.done))
+
 
     @api.onchange('equipment_assign_to')
     def _onchange_equipment_assign_to(self):
