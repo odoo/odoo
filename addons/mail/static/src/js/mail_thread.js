@@ -281,6 +281,14 @@ var MailComposeMessage = Widget.extend({
     },
     attachment_render: function(){
         this.$attachments_list.html(QWeb.render('mail.ComposeMessage.attachments', {'widget': this}));
+
+        // display image thumbnail
+         this.$attachments_list.find(".o_image[data-mimetype^='image']").each(function () {
+            var $img = $(this);
+            if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
+                $img.css('background-image', "url('" + $img.data('src') + "')");
+            }
+        });
     },
     // Mention
     on_click_mention_item: function(event){

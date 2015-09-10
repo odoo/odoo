@@ -391,6 +391,14 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
      */
     message_render: function(){
         this.$('.o_mail_chatter_messages').html(QWeb.render('mail.chatter.ChatterMailThread.messages', {'widget': this}));
+
+        // display image thumbnail
+        this.$(".o_mail_chatter_messages .o_image[data-mimetype^='image']").each(function () {
+            var $img = $(this);
+            if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
+                $img.css('background-image', "url('" + $img.data('src') + "')");
+            }
+        });
     },
     /**
      * Order the messages
