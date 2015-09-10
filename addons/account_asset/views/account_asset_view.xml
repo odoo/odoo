@@ -236,11 +236,6 @@
                     domain="[('type', '=', 'purchase')]"
                     context="{'default_type': 'purchase'}"/>
             </field>
-            <field name="property_account_income_id" position="before">
-                <field name="deferred_revenue_category_id"
-                    domain="[('type', '=', 'sale')]"
-                    context="{'default_type': 'sale'}"/>
-            </field>
         </field>
     </record>
     
