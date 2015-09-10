@@ -8,10 +8,7 @@ class ReportFinancial(models.AbstractModel):
     _name = 'report.account.report_financial'
 
     def _compute_account_balance(self, accounts):
-        """ compute the balance, debit and credit for the provided
-        accounts
-        Arguments:
-        `accounts`: accounts 
+        """ compute the balance, debit and credit for the provided accounts
         """
         mapping = {
             'balance': "COALESCE(SUM(debit),0) - COALESCE(SUM(credit), 0) as balance",
@@ -29,12 +26,11 @@ class ReportFinancial(models.AbstractModel):
             if where_clause.strip():
                 wheres.append(where_clause.strip())
             filters = " AND ".join(wheres)
-            request = ("SELECT account_id as id, " +\
-                       ', '.join(mapping.values()) +
-                       " FROM " + tables +
+            request = "SELECT account_id as id, " + ', '.join(mapping.values()) + \
+                       " FROM " + tables + \
                        " WHERE account_id IN %s " \
-                            + filters +
-                       " GROUP BY account_id")
+                            + filters + \
+                       " GROUP BY account_id"
             params = (tuple(accounts._ids),) + tuple(where_params)
             self.env.cr.execute(request, params)
             for row in self.env.cr.dictfetchall():
@@ -42,7 +38,7 @@ class ReportFinancial(models.AbstractModel):
         return res
 
     def _compute_report_balance(self, reports):
-        '''returns a dictionary with key=the ID of a record and value=the credit, debit and balance amount 
+        '''returns a dictionary with key=the ID of a record and value=the credit, debit and balance amount
            computed for this record. If the record is of type :
                'accounts' : it's the sum of the linked accounts
                'account_type' : it's the sum of leaf accoutns with such an account_type
