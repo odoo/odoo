@@ -2201,7 +2201,9 @@ class stock_move(osv.osv):
                 move2 = move.split_from
                 while move2 and state != 'waiting':
                     if move2.move_orig_ids:
-                        state = 'waiting'
+                        for move_orig in move2.move_orig_ids:
+                            if move_orig.state not in ('done', 'cancel'):
+                                state = 'waiting'
                     move2 = move2.split_from
             states[state].append(move.id)
 
@@ -2362,7 +2364,7 @@ class stock_move(osv.osv):
         ancestors = []
         move2 = move
         while move2:
-            ancestors += [x.id for x in move2.move_orig_ids]
+            ancestors += [x.id for x in move2.move_orig_ids if x.state not in ('done', 'cancel')]
             #loop on the split_from to find the ancestor of split moves only if the move has not direct ancestor (priority goes to them)
             move2 = not move2.move_orig_ids and move2.split_from or False
         return ancestors
