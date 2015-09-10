@@ -287,6 +287,29 @@ class product_product(osv.osv):
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
     }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('company_id', False):
+            move_pool = self.pool.get('stock.move')
+            quant_pool = self.pool.get('stock.quant')
+            for product in self.browse(cr, uid, ids, context=context):
+                if vals['company_id'] == product.company_id.id:
+                    continue
+                active_moves = move_pool.search(
+                    cr, uid, [('product_id', '=', product.id),
+                              ('company_id', '=', product.company_id.id)],
+                    context=context)
+                active_quants = quant_pool.search(
+                    cr, uid, [('product_id', '=', product.id),
+                              ('company_id', '=', product.company_id.id)],
+                    context=context)
+                if active_moves or active_quants:
+                    raise except_orm(
+                        _('Warning'),
+                        _('You try to modify the company to a product which '
+                          'have active moves or quants in the old company.'))
+        return super(product_product, self).write(cr, uid, ids, vals,
+                                                  context=context)
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(product_product, self).fields_view_get(
             cr, uid, view_id=view_id, view_type=view_type, context=context,
