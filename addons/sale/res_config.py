@@ -95,7 +95,8 @@ class sale_configuration(osv.TransientModel):
     def get_default_deposit_values(self, cr, uid, fields, context=None):
         deposit_product_template = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'sale.advance_product_1', context=context)
         return {
-            'deposit_property_account_income_id': deposit_product_template.product_variant_ids.property_account_income_id.id,
+            'deposit_property_account_income_id': deposit_product_template.product_variant_ids.property_account_income_id.id \
+                                              or  deposit_product_template.product_variant_ids.categ_id.property_account_income_categ_id.id,
             'deposit_taxes_ids': deposit_product_template.product_variant_ids.taxes_id.ids
             }
 
