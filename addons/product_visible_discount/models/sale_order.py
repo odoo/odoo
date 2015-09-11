@@ -4,14 +4,6 @@ from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-class product_pricelist(osv.osv):
-    _inherit = 'product.pricelist'
-
-    _columns = {
-        'discount_policy': fields.selection([('with_discount', 'Discount included in the price'), ('without_discount', 'Show discount in the sale order')], string="Discount Policy"),
-    }
-    _defaults = {'discount_policy': 'with_discount'}
-
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
