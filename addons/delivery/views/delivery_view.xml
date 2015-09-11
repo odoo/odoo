@@ -35,6 +35,7 @@
                                 <field name="partner_id" class="oe_inline"/>
                                 <field name="product_type" invisible="1"/>
                                 <field name="product_sale_ok" invisible="1"/>
+                                <field name="shipping_enabled" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
                             </group>
                         </div>
                         <notebook>
