@@ -2,12 +2,15 @@ odoo.define('web.planner', function (require) {
 "use strict";
 
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var Model = require('web.Model');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 var planner = require('web.planner.common');
 var webclient = require('web.web_client');
 
+var QWeb = core.qweb;
+var _t = core._t;
 var PlannerDialog = planner.PlannerDialog;
 
 var PlannerLauncher = Widget.extend({
@@ -20,11 +23,14 @@ var PlannerLauncher = Widget.extend({
     start: function() {
         var self = this;
         core.bus.on("change_menu_section", self, self.on_menu_clicked);
+
         var res =  self._super.apply(this, arguments).then(function() {
             self.$el.filter('.o_planner_systray').on('click', self, self.show_dialog.bind(self));
+            self.$el.filter('.o_planner_help').on('click', '.dropdown-menu li a[data-menu]', self.on_menu_help);
             return self.fetch_application_planner();
         }).then(function(apps) {
-            self.do_hide();  // hidden by default
+            self.$el.filter('.o_planner_systray').hide();  // hidden by default
+            self.$el.filter('.o_planner_help').find('.o_planner_link').hide();
             self.$('.progress').tooltip({html: true, placement: 'bottom', delay: {'show': 500}});
             self.planner_apps = apps;
             return apps;
@@ -52,7 +58,8 @@ var PlannerLauncher = Widget.extend({
             this.setup(this.planner_apps[menu_id]);
             this.need_reflow = true;
         } else {
-            this.do_hide();
+            this.$el.filter('.o_planner_systray').hide();
+            this.$el.filter('.o_planner_help').find('.o_planner_link').hide();
             this.need_reflow = true;
         }
         if (this.need_reflow) {
@@ -63,6 +70,33 @@ var PlannerLauncher = Widget.extend({
         if (this.dialog) {
             this.dialog.$el.modal('hide');
             this.dialog.$el.detach();
+        }
+    },
+    on_menu_help: function(ev) {
+        ev.preventDefault();
+
+        var menu = $(ev.currentTarget).data('menu');
+        if (menu === 'about') {
+            var self = this;
+            self.rpc("/web/webclient/version_info", {}).done(function(res) {
+                var $help = $(QWeb.render("PlannerLauncher.about", {version_info: res}));
+                $help.find('a.oe_activate_debug_mode').click(function (e) {
+                    e.preventDefault();
+                    window.location = $.param.querystring( window.location.href, 'debug');
+                });
+                new Dialog(this, {
+                    size: 'medium',
+                    dialogClass: 'o_act_window',
+                    title: _t("About"),
+                    $content: $help
+                }).open();
+            });
+        } else if (menu === 'documentation') {
+            window.open('https://www.odoo.com/documentation/user', '_blank');
+        } else if (menu === 'planner') {
+            if (this.dialog) this.show_dialog();
+        } else if (menu === 'support') {
+            window.open('https://www.odoo.com/pricing?noredirect=1', '_blank');
         }
     },
     setup: function(planner) {
@@ -77,6 +111,7 @@ var PlannerLauncher = Widget.extend({
         this.dialog.appendTo($('<div>'));
 
         this.$('.progress').attr('data-original-title', this.planner.tooltip_planner);
+        this.$el.filter('.o_planner_help').find('.o_planner_link').show();
 
         this.dialog.on("planner_progress_changed", this, function(percent){
             self.update_parent_progress_bar(percent);
@@ -88,13 +123,13 @@ var PlannerLauncher = Widget.extend({
         } else {
             this.$(".progress").show();
         }
-        this.do_show();
+        this.$el.filter('.o_planner_systray').show();
         this.$(".progress-bar").css('width', percent+"%");
     },
     show_dialog: function() {
         this.dialog.$el.appendTo(webclient.$el);
         this.dialog.$el.modal('show');
-    }
+    },
 });
 
 SystrayMenu.Items.push(PlannerLauncher);
