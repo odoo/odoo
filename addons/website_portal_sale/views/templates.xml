@@ -31,7 +31,7 @@
                 </thead>
                 <t t-foreach="quotations" t-as="quotation">
                     <tr t-att-class="'hidden to_hide' if quotation.state!='sent' and quotation_index &gt; 4 else ''">
-                        <td>                                   
+                        <td>
                             <a t-att-href="'/my/orders/'+str(quotation.id)"><t t-esc="quotation.name"/></a>
                         </td>
                         <td><span t-field="quotation.validity_date"/></td>
@@ -96,7 +96,7 @@
         </t>
     </template>
 
-    <template id="invoices" name="Invoices and Payments"> 
+    <template id="invoices" name="Invoices and Payments">
         <h3 class="page-header">Your Invoices and Payments</h3>
         <t t-if="not invoices">
             <p>There are currently no invoices for your account.</p>
@@ -175,10 +175,10 @@
                         <div class="col-md-12">
                           <h4>
                             <t t-if="order.state == 'sent'">
-                              Quotation 
+                              Quotation
                             </t>
                             <t t-if="order.state != 'sent'">
-                              Order 
+                              Order
                             </t>
                             <span t-esc="order.name"/>
                           </h4>
@@ -250,7 +250,7 @@
                       <t t-foreach="order.order_line" t-as="ol">
                         <div class="row orders_vertical_align">
                             <div class="col-md-1 text-center">
-                                <img t-att-src="'/web_editor/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
+                                <img t-att-src="'/web/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
                             </div>
                             <div id='product_name' class="col-md-5">
                               <span t-esc="ol.product_id.name"/>
