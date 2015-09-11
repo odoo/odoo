@@ -686,6 +686,9 @@ class task(osv.osv):
             vals['date_start'] = fields.datetime.now()
         return {'value': vals}
 
+    def onchange_date_deadline(self, cr, uid, ids, date_deadline, context=None):
+        return {'value': {'date_end': date_deadline}}
+
     def duplicate_task(self, cr, uid, map_ids, context=None):
         mapper = lambda t: map_ids.get(t.id, t.id)
         for task in self.browse(cr, uid, map_ids.values(), context):
