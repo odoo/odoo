@@ -333,15 +333,14 @@ class resource_calendar(osv.osv):
                 intervals.append((start_dt.replace(hour=default_interval[0]), start_dt.replace(hour=default_interval[1])))
             return intervals
 
-        tzinfo = fields.datetime.context_timestamp(cr, uid, work_dt, context={}).tzinfo
         working_intervals = []
+        tz_info = fields.datetime.context_timestamp(cr, uid, work_dt, context=context).tzinfo
         for calendar_working_day in self.get_attendances_for_weekdays(cr, uid, id, [start_dt.weekday()], context):
-            hour_from = work_dt.replace(hour=int(calendar_working_day.hour_from)).replace(tzinfo=tzinfo).astimezone(pytz.UTC).hour
-            hour_to = work_dt.replace(hour=int(calendar_working_day.hour_to)).replace(tzinfo=tzinfo).astimezone(pytz.UTC).hour
-            working_interval = (
-                work_dt.replace(hour=int(hour_from)),
-                work_dt.replace(hour=int(hour_to))
-            )
+            x = work_dt.replace(hour=int(calendar_working_day.hour_from))
+            y = work_dt.replace(hour=int(calendar_working_day.hour_to))
+            x = x.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None)
+            y = y.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None)
+            working_interval = (x, y)
             working_intervals += self.interval_remove_leaves(working_interval, work_limits)
 
         # find leave intervals
@@ -597,7 +596,7 @@ class resource_calendar(osv.osv):
         for dt_str, hours, calendar_id in date_and_hours_by_cal:
             result = self.schedule_hours(
                 cr, uid, calendar_id, hours,
-                day_dt=datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S').replace(minute=0, second=0),
+                day_dt=datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S').replace(second=0),
                 compute_leaves=True, resource_id=resource,
                 default_interval=(8, 16)
             )
