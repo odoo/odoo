@@ -306,7 +306,11 @@ class WebRequest(object):
             # case, the request cursor is unusable. Rollback transaction to create a new one.
             if self._cr:
                 self._cr.rollback()
-            return self.endpoint(*a, **kw)
+            result = self.endpoint(*a, **kw)
+            if isinstance(result, Response) and result.is_qweb:
+                # Early rendering of lazy responses to benefit from @service_model.check protection
+                result.flatten()
+            return result
 
         if self.db:
             return checked_call(self.db, *args, **kwargs)
@@ -1299,8 +1303,9 @@ class Response(werkzeug.wrappers.Response):
         """ Forces the rendering of the response's template, sets the result
         as response body and unsets :attr:`.template`
         """
-        self.response.append(self.render())
-        self.template = None
+        if self.template:
+            self.response.append(self.render())
+            self.template = None
 
 class DisableCacheMiddleware(object):
     def __init__(self, app):

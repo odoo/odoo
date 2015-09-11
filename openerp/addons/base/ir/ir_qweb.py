@@ -27,6 +27,7 @@ import openerp.http
 import openerp.tools
 from openerp.tools.func import lazy_property
 import openerp.tools.lru
+from openerp.exceptions import QWebException
 from openerp.fields import Datetime
 from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
@@ -43,15 +44,6 @@ MAX_CSS_RULES = 4095
 #--------------------------------------------------------------------
 # QWeb template engine
 #--------------------------------------------------------------------
-class QWebException(Exception):
-    def __init__(self, message, **kw):
-        Exception.__init__(self, message)
-        self.qweb = dict(kw)
-    def pretty_xml(self):
-        if 'node' not in self.qweb:
-            return ''
-        return etree.tostring(self.qweb['node'], pretty_print=True)
-
 class QWebTemplateNotFound(QWebException):
     pass
 
