@@ -16,6 +16,15 @@ class LunchOrder(models.Model):
     _description = 'Lunch Order'
     _order = 'date desc'
 
+    def _default_previous_order_ids(self):
+        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid)], limit=20, order='id desc')
+        # If we return return prev_order.ids, we will have duplicates (identical orders).
+        # Therefore, this following part removes duplicates based on product_id and note.
+        return {
+            (order.product_id, order.note): order.id
+            for order in prev_order
+        }.values()
+
     user_id = fields.Many2one('res.users', 'User', required=True, readonly=True,
                               states={'new': [('readonly', False)]},
                               default=lambda self: self.env.uid)
@@ -32,8 +41,8 @@ class LunchOrder(models.Model):
                              'Status', readonly=True, index=True, copy=False, default='new',
                              compute='_compute_order_state')
     alerts = fields.Text(compute='_compute_alerts_get', string="Alerts")
-    previous_order_ids = fields.One2many(comodel_name='lunch.order.line',
-                                         compute='_compute_get_previous_order_ids')
+    previous_order_ids = fields.Many2many('lunch.order.line', compute='_compute_previous_order_ids',
+                                          default=lambda self: self._default_previous_order_ids())
     company_id = fields.Many2one('res.company', related='user_id.company_id', store=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
     cash_move_balance = fields.Monetary(compute='_compute_cash_move_balance', multi='cash_move_balance')
@@ -64,15 +73,9 @@ class LunchOrder(models.Model):
         if self.state == 'new':
             self.alerts = alert_msg and '\n'.join(alert_msg) or False
 
-    @api.depends('state')
-    def _compute_get_previous_order_ids(self):
-        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid)], limit=20, order='id desc')
-        # If we return return prev_order.ids, we will have duplicates (identical orders).
-        # Therefore, this following part removes duplicates based on product_id and note.
-        self.previous_order_ids = {
-            (order.product_id, order.note): order.id
-            for order in prev_order
-        }.values()
+    @api.depends('user_id')
+    def _compute_previous_order_ids(self):
+        self.previous_order_ids = self._default_previous_order_ids()
 
     @api.onchange('total')
     def _onchange_total(self):

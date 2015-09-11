@@ -394,10 +394,10 @@
                                 </div>
                             </group>
                         </group>
-                        <div attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline alert alert-danger">
+                        <div attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline alert alert-danger oe_edit_only">
                             <field name='alerts'/>
                         </div>
-                        <field name='previous_order_ids' widget='previous_order'/>
+                        <field name='previous_order_ids' widget='previous_order' class="oe_edit_only"/>
                         <separator string='Select your order'/>
                         <field name='order_line_ids' nolabel='1'>
                             <tree string='List' editable='bottom'>
