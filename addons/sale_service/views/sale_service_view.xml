@@ -31,7 +31,7 @@
             <field name="inherit_id" ref="project.task_type_edit"/>
             <field name="arch" type="xml">
                 <field name="fold" position="after">
-                    <field name="closed"/>
+                    <field name="closed" groups="base.group_no_one"/>
                 </field>
             </field>
         </record>
