@@ -182,8 +182,8 @@
             <field name="arch" type="xml">
                 <sheet position="before">
                     <header>
-                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action"/>
-                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action"/>
+                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
+                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
                     </header>
                 </sheet>
             </field>
@@ -198,10 +198,12 @@
                     <header position="inside">
                         <button string="Update Qty On Hand"
                             type="action"
-                            name="%(action_view_change_product_quantity)d"/>
+                            name="%(action_view_change_product_quantity)d"
+                            attrs="{'invisible': [('type', '!=', 'consu')]}"/>
                         <button string="Procurement Request"
                             type="action"
-                            name="%(stock.act_make_procurement)d"/>
+                            name="%(stock.act_make_procurement)d"
+                            attrs="{'invisible': [('type', '!=', 'consu')]}"/>
                     </header>
                     <div name="button_box" position="inside">
                         <button class="oe_stat_button"
@@ -261,8 +263,8 @@
             <field name="arch" type="xml">
                 <data>
                     <header position="inside" >
-                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action"/>
-                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action"/>
+                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
+                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
                     </header>
                     <div name="button_box" position="inside">
                         <button type="object"
