@@ -659,6 +659,19 @@ class account_voucher(osv.osv):
             del(res['value']['payment_rate'])
         return res
 
+    def finalize_voucher_move_lines(self, cr, uid, ids, move_lines,
+                                    partner_id, journal_id, price,
+                                    currency_id, ttype, date, context=None):
+        """ finalize_account_move_lines(move_lines) -> move_lines
+
+            Hook method to be overridden in additional modules to verify and
+            possibly alter the move lines to be created by an voucher, for
+            special cases.
+            :param move_lines: list of dictionaries with the account.move.lines (as for create())
+            :return: the (possibly updated) final move_lines to create for this voucher
+        """
+        return account_move_lines
+
     def recompute_voucher_lines(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=None):
         """
         Returns a dict that contains new values and context
@@ -738,7 +751,15 @@ class account_voucher(osv.osv):
         #order the lines by most old first
         ids.reverse()
         account_move_lines = move_line_pool.browse(cr, uid, ids, context=context)
-
+        
+        #hook
+        account_move_lines = self.finalize_voucher_move_lines(
+                                                cr, uid, ids,
+                                                account_move_lines,
+                                                partner_id, journal_id, price,
+                                                currency_id, ttype, date,
+                                                context=context)
+                            
         #compute the total debit/credit and look for a matching open amount or invoice
         for line in account_move_lines:
             if _remove_noise_in_o2m():
