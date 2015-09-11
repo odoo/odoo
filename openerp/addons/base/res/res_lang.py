@@ -161,7 +161,7 @@ class lang(osv.osv):
 
     @tools.ormcache('lang', 'monetary')
     def _lang_data_get(self, cr, uid, lang, monetary=False):
-        if type(lang) in (str, unicode):
+        if isinstance(lang, basestring):
             lang = self._lang_get(cr, uid, lang)
         conv = localeconv()
         lang_obj = self.browse(cr, uid, lang)
