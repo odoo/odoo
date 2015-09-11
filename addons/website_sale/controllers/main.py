@@ -137,24 +137,17 @@ class website_sale(http.Controller):
 
         return attribute_value_ids
 
-    @http.route(['/shop',
-        '/shop/page/<int:page>',
-        '/shop/category/<model("product.public.category"):category>',
-        '/shop/category/<model("product.public.category"):category>/page/<int:page>'
-    ], type='http', auth="public", website=True)
-    def shop(self, page=0, category=None, search='', **post):
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-
+    def _get_search_domain(self, search, category, attrib_values):
         domain = request.website.sale_product_domain()
+
         if search:
             for srch in search.split(" "):
-                domain += ['|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
+                domain += [
+                    '|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
                     ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)]
+
         if category:
             domain += [('public_categ_ids', 'child_of', int(category))]
-        attrib_list = request.httprequest.args.getlist('attrib')
-        attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
-        attrib_set = set([v[1] for v in attrib_values])
 
         if attrib_values:
             attrib = None
@@ -171,6 +164,23 @@ class website_sale(http.Controller):
                     ids = [value[1]]
             if attrib:
                 domain += [('attribute_line_ids.value_ids', 'in', ids)]
+
+        return domain
+
+    @http.route([
+        '/shop',
+        '/shop/page/<int:page>',
+        '/shop/category/<model("product.public.category"):category>',
+        '/shop/category/<model("product.public.category"):category>/page/<int:page>'
+    ], type='http', auth="public", website=True)
+    def shop(self, page=0, category=None, search='', **post):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+
+        attrib_list = request.httprequest.args.getlist('attrib')
+        attrib_values = [map(int, v.split("-")) for v in attrib_list if v]
+        attrib_set = set([v[1] for v in attrib_values])
+
+        domain = self._get_search_domain(search, category, attrib_values)
 
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list)
 
@@ -896,15 +906,29 @@ class website_sale(http.Controller):
         """ Transforms a list of order lines into a dict for google analytics """
         ret = []
         for line in order_lines:
+            product = line.product_id
             ret.append({
                 'id': line.order_id and line.order_id.id,
-                'sku': line.product_id.id,
-                'name': line.product_id.name or '-',
-                'category': line.product_id.categ_id and line.product_id.categ_id.name or '-',
+                'sku': product.ean13 or product.id,
+                'name': product.name or '-',
+                'category': product.categ_id and product.categ_id.name or '-',
                 'price': line.price_unit,
                 'quantity': line.product_uom_qty,
             })
         return ret
+
+    def order_2_return_dict(self, order):
+        """ Returns the tracking_cart dict of the order for Google analytics basically defined to be inherited """
+        return {
+            'transaction': {
+                'id': order.id,
+                'affiliation': order.company_id.name,
+                'revenue': order.amount_total,
+                'tax': order.amount_tax,
+                'currency': order.currency_id.name
+            },
+            'lines': self.order_lines_2_google_api(order.order_line)
+        }
 
     @http.route(['/shop/tracking_last_order'], type='json', auth="public")
     def tracking_cart(self, **post):
@@ -914,13 +938,7 @@ class website_sale(http.Controller):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-            ret['transaction'] = {
-                'id': sale_order_id,
-                'affiliation': order.company_id.name,
-                'revenue': order.amount_total,
-                'currency': order.currency_id.name
-            }
-            ret['lines'] = self.order_lines_2_google_api(order.order_line)
+            ret = self.order_2_return_dict(order)
         return ret
 
     @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)

@@ -4,13 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Miku Laitinen <miku.laitinen@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-04 10:01+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-09-05 15:27+0000\n"
+"Last-Translator: Miku Laitinen <miku.laitinen@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,12 +45,12 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr ""
+msgstr "\n<p>\n    Heippa ${object.name},\n</p>\n<p>\n    Sinun on vahvistettava sähköpostiosoitteesi aktivoidaksesi käyttäjätilisi \"${object.company_id.name}\" kysymyspalstalla.\n</p>\n<p>\n    Klikkaa oheista linkkiä vahvistaaksesi sähköpostiosoitteesi:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">Aktivoi tili \"${object.company_id.name}\" kysymyspalstalla</a></li>\n</ul>\n<p>\n    Terveisin,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} - Sähköpostiosoitteen vahvistaminen"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -58,22 +60,22 @@ msgstr "&times;"
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "(only one answer per question is allowed)"
-msgstr ""
+msgstr "(voit vastata kysymykseen vain yhden kerran)"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- it really helps to select the best questions and answers!"
-msgstr ""
+msgstr "- se auttaa erottamaan parhaat kysymykset ja vastaukset."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- no need to answer the same question twice. Also, please"
-msgstr ""
+msgstr "- yksi henkilö ei voi vastava samaan kysymykseen kahdesti. Älä myöskään "
 
 #. module: website_forum
 #: selection:forum.post.vote,vote:0
 msgid "-1"
-msgstr ""
+msgstr "-1"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:374
@@ -81,7 +83,7 @@ msgstr ""
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
-msgstr ""
+msgstr "<p>Kysymykseen <i>%s</i> on tullut uusi vastaus. <a href=\"%s/forum/%s/question/%s\">Klikkaa tästä nähdäksesi vastauksen.</a></p>"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:380
@@ -89,14 +91,14 @@ msgstr ""
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
-msgstr ""
+msgstr "<p>Uusi kysymys <i>%s</i> on esitetty keskustelupalstalla %s. <a href=\"%s/forum/%s/question/%s\">Klikkaa tästä lukeaksesi kysymyksen.</a></p>"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
 msgid ""
 "<p>This community is for professionals and enthusiasts of our products and "
 "services.</p>"
-msgstr ""
+msgstr "<p>Tämä yhteisö on tarkoitettu ammattilaisille sekä muille tuotteistamme ja palveluistamme kiinnostuneille.</p>"
 
 #. module: website_forum
 #: view:website:website_forum.tag
@@ -104,7 +106,7 @@ msgid ""
 "A tag is a label that categorizes your question with other,\n"
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question."
-msgstr ""
+msgstr "Tunniste on tapa kategorisoida kysymyksiä ja tehdä samankaltaisten kysymysten löytäminen helpommaksi. Oikeiden tunnisteiden käyttäminen helpottaa ihmisiä löytämään kysymyksesi ja vastaamaan siihen."
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -114,17 +116,17 @@ msgstr "Tietoa keskustelupalstasta"
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_own:0
 msgid "Accept an answer on its own questions"
-msgstr ""
+msgstr "Omaan kysymykseen lähetetyn vastauksen hyväksyminen"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_all:0
 msgid "Accept an answer to all questions"
-msgstr ""
+msgstr "Minkä vain kysymyksen vastauksen hyväksyminen"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accept:0
 msgid "Accepting an answer"
-msgstr ""
+msgstr "Vastauksen hyväksyminen"
 
 #. module: website_forum
 #: field:forum.post,active:0 selection:forum.post,state:0
@@ -134,7 +136,7 @@ msgstr "Aktiivinen"
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Activity"
-msgstr "Toiminto"
+msgstr "Toimet"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -157,32 +159,32 @@ msgstr "Vastaus muokattu"
 #. module: website_forum
 #: field:forum.forum,karma_answer:0
 msgid "Answer a question"
-msgstr ""
+msgstr "Kysymykseen vastaaminen"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accepted:0
 msgid "Answer accepted"
-msgstr ""
+msgstr "Vastaus hyväksytty"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_downvote:0
 msgid "Answer downvoted"
-msgstr ""
+msgstr "Vastausta äänestetty huonommaksi"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_flagged:0
 msgid "Answer flagged"
-msgstr ""
+msgstr "Vastaus merkattu vaatimaan ylläpidon huomiota"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_upvote:0
 msgid "Answer upvoted"
-msgstr ""
+msgstr "Vastausta äänestetty paremmaksi"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Answered on"
-msgstr ""
+msgstr "Vastattu"
 
 #. module: website_forum
 #: field:forum.post,child_count:0 field:forum.post,child_ids:0
@@ -194,7 +196,7 @@ msgstr "Vastaukset"
 #. module: website_forum
 #: view:website:website_forum.header field:forum.forum,karma_ask:0
 msgid "Ask a Question"
-msgstr ""
+msgstr "Esitä kysymys"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -205,17 +207,17 @@ msgstr "Esitä kysymyksesi"
 #: field:forum.post,create_date:0
 #: view:website:website_forum.post_description_full
 msgid "Asked on"
-msgstr ""
+msgstr "Kysytty"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Asked:"
-msgstr ""
+msgstr "Kysytty:"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_new:0
 msgid "Asking a question"
-msgstr ""
+msgstr "Kysymyksen esittäminen"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -225,17 +227,17 @@ msgstr "Laatija"
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_1
 msgid "Autobiographer"
-msgstr ""
+msgstr "Avautuja"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Back to"
-msgstr ""
+msgstr "Takaisin kohteeseen"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "Badge \""
-msgstr ""
+msgstr "Ansiomerkki \""
 
 #. module: website_forum
 #: field:res.users,badge_ids:0 view:website:website_forum.badge
@@ -250,78 +252,78 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr ""
+msgstr "Voit kerryttää mainettasi kysymyksin ja vastauksin, mutta sen lisäksi voit ansaita ansiomerkkejä olemalla erityisen avulias. Ansiomerkit näkyvät profiilisivullasi ja lähettämissäsi viesteissä."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Biography"
-msgstr ""
+msgstr "Kuvaus itsestäsi"
 
 #. module: website_forum
 #: field:forum.post,can_accept:0
 msgid "Can Accept"
-msgstr ""
+msgstr "Voi hyväksyä"
 
 #. module: website_forum
 #: field:forum.post,can_answer:0
 msgid "Can Answer"
-msgstr ""
+msgstr "Voi vastava"
 
 #. module: website_forum
 #: field:forum.post,can_ask:0
 msgid "Can Ask"
-msgstr ""
+msgstr "Voi kysyä"
 
 #. module: website_forum
 #: field:forum.post,can_close:0
 msgid "Can Close"
-msgstr ""
+msgstr "Voi sulkea"
 
 #. module: website_forum
 #: field:forum.post,can_comment:0
 msgid "Can Comment"
-msgstr ""
+msgstr "Voi kommentoida"
 
 #. module: website_forum
 #: field:forum.post,can_comment_convert:0
 msgid "Can Convert to Comment"
-msgstr ""
+msgstr "Voi muuntaa vastauksen kommentiksi"
 
 #. module: website_forum
 #: field:forum.post,can_downvote:0
 msgid "Can Downvote"
-msgstr ""
+msgstr "Voi äänestää huonommaksi"
 
 #. module: website_forum
 #: field:forum.post,can_edit:0
 msgid "Can Edit"
-msgstr ""
+msgstr "Voi muokata"
 
 #. module: website_forum
 #: field:forum.post,can_unlink:0
 msgid "Can Unlink"
-msgstr ""
+msgstr "Voi poistaa linkityksen"
 
 #. module: website_forum
 #: field:forum.post,can_upvote:0
 msgid "Can Upvote"
-msgstr ""
+msgstr "Voi äänestää paremmaksi"
 
 #. module: website_forum
 #: field:forum.forum,karma_retag:0
 msgid "Change question tags"
-msgstr ""
+msgstr "Kysymyksen tunnisteiden vaihtaminen"
 
 #. module: website_forum
 #: view:website:website_forum.user_badges
 msgid "Check available badges"
-msgstr ""
+msgstr "Näytä kaikki ansiomerkit"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
 #: model:gamification.challenge,name:website_forum.challenge_chief_commentator
 msgid "Chief Commentator"
-msgstr ""
+msgstr "Päällikkökommentaattori"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -333,12 +335,12 @@ msgstr "Kaupunki"
 msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
-msgstr ""
+msgstr "Klikkaa tästä lähettääksesi vahvistussähköpostin. Sähköpostiosoitteen vahvistamisen jälkeen voit osallistua keskusteluihin."
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_clickable_link:0
 msgid "Clickable links (Editor)"
-msgstr ""
+msgstr "Klikattavat linkit (editori)"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -348,27 +350,27 @@ msgstr "Sulje"
 #. module: website_forum
 #: field:forum.forum,karma_close_all:0
 msgid "Close all posts"
-msgstr ""
+msgstr "Kaikkien kysymysten sulkeminen"
 
 #. module: website_forum
 #: field:forum.forum,karma_close_own:0
 msgid "Close its own posts"
-msgstr ""
+msgstr "Omien kysymysten sulkeminen"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Close question"
-msgstr ""
+msgstr "Sulje kysymys"
 
 #. module: website_forum
 #: field:forum.post,closed_uid:0
 msgid "Closed by"
-msgstr ""
+msgstr "Sulkenut"
 
 #. module: website_forum
 #: field:forum.post,closed_date:0
 msgid "Closed on"
-msgstr ""
+msgstr "Suljettu"
 
 #. module: website_forum
 #: view:website:website_forum.display_post_answer
@@ -379,24 +381,24 @@ msgstr "Kommentti"
 #. module: website_forum
 #: field:forum.forum,karma_comment_all:0
 msgid "Comment all posts"
-msgstr ""
+msgstr "Kaikkien viestien kommentointi"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_own:0
 msgid "Comment its own posts"
-msgstr ""
+msgstr "Omien viestien kommentointi"
 
 #. module: website_forum
 #: view:website:website_forum.post_comment
 msgid "Comment this post..."
-msgstr ""
+msgstr "Kommentoi tätä viestiä..."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
 #: model:gamification.challenge,name:website_forum.challenge_commentator
 #: model:gamification.goal.definition,name:website_forum.definition_commentator
 msgid "Commentator"
-msgstr ""
+msgstr "Kommentaattori"
 
 #. module: website_forum
 #: view:website:website_forum.display_post_answer
@@ -406,24 +408,24 @@ msgstr "Kommentit"
 #. module: website_forum
 #: help:forum.post,website_message_ids:0
 msgid "Comments on forum post"
-msgstr ""
+msgstr "Viestin kommentit"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
 msgid "Complete own biography"
-msgstr ""
+msgstr "Viimeistele kuvaus itsestäsi"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_configure_profile
 msgid "Completed own biography"
-msgstr ""
+msgstr "Viimeisteli kuvauksen itsestään"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid ""
 "Congratulations! Your email has just been validated. You may now participate"
 " to our forums."
-msgstr ""
+msgstr "Onnittelut! Sähköpostiosoitteesi on vahvistettu. Voit nyt osallistua keskustelupalstan toimintaan."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -434,17 +436,17 @@ msgstr "Sisältö"
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_all:0
 msgid "Convert all answers to comments and vice versa"
-msgstr ""
+msgstr "Muunna kaikki vastaukset kommenteiksi ja kommentit vastauksiksi"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_own:0
 msgid "Convert its own answers to comments and vice versa"
-msgstr ""
+msgstr "Omien vastausten muuntaminen kommenteiksi ja päinvastoin"
 
 #. module: website_forum
 #: help:forum.post,is_correct:0
 msgid "Correct Answer or Answer on this question accepted."
-msgstr ""
+msgstr "Oikea vastaus tai tähän kysymykseen liittyvä vastaus hyväksytty."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -454,7 +456,7 @@ msgstr "Maa"
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Country..."
-msgstr ""
+msgstr "Maa..."
 
 #. module: website_forum
 #: field:forum.post.vote,create_date:0
@@ -478,29 +480,29 @@ msgstr "Luotu"
 #: model:gamification.badge,name:website_forum.badge_q_4
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
 msgid "Credible Question"
-msgstr ""
+msgstr "Uskottava kysymys"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_5
 #: model:gamification.challenge,name:website_forum.challenge_critic
 #: model:gamification.goal.definition,name:website_forum.definition_critic
 msgid "Critic"
-msgstr ""
+msgstr "Kriitikko"
 
 #. module: website_forum
 #: help:forum.forum,message_last_post:0 help:forum.post,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Viimeisen viestin päivämäärä"
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_all:0
 msgid "Delete all posts"
-msgstr ""
+msgstr "Poista kaikki viestit"
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_own:0
 msgid "Delete its own posts"
-msgstr ""
+msgstr "Omien viestien poistaminen"
 
 #. module: website_forum
 #: field:forum.forum,description:0
@@ -512,59 +514,59 @@ msgstr "Kuvaus"
 #: model:gamification.challenge,name:website_forum.challenge_disciplined
 #: model:gamification.goal.definition,name:website_forum.definition_disciplined
 msgid "Disciplined"
-msgstr ""
+msgstr "Kurinalainen"
 
 #. module: website_forum
 #: field:forum.forum,karma_downvote:0
 msgid "Downvote"
-msgstr ""
+msgstr "Huonommaksi äänestäminen"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Edit Profile"
-msgstr ""
+msgstr "Profiilin muokkaus"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Edit Your Bio"
-msgstr ""
+msgstr "Muokkaa kuvaustasi"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
-msgstr ""
+msgstr "Päivitä vastaustasi"
 
 #. module: website_forum
 #: field:forum.forum,karma_edit_all:0
 msgid "Edit all posts"
-msgstr ""
+msgstr "Kaikkien viestien muokkaaminen"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit answer"
-msgstr ""
+msgstr "Muokkaa vastausta"
 
 #. module: website_forum
 #: field:forum.forum,karma_edit_own:0
 msgid "Edit its own posts"
-msgstr ""
+msgstr "Omien viestien muokkaaminen"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit question"
-msgstr ""
+msgstr "Muokkaa kysymystä"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit your Question"
-msgstr ""
+msgstr "Muokkaa kysymystäsi"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_7
 #: model:gamification.challenge,name:website_forum.challenge_editor
 #: model:gamification.goal.definition,name:website_forum.definition_editor
 msgid "Editor"
-msgstr ""
+msgstr "Muokkaaja"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -576,7 +578,7 @@ msgstr "Sähköposti"
 #: model:gamification.challenge,name:website_forum.challenge_enlightened
 #: model:gamification.goal.definition,name:website_forum.definition_enlightened
 msgid "Enlightened"
-msgstr ""
+msgstr "Valistunut"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -587,43 +589,43 @@ msgstr "Kirjoita kysymyksesi"
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
-msgstr ""
+msgstr "Kuuluisa kysymys"
 
 #. module: website_forum
 #: field:forum.post,favourite_count:0
 msgid "Favorite Count"
-msgstr ""
+msgstr "Suosikkimerkintöjen määrä"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_5
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
-msgstr ""
+msgstr "Suosikkikysymys"
 
 #. module: website_forum
 #: field:forum.post,favourite_ids:0
 msgid "Favourite"
-msgstr ""
+msgstr "Suosikki"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
 msgid "Favourite Question (1)"
-msgstr ""
+msgstr "Suosikkikysymys (1)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
 msgid "Favourite Question (25)"
-msgstr ""
+msgstr "Suosikkikysymys (25)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
 msgid "Favourite Question (5)"
-msgstr ""
+msgstr "Suosikkikysymys (5)"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Favourite Questions"
-msgstr ""
+msgstr "Suosikkikysymykset"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -633,7 +635,7 @@ msgstr "Suodata"
 #. module: website_forum
 #: field:forum.forum,karma_flag:0
 msgid "Flag a post as offensive"
-msgstr ""
+msgstr "Ilmoita loukkaavasta sisällöstä"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -665,24 +667,24 @@ msgstr "Keskustelupalsta"
 #. module: website_forum
 #: field:gamification.badge,level:0
 msgid "Forum Badge Level"
-msgstr ""
+msgstr "Ansiomerkin taso"
 
 #. module: website_forum
 #: view:res.users:website_forum.view_users_form_forum
 msgid "Forum Karma"
-msgstr ""
+msgstr "Keskustelupalstan karma"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_form
 #: model:ir.model,name:website_forum.model_forum_post
 msgid "Forum Post"
-msgstr ""
+msgstr "Keskustelupalstan viesti"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 msgid "Forum Posts"
-msgstr ""
+msgstr "Keskustelupalstan viestit"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_list
@@ -695,46 +697,46 @@ msgstr "Keskustelupalstat"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
 msgid "Gamification badge"
-msgstr ""
+msgstr "Pelillistämisansiomerkki"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr ""
+msgstr "Pelillistämishaaste"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
 #: model:gamification.challenge,name:website_forum.challenge_good_answer
 msgid "Good Answer"
-msgstr ""
+msgstr "Hyvä vastaus"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_good_answer
 msgid "Good Answer (6)"
-msgstr ""
+msgstr "Hyvä vastaus (6)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_9
 #: model:gamification.challenge,name:website_forum.challenge_good_question
 msgid "Good Question"
-msgstr ""
+msgstr "Hyvä kysymys"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_4
 #: model:gamification.challenge,name:website_forum.challenge_great_answer
 msgid "Great Answer"
-msgstr ""
+msgstr "Loistava vastaus"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_great_answer
 msgid "Great Answer (15)"
-msgstr ""
+msgstr "Loistava vastaus (15)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_10
 #: model:gamification.challenge,name:website_forum.challenge_great_question
 msgid "Great Question"
-msgstr ""
+msgstr "Loistava kysymys"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -744,28 +746,28 @@ msgstr "Ryhmittele"
 #. module: website_forum
 #: field:forum.forum,faq:0
 msgid "Guidelines"
-msgstr ""
+msgstr "Ohjesäännöt"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_6
 #: model:gamification.challenge,name:website_forum.challenge_guru
 msgid "Guru"
-msgstr ""
+msgstr "Guru"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_guru
 msgid "Guru (15)"
-msgstr ""
+msgstr "Guru (15)"
 
 #. module: website_forum
 #: field:forum.post,uid_has_answered:0
 msgid "Has Answered"
-msgstr ""
+msgstr "On vastannut"
 
 #. module: website_forum
 #: field:forum.post,has_validated_answer:0
 msgid "Has a Validated Answered"
-msgstr ""
+msgstr "On hyväksynyt vastauksen"
 
 #. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
@@ -796,12 +798,12 @@ msgid ""
 "If you close this question, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed questions to moderate\n"
 "            them."
-msgstr ""
+msgstr "Jos suljet tämän kysymyksen, se piilotetaan suurimmalta osalta käyttäjistä. Vain korkean karman käyttäjät voivat nähdä suljetut kysymykset moderoidakseen niitä."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "If you wanted to comment on the question or answer, just"
-msgstr ""
+msgstr "Jos haluat kommentoida kysymystä tai vastausta,"
 
 #. module: website_forum
 #: field:forum.forum,message_is_follower:0
@@ -812,67 +814,67 @@ msgstr "on seuraaja"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "It appears your email has not been verified."
-msgstr ""
+msgstr "Näyttää siltä, että sähköpostiosoitettasi ei ole vahvistettu."
 
 #. module: website_forum
 #: field:res.users,karma:0 view:website:website_forum.user_detail_full
 msgid "Karma"
-msgstr ""
+msgstr "Karma"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr ""
+msgstr "Ansaittu karma"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 msgid "Karma Requirements"
-msgstr ""
+msgstr "Karmavaatimukset"
 
 #. module: website_forum
 #: field:forum.post,karma_accept:0
 msgid "Karma to accept this answer"
-msgstr ""
+msgstr "Vaadittu karma tämän vastauksen hyväksymiseksi"
 
 #. module: website_forum
 #: field:forum.post,karma_answer:0
 msgid "Karma to answer"
-msgstr ""
+msgstr "Vastaamiseen vaadittu karma"
 
 #. module: website_forum
 #: field:forum.post,karma_ask:0
 msgid "Karma to ask"
-msgstr ""
+msgstr "Kysymiseen vaadittu karma"
 
 #. module: website_forum
 #: field:forum.post,karma_close:0
 msgid "Karma to close"
-msgstr ""
+msgstr "Kysymyksen sulkemiseen vaadittu karma"
 
 #. module: website_forum
 #: field:forum.post,karma_comment:0
 msgid "Karma to comment"
-msgstr ""
+msgstr "Kommentointiin vaadittu karma"
 
 #. module: website_forum
 #: field:forum.post,karma_downvote:0
 msgid "Karma to downvote"
-msgstr ""
+msgstr "Huonommaksi äänestämiseen vaadittu karma"
 
 #. module: website_forum
 #: field:forum.post,karma_edit:0
 msgid "Karma to edit"
-msgstr ""
+msgstr "Muokkaamiseen vaadittava karma"
 
 #. module: website_forum
 #: field:forum.post,karma_unlink:0
 msgid "Karma to unlink"
-msgstr ""
+msgstr "Linkityksen poistamiseen vaadittu karma"
 
 #. module: website_forum
 #: field:forum.post,karma_upvote:0
 msgid "Karma to upvote"
-msgstr ""
+msgstr "Paremmaksi äänestämiseen vaadittu karma"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -882,7 +884,7 @@ msgstr "Pysy ajan tasalla"
 #. module: website_forum
 #: field:forum.forum,message_last_post:0 field:forum.post,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Viimeinen viestipvm"
 
 #. module: website_forum
 #: field:forum.forum,write_uid:0 field:forum.post.reason,write_uid:0
@@ -904,12 +906,12 @@ msgstr "Viimeisin muokkaus"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Last updated:"
-msgstr ""
+msgstr "Viimeksi päivitetty:"
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_link_files:0
 msgid "Linking files (Editor)"
-msgstr ""
+msgstr "Tiedostojen linkittäminen (editori)"
 
 #. module: website_forum
 #: field:forum.forum,message_ids:0 field:forum.post,message_ids:0
@@ -934,7 +936,7 @@ msgstr "Äänestetyimmät"
 #. module: website_forum
 #: field:forum.post,user_favourite:0
 msgid "My Favourite"
-msgstr ""
+msgstr "Suosikkini"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -944,7 +946,7 @@ msgstr "Profiilini"
 #. module: website_forum
 #: field:forum.post,user_vote:0
 msgid "My Vote"
-msgstr ""
+msgstr "Ääneni"
 
 #. module: website_forum
 #: field:forum.forum,name:0 view:forum.post:website_forum.view_forum_post_form
@@ -957,7 +959,7 @@ msgstr "Nimi"
 #: model:mail.message.subtype,name:website_forum.mt_answer_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
 msgid "New Answer"
-msgstr ""
+msgstr "Uusi vastaus"
 
 #. module: website_forum
 #. openerp-web
@@ -972,7 +974,7 @@ msgstr "Uusi keskustelupalsta"
 #: model:mail.message.subtype,name:website_forum.mt_forum_question_new
 #: model:mail.message.subtype,name:website_forum.mt_question_new
 msgid "New Question"
-msgstr ""
+msgstr "Uusi kysymys"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -983,80 +985,80 @@ msgstr "Uusimmat"
 #: model:gamification.badge,name:website_forum.badge_a_2
 #: model:gamification.challenge,name:website_forum.challenge_nice_answer
 msgid "Nice Answer"
-msgstr ""
+msgstr "Kiva vastaus"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_nice_answer
 msgid "Nice Answer (4)"
-msgstr ""
+msgstr "Kiva vastaus (4)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_8
 msgid "Nice Quesiotn"
-msgstr ""
+msgstr "Kiva kysymys"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_nice_question
 msgid "Nice Question"
-msgstr ""
+msgstr "Kiva kysymys"
 
 #. module: website_forum
 #: view:website:website_forum.user_badges
 msgid "No badge yet!"
-msgstr ""
+msgstr "Ei ansiomerkkejä vielä!"
 
 #. module: website_forum
 #: view:website:website_forum.user_votes
 msgid "No vote given by you yet!"
-msgstr ""
+msgstr "Et ole vielä äänestänyt viestejä!"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
 #: model:gamification.challenge,name:website_forum.challenge_notable_question
 msgid "Notable Question"
-msgstr ""
+msgstr "Huomionarvoinen kysymys"
 
 #. module: website_forum
 #: field:forum.tag,posts_count:0
 msgid "Number of Posts"
-msgstr ""
+msgstr "Viestien määrä"
 
 #. module: website_forum
 #: field:forum.post,views:0
 msgid "Number of Views"
-msgstr ""
+msgstr "Katselukertojen määrä"
 
 #. module: website_forum
 #: field:res.users,bronze_badge:0
 msgid "Number of bronze badges"
-msgstr ""
+msgstr "Pronssisten ansiomerkkien määrä"
 
 #. module: website_forum
 #: field:res.users,gold_badge:0
 msgid "Number of gold badges"
-msgstr ""
+msgstr "Kultaisten ansiomerkkien määrä"
 
 #. module: website_forum
 #: field:res.users,silver_badge:0
 msgid "Number of silver badges"
-msgstr ""
+msgstr "Hopeisten ansiomerkkien määrä"
 
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Offensive"
-msgstr ""
+msgstr "Loukkaava"
 
 #. module: website_forum
 #: view:website:website_forum.forum_all
 msgid "Our forums"
-msgstr ""
+msgstr "Keskustelupalstamme"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_23
 #: model:gamification.challenge,name:website_forum.challenge_peer_pressure
 #: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
 msgid "Peer Pressure"
-msgstr ""
+msgstr "Vertaispaine"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1078,63 +1080,63 @@ msgstr "Kirjoita kuvaava kysymys (hyvä kysymys päättyy kysymysmerkkiin)"
 msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
-msgstr ""
+msgstr "Anna toimiva sähköpostiosoite vastaanottaaksesi päivityksiä uusista vastauksista ja kommenteista."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Please remember that you can always"
-msgstr ""
+msgstr "Muista, että voit aina "
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Please try to give a substantial answer."
-msgstr ""
+msgstr "Pyri mahdollisimman konkreettiseen vastaukseen."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
 #: model:gamification.challenge,name:website_forum.challenge_popular_question
 msgid "Popular Question"
-msgstr ""
+msgstr "Suosittu kysymys"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_popular_question
 msgid "Popular Question (150)"
-msgstr ""
+msgstr "Suosittu kysymys (150)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_notable_question
 msgid "Popular Question (250)"
-msgstr ""
+msgstr "Suosittu kysymys (250)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_famous_question
 msgid "Popular Question (500)"
-msgstr ""
+msgstr "Suosittu kysymys (500)"
 
 #. module: website_forum
 #: field:forum.post.vote,post_id:0 view:website:website_forum.post_comment
 msgid "Post"
-msgstr ""
+msgstr "Lähetä"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
-msgstr ""
+msgstr "Kysymyksen sulkemisen syy"
 
 #. module: website_forum
 #: field:forum.post,website_message_ids:0
 msgid "Post Messages"
-msgstr ""
+msgstr "Viestin kommentit"
 
 #. module: website_forum
 #: field:forum.post.reason,name:0
 msgid "Post Reason"
-msgstr ""
+msgstr "Sulkemisen syy"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Post Your Answer"
-msgstr ""
+msgstr "Lähetä vastauksesi"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -1145,24 +1147,24 @@ msgstr "Lähetä kysymyksesi"
 #: field:forum.tag,post_ids:0
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 msgid "Posts"
-msgstr ""
+msgstr "Viestit"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Public profile"
-msgstr ""
+msgstr "Profiili julkinen"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
 #: model:gamification.challenge,name:website_forum.challenge_pundit
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
-msgstr ""
+msgstr "Asiantuntija"
 
 #. module: website_forum
 #: view:website:website.layout
 msgid "Q&A"
-msgstr ""
+msgstr "Kysymys & vastaus"
 
 #. module: website_forum
 #: field:forum.post,parent_id:0
@@ -1175,32 +1177,32 @@ msgstr "Kysymys"
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
 msgid "Question Edited"
-msgstr ""
+msgstr "Kysymystä muokattu"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_downvote:0
 msgid "Question downvoted"
-msgstr ""
+msgstr "Kysymystä äänestetty huonommaksi"
 
 #. module: website_forum
 #: view:website:website_forum.404
 msgid "Question not found!"
-msgstr ""
+msgstr "Kysymystä ei löydy!"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Question tools"
-msgstr ""
+msgstr "Kysymystyökalut"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_upvote:0
 msgid "Question upvoted"
-msgstr ""
+msgstr "Kysymystä äänestetty paremmaksi"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Question:"
-msgstr ""
+msgstr "Kysymys:"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index view:website:website_forum.header
@@ -1212,7 +1214,7 @@ msgstr "Kysymykset"
 #: code:addons/website_forum/models/forum.py:376
 #, python-format
 msgid "Re: %s"
-msgstr ""
+msgstr "Re: %s"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1222,7 +1224,7 @@ msgstr "Lue ohjesäännöt"
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Real name"
-msgstr ""
+msgstr "Oikea nimi"
 
 #. module: website_forum
 #: field:forum.post,closed_reason_id:0
@@ -1237,7 +1239,7 @@ msgstr "Syy:"
 #. module: website_forum
 #: view:website:website_forum.404 view:website:website_forum.private_profile
 msgid "Return to the question list."
-msgstr ""
+msgstr "Palaa kysymyslistaan."
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -1249,7 +1251,7 @@ msgstr "Tallenna"
 #: model:gamification.challenge,name:website_forum.challenge_scholar
 #: model:gamification.goal.definition,name:website_forum.definition_scholar
 msgid "Scholar"
-msgstr ""
+msgstr "Oppinut"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1264,19 +1266,19 @@ msgstr "Etsi kysymyksiä..."
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 msgid "Search in Post"
-msgstr ""
+msgstr "Etsi viesteistä"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Seen:"
-msgstr ""
+msgstr "Nähty:"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_8
 #: model:gamification.challenge,name:website_forum.challenge_self_learner
 #: model:gamification.goal.definition,name:website_forum.definition_self_learner
 msgid "Self-Learner"
-msgstr ""
+msgstr "Itseoppinut"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
@@ -1287,7 +1289,7 @@ msgstr "Lähetä viesti ryhmälle"
 #. module: website_forum
 #: view:website:website_forum.404
 msgid "Sorry, this question is not available anymore."
-msgstr ""
+msgstr "Valitettavasti tämä kysymys ei ole enää saatavilla."
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1297,7 +1299,7 @@ msgstr "Järjestä"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Stats"
-msgstr ""
+msgstr "Tilastot"
 
 #. module: website_forum
 #: field:forum.post,state:0
@@ -1308,13 +1310,13 @@ msgstr "Tila"
 #: model:gamification.badge,name:website_forum.badge_q_6
 #: model:gamification.challenge,name:website_forum.challenge_stellar_question_25
 msgid "Stellar Question"
-msgstr ""
+msgstr "Erinomainen kysymys"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_7
 #: model:gamification.challenge,name:website_forum.challenge_student
 msgid "Student"
-msgstr ""
+msgstr "Oppilas"
 
 #. module: website_forum
 #: field:forum.forum,message_summary:0 field:forum.post,message_summary:0
@@ -1326,7 +1328,7 @@ msgstr "Yhteenveto"
 #: model:gamification.challenge,name:website_forum.challenge_supporter
 #: model:gamification.goal.definition,name:website_forum.definition_supporter
 msgid "Supporter"
-msgstr ""
+msgstr "Tukija"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
@@ -1345,29 +1347,29 @@ msgstr "Tunnisteet"
 #: model:gamification.challenge,name:website_forum.challenge_taxonomist
 #: model:gamification.goal.definition,name:website_forum.definition_taxonomist
 msgid "Taxonomist"
-msgstr ""
+msgstr "Taksonomisti"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_1
 #: model:gamification.challenge,name:website_forum.challenge_teacher
 #: model:gamification.goal.definition,name:website_forum.definition_teacher
 msgid "Teacher"
-msgstr ""
+msgstr "Opettaja"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "The question has been closed"
-msgstr ""
+msgstr "Kysymys on suljettu"
 
 #. module: website_forum
 #: help:forum.post.vote,recipient_id:0
 msgid "The user receiving the vote"
-msgstr ""
+msgstr "Äänen saanut jäsen"
 
 #. module: website_forum
 #: view:website:website_forum.private_profile
 msgid "This profile is private!"
-msgstr ""
+msgstr "Tämä profiili on yksityinen!"
 
 #. module: website_forum
 #: field:forum.post,name:0
@@ -1382,7 +1384,7 @@ msgstr "päättyen"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Kytke navigaatio päälle/pois"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1392,12 +1394,12 @@ msgstr "Vastaamattomat"
 #. module: website_forum
 #: field:forum.forum,karma_comment_unlink_all:0
 msgid "Unlink all comments"
-msgstr ""
+msgstr "Poista kaikkien kommenttien linkitykset"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_unlink_own:0
 msgid "Unlink its own comments"
-msgstr ""
+msgstr "Omien kommenttien linkitysten poistaminen"
 
 #. module: website_forum
 #: field:forum.forum,message_unread:0 field:forum.post,message_unread:0
@@ -1412,37 +1414,37 @@ msgstr "Päivitä"
 #. module: website_forum
 #: field:forum.post,write_date:0
 msgid "Update on"
-msgstr ""
+msgstr "Päivitetty"
 
 #. module: website_forum
 #: field:forum.post,write_uid:0
 msgid "Updated by"
-msgstr ""
+msgstr "Päivittänyt"
 
 #. module: website_forum
 #: field:forum.forum,karma_upvote:0
 msgid "Upvote"
-msgstr ""
+msgstr "Paremmaksi äänestäminen"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_student
 msgid "Upvoted question (1)"
-msgstr ""
+msgstr "Äänesti kysymystä paremmaksi (1)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_great_question
 msgid "Upvoted question (15)"
-msgstr ""
+msgstr "Äänesti kysymystä paremmaksi (15)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_nice_question
 msgid "Upvoted question (4)"
-msgstr ""
+msgstr "Äänesti kysymystä paremmaksi (4)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_good_question
 msgid "Upvoted question (6)"
-msgstr ""
+msgstr "Äänesti kysymystä paremmaksi (6)"
 
 #. module: website_forum
 #: field:forum.post.vote,user_id:0
@@ -1457,81 +1459,81 @@ msgstr "Käyttäjät"
 #. module: website_forum
 #: field:forum.post,is_correct:0
 msgid "Valid Answer"
-msgstr ""
+msgstr "Oikea vastaus"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "View Your Badges"
-msgstr ""
+msgstr "Tarkastele ansiomerkkejäsi"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Views"
-msgstr "Näkymät"
+msgstr "katselukertaa"
 
 #. module: website_forum
 #: field:forum.post.vote,vote:0
 #: model:ir.model,name:website_forum.model_forum_post_vote
 msgid "Vote"
-msgstr ""
+msgstr "Äänestä"
 
 #. module: website_forum
 #: field:forum.post,vote_count:0 field:forum.post,vote_ids:0
 #: view:website:website_forum.user_detail_full
 msgid "Votes"
-msgstr ""
+msgstr "Ääniä"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Website"
-msgstr "Web-sivusto"
+msgstr "Verkkosivusto"
 
 #. module: website_forum
 #: field:forum.forum,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Verkkosivu ilmoitukset"
 
 #. module: website_forum
 #: help:forum.forum,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Verkkosivun viestihistoria"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_description:0
 #: field:forum.post,website_meta_description:0
 #: field:forum.tag,website_meta_description:0
 msgid "Website meta description"
-msgstr ""
+msgstr "Verkkosivuston metakuvaus"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_keywords:0
 #: field:forum.post,website_meta_keywords:0
 #: field:forum.tag,website_meta_keywords:0
 msgid "Website meta keywords"
-msgstr ""
+msgstr "Verkkosivuston meta avainsanat"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_title:0
 #: field:forum.post,website_meta_title:0 field:forum.tag,website_meta_title:0
 msgid "Website meta title"
-msgstr ""
+msgstr "Verkkosivuston metaotsikko"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Your answer"
-msgstr ""
+msgstr "Vastauksesi kysymykseen"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "[Closed]"
-msgstr ""
+msgstr "[Suljettu]"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "[Deleted]"
-msgstr ""
+msgstr "[Poistettu]"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
@@ -1541,22 +1543,22 @@ msgstr "ja"
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "answers"
-msgstr ""
+msgstr "vastausta"
 
 #. module: website_forum
 #: view:website:website_forum.badge view:website:website_forum.user_badges
 msgid "awarded users"
-msgstr ""
+msgstr "palkittua käyttäjää"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "back to question"
-msgstr ""
+msgstr "takaisin kysymykseen"
 
 #. module: website_forum
 #: view:website:website_forum.users
 msgid "badges:"
-msgstr ""
+msgstr "ansiomerkkejä:"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -1567,18 +1569,18 @@ msgstr "kirjoita selkeästi ja ytimekkäästi. Vältä turhia tervehdyksiä (Hei
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "bio"
-msgstr ""
+msgstr "bio"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "bronze"
-msgstr ""
+msgstr "pronssi"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "by"
-msgstr ""
+msgstr "kirjoittanut"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1603,84 +1605,84 @@ msgstr "äänestetyimpien mukaisesti"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_7
 msgid "contains offensive or malicious remarks"
-msgstr ""
+msgstr "sisältää loukkaavia tai haitallisia huomautuksia"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "contributions"
-msgstr ""
+msgstr "kontribuutiot"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "don't forget to vote"
-msgstr ""
+msgstr "unohda äänestää"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
 msgid "duplicate question"
-msgstr ""
+msgstr "duplikaatti kysymys"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "follower(s)"
-msgstr ""
+msgstr "seuraaja(a)"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "for reason:"
-msgstr ""
+msgstr "seuraavasta syystä:"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "gold"
-msgstr ""
+msgstr "kulta"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "karma"
-msgstr ""
+msgstr "karma"
 
 #. module: website_forum
 #: field:forum.post,karma_comment_convert:0
 msgid "karma to convert as a comment"
-msgstr ""
+msgstr "Kommentiksi muuntamiseksi vaadittava karma"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "last connection"
-msgstr ""
+msgstr "viimeksi paikalla"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "location"
-msgstr ""
+msgstr "sijainti"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "member since"
-msgstr ""
+msgstr "liittynyt jäseneksi"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
 msgid "not a real question"
-msgstr ""
+msgstr "ei oikea kysymys"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
 msgid "not relevant or out dated"
-msgstr ""
+msgstr "ei relevantti tai vanhentunut"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_2
 msgid "off-topic or not relevant"
-msgstr ""
+msgstr "ei liity aiheeseen tai ei relevantti"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_comment
 #: view:website:website_forum.post_description_full
 msgid "on"
-msgstr "käytössä"
+msgstr "päiväyksellä"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -1695,7 +1697,7 @@ msgstr "pyri muotoilemaan kysymyksesi siten, että se herättää kiinnostusta"
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "profile"
-msgstr ""
+msgstr "profiili"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -1705,47 +1707,47 @@ msgstr "anna riittävät pohjatiedot, ja jos mahdollista, anna esimerkki"
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "received this badge:"
-msgstr ""
+msgstr "on ansainnut tämän ansiomerkin:"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "revise your answers"
-msgstr ""
+msgstr "päivittää vastaustasi"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "silver"
-msgstr ""
+msgstr "hopea"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
 msgid "spam or advertising"
-msgstr ""
+msgstr "roskapost tai mainos"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "stats"
-msgstr ""
+msgstr "tilastot"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "time"
-msgstr ""
+msgstr "kerran"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "times"
-msgstr ""
+msgstr "kertaa"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
 msgid "too localized"
-msgstr ""
+msgstr "liian rajattu"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_3
 msgid "too subjective and argumentative"
-msgstr ""
+msgstr "liian subjektiivinen tai kiistanalainen"
 
 #. module: website_forum
 #: field:forum.post,self_reply:0
@@ -1755,40 +1757,40 @@ msgstr "tuntematon"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "use the commenting tool."
-msgstr ""
+msgstr "käytä kommentointityökalua painamalla kysymyksen tai vastauksen alapuolella olevaa \"Kommentti\"-painiketta."
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "user"
-msgstr ""
+msgstr "jäsen"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "users"
-msgstr ""
+msgstr "jäsentä"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "views"
-msgstr ""
+msgstr "katselukertaa"
 
 #. module: website_forum
 #: view:website:website_forum.display_post view:website:website_forum.vote
 msgid "vote"
-msgstr ""
+msgstr "ääni"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.user_detail_full view:website:website_forum.vote
 msgid "votes"
-msgstr ""
+msgstr "ääntä"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "website"
-msgstr ""
+msgstr "verkkosivusto"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "with"
-msgstr ""
+msgstr "saavuttaen"

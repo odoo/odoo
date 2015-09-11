@@ -1247,7 +1247,8 @@ class BaseModel(object):
         for fun, msg, names in self._constraints:
             try:
                 # validation must be context-independent; call ``fun`` without context
-                valid = not (set(names) & field_names) or fun(self._model, cr, uid, ids)
+                valid = names and not (set(names) & field_names)
+                valid = valid or fun(self._model, cr, uid, ids)
                 extra_error = None
             except Exception, e:
                 _logger.debug('Exception while validating constraint', exc_info=True)
@@ -4007,18 +4008,22 @@ class BaseModel(object):
 
         done = {}
         recs.env.recompute_old.extend(result)
-        for order, model_name, ids_to_update, fields_to_recompute in sorted(recs.env.recompute_old):
-            key = (model_name, tuple(fields_to_recompute))
-            done.setdefault(key, {})
-            # avoid to do several times the same computation
-            todo = []
-            for id in ids_to_update:
-                if id not in done[key]:
-                    done[key][id] = True
-                    if id not in deleted_related[model_name]:
-                        todo.append(id)
-            self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
-        recs.env.clear_recompute_old()
+        while recs.env.recompute_old:
+            sorted_recompute_old = sorted(recs.env.recompute_old)
+            recs.env.clear_recompute_old()
+            for __, model_name, ids_to_update, fields_to_recompute in \
+                    sorted_recompute_old:
+                key = (model_name, tuple(fields_to_recompute))
+                done.setdefault(key, {})
+                # avoid to do several times the same computation
+                todo = []
+                for id in ids_to_update:
+                    if id not in done[key]:
+                        done[key][id] = True
+                        if id not in deleted_related[model_name]:
+                            todo.append(id)
+                self.pool[model_name]._store_set_values(
+                    cr, user, todo, fields_to_recompute, context)
 
         # recompute new-style fields
         if recs.env.recompute and context.get('recompute', True):
@@ -4275,11 +4280,15 @@ class BaseModel(object):
 
         if recs.env.recompute and context.get('recompute', True):
             done = []
-            for order, model_name, ids, fields2 in sorted(recs.env.recompute_old):
-                if not (model_name, ids, fields2) in done:
-                    self.pool[model_name]._store_set_values(cr, user, ids, fields2, context)
-                    done.append((model_name, ids, fields2))
-            recs.env.clear_recompute_old()
+            while recs.env.recompute_old:
+                sorted_recompute_old = sorted(recs.env.recompute_old)
+                recs.env.clear_recompute_old()
+                for __, model_name, ids, fields2 in sorted_recompute_old:
+                    if not (model_name, ids, fields2) in done:
+                        self.pool[model_name]._store_set_values(
+                            cr, user, ids, fields2, context)
+                        done.append((model_name, ids, fields2))
+
             # recompute new-style fields
             recs.recompute()
 
@@ -4710,8 +4719,10 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_data_seen', {})
-        if id in seen_map.setdefault(self._name, []):
+        if '__copy_data_seen' not in context:
+            context = dict(context, __copy_data_seen=defaultdict(list))
+        seen_map = context['__copy_data_seen']
+        if id in seen_map[self._name]:
             return
         seen_map[self._name].append(id)
 
@@ -4781,8 +4792,10 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_translations_seen',{})
-        if old_id in seen_map.setdefault(self._name,[]):
+        if '__copy_translations_seen' not in context:
+            context = dict(context, __copy_translations_seen=defaultdict(list))
+        seen_map = context['__copy_translations_seen']
+        if old_id in seen_map[self._name]:
             return
         seen_map[self._name].append(old_id)
 
@@ -5351,7 +5364,11 @@ class BaseModel(object):
         """
         if self:
             vals = [func(rec) for rec in self]
-            return reduce(operator.or_, vals) if isinstance(vals[0], BaseModel) else vals
+            if isinstance(vals[0], BaseModel):
+                # return the union of all recordsets in O(n)
+                ids = set(itertools.chain(*[rec._ids for rec in vals]))
+                return vals[0].browse(ids)
+            return vals
         else:
             vals = func(self)
             return vals if isinstance(vals, BaseModel) else []

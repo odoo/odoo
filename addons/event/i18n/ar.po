@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-20 19:00+0000\n"
+"PO-Revision-Date: 2015-09-08 12:12+0000\n"
 "Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgid ""
 "        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n        <p>مرحباً ${object.name},</p>\n        <p>الحدث ${object.event_id.name} والذي سجلت فيه تم تأكيده وسيتم عقده في الفترة من ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} إلى ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n        لمزيد من المعلومات، الرجاء الاتصال بالإدارة المختصة.</p>\n        <p>شكراً لمشاركتك السباقة!</p>\n        <p>مع أطيب أمنياتنا</p>"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration
@@ -40,7 +40,7 @@ msgid ""
 "        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n        <p>مرحباً ${object.name},</p>\n        <p>نحيط سيادتكم علماً بأن تسجيلك في الحدث event ${object.event_id.name} قد تم تأكيده.\n        ستتلقى رسالة آلية بمزيد من المعلومات (مثل أجندة الحدث، جدوله، وغيرها) ما أن يتم تأكيد الحدث.</p>\n        <p>شكراً لمشاركتك السباقة!</p>\n        <p>مع أطيب أمنياتنا</p>"
 
 #. module: event
 #: field:report.event.registration,confirm_state:0
@@ -588,7 +588,7 @@ msgid ""
 "                Picture of the exhibition hall\n"
 "            </div>\n"
 "        "
-msgstr ""
+msgstr "<div>\n                <h2>قاعة المعرض</h2>\n            </div>\n            <div>\n                صورة قاعة المعرض\n            </div>\n        "
 
 #. module: event
 #: model:event.event,badge_innerleft:event.event_1
@@ -694,7 +694,7 @@ msgid ""
 "               sell tickets, etc.\n"
 "             </p>\n"
 "           "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء حدث جديد.\n</p><p>\nيساعدك أودو على جدولة وإدارة أحداثك بفاعلية كبيرة،\nبداية من تتبع التسجيلات والمشاركين، إجراء مراسلات التأكيد\nوالحجز آلياً، بيع التذاكر وغيرها.\n</p>"
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -752,7 +752,7 @@ msgstr "اختر  هذا المربع إذا كان هذا الاتصال هو �
 #: code:addons/event/event.py:219
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "لا يمكن أن يكون تاريخ الانتهاء سابقاً لتاريخ البداية."
 
 #. module: event
 #: field:event.event,company_id:0 field:event.registration,company_id:0
@@ -764,7 +764,7 @@ msgstr "شركة"
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on Business Applications"
-msgstr ""
+msgstr "مؤتمر حول تطبيقات الأعمال"
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -827,7 +827,7 @@ msgstr "إنشاؤه في"
 #. module: event
 #: view:event.event:event.view_event_form
 msgid "Current Registrations"
-msgstr ""
+msgstr "التسجيلات الحالية"
 
 #. module: event
 #: help:event.event,message_last_post:0
@@ -843,12 +843,12 @@ msgstr "الحد الأقصى الافتراضي التسجيل"
 #. module: event
 #: field:event.type,default_registration_min:0
 msgid "Default Minimum Registration"
-msgstr ""
+msgstr "الحد الادني الافتراضي التسجيل"
 
 #. module: event
 #: field:event.type,default_reply_to:0
 msgid "Default Reply-To"
-msgstr ""
+msgstr "عنوان الرد إلى الافتراضي"
 
 #. module: event
 #: view:event.event:event.view_event_form field:event.event,description:0
@@ -921,7 +921,7 @@ msgstr "تاريخ الحدث"
 #. module: event
 #: view:event.event:event.view_event_form
 msgid "Event Description..."
-msgstr ""
+msgstr "وصف الحدث..."
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -931,12 +931,12 @@ msgstr "تفاصيل التنفيذ"
 #. module: event
 #: view:report.event.registration:event.view_report_event_registration_search
 msgid "Event Month"
-msgstr ""
+msgstr "شهر الحدث "
 
 #. module: event
 #: field:event.event,name:0
 msgid "Event Name"
-msgstr ""
+msgstr "اسم الحدث"
 
 #. module: event
 #: view:event.event:event.view_event_calendar
@@ -955,7 +955,7 @@ msgstr "تسجيل التنفيذ"
 #: code:addons/event/event.py:348
 #, python-format
 msgid "Event Registration confirmed."
-msgstr ""
+msgstr "تم تأكيد التسجيل في الحدث."
 
 #. module: event
 #: field:report.event.registration,user_id:0
@@ -1016,7 +1016,7 @@ msgstr "الأحداث التي هي في حالة جديدة"
 #. module: event
 #: view:report.event.registration:event.view_report_event_registration_search
 msgid "Events which are in confirm state"
-msgstr ""
+msgstr "الأحداث المؤكدة"
 
 #. module: event
 #: view:report.event.registration:event.view_report_event_registration_search
@@ -1037,7 +1037,7 @@ msgstr "المتابعين"
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Functional Webinar"
-msgstr ""
+msgstr "ورشة عمل وظيفية عبر الإنترنت"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1078,14 +1078,14 @@ msgid ""
 "particular dates the status is set to 'Confirmed'. If the event is over, the"
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr ""
+msgstr "عند إنشاء الحدث فإن حالته الافتراضية 'مسودة'. عند تأكيد الحدث في التواريخ المحددة فإن حالته تتغير إلى 'مؤكد'. عندما ينتهي الحدث فإن حالته تتغير إلى 'منتهي'. إذا تم إلغاء الحجز تصبح حالته 'ملغي'."
 
 #. module: event
 #: help:event.event,email_confirmation_id:0
 msgid ""
 "If you set an email template, each participant will receive this email "
 "announcing the confirmation of the event."
-msgstr ""
+msgstr "إذا حددت قالب بريد إلكتروني، فسيتلقى كل مشارك هذا البريد معلناً تأكيد الحدث."
 
 #. module: event
 #: field:event.event,message_is_follower:0
@@ -1098,7 +1098,7 @@ msgstr "متابع"
 msgid ""
 "It will select this default confirmation event mail value when you choose "
 "this event"
-msgstr ""
+msgstr "سيقوم باختيار قالب بريد تأكيد الحدث الافتراضي عند اختيارك لهذا الحدث."
 
 #. module: event
 #: help:event.type,default_email_registration:0
@@ -1115,7 +1115,7 @@ msgstr "سيتم اختيار القيمة القصوى الافتراضية ع�
 #. module: event
 #: help:event.type,default_registration_min:0
 msgid "It will select this default minimum value when you choose this event"
-msgstr ""
+msgstr "سيقوم باختيار القيمة الدنيا الافتراضية عند اختيارك لهذا الحدث"
 
 #. module: event
 #: field:event.event,message_last_post:0
@@ -1153,12 +1153,12 @@ msgstr "المدير"
 #. module: event
 #: field:report.event.registration,seats_max:0
 msgid "Max Seats"
-msgstr ""
+msgstr "أقصى عدد مقاعد"
 
 #. module: event
 #: field:event.event,seats_max:0
 msgid "Maximum Available Seats"
-msgstr ""
+msgstr "أقصى عدد من المقاعد المتوفرة"
 
 #. module: event
 #: field:event.event,message_ids:0 field:event.registration,message_ids:0
@@ -1173,7 +1173,7 @@ msgstr "الرسائل و سجل التواصل"
 #. module: event
 #: field:event.event,seats_min:0
 msgid "Minimum Reserved Seats"
-msgstr ""
+msgstr "أدنى عدد من المقاعدة المحجوزة"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1339,7 +1339,7 @@ msgstr "حالة التسجيل"
 #. module: event
 #: view:report.event.registration:event.view_report_event_registration_search
 msgid "Registration contact"
-msgstr ""
+msgstr "جهة اتصال التسجيل"
 
 #. module: event
 #: view:event.event:event.view_event_form field:event.event,registration_ids:0
@@ -1456,7 +1456,7 @@ msgid ""
 " to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr ""
+msgstr "عنوان بريد المنظم الإلكتروني غالباً هو ما ستضعه هنا، مع ملاحظة أنه سيتم إضافته في كافة المراسلات بصفته عنوان 'الرد إلى' عند تأكيد الحدث والتسجيل فيه. يمكنك أيضاً أن تضع عنوان بريد مؤسستك الذي يتلقى النظام عليه كافة المراسلات."
 
 #. module: event
 #: help:event.type,default_reply_to:0
@@ -1464,7 +1464,7 @@ msgid ""
 "The email address of the organizer which is put in the 'Reply-To' of all "
 "emails sent automatically at event or registrations confirmation. You can "
 "also put your email address of your mail gateway if you use one."
-msgstr ""
+msgstr "عنوان بريد المنظم الإلكتروني غالباً هو ما ستضعه هنا، مع ملاحظة أنه سيتم إضافته في كافة المراسلات بصفته عنوان 'الرد إلى' عند تأكيد الحدث والتسجيل فيه. يمكنك أيضاً أن تضع عنوان بريد مؤسستك الذي يتلقى النظام عليه كافة المراسلات."
 
 #. module: event
 #: help:event.event,seats_max:0
@@ -1472,14 +1472,14 @@ msgid ""
 "The maximum registration level is equal to the sum of the maximum "
 "registration of event ticket. If you have too much registrations you are not"
 " able to confirm your event. (0 to ignore this rule )"
-msgstr ""
+msgstr "أقصى مستوى لعدد التسجيلات يساوي مجموع عمليات التسجيل والاشتراك على تذاكر الحدث. إذا كان لديك تسجيلات واشتراكات تفوق هذا العدد فلن يمكنك تأكيد الحدث. (اكتب 0 لتجاهل هذه القاعدة)"
 
 #. module: event
 #: help:event.event,email_registration_id:0
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
 " each time a registration for this event is confirmed."
-msgstr ""
+msgstr "هذا الحقل يحتوي قالب البريد الإلكتروني الذي سيتم إرساله آلياً عند تأكيد هذا الحدث."
 
 #. module: event
 #: field:event.event,date_tz:0
@@ -1557,7 +1557,7 @@ msgstr "يمكنك تحديد الحد الأدنى للتسجيل. إذا لم 
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr ""
+msgstr "لديك اشتراك أو تسجيل تم تحديد حالته على أنه 'حضر'. يرجى إعادة حالته إلى 'مسودة' لتتمكن من إلغاء هذا الحدث."
 
 #. module: event
 #: code:addons/event/event.py:364
@@ -1569,7 +1569,7 @@ msgstr "عليك الانتظار ليوم بدء الحدث للقيام بهذ
 #: model:email.template,subject:event.confirmation_event
 #: model:email.template,subject:event.confirmation_registration
 msgid "Your registration at ${object.event_id.name}"
-msgstr ""
+msgstr "تسجيلك في ${object.event_id.name}"
 
 #. module: event
 #: view:event.event:event.view_event_kanban

@@ -425,9 +425,11 @@
         saveElement: function ($el) {
             // escape text nodes for xml saving
             var escaped_el = $el.clone();
-            escaped_el.find('*').addBack().not('script,style').contents().each(function(){
+            var to_escape = escaped_el.find('*').addBack();
+            to_escape = to_escape.not(to_escape.filter('script,style,[data-oe-model][data-oe-model!="ir.ui.view"]').find('*').addBack());
+            to_escape.contents().each(function(){
                 if(this.nodeType == 3) {
-                    this.nodeValue = _.escape(this.nodeValue);
+                    this.nodeValue = $('<div />').text(this.nodeValue).html();
                 }
             });
             var markup = escaped_el.prop('outerHTML');

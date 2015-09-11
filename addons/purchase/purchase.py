@@ -343,7 +343,7 @@ class purchase_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'purchase.order') or '/'
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'purchase.order', context=context) or '/'
         context = dict(context or {}, mail_create_nolog=True)
         order =  super(purchase_order, self).create(cr, uid, vals, context=context)
         self.message_post(cr, uid, [order], body=_("RFQ created"), context=context)
@@ -1466,7 +1466,7 @@ class procurement_order(osv.osv):
         if qty != po_line.product_qty:
             pricelist_obj = self.pool.get('product.pricelist')
             pricelist_id = po_line.order_id.partner_id.property_product_pricelist_purchase.id
-            price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, po_line.order_id.partner_id.id, {'uom': procurement.product_uom.id})[pricelist_id]
+            price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, po_line.order_id.partner_id.id, {'uom': procurement.product_id.uom_po_id.id})[pricelist_id]
 
         return qty, price
 
@@ -1522,7 +1522,7 @@ class procurement_order(osv.osv):
                         po_line_id = po_line_obj.create(cr, SUPERUSER_ID, line_vals, context=context)
                         linked_po_ids.append(procurement.id)
                 else:
-                    name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
+                    name = seq_obj.get(cr, uid, 'purchase.order', context=context) or _('PO: %s') % procurement.name
                     po_vals = {
                         'name': name,
                         'origin': procurement.origin,

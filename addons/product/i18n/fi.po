@@ -3,6 +3,7 @@
 # * product
 # 
 # Translators:
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
 msgid ""
@@ -10,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-11 07:11+0000\n"
+"PO-Revision-Date: 2015-09-06 08:48+0000\n"
 "Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -100,7 +101,7 @@ msgid ""
 ": adding or deleting attributes\n"
 "                            will delete and recreate existing variants and lead\n"
 "                            to the loss of their possible customizations."
-msgstr ""
+msgstr ": attribuuttien lisääminen tai poistaminen \ntuhoaa ja luo uudelleen tuotteen variaatiot\njolloin niihin tehdyt muutokset häviävät"
 
 #. module: product
 #: model:product.template,website_description:product.product_product_9_product_template
@@ -743,7 +744,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr ""
+msgstr "Asiakkaille tarkoitettu tuotteen kuvaus. Lisätään Myyntitilauksiin, Toimitustilauksiin ja asiakkaan laskuihin/palautuksiin."
 
 #. module: product
 #: help:product.template,description_purchase:0
@@ -751,14 +752,14 @@ msgid ""
 "A description of the Product that you want to communicate to your suppliers."
 " This description will be copied to every Purchase Order, Receipt and "
 "Supplier Invoice/Refund."
-msgstr ""
+msgstr "Toimittajille tarkoitettu tuotteen kuvaus. Lisätään Ostotilauksiin, Kuitteihin ja toimittajan laskuun tai palautukseen."
 
 #. module: product
 #: help:product.template,description:0
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr ""
+msgstr "Vain sisäiseen käyttöön tarkoitettu yksityiskohtainen kuvaus tuotteesta."
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -1054,7 +1055,7 @@ msgstr "Tietokoneet"
 #. module: product
 #: view:product.template:product.product_template_form_view
 msgid "Configurations"
-msgstr ""
+msgstr "Määritykset"
 
 #. module: product
 #: view:product.template:product.product_template_search_view
@@ -1072,7 +1073,7 @@ msgstr "Kulutustuotteet"
 msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
-msgstr ""
+msgstr "Kulutustavara: tämän tuotteen varastosaldoa ei hallinoida.\nVarastoitava tuote: tämän tuotteen varastosaldoa hallinnoidaan."
 
 #. module: product
 #: help:product.uom,category_id:0
@@ -1101,7 +1102,7 @@ msgid ""
 "Cost price of the product template used for standard stock valuation in "
 "accounting and used as a base price on purchase orders. Expressed in the "
 "default unit of measure of the product."
-msgstr ""
+msgstr "Omakustannushinta jonka perusteella lasketaan tuotteen varastoarvo ja joka on oletuksena tuotteen ostohinta. Hinta per tuotteen oletusmittayksikkö."
 
 #. module: product
 #: field:pricelist.partnerinfo,create_uid:0
@@ -1175,7 +1176,7 @@ msgstr "Muistikortti"
 #: help:product.product,message_last_post:0
 #: help:product.template,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Viimeisen viestin päivämäärä"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_day
@@ -1228,7 +1229,7 @@ msgstr "Kuvaus toimittajalle"
 #. module: product
 #: help:product.attribute.value,sequence:0
 msgid "Determine the display order"
-msgstr ""
+msgstr "Aseta näyttöjärjestys"
 
 #. module: product
 #: model:product.public.category,name:product.devices
@@ -1279,7 +1280,7 @@ msgstr "Virhe!"
 #. module: product
 #: constraint:product.pricelist.item:0
 msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "Virhe! Minimimarginaalin tulee olla maksimimarginaalia pienempi."
 
 #. module: product
 #: constraint:product.pricelist.item:0
@@ -1616,7 +1617,7 @@ msgstr "Sisäinen"
 #. module: product
 #: field:product.template,categ_id:0
 msgid "Internal Category"
-msgstr ""
+msgstr "Sisäinen kategoria"
 
 #. module: product
 #: field:product.product,code:0 field:product.product,default_code:0
@@ -1654,7 +1655,7 @@ msgstr "on seuraaja"
 #: field:product.product,is_product_variant:0
 #: field:product.template,is_product_variant:0
 msgid "Is product variant"
-msgstr ""
+msgstr "On tuotteen muunnelma"
 
 #. module: product
 #: view:product.pricelist.version:product.product_pricelist_version_form_view
@@ -1695,7 +1696,7 @@ msgstr ""
 #: field:product.product,message_last_post:0
 #: field:product.template,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Viimeinen viestipvm"
 
 #. module: product
 #: field:pricelist.partnerinfo,write_uid:0 field:product.attribute,write_uid:0
@@ -1765,7 +1766,7 @@ msgstr "Pituus / Etäisyys"
 #. module: product
 #: view:product.template:product.product_template_only_form_view
 msgid "List of Variants"
-msgstr ""
+msgstr "Tuotevariaatiot"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -1775,7 +1776,7 @@ msgstr "litra(a)"
 #. module: product
 #: model:ir.model,name:product.model_product_ul
 msgid "Logistic Unit"
-msgstr ""
+msgstr "Kuljetusyksikkö"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_ul_form_action
@@ -1783,7 +1784,7 @@ msgstr ""
 #: view:product.ul:product.product_ul_form_view
 #: view:product.ul:product.product_ul_tree
 msgid "Logistic Units"
-msgstr ""
+msgstr "Kuljetusyksiköt"
 
 #. module: product
 #: field:product.template,packaging_ids:0
@@ -1955,7 +1956,7 @@ msgid ""
 "as of old Unit of Measure '%s'. If you need to change the unit of measure, "
 "you may deactivate this product from the 'Procurements' tab and create a new"
 " one."
-msgstr ""
+msgstr "Uuden mittayksikön '%s' on kuuluttava samaan luokkaan '%s' kuin vanha mittayksikkö '%s'. Jos sinun on vaihdettava tuotteen mittayksikköä, voit myös merkitä tuotteen ei-aktiiviseksi 'Hankinnat'-välilehdeltä ja luoda uuden tuotteen."
 
 #. module: product
 #: selection:product.category,type:0 selection:product.template,state:0
@@ -2035,7 +2036,7 @@ msgstr "Paketti"
 #. module: product
 #: field:product.packaging,ul:0
 msgid "Package Logistic Unit"
-msgstr ""
+msgstr "Paketin kuljetusyksikkö"
 
 #. module: product
 #: field:product.packaging,ul_qty:0
@@ -2060,7 +2061,7 @@ msgstr "Lava"
 #. module: product
 #: field:product.packaging,ul_container:0
 msgid "Pallet Logistic Unit"
-msgstr ""
+msgstr "Lavan kuljetusyksikkö"
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
@@ -2116,14 +2117,14 @@ msgstr "Hinnanalennus"
 #. module: product
 #: field:product.attribute.price,price_extra:0
 msgid "Price Extra"
-msgstr ""
+msgstr "Hintalisä"
 
 #. module: product
 #: help:product.attribute.value,price_extra:0
 msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr ""
+msgstr "Hintalisä: Ylimääräinen myyntihinta niille muunnelmille joilla on tämä ominaisuus, esim. hintalisä 200, perushinta 1000, myyntihinta = 1200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -2246,7 +2247,7 @@ msgstr "Tulosta"
 #. module: product
 #: view:website:product.report_pricelist
 msgid "Print date"
-msgstr ""
+msgstr "Tulostuspäivämäärä"
 
 #. module: product
 #: model:product.public.category,name:product.printer
@@ -2293,13 +2294,13 @@ msgstr "Tuote"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute
 msgid "Product Attribute"
-msgstr ""
+msgstr "Tuotteen ominaisuus"
 
 #. module: product
 #: field:product.attribute.line,value_ids:0
 #: field:product.attribute.price,value_id:0
 msgid "Product Attribute Value"
-msgstr ""
+msgstr "Tuotteen ominaisuuden arvo"
 
 #. module: product
 #: field:product.template,attribute_line_ids:0
@@ -2319,7 +2320,7 @@ msgstr "Tuoteryhmät"
 #. module: product
 #: model:ir.ui.menu,name:product.prod_config_main
 msgid "Product Categories & Attributes"
-msgstr ""
+msgstr "Tuotekategoriat ja ominaisuudet"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -2653,7 +2654,7 @@ msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "Pienikokoinen kuva tuotteesta. Liian suuret kuvat skaalataan automaattisesti 64x64px kokoisiksi kuvasuhde säilyttäen. Käytä tätä kenttää aina kun tarvitaan pientä kuvaa."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -2676,7 +2677,7 @@ msgstr ""
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr ""
+msgstr "Määrittele tuotekategoria jos tämä sääntö koskee ainoastaan kyseisen kategorian tuotteita. Jätä muutoin tyhjäksi."
 
 #. module: product
 #: help:product.pricelist.item,product_id:0
@@ -2697,7 +2698,7 @@ msgstr "Määrittele malli jos tätä sääntöä sovelletaan tasan yhteen malli
 msgid ""
 "Specify a unit of measure here if invoicing is made in another unit of "
 "measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
+msgstr "Määrittele tähän mittayksikkö jos laskutuksen mittayksikkö on eri kuin varaston. Jätä tyhjäksi käyttääksesi oletusmittayksikköä."
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -2709,7 +2710,7 @@ msgstr "Määrittele voiko tuotteen valita myyntitilausrivillä."
 msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
-msgstr ""
+msgstr "Määrittele vakiosumma joka tulee lisätä tai vähentää (jos negatiivinen) alennuksen jälkeiseen hintaan."
 
 #. module: product
 #: help:product.pricelist.item,price_max_margin:0
@@ -2830,14 +2831,14 @@ msgstr "Kuljetusyksikön koodi"
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr ""
+msgstr "Laskettu hinta ilmoitetaan oletusmittayksikössä."
 
 #. module: product
 #: help:product.uom,rounding:0
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
-msgstr ""
+msgstr "Laskettu määrä on moninkerta tästä arvosta. Käytä arvoa 1.0 sellaiselle mittayksikölle jota ei voi jakaa, kuten kappale."
 
 #. module: product
 #: sql_constraint:product.uom:0
@@ -2870,7 +2871,7 @@ msgid ""
 "The minimal quantity to purchase to this supplier, expressed in the supplier"
 " Product Unit of Measure if not empty, in the default unit of measure of the"
 " product otherwise."
-msgstr ""
+msgstr "Pienin määrä joka ostetaan tältä toimittajalta. Mittayksikkönä toimittajan tuotteelle määrittämä mittayksikkö jos annettu, muutoin tuotteen oletusmittayksikkö."
 
 #. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
@@ -2951,7 +2952,7 @@ msgstr "Tämä tulee tuotelomakkeelta"
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr ""
+msgstr "Tähän kenttään määritellään tuotemuunnelman kuva, maksimikoko 1024x1024px."
 
 #. module: product
 #: help:product.template,image:0

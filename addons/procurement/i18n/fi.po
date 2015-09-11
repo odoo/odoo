@@ -3,13 +3,16 @@
 # * procurement
 # 
 # Translators:
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Marko Happonen <marko.happonen@sprintit.fi>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-04 10:27+0000\n"
+"PO-Revision-Date: 2015-09-05 11:12+0000\n"
 "Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +38,7 @@ msgid ""
 "                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 Valitse tehdäksesi uuden hankinnan.\n              </p>\n              <p>\n                <b>Hankintatilaukset</b> kuvaavat tarvetta hankkia tietty määrä tuotetta, tietyllä ajanhetkellä toimitettuna tiettyyn paikkaan.\n              </p>\n              <p>\n                <b>Myyntitilaukset</b> ovat yksi lähde hankintatilauksille (mutta ovat kaksi eri dokumenttia).\n                <br/>Riippuen hankinnan luonteesta ja tuotevalikoimasta, Odoon hankinta-automaatti yrittää täyttää tarpeen varaamalla tuotteita varastosta, tilaamalla tuotteita toimittajilta tai tekemällä tuotantotilauksen jne..\n              </p>\n              <p>\n               <b>Hankintapoikkeus/virhe</b> tapahtuu kun järjestelmä ei pysty täyttämään hankintatilausta. Jotkut poikkeukset pystytään ratkaisemaan automaattisesti, mutta jotkin  tarvitsevat manuaalista käsittelyä (nämä on merkitty virheviestillä).\n              </p>\n            "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -114,7 +117,7 @@ msgstr "Yritys"
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Suorita ajastimet taustalla"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -143,7 +146,7 @@ msgstr "Luotu"
 #. module: procurement
 #: help:procurement.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Viimeisen viestin päivämäärä"
 
 #. module: procurement
 #: field:procurement.group,move_type:0
@@ -366,7 +369,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.group:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Hankintaryhmä"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -528,7 +531,7 @@ msgstr "Lukemattomat viestit"
 #. module: procurement
 #: field:procurement.order,product_uos_qty:0
 msgid "UoS Quantity"
-msgstr "my määrä"
+msgstr "Myynnin määräyksikkö"
 
 #. module: procurement
 #: selection:procurement.order,priority:0

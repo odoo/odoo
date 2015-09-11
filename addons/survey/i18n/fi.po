@@ -6,14 +6,15 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Miku Laitinen <miku.laitinen@gmail.com>, 2015
 # Sanna Edelman <direct@generare.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-04 10:25+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
+"PO-Revision-Date: 2015-09-03 08:14+0000\n"
+"Last-Translator: Miku Laitinen <miku.laitinen@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +35,7 @@ msgid ""
 "                </div>\n"
 "                \n"
 "            "
-msgstr "\n\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n<p>Hei,</p>\n<p>Teemme kyselytutkimusta, ja olisi mukavaa, jos ehdit vastata siihen.</p>\n<p><a href=\"__URL__\">Ole hyvä ja napsauta linkkiä aloittaaksesi kyselyn.</a></p>\n<p>Kiitos osallistumisestasi!</p>\n</div>"
+msgstr "\n\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n<p>Hei,</p>\n<p>Teemme kyselytutkimusta, ja olisi mukavaa, jos ehdit vastata siihen.</p>\n<p><a href=\"__URL__\">Ole hyvä ja klikkaa linkkiä aloittaaksesi kyselyn.</a></p>\n<p>Kiitos osallistumisestasi!</p>\n</div>"
 
 #. module: survey
 #: view:survey.page:survey.survey_page_tree
@@ -135,7 +136,7 @@ msgstr ""
 #. module: survey
 #: constraint:survey.user_input_line:0
 msgid "A question cannot be unanswered and skipped"
-msgstr ""
+msgstr "Kysymykseen on pakko vastata"
 
 #. module: survey
 #: sql_constraint:survey.user_input:0
@@ -283,30 +284,30 @@ msgstr "Ryhmä"
 #. module: survey
 #: field:survey.mail.compose.message,child_ids:0
 msgid "Child Messages"
-msgstr ""
+msgstr "Aliviestit"
 
 #. module: survey
 #: view:website:survey.simple_choice
 msgid "Choose..."
-msgstr ""
+msgstr "Valitse..."
 
 #. module: survey
 #: view:website:survey.result
 msgid "Clear All Filters"
-msgstr ""
+msgstr "Poista kaikki suotimet"
 
 #. module: survey
 #: code:addons/survey/survey.py:141
 #: code:addons/survey/wizard/survey_email_compose_message.py:51
 #, python-format
 msgid "Click here to start survey"
-msgstr ""
+msgstr "Klikkaa tästä aloittaaksesi kyselyn"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:109
 #, python-format
 msgid "Click here to take survey"
-msgstr ""
+msgstr "Klikkaa tästä suorittaaksesi kyselyn"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -333,12 +334,12 @@ msgstr "Kommentti"
 #. module: survey
 #: field:survey.question,comment_count_as_answer:0
 msgid "Comment Field is an Answer Choice"
-msgstr ""
+msgstr "Palautekenttä on vastausvalinta"
 
 #. module: survey
 #: field:survey.question,comments_message:0
 msgid "Comment Message"
-msgstr ""
+msgstr "Palauteviesti"
 
 #. module: survey
 #: model:survey.page,title:survey.feedback_3
@@ -350,7 +351,7 @@ msgstr ""
 #: view:survey.user_input:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
 msgid "Completed"
-msgstr ""
+msgstr "Valmis"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -381,12 +382,12 @@ msgstr "Sisältö"
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid ""
 "Copy and paste the HTML code below to add this web link to any webpage."
-msgstr ""
+msgstr "Kopioi ja liitä seuraava HTML-koodi lisätäksesi tämän verkkolinkin mihin tahansa sivuun."
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid "Copy, paste and share the web link below to your audience."
-msgstr ""
+msgstr "Kopioi, liitä ja jaa seuraava verkkolinkki kohdeyleisöllesi."
 
 #. module: survey
 #: field:survey.user_input_line,date_create:0
@@ -442,7 +443,7 @@ msgstr "Päivämäärä"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Date and Time"
-msgstr ""
+msgstr "Päiväys ja aika"
 
 #. module: survey
 #: field:survey.user_input_line,value_date:0
@@ -457,7 +458,7 @@ msgstr ""
 #. module: survey
 #: help:survey.survey,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Viimeisen viestin päivämäärä"
 
 #. module: survey
 #: field:survey.user_input,deadline:0
@@ -469,17 +470,17 @@ msgstr "Määräaika"
 msgid ""
 "Deadline to which the invitation to respond for this survey is valid. If the"
 " field is empty, the invitation is still valid."
-msgstr ""
+msgstr "Määräaika, johon vastauspyyntö tähän kyselyyn on voimassa. Jos kenttä on tyhjä, pyyntö on vielä voimassa."
 
 #. module: survey
 #: field:survey.mail.compose.message,date_deadline:0
 msgid "Deadline to which the invitation to respond is valid"
-msgstr ""
+msgstr "Määräaika, johon vastauspyyntö on voimassa "
 
 #. module: survey
 #: view:survey.survey:survey.survey_kanban
 msgid "Delete!"
-msgstr ""
+msgstr "Poista!"
 
 #. module: survey
 #: field:survey.page,description:0 field:survey.question,description:0
@@ -503,7 +504,7 @@ msgstr "Suunnittele"
 #: model:survey.label,value:survey.fcol_2_5_2
 #: model:survey.label,value:survey.fcol_2_7_2
 msgid "Disagree"
-msgstr ""
+msgstr "Eri mieltä"
 
 #. module: survey
 #: view:survey.question:survey.survey_question_form
@@ -534,7 +535,7 @@ msgstr "Luonnos"
 #. module: survey
 #: field:survey.user_input,email:0
 msgid "E-mail"
-msgstr ""
+msgstr "Sähköposti"
 
 #. module: survey
 #: view:survey.survey:survey.survey_form
@@ -557,23 +558,23 @@ msgstr "Sähköpostin mallipohja"
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
-msgstr ""
+msgstr "Lähettäjän sähköpostiosoite. Tämä kenttä asetetaan kun tuleville viesteille ei löydy vastaavaa kumppania."
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "Sähköpostin ohjattu koostaminen kyselytutkimukselle"
 
 #. module: survey
 #: model:survey.page,title:survey.feedback_2
 msgid "Ergonomy and ease of use"
-msgstr ""
+msgstr "Ergonomia ja helppokäyttöisyys"
 
 #. module: survey
 #: field:survey.question,constr_error_msg:0
 #: field:survey.question,validation_error_msg:0
 msgid "Error message"
-msgstr ""
+msgstr "Virheilmoitus"
 
 #. module: survey
 #: code:addons/survey/survey.py:439
@@ -584,7 +585,7 @@ msgstr "Virhe!"
 #. module: survey
 #: field:survey.mail.compose.message,partner_ids:0
 msgid "Existing contacts"
-msgstr ""
+msgstr "Olemassaolevat yhteyshenkilöt"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_3
@@ -604,12 +605,12 @@ msgstr ""
 #. module: survey
 #: view:website:survey.result
 msgid "Finished surveys"
-msgstr ""
+msgstr "Valmiit kyselytutkimukset"
 
 #. module: survey
 #: field:survey.stage,fold:0
 msgid "Folded in kanban view"
-msgstr ""
+msgstr "Laskostettu Kanban näkymässä"
 
 #. module: survey
 #: field:survey.survey,message_follower_ids:0
@@ -619,12 +620,12 @@ msgstr "Seuraajat"
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 msgid "Format"
-msgstr ""
+msgstr "Muotoilu"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Free Text"
-msgstr ""
+msgstr "Vapaamuotoinen teksti"
 
 #. module: survey
 #: field:survey.user_input_line,value_free_text:0
@@ -639,7 +640,7 @@ msgstr "Mistä"
 #. module: survey
 #: view:website:survey.survey view:website:survey.survey_init
 msgid "Go back to surveys"
-msgstr ""
+msgstr "Palaa kyselyihin"
 
 #. module: survey
 #: view:website:survey.result_choice view:website:survey.result_matrix
@@ -669,12 +670,12 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
 msgid "Human Ressources"
-msgstr ""
+msgstr "Henkilöstöhallinto"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
 msgid "I develop new features"
-msgstr ""
+msgstr "Kehitän uusia ominaisuuksia"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_4
@@ -684,7 +685,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_4
 msgid "I help to translate"
-msgstr ""
+msgstr "Autan kääntämisessä"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_3
@@ -699,7 +700,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_1
 msgid "I use Launchpad, like all official Odoo projects"
-msgstr ""
+msgstr "Käytän Launchpad'ia, kuten kaikki viralliset Odoo projektit"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_2
@@ -714,7 +715,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_5
 msgid "I write documentations"
-msgstr ""
+msgstr "Kirjoitan dokumentaatiota"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_2
@@ -771,7 +772,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.sfinished
 msgid "If you wish, you can"
-msgstr ""
+msgstr "Jos haluat, voit "
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_in_progress
@@ -786,12 +787,12 @@ msgstr ""
 #. module: survey
 #: field:survey.question,validation_email:0
 msgid "Input must be an email"
-msgstr ""
+msgstr "Syöttötiedon pitää olla sähköpostiosoite"
 
 #. module: survey
 #: view:survey.survey:survey.survey_tree
 msgid "Invitations sent"
-msgstr ""
+msgstr "Kutsut lähetetty"
 
 #. module: survey
 #: field:survey.survey,message_is_follower:0
@@ -811,7 +812,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_2
 msgid "It helps in the beginning"
-msgstr ""
+msgstr "Se auttaa alussa"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_5
@@ -826,7 +827,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_1
 msgid "It is up-to-date"
-msgstr ""
+msgstr "Se on ajan tasalla"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_5
@@ -847,7 +848,7 @@ msgstr "Osoitetarrat"
 #. module: survey
 #: field:survey.survey,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Viimeinen viestipvm"
 
 #. module: survey
 #: field:survey.label,write_uid:0
@@ -871,38 +872,38 @@ msgstr "Viimeksi päivitetty"
 #. module: survey
 #: field:survey.user_input,last_displayed_page_id:0
 msgid "Last displayed page"
-msgstr ""
+msgstr "Viimeksi näytetty sivu"
 
 #. module: survey
 #: selection:survey.user_input,type:0
 msgid "Link"
-msgstr ""
+msgstr "Linkki"
 
 #. module: survey
 #: field:survey.mail.compose.message,multi_email:0
 msgid "List of emails"
-msgstr ""
+msgstr "Sähköpostilista"
 
 #. module: survey
 #: field:survey.mail.compose.message,is_log:0
 msgid "Log an Internal Note"
-msgstr ""
+msgstr "Kirjaa sisäinen muistiinpano"
 
 #. module: survey
 #: field:survey.survey,auth_required:0 view:website:survey.auth_required
 msgid "Login required"
-msgstr ""
+msgstr "Sisäänkirjautuminen vaaditaan"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Long Text Zone"
-msgstr ""
+msgstr "Pitkä tekstialue"
 
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 #: field:survey.question,constr_mandatory:0
 msgid "Mandatory Answer"
-msgstr ""
+msgstr "Pakollinen vastaus"
 
 #. module: survey
 #: selection:survey.user_input,type:0
@@ -912,37 +913,37 @@ msgstr "Manuaalisesti"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix"
-msgstr ""
+msgstr "Taulukko"
 
 #. module: survey
 #: field:survey.question,matrix_subtype:0
 msgid "Matrix Type"
-msgstr ""
+msgstr "Taulukon tyyppi"
 
 #. module: survey
 #: view:website:survey.result
 msgid "Matrix:"
-msgstr ""
+msgstr "Taulukko:"
 
 #. module: survey
 #: sql_constraint:survey.question:0
 msgid "Max date cannot be smaller than min date!"
-msgstr ""
+msgstr "Maksimipäivämäärä ei voi olla pienempi kuin minimipäivämäärä!"
 
 #. module: survey
 #: sql_constraint:survey.question:0
 msgid "Max length cannot be smaller than min length!"
-msgstr ""
+msgstr "Suurin pituus ei voi olla pienempi kuin pienin pituus!"
 
 #. module: survey
 #: sql_constraint:survey.question:0
 msgid "Max value cannot be smaller than min value!"
-msgstr ""
+msgstr "Maksimiarvo ei voi olla pienempi kuin minimiarvo!"
 
 #. module: survey
 #: view:website:survey.result_number
 msgid "Maximum"
-msgstr ""
+msgstr "Maksimi"
 
 #. module: survey
 #: field:survey.question,validation_max_date:0
@@ -952,12 +953,12 @@ msgstr ""
 #. module: survey
 #: field:survey.question,validation_length_max:0
 msgid "Maximum Text Length"
-msgstr ""
+msgstr "Tekstin maksimipituus"
 
 #. module: survey
 #: field:survey.question,validation_max_float_value:0
 msgid "Maximum value"
-msgstr ""
+msgstr "Maksimiarvo"
 
 #. module: survey
 #: field:survey.mail.compose.message,record_name:0
@@ -994,7 +995,7 @@ msgstr "Viesti- ja kommunikointihistoria"
 #. module: survey
 #: view:website:survey.result_number
 msgid "Minimum"
-msgstr ""
+msgstr "Minimi"
 
 #. module: survey
 #: field:survey.question,validation_min_date:0
@@ -1009,12 +1010,12 @@ msgstr ""
 #. module: survey
 #: field:survey.question,validation_min_float_value:0
 msgid "Minimum value"
-msgstr ""
+msgstr "Minimiarvo"
 
 #. module: survey
 #: view:website:survey.result_number
 msgid "Most Common"
-msgstr ""
+msgstr "Yleisin"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1049,7 +1050,7 @@ msgstr "Uusi"
 #. module: survey
 #: view:website:survey.page
 msgid "Next page"
-msgstr ""
+msgstr "Seuraava sivu"
 
 #. module: survey
 #: field:survey.mail.compose.message,no_auto_thread:0
@@ -1064,17 +1065,17 @@ msgstr ""
 #. module: survey
 #: view:website:survey.notopen
 msgid "Not open"
-msgstr ""
+msgstr "Ei avoinna"
 
 #. module: survey
 #: view:website:survey.nopages
 msgid "Not ready"
-msgstr ""
+msgstr "Ei valmis"
 
 #. module: survey
 #: selection:survey.user_input,state:0
 msgid "Not started yet"
-msgstr ""
+msgstr "Ei vielä aloitettu"
 
 #. module: survey
 #: field:survey.mail.compose.message,notification_ids:0
@@ -1105,7 +1106,7 @@ msgstr "Lukumäärä"
 #: view:survey.question:survey.survey_question_form
 #: field:survey.question,column_nb:0
 msgid "Number of columns"
-msgstr ""
+msgstr "Sarakkeiden lukumäärä"
 
 #. module: survey
 #: field:survey.survey,tot_comp_survey:0
@@ -1125,7 +1126,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Numerical Value"
-msgstr ""
+msgstr "Numeroarvo"
 
 #. module: survey
 #: field:survey.user_input_line,value_number:0
@@ -1140,7 +1141,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.question,matrix_subtype:0
 msgid "One choice per row"
-msgstr ""
+msgstr "Yksi valinta riviä kohti"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:95
@@ -1168,12 +1169,12 @@ msgstr "Sivu"
 #. module: survey
 #: field:survey.page,title:0
 msgid "Page Title"
-msgstr ""
+msgstr "Sivun otsikko"
 
 #. module: survey
 #: field:survey.page,sequence:0
 msgid "Page number"
-msgstr ""
+msgstr "Sivun numero"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_pages
@@ -1192,7 +1193,7 @@ msgstr "Edeltävä viesti"
 #: view:survey.user_input:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
 msgid "Partially completed"
-msgstr ""
+msgstr "Osittain täytetty"
 
 #. module: survey
 #: view:survey.user_input:survey.survey_user_input_search
@@ -1237,7 +1238,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.page
 msgid "Previous page"
-msgstr ""
+msgstr "Edellinen sivu"
 
 #. module: survey
 #: view:survey.survey:survey.survey_form
@@ -1421,7 +1422,7 @@ msgstr ""
 #. module: survey
 #: view:survey.question:survey.survey_question_search
 msgid "Search Question"
-msgstr ""
+msgstr "Etsi kysymys"
 
 #. module: survey
 #: view:survey.user_input:survey.survey_user_input_search
@@ -1533,7 +1534,7 @@ msgstr "Tähdellä varustetut"
 #. module: survey
 #: view:website:survey.survey_init
 msgid "Start Survey"
-msgstr ""
+msgstr "Aloita kysely"
 
 #. module: survey
 #: view:survey.survey:survey.survey_tree
@@ -1558,7 +1559,7 @@ msgstr "Aihe..."
 #. module: survey
 #: view:website:survey.page
 msgid "Submit survey"
-msgstr ""
+msgstr "Lähetä kysely"
 
 #. module: survey
 #: field:survey.mail.compose.message,subtype_id:0
@@ -1668,7 +1669,7 @@ msgstr ""
 #. module: survey
 #: field:survey.question,page_id:0
 msgid "Survey page"
-msgstr ""
+msgstr "Kyselysivu"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -1724,12 +1725,12 @@ msgstr ""
 #. module: survey
 #: field:survey.survey,thank_you_message:0
 msgid "Thank you message"
-msgstr ""
+msgstr "Kiitosviesti"
 
 #. module: survey
 #: view:website:survey.sfinished
 msgid "Thank you!"
-msgstr ""
+msgstr "Kiitoksia!"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
@@ -2051,7 +2052,7 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,vote_user_ids:0
 msgid "Votes"
-msgstr ""
+msgstr "Ääniä"
 
 #. module: survey
 #: code:addons/survey/survey.py:444 code:addons/survey/survey.py:898

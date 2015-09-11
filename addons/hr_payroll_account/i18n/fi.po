@@ -1,0 +1,119 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_account
+# 
+# Translators:
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-26 14:20+0000\n"
+"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
+"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_payroll_account
+#: view:hr.contract:hr_payroll_account.hr_contract_form_inherit
+#: view:hr.salary.rule:hr_payroll_account.hr_salary_rule_form_inherit
+msgid "Accounting"
+msgstr "Kirjanpito"
+
+#. module: hr_payroll_account
+#: field:hr.payslip,move_id:0
+msgid "Accounting Entry"
+msgstr "Kirjanpitovienti"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:154
+#: code:addons/hr_payroll_account/hr_payroll_account.py:170
+#, python-format
+msgid "Adjustment Entry"
+msgstr "Korjausvienti"
+
+#. module: hr_payroll_account
+#: field:hr.contract,analytic_account_id:0
+#: field:hr.salary.rule,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Analyyttinen tili"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/hr_payroll_account.py:168
+#, python-format
+msgid "Configuration Error!"
+msgstr "Konfiguraatio virhe!"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Contract"
+msgstr "Työsopimus"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_credit:0
+msgid "Credit Account"
+msgstr "Luottotili"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_debit:0
+msgid "Debit Account"
+msgstr "Käyttötili"
+
+#. module: hr_payroll_account
+#: field:hr.payslip,period_id:0
+msgid "Force Period"
+msgstr "Pakota jakso"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Luo palkkalaskelmat kaikille valituille työntekijöille"
+
+#. module: hr_payroll_account
+#: help:hr.payslip,period_id:0
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "Jätä tyhjäksi käyttääksesi jakson tarkistus(palkkalaskelman) päivämäärää."
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Palkkalaskelma"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Palkkalaskelman erät"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:97
+#, python-format
+msgid "Payslip of %s"
+msgstr "%s palkkalaskelma"
+
+#. module: hr_payroll_account
+#: field:hr.contract,journal_id:0 field:hr.payslip,journal_id:0
+#: field:hr.payslip.run,journal_id:0
+msgid "Salary Journal"
+msgstr "Palkkapäiväkirja"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_tax_id:0
+msgid "Tax Code"
+msgstr "Verokoodi"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#, python-format
+msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr "Kulupäiväkirja \"%s\" ei ole määrittänyt luottotiliä oikein!"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:168
+#, python-format
+msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr "Kulupäiväkirja \"%s\" ei ole määrittänyt käyttötiliä oikein!"
