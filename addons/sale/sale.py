@@ -444,7 +444,7 @@ class SaleOrderLine(models.Model):
                     taxes = fpos.map_tax(line.product_id.taxes_id)
                 line.tax_id = taxes
             else:
-                line.tax_id = False
+                line.tax_id = line.product_id.taxes_id if line.product_id.taxes_id else False
 
     @api.multi
     def _prepare_order_line_procurement(self, group_id=False):
