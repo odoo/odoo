@@ -370,36 +370,39 @@
                     </header>
                     <sheet>
                         <field name="balance_visible" invisible="1"/>
-                        <div class="alert alert-warning" role="alert" attrs="{'invisible': ['|',('cash_move_balance', '&gt;', 0),('balance_visible', '=', False)]}">
-                            Warning : Your balance is insufficient.
+
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button"
+                                attrs="{'invisible': [('balance_visible', '=', False)]}"
+                                name="%(lunch_cashmove_action_account)d"
+                                icon="fa-money"
+                                type="action">
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_value"><field name="cash_move_balance" widget="monetary"/></span>
+                                    <span class="o_stat_text">Balance</span>
+                                </div>
+                            </button>
                         </div>
+
                         <group>
                             <group>
-                                <field name='user_id'
-                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'lunch.group_lunch_user']}"/>
+                                <field name='user_id' context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'lunch.group_lunch_user']}"/>
                                 <field name='date'/>
                             </group>
-                            <group>
-                                <div class="oe_button_box" name="button_box">
-                                    <button class="oe_stat_button"
-                                        attrs="{'invisible': [('balance_visible', '=', False)]}"
-                                        name="%(lunch_cashmove_action_account)d"
-                                        icon="fa-money"
-                                        type="action">
-                                        <div class="o_form_field o_stat_info">
-                                            <span class="o_stat_value"><field name="cash_move_balance" widget="monetary"/></span>
-                                            <span class="o_stat_text">Balance</span>
-                                        </div>
-                                    </button>
+                            <div>
+                                <div class="alert alert-warning" role="alert" attrs="{'invisible': ['|',('cash_move_balance', '&gt;', 0),('balance_visible', '=', False)]}">
+                                    Warning : Your balance is insufficient.
                                 </div>
-                            </group>
+                                <div attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="alert alert-danger oe_edit_only">
+                                    <field name='alerts'/>
+                                </div>
+                            </div>
                         </group>
-                        <div attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline alert alert-danger oe_edit_only">
-                            <field name='alerts'/>
-                        </div>
+                        
                         <field name='previous_order_ids' widget='previous_order' class="oe_edit_only"/>
+
                         <separator string='Select your order'/>
-                        <field name='order_line_ids' nolabel='1'>
+                        <field name='order_line_ids'>
                             <tree string='List' editable='bottom'>
                                 <field name='product_id'/>
                                 <field name='note' />
@@ -411,7 +414,6 @@
                         <group class='oe_subtotal_footer oe_right'>
                             <field name='total' widget='monetary' options="{'currency_field': 'currency_id'}"/>
                         </group>
-                        <br/><br/>
                     </sheet>
                 </form>
             </field>
@@ -460,7 +462,7 @@
             <field name="name">lunch.alert.tree</field>
             <field name="model">lunch.alert</field>
             <field name="arch" type="xml">
-                <tree string="alert tree">
+                <tree>
                     <field name="message"/>
                     <field name="alert_type"/>
                     <field name='start_hour' widget='float_time'/>
@@ -473,29 +475,27 @@
             <field name="name">lunch.alert.form</field>
             <field name="model">lunch.alert</field>
             <field name="arch" type="xml">
-                <form string="alert tree">
-                    <group string="Schedule Date">
-                        <group>
-                            <field name="alert_type" class="oe_inline"/>
+                <form>
+                    <group>
+                        <group string="Schedule Date">
+                            <field name="alert_type"/>
                             <field name="specific_day" attrs="{'invisible': [('alert_type','!=','specific')], 'required':[('alert_type','=','specific')]}"/>
                         </group>
-                    </group>
-                    <group attrs="{'invisible': [('alert_type','!=','week')]}">
-                        <group>
-                            <field name="monday"/>
-                            <field name="tuesday"/>
-                            <field name="wednesday"/>
-                            <field name="thursday"/>
+                        <group string="Schedule Hour">
+                            <field name='start_hour' widget='float_time'/>
+                            <field name='end_hour' widget='float_time'/>
                         </group>
-                        <group>
-                            <field name="friday"/>
-                            <field name="saturday"/>
-                            <field name="sunday"/>
+                        <group attrs="{'invisible': [('alert_type','!=','week')]}">
+                            <group col="4">
+                                <field name="monday"/>
+                                <field name="tuesday"/>
+                                <field name="wednesday"/>
+                                <field name="thursday"/>
+                                <field name="friday"/>
+                                <field name="saturday"/>
+                                <field name="sunday"/>
+                            </group>
                         </group>
-                    </group>
-                    <group string="Schedule Hour">
-                        <field name='start_hour' widget='float_time'/>
-                        <field name='end_hour' widget='float_time'/>
                     </group>
                     <group string='Message'>
                         <field name='message' nolabel='1' placeholder="Write the message you want to display during the defined period..."/>
@@ -503,5 +503,4 @@
                 </form>
             </field>
         </record>
-
 </odoo>
