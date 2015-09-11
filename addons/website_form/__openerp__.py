@@ -1,14 +1,9 @@
 {
-    'name': 'Website Form Builder',
-    'category': 'Website',
-    'summary': 'Build custom web forms using the website builder',
+    'name': 'Website Form Controller',
+    'category': 'Hidden',
+    'summary': 'Generic controller for website forms',
+    'description': 'Generic controller for website forms',
     'version': '1.0',
-    'description': """
-Odoo Form Builder
-====================
-
-Allows you to build web forms on the website using the website builder.
-        """,
     'depends': ['website', 'mail'],
     'data': [
         'views/assets.xml',
