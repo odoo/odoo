@@ -1267,7 +1267,14 @@ var FieldOne2Many = FieldX2Many.extend({
     start: function() {
         this.$el.addClass('oe_form_field_one2many');
         return this._super.apply(this, arguments);
-    }
+    },
+    before_save: function() {
+        if(this.viewmanager.active_view.type === "list"
+            && this.viewmanager.active_view.controller.editable()) {
+            return this.viewmanager.active_view.controller.save_edition();
+        }
+        return $.when();
+    },
 });
 
 /**
