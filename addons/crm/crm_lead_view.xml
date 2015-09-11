@@ -637,6 +637,15 @@
                     <filter string="Unassigned" name="unassigned"
                             domain="[('user_id','=', False)]" help="No salesperson"/>
                     <separator/>
+                    <filter string="Today Activities" name="today"
+                            domain="[('date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="This Week Activities" name="this_week"
+                            domain="['&amp;', ('date_action', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                     ('date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                            ]"/>
+                    <filter string="Overdue Activities" name="overdue"
+                            domain="[('date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <separator/>
                     <filter string="Follow-up" name="follow_up"
                             domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d') )]"
                             help="Show all opportunities for which the next action date is today or before"/>

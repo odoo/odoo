@@ -27,7 +27,7 @@
                             </a>
                         </td>
                         <td class="o_main" title="To Activities">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-extra="today">
                                 <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="values['activity']['today']"/>
@@ -59,7 +59,7 @@
                             </a>
                         </td>
                         <td class="o_main" title="To Activities">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-extra="this_week">
                                 <t t-if="!show_demo">
                                     <t t-esc="values['activity']['next_7_days']"/>
                                 </t>
@@ -74,7 +74,7 @@
                         <td></td>
                         <!-- Hide overdue when there is none -->
                         <td t-if="show_demo or (values and values['activity']['overdue'] != 0)" class="o_warning" title="To Activities">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-extra="overdue">
                                 <t t-if="!show_demo">
                                     <t t-esc="values['activity']['overdue']"/> overdue
                                 </t>
@@ -102,9 +102,9 @@
                             <div class="o_highlight">Performance</div>
                             This Month
                         </td>
-                        <td class="o_secondary" title="To Activity Report">
+                        <td t-attf-class="#{values and values['done']['target'] and values['done']['this_month'] >= values['done']['target'] ? 'o_main' : 'o_secondary'}" title="To Activity Report">
                             <a href="#" class="o_dashboard_action" name="crm.crm_activity_report_action">
-                                <span t-attf-class="o_highlight #{values and values['done']['target'] and values['done']['this_month'] >= values['done']['target'] ? 'o_target_reached' : ''}">
+                                <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="values['done']['this_month']"/>
                                     </t>
@@ -115,22 +115,22 @@
                                 Activities Done
                             </a>
                         </td>
-                        <td class="o_secondary" title="To Opportunity Report">
+                        <td t-attf-class="#{values and values['won']['target'] and values['won']['this_month'] >= values['won']['target'] ? 'o_main' : 'o_secondary'}" title="To Opportunity Report">
                             <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph">
-                                <span t-attf-class="o_highlight #{values and values['won']['target'] and values['won']['this_month'] >= values['won']['target'] ? 'o_target_reached' : ''}">
+                                <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="widget.render_monetary_field(values['won']['this_month'], values['currency_id'])"/>
                                     </t>
-                                    <t t-if="show_demo" class="o_target_reached">
+                                    <t t-if="show_demo">
                                         78,140.03€
                                     </t>
                                 </span> <br/>
                                 Won in Opportunities
                             </a>
                         </td>
-                        <td t-if="values['invoiced']" class="o_secondary" title="To Invoice Report">
+                        <td t-if="values['invoiced']" t-attf-class="#{values and values['invoiced']['target'] and values['invoiced']['this_month'] >= values['invoiced']['target'] ? 'o_main' : 'o_secondary'}" title="To Invoice Report">
                             <a href="#" class="o_dashboard_action" name="account.action_account_invoice_report_all">
-                                <span t-attf-class="o_highlight #{values and values['invoiced']['target'] and values['invoiced']['this_month'] >= values['invoiced']['target'] ? 'o_target_reached' : ''}">
+                                <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="widget.render_monetary_field(values['invoiced']['this_month'], values['currency_id'])"/>
                                     </t>
@@ -192,7 +192,7 @@
                             </a>
                         </td>
                         <td class="o_secondary" title="To Opportunity Report">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph">
                                 <t t-esc="widget.render_monetary_field(values['won']['last_month'], values['currency_id'])"/>
                             </a>
                         </td>

@@ -50,14 +50,22 @@ var SalesTeamDashboardView = KanbanView.extend({
         var self = this;
         var $action = $(ev.currentTarget);
         var action_name = $action.attr('name');
+        var action_extra = $action.data('extra');
         var additional_context = {}
 
         // TODO: find a better way to add defaults to search view
         if (action_name === 'calendar.action_calendar_event') {
             additional_context['search_default_mymeetings'] = 1;
-        }
-        if (action_name === 'crm.crm_lead_opportunities') {
-            additional_context['search_default_assigned_to_me'] = 1;
+        } else if (action_name === 'crm.crm_lead_action_activities') {
+            if (action_extra === 'today') {
+                additional_context['search_default_today'] = 1;
+            } else if (action_extra === 'this_week') {
+                additional_context['search_default_this_week'] = 1;
+            } else if (action_extra === 'overdue') {
+                additional_context['search_default_overdue'] = 1;
+            }
+        } else if (action_name === 'crm.crm_opportunity_report_action_graph') {
+            additional_context['search_default_won'] = 1;
         }
 
         new Model("ir.model.data")
