@@ -166,7 +166,7 @@ class event_event(models.Model):
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
     blog_id = fields.Many2one('blog.blog', 'Event Blog')
-    show_track_proposal = fields.Boolean('Talks Proposals')
+    show_track_proposal = fields.Boolean('Tracks Proposals')
     show_tracks = fields.Boolean('Show Tracks on Website')
     show_blog = fields.Boolean('News')
     count_tracks = fields.Integer('Tracks', compute='_count_tracks')

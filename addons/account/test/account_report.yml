@@ -72,18 +72,10 @@
     from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_general_journal',wiz_data=data_dict, context=ctx, our_module='account')
 -
-  Print the General Ledger Report in Normal Mode
+  Print the General Ledger Report (in Landscape Mode)
 -
   !python {model: account.account}: |
     ctx={}
-    data_dict = {'chart_account_id':ref('account.chart0'),'landscape':False}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
--
-  Print the General Ledger Report in Landscape Mode
--
-  !python {model: account.account}: |
-    ctx={'landscape': True}
     data_dict = {'chart_account_id':ref('account.chart0')}
     from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')

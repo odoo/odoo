@@ -37,25 +37,26 @@ class AccountJournal(models.Model):
 
     @api.model
     def create(self, vals):
-        if not vals.get('check_sequence_id'):
-            vals.update({'check_sequence_id': self._create_check_sequence(vals).id})
-        return super(AccountJournal, self).create(vals)
+        rec = super(AccountJournal, self).create(vals)
+        if not rec.check_sequence_id:
+            rec._create_check_sequence()
+        return rec
 
     @api.one
     def copy(self, default=None):
         rec = super(AccountJournal, self).copy(default)
-        rec.write({'check_sequence_id': self._create_check_sequence({'name': rec.name, 'company_id': rec.company_id.id}).id})
+        rec._create_check_sequence()
         return rec
 
-    @api.model
-    def _create_check_sequence(self, vals):
+    @api.one
+    def _create_check_sequence(self):
         """ Create a check sequence for the journal """
-        return self.env['ir.sequence'].sudo().create({
-            'name': vals['name'] + _(" : Check Number Sequence"),
+        self.check_sequence_id = self.env['ir.sequence'].sudo().create({
+            'name': self.name + _(" : Check Number Sequence"),
             'implementation': 'no_gap',
             'padding': 5,
             'number_increment': 1,
-            'company_id': vals.get('company_id', self.env.user.company_id.id),
+            'company_id': self.company_id.id,
         })
 
     def _default_outbound_payment_methods(self):
@@ -70,8 +71,7 @@ class AccountJournal(models.Model):
         check_printing = self.env.ref('account_check_printing.account_payment_method_check')
         bank_journals = self.search([('type', '=', 'bank')])
         for bank_journal in bank_journals:
-            check_sequence = self._create_check_sequence({'name': bank_journal.name, 'company_id': bank_journal.company_id.id})
+            bank_journal._create_check_sequence()
             bank_journal.write({
                 'outbound_payment_method_ids': [(4, check_printing.id, None)],
-                'check_sequence_id': check_sequence.id,
             })

@@ -82,7 +82,7 @@
                         <field name='product_variant_count' invisible='1'/>
                         <field name="id" invisible="True"/>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" groups="base.group_no_one"
+                            <button name="toggle_active" type="object"
                                     class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button"
                                     options='{"terminology": "archive"}'/>
@@ -125,11 +125,9 @@
                                         <field name="categ_id" string="Internal Category"/>
                                     </group>
                                     <group name="group_lots_and_weight">
-                                        <label for="weight"/>
-                                        <div class="o_row" name="weight">
-                                            <field digits="(14, 3)" name="weight" string="Weight"
-                                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
-                                            <span>kg</span>
+                                        <label for="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
+                                        <div class="o_row" name="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                            <field name="weight" string="Weight"/>
                                         </div>
                                     </group>
                                 </group>
@@ -145,7 +143,7 @@
                             <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
                                 <div name="pricelist_item" groups="product.group_product_pricelist">
                                     <separator string="Pricing"/>
-                                    <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1'}">
+                                    <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
                                         <tree string="Pricelist Items" editable="bottom">
                                             <field name="pricelist_id" string="Pricelist" required='1'/>
                                             <field name="fixed_price" string="Price" required='1'/>
@@ -265,7 +263,7 @@
                                     </div>
                                     <label for="weight"/>
                                     <div class="o_row">
-                                        <field digits="(14, 3)" name="weight"/>
+                                        <field name="weight"/>
                                         <span>kg</span>
                                     </div>
                                 </group>
@@ -354,6 +352,7 @@
                     <field name="is_product_variant"/>
                     <field name="product_variant_count"/>
                     <field name="product_variant_ids"/>
+                    <field name="currency_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -372,7 +371,7 @@
                                     </div>
                                     <div name="tags"/>
                                     <ul>
-                                        <li>Price: <field name="lst_price"></field></li>
+                                        <li>Price: <field name="lst_price" widget="monetary"></field></li>
                                     </ul>
                                     <div name="tags"/>
                                 </div>
@@ -482,12 +481,12 @@
                     <field name="standard_price" attrs="{'invisible':[('product_variant_count','=', 1)]}"
                             widget='monetary' options="{'currency_field': 'currency_id'}"/>
                 </field>
-                <field name="weight" position="replace">
-                    <field digits="(14, 3)" name="volume"
-                        attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']),('product_variant_count','=',1)]}"/>
-                    <field digits="(14, 3)" name="weight"
-                        attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']),('product_variant_count','=',1)]}"/>
-                </field>
+                <label for="weight" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
+                </label>
+                <div name="weight" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
+                </div>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                 </xpath>

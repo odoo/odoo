@@ -1197,6 +1197,8 @@ Update your business card, phone book, social media,... Send an email right now 
         res['done']['target'] = user.target_sales_done
         res['won']['target'] = user.target_sales_won
 
+        res['currency_id'] = user.company_id.currency_id.id
+
         return res
 
     def modify_target_sales_dashboard(self, cr, uid, target_name, target_value, context=None):

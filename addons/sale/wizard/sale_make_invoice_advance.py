@@ -26,7 +26,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.model
     def _get_advance_product(self):
         try:
-            return self.env['ir.model.data'].xmlid_to_res_id('sale.advance_product_0', raise_if_not_found=True)
+            deposit_product_template = self.env['ir.model.data'].xmlid_to_object('sale.advance_product_1', raise_if_not_found=True)
+            return deposit_product_template.product_variant_ids.ids[0]
         except ValueError:
             return False
 
@@ -39,6 +40,17 @@ class SaleAdvancePaymentInv(models.TransientModel):
     product_id = fields.Many2one('product.product', string='Deposit Product', domain=[('type', '=', 'service')], default=_get_advance_product)
     count = fields.Integer(default=_count, string='# of Orders')
     amount = fields.Float('Deposit Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
+    deposit_property_account_income_id = fields.Many2one(
+        related="product_id.property_account_income_id",
+        relation="account.account",
+        string="Income Account",
+        domain=[('deprecated', '=', False)],
+        help="This account will be used for invoices instead of the default one to value sales for the deposit.")
+    deposit_taxes_ids = fields.Many2many(
+        related="product_id.taxes_id",
+        string='Customer Taxes',
+        domain=[('type_tax_use', '=', 'sale')])
+
 
     @api.onchange('advance_payment_method')
     def onchange_advance_payment_method(self):

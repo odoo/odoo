@@ -195,7 +195,7 @@
                     <p>To use the <strong>multi-currency option:</strong>
                         <ol>
                             <li>Activate the option in the <a t-att-href="prepare_backend_url('account.action_account_config')">Accounting Settings</a></li>
-                            <li>Review the list of available currencies (from the Configuration menu)</li>
+                            <li>Review the list of available currencies (from the <a t-att-href="prepare_backend_url('base.action_currency_form')">Configuration menu</a>)</li>
                         </ol>
                     </p>
                     <p>
@@ -225,14 +225,14 @@
                                 </div>
                                 <div class="panel-body">
                                     <p>
-                                        If you have less than 200 contacts, we recommand you
+                                        If you have less than 200 contacts, we recommend you
                                         to create them manually.
                                     </p>
                                     <ul>
                                         <li>
-                                            <a t-att-href="prepare_backend_url('base.action_partner_form','list')">Create Customers</a>
+                                            <a t-att-href="prepare_backend_url('base.action_partner_form','kanban')">Create Customers</a>
                                         </li><li>
-                                            <a t-att-href="prepare_backend_url('base.action_partner_form','list')">Create Vendors</a>, if accounting or purchase is installed
+                                            <a t-att-href="prepare_backend_url('base.action_partner_supplier_form','kanban')">Create Vendors</a>, if accounting or purchase is installed
                                         </li>
                                     </ul>
                                 </div>
@@ -284,7 +284,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a t-att-href="prepare_backend_url('product.product_template_action', 'from', 'sale')">Create your products</a></li>
+                                        <li><a t-att-href="prepare_backend_url('product.product_template_action', 'form')">Create your products</a></li>
                                     </ul>
                                 </div>
                             </div>

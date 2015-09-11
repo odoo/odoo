@@ -4,7 +4,7 @@
 # Copyright (c) 2011 Cubic ERP - Teradata SAC. (http://cubicerp.com).
 
 {
-    'name': 'Chile Localization Chart Account',
+    'name': 'Chile - Accounting',
     'version': '1.0',
     'description': """
 Chilean accounting chart and tax localization.

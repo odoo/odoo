@@ -4,7 +4,7 @@
 # Copyright (c) 2011 Cubic ERP - Teradata SAC. (http://cubicerp.com)
 
 {
-    'name': 'Argentina Localization Chart Account',
+    'name': 'Argentina - Accounting',
     'version': '1.0',
     'description': """
 Argentinian accounting chart and tax localization.

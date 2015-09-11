@@ -12,6 +12,7 @@
             'product_uom_id': ref('product.product_uom_hour'),
             'account_id': ref('analytic.analytic_administratif'),
             'amount': -60.00,
+            'is_timesheet': True,
         }
         self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_requirements')
         vals = {
@@ -23,6 +24,7 @@
             'product_uom_id': ref('product.product_uom_hour'),
             'account_id': ref('analytic.analytic_administratif'),
             'amount': -30.00,
+            'is_timesheet': True,
         }
         self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_design')
         vals = {
@@ -34,6 +36,7 @@
             'product_uom_id': ref('product.product_uom_hour'),
             'account_id': ref('analytic.analytic_administratif'),
             'amount': -90.00,
+            'is_timesheet': True,
         }
         self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_coding')
         vals = {
@@ -45,6 +48,7 @@
             'product_uom_id': ref('product.product_uom_hour'),
             'account_id': ref('analytic.analytic_administratif'),
             'amount': -30.00,
+            'is_timesheet': True,
         }
         self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_testing')
         vals = {
@@ -56,5 +60,6 @@
             'product_uom_id': ref('product.product_uom_hour'),
             'account_id': ref('analytic.analytic_administratif'),
             'amount': -30.00,
+            'is_timesheet': True,
         }
         self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_maintenance')

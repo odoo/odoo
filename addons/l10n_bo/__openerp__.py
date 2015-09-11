@@ -4,7 +4,7 @@
 # Copyright (c) 2011 Cubic ERP - Teradata SAC. (https://cubicerp.com).
 
 {
-    "name": "Bolivia Localization Chart Account",
+    "name": "Bolivia - Accounting",
     "version": "1.0",
     "description": """
 Bolivian accounting chart and tax localization.

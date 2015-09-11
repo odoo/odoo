@@ -450,6 +450,8 @@ class product_template(osv.osv):
 
     def _compute_product_template_field(self, cr, uid, ids, names, arg, context=None):
         ''' Compute the field from the product_variant if there is only one variant, otherwise returns 0.0 '''
+        if isinstance(names, basestring):
+            names = [names]
         res = {id: {} for id in ids}
         templates = self.browse(cr, uid, ids, context=context)
         unique_templates = [template.id for template in templates if template.product_variant_count == 1]

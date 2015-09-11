@@ -482,6 +482,13 @@ class product_template(osv.osv):
         result = act_obj.read(cr, uid, [result], context=context)[0]
         return result
 
+    def action_open_quants(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock.product_open_quants', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        result['context'] = "{'search_default_locationgroup': 1, 'search_default_internal_loc': 1}"
+        return result
+
     def action_view_orderpoints(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'stock.product_open_orderpoint', context=context)

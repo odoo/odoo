@@ -438,7 +438,7 @@ class MailThread(models.AbstractModel):
                     _logger.debug('subtype %s not found' % subtype_xmlid)
                     continue
                 record.message_post(subtype=subtype_xmlid, tracking_value_ids=tracking_value_ids)
-            else:
+            elif tracking_value_ids:
                 record.message_post(tracking_value_ids=tracking_value_ids)
 
         return True

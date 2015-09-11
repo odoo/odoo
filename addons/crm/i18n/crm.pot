@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:39+0000\n"
-"PO-Revision-Date: 2015-09-07 14:39+0000\n"
+"POT-Creation-Date: 2015-09-10 10:19+0000\n"
+"PO-Revision-Date: 2015-09-10 10:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -65,11 +65,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Live Chat"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Mailing"
 msgstr ""
 
@@ -81,6 +76,11 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Surveys"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Website Live Chat"
 msgstr ""
 
 #. module: crm
@@ -101,7 +101,7 @@ msgid "<span class=\"fa fa-lightbulb-o fa-lg\"/>\n"
 "                        Using templates can boost the quality of your\n"
 "                        quotations and their success rate. However,\n"
 "                        creating such templates can be a huge effort.\n"
-"                        We recommand to start with standard quotations\n"
+"                        We recommend to start with standard quotations\n"
 "                        and upgrade later."
 msgstr ""
 
@@ -185,7 +185,7 @@ msgstr ""
 msgid "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
 "                                        <strong>Import a file</strong><br/>\n"
-"                                        <span class=\"small\">Recommanded if &gt;100 products</span>\n"
+"                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
 
@@ -221,7 +221,7 @@ msgstr ""
 msgid "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
 "                                        <strong> Create manually</strong><br/>\n"
-"                                        <span class=\"small\">Recommanded if &lt;100 products</span>\n"
+"                                        <span class=\"small\">Recommended if &lt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
 
@@ -338,11 +338,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "<strong>Live Chat</strong>"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Mass mailing</strong>"
 msgstr ""
 
@@ -448,12 +443,17 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "<strong>Website Live Chat</strong>"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>You</strong> called the prospect for a follow up on your offer"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "<strong>You</strong> understand the customer need, it's budget and his pain points"
+msgid "<strong>You</strong> understand the customer's needs and pain points, and you have a fairly good idea of his budget to spend"
 msgstr ""
 
 #. module: crm
@@ -501,6 +501,16 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Accept Emails From"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_property_account_payable_id
+msgid "Account Payable"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_property_account_receivable_id
+msgid "Account Receivable"
 msgstr ""
 
 #. module: crm
@@ -710,6 +720,11 @@ msgid "B2C"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_bank_account_count
+msgid "Bank"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Better structure the sales process"
 msgstr ""
@@ -903,6 +918,11 @@ msgid "Color Index"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_ref_company_ids
+msgid "Companies that refers to partner"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_company_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_company_id
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_company_id
@@ -955,6 +975,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_partner_ids
 msgid "Contacts"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_contract_ids
+#: model:ir.model.fields,field_description:crm.field_res_users_contracts_count
+msgid "Contracts"
 msgstr ""
 
 #. module: crm
@@ -1120,6 +1146,11 @@ msgid "Currency"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_currency_id
+msgid "Currency id"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Current"
 msgstr ""
@@ -1152,6 +1183,11 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_name
 msgid "Customer Name"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_property_payment_term_id
+msgid "Customer Payment Term"
 msgstr ""
 
 #. module: crm
@@ -1478,6 +1514,11 @@ msgid "Finished"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_property_account_position_id
+msgid "Fiscal Position"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
 msgstr ""
@@ -1607,6 +1648,11 @@ msgid "Happy Selling!<br/>- The Odoo Team"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_has_unreconciled_entries
+msgid "Has unreconciled entries"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Have clear forecasts on sales"
 msgstr ""
@@ -1618,7 +1664,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Here are a few examples of document you should provide to your sales team based on the sales stage:"
+msgid "Here are a few examples of documents you should provide to your sales team based on the sales stage:"
 msgstr ""
 
 #. module: crm
@@ -1701,7 +1747,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "If you have less than 200 contacts, we recommand you\n"
+msgid "If you have less than 200 contacts, we recommend you\n"
 "                                        to create them manually."
 msgstr ""
 
@@ -1738,6 +1784,12 @@ msgid "In Odoo, there are 3 different ways to manage your products prices.<br/>"
 msgstr ""
 
 #. module: crm
+#: code:addons/crm/sales_team.py:15
+#, python-format
+msgid "Incoming"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Incoming email create leads automatically when a new prospect contacts you.\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
@@ -1760,6 +1812,11 @@ msgid "Invoice Analysis"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_invoice_ids
+msgid "Invoices"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_is_company
 msgid "Is Company"
 msgstr ""
@@ -1767,6 +1824,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_is_follower
 msgid "Is Follower"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_issued_total
+#: model:ir.model.fields,field_description:crm.field_res_users_journal_item_count
+msgid "Journal Items"
 msgstr ""
 
 #. module: crm
@@ -1847,6 +1910,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_write_date
 #: model:ir.model.fields,field_description:crm.field_crm_stage_write_date
 msgid "Last Updated on"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_calendar_last_notif_ack
+msgid "Last notification marked as read from base Calendar"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_last_time_entries_checked
+msgid "Last time the invoices & payments matching was performed for this partner. It is set either if there's not at least an unreconciled debit and an unreconciled credit or if you click the \"Done\" button."
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_last_time_entries_checked
+msgid "Latest Invoices & Payments Matching Date"
 msgstr ""
 
 #. module: crm
@@ -2297,10 +2375,8 @@ msgid "Negotiation"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/sales_team.py:15
 #: model:crm.stage,name:crm.crm_stage_2_1
 #: model:crm.stage,name:crm.stage_lead1
-#, python-format
 msgid "New"
 msgstr ""
 
@@ -2415,7 +2491,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_days
-msgid "Number of days before doing fulfilling the action, allowing to plan the action date."
+msgid "Number of days before executing the action, allowing you to plan the date of the action."
 msgstr ""
 
 #. module: crm
@@ -2448,7 +2524,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Odoo is the world's only software to have a full integration of Marketing Apps your sales channel: insight sales, point of sale, ecommerce."
+msgid "Odoo is the world's only software to have a full integration of Marketing Apps for your sales channel: insight sales, point of sale, ecommerce."
 msgstr ""
 
 #. module: crm
@@ -2641,12 +2717,12 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_parent_model_id
-msgid "Parent model holding the alias. The model holding the alias referenceis not necessarily the model given by alias_model_id(example: project (parent_model) and task (model))"
+msgid "Parent model holding the alias. The model holding the alias reference is not necessarily the model given by alias_model_id (example: project (parent_model) and task (model))"
 msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_parent_id
-msgid "Parent subtype, used for automatic subscription. This field is notcorrectly named. For example on a project, project subtypes haveparent_id to task-related subtypes."
+msgid "Parent subtype, used for automatic subscription. This field is not correctly named. For example on a project, the parent_id of project subtypes refers to task-related subtypes."
 msgstr ""
 
 #. module: crm
@@ -2678,6 +2754,11 @@ msgid "Partners"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_debit_limit
+msgid "Payable Limit"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_phone
 msgid "Phone"
 msgstr ""
@@ -2705,12 +2786,20 @@ msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action
+msgid "Pipeline Analysis gives you an instant access to\n"
+"your opportunities with information such as the expected revenue, planned cost,\n"
+"missed deadlines or the number of interactions per opportunity. This report is\n"
+"mainly used by the sales manager in order to do the periodic review with the\n"
+"teams of the sales pipeline."
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_graph
 msgid "Pipeline Analysis gives you an instant access to\n"
 "your opportunities with information such as the expected revenue, planned cost,\n"
-"µmissed deadlines or the number of interactions per opportunity. This report is\n"
-"mainly used by the sales manager in order to do the periodic review with the\n"
-"teams of the sales pipeline."
+"missed deadlines or the number of interactions per opportunity. This report is\n"
+"mainly used by the sales manager in order to periodically review the pipeline\n"
+"with the the sales teams."
 msgstr ""
 
 #. module: crm
@@ -3008,7 +3097,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Show advanced filters and options by clicking on next to the search bar."
+msgid "Show advanced filters and options by clicking on the magnifying glass icon next to the search bar."
 msgstr ""
 
 #. module: crm
@@ -3221,6 +3310,11 @@ msgid "The first stage is usually \"New\" and the last one is \"Won\""
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_property_account_position_id
+msgid "The fiscal position will determine taxes and accounts used for the partner."
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_model_id
 msgid "The model (Odoo Document Kind) to which this alias corresponds. Any incoming email that does not reply to an existing record will cause the creation of a new record of this model (e.g. a Project Task)"
 msgstr ""
@@ -3238,6 +3332,11 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_user_id
 msgid "The owner of records created upon receiving emails on this alias. If this field is not set the system will attempt to find the right owner based on the sender (From) address, or will use the Administrator account if no system user is found for that address."
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_has_unreconciled_entries
+msgid "The partner has at least one unreconciled debit and credit since last time the invoices & payments matching was performed."
 msgstr ""
 
 #. module: crm
@@ -3272,6 +3371,16 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_email_cc
 msgid "These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_property_account_payable_id
+msgid "This account will be used instead of the default one as the payable account for the current partner"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_property_account_receivable_id
+msgid "This account will be used instead of the default one as the receivable account for the current partner"
 msgstr ""
 
 #. module: crm
@@ -3315,6 +3424,16 @@ msgid "This is the source of the link Ex: Search Engine, another domain, or name
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_property_supplier_payment_term_id
+msgid "This payment term will be used instead of the default one for purchase orders and vendor bills"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_property_payment_term_id
+msgid "This payment term will be used instead of the default one for sale orders and customer invoices"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
 msgid "This percentage depicts the default/average probability of the Case for this stage to be a success"
 msgstr ""
@@ -3354,8 +3473,33 @@ msgid "Title"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_total_invoiced
+msgid "Total Invoiced"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_debit
+msgid "Total Payable"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_credit
+msgid "Total Receivable"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_total_revenue
 msgid "Total Revenue"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_credit
+msgid "Total amount this customer owes you."
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_debit
+msgid "Total amount you have to pay to this vendor."
 msgstr ""
 
 #. module: crm
@@ -3500,6 +3644,11 @@ msgid "Users"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_currency_id
+msgid "Utility field to express amount currency"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_vat
 msgid "VAT"
 msgstr ""
@@ -3507,6 +3656,11 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "VIP letter to potential sponsors"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_property_supplier_payment_term_id
+msgid "Vendor Payment Term"
 msgstr ""
 
 #. module: crm
@@ -3558,23 +3712,13 @@ msgid "We hope this process helped you improve your sales strategy."
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead_website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_lead_website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "What <strong>kind of proposals</strong> do you usually send to your customers ?"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "What are the main KPIs you need to track the sales actities?"
+msgid "What are the main KPIs you need to track for your the sales actities?"
 msgstr ""
 
 #. module: crm
@@ -3656,8 +3800,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "You may have different sale price for different\n"
-"                                        group of customers:"
+msgid "You may have a different sale price for different\n"
+"                                        groups of customers:"
 msgstr ""
 
 #. module: crm

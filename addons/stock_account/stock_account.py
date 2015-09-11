@@ -8,6 +8,21 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+class stock_inventory(osv.osv):
+    _inherit = "stock.inventory"
+    _columns = {
+        'accounting_date': fields.date('Force Accounting Date', help="Choose the accounting date at which you want to value the stock moves created by the inventory instead of the default one (the inventory end date)"),
+    }
+
+    def post_inventory(self, cr, uid, inv, context=None):
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        if inv.accounting_date:
+            ctx['force_period_date'] = inv.accounting_date
+        return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
+
+
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
@@ -26,7 +41,6 @@ class account_invoice_line(osv.osv):
 
     def _get_price(self, cr, uid, inv, company_currency, i_line, price_unit):
         cur_obj = self.pool.get('res.currency')
-        decimal_precision = self.pool.get('decimal.precision')
         if inv.currency_id.id != company_currency:
             price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, price_unit * i_line.quantity, context={'date': inv.date_invoice})
         else:
@@ -242,7 +256,6 @@ class stock_quant(osv.osv):
             self._account_entry_move(cr, uid, quants, move, context=context)
         return res
 
-
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
         """
         Return the accounts and journal to use to post Journal Entries for the real-time
@@ -295,7 +308,6 @@ class stock_quant(osv.osv):
                     'quantity': qty,
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
-                    'date': move.date,
                     'partner_id': partner_id,
                     'debit': valuation_amount > 0 and valuation_amount or 0,
                     'credit': valuation_amount < 0 and -valuation_amount or 0,
@@ -307,7 +319,6 @@ class stock_quant(osv.osv):
                     'quantity': qty,
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
-                    'date': move.date,
                     'partner_id': partner_id,
                     'credit': valuation_amount > 0 and valuation_amount or 0,
                     'debit': valuation_amount < 0 and -valuation_amount or 0,

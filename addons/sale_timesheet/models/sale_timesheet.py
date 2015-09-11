@@ -76,6 +76,20 @@ class AccountAnalyticLine(models.Model):
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    timesheet_ids = fields.One2many('account.analytic.line', compute='_compute_timesheet_ids', string='Timesheet activities associated to this sale')
+    timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_ids')
+
+    @api.multi
+    @api.depends('project_id.line_ids')
+    def _compute_timesheet_ids(self):
+        for order in self:
+            if not order.project_id:
+                order.timesheet_ids = []
+                order.timesheet_count = 0.0
+            else:
+                order.timesheet_ids = self.env['account.analytic.line'].search([('is_timesheet', '=', True), ('account_id', '=', self.project_id.id)]).ids
+                order.timesheet_count = sum([line.unit_amount for line in order.timesheet_ids])
+
     @api.one
     @api.constrains('order_line')
     def _check_multi_timesheet(self):
@@ -97,6 +111,28 @@ class SaleOrder(models.Model):
                     break
         return result
 
+    @api.multi
+    def action_view_timesheet(self):
+        self.ensure_one()
+        imd = self.env['ir.model.data']
+        action = imd.xmlid_to_object('hr_timesheet.act_hr_timesheet_line_evry1_all_form')
+        list_view_id = imd.xmlid_to_res_id('hr_timesheet.hr_timesheet_line_tree')
+        form_view_id = imd.xmlid_to_res_id('hr_timesheet.hr_timesheet_line_form')
+
+        result = {
+            'name': action.name,
+            'help': action.help,
+            'type': action.type,
+            'views': [[list_view_id, 'tree'], [form_view_id, 'form']],
+            'target': action.target,
+            'context': action.context,
+            'res_model': action.res_model,
+        }
+        if self.timesheet_count > 0:
+            result['domain'] = "[('id','in',%s)]" % self.timesheet_ids.ids
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+        return result
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

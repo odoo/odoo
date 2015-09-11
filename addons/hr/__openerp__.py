@@ -32,6 +32,7 @@ You can manage:
         'mail',
         'resource',
         'web_kanban',
+        'web_tip',
     ],
     'data': [
         'security/hr_security.xml',

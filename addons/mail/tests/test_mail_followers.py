@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from psycopg2 import IntegrityError
 from openerp.addons.mail.tests.common import TestMail
 
 
@@ -102,3 +103,18 @@ class TestMailFollowers(TestMail):
             ('partner_id', '=', self.user_employee.partner_id.id)])
         self.assertEqual(len(follower), 1)
         self.assertEqual(follower.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
+
+    def test_no_DID(self):
+        """Test that a follower cannot suffer from dissociative identity disorder.
+           It cannot be both a partner and a channel.
+        """
+        test_channel = self.env['mail.channel'].create({
+            'name': 'I used to be schizo, but now we are alright.'
+        })
+        with self.assertRaises(IntegrityError):
+            self.env['mail.followers'].create({
+                'res_model': 'mail.channel',
+                'res_id': test_channel.id,
+                'partner_id': self.user_employee.partner_id.id,
+                'channel_id': self.group_pigs.id,
+            })
