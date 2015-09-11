@@ -239,7 +239,14 @@ var Many2ManyAttendee = FieldMany2ManyTags.extend({
     tag_template: "Many2ManyAttendeeTag",
     get_render_data: function(ids){
         var dataset = new data.DataSetStatic(this, this.field.relation, this.build_context());
-        return dataset.call('get_attendee_detail',[ids, this.getParent().datarecord.id || false]);
+        return dataset.call('get_attendee_detail',[ids, this.getParent().datarecord.id || false])
+                      .then(process_data);
+
+        function process_data(data) {
+            return _.map(data, function(d) {
+                return _.object(['id', 'name', 'status'], d);
+            });
+        }
     }
 });
 
