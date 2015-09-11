@@ -35,7 +35,7 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
     // Let subclasses add custom behaviour before onchange. Must return a deferred.
     // Resolve the deferred with true proceed with the onchange, false to prevent it.
     pre_onchange_hook: function(barcode) {
-        return $.Deferred.resolve(true);
+        return $.Deferred().resolve(true);
     },
 
     on_barcode_scanned: function(barcode) {
