@@ -45,7 +45,7 @@
                     <button name="open_rfq" type="object" string="RFQs/Bids" class="oe_stat_button" icon="fa-list-alt"
                         attrs="{'invisible': [('state', '=', 'draft')]}"/>
                     <button name="%(action_purchase_requisition_partner)d" type="action"
-                        string="Request a Quotation" icon="gtk-execute"
+                        string="Request a Quotation" icon="fa-cogs"
                         attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
                 </div>
                 <div class="pull-left">
