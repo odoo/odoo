@@ -99,6 +99,18 @@
         </t>
     </t>
 
+    <!-- Date Field -->
+    <t t-name="website_form_editor.field_date">
+        <t t-call="website_form_editor.field">
+            <input
+                type="text"
+                class="form-control o_website_form_input o_website_form_date"
+                t-att-name="field.name"
+                t-att-required="field.required"
+            />
+        </t>
+    </t>
+
     <!-- Datetime Field -->
     <t t-name="website_form_editor.field_datetime">
         <t t-call="website_form_editor.field">

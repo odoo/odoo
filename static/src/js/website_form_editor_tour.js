@@ -51,7 +51,7 @@ odoo.define('website_form_editor.tour', function(require) {
                     title:          "Click on Save",
                     element:        ".modal-footer #modal-save"
                 },
-                // Add the display_name field
+                // Add the subject field
                 {
                     title:          "Click on Form snippet",
                     element:        ".s_website_form[data-model_name]"
@@ -65,19 +65,19 @@ odoo.define('website_form_editor.tour', function(require) {
                     element:        ".oe_overlay_options:visible li[data-website_form_field_modal] a"
                 },
                 {
-                    title:          "Select the display_name field",
+                    title:          "Select the subject field",
                     element:        "select[name='field_selection']",
-                    sampleText:     "display_name"
+                    sampleText:     "subject"
                 },
                 {
                     title:          "Click on Save",
                     element:        ".modal-footer #modal-save"
                 },
 
-                // Customize display_name field
+                // Customize subject field
                 {
                     title:          "Change the label",
-                    element:        ".control-label[for='display_name']",
+                    element:        ".control-label[for='subject']",
                     sampleText:     "Name"
                 },
                 {
@@ -91,7 +91,7 @@ odoo.define('website_form_editor.tour', function(require) {
                 {
                     title:          "Check the resulting field",
                     waitFor:        ".form-field.o_website_form_required_custom" +
-                                    ":has(input[type=text][name=display_name][required])" +
+                                    ":has(input[type=text][name=subject][required])" +
                                     ":has(label:contains('Name'))"
                 },
 
@@ -109,7 +109,7 @@ odoo.define('website_form_editor.tour', function(require) {
                     element:        ".oe_overlay_options:visible li[data-website_form_field_modal] a"
                 },
                 {
-                    title:          "Select the display_name field",
+                    title:          "Select the subject field",
                     element:        "select[name='field_selection']",
                     sampleText:     "record_name"
                 },
@@ -154,7 +154,7 @@ odoo.define('website_form_editor.tour', function(require) {
                     element:        ".oe_overlay_options:visible li[data-website_form_field_modal] a"
                 },
                 {
-                    title:          "Select the display_name field",
+                    title:          "Select the subject field",
                     element:        "select[name='field_selection']",
                     sampleText:     "body_html"
                 },
@@ -163,7 +163,7 @@ odoo.define('website_form_editor.tour', function(require) {
                     element:        ".modal-footer #modal-save"
                 },
 
-                // Customize display_name field
+                // Customize subject field
                 {
                     title:          "Change the label",
                     element:        ".control-label[for='body_html']",
@@ -434,7 +434,7 @@ odoo.define('website_form_editor.tour', function(require) {
                     element:        ".oe_overlay_options:visible li[data-website_form_field_modal] a"
                 },
                 {
-                    title:          "Select the display_name field",
+                    title:          "Select the subject field",
                     element:        "select[name='field_selection']",
                     sampleText:     "attachment_ids"
                 },
@@ -486,7 +486,7 @@ odoo.define('website_form_editor.tour', function(require) {
                     title:          "Try to send empty form",
                     waitFor:        "form[data-model_name='mail.mail']" +
                                     "[data-success_page='']" +
-                                    ":has(.form-field:has(label:contains('Name')):has(input[type='text'][name='display_name'][required]))" +
+                                    ":has(.form-field:has(label:contains('Name')):has(input[type='text'][name='subject'][required]))" +
                                     ":has(.form-field:has(label:contains('Awesome Label')):hidden)" +
                                     ":has(.form-field:has(label:contains('Your Message')):has(textarea[name='body_html'][required]))" +
                                     ":has(.form-field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Iphone'][required]))" +
@@ -513,7 +513,7 @@ odoo.define('website_form_editor.tour', function(require) {
                                     ":has(.form-field:has(label:contains('Service')):not(.has-error))" +
                                     ":has(.form-field:has(label:contains('State')):not(.has-error))" +
                                     ":has(.form-field:has(label:contains('Invoice Scan')):not(.has-error))",
-                    element:        "input[name=display_name]",
+                    element:        "input[name=subject]",
                     sampleText:     "Jane Smith"
                 },
                 {

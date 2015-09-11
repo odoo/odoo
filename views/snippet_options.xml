@@ -22,6 +22,8 @@
                       <li data-website_form_custom_field="selection"><a>Radio Buttons</a></li>
                       <li data-website_form_custom_field="many2one"><a>Selection</a></li>
                       <li data-website_form_custom_field="one2many"><a>Multiple Checkboxes</a></li>
+                      <li data-website_form_custom_field="date"><a>Date</a></li>
+                      <li data-website_form_custom_field="datetime"><a>Date &amp; Time</a></li>
                       <li data-website_form_custom_field="binary"><a>File Upload</a></li>
                   </ul>
               </li>
@@ -67,6 +69,9 @@
 
           <!-- Remove the duplicate option of model select items -->
           <div data-js="website_form_editor_field_x2many" data-selector=".s_website_form .form-field:not(.o_website_form_custom) .o_website_form_select_item" data-drop-near=".o_website_form_select_item"/>
+
+          <!-- Remove the delete options of the Submit button -->
+          <div data-js="website_form_editor_field_required" data-selector=".s_website_form .o_website_form_send"/>
 
         </xpath>
     </template>

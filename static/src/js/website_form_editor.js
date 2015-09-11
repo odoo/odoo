@@ -27,9 +27,19 @@ odoo.define('website_form_editor', function (require) {
             self.$modal.appendTo('body');
 
             // Process the modal on_save then hide it
-            self.$modal.find("#modal-save").on('click', function(){
-                on_save();
-                self.$modal.modal('hide');
+            self.$modal.find("#modal-save").on('click', function(e){
+                if (self.$modal.find("form")[0].checkValidity()) {
+                    on_save();
+                    self.$modal.modal('hide');
+                } else {
+                    _.each(self.$modal.find('input'), function(input) {
+                        var $field = $(input).closest('.form-field');
+                        $field.removeClass('has-error');
+                        if (!input.checkValidity()) {
+                            $field.addClass('has-error');
+                        }
+                    });
+                }
             });
 
             // Destroy the modal when it is closed, as we will use many of them
@@ -122,7 +132,7 @@ odoo.define('website_form_editor', function (require) {
                 var success_page = qweb.render("website_form_editor.field_char", {
                     field: {
                         name: 'success_page',
-                        string: 'Success Page',
+                        string: 'Thank You Page',
                         value: self.$target.attr('data-success_page')
                     }
                 });
@@ -150,6 +160,15 @@ odoo.define('website_form_editor', function (require) {
 
                 self.$modal.find("[name='model_selection']").on('change', function() {
                     self.toggle_email_to();
+                });
+
+                // On modal close, if there is no data-model, it means
+                // that the user refused to configure the form on the
+                // first modal, so we remove the snippet.
+                self.$modal.on('hidden.bs.modal', function (e) {
+                    if (!self.$target.attr('data-model_name')){
+                        self.$target.remove();
+                    }
                 });
             })
         },
@@ -186,10 +205,6 @@ odoo.define('website_form_editor', function (require) {
                         self.append_field(selected_field);
                     }
                 );
-
-                self.$modal.find("[name='field_selection']").on('change', function() {
-                    console.log('changed');
-                });
             });
         },
 
@@ -290,7 +305,7 @@ odoo.define('website_form_editor', function (require) {
                     model:  field.relation,
                     method: 'search_read',
                     args: [
-                        field.domain,
+                        // field.domain,  TODO: Handle field domains
                         ['display_name']
                     ],
                     kwargs:{"context": base.get_context()}

@@ -1,5 +1,5 @@
 {
-    'name': 'Website Form Editor',
+    'name': 'Website Form Builder',
     'category': 'Website',
     'summary': 'Build custom web forms using the website builder',
     'version': '1.0',
