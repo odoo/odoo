@@ -79,11 +79,12 @@
                             <label for="name"/>
                         </div>
                         <h1>
-                            <field name="name"/>
+                            <field name="name" placeholder="e.g. Business Lunch"/>
                         </h1>
                         <label for="partner_ids" string="Attendees" class="oe_edit_only"/>
                         <h2>
                             <field name="partner_ids" widget="many2manyattendee"
+                                placeholder="Select attendees..."
                                 context="{'force_email':True}"
                                 on_change="onchange_partner_ids(partner_ids)"
                                 class="oe_inline"/>
