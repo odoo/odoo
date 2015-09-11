@@ -206,7 +206,7 @@ class google_calendar(osv.AbstractModel):
             context = {}
         if event.allday:
             start_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.start, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context).isoformat('T').split('T')[0]
-            final_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.start, tools.DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=event.duration) + timedelta(days=isCreating and 1 or 0), context=context).isoformat('T').split('T')[0]
+            final_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.stop, tools.DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=1), context=context).isoformat('T').split('T')[0]
             type = 'date'
             vstype = 'dateTime'
         else:

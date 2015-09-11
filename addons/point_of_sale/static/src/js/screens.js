@@ -690,6 +690,9 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.product_list_widget.set_product_list(products); // FIXME: this should be moved elsewhere ... 
 
             this.el.querySelector('.searchbox input').addEventListener('keyup',this.search_handler);
+            $('.searchbox input', this.el).keypress(function(e){
+                e.stopPropagation();
+            });
 
             this.el.querySelector('.search-clear').addEventListener('click',this.clear_search_handler);
 
