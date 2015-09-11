@@ -910,7 +910,7 @@
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
                         <page string="Initial Demand" attrs="{'invisible': [('state', 'in', ('draft', 'confirmed', 'waiting', 'done'))]}">
-                            <field name="move_lines_related" readonly="1"/>
+                            <field name="move_lines_related" readonly="1" context="{'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}"/>
                         </page>
                         <page string="Additional Info" name="extra">
                             <group>
