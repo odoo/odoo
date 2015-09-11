@@ -220,7 +220,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_view_invoice(self):
-        self.ensure_one()
+        invoice_ids = self.mapped('invoice_ids')
         imd = self.env['ir.model.data']
         action = imd.xmlid_to_object('account.action_invoice_tree1')
         list_view_id = imd.xmlid_to_res_id('account.invoice_tree')
@@ -235,11 +235,11 @@ class SaleOrder(models.Model):
             'context': action.context,
             'res_model': action.res_model,
         }
-        if len(self.invoice_ids) > 1:
-            result['domain'] = "[('id','in',%s)]" % self.invoice_ids.ids
-        elif len(self.invoice_ids) == 1:
+        if len(invoice_ids) > 1:
+            result['domain'] = "[('id','in',%s)]" % invoice_ids.ids
+        elif len(invoice_ids) == 1:
             result['views'] = [(form_view_id, 'form')]
-            result['res_id'] = self.invoice_ids.id
+            result['res_id'] = invoice_ids.ids[0]
         else:
             result = {'type': 'ir.actions.act_window_close'}
         return result
