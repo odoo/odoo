@@ -1753,7 +1753,7 @@ class mail_compose_message(osv.Model):
         if context.get('default_model') == 'purchase.order' and context.get('default_res_id'):
             context = dict(context, mail_post_autofollow=True)
             self.pool.get('purchase.order').signal_workflow(cr, uid, [context['default_res_id']], 'send_rfq')
-        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, auto_commit=auto_commit, context=context)
 
 
 class account_invoice(osv.Model):

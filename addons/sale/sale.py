@@ -1216,7 +1216,7 @@ class mail_compose_message(osv.Model):
         if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
             self.pool.get('sale.order').signal_workflow(cr, uid, [context['default_res_id']], 'quotation_sent')
-        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, auto_commit=auto_commit, context=context)
 
 
 class account_invoice(osv.Model):

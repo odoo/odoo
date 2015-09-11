@@ -1656,7 +1656,7 @@ class mail_compose_message(models.Model):
     _inherit = 'mail.compose.message'
 
     @api.multi
-    def send_mail(self):
+    def send_mail(self, auto_commit=False):
         context = self._context
         if context.get('default_model') == 'account.invoice' and \
                 context.get('default_res_id') and context.get('mark_invoice_as_sent'):
@@ -1664,4 +1664,4 @@ class mail_compose_message(models.Model):
             invoice = invoice.with_context(mail_post_autofollow=True)
             invoice.write({'sent': True})
             invoice.message_post(body=_("Invoice sent"))
-        return super(mail_compose_message, self).send_mail()
+        return super(mail_compose_message, self).send_mail(auto_commit=auto_commit)
