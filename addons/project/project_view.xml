@@ -111,12 +111,12 @@
                     <notebook>
                         <page string="Settings">
                             <group>
-                                <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
+                                <field name="privacy_visibility" widget="radio"/>
+                                <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer" attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
                                         context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"
                                         groups="base.group_no_one"/>
-                                <field name="privacy_visibility" widget="radio"/>
                             </group>
                             <group name="misc">
                                 <group string="Time Scheduling" groups="project.group_time_work_estimation_tasks">
