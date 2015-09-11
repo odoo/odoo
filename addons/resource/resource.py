@@ -20,6 +20,7 @@
 ##############################################################################
 
 import datetime
+import pytz
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
@@ -332,11 +333,14 @@ class resource_calendar(osv.osv):
                 intervals.append((start_dt.replace(hour=default_interval[0]), start_dt.replace(hour=default_interval[1])))
             return intervals
 
+        tzinfo = fields.datetime.context_timestamp(cr, uid, work_dt, context={}).tzinfo
         working_intervals = []
         for calendar_working_day in self.get_attendances_for_weekdays(cr, uid, id, [start_dt.weekday()], context):
+            hour_from = work_dt.replace(hour=int(calendar_working_day.hour_from)).replace(tzinfo=tzinfo).astimezone(pytz.UTC).hour
+            hour_to = work_dt.replace(hour=int(calendar_working_day.hour_to)).replace(tzinfo=tzinfo).astimezone(pytz.UTC).hour
             working_interval = (
-                work_dt.replace(hour=int(calendar_working_day.hour_from)),
-                work_dt.replace(hour=int(calendar_working_day.hour_to))
+                work_dt.replace(hour=int(hour_from)),
+                work_dt.replace(hour=int(hour_to))
             )
             working_intervals += self.interval_remove_leaves(working_interval, work_limits)
 
