@@ -659,7 +659,7 @@ class account_voucher(osv.osv):
             del(res['value']['payment_rate'])
         return res
 
-    def finalize_voucher_move_lines(self, cr, uid, ids, move_lines,
+    def finalize_voucher_move_lines(self, cr, uid, ids, account_move_lines,
                                     partner_id, journal_id, price,
                                     currency_id, ttype, date, context=None):
         """ finalize_account_move_lines(move_lines) -> move_lines
