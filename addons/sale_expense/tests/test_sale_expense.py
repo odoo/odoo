@@ -76,4 +76,4 @@ class TestSaleExpense(TestSale):
         # both expenses should be invoiced
         inv_id = so.action_invoice_create()
         inv = self.env['account.invoice'].browse(inv_id)
-        self.assertEqual(inv.amount_total, 732.0, 'Sale Expense: invoicing of expense is wrong')
+        self.assertEqual(inv.amount_untaxed, 732.0, 'Sale Expense: invoicing of expense is wrong')

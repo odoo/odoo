@@ -24,7 +24,7 @@ class procurement_order(osv.osv):
 class stock_move(osv.osv):
     _inherit = "stock.move"
 
-    def action_confirm(self, cr, uid, moves, context=None):
-        res = super(stock_move, self).action_confirm(cr, uid, moves, context=context or {})
-        super(stock_move, self).action_assign(cr, uid, moves, context=context or {})
+    def action_confirm(self, cr, uid, ids, context=None):
+        res = super(stock_move, self).action_confirm(cr, uid, ids, context=context or {})
+        super(stock_move, self).action_assign(cr, uid, ids, context=context or {})
         return res
