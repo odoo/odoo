@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
+
 <template id="report_invoice_layouted" inherit_id="account.report_invoice_document">
     <xpath expr="//table/tbody[@class='invoice_tbody']" position="replace">
-        <t t-foreach="o.sale_layout_lines(invoice_id=o.id)" t-as="p">
+        <t t-set="doc" t-value="o"/>
+        <t t-foreach="o.sale_layout_lines()" t-as="p">
             <!-- Name of the category -->
             <t t-call="sale_layout.category_template"/>
 
@@ -64,5 +65,5 @@
         </t>
     </xpath>
 </template>
-</data>
-</openerp>
+
+</odoo>

@@ -1,54 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <!-- Sale order form -->
-        <record model="ir.ui.view" id="view_order_form_inherit_1">
-            <field name="name">sale.order.form.inherit_1</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
-                         <field name="sale_layout_cat_id"/>
-                    </xpath>
-                    <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="after">
-                        <field name="sale_layout_cat_id"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
-        <!-- Invoice form -->
-        <record model="ir.ui.view" id="view_invoice_form_inherit_1">
-             <field name="name">account.invoice.form.inherit_1</field>
-             <field name="model">account.invoice</field>
-             <field name="inherit_id" ref="account.invoice_form"/>
-             <field name="arch" type="xml">
-                 <data>
-                    <xpath expr="//page/field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="after">
-                        <field name="sale_layout_cat_id"/>
-                    </xpath>
-
-                 </data>
-             </field>
-         </record>
-
-        <record model="ir.ui.view" id="view_invoice_line_form_inherit_2">
-            <field name="name">account.invoice.line.form.inherit_2</field>
-            <field name="model">account.invoice.line</field>
-            <field name="inherit_id" ref="account.view_invoice_line_form"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//group/group/field[@name='product_id']" position="after">
-                        <field name="sale_layout_cat_id"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
+<odoo>
 
         <!-- Report condiguration -->
         <record id="report_configuration_form_view" model="ir.ui.view">
-            <field name="name">report.configuration.form.view</field>
+            <field name="name">sale.layout.category.form</field>
             <field name="model">sale_layout.category</field>
             <field name="arch" type="xml">
                 <form string="Report Configuration">
@@ -64,7 +19,7 @@
         </record>
 
         <record id="report_configuration_tree_view" model="ir.ui.view">
-            <field name="name">report.configuration.form.view</field>
+            <field name="name">sale.layout.category.tree</field>
             <field name="model">sale_layout.category</field>
             <field name="arch" type="xml">
                 <tree string="Report Configuration">
@@ -78,7 +33,7 @@
         </record>
 
         <record id="report_configuration_search_view" model="ir.ui.view" >
-	        <field name="name">report.configuration.search.view</field>
+	        <field name="name">sale.layout.category.search</field>
 	        <field name="model">sale_layout.category</field>
 	        <field name="arch" type="xml">
                 <search string="Search Name">
@@ -107,5 +62,5 @@
             name="Report Layout Categories" 
             groups="base.group_sale_manager,base.group_sale_salesman,account.group_account_manager,account.group_account_user"
         />
-    </data>
-</openerp>
+
+</odoo>
