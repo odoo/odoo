@@ -3,7 +3,9 @@
 # * account_followup
 # 
 # Translators:
+# Clo <clo@odoo.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Florian Hatat, 2015
 # Henri Cornuau <hcornuau@gmail.com>, 2015
 # Quentin THEURET <quentin@theuret.net>, 2015
 msgid ""
@@ -11,9 +13,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-15 16:30+0000\n"
-"Last-Translator: Henri Cornuau <hcornuau@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/p/odoo-8/language/fr/)\n"
+"PO-Revision-Date: 2015-08-05 12:01+0000\n"
+"Last-Translator: Clo <clo@odoo.com>\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -321,7 +323,7 @@ msgid ""
 "                the customer.\n"
 "              </p>\n"
 "          "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliquez pour définir les niveaux de relance et les actions qui leurs sont liées.\n</p><p>\nPour chaque étape, déterminez les actions à prendre et la durée en jours. Il est possible d'utiliser des modèles d'impression et de courriels pour envoyer des messages spécifiques à votre client.\n</p>"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -420,7 +422,7 @@ msgstr "Annuler"
 #: help:account_followup.print,test_print:0
 msgid ""
 "Check if you want to print follow-ups without changing follow-up level."
-msgstr ""
+msgstr "Cocher si vous souhaitez imprimer des relances sans changer les niveaux de relance."
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -443,7 +445,7 @@ msgstr "Société"
 #. module: account_followup
 #: view:account.config.settings:account_followup.view_account_config_settings_inherit
 msgid "Configure your follow-up levels"
-msgstr ""
+msgstr "Configurez vos niveaux de relance."
 
 #. module: account_followup
 #: field:account_followup.followup,create_uid:0
@@ -785,7 +787,7 @@ msgstr "Dernier niveau de suivi sans litige"
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Latest Follow-up Month"
-msgstr ""
+msgstr "Mois de la dernière relance"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
@@ -1116,7 +1118,7 @@ msgstr "Nombre de jours à attendre après la date d'échéance de la facture av
 msgid ""
 "The partner does not have any accounting entries to print in the overdue "
 "report for the current company."
-msgstr ""
+msgstr "Ce partenaire n'a aucune écriture comptable à imprimer dans le rapport des impayés pour la société actuelle."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:319
@@ -1134,7 +1136,7 @@ msgstr "Exercice comptable"
 msgid ""
 "This action will send follow-up emails, print the letters and\n"
 "                        set the manual actions per customer, according to the follow-up levels defined."
-msgstr ""
+msgstr "Cette action enverra un courriel de suivi, imprimera les lettres et mettra en place les actions manuelles par client, en fonction des niveaux de suivi définis."
 
 #. module: account_followup
 #: help:account_followup.print,date:0
@@ -1155,7 +1157,7 @@ msgid ""
 "current date when the partner gets a follow-up level that requires a manual "
 "action. Can be practical to set manually e.g. to see if he keeps his "
 "promises."
-msgstr ""
+msgstr "Lorsque le suivi manuel est nécessaire. La date sera fixée à la date du jour où l'associé atteint un niveau de relance qui exige une action manuelle. Cela peut être pratique de le paramétrer manuellement, pour voir par exemple, s'il tient ses promesses."
 
 #. module: account_followup
 #: view:account_followup.followup:account_followup.view_account_followup_followup_form
@@ -1200,7 +1202,7 @@ msgstr "Lors du traitement, enverra un courriel"
 msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
-msgstr ""
+msgstr "Lors du traitement, Odoo indiquera l'action manuelle à faire pour ce client."
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
@@ -1215,7 +1217,7 @@ msgid ""
 "                            use the following keywords in the text. Don't\n"
 "                            forget to translate in all languages you installed\n"
 "                            using to top right icon."
-msgstr ""
+msgstr "Ecrivez ici l'introduction de la lettre,\nselon le niveau de suivi. Vous pouvez\nutiliser les mots clés suivants dans le texte. N'oubliez\npas de les traduire dans toutes les langues que vous avez installées\nen utilisant l'icône en haut à droite."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:291

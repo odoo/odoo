@@ -37,6 +37,7 @@ class purchase_order(osv.osv):
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         cur_obj=self.pool.get('res.currency')
+        line_obj = self.pool['purchase.order.line']
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {
                 'amount_untaxed': 0.0,
@@ -46,8 +47,14 @@ class purchase_order(osv.osv):
             val = val1 = 0.0
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
-               val1 += line.price_subtotal
-               for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, line.product_id, order.partner_id)['taxes']:
+                val1 += line.price_subtotal
+                line_price = line_obj._calc_line_base_price(cr, uid, line,
+                                                            context=context)
+                line_qty = line_obj._calc_line_quantity(cr, uid, line,
+                                                        context=context)
+                for c in self.pool['account.tax'].compute_all(
+                        cr, uid, line.taxes_id, line_price, line_qty,
+                        line.product_id, order.partner_id)['taxes']:
                     val += c.get('amount', 0.0)
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
@@ -336,7 +343,7 @@ class purchase_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'purchase.order') or '/'
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'purchase.order', context=context) or '/'
         context = dict(context or {}, mail_create_nolog=True)
         order =  super(purchase_order, self).create(cr, uid, vals, context=context)
         self.message_post(cr, uid, [order], body=_("RFQ created"), context=context)
@@ -746,8 +753,12 @@ class purchase_order(osv.osv):
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
         res = []
+        if order.location_id.usage == 'customer':
+            name = order_line.product_id.with_context(dict(context or {}, lang=order.dest_address_id.lang)).name
+        else:
+            name = order_line.name or ''
         move_template = {
-            'name': order_line.name or '',
+            'name': name,
             'product_id': order_line.product_id.id,
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
@@ -990,14 +1001,60 @@ class purchase_order(osv.osv):
 
         return orders_info
 
+    def _set_po_lines_invoiced(self, cr, uid, ids, context=None):
+        for po in self.browse(cr, uid, ids, context=context):
+            is_invoiced = []
+            if po.invoice_method == 'picking':
+                # We determine the invoiced state of the PO line based on the invoiced state
+                # of the associated moves. This should cover all possible cases:
+                # - all moves are done and invoiced
+                # - a PO line is split into multiple moves (e.g. if multiple pickings): some
+                #   pickings are done, some are in progress, some are cancelled
+                for po_line in po.order_line:
+                    if (po_line.move_ids and
+                            all(move.state in ('done', 'cancel') for move in po_line.move_ids) and
+                            not all(move.state == 'cancel' for move in po_line.move_ids) and
+                            all(move.invoice_state == 'invoiced' for move in po_line.move_ids if move.state == 'done')):
+                        is_invoiced.append(po_line.id)
+            else:
+                for po_line in po.order_line:
+                    if (po_line.invoice_lines and 
+                            all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines)):
+                        is_invoiced.append(po_line.id)
+            if is_invoiced:
+                self.pool['purchase.order.line'].write(cr, uid, is_invoiced, {'invoiced': True})
+            workflow.trg_write(uid, 'purchase.order', po.id, cr)
+
 
 class purchase_order_line(osv.osv):
+    def _calc_line_base_price(self, cr, uid, line, context=None):
+        """Return the base price of the line to be used for tax calculation.
+
+        This function can be extended by other modules to modify this base
+        price (adding a discount, for example).
+        """
+        return line.price_unit
+
+    def _calc_line_quantity(self, cr, uid, line, context=None):
+        """Return the base quantity of the line to be used for the subtotal.
+
+        This function can be extended by other modules to modify this base
+        quantity (adding for example offers 3x2 and so on).
+        """
+        return line.product_qty
+
     def _amount_line(self, cr, uid, ids, prop, arg, context=None):
         res = {}
         cur_obj=self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
         for line in self.browse(cr, uid, ids, context=context):
-            taxes = tax_obj.compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, line.product_id, line.order_id.partner_id)
+            line_price = self._calc_line_base_price(cr, uid, line,
+                                                    context=context)
+            line_qty = self._calc_line_quantity(cr, uid, line,
+                                                context=context)
+            taxes = tax_obj.compute_all(cr, uid, line.taxes_id, line_price,
+                                        line_qty, line.product_id,
+                                        line.order_id.partner_id)
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
@@ -1113,6 +1170,9 @@ class purchase_order_line(osv.osv):
 
         res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
         if not product_id:
+            if not uom_id:
+                uom_id = self.default_get(cr, uid, ['product_uom'], context=context).get('product_uom', False)
+                res['value']['product_uom'] = uom_id
             return res
 
         product_product = self.pool.get('product.product')
@@ -1193,6 +1253,7 @@ class purchase_order_line(osv.osv):
         taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
         taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
+        price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, product.supplier_taxes_id, taxes_ids)
         res['value'].update({'price_unit': price, 'taxes_id': taxes_ids})
 
         return res
@@ -1405,9 +1466,12 @@ class procurement_order(osv.osv):
         if qty != po_line.product_qty:
             pricelist_obj = self.pool.get('product.pricelist')
             pricelist_id = po_line.order_id.partner_id.property_product_pricelist_purchase.id
-            price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, po_line.order_id.partner_id.id, {'uom': procurement.product_uom.id})[pricelist_id]
+            price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, po_line.order_id.partner_id.id, {'uom': procurement.product_id.uom_po_id.id})[pricelist_id]
 
         return qty, price
+
+    def update_origin_po(self, cr, uid, po, proc, context=None):
+        pass
 
     def make_po(self, cr, uid, ids, context=None):
         """ Resolve the purchase from procurement, which may result in a new PO creation, a new PO line creation or a quantity change on existing PO line.
@@ -1451,13 +1515,14 @@ class procurement_order(osv.osv):
 
                         if new_qty > po_line.product_qty:
                             po_line_obj.write(cr, SUPERUSER_ID, po_line.id, {'product_qty': new_qty, 'price_unit': new_price}, context=context)
+                            self.update_origin_po(cr, uid, po_rec, procurement, context=context)
                             sum_po_line_ids.append(procurement.id)
                     else:
                         line_vals.update(order_id=po_id)
                         po_line_id = po_line_obj.create(cr, SUPERUSER_ID, line_vals, context=context)
                         linked_po_ids.append(procurement.id)
                 else:
-                    name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
+                    name = seq_obj.get(cr, uid, 'purchase.order', context=context) or _('PO: %s') % procurement.name
                     po_vals = {
                         'name': name,
                         'origin': procurement.origin,
@@ -1580,22 +1645,9 @@ class account_invoice(osv.Model):
         else:
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
-        for order in purchase_order_obj.browse(cr, user_id, po_ids, context=context):
-            purchase_order_obj.message_post(cr, user_id, order.id, body=_("Invoice received"), context=context)
-            invoiced = []
-            shipped = True
-            # for invoice method manual or order, don't care about shipping state
-            # for invoices based on incoming shippment, beware of partial deliveries
-            if (order.invoice_method == 'picking' and
-                    not all(picking.invoice_state in ['invoiced'] for picking in order.picking_ids)):
-                shipped = False
-            for po_line in order.order_line:
-                if (po_line.invoice_lines and 
-                        all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines)):
-                    invoiced.append(po_line.id)
-            if invoiced and shipped:
-                self.pool['purchase.order.line'].write(cr, user_id, invoiced, {'invoiced': True})
-            workflow.trg_write(user_id, 'purchase.order', order.id, cr)
+        for po_id in po_ids:
+            purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice received"), context=context)
+            purchase_order_obj._set_po_lines_invoiced(cr, user_id, [po_id], context=context)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

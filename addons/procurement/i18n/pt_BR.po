@@ -3,15 +3,17 @@
 # * procurement
 # 
 # Translators:
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-02 22:05+0000\n"
+"PO-Revision-Date: 2015-08-04 00:12+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/p/odoo-8/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -55,7 +57,7 @@ msgid ""
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 Clique para criar uma ordem de compra\n              </p>\n              <p>\n                Uma <b>ordem de compra</b> é utilizado para gravar uma necessidade para um específico\n                 produto a um local específico. Ordens de compra de contratos são geralmente\n                 criado automaticamente a partir do <i> ordens de venda, regras logísticas ou\n                 regras mínimas de ações.</i>\n              </p>\n              <p>\n                Quando a ordem de aquisição for confirmada, automaticamente\n                 cria as operações necessárias a cumprir a necessidade: proposição\n de pedido de compra, ordem de produção, etc.\n              </p>\n            "
 
 #. module: procurement
 #: field:procurement.rule,action:0
@@ -104,7 +106,7 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but"
 " can be manually set by the procurement manager to force an unusual "
 "behavior."
-msgstr ""
+msgstr "Regra escolhida para a resolução de contratos. Normalmente escolhido pelo sistema, mas pode ser definido manualmente pelo gerente de compras para forçar um comportamento incomum."
 
 #. module: procurement
 #: field:procurement.order,company_id:0 field:procurement.rule,company_id:0
@@ -188,7 +190,7 @@ msgstr "Fixo"
 #. module: procurement
 #: field:procurement.rule,group_id:0
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Grupo de Aquisição previsto"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -209,7 +211,7 @@ msgstr "Agrupar Por"
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr ""
+msgstr "Grupos de Aquisições"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -232,7 +234,7 @@ msgstr "Se marcado novas mensagens solicitarão sua atenção."
 #. module: procurement
 #: help:procurement.rule,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
+msgstr "Se desmarcado, permitirá que você esconda a regra sem removê-la."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:155
@@ -298,7 +300,7 @@ msgstr "Nome"
 #: code:addons/procurement/procurement.py:212
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "Nenhuma regra correspondente a essa aquisição"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -341,7 +343,7 @@ msgstr "Problemas das Aquisições"
 #. module: procurement
 #: field:procurement.order,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "Grupo de Aquisição"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
@@ -356,12 +358,12 @@ msgstr "Ordens de Aquisição"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Requisição de Compras"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Regras de Compras"
 
 #. module: procurement
 #: view:procurement.group:procurement.procurement_group_form_view
@@ -399,27 +401,27 @@ msgstr "UdV do Produto"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Propagar"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Opções de Propagação"
 
 #. module: procurement
 #: field:procurement.rule,group_propagation_option:0
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Propagação de Grupo de Aquisições"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Pull Rule"
-msgstr ""
+msgstr "Regra de recebimento"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_tree
 msgid "Pull Rules"
-msgstr ""
+msgstr "Regras de Recebimentos"
 
 #. module: procurement
 #: field:procurement.order,product_qty:0
@@ -429,7 +431,7 @@ msgstr "Quantidade"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr ""
+msgstr "Reconfirmar Compra"
 
 #. module: procurement
 #: field:procurement.group,name:0
@@ -441,7 +443,7 @@ msgstr "Referência"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr ""
+msgstr "Referência do documento que criou esta Aquisição.\nEla é automaticamente lançada pelo Odoo."
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
@@ -513,7 +515,7 @@ msgstr "Resumo"
 #. module: procurement
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr ""
+msgstr "Este campo irá preencher a Origem da embalagem e o nome da movimentação"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view

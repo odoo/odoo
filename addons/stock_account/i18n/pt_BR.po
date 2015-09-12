@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-11 03:56+0000\n"
+"PO-Revision-Date: 2015-08-04 00:17+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/p/odoo-8/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -64,7 +64,7 @@ msgstr "Preço Médio"
 #. module: stock_account
 #: field:stock.config.settings,module_stock_landed_costs:0
 msgid "Calculate landed costs on products"
-msgstr ""
+msgstr "Calcular os custos adicionais em produtos"
 
 #. module: stock_account
 #: view:stock.change.standard.price:stock_account.view_change_standard_price
@@ -96,7 +96,7 @@ msgid ""
 "Choose the accounting period where you want to value the stock moves created"
 " by the inventory instead of the default one (chosen by the inventory end "
 "date)"
-msgstr ""
+msgstr "Escolha o período contábil em que deseja valorizar as movimentações de estoque criadas pelo inventário em vez do padrão (escolhido pela data de término do inventário)"
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
@@ -105,12 +105,12 @@ msgid ""
 "\n"
 "                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
 "                        you had, and gives you the inventory value according to the standard price used at that time."
-msgstr ""
+msgstr "Escolha a data para a qual você deseja obter a avaliação de estoque de seus produtos.\n\n                        Este irá filtrar a operação de estoque que não foram feitas na data selecionada, para recuperar a quantidade\n                         você tinha, e dá-lhe o valor do inventário de acordo com o preço padrão utilizado na época."
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid "Choose your date"
-msgstr ""
+msgstr "Escolha a sua data"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_search
@@ -137,7 +137,7 @@ msgstr "Criar"
 #. module: stock_account
 #: selection:stock.invoice.onshipping,journal_type:0
 msgid "Create Customer Invoice"
-msgstr ""
+msgstr "Criar Fatura do Cliente"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_stock_invoice_onshipping
@@ -152,7 +152,7 @@ msgstr "Criar Fatura"
 #. module: stock_account
 #: selection:stock.invoice.onshipping,journal_type:0
 msgid "Create Supplier Invoice"
-msgstr ""
+msgstr "Criar Fatura Fornecedor"
 
 #. module: stock_account
 #: field:stock.config.settings,module_stock_invoice_directly:0
@@ -182,7 +182,7 @@ msgstr "Criado em"
 #: model:ir.actions.act_window,name:stock_account.action_history_tree
 #: model:ir.ui.menu,name:stock_account.menu_action_history_tree
 msgid "Current Inventory Valuation"
-msgstr ""
+msgstr "Avaliação de estoque atual"
 
 #. module: stock_account
 #: field:wizard.valuation.history,date:0
@@ -205,7 +205,7 @@ msgstr "Erro!"
 #. module: stock_account
 #: field:stock.inventory,period_id:0
 msgid "Force Valuation Period"
-msgstr ""
+msgstr "Força Valorização do Período"
 
 #. module: stock_account
 #: field:stock.config.settings,group_stock_inventory_valuation:0
@@ -251,7 +251,7 @@ msgstr ""
 msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
-msgstr ""
+msgstr "Instale o módulo que permite a afetar despesas de importação nas separações, e dividi-los para os diferentes produtos."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -261,7 +261,7 @@ msgstr "Inventário"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr ""
+msgstr "Locais de inventário"
 
 #. module: stock_account
 #: view:product.template:stock_account.view_template_property_form
@@ -272,7 +272,7 @@ msgstr "Valorização de Inventário"
 #. module: stock_account
 #: field:stock.history,inventory_value:0
 msgid "Inventory Value"
-msgstr ""
+msgstr "Valor de Inventário"
 
 #. module: stock_account
 #: field:procurement.order,invoice_state:0 field:stock.move,invoice_state:0
@@ -308,7 +308,7 @@ msgstr "Faturamento"
 #. module: stock_account
 #: field:stock.invoice.onshipping,journal_type:0
 msgid "Journal Type"
-msgstr ""
+msgstr "Tipo de Diário"
 
 #. module: stock_account
 #: field:stock.change.standard.price,write_uid:0
@@ -350,7 +350,7 @@ msgstr "Nenhuma diferença entre o preço padrão e o novo preço!"
 #: code:addons/stock_account/wizard/stock_invoice_onshipping.py:91
 #, python-format
 msgid "No invoice created!"
-msgstr ""
+msgstr "Nenhuma fatura criada!"
 
 #. module: stock_account
 #: selection:stock.return.picking,invoice_state:0
@@ -383,12 +383,12 @@ msgid ""
 "    Stock Valuation Account: %s\n"
 "    Stock Journal: %s\n"
 "    "
-msgstr ""
+msgstr "Uma das seguintes informações está ausente da categoria do produto ou do produto e impede que as entradas avaliação contábeis a serem criados:\n     Produto:%s\n     Conta da entrada:%s\n     Conta da saída:%s\n     Conta da Avaliação:%s\n     Diário: %s\n    "
 
 #. module: stock_account
 #: field:stock.history,date:0
 msgid "Operation Date"
-msgstr ""
+msgstr "Data de Operação"
 
 #. module: stock_account
 #: selection:product.template,valuation:0
@@ -413,7 +413,7 @@ msgstr "Aquisições"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Regras de Compras"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_search
@@ -451,7 +451,7 @@ msgstr "Quants"
 #. module: stock_account
 #: selection:product.template,cost_method:0
 msgid "Real Price"
-msgstr ""
+msgstr "Preço Real"
 
 #. module: stock_account
 #: selection:product.template,valuation:0
@@ -461,22 +461,22 @@ msgstr "Tempo Real (automatizado)"
 #. module: stock_account
 #: selection:stock.invoice.onshipping,journal_type:0
 msgid "Refund Purchase"
-msgstr ""
+msgstr "Reembolso de Compra"
 
 #. module: stock_account
 #: selection:stock.invoice.onshipping,journal_type:0
 msgid "Refund Sale"
-msgstr ""
+msgstr "Reembolso de Venda"
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid "Retrieve the Inventory Value"
-msgstr ""
+msgstr "Recuperar o valor do inventário"
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid "Retrieve the stock valuation of your products at current day"
-msgstr ""
+msgstr "Recuperar a avaliação de estoque de seus produtos no dia atual"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
@@ -498,7 +498,7 @@ msgstr "Preço Padrão"
 #: code:addons/stock_account/product.py:144
 #, python-format
 msgid "Standard Price changed"
-msgstr ""
+msgstr "Preço padrão mudou"
 
 #. module: stock_account
 #: help:product.template,cost_method:0
@@ -540,7 +540,7 @@ msgstr "Conta de Saída do Estoque"
 #: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
 #: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
 msgid "Stock Valuation"
-msgstr ""
+msgstr "Avaliação de Estoque "
 
 #. module: stock_account
 #: field:product.category,property_stock_valuation_account_id:0
@@ -564,14 +564,14 @@ msgstr "Conta de Valorização do Estoque (Saindo)"
 #: view:stock.history:stock_account.view_stock_history_report_tree
 #, python-format
 msgid "Stock Value At Date"
-msgstr ""
+msgstr "Valor de Estoque na Data "
 
 #. module: stock_account
 #: help:stock.config.settings,module_stock_invoice_directly:0
 msgid ""
 "This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
 "-This installs the module stock_invoice_directly."
-msgstr ""
+msgstr "Isto permite iniciar automaticamente o assistente de faturação, caso a entrega deve ser faturado quando você enviar ou entregar mercadorias.%s\n-Instala o módulo stock_invoice_directly."
 
 #. module: stock_account
 #: selection:procurement.order,invoice_state:0

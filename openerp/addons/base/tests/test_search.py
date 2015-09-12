@@ -96,14 +96,69 @@ class test_search(common.TransactionCase):
         self.assertEqual(test_user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
 
         # Do: order on many2one, but not by specifying in order parameter of search, but by overriding _order of res_users
-        old_order = users_obj._order
-        users_obj._order = 'country_id desc, name asc, login desc'
+        self.patch_order('res.users', 'country_id desc, name asc, login desc')
         user_ids = users_obj.search(cr, search_user, [])
         expected_ids = [search_user, c, b, a]
         test_user_ids = filter(lambda x: x in expected_ids, user_ids)
         self.assertEqual(test_user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
-        users_obj._order = old_order
 
+    def test_11_indirect_inherits_m2o_order(self):
+        registry, cr, uid = self.registry, self.cr, self.uid
+        Cron = registry('ir.cron')
+        Users = registry('res.users')
+
+        user_ids = {}
+        cron_ids = {}
+        for u in 'BAC':
+            user_ids[u] = Users.create(cr, uid, {'name': u, 'login': u})
+            cron_ids[u] = Cron.create(cr, uid, {'name': u, 'user_id': user_ids[u]})
+
+        ids = Cron.search(cr, uid, [('id', 'in', cron_ids.values())], order='user_id')
+        expected_ids = [cron_ids[l] for l in 'ABC']
+        self.assertEqual(ids, expected_ids)
+
+    def test_12_m2o_order_loop_self(self):
+        registry, cr, uid = self.registry, self.cr, self.uid
+
+        Cats = registry('ir.module.category')
+        ids = {}
+        def create(name, **kw):
+            ids[name] = Cats.create(cr, uid, dict(kw, name=name))
+
+        self.patch_order('ir.module.category', 'parent_id desc, name')
+
+        create('A')
+        create('B', parent_id=ids['A'])
+        create('C', parent_id=ids['A'])
+        create('D')
+        create('E', parent_id=ids['D'])
+        create('F', parent_id=ids['D'])
+
+        expected_order = [ids[x] for x in 'ADEFBC']
+        domain = [('id', 'in', ids.values())]
+        search_result = Cats.search(cr, uid, domain)
+        self.assertEqual(search_result, expected_order)
+
+    def test_13_m2o_order_loop_multi(self):
+        Users = self.env['res.users']
+
+        # will sort by login desc of the creator, then by name
+        self.patch_order('res.partner', 'create_uid, name')
+        self.patch_order('res.users', 'partner_id, login desc')
+
+        kw = dict(groups_id=[(6, 0, [self.ref('base.group_system'),
+                                     self.ref('base.group_partner_manager')])])
+
+        u1 = Users.create(dict(name='Q', login='m', **kw)).id
+        u2 = Users.sudo(user=u1).create(dict(name='B', login='f', **kw)).id
+        u3 = Users.create(dict(name='C', login='c', **kw)).id
+        u4 = Users.sudo(user=u2).create(dict(name='D', login='z', **kw)).id
+
+        expected_order = [u2, u4, u3, u1]
+
+        domain = [('id', 'in', [u1, u2, u3, u4])]
+        search_result = list(Users.search(domain)._ids)
+        self.assertEqual(search_result, expected_order)
 
 if __name__ == '__main__':
     unittest2.main()

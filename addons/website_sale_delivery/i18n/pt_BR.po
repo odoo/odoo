@@ -3,14 +3,16 @@
 # * website_sale_delivery
 # 
 # Translators:
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2015-07-11 03:50+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/p/odoo-8/language/pt_BR/)\n"
+"POT-Creation-Date: 2015-07-31 09:26+0000\n"
+"PO-Revision-Date: 2015-08-04 21:08+0000\n"
+"Last-Translator: Luiz Carlos de Lima <luiz.carlos@akretion.com.br>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -30,22 +32,22 @@ msgstr "Transportadora"
 #. module: website_sale_delivery
 #: view:website:website_sale.payment
 msgid "Choose your Delivery Method"
-msgstr ""
+msgstr "Escolha o seu método de entrega"
 
 #. module: website_sale_delivery
 #: field:sale.order,amount_delivery:0
 msgid "Delivery Amount"
-msgstr ""
+msgstr "Montante de entrega"
 
 #. module: website_sale_delivery
 #: view:website:website_sale.total
 msgid "Delivery will be updated after choosing a new delivery method"
-msgstr ""
+msgstr "A entrega será atualizada Depois de escolher um novo método de entrega"
 
 #. module: website_sale_delivery
 #: view:website:website_sale.total
 msgid "Delivery:"
-msgstr ""
+msgstr "Entrega:"
 
 #. module: website_sale_delivery
 #: field:delivery.carrier,website_description:0
@@ -53,9 +55,23 @@ msgid "Description for the website"
 msgstr "Descrição para o site"
 
 #. module: website_sale_delivery
+#: code:addons/website_sale_delivery/models/sale_order.py:109
+#, python-format
+msgid ""
+"No shipping method is available for your current order and shipping address."
+" Please contact us for more information."
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Sales Order"
 msgstr "Pedido de Venda"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/models/sale_order.py:108
+#, python-format
+msgid "Sorry, we are unable to ship your order"
+msgstr ""
 
 #. module: website_sale_delivery
 #: help:sale.order,amount_delivery:0

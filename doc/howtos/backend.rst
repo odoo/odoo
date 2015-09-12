@@ -623,12 +623,12 @@ instead of a single view its ``arch`` field is composed of any number of
     <!-- improved idea categories list -->
     <record id="idea_category_list2" model="ir.ui.view">
         <field name="name">id.category.list2</field>
-        <field name="model">idea.category/field>
+        <field name="model">idea.category</field>
         <field name="inherit_id" ref="id_category_list"/>
         <field name="arch" type="xml">
-            <!-- find field description inside tree, and add the field
+            <!-- find field description and add the field
                  idea_ids after it -->
-            <xpath expr="/tree/field[@name='description']" position="after">
+            <xpath expr="//field[@name='description']" position="after">
               <field name="idea_ids" string="Number of ideas"/>
             </xpath>
         </field>
@@ -651,6 +651,22 @@ instead of a single view its ``arch`` field is composed of any number of
     ``attributes``
         alters the attributes of the matched element using special
         ``attribute`` elements in the ``xpath``'s body
+
+.. tip::
+
+    When matching a single element, the ``position`` attribute can be set directly
+    on the element to be found. Both inheritances below will give the same result.
+
+    .. code-block:: xml
+
+        <xpath expr="//field[@name='description']" position="after">
+            <field name="idea_ids" />
+        </xpath>
+
+        <field name="description" position="after">
+            <field name="idea_ids" />
+        </field>
+
 
 .. exercise:: Alter existing content
 

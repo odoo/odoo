@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-29 12:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovenian (http://www.transifex.com/p/odoo-8/language/sl/)\n"
+"PO-Revision-Date: 2015-09-05 05:43+0000\n"
+"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
+"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -8749,7 +8749,7 @@ msgid ""
 "Set the analytic account that will be used by default on the invoice tax "
 "lines for invoices. Leave empty if you don't want to use an analytic account"
 " on the invoice tax lines by default."
-msgstr "Privzeti analitični konto za davek na računih. Lahko pustite prazno."
+msgstr "Privzeti analitični konto, ki bo uporabljen za davčne postavke na računih. Če ne želite privzeto uporabljati analitičnega konta za davčne postavke računov, pustite prazno."
 
 #. module: account
 #: help:account.tax,account_analytic_paid_id:0
@@ -9146,6 +9146,11 @@ msgid "Suppliers"
 msgstr "Dobavitelji"
 
 #. module: account
+#: view:website:account.report_invoice_document
+msgid "TIN:"
+msgstr "TIN:"
+
+#. module: account
 #: view:cash.box.out:account.cash_box_out_form
 #: model:ir.actions.act_window,name:account.action_cash_box_out
 msgid "Take Money Out"
@@ -9509,7 +9514,7 @@ msgid ""
 "can have children accounts for multi-company consolidations, "
 "payable/receivable are for partners accounts (for debit/credit "
 "computations), closed for depreciated accounts."
-msgstr "Vrsta konta"
+msgstr "'Interni tip' se uporablja za funkcije, ki so na voljo pri različnih tipih kontov: prikaz je lahko brez dnevniških postavk, konsolidacija so konti, ki imajo podrejene konte za konsolidacije pri več družbah, plačilo/prejem plačila so za konte partnerjev (za obdelave breme/dobro), zaključeno za opuščene konte."
 
 #. module: account
 #: help:account.move.line,tax_code_id:0
@@ -9545,7 +9550,7 @@ msgstr "Vknjižba (%s) za skupni konto je bila potrjena."
 msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency"
 " entry."
-msgstr "Vrednost v drugi valuti"
+msgstr "Vrednost izražena v opcijski drugi valuti pri več valutnem vnosu."
 
 #. module: account
 #: help:account.model.line,amount_currency:0
@@ -10789,7 +10794,7 @@ msgstr "Ponavadi 1 ali -1."
 #. module: account
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr "DDV izpisek"
+msgstr "DDV zavezanec"
 
 #. module: account
 #: field:account.fiscal.position,vat_required:0
@@ -11654,3 +11659,16 @@ msgstr "Uporablja se za izjavo o uskladitvi"
 #: selection:account.subscription,period_type:0
 msgid "year"
 msgstr "leto"
+
+#. module: account
+#: model:res.company,overdue_msg:stock.res_company_1
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr "Dragi gospod/gospa,\n\nPo naši evidenci imate do nas še določene odprte postavke, ki so podrobneje prikazane spodaj.\nV kolikor je medtem bila obveznost že poravnana, lahko smatrate ta opomin kot ničen. V nasprotnem primeru vas prosimo, da poravnate spodaj navedeni znesek.\nV primeru potrebe po kakršnihkoli pojasnilih, smo vam vedno na voljo.\n\nZa sodelovanje se vam v naprej zahvaljujemo ter vas lepo pozdravljamo."
