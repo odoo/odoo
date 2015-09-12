@@ -21,7 +21,7 @@ as possible and the scheduler time range is not taken into account anymore.
 In that case, you can not use priorities any more on the different picking.
     """,
     'website': 'https://www.odoo.com/page/manufacturing',
-    'depends': ['procurement', 'stock'],
+    'depends': ['sale_stock'],
     'data': [],
     'demo': [],
     'test': ['test/procurement_jit.yml'],

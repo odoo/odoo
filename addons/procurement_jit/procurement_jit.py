@@ -21,12 +21,3 @@ class procurement_order(osv.osv):
             return result
         return res
 
-# TODO FP: This code should be uncommented to assign delivery orders directly
-#          Vut there is code to fix in stock.py before, to not have purchase tests that fails
-# class stock_move(osv.osv):
-#     _inherit = "stock.move"
-# 
-#     def action_confirm(self, cr, uid, ids, context=None):
-#         res = super(stock_move, self).action_confirm(cr, uid, ids, context=context or {})
-#         super(stock_move, self).action_assign(cr, uid, ids, context=context or {})
-#         return res
