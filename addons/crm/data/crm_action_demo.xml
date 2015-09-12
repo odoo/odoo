@@ -26,5 +26,16 @@
             <field name="days">5</field>
         </record>
 
+        <record id="crm_activity_data_call" model="crm.activity">
+            <field name="activity_1_id" ref="crm_activity_data_email"/>
+            <field name="description">Follow-up call</field>
+        </record>
+        <record id="crm_activity_data_meeting" model="crm.activity">
+            <field name="activity_1_id" ref="crm_activity_data_call"/>
+            <field name="activity_2_id" ref="crm_activity_data_email"/>
+            <field name="days">15</field>
+        </record>
+
+
     </data>
 </odoo>
