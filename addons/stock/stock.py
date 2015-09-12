@@ -1645,6 +1645,7 @@ class stock_picking(models.Model):
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
+                todo_move_ids = list(set(todo_move_ids))
                 if need_rereserve or not all_op_processed: 
                     if not picking.location_id.usage in ("supplier", "production", "inventory"):
                         self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
