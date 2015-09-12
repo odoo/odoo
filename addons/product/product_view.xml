@@ -454,18 +454,6 @@
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
                 </form>
-                <notebook position="before">
-                    <group>
-                        <p>All general settings about this product are managed on <button name="open_product_template" type="object" string="the product template" class="oe_link"/></p>
-                    </group>
-                </notebook>
-                <field name="seller_ids" position="replace">
-                    <field name="seller_ids" readonly="1"/>
-                </field>
-                <field name="description_purchase" position="replace">
-                    <field name="description_purchase" nolabel="1"
-                        placeholder="This note will be displayed on requests for quotation..." readonly="1"/>
-                </field>
                 <field name="type" position="after">
                     <field name="default_code"/>
                     <field name="barcode"/>
@@ -473,20 +461,9 @@
                 <field name="list_price" position="attributes">
                    <attribute name="name">lst_price</attribute>
                 </field>
-                <field name="name" position="replace">
-                    <field name="name" attrs="{'invisible': [('id', '!=', False)]}"/>
+                <field name="name" position="after">
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)], 'required': [('id', '!=', False)]}"/>
                 </field>
-                <field name="standard_price" position="replace">
-                    <field name="standard_price" attrs="{'invisible':[('product_variant_count','=', 1)]}"
-                            widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                </field>
-                <label for="weight" position="attributes">
-                    <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
-                </label>
-                <div name="weight" position="attributes">
-                    <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
-                </div>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                 </xpath>
