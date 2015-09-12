@@ -123,7 +123,7 @@ class stock_config_settings(osv.osv_memory):
             help="""This allows you to assign a lot (or serial number) to the pickings and moves.  This can make it possible to know which production lot was sent to a certain client, ..."""),
         'group_stock_tracking_lot': fields.selection([
             (0, 'Do not manage packaging'),
-            (1, 'Record packages used on packing: pallets, boxes, ...)')
+            (1, 'Record packages used on packing: pallets, boxes, ...')
             ], "Packages",
             implied_group='stock.group_tracking_lot',
             help="""This allows to manipulate packages.  You can put something in, take something from a package, but also move entire packages and put them even in another package.  """),

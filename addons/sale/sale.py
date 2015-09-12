@@ -505,13 +505,15 @@ class SaleOrderLine(models.Model):
     # Create new procurements if quantities purchased changes
     @api.multi
     def write(self, values):
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         lines = False
         if 'product_uom_qty' in values:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             lines = self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+        result = super(SaleOrderLine, self).write(values)
+        if lines:
             lines._action_procurement_create()
-        return super(SaleOrderLine, self).write(values)
+        return result
 
     order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False)
     name = fields.Text(string='Description', required=True)

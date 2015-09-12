@@ -965,6 +965,7 @@ class stock_picking(models.Model):
         # technical field for attrs in view
         'pack_operation_exist': fields.function(_get_pack_operation_exist, type='boolean', string='Has Pack Operations', help='Check the existance of pack operation on the picking'),
         'owner_id': fields.many2one('res.partner', 'Owner', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="Default Owner"),
+        'printed': fields.boolean('Printed'),
         # Used to search on pickings
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),
         'recompute_pack_op': fields.boolean('Recompute pack operation?', help='True if reserved quants changed, which mean we might need to recompute the package operations', copy=False),
@@ -980,6 +981,7 @@ class stock_picking(models.Model):
         'name': '/',
         'state': 'draft',
         'move_type': 'direct',
+        'printed': False,
         'priority': '1',  # normal
         'date': fields.datetime.now,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c),
@@ -993,6 +995,7 @@ class stock_picking(models.Model):
     def do_print_picking(self, cr, uid, ids, context=None):
         '''This function prints the picking list'''
         context = dict(context or {}, active_ids=ids)
+        self.write(cr, uid, ids, {'printed': True}, context=context)
         return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_picking', context=context)
 
     def launch_packops(self, cr, uid, ids, context=None):
@@ -2210,7 +2213,8 @@ class stock_move(osv.osv):
                 ('location_id', '=', move.location_id.id),
                 ('location_dest_id', '=', move.location_dest_id.id),
                 ('picking_type_id', '=', move.picking_type_id.id),
-                ('state', 'in', ['draft', 'confirmed', 'waiting'])], limit=1, context=context)
+                ('printed', '=', False),
+                ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1, context=context)
         if picks:
             pick = picks[0]
         else:
