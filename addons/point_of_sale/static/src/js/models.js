@@ -276,6 +276,13 @@ exports.PosModel = Backbone.Model.extend({
             self.users = pos_users; 
         },
     },{
+        model:  'account.fiscal.position.tax',
+        fields: ['position_id', 'tax_src_id', 'tax_dest_id'],
+        domain: function(self) { return [['position_id', '=', self.config.fiscal_position_id && self.config.fiscal_position_id[0]]]; },
+        loaded: function(self, fiscal_position_tax) {
+            self.fiscal_position_tax = fiscal_position_tax;
+        },
+     },{
         model: 'stock.location',
         fields: [],
         ids:    function(self){ return [self.config.stock_location_id[0]]; },
@@ -1241,11 +1248,24 @@ exports.Orderline = Backbone.Model.extend({
     get_tax: function(){
         return this.get_all_prices().tax;
     },
+    get_fiscal_tax: function() {
+        var self = this;
+        var product_tax = this.get_product().taxes_id;
+        if(product_tax && this.pos.config.fiscal_position_id) {
+            _.each(product_tax, function(v, i) {
+                var fiscal_tax = _.filter(self.pos.fiscal_position_tax, function(t) { return t.tax_src_id[0] == v });
+                if(fiscal_tax.length) {
+                    product_tax[i] = fiscal_tax[0].tax_dest_id[0];
+                }
+            });
+        }
+        return _.uniq(_.compact(product_tax));
+    },
     get_applicable_taxes: function(){
         var i;
         // Shenaningans because we need
         // to keep the taxes ordering.
-        var ptaxes_ids = this.get_product().taxes_id;
+        var ptaxes_ids = this.get_fiscal_tax();
         var ptaxes_set = {};
         for (i = 0; i < ptaxes_ids.length; i++) {
             ptaxes_set[ptaxes_ids[i]] = true;
@@ -1262,7 +1282,7 @@ exports.Orderline = Backbone.Model.extend({
         return this.get_all_prices().taxDetails;
     },
     get_taxes: function(){
-        var taxes_ids = this.get_product().taxes_id;
+        var taxes_ids = this.get_fiscal_tax();
         var taxes = [];
         for (var i = 0; i < taxes_ids.length; i++) {
             taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
@@ -1332,8 +1352,7 @@ exports.Orderline = Backbone.Model.extend({
         var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
         var taxtotal = 0;
 
-        var product =  this.get_product();
-        var taxes_ids = product.taxes_id;
+        var taxes_ids = this.get_fiscal_tax();
         var taxes =  this.pos.taxes;
         var taxdetail = {};
         var product_taxes = [];
