@@ -105,13 +105,14 @@
                                     <field name="start_date" string="Starting at" on_change="onchange_dates('start', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
                                     <field name="stop_date" string="Ending at" on_change="onchange_dates('stop', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
 
-                                    <field name="start_datetime" string="Starting at" on_change="onchange_dates('start', start_datetime, stop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
-                                    <field name="stop_datetime" string="Ending at" on_change="onchange_dates('stop', start_datetime, stop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
-                                    <label for="allday"/>
-                                    <div>
-                                        <field name="allday"  class="oe_inline" on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)"/>
+                                    <field name="start_datetime" string="Starting at" on_change="onchange_duration(start_datetime, duration)" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <field name="stop_datetime" invisible="1"/>
+                                    <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <div attrs="{'invisible': [('allday','=',True)]}">
+                                        <field name="duration" widget="float_time" string="Duration" on_change="onchange_duration(start_datetime, duration)" class="oe_inline"/>
+                                        <span>hours</span>
                                     </div>
-                                    <field name="duration" widget="float_time" class="oe_inline" attrs="{ 'invisible': True }"/>
+                                    <field name="allday"  on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)"/>
                                 </group>
                                 <group>
                                     <field name="categ_ids" widget="many2many_tags" />
