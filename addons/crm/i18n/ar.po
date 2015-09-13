@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-20 19:20+0000\n"
+"PO-Revision-Date: 2015-09-12 22:44+0000\n"
 "Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -321,7 +321,7 @@ msgstr "تطبيق إلغاء التكرار"
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the automatic merge of your contacts ?"
-msgstr ""
+msgstr "هل ترغب حقاً في بدء عملية الدمج الآلي لجهات الاتصال؟"
 
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
@@ -1231,12 +1231,12 @@ msgid ""
 "If opt-out is checked, this contact has refused to receive emails for mass "
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the leads when performing mass mailing."
-msgstr ""
+msgstr "إذا تم تحديد حقل بلا اتصالات، فقد رفضت جهة الاتصال هذه تلقي مراسلات بريدية جماعية وحملات التسويق. الفلتر متاح للحملات الجماعية يسمح للمستخدمين بفرز الترشيحات عند إجراء عمليات مراسلة جماعية."
 
 #. module: crm
 #: help:crm.lead2opportunity.partner.mass,force_assignation:0
 msgid "If unchecked, this will leave the salesman of duplicated opportunities"
-msgstr ""
+msgstr "إذا لم يتم تحديدها، فسيترك هذا مسئول المبيعات بفرص بيع متكررة."
 
 #. module: crm
 #: help:crm.case.stage,case_default:0
@@ -1281,12 +1281,12 @@ msgstr "متابع"
 #: code:addons/crm/crm_phonecall.py:291
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
-msgstr ""
+msgstr "يمكنك تحويل مكالمة هاتفية واحدة في كل مرة."
 
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,exclude_journal_item:0
 msgid "Journal Items associated to the contact"
-msgstr ""
+msgstr "عناصر القيود المقترنة بجهة الاتصال هذه."
 
 #. module: crm
 #: field:crm.lead,date_action_last:0 field:crm.phonecall,date_action_last:0
@@ -1419,12 +1419,12 @@ msgid ""
 "Leads Analysis allows you to check different CRM related information like "
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
-msgstr ""
+msgstr "تحليل الترشيحات يسمح لك بمتابعة معلومات مختلفة عن علاقاتك بالعملاء، مثل معالجة التأخيرات أو عدد الترشيحات في كل مرحلة. يمكنك ترتيب الترشيحات وتحليلها بواسطة مجموعات مختلفة من الفلاتر للوصول إلى مستوى التحليل المناسب لك."
 
 #. module: crm
 #: view:sale.config.settings:crm.view_sale_config_settings
 msgid "Leads Email Alias"
-msgstr ""
+msgstr "لقب بريد الترشيحات"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_form_view_leads
@@ -1461,12 +1461,12 @@ msgstr "الترشيحات التي لم تطلب حذفها من حملات ا�
 msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means"
 " that no duplicates were found"
-msgstr ""
+msgstr "الترشيحات التي حددها لها تكرار أو نسخ أخرى منها. إذا كانت القائمة فارغة، فهذا يعني أنه لا يوجد أي تكرارات أخرى."
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
 msgid "Leads with existing duplicates (for information)"
-msgstr ""
+msgstr "الترشيحات التي لها تكرار (لأغراض المعلومات)"
 
 #. module: crm
 #: field:crm.merge.opportunity,opportunity_ids:0
@@ -1494,7 +1494,7 @@ msgstr "اربطه بعميل"
 #. module: crm
 #: help:crm.lead,partner_id:0
 msgid "Linked partner (optional). Usually created when converting the lead."
-msgstr ""
+msgstr "الشريك المقترن (اختياري). يتم إنشاؤه في العادة عند تحويل الترشيح إلى فرصة بيع."
 
 #. module: crm
 #: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
@@ -1677,7 +1677,7 @@ msgstr "دمج مع اختيار يدوي"
 #. module: crm
 #: help:crm.lead2opportunity.partner.mass,deduplicate:0
 msgid "Merge with existing leads/opportunities of each partner"
-msgstr ""
+msgstr "دمج مع الترشيحات/فرص البيع القائمة لكل شريك."
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,name:0
@@ -1689,13 +1689,13 @@ msgstr "دمج مع فرصة موجودة"
 #: code:addons/crm/crm_lead.py:549
 #, python-format
 msgid "Merged lead"
-msgstr ""
+msgstr "ترشيح مدمج"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:543
 #, python-format
 msgid "Merged leads"
-msgstr ""
+msgstr "ترشيحات مدمجة"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:545
@@ -1728,7 +1728,7 @@ msgstr "الرسائل و سجل التواصل"
 #. module: crm
 #: field:base.partner.merge.line,min_id:0
 msgid "MinID"
-msgstr ""
+msgstr "أدنى معرف"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_form_view_leads
@@ -1834,7 +1834,7 @@ msgstr "بدون موضوع"
 msgid ""
 "No customer name defined. Please fill one of the following fields: Company "
 "Name, Contact Name or Email (\"Name <email@address>\")"
-msgstr ""
+msgstr "لم يتم تعريف اسم للعميل. الرجاء تعبئة أحد الحقول التالية: اسم المؤسسة، اسم جهة الاتصال أو عنوان البريد الإلكتروني أو استخدم الصيغة (\"Name <email@address>\") في حقل البريد."
 
 #. module: crm
 #: view:crm.lead:crm.view_crm_case_leads_filter
