@@ -76,13 +76,13 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     (self.product_id.name,))
 
         if self.amount <= 0.00:
-            raise UserError(_('The value of Advance Amount must be positive.'))
+            raise UserError(_('The value of the deposit amount must be positive.'))
         if self.advance_payment_method == 'percentage':
             amount = order.amount_untaxed * self.amount / 100
-            name = _("Advance of %s%%") % (self.amount,)
+            name = _("Deposit of %s%%") % (self.amount,)
         else:
             amount = self.amount
-            name = _('Advance')
+            name = _('Deposit')
 
         invoice = inv_obj.create({
             'name': order.client_order_ref or order.name,
