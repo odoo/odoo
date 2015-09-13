@@ -110,7 +110,7 @@
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
                                         <field name="duration" widget="float_time" string="Duration" on_change="onchange_duration(start_datetime, duration)" class="oe_inline"/>
-                                        <span>hours</span>
+                                        <span> hours</span>
                                     </div>
                                     <field name="allday"  on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)"/>
                                 </group>
@@ -222,17 +222,20 @@
                     <group>
                         <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)]}"/>
                         <field name="start_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)]}"/>
-        
-                        <field name="duration" string="Duration" widget="float_time" attrs="{'invisible': [('allday','=',True)]}"/>
+                        <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
+                        <div attrs="{'invisible': [('allday','=',True)]}">
+                            <field name="duration" widget="float_time" class="oe_inline"/>
+                            <span> hours</span>
+                        </div>
                         <field name="allday" class="oe_inline" attrs="{'invisible': [('allday','=',False)]}"/>
                         <field name="partner_ids" widget="many2manyattendee" string="Attendees"/>
                     </group>
                     <group>
+                        <field name="location"/>
                         <field name="categ_ids" widget="many2many_tags"/>
                         <field name="alarm_ids" widget="many2many_tags" />
-                        <field name="location"/>
                     </group>
-                </group>       
+                </group>
             </form>
         </field>
     </record>
