@@ -39,17 +39,10 @@
                                 Next Actions
                             </a>
                         </td>
-                        <td class="o_main" title="To Opportunities">
+                        <td class="o_main" title="Your Pipeline" rowspan="2">
                             <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline">
-                                <span class="o_highlight">
-                                    <t t-if="!show_demo">
-                                        <t t-esc="values['closing']['today']"/>
-                                    </t>
-                                    <t t-if="show_demo">
-                                        4
-                                    </t>
-                                </span> <br/>
-                                Expected Closing
+                                <span class="fa fa-th-large fa-3x"/><br/>
+                                Your Pipeline
                             </a>
                         </td>
                     </tr>
@@ -75,16 +68,6 @@
                                 </t>
                             </a>
                         </td>
-                        <td class="o_main" title="To Opportunities">
-                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline">
-                                <t t-if="!show_demo">
-                                    <t t-esc="values['closing']['next_7_days']"/>
-                                </t>
-                                <t t-if="show_demo">
-                                    17
-                                </t>
-                            </a>
-                        </td>
                     </tr>
                     <tr>
                         <td></td>
@@ -103,10 +86,10 @@
                         <td  t-if="show_demo or (values and values['closing']['overdue'] != 0)" class="o_warning" title="To Opportunities">
                             <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline">
                                 <t t-if="!show_demo">
-                                    <t t-esc="values['closing']['overdue']"/> overdue
+                                    <t t-esc="values['closing']['overdue']"/> exp. closing
                                 </t>
                                 <t t-if="show_demo">
-                                    3
+                                    3 exp. closing
                                 </t>
                             </a>
                         </td>
