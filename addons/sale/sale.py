@@ -261,7 +261,7 @@ class SaleOrder(models.Model):
                     invoices[group_key] = invoice
                 if line.qty_to_invoice > 0:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
-                elif line.qty_to_invoice < 0 and (final or invoices[group_key].amount_untaxed > abs(line.qty_to_invoice * line.price_unit)):
+                elif line.qty_to_invoice < 0 and final:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
 
         for invoice in invoices.values():

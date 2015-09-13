@@ -27,17 +27,11 @@
                                 attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
                         </div>
                     </group>
-                    <div attrs="{'invisible': [('advance_payment_method', '!=', 'delivered')]}">
-                        <span class="oe_grey">
-                        Note that if you select 'Invoiceable lines (without refunds)', you won't be able to create an invoice with a negative total amount.
-                        </span>
-                    </div>
                     <footer>
                         <button name="create_invoices" string="Create and View Invoices" type="object"
                             context="{'open_invoices': True}" class="btn-primary"/>
                         <button name="create_invoices" string="Create Invoices" type="object"
                             class="btn-primary"/>
-                        or
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
