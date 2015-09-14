@@ -7,29 +7,31 @@
             <t t-call="web_planner.page">
                 <t t-set="page_title">Welcome</t>
                 <t t-set="hide_mark_as_done" t-value="True"/>
-                <p>
-                    This guide will help you get started with Odoo Inventory.
-                    Once you are done, you will benefit from:
-                </p>
-                <ul>
-                    <li><strong>Automated flows</strong>: from sale to delivery, and purchase to reception</li>
-                    <li><strong>Automated replenishment rules</strong></li>
-                    <li>Accurate visibility on all your operations</li>
-                </ul>
-                <p>
-                    In short, you will get a more efficient warehouse management that will lead
-                    to inventory reduction and better efficiencies in your daily operations.
-                </p><p>
-                    If you need help, do not hesitate to contact our experts
-                    using the <span class="fa fa-question-circle"/> button on
-                    the top bar.
-                </p>
-                <div class="mt32">
-                    <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
-                    <address>
-                        From the Odoo Team,<br/>
-                        Fabien Pinckaers, Founder
-                    </address>
+                <div class="o_planner_intro">
+                    <p>
+                        This guide will help you get started with Odoo Inventory.
+                        Once you are done, you will benefit from:
+                    </p>
+                    <ul>
+                        <li><strong>Automated flows</strong>: from sale to delivery, and purchase to reception</li>
+                        <li><strong>Automated replenishment rules</strong></li>
+                        <li>Accurate visibility on all your operations</li>
+                    </ul>
+                    <p>
+                        In short, you will get a more efficient warehouse management that will lead
+                        to inventory reduction and better efficiencies in your daily operations.
+                    </p><p>
+                        If you need help, do not hesitate to contact our experts
+                        using the <span class="fa fa-question-circle"/> button on
+                        the top bar.
+                    </p>
+                    <div class="mt32">
+                        <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
+                        <address>
+                            From the Odoo Team,<br/>
+                            Fabien Pinckaers, Founder
+                        </address>
+                    </div>
                 </div>
             </t>
             <t t-call="web_planner.category">
