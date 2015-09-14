@@ -10,8 +10,5 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order in self:
-            for pick in order.picking_ids:
-                print pick.state
             order.picking_ids.filtered(lambda x: x.state=='confirmed').action_assign()
         return res
-

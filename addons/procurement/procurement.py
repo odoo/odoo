@@ -139,6 +139,13 @@ class procurement_order(osv.osv):
                 raise UserError(_('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
+    def create(self, cr, uid, vals, context=None):
+        context = context or {}
+        procurement_id = super(procurement_order, self).create(cr, uid, vals, context=context)
+        if not context.get('procurement_autorun_defer'):
+            self.run(cr, uid, [procurement_id], context=context)
+        return procurement_id
+
     def do_view_procurements(self, cr, uid, ids, context=None):
         '''
         This function returns an action that display existing procurement orders

@@ -468,6 +468,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _action_procurement_create(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        new_procs = self.env['procurement.order'] #Empty recordset
         for line in self:
             if line.state != 'sale':
                 continue
@@ -484,8 +485,9 @@ class SaleOrderLine(models.Model):
             vals = line._prepare_order_line_procurement(group_id=line.order_id.procurement_group_id.id)
             vals['product_qty'] = line.product_uom_qty - qty
             new_proc = self.env["procurement.order"].create(vals)
-            new_proc.run()
-        return True
+            new_procs += new_proc
+        new_procs.run()
+        return new_procs
 
     @api.model
     def _get_analytic_invoice_policy(self):

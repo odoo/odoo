@@ -321,6 +321,7 @@ class procurement_order(osv.osv):
 
     def run(self, cr, uid, ids, autocommit=False, context=None):
         new_ids = [x.id for x in self.browse(cr, uid, ids, context=context) if x.state not in ('running', 'done', 'cancel')]
+        context = dict(context or {}, procurement_auto_defer=True) #When creating
         res = super(procurement_order, self).run(cr, uid, new_ids, autocommit=autocommit, context=context)
 
         #after all the procurements are run, check if some created a draft stock move that needs to be confirmed
@@ -331,6 +332,10 @@ class procurement_order(osv.osv):
                 move_to_confirm_ids += [m.id for m in procurement.move_ids if m.state == 'draft']
         if move_to_confirm_ids:
             self.pool.get('stock.move').action_confirm(cr, uid, move_to_confirm_ids, context=context)
+        # If procurements created other procurements, run the created in batch
+        procurement_ids = self.search(cr, uid, [('move_dest_id.procurement_id', 'in', new_ids)], order='id', context=context)
+        if procurement_ids:
+            res = res and self.run(cr, uid, procurement_ids, autocommit=autocommit, context=context)
         return res
 
     def _check(self, cr, uid, procurement, context=None):
