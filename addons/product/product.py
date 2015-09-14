@@ -686,7 +686,11 @@ class product_template(osv.osv):
             for variant_id in variant_alone:
                 product_ids = []
                 for product_id in tmpl_id.product_variant_ids:
-                    if variant_id.id not in map(int, product_id.attribute_value_ids):
+                    # fix: it must also check if the attribute already exists in the product variant
+                    # in order to avoid duplicated attributes
+                    att_ids = [att.attribute_id for att in product_id.attribute_value_ids]
+                    if variant_id.id not in map(int, product_id.attribute_value_ids.ids) and \
+                            variant_id.attribute_id not in att_ids:
                         product_ids.append(product_id.id)
                 product_obj.write(cr, uid, product_ids, {'attribute_value_ids': [(4, variant_id.id)]}, context=ctx)
 
