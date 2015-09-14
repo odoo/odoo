@@ -313,6 +313,21 @@ Thanks!</field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
         </record>
+        <!-- sale advance demo.. -->
+        <!-- Demo Data for Product -->
+
+        <record id="advance_product_0" model="product.product">
+            <field name="name">Deposit</field>
+            <field name="categ_id" ref="product.product_category_1"/>
+            <field name="type">service</field>
+            <field name="list_price">150.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="standard_price">100.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="company_id" eval="[]"/>
+            <field name="image" type="base64" file="sale/static/img/advance_product_0-image.jpg"/>
+        </record>
 
         <record id="base.user_demo" model="res.users">
             <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>

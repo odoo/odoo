@@ -64,15 +64,7 @@ class sale_configuration(osv.TransientModel):
             ('order', 'Invoice ordered quantities'),
             ('delivery', 'Invoice delivered quantities'),
             ('cost', 'Invoice based on costs (time and material, expenses)')
-            ], 'Default Invoicing', default_model='product.template'),
-        'deposit_property_account_income_id': fields.property(
-            type="many2one",
-            relation="account.account",
-            string="Income Account",
-            domain=[('deprecated', '=', False)],
-            help="This account will be used for invoices instead of the default one to value sales for the deposit."),
-        'deposit_taxes_ids': fields.many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', string='Customer Taxes',
-        domain=[('type_tax_use', '=', 'sale')]),
+            ], 'Default Invoicing', default_model='product.template')
     }
 
     _defaults = {
@@ -92,23 +84,6 @@ class sale_configuration(osv.TransientModel):
             return {'value': {'group_pricelist_item': True, 'group_sale_pricelist': True, 'group_product_pricelist': False}}
         return {'value': {'group_pricelist_item': False, 'group_sale_pricelist': False, 'group_product_pricelist': False}}
 
-    def get_default_deposit_values(self, cr, uid, fields, context=None):
-        deposit_product_template = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'sale.advance_product_1', context=context)
-        return {
-            'deposit_property_account_income_id': deposit_product_template.product_variant_ids.property_account_income_id.id \
-                                              or  deposit_product_template.product_variant_ids.categ_id.property_account_income_categ_id.id,
-            'deposit_taxes_ids': deposit_product_template.product_variant_ids.taxes_id.ids
-            }
-
-    def set_deposit_values(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        config_value = self.browse(cr, uid, ids, context=context)
-        deposit_product_template = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'sale.advance_product_1', context=context)
-        deposit_product_template.product_variant_ids.write({
-            'property_account_income_id': config_value.deposit_property_account_income_id.id,
-            'taxes_id': [(6, 0, config_value.deposit_taxes_ids.ids)],
-            })
 
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
