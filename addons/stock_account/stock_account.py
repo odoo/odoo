@@ -83,7 +83,7 @@ class account_invoice_line(osv.osv):
                     to_unit = i_line.move_id.product_uom.id
                     price_unit = self.pool['product.uom']._compute_price(cr, uid, from_unit, price, to_uom_id=to_unit)
                 else:
-                    price_unit = i_line.product_id.standard_pric
+                    price_unit = i_line.product_id.standard_price
                 return [
                     {
                         'type':'src',

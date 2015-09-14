@@ -232,7 +232,7 @@ class produce_price_history(osv.osv):
 
     _columns = {
         'company_id': fields.many2one('res.company', required=True),
-        'product_template_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade'),
         'datetime': fields.datetime('Date'),
         'cost': fields.float('Cost'),
     }
@@ -417,30 +417,6 @@ class product_template(osv.osv):
                     context['uom'], value, uom.id)
 
         return product.write({'list_price': value})
-
-    def get_history_price(self, cr, uid, product_tmpl, company_id, date=None, context=None):
-        if context is None:
-            context = {}
-        if date is None:
-            date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        price_history_obj = self.pool.get('product.price.history')
-        history_ids = price_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_template_id', '=', product_tmpl), ('datetime', '<=', date)], limit=1)
-        if history_ids:
-            return price_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
-        return 0.0
-
-    def _set_standard_price(self, cr, uid, product_tmpl_id, value, context=None):
-        ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
-        if context is None:
-            context = {}
-        price_history_obj = self.pool['product.price.history']
-        user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        company_id = context.get('force_company', user_company)
-        price_history_obj.create(cr, uid, {
-            'product_template_id': product_tmpl_id,
-            'cost': value,
-            'company_id': company_id,
-        }, context=context)
 
     def _get_product_variant_count(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -724,7 +700,6 @@ class product_template(osv.osv):
         product_template_id = super(product_template, self).create(cr, uid, vals, context=context)
         if not context or "create_product_product" not in context:
             self.create_variant_ids(cr, uid, [product_template_id], context=context)
-        self._set_standard_price(cr, uid, product_template_id, vals.get('standard_price', 0.0), context=context)
 
         # TODO: this is needed to set given values to first variant after creation
         # these fields should be moved to product as lead to confusion
@@ -745,12 +720,6 @@ class product_template(osv.osv):
         return product_template_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if 'standard_price' in vals:
-            for prod_template_id in ids:
-                self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
         res = super(product_template, self).write(cr, uid, ids, vals, context=context)
         if 'attribute_line_ids' in vals or vals.get('active'):
             self.create_variant_ids(cr, uid, ids, context=context)
@@ -1184,10 +1153,44 @@ class product_product(osv.osv):
                 'target': 'new'}
 
     def create(self, cr, uid, vals, context=None):
+        ctx = dict(context or {}, create_product_product=True)
+        product_id = super(product_product, self).create(cr, uid, vals, context=ctx)
+        self._set_standard_price(cr, uid, product_id, vals.get('standard_price', 0.0), context=context)
+        return product_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = super(product_product, self).write(cr, uid, ids, vals, context=context)
+        if 'standard_price' in vals:
+            for product_id in ids:
+                self._set_standard_price(cr, uid, product_id, vals['standard_price'], context=context)
+        return res
+
+    def _set_standard_price(self, cr, uid, product_id, value, context=None):
+        ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
         if context is None:
             context = {}
-        ctx = dict(context or {}, create_product_product=True)
-        return super(product_product, self).create(cr, uid, vals, context=ctx)
+        price_history_obj = self.pool['product.price.history']
+        user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        company_id = context.get('force_company', user_company)
+        price_history_obj.create(cr, uid, {
+            'product_id': product_id,
+            'cost': value,
+            'company_id': company_id,
+        }, context=context)
+
+    def get_history_price(self, cr, uid, product_id, company_id, date=None, context=None):
+        if context is None:
+            context = {}
+        if date is None:
+            date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        price_history_obj = self.pool.get('product.price.history')
+        history_ids = price_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_id', '=', product_id), ('datetime', '<=', date)], limit=1)
+        if history_ids:
+            return price_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
+        return 0.0
 
 
 class product_packaging(osv.osv):

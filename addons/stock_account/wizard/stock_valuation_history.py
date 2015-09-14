@@ -62,16 +62,16 @@ class stock_history(osv.osv):
                 lines_rec = cr.dictfetchall()
             lines_dict = dict((line['id'], line) for line in lines_rec)
             product_ids = list(set(line_rec['product_id'] for line_rec in lines_rec))
-            products_rec = self.pool['product.product'].read(cr, uid, product_ids, ['cost_method', 'product_tmpl_id'], context=context)
+            products_rec = self.pool['product.product'].read(cr, uid, product_ids, ['cost_method', 'id'], context=context)
             products_dict = dict((product['id'], product) for product in products_rec)
-            cost_method_product_tmpl_ids = list(set(product['product_tmpl_id'][0] for product in products_rec if product['cost_method'] != 'real'))
+            cost_method_product_ids = list(set(product['id'] for product in products_rec if product['cost_method'] != 'real'))
             histories = []
-            if cost_method_product_tmpl_ids:
-                cr.execute('SELECT DISTINCT ON (product_template_id, company_id) product_template_id, company_id, cost FROM product_price_history WHERE product_template_id in %s AND datetime <= %s ORDER BY product_template_id, company_id, datetime DESC', (tuple(cost_method_product_tmpl_ids), date))
+            if cost_method_product_ids:
+                cr.execute('SELECT DISTINCT ON (product_id, company_id) product_id, company_id, cost FROM product_price_history WHERE product_id in %s AND datetime <= %s ORDER BY product_id, company_id, datetime DESC', (tuple(cost_method_product_ids), date))
                 histories = cr.dictfetchall()
             histories_dict = {}
             for history in histories:
-                histories_dict[(history['product_template_id'], history['company_id'])] = history['cost']
+                histories_dict[(history['product_id'], history['company_id'])] = history['cost']
             for line in res:
                 inv_value = 0.0
                 lines = group_lines.get(str(line.get('__domain', [])))
@@ -81,7 +81,7 @@ class stock_history(osv.osv):
                     if product['cost_method'] == 'real':
                         price = line_rec['price_unit_on_quant']
                     else:
-                        price = histories_dict.get((product['product_tmpl_id'][0], line_rec['company_id']), 0.0)
+                        price = histories_dict.get((product['id'], line_rec['company_id']), 0.0)
                     inv_value += price * line_rec['quantity']
                 line['inventory_value'] = inv_value
         return res
@@ -90,13 +90,13 @@ class stock_history(osv.osv):
         if context is None:
             context = {}
         date = context.get('history_date')
-        product_tmpl_obj = self.pool.get("product.template")
+        product_obj = self.pool.get("product.product")
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             if line.product_id.cost_method == 'real':
                 res[line.id] = line.quantity * line.price_unit_on_quant
             else:
-                res[line.id] = line.quantity * product_tmpl_obj.get_history_price(cr, uid, line.product_id.product_tmpl_id.id, line.company_id.id, date=date, context=context)
+                res[line.id] = line.quantity * product_obj.get_history_price(cr, uid, line.product_id.id, line.company_id.id, date=date, context=context)
         return res
 
     _columns = {
