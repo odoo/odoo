@@ -392,6 +392,9 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
         var self = this;
         return function () {
             var fn = (typeof method === 'string') ? self[method] : method;
+            if (fn === void 0) {
+                throw new Error("Couldn't find method '" + method + "' in widget " + self);
+            }
             return fn.apply(self, arguments);
         };
     },
