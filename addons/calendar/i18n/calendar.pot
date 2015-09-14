@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2015-09-14 10:28+0000\n"
+"PO-Revision-Date: 2015-09-14 10:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -381,7 +381,13 @@ msgid "${object.event_id.name} - Reminder"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1620
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
+msgid "<span> hours</span>"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:1628
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
 msgstr ""
@@ -426,13 +432,13 @@ msgid "Amount"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1082
+#: code:addons/calendar/calendar.py:1090
 #, python-format
 msgid "An invitation email has been sent to attendee %s"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1416
+#: code:addons/calendar/calendar.py:1424
 #, python-format
 msgid "An invitation email has been sent to attendee(s)"
 msgstr ""
@@ -466,7 +472,7 @@ msgid "Availability"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1707
+#: code:addons/calendar/calendar.py:1715
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -614,7 +620,7 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_duration
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Duration"
 msgstr ""
 
@@ -631,7 +637,7 @@ msgid "Email"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1378
+#: code:addons/calendar/calendar.py:1386
 #, python-format
 msgid "Email addresses not found"
 msgstr ""
@@ -688,7 +694,7 @@ msgid "Event alarm"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1244
+#: code:addons/calendar/calendar.py:1252
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr ""
@@ -768,7 +774,7 @@ msgid "Group By"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1651
+#: code:addons/calendar/calendar.py:1659
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -1074,7 +1080,7 @@ msgid "Partner"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1257
+#: code:addons/calendar/calendar.py:1265
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr ""
@@ -1185,6 +1191,11 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Select attendees..."
+msgstr ""
+
+#. module: calendar
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send mail"
 msgstr ""
 
@@ -1286,7 +1297,7 @@ msgid "The calendar is shared between employees and fully integrated with\n"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1374
+#: code:addons/calendar/calendar.py:1382
 #, python-format
 msgid "The following contacts have no email address :"
 msgstr ""
@@ -1425,7 +1436,12 @@ msgid "calendar.contacts"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1242
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "e.g. Business Lunch"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:1250
 #, python-format
 msgid "interval cannot be negative."
 msgstr ""

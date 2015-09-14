@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2015-09-14 10:26+0000\n"
+"PO-Revision-Date: 2015-09-14 10:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -125,6 +125,16 @@ msgid "# of Sales Order"
 msgstr ""
 
 #. module: sale
+#: model:mail.template,report_name:sale.email_template_edi_sale
+msgid "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
+msgstr ""
+
+#. module: sale
+#: model:mail.template,subject:sale.email_template_edi_sale
+msgid "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "(update)"
 msgstr ""
@@ -180,19 +190,7 @@ msgid "Addresses in Sales Orders"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:73
-#, python-format
-msgid "Advance"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:70
-#, python-format
-msgid "Advance of %s%%"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:123
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:135
 #, python-format
 msgid "Advance: %s"
 msgstr ""
@@ -397,6 +395,12 @@ msgid "Customer Reference"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_ids
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_taxes_ids
+msgid "Customer Taxes"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_date
 msgid "Date Order"
 msgstr ""
@@ -462,8 +466,10 @@ msgid "Delivery address for current sales order."
 msgstr ""
 
 #. module: sale
-#: model:product.product,name:sale.advance_product_0
-#: model:product.template,name:sale.advance_product_0_product_template
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:85
+#: model:ir.ui.view,arch_db:sale.view_sales_config
+#: model:product.template,name:sale.advance_product_1
+#, python-format
 msgid "Deposit"
 msgstr ""
 
@@ -485,6 +491,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Deposit Product"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:82
+#, python-format
+msgid "Deposit of %s%%"
 msgstr ""
 
 #. module: sale
@@ -636,6 +648,12 @@ msgid "Important Messages"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_property_account_income_id
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_property_account_income_id
+msgid "Income Account"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_display_incoterm
 msgid "Incoterms"
 msgstr ""
@@ -646,7 +664,7 @@ msgid "Invoice"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:707
+#: code:addons/sale/sale.py:708
 #, python-format
 msgid "Invoice %s paid"
 msgstr ""
@@ -725,6 +743,16 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced
 msgid "Invoice revenue for the current month. This is the amount the sales team has invoiced this month. It is used to compute the progression ratio of the current and target revenue on the kanban view."
+msgstr ""
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Invoiceable lines"
+msgstr ""
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Invoiceable lines (deduce deposits)"
 msgstr ""
 
 #. module: sale
@@ -1044,13 +1072,13 @@ msgid "Payment Term"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:198
+#: code:addons/sale/sale.py:197
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:583
+#: code:addons/sale/sale.py:584
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d) - or for its category: \"%s\"."
 msgstr ""
@@ -1217,12 +1245,6 @@ msgid "Quotation confirmed"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:185
-#, python-format
-msgid "Quotation created"
-msgstr ""
-
-#. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
@@ -1251,16 +1273,6 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr ""
-
-#. module: sale
-#: selection:sale.advance.payment.inv,advance_payment_method:0
-msgid "Ready to invoice"
-msgstr ""
-
-#. module: sale
-#: selection:sale.advance.payment.inv,advance_payment_method:0
-msgid "Ready to invoice (with refunds)"
 msgstr ""
 
 #. module: sale
@@ -1545,25 +1557,25 @@ msgid "The printed reports will display the incoterms for the sale orders and th
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:119
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:131
 #, python-format
 msgid "The product used to invoice a deposit should have an invoice policy set to \"Ordered quantities\". Please update your deposit product to be able to create a deposit invoice."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:121
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:133
 #, python-format
 msgid "The product used to invoice an deposit should be of type 'Service'. Please use another product or update this product."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:67
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:79
 #, python-format
-msgid "The value of Advance Amount must be positive."
+msgid "The value of the deposit amount must be positive."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:63
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:75
 #, python-format
 msgid "There is no income account defined for this product: \"%s\". You may have to install a chart of account from Accounting app, settings menu."
 msgstr ""
@@ -1571,6 +1583,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_property_account_income_id
+#: model:ir.model.fields,help:sale.field_sale_config_settings_deposit_property_account_income_id
+msgid "This account will be used for invoices instead of the default one to value sales for the deposit."
 msgstr ""
 
 #. module: sale
@@ -1708,7 +1726,7 @@ msgid "Wrong value entered!"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:663
+#: code:addons/sale/sale.py:664
 #, python-format
 msgid "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
@@ -1742,11 +1760,6 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "days"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
-msgid "or"
 msgstr ""
 
 #. module: sale

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"PO-Revision-Date: 2015-09-14 10:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
-msgid "(Report)"
+msgid "(stats)"
 msgstr ""
 
 #. module: event
@@ -129,6 +129,13 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<small>John Doe, CEO</small>"
+msgstr ""
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                                to \n"
+"                                            </span>"
 msgstr ""
 
 #. module: event
@@ -287,32 +294,17 @@ msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
-msgid "Attendees Confirmed"
+msgid "Attendees confirmed"
 msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
-msgid "Attendees Expected"
+msgid "Attendees expected"
 msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_auto_confirmation
 msgid "Auto Confirmation"
-msgstr ""
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
-msgid "Auto Confirmation Activated"
-msgstr ""
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_seats_availability
-msgid "Available Seat"
-msgstr ""
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_seats_available
-msgid "Available Seats"
 msgstr ""
 
 #. module: event
@@ -479,6 +471,11 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Confirm Registration"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
+msgid "Confirmation not required"
 msgstr ""
 
 #. module: event
@@ -750,6 +747,7 @@ msgid "Event Month"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_name
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
 msgstr ""
@@ -892,7 +890,7 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
-msgid "For each event you can define a minimum reserved seats(number of attendees), if it does not reach the mentioned registrations the event can not be confirmed (keep 0 to ignore this rule)"
+msgid "For each event you can define a minimum reserved seats (number of attendees), if it does not reach the mentioned registrations the event can not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
 
 #. module: event
@@ -1175,8 +1173,14 @@ msgid "Max Seats"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_availability
+#: model:ir.model.fields,field_description:event.field_event_event_seats_available
+msgid "Maximum Attendees"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_max
-msgid "Maximum Available Seats"
+msgid "Maximum Attendees Number"
 msgstr ""
 
 #. module: event
@@ -1193,7 +1197,7 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
-msgid "Minimum Reservation of Seats Required"
+msgid "Minimum Attendees"
 msgstr ""
 
 #. module: event
@@ -1211,11 +1215,6 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "My Events"
-msgstr ""
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_name
-msgid "Name"
 msgstr ""
 
 #. module: event

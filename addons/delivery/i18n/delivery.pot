@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"PO-Revision-Date: 2015-09-14 10:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -65,6 +65,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_type
+msgid "A consumable is a product for which you don't manage stock, a service is a non-material product provided by a company or an individual."
 msgstr ""
 
 #. module: delivery
@@ -159,6 +165,11 @@ msgid "Bill of Materials"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
+msgid "Bulk Weight"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
 msgid "Can be Purchased"
 msgstr ""
@@ -237,12 +248,6 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_type
-msgid "Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."
 msgstr ""
 
 #. module: delivery
@@ -821,8 +826,18 @@ msgid "Outgoing"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
+msgid "Packages"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_quant_package
+msgid "Physical Packages"
 msgstr ""
 
 #. module: delivery
@@ -937,11 +952,6 @@ msgid "Products"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_lst_price
-msgid "Public Price"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
 msgid "Purchase Description"
 msgstr ""
@@ -958,7 +968,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_seller_price
-msgid "Purchase price from from Main Vendor."
+msgid "Purchase price from main vendor."
 msgstr ""
 
 #. module: delivery
@@ -1015,6 +1025,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_list_price
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_lst_price
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_price
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
@@ -1052,7 +1063,7 @@ msgid "Selected Seller"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/delivery_carrier.py:257
+#: code:addons/delivery/models/delivery_carrier.py:258
 #, python-format
 msgid "Selected product in the delivery method doesn't fulfill any of the delivery carrier(s) criteria."
 msgstr ""
@@ -1074,7 +1085,7 @@ msgid "Set price"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:110
+#: code:addons/delivery/models/stock_picking.py:86
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
 msgstr ""
@@ -1082,6 +1093,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_shipping_enabled
+msgid "Shipping enabled"
 msgstr ""
 
 #. module: delivery
@@ -1191,12 +1207,6 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
 msgid "The average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."
-msgstr ""
-
-#. module: delivery
-#: code:addons/delivery/models/stock_picking.py:58
-#, python-format
-msgid "The carrier %s (id: %d) has no delivery method!"
 msgstr ""
 
 #. module: delivery
@@ -1339,6 +1349,11 @@ msgid "Type of Event"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_shipping_enabled
+msgid "Uncheck this box to disable package shipping while validating Delivery Orders"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_uom_id
@@ -1443,6 +1458,7 @@ msgstr ""
 #: selection:delivery.price.rule,variable_factor:0
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package_weight
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight"
 msgstr ""
@@ -1489,11 +1505,6 @@ msgid "When validating an invoice, an email will be sent to the customer based o
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_shipping2
-msgid "Will be invoiced to:"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
 msgid "Zip From"
 msgstr ""
@@ -1501,6 +1512,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
 msgid "Zip To"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "e.g. USPS Express"
 msgstr ""
 
 #. module: delivery

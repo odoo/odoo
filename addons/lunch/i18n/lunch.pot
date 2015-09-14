@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2015-09-14 10:28+0000\n"
+"PO-Revision-Date: 2015-09-14 10:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -52,13 +52,13 @@ msgstr ""
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:25
+#: code:addons/lunch/static/src/xml/lunch.xml:15
 #, python-format
 msgid "Add"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:264
+#: code:addons/lunch/models/lunch.py:267
 #, python-format
 msgid "Alert"
 msgstr ""
@@ -271,7 +271,7 @@ msgstr ""
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:13
+#: code:addons/lunch/static/src/xml/lunch.xml:7
 #, python-format
 msgid "Don't forget the alerts displayed in the reddish area"
 msgstr ""
@@ -327,12 +327,7 @@ msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
-msgid "Here you can find every lunch categories for products."
-msgstr ""
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
-msgid "Here you can see every orders grouped by vendors and by date."
+msgid "Here you can access all categories for the lunch products."
 msgstr ""
 
 #. module: lunch
@@ -379,7 +374,7 @@ msgid "ID"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:88
+#: code:addons/lunch/models/lunch.py:91
 #, python-format
 msgid "Insufficient balance"
 msgstr ""
@@ -439,13 +434,13 @@ msgid "Lunch Alert"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:236
+#: code:addons/lunch/models/lunch.py:239
 #, python-format
 msgid "Lunch Cashmove"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:53
+#: code:addons/lunch/models/lunch.py:62
 #: model:ir.actions.report.xml,name:lunch.action_report_lunch_order
 #: model:ir.model,name:lunch.model_lunch_order
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
@@ -682,7 +677,7 @@ msgstr ""
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:11
+#: code:addons/lunch/static/src/xml/lunch.xml:5
 #, python-format
 msgid "Select a product and put your order comments on the note."
 msgstr ""
@@ -709,6 +704,11 @@ msgid "Status"
 msgstr ""
 
 #. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
+msgid "Summary of all lunch orders, grouped by vendor and by date."
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_sunday
 msgid "Sunday"
 msgstr ""
@@ -719,20 +719,20 @@ msgid "The company this user is currently working for."
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:111
+#: code:addons/lunch/models/lunch.py:114
 #, python-format
 msgid "The date of your order is in the past."
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:89
+#: code:addons/lunch/models/lunch.py:92
 #, python-format
 msgid "The total amount of the order is larger than the available balance"
 msgstr ""
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:10
+#: code:addons/lunch/static/src/xml/lunch.xml:4
 #, python-format
 msgid "This is the first time you order a meal"
 msgstr ""
@@ -828,15 +828,9 @@ msgstr ""
 
 #. module: lunch
 #. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:12
+#: code:addons/lunch/static/src/xml/lunch.xml:6
 #, python-format
 msgid "Your favorite meals will be created based on your last orders."
-msgstr ""
-
-#. module: lunch
-#: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
-#: model:ir.ui.view,arch_db:lunch.lunch_alert_view_tree
-msgid "alert tree"
 msgstr ""
 
 #. module: lunch
