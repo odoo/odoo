@@ -165,6 +165,7 @@ var FieldChar = common.AbstractField.extend(common.ReinitializeFieldMixin, {
 });
 
 var KanbanSelection = FieldChar.extend({
+    template: "FormSelection",
     init: function (field_manager, node) {
         this._super(field_manager, node);
     },
@@ -180,54 +181,58 @@ var KanbanSelection = FieldChar.extend({
     prepare_dropdown_selection: function() {
         var self = this;
         var _data = [];
-        var fetch_stage;
-        var selection = this.field.selection || [];
-        var stage_id = _.isArray(this.view.datarecord.stage_id) ? this.view.datarecord.stage_id[0] : this.view.datarecord.stage_id;
-        var legend_field = this.options && this.options.states_legend_field || false;
-        var fields_to_read = _.map(
-            this.options && this.options.states_legend || {},
-            function (value, key, list) { return value; });
-        if (legend_field && fields_to_read && stage_id) {
-            fetch_stage = new data.DataSet(
-                this,
-                self.view.fields[legend_field].field.relation).read_ids([stage_id],
-                fields_to_read);
-        }
-        else { fetch_stage = $.Deferred().resolve(false); }
-        return $.when(fetch_stage).then(function (stage_data) {
-            _.map(selection, function(res) {
-                var value = {
-                    'name': res[0],
-                    'tooltip': res[1],
-                    'state_name': res[1],
-                };
-                if (stage_data && stage_data[0][self.options.states_legend[res[0]]]) {
-                    value['state_name'] = stage_data[0][self.options.states_legend[res[0]]];
-                    value['tooltip'] = stage_data[0][self.options.states_legend[res[0]]];
-                }
-                if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
-                else if (res[0] == 'done') { value['state_class'] = 'oe_kanban_status oe_kanban_status_green'; }
-                else { value['state_class'] = 'oe_kanban_status oe_kanban_status_red'; }
-                _data.push(value);
-            });
-            return _data;
+        var current_stage_id = self.view.datarecord.stage_id[0];
+        var stage_data = {
+            id: current_stage_id,
+            legend_normal: self.view.datarecord.legend_normal,
+            legend_blocked : self.view.datarecord.legend_blocked,
+            legend_done: self.view.datarecord.legend_done,
+        };
+        _.map(self.field.selection || [], function(selection_item) {
+            var value = {
+                'name': selection_item[0],
+                'tooltip': selection_item[1],
+            };
+            if (selection_item[0] === 'normal') {
+                value.state_name = stage_data.legend_normal ? stage_data.legend_normal : selection_item[1];
+            } else if (selection_item[0] === 'done') {
+                value.state_class = 'oe_kanban_status_green';
+                value.state_name = stage_data.legend_done ? stage_data.legend_done : selection_item[1];
+            } else {
+                value.state_class = 'oe_kanban_status_red';
+                value.state_name = stage_data.legend_blocked ? stage_data.legend_blocked : selection_item[1];
+            }
+            _data.push(value);
         });
+        return _data;
     },
     render_value: function() {
+        this._super();
+        this.states = this.prepare_dropdown_selection();
         var self = this;
-        var dd_fetched = this.prepare_dropdown_selection();
-        return $.when(dd_fetched).then(function (states) {
-            self.states = states;
-            self.$el.addClass('oe_right oe_inline');
-            self.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
-            self.$el.find('li').on('click', self.set_kanban_selection.bind(self));
+        // Adapt "FormSelection"
+        var current_state = _.find(this.states, function(state) {
+            return state.name === self.get('value');
         });
+        this.$('.oe_kanban_status')
+            .removeClass('oe_kanban_status_red oe_kanban_status_green')
+            .addClass(current_state.state_class);
+
+        // Render "FormSelection.Items" and move it into "FormSelection"
+        var $items = $(QWeb.render('FormSelection.items', {
+            states: _.without(this.states, current_state)
+        }));
+        var $dropdown = this.$el.find('.dropdown-menu');
+        $dropdown.children().remove(); // remove old items
+        $items.appendTo($dropdown);
+        this.$el.find('a').on('click', this.set_kanban_selection.bind(this));
     },
     /* setting the value: in view mode, perform an asynchronous call and reload
     the form view; in edit mode, use set_value to save the new value that will
     be written when saving the record. */
     set_kanban_selection: function (ev) {
         var self = this;
+        ev.preventDefault();
         var li = $(ev.target).closest('li');
         if (li.length) {
             var value = String(li.data('value'));

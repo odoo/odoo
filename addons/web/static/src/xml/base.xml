@@ -679,27 +679,20 @@
         </t>
     </span>
 </t>
-<t t-name="KanbanSelection">
-    <div class="btn-group kanban_state">
-        <t t-foreach="widget.states" t-as="rec">
-            <a t-if="widget.get('value') === rec.name">
-                <a class="dropdown-toggle" data-toggle="dropdown">
-                    <span t-att-class="rec.state_class" t-if="widget.get('value') === rec.name" t-att-title="rec.tooltip"/>
-                    <span class="sr-only">Toggle Dropdown</span>
-                </a>
-            </a>
-        </t>
+<t t-name="FormSelection">
+    <div class="btn-group o_kanban_selection">
+        <a href="#" data-toggle="dropdown"><span class="oe_kanban_status"/></a>
         <ul class="dropdown-menu state" role="menu">
-            <t t-foreach="widget.states" t-as="rec">
-                <t t-if="widget.get('value') !== rec.name">
-                    <li t-att-data-value="rec.name" ><a href="#">
-                        <span t-att-class="rec.state_class" t-att-title="rec.tooltip"/>
-                        <t t-raw="rec.state_name" /></a>
-                    </li>
-                </t>
-            </t>
         </ul>
     </div>
+</t>
+<t t-name="FormSelection.items">
+    <li t-foreach="states" t-as="rec" t-att-data-value="rec.name">
+        <a href="#">
+            <span t-att-class="'oe_kanban_status ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
+            <t t-raw="rec.state_name"/>
+        </a>
+    </li>
 </t>
 <div t-name="Priority" class="o_priority">
     <a t-if="!widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" href="#" t-att-data-value="v[0]" t-att-title="v[1]" class="o_priority_star fa"/>

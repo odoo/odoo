@@ -254,11 +254,7 @@
                                 options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <field name="kanban_state" widget="kanban_state_selection"
-                           options='{
-                               "states_legend_field": "stage_id",
-                               "states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}
-                           }'/>
+                    <field name="kanban_state" widget="kanban_state_selection"/>
                     <div class="oe_title">
                         <h1 class="o_row">
                             <field name="priority" widget="priority"/>
@@ -274,6 +270,9 @@
                             <field name="planned_hours" widget="float_time"
                                     groups="project.group_time_work_estimation_tasks"
                                     on_change="onchange_planned(planned_hours)"/>
+                            <field name="legend_blocked" invisible="1"/>
+                            <field name="legend_normal" invisible="1"/>
+                            <field name="legend_done" invisible="1"/>
                         </group>
                         <group>
                             <field name="date_deadline"/>
@@ -329,6 +328,9 @@
                     <field name="attachment_ids"/>
                     <field name="displayed_image_id"/>
                     <field name="active"/>
+                    <field name="legend_blocked"/>
+                    <field name="legend_normal"/>
+                    <field name="legend_done"/>
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -365,8 +367,7 @@
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left" groups="base.group_user">
-                                        <field name="kanban_state" widget="kanban_state_selection"
-                                            options='{"states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
+                                        <field name="kanban_state" widget="kanban_state_selection"/>
                                     </div>
                                 </div>
                             </div>

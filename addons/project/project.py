@@ -453,6 +453,9 @@ class task(osv.osv):
         'attachment_ids': fields.one2many('ir.attachment', 'res_id', domain=lambda self: [('res_model', '=', self._name)], auto_join=True, string='Attachments'),
         # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
         'displayed_image_id': fields.many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Displayed Image'),
+        'legend_blocked': fields.related("stage_id", "legend_blocked", type="char", string='Kanban Blocked Explanation'),
+        'legend_done': fields.related("stage_id", "legend_done", type="char", string='Kanban Valid Explanation'),
+        'legend_normal': fields.related("stage_id", "legend_normal", type="char", string='Kanban Ongoing Explanation'),
         }
     _defaults = {
         'stage_id': _get_default_stage_id,
@@ -637,7 +640,6 @@ class task(osv.osv):
         # user_id change: update date_assign
         if vals.get('user_id'):
             vals['date_assign'] = fields.datetime.now()
-
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
         task_id = super(task, self).create(cr, uid, vals, context=create_context)
