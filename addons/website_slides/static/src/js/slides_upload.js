@@ -87,7 +87,7 @@ var SlideDialog = Widget.extend({
             return;
         }
         if (file.size / 1024 / 1024 > 15) {
-            this.display_alert(_t("File is too big. Please select file upto 15MB"));
+            this.display_alert(_t("File is too big. File size cannot exceed 15MB"));
             this.reset_file();
             return;
         }

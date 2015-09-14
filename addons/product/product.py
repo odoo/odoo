@@ -506,7 +506,8 @@ class product_template(osv.osv):
         'description_sale': fields.text('Sale Description',translate=True,
             help="A description of the Product that you want to communicate to your customers. "
                  "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),
-        'type': fields.selection(_get_product_template_type_wrapper, 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),        
+        'type': fields.selection(_get_product_template_type_wrapper, 'Product Type', required=True,
+            help="A consumable is a product for which you don't manage stock, a service is a non-material product provided by a company or an individual."),
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'price': fields.function(_product_template_price, fnct_inv=_set_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
@@ -562,7 +563,7 @@ class product_template(osv.osv):
             help="This is minimum quantity to purchase from Main Vendor."),
         'seller_id': fields.related('selected_seller_id','name', type='many2one', relation='res.partner', string='Main Vendor',
             help="Main vendor who has highest priority in vendor list."),
-        'seller_price': fields.related('selected_seller_id','price', type='float', string='Vendor Price', help="Purchase price from from Main Vendor."),
+        'seller_price': fields.related('selected_seller_id','price', type='float', string='Vendor Price', help="Purchase price from main vendor."),
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
