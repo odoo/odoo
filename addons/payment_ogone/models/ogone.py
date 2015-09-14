@@ -253,7 +253,7 @@ class PaymentTxOgone(osv.Model):
                 'state': 'cancel',
                 'acquirer_reference': data.get('PAYID'),
             })
-        elif status in self._ogone_pending_tx_status:
+        elif status in self._ogone_pending_tx_status or status in self._ogone_wait_tx_status:
             tx.write({
                 'state': 'pending',
                 'acquirer_reference': data.get('PAYID'),
