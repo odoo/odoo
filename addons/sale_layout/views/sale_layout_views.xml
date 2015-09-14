@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
+
         <!-- Report condiguration -->
         <record id="report_configuration_form_view" model="ir.ui.view">
-            <field name="name">report.configuration.form.view</field>
+            <field name="name">sale.layout.category.form</field>
             <field name="model">sale_layout.category</field>
             <field name="arch" type="xml">
                 <form string="Report Configuration">
@@ -19,7 +19,7 @@
         </record>
 
         <record id="report_configuration_tree_view" model="ir.ui.view">
-            <field name="name">report.configuration.form.view</field>
+            <field name="name">sale.layout.category.tree</field>
             <field name="model">sale_layout.category</field>
             <field name="arch" type="xml">
                 <tree string="Report Configuration">
@@ -33,7 +33,7 @@
         </record>
 
         <record id="report_configuration_search_view" model="ir.ui.view" >
-	        <field name="name">report.configuration.search.view</field>
+	        <field name="name">sale.layout.category.search</field>
 	        <field name="model">sale_layout.category</field>
 	        <field name="arch" type="xml">
                 <search string="Search Name">
@@ -62,5 +62,5 @@
             name="Report Layout Categories" 
             groups="base.group_sale_manager,base.group_sale_salesman,account.group_account_manager,account.group_account_user"
         />
-    </data>
-</openerp>
+
+</odoo>
