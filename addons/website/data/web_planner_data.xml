@@ -4,7 +4,7 @@
     <template id="website_planner">
         <t t-call="web_planner.pages">
             <t t-call="web_planner.page">
-                <t t-set="page_title" t-value="'Welcome'"/>
+                <t t-set="page_title">Welcome</t>
                 <t t-set="hide_mark_as_done" t-value="True"/>
                 <p><i>Congratulations on taking the leap and deciding to build your own website!</i></p>
                 <p><i>
@@ -25,10 +25,10 @@
             </t>
 
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Plan'"/>
+                <t t-set="menu_categorytitle">Plan</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-bullseye'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Objectives'"/>
+                    <t t-set="page_title">Your Objectives</t>
                     <p class="text-muted">
                         Being clear on why you're creating your site and your goals is an essential first step to ensure your content and structure meet business objectives.
                     </p>
@@ -86,7 +86,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Find Inspiration'"/>
+                    <t t-set="page_title">Find Inspiration</t>
                     <p class="text-muted">
                         It's often much easier not to start with a blank page. Take a look at your competitors
                         and similar companies around the world. They probably have the same objectives and
@@ -138,10 +138,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Design'"/>
+                <t t-set="menu_categorytitle" name="design_placeholder">Design</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-image'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Theme Selection'"/>
+                    <t t-set="page_title">Theme Selection</t>
                     <p class="text-muted">The theme you choose sets the tone for the overall look and feel of your site design.</p>
                     <div class="row">
                         <div class="col-md-6 col-xs-12">
@@ -198,7 +198,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Install Apps'"/>
+                    <t t-set="page_title">Install Apps</t>
                     <p class="text-muted">
                         Before starting to work on your website, make sure you have all the right applications installed.
                         It will be much easier for you to organize and create your content if you have all the options activated from the start.
@@ -259,7 +259,7 @@
                     </section>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Homepage'"/>
+                    <t t-set="page_title">Your Homepage</t>
                     <p class="text-muted">
                         Your homepage is the most important page of your website. This is where visitors get their first impressions of you. An excellent homepage will encourage them to stay on your site, guide them towards your content, reinforce your company's branding and more.<br/>
                         Here are some pointers to help you get started.
@@ -322,7 +322,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Main Menu'"/>
+                    <t t-set="page_title">Your Main Menu</t>
                     <p class="text-muted">
                         Creating your main menu is an important and difficult stage in building your website.<br/>
                         It needs to be organized, so that your visitors can see all the main content you offer at a glance.<br/>
@@ -413,7 +413,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Footer'"/>
+                    <t t-set="page_title">Your Footer</t>
                     <p class="text-muted">
                         A footer, as its name implies, is located at the very bottom of your website.
                         Because of that, your visitors won't see it immediately so it's very useful for linking
@@ -497,10 +497,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Launch'"/>
+                <t t-set="menu_categorytitle">Launch</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-rocket'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Domain Name'"/>
+                    <t t-set="page_title">Your Domain Name</t>
                     <p class="text-muted">
                         You can set Odoo on a custom domain name (e.g. yourcompany.com) for both the website
                         and your emails. Because your website address is as important to your branding as the
@@ -535,7 +535,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Ready For Launch!'"/>
+                    <t t-set="page_title">Ready For Launch!</t>
                     <p class="text-muted">
                         Launching your website is an important step.<br/>
                         Here is a checklist of actions to help you launch a new website efficiently:
@@ -583,10 +583,10 @@
             </t>
 
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Grow'"/>
+                <t t-set="menu_categorytitle">Grow</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-bar-chart'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Promote'"/>
+                    <t t-set="page_title">Promote</t>
                     <p>Once you’ve launched your website, it’s time to grow your traffic.</p>
                     <p>
                         You can do this by optimizing your referencing by search engines like Google: it's
@@ -726,7 +726,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'A/B Testing'"/>
+                    <t t-set="page_title">A/B Testing</t>
                     <p class="text-muted">
                         A/B testing is the process of testing two versions of a page to see which one performs
                         better in reaching your business objectives. For example, imagine you have an existing
@@ -835,7 +835,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Translate'"/>
+                    <t t-set="page_title" name="translate_placeholder">Translate</t>
                     <p class="text-muted">
                         Translating your website into other languages is the best way to broaden its audience.
                         In Odoo, you can either manually translate your pages as they are displayed, use an
@@ -904,7 +904,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Communicate'"/>
+                    <t t-set="page_title">Communicate</t>
                     <p class="text-muted">
                         Your website is an important part of your online business strategy, but it shouldn't be
                         the only one. There are so many ways to communicate with your customers, visitors and
@@ -965,7 +965,7 @@
             </t>
 
             <t t-call="web_planner.page">
-                <t t-set="page_title" t-value="'End'"/>
+                <t t-set="page_title">End</t>
                 <t t-set="hide_title" t-value="True"/>
                 <t t-set="hide_from_menu" t-value="True"/>
                 <t t-set="hide_mark_as_done" t-value="True"/>

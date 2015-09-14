@@ -4,7 +4,7 @@
     <template id="project_planner">
         <t t-call="web_planner.pages">
             <t t-call="web_planner.page">
-                <t t-set="page_title" t-value="'Welcome'"/>
+                <t t-set="page_title">Welcome</t>
                 <t t-set="hide_mark_as_done" t-value="True"/>
                 <i><p>
                     Congratulations on choosing Odoo Project to help running your company more efficiently!
@@ -33,10 +33,10 @@
             </t>
 
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Prepare'"/>
+                <t t-set="menu_categorytitle">Prepare</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-flag-checkered'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Objectives'"/>
+                    <t t-set="page_title">Your Objectives</t>
                     <t t-set="page_menutitle" t-value="'Objectives'"/>
                     <p class="text-muted">
                         It's essential to be clear about why you want to use Odoo Project and what your goals are.
@@ -80,7 +80,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Activities'"/>
+                    <t t-set="page_title">Your Activities</t>
                     <t t-set="page_menutitle" t-value="'Activities'"/>
                     <p class="text-muted">The Odoo Project app can be used to manage many activities, from the development of a new product to the daily operations of a customer support. With some creativity, it can even be used to manage your marketing communications or personal projects. But just because it can be done doesn't mean it's always a good idea: let's start by helping you understand what can be a good project.</p>
 
@@ -113,7 +113,7 @@
 
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Projects'"/>
+                    <t t-set="page_title">Your Projects</t>
                     <t t-set="page_menutitle" t-value="'Projects'"/>
                     <p class="text-muted">Depending on what you need and how you want to operate, there are several ways to work with Odoo. First, decide if you want to think in terms of tasks or issues. Then, activate the Timesheets app if you need it.</p>
                     <h4>1. Learn about Tasks, Issues and Timesheets.</h4>
@@ -250,7 +250,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Kanban Stages'"/>
+                    <t t-set="page_title">Kanban Stages</t>
                     <p class="text-muted">
                         It is time to think about how you will transform your activities into real projects in Odoo.<br/>
                         For that, the most important part is defining the stages of your projects. Stages are the different steps a task or an issue can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects.
@@ -336,10 +336,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Implement'"/>
+                <t t-set="menu_categorytitle">Implement</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-cogs'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Tasks &amp; Issues'"/>
+                    <t t-set="page_title">Tasks &amp; Issues</t>
                     <p class="text-muted">
                         Creating Tasks and/or Issues is the next step in managing your Projects.<br/>
                         In Odoo, it is pretty straightforward, but here are some explanations you may find useful.
@@ -427,7 +427,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Use Timesheets'"/>
+                    <t t-set="page_title">Use Timesheets</t>
                     <p class="text-muted">Timesheets are often essential for running a company.<br/>
                     They are also prone to human error, repetitive, annoying, and sometimes stressful to employees.<br/>
                     Fortunately, Odoo has several solutions to make them as efficient and painless as possible!<br/></p>
@@ -548,7 +548,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Customization'"/>
+                    <t t-set="page_title">Customization</t>
                     <p class="text-muted">Every business is different.<br/>
                     Odoo allows you to customize every application and it's usually a good idea to customize screens to fit your project needs.</p>
                     <h4>Here are some of the <strong>available customizations</strong></h4>
@@ -629,7 +629,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Get more apps'"/>
+                    <t t-set="page_title">Get more apps</t>
                     <h4>
                         <strong>To increase the efficiency of your Projects</strong>, you should have a look at some of our other apps:
                     </h4>
@@ -658,10 +658,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Deploy'"/>
+                <t t-set="menu_categorytitle">Deploy</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-rocket'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Responsibilities'"/>
+                    <t t-set="page_title">Responsibilities</t>
                     <p class="text-muted">
                         A project usually involves many stakeholders, be it the project's sponsor, resources, customers or external contractors. But the most important person in a project is usually the Project Manager.<br/>
                     In Odoo, the Project Managers have the responsibility of managing the Kanban view: they ensure smooth progression of the projects, minimal downtime between stages and optimal work distribution between resources.</p>
@@ -800,7 +800,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Notifications'"/>
+                    <t t-set="page_title">Notifications</t>
                     <p class="text-muted">Managing notifications is essential: too few and you risk missing critical information, too many and you will be  overloaded with unnecessary information. The trick is to find the right balance between the projects, stages and tasks you want to be informed about. Fortunately, Odoo Project has many levels of notifications and messages you can choose from.</p>
                     <div class="o_planner_paragraphs">
                         <div class="row">
@@ -869,10 +869,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Improve'"/>
+                <t t-set="menu_categorytitle">Improve</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-book'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Organize meetings'"/>
+                    <t t-set="page_title">Organize meetings</t>
                     <p class="text-muted">
                         Usually, a project's team members are managed through weekly (or monthly) status meetings.<br/>
                         Sometimes, these meetings can last hours and expose participants to an overly detailed review of the project.<br/>
@@ -958,7 +958,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Reporting'"/>
+                    <t t-set="page_title">Reporting</t>
                     <h4><strong>Click on 'Reporting' on the main menu</strong> and generate statistics relevent to each profiles:</h4>
                     <section>
                         <div class="row">
@@ -1026,7 +1026,7 @@
             </t>
 
             <t t-call="web_planner.page">
-                <t t-set="page_title" t-value="'End'"/>
+                <t t-set="page_title">End</t>
                 <t t-set="hide_title" t-value="True"/>
                 <t t-set="hide_from_menu" t-value="True"/>
                 <t t-set="hide_mark_as_done" t-value="True"/>

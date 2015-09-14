@@ -5,7 +5,7 @@
     <template id="inventory_planner">
         <t t-call="web_planner.pages">
             <t t-call="web_planner.page">
-                <t t-set="page_title" t-value="'Welcome'"/>
+                <t t-set="page_title">Welcome</t>
                 <t t-set="hide_mark_as_done" t-value="True"/>
                 <p>
                     This guide will help you get started with Odoo Inventory.
@@ -33,10 +33,10 @@
                 </div>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Your Situation'"/>
+                <t t-set="menu_categorytitle">Your Situation</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-building-o'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Warehouse'"/>
+                    <t t-set="page_title">Your Warehouse</t>
                     <p>Odoo has preconfigured <strong>one Warehouse</strong> for you. <a t-att-href="prepare_backend_url('stock.action_warehouse_form')">Edit its details or add new ones</a>.</p>
                     <div class="alert alert-info">
                         <p><strong>Warehouse Locations</strong></p>
@@ -50,7 +50,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Vendors'"/>
+                    <t t-set="page_title">Your Vendors</t>
                     <p class="text-muted">
                         Unless you are starting a new business, you probably have a list of vendors you'd like to import.
                     </p>
@@ -116,7 +116,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Products'"/>
+                    <t t-set="page_title">Your Products</t>
                     <p>Before creating your products, here are a few concepts your should understand:</p>
 
 
@@ -236,10 +236,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Deployment'"/>
+                <t t-set="menu_categorytitle">Deployment</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-rocket'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Initial Inventory'"/>
+                    <t t-set="page_title">Initial Inventory</t>
                     <p>
                         It's time to make your initial Inventory. To do so:
                     </p>
@@ -262,10 +262,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Daily Operations'"/>
+                <t t-set="menu_categorytitle">Daily Operations</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-calendar-o'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Sales Flow'"/>
+                    <t t-set="page_title">Sales Flow</t>
                     <p class="text-muted">
                         In Odoo, inventory management is fully integrated with the sales and
                         invoicing process. That means you can automate everything from the initial
@@ -311,7 +311,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Purchase Flow'"/>
+                    <t t-set="page_title">Purchase Flow</t>
                     <div t-if="not is_module_installed('purchase')" class="alert alert-warning">
                         <span>You need to install the Purchases Management app for this flow.</span>
                     </div>
@@ -355,10 +355,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Periodical Tasks'"/>
+                <t t-set="menu_categorytitle">Periodical Tasks</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-recycle'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Reordering Rules'"/>
+                    <t t-set="page_title">Reordering Rules</t>
                     <t t-set="page_menutitle" t-value="'Reordering Rules'"/>
                     <p class="text-muted">
                         A good inventory management aims to optimize stock levels: not too low (or
@@ -374,8 +374,8 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Resolve Procurement Exceptions'"/>
-                    <t t-set="page_menutitle" t-value="'Procurement Exceptions'"/>
+                    <t t-set="page_title">Resolve Procurement Exceptions</t>
+                    <t t-set="page_menutitle">Procurement Exceptions</t>
                     <p class="text-muted">
                         If you configured automatic procurement, Odoo will automatically generate
                         Procurements Orders. You usually don't need to worry about them, but
@@ -397,11 +397,11 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Advanced'"/>
+                <t t-set="menu_categorytitle">Advanced'</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-bolt'"/>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Traceability'"/>
+                    <t t-set="page_title">Traceability</t>
                     <p>
                         Odoo can run advanced traceability by using Product Lots and Serial
                         Numbers, usually identified by bar codes stuck on the products.
@@ -428,7 +428,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Routes Management'"/>
+                    <t t-set="page_title">Routes Management</t>
                     <p>
                         Odoo can manage <strong>advanced push/pull routes configuration</strong>, for example:
                     </p>
@@ -442,7 +442,7 @@
                 </t>
             </t>
             <t t-call="web_planner.page">
-                <t t-set="page_title" t-value="'End'"/>
+                <t t-set="page_title">End</t>
                 <t t-set="hide_title" t-value="True"/>
                 <t t-set="hide_from_menu" t-value="True"/>
                 <t t-set="hide_mark_as_done" t-value="True"/>
