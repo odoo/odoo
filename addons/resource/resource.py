@@ -165,8 +165,10 @@ class resource_calendar(osv.osv):
             current_hour = dt_from.hour
             while float_compare(todo, 0, 4) and maxrecur:
                 for (hour_from,hour_to) in [(item['hour_from'], item['hour_to']) for item in hours_by_cal[id] if item['dayofweek'] == str(dt_from.weekday())]:
-                    hour_from = dt_from.replace(hour=int(hour_from)).replace(tzinfo=tzinfo).astimezone(pytz.UTC).hour
-                    hour_to = dt_from.replace(hour=int(hour_to)).replace(tzinfo=tzinfo).astimezone(pytz.UTC).hour
+                    h_from = dt_from.replace(hour=int(hour_from), minute=int((hour_from % 1)*60)).replace(tzinfo=tzinfo).astimezone(pytz.UTC)
+                    hour_from = h_from.hour + f_round(float(h_from.minute)/60, 2)
+                    h_to = dt_from.replace(hour=int(hour_to), minute=int((hour_to % 1)*60)).replace(tzinfo=tzinfo).astimezone(pytz.UTC)
+                    hour_to = h_to.hour + f_round(float(h_to.minute)/60, 2)
                     leave_flag  = False
                     if (hour_to>current_hour) and float_compare(todo, 0, 4):
                         m = max(hour_from, current_hour)
