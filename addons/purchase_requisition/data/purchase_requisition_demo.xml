@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="base.user_demo" model="res.users">
@@ -41,7 +41,7 @@
             <field name="price_unit">60</field>
             <field name="product_qty">5</field>
         </record>
-               
+
         <record id="rfq2" model="purchase.order">
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="requisition_id" ref="requisition1"/>
@@ -55,8 +55,8 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">50</field>
             <field name="product_qty">3</field>
-        </record>        
+        </record>
 
 
     </data>
-</openerp>
+</odoo>

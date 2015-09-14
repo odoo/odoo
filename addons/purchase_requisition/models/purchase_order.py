@@ -1,51 +1,49 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-import openerp.addons.decimal_precision as dp
+from odoo import api, fields, models
+import odoo.addons.decimal_precision as dp
 
 
-class purchase_order(osv.osv):
+class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
-    _columns = {
-        'requisition_id': fields.many2one('purchase.requisition', 'Call for Tenders', copy=False),
-    }
+    requisition_id = fields.Many2one('purchase.requisition', string='Call for Tenders', copy=False)
 
-    def button_confirm(self, cr, uid, ids, context=None):
-        res = super(purchase_order, self).button_confirm(cr, uid, ids, context=context)
-        proc_obj = self.pool.get('procurement.order')
-        for po in self.browse(cr, uid, ids, context=context):
-            if po.requisition_id and (po.requisition_id.exclusive == 'exclusive'):
+    @api.multi
+    def button_confirm(self):
+        res = super(PurchaseOrder, self).button_confirm()
+        ProcurementOrder = self.env['procurement.order']
+        for po in self:
+            if po.requisition_id.exclusive == 'exclusive':
                 for order in po.requisition_id.purchase_ids:
                     if order.id != po.id:
-                        proc_ids = proc_obj.search(cr, uid, [('purchase_id', '=', order.id)])
-                        if proc_ids and po.state == 'confirmed':
-                            proc_obj.write(cr, uid, proc_ids, {'purchase_id': po.id})
+                        procurement = ProcurementOrder.search([('purchase_id', '=', order.id)])
+                        if procurement and po.state == 'confirmed':
+                            procurement.write({'purchase_id': po.id})
                         order.button_cancel()
-                    po.requisition_id.tender_done(context=context)
+                    po.requisition_id.tender_done()
             for element in po.order_line:
                 if not element.quantity_tendered:
                     element.write({'quantity_tendered': element.product_qty})
         return res
 
 
-class purchase_order_line(osv.osv):
+class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    _columns = {
-        'quantity_tendered': fields.float('Quantity Tendered', digits_compute=dp.get_precision('Product Unit of Measure'), help="Technical field for not loosing the initial information about the quantity proposed in the tender", oldname='quantity_bid'),
-    }
+    quantity_tendered = fields.Float(string='Quantity Tendered', digits_compute=dp.get_precision('Product Unit of Measure'), help="Technical field for not loosing the initial information about the quantity proposed in the tender", oldname='quantity_bid')
 
-    def generate_po(self, cr, uid, tender_id, context=None):
+    @api.model
+    def generate_po(self, tender_id):
         #call generate_po from tender with active_id. Called from js widget
-        return self.pool.get('purchase.requisition').generate_po(cr, uid, [tender_id], context=context)
+        return self.env['purchase.requisition'].browse(tender_id).generate_po()
 
-    def button_confirm(self, cr, uid, ids, context=None):
-        for element in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, element.id, {'quantity_tendered': element.product_qty}, context=context)
-        return True
+    @api.multi
+    def button_confirm(self):
+        for element in self:
+            element.write({'quantity_tendered': element.product_qty})
 
-    def button_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'quantity_tendered': 0}, context=context)
-        return True
+    @api.multi
+    def button_cancel(self):
+        self.write({'quantity_tendered': 0})

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-
+<odoo>
         <record id="purchase_requisition_workflow" model="workflow">
             <field name="name">Purchase Requisition Basic Workflow</field>
             <field name="osv">purchase.requisition</field>
@@ -65,5 +63,4 @@
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">cancel_requisition</field>
         </record>
-    </data>
-</openerp>
+</odoo>
