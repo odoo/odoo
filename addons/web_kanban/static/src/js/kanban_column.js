@@ -240,12 +240,10 @@ var KanbanColumn = Widget.extend({
         this.quick_create_widget = new RecordQuickCreate(this, width);
         this.quick_create_widget.insertAfter(this.$header);
         this.quick_create_widget.$el.focusout(function () {
-            setTimeout(function() {
-                var hasFocus = !! (self.quick_create_widget.$(':focus').length > 0);
-                if (! hasFocus && self.quick_create_widget) {
-                    self.cancel_quick_create();
-                }
-            }, 10);
+            var hasFocus = (self.quick_create_widget.$(':focus').length > 0);
+            if (! hasFocus && self.quick_create_widget) {
+                self.cancel_quick_create();
+            }
         });
 
     },
