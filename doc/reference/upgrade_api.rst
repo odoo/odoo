@@ -10,11 +10,14 @@
 Upgrade API
 ===========
 
+Introduction
+~~~~~~~~~~~~
+
 This document describes the API used to upgrade an Odoo database to a
 higher version.
 
 It allows a database to be upgraded without ressorting to the html form at
-https://upgrade.odoo.com/database/upload
+https://upgrade.odoo.com
 Although the database will follow the same process described on that form.
 
 
@@ -25,6 +28,9 @@ The required steps are:
 * running the upgrade process
 * obtaining the status of the database request
 * downloading the upgraded database dump
+
+The methods
+~~~~~~~~~~~
 
 .. _upgrade-api-create-method:
 
@@ -40,8 +46,8 @@ This action creates a database request with the following information:
 * the database dump name (required but purely informative)
 * optionally the server timezone (for Odoo source version < 6.1)
 
-create method
--------------
+The ``create`` method
+---------------------
 
 .. py:function:: https://upgrade.odoo.com/database/v1/create
 
@@ -56,11 +62,10 @@ create method
     :return: request result
     :rtype: json dictionary
 
-
 The *create* method returns a json dictionary containing the following keys:
 
-failures
-''''''''
+``failures``
+''''''''''''
 
 The list of errors.
 
@@ -107,8 +112,8 @@ See a sample output aside.
             }
 
 
-request
-'''''''
+``request``
+'''''''''''
 
 If the *create* method is successful, the value associated to the *request* key
 will be a dictionary containing various information about the created request:
@@ -198,8 +203,8 @@ Uploading your database dump
 
 This action upload your database dump.
 
-upload method
--------------
+The ``upload`` method
+---------------------
 
 .. py:function:: https://upgrade.odoo.com/database/v1/upload
 
@@ -269,8 +274,8 @@ Asking to process your request
 
 This action ask the Upgrade Platform to process your database dump.
 
-process method
---------------
+The ``process`` method
+----------------------
 
 .. py:function:: https://upgrade.odoo.com/database/v1/process
 
@@ -335,8 +340,8 @@ Obtaining your request status
 
 This action ask the status of your database upgrade request.
 
-status method
--------------
+The ``status`` method
+---------------------
 
 .. py:function:: https://upgrade.odoo.com/database/v1/status
 
@@ -391,7 +396,6 @@ database upgrade request.
         REQUEST_ID="10534"
         URL_PARAMS="key=${KEY}&request=${REQUEST_ID}"
         curl -sS "${PROCESS_URL}?${URL_PARAMS}"
-
 
 Sample output
 -------------
