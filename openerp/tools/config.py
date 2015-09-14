@@ -159,7 +159,7 @@ class configmanager(object):
         group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
                          help="Enable correct behavior when behind a reverse proxy")
         group.add_option("--longpolling-port", dest="longpolling_port", my_default=8072,
-                         help="specify the TCP port for longpolling requests", type="int")
+                         help="specify the TCP port for longpolling requests", type="int")        
         parser.add_option_group(group)
 
         # XML-RPC / HTTPS
@@ -305,6 +305,17 @@ class configmanager(object):
                          help="Use the unaccent function provided by the database when available.")
         group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLiteCity.dat',
                          help="Absolute path to the GeoIP database file.")
+        
+        group.add_option("--without_bt_swissdec", dest="without_bt_swissdec",
+                          help="do not require bt_swissdec when installing sett_hr",
+                          my_default=False)
+        group.add_option("--bt_fetch_mail_filter", dest="bt_fetch_mail_filter",
+                          help="prevent receiving/sending emails",
+                          my_default=False)
+        group.add_option("--bt_fetch_mail_db_name", dest="bt_fetch_mail_db_name",
+                          help="comma-separated list of database names in which we prevent sending/receiving emails",
+                          my_default=False)        
+        
         parser.add_option_group(group)
 
         if os.name == 'posix':
