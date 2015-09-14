@@ -82,7 +82,8 @@ class TestSaleStock(TestSale):
         # let's do an invoice for a deposit of 5%
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'percentage',
-            'amount': 5.0
+            'amount': 5.0,
+            'product_id': self.env.ref('sale.advance_product_0').id,
         })
         act = adv_wiz.with_context(open_invoices=True).create_invoices()
         inv = self.env['account.invoice'].browse(act['res_id'])

@@ -23,20 +23,14 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 return 'all'
         return 'delivered'
 
-    @api.model
-    def _get_advance_product(self):
-        try:
-            return self.env['ir.model.data'].xmlid_to_res_id('sale.advance_product_0', raise_if_not_found=True)
-        except ValueError:
-            return False
-
     advance_payment_method = fields.Selection([
         ('all', 'Invoiceable lines (deduce deposits)'),
         ('delivered', 'Invoiceable lines'),
         ('percentage', 'Deposit (percentage)'),
         ('fixed', 'Deposit (fixed amount)')
         ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
-    product_id = fields.Many2one('product.product', string='Deposit Product', domain=[('type', '=', 'service')], default=_get_advance_product)
+    product_id = fields.Many2one('product.product', string='Deposit Product', domain=[('type', '=', 'service')],\
+        default=lambda self: self.env['ir.values'].get_default('sale.config.settings', 'deposit_product_id_setting'))
     count = fields.Integer(default=_count, string='# of Orders')
     amount = fields.Float('Deposit Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
 

@@ -64,7 +64,10 @@ class sale_configuration(osv.TransientModel):
             ('order', 'Invoice ordered quantities'),
             ('delivery', 'Invoice delivered quantities'),
             ('cost', 'Invoice based on costs (time and material, expenses)')
-            ], 'Default Invoicing', default_model='product.template')
+            ], 'Default Invoicing', default_model='product.template'),
+        'deposit_product_id_setting': fields.many2one('product.product', 'Default Advance Product',\
+            domain="[('type', '=', 'service')]",\
+            help='Default product used for payment advances'),
     }
 
     _defaults = {
@@ -75,6 +78,11 @@ class sale_configuration(osv.TransientModel):
     def set_sale_defaults(self, cr, uid, ids, context=None):
         sale_price = self.browse(cr, uid, ids, context=context).sale_pricelist_setting
         res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'sale_pricelist_setting', sale_price)
+        return res
+
+    def set_deposit_product_id_defaults(self, cr, uid, ids, context=None):
+        deposit_product_id = self.browse(cr, uid, ids, context=context).deposit_product_id_setting
+        res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'deposit_product_id_setting', deposit_product_id.id)
         return res
 
     def onchange_sale_price(self, cr, uid, ids, sale_pricelist_setting, context=None):
