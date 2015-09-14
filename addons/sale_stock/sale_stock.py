@@ -172,15 +172,17 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _check_package(self):
-        default_uom = self.product_id.product_uom
+        default_uom = self.product_id.uom_id
         pack = self.product_packaging
         qty = self.product_uom_qty
-        q = self.product_id.product_uom._compute_qty(pack.qty, default_uom)
+        q = self.env['product.uom']._compute_qty_obj(default_uom, pack.qty, self.product_uom)
         if qty and q and (qty % q):
             newqty = qty - (qty % q) + q
             return {
-               'title': _('Warning!'),
-               'message': _("This product is packaged by %d %s. You should sell %d %s.") % (pack.qty, default_uom, newqty, default_uom)
+                'warning': {
+                    'title': _('Warning'),
+                    'message': _("This product is packaged by %d . You should sell %d .") % (pack.qty, newqty),
+                },
             }
         return {}
 
