@@ -549,6 +549,13 @@ class account_account(osv.osv):
             ids = child_ids
         return True
 
+    def _check_consol_children(self, cr, uid, ids, context=None):
+        obj = self.browse(cr, uid, ids[0], context=context)
+        parent_ids = self.search(cr, uid, [('parent_id', 'child_of', obj.child_consol_ids.ids)], context=context)
+        if (ids[0] in parent_ids):
+            return False
+        return True
+
     def _check_type(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -573,6 +580,7 @@ class account_account(osv.osv):
 
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id']),
+        (_check_consol_children, 'Error!\nYou cannot use this account as consolidated children.', ['child_consol_ids']),
         (_check_type, 'Configuration Error!\nYou cannot define children to an account with internal type different of "View".', ['type']),
         (_check_account_type, 'Configuration Error!\nYou cannot select an account type with a `carry forward` method different of "Unreconciled" for accounts with internal type "Payable/Receivable".', ['user_type','type']),
         (_check_company_account, 'Error!\nYou cannot create an account which has parent account of different company.', ['parent_id']),
