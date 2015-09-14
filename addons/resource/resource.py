@@ -159,10 +159,10 @@ class resource_calendar(osv.osv):
                 continue
 
             dt_leave = self._get_leaves(cr, uid, id, resource)
-            todo = hours + f_round(float(dt_from.minute)/60, 2)
+            todo = hours
             result = []
             maxrecur = 100
-            current_hour = dt_from.hour
+            current_hour = dt_from.hour + f_round(float(dt_from.minute)/60, 2)
             while float_compare(todo, 0, 4) and maxrecur:
                 for (hour_from,hour_to) in [(item['hour_from'], item['hour_to']) for item in hours_by_cal[id] if item['dayofweek'] == str(dt_from.weekday())]:
                     h_from = dt_from.replace(hour=int(hour_from), minute=int((hour_from % 1)*60)).replace(tzinfo=tzinfo).astimezone(pytz.UTC)
