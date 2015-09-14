@@ -140,6 +140,9 @@ var PlannerDialog = Widget.extend({
             next_button.removeClass('btn-primary');
             next_button.addClass('btn-default');
         }
+        if (page.hide_mark_as_done) {
+            next_button.removeClass('btn-default').addClass('btn-primary');
+        }
     },
     _show_last_open_page: function () {
         var last_open_page = utils.get_cookie(this.cookie_name);
