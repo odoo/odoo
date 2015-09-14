@@ -20,7 +20,7 @@ class PaymentAcquirerAuthorize(models.Model):
     def _get_authorize_urls(self, environment):
         """ Authorize URLs """
         if environment == 'prod':
-            return {'authorize_form_url': 'https://secure.authorize.net/gateway/transact.dll'}
+            return {'authorize_form_url': 'https://secure2.authorize.net/gateway/transact.dll'}
         else:
             return {'authorize_form_url': 'https://test.authorize.net/gateway/transact.dll'}
 
