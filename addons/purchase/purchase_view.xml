@@ -13,6 +13,11 @@
         <menuitem id="menu_procurement_management" name="Purchase"
             parent="base.menu_purchase_root" sequence="1" />
 
+        <!--Supplier menu-->
+        <menuitem id="base.menu_procurement_management_supplier_name" name="Vendors"
+            parent="menu_procurement_management"
+            action="base.action_partner_supplier_form" sequence="15"/>
+
         <menuitem id="menu_purchase_config" name="Configuration" parent="base.menu_purchase_root" sequence="100" groups="group_purchase_manager,base.group_configuration"/>
 
         <menuitem
@@ -21,7 +26,7 @@
 
         <menuitem
            action="product.product_supplierinfo_type_action" id="menu_product_pricelist_action2_purchase"
-           parent="menu_purchase_config_pricelist" sequence="1" groups="base.group_no_one"/>
+           parent="menu_procurement_management" sequence="16" groups="purchase.group_manage_vendor_price"/>
 
         <menuitem
             id="menu_product_in_config_purchase" name="Products"
@@ -43,10 +48,6 @@
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
               parent="purchase.menu_product_in_config_purchase" sequence="5"/>
 
-    <!--Supplier menu-->
-    <menuitem id="base.menu_procurement_management_supplier_name" name="Vendors"
-        parent="menu_procurement_management"
-        action="base.action_partner_supplier_form" sequence="15"/>
 
     <!-- Purchase Control Menu -->
     <menuitem id="menu_purchase_control" name="Control" parent="base.menu_purchase_root" sequence="4"/>
