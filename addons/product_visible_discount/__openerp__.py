@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Prices Visible Discounts',
@@ -17,8 +18,6 @@ To this end, a new check box named 'Visible Discount' is added to the pricelist 
     Unit price=225, Discount=0,00, Net price=225.
     """,
     'depends': ["sale","purchase"],
-    'demo': [],
     'data': ['views/product_pricelist_views.xml'],
-    'auto_install': False,
     'installable': True,
 }

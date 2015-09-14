@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from openerp import fields, models
 
-class product_pricelist(osv.osv):
+class ProductPricelist(models.Model):
     _inherit = 'product.pricelist'
 
-    _columns = {
-        'discount_policy': fields.selection([('with_discount', 'Discount included in the price'), ('without_discount', 'Show discount in the sale order')], string="Discount Policy"),
-    }
-    _defaults = {'discount_policy': 'with_discount'}
+    discount_policy = fields.Selection([
+        ('with_discount', 'Discount included in the price'),
+        ('without_discount', 'Show discount in the sale order')],
+        default='with_discount')
