@@ -10,7 +10,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     buffered_key_events: [],
     // Regexp to match a barcode input and extract its payload
     // Note: to build in init() if prefix/suffix can be configured
-    regexp: /(.{3,})[\n\r\t]+/,
+    regexp: /(.{3,})[\n\r\t]*/,
     // By knowing the terminal character we can interpret buffered keys
     // as a barcode as soon as it's encountered (instead of waiting x ms)
     suffix: /[\n\r\t]+/,
