@@ -309,7 +309,7 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="name">Track Tags</field>
             <field name="res_model">event.track.tag</field>
         </record>
-        <menuitem id="menu_event_track_tag" action="action_event_track_tag" 
+        <menuitem id="menu_event_track_tag" action="action_event_track_tag"
             parent="event.menu_event_configuration"/>
 
         <!-- Events Organisation/CONFIGURATION/EVENTS -->
@@ -319,9 +319,9 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="model">event.event</field>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button name="%(action_event_track_from_event)d" 
-                            type="action" 
-                            class="oe_stat_button" 
+                    <button name="%(action_event_track_from_event)d"
+                            type="action"
+                            class="oe_stat_button"
                             icon="fa-inbox"
                             attrs="{'invisible': [('show_tracks', '=', False), ('show_track_proposal', '=', False)]}">
                         <field name="count_tracks" widget="statinfo"/>
@@ -337,10 +337,10 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
                     <div name="event_checkboxes">
                         <field name="show_menu"/>
                         <label for="show_menu"/>
-                        <field name="show_tracks"/>
-                        <label for="show_tracks"/>
-                        <field name="show_track_proposal"/>
-                        <label for="show_track_proposal"/>
+                        <field name="show_tracks" attrs="{'invisible': [('show_menu', '=', False)]}"/>
+                        <label for="show_tracks" attrs="{'invisible': [('show_menu', '=', False)]}"/>
+                        <field name="show_track_proposal" attrs="{'invisible': [('show_menu', '=', False)]}"/>
+                        <label for="show_track_proposal" attrs="{'invisible': [('show_menu', '=', False)]}"/>
                     </div>
                 </xpath>
             </field>
