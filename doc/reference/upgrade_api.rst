@@ -71,7 +71,7 @@ The list of errors.
 
 A list of dictionaries, each dictionary giving information about one particular
 error. Each dictionary can contain various keys depending of the type of error
-but you will always get the *reason* and the *message* keys:
+but you will always get the ``reason`` and the ``message`` keys:
 
 * ``reason``: the error type
 * ``message``: a human friendly message
@@ -150,19 +150,17 @@ Here are 2 examples of database upgrade request creation using:
 
         CREATE_URL = "https://upgrade.odoo.com/database/v1/create"
         CONTRACT = "M123456-abcdef"
-        AIM = "test"
-        TARGET = "8.0"
         EMAIL = "john.doe@example.com"
+        TARGET = "8.0"
+        AIM = "test"
         FILENAME = "db_name.dump"
 
-        fields = dict([
-            ('aim', AIM),
-            ('email', EMAIL),
-            ('filename', DB_SOURCE),
+        postfields = urlencode([
             ('contract', CONTRACT),
+            ('email', EMAIL),
             ('target', TARGET),
-        ])
-        postfields = urlencode(fields)
+            ('aim', AIM),
+            ('filename', FILENAME)])
 
         c = pycurl.Curl()
         c.setopt(pycurl.URL, CREATE_URL)
