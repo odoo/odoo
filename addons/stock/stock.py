@@ -1652,7 +1652,7 @@ class StockProductionLot(models.Model):
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's serial number")
     product_id = fields.Many2one('product.product', 'Product', required=True, domain=[('type', 'in', ['product', 'consu'])], default=lambda x: x._context.get('product_id'))
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
-    create_date = fields.Datetime('Creation Date'),
+    create_date = fields.Datetime('Creation Date')
 
     _sql_constraints = [
         ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
@@ -1837,7 +1837,7 @@ class StockMove(models.Model):
             "the product reservation, and should be done with care."
     )
     product_uom = fields.Many2one('product.uom', 'Unit of Measure', required=True, states={'done': [('readonly', True)]})
-    product_tmpl_id = fields.Many2one(related='product_id.product_tmpl_id', relation='product.template', string='Product Template'),
+    product_tmpl_id = fields.Many2one(related='product_id.product_tmpl_id', relation='product.template', string='Product Template')
     product_packaging = fields.Many2one('product.packaging', 'preferred Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc.")
     location_id = fields.Many2one('stock.location', 'Source Location', required=True, select=True, auto_join=True, states={'done': [('readonly', True)]}, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations.")
     location_dest_id = fields.Many2one('stock.location', 'Destination Location', required=True, states={'done': [('readonly', True)]}, select=True, auto_join=True, help="Location where the system will stock the finished products.")
@@ -1874,7 +1874,7 @@ class StockMove(models.Model):
     reserved_quant_ids = fields.One2many('stock.quant', 'reservation_id', 'Reserved quants')
     linked_move_operation_ids = fields.One2many('stock.move.operation.link', 'move_id', string='Linked Operations', readonly=True, help='Operations that impact this move for the computation of the remaining quantities')
     remaining_qty = fields.Float(compute="_get_remaining_qty", string='Remaining Quantity', digits=0, states={'done': [('readonly', True)]},
-        help="Remaining Quantity in default UoM according to operations matched with this move"),
+        help="Remaining Quantity in default UoM according to operations matched with this move")
     procurement_id = fields.Many2one('procurement.order', 'Procurement')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id)
     rule_id = fields.Many2one('procurement.rule', 'Procurement Rule', help='The procurement rule that created this stock move')
@@ -1887,8 +1887,8 @@ class StockMove(models.Model):
     returned_move_ids = fields.One2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move')
     reserved_availability = fields.Float(compute="_get_reserved_availability", string='Quantity Reserved', readonly=True, help='Quantity that has already been reserved for this move')
     availability = fields.Float(compute="_get_product_availability", type='float', string='Forecasted Quantity', readonly=True, help='Quantity in stock that can still be reserved for this move')
-    string_availability_info = fields.Text(compute="_get_string_qty_information", string='Availability', readonly=True, help='Show various information on stock availability for this move'),
-    restrict_lot_id = fields.Many2one('stock.production.lot', 'Lot', help="Technical field used to depict a restriction on the lot of quants to consider when marking this move as 'done'"),
+    string_availability_info = fields.Text(compute="_get_string_qty_information", string='Availability', readonly=True, help='Show various information on stock availability for this move')
+    restrict_lot_id = fields.Many2one('stock.production.lot', 'Lot', help="Technical field used to depict a restriction on the lot of quants to consider when marking this move as 'done'")
     restrict_partner_id = fields.Many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'")
     route_ids = fields.Many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
@@ -2737,6 +2737,14 @@ class StockInventory(models.Model):
         for inv in self:
             inv.total_qty = sum([x.product_qty for x in inv.line_ids])
 
+    @api.model
+    def _default_stock_location(self):
+        try:
+            warehouse = self.env.ref('stock.warehouse0')
+            return warehouse.lot_stock_id.id
+        except:
+            return False
+
     INVENTORY_STATE_SELECTION = [
         ('draft', 'Draft'),
         ('cancel', 'Cancelled'),
@@ -2762,14 +2770,6 @@ class StockInventory(models.Model):
         "(e.g. Cycle Counting) you can choose 'Manual Selection of Products' and the system won't propose anything.  You can also let the "\
         "system propose for a single product / lot /... ")
     total_qty = fields.Float(compute="_get_total_qty")
-
-    @api.model
-    def _default_stock_location(self):
-        try:
-            warehouse = self.env.ref('stock.warehouse0')
-            return warehouse.lot_stock_id.id
-        except:
-            return False
 
     @api.multi
     def reset_real_qty(self):
@@ -2945,7 +2945,7 @@ class StockInventoryLine(models.Model):
     product_id = fields.Many2one('product.product', 'Product', required=True, select=True)
     package_id = fields.Many2one('stock.quant.package', 'Pack', select=True)
     product_uom_id = fields.Many2one('product.uom', 'Product Unit of Measure', required=True, default=lambda self=None: self.env.ref('product.product_uom_unit').ids)
-    product_qty = fields.float('Checked Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), default=0)
+    product_qty = fields.Float('Checked Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), default=0)
     company_id = fields.Many2one(related='inventory_id.company_id', relation='res.company', string='Company', store=True, select=True, readonly=True)
     prod_lot_id = fields.Many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]")
     state = fields.Char(related='inventory_id.state', string='Status', readonly=True)
@@ -3841,9 +3841,9 @@ class StockLocationPath(models.Model):
 
     name = fields.Char('Operation Name', required=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id)
-    route_id = fields.Many2one('stock.location.route', 'Route'),
+    route_id = fields.Many2one('stock.location.route', 'Route')
     location_from_id = fields.Many2one('stock.location', 'Source Location', ondelete='cascade', select=1, required=True,
-        help="This rule can be applied when a move is confirmed that has this location as destination location"),
+        help="This rule can be applied when a move is confirmed that has this location as destination location")
     location_dest_id = fields.Many2one('stock.location', 'Destination Location', ondelete='cascade', select=1, required=True,
         help="The new location where the goods need to go")
     delay = fields.Integer('Delay (days)', help="Number of days needed to transfer the goods", default=0)
@@ -4186,7 +4186,7 @@ class StockPackOperation(models.Model):
     package_id = fields.Many2one('stock.quant.package', 'Source Package')  # 2
     pack_lot_ids = fields.One2many('stock.pack.operation.lot', 'operation_id', 'Lots Used')
     result_package_id = fields.Many2one('stock.quant.package', 'Destination Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade')
-    date = fields.Datetime(required=True, default=fields.date.context_today)
+    date = fields.Datetime(required=True, default=fields.date.today)
     owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
     #'update_cost': fields.boolean('Need cost update'),
     cost = fields.Float(help="Unit Cost for this product line")
@@ -4310,7 +4310,7 @@ class StockPackOperationLot(models.Model):
 
     operation_id = fields.Many2one('stock.pack.operation')
     qty = fields.Float('Quantity', default=1.0)
-    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number'),
+    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
     lot_name = fields.Char()
     qty_todo = fields.Float('Quantity')
     processed = fields.Boolean("_get_processed")
@@ -4412,7 +4412,7 @@ class StockWarehouseOrderpoint(models.Model):
                 return False
         return True
 
-    name = fields.char(required=True, copy=False, default=lambda self: self.env['ir.sequence'].next_by_code('stock.orderpoint') or '')
+    name = fields.Char(required=True, copy=False, default=lambda self: self.env['ir.sequence'].next_by_code('stock.orderpoint') or '')
     active = fields.Boolean(help="If the active field is set to False, it will allow you to hide the orderpoint without removing it.", default=lambda *a: 1)
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade")
     location_id = fields.Many2one('stock.location', 'Location', required=True, ondelete="cascade")
@@ -4431,7 +4431,7 @@ class StockWarehouseOrderpoint(models.Model):
         help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.  ", default=lambda *a: 1)
     procurement_ids = fields.One2many('procurement.order', 'orderpoint_id', 'Created Procurements')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by procurement rules will be grouped into one big picking.", copy=False)
-    company_id = fields.many2one('res.company', 'Company', required=True, default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', 'Company', required=True, default=lambda self: self.env.user.company_id)
     lead_days = fields.Integer('Lead Time', help="Number of days after the orderpoint is triggered to receive the products or to order to the vendor", default=lambda *a: 1)
     lead_type = fields.Selection([('net', 'Day(s) to get the products'), ('supplier', 'Day(s) to purchase')], 'Lead Type', required=True, default=lambda *a: 'supplier')
 
@@ -4600,7 +4600,7 @@ class StockPickingType(models.Model):
         return res and res[0] or False
 
     name = fields.Char('Picking Type Name', translate=True, required=True)
-    complete_name = fields.char(compute="_get_name", string='Name')
+    complete_name = fields.Char(compute="_get_name", string='Name')
     color = fields.Integer()
     sequence = fields.Integer(help="Used to order the 'All Operations' kanban view")
     sequence_id = fields.Many2one('ir.sequence', 'Reference Sequence', required=True)
@@ -4614,7 +4614,7 @@ class StockPickingType(models.Model):
     use_create_lots = fields.Boolean('Create New Lots', default=True)
     use_existing_lots = fields.Boolean('Use Existing Lots', default=True)
     # Statistics for the kanban view
-    last_done_picking = fields.char(compute="_get_tristate_values", string='Last 10 Done Pickings')
+    last_done_picking = fields.Char(compute="_get_tristate_values", string='Last 10 Done Pickings')
     count_picking_draft = fields.Integer(compute="_get_picking_count", multi='_get_picking_count')
     count_picking_ready = fields.Integer(compute="_get_picking_count", multi='_get_picking_count')
     count_picking = fields.Integer(compute="_get_picking_count", multi='_get_picking_count')
