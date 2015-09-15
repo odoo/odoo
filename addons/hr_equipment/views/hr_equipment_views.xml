@@ -220,7 +220,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="category_id" groups="base.group_equipment_manager" on_change="1" options="{&quot;no_open&quot;: True}"/>
+                            <field name="category_id" invisible="1" on_change="1" options="{&quot;no_open&quot;: True}"/>
                             <field name="equipment_assign_to" on_change="1" widget="radio"/>
                             <field name="employee_id" string="Employee" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'department'), ('equipment_assign_to', '=', False)]}"/>
                             <field name="department_id" string="Department" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'employee'), ('equipment_assign_to', '=', False)]}"/>
