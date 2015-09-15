@@ -33,6 +33,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
         default=lambda self: self.env['ir.values'].get_default('sale.config.settings', 'deposit_product_id_setting'))
     count = fields.Integer(default=_count, string='# of Orders')
     amount = fields.Float('Deposit Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
+    deposit_account_id = fields.Many2one("account.account", string="Income Account", domain=[('deprecated', '=', False)],\
+        help="Account used for deposits")
+    deposit_taxes_id = fields.Many2many("account.tax", string="Customer Taxes", help="Taxes used for deposits")
 
     @api.onchange('advance_payment_method')
     def onchange_advance_payment_method(self):
@@ -103,6 +106,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
         elif self.advance_payment_method == 'all':
             sale_orders.action_invoice_create(final=True)
         else:
+            # Create deposit product if necessary
+            if not self.product_id:
+                vals = self._prepare_deposit_product()
+                self.product_id = self.env['product.product'].create(vals)
+                self.env['ir.values'].set_default('sale.config.settings', 'deposit_product_id_setting', self.product_id.id)
+
             sale_line_obj = self.env['sale.order.line']
             for order in sale_orders:
                 if self.advance_payment_method == 'percentage':
@@ -121,9 +130,18 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     'discount': 0.0,
                     'product_uom': self.product_id.uom_id.id,
                     'product_id': self.product_id.id,
-                    'tax_id': self.product_id.taxes_id,
+                    'tax_id': [(6, 0, self.product_id.taxes_id.ids)],
                 })
                 self._create_invoice(order, so_line, amount)
         if self._context.get('open_invoices', False):
             return sale_orders.action_view_invoice()
         return {'type': 'ir.actions.act_window_close'}
+
+    def _prepare_deposit_product(self):
+        return {
+            'name': 'Deposit',
+            'type': 'service',
+            'invoice_policy': 'order',
+            'property_account_income_id': self.deposit_account_id.id,
+            'taxes_id': [(6, 0, self.deposit_taxes_id.ids)],
+        }
