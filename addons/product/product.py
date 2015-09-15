@@ -458,7 +458,7 @@ class product_template(osv.osv):
         for template in templates:
             for name in names:
                 res[template.id][name] = getattr(template.product_variant_ids[0], name) if template.id in unique_templates else 0.0
-        return res     
+        return res
 
     def _set_product_template_field(self, cr, uid, product_tmpl_id, name, value, args, context=None):
         ''' Set the standard price modification on the variant if there is only one variant '''
@@ -466,7 +466,16 @@ class product_template(osv.osv):
         if template.product_variant_count == 1:
             variant = self.pool['product.product'].browse(cr, uid, template.product_variant_ids.id, context=context)
             return variant.write({name: value})
-        return {}        
+        return {}
+
+    def _search_by_standard_price(self, cr, uid, obj, name, domain, context=None):
+        r = self.pool['product.product'].search_read(cr, uid, domain, ['product_tmpl_id'],
+                                                     limit=None, context=context)
+        return [('id', 'in', [x['product_tmpl_id'][0] for x in r])]
+
+    def _get_template_id_from_product(self, cr, uid, ids, context=None):
+        r = self.pool['product.product'].read(cr, uid, ids, ['product_tmpl_id'], context=context)
+        return [x['product_tmpl_id'][0] for x in r]
 
     def _select_seller(self, cr, uid, ids, name, arg, context=None):
         if context is None:
@@ -518,10 +527,16 @@ class product_template(osv.osv):
             string='Currency'),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
-        'standard_price': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Cost', digits_compute=dp.get_precision('Product Price'), 
-                                          help="Cost of the product, in the default unit of measure of the product.", groups="base.group_user", store=True),
-        'volume': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Volume', help="The volume in m3.", store=True),
-        'weight': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc.", store=True),
+        'standard_price': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, fnct_search=_search_by_standard_price, multi='_compute_product_template_field', type='float', string='Cost', digits_compute=dp.get_precision('Product Price'),
+                                          help="Cost of the product, in the default unit of measure of the product.", groups="base.group_user"),
+        'volume': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Volume', help="The volume in m3.", store={
+            _name: (lambda s,c,u,i,t: i, ['product_variant_ids'], 10),
+            'product.product': (_get_template_id_from_product, ['product_tmpl_id', 'volume'], 10),
+        }),
+        'weight': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc.", store={
+            _name: (lambda s,c,u,i,t: i, ['product_variant_ids'], 10),
+            'product.product': (_get_template_id_from_product, ['product_tmpl_id', 'weight'], 10),
+        }),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
