@@ -5762,20 +5762,20 @@ class BaseModel(object):
         """
         while self.env.has_todo():
             field, recs = self.env.get_todo()
-            # evaluate the fields to recompute, and save them to database
-            computed = self.env[field.model_name]._field_computed[field]
-            names = [f.name for f in computed if f.store and self.env.field_todo(f)]
-            for rec in recs:
-                try:
-                    values = rec._convert_to_write({
-                        name: rec[name] for name in names
-                    })
-                    with rec.env.norecompute():
-                        rec._write(values)
-                except MissingError:
-                    pass
-            # mark the computed fields as done
-            map(recs._recompute_done, computed)
+            # determine the fields to recompute
+            fs = self.env[field.model_name]._field_computed[field]
+            ns = [f.name for f in fs if f.store]
+            # evaluate fields, and group record ids by update
+            updates = defaultdict(set)
+            for rec in recs.exists():
+                vals = rec._convert_to_write({n: rec[n] for n in ns})
+                updates[frozendict(vals)].add(rec.id)
+            # update records in batch when possible
+            with recs.env.norecompute():
+                for vals, ids in updates.iteritems():
+                    recs.browse(ids)._write(dict(vals))
+            # mark computed fields as done
+            map(recs._recompute_done, fs)
 
     #
     # Generic onchange method
