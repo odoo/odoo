@@ -40,7 +40,7 @@ class AccountBankStmtCashWizard(models.Model):
 
     @api.multi
     def validate(self):
-        bnk_stmt_id = self.env.context.get('active_id', False)
+        bnk_stmt_id = self.env.context.get('bank_statement_id', False) or self.env.context.get('active_id', False)
         bnk_stmt = self.env['account.bank.statement'].browse(bnk_stmt_id)
         total = 0.0
         for lines in self.cashbox_lines_ids:

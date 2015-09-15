@@ -105,6 +105,7 @@ class pos_config(osv.osv):
         'iface_tax_included':   fields.boolean('Include Taxes in Prices', help='The displayed prices will always include all taxes, even if the taxes have been setup differently'),
         'iface_start_categ_id': fields.many2one('pos.category','Start Category', help='The point of sale will display this product category by default. If no category is specified, all available products will be shown'),
         'iface_display_categ_images': fields.boolean('Display Category Pictures', help="The product categories will be displayed with pictures."),
+        'cash_control': fields.boolean('Cash Control', help="Check the amount of the cashbox at opening and closing."),
         'receipt_header': fields.text('Receipt Header',help="A short text that will be inserted as a header in the printed receipt"),
         'receipt_footer': fields.text('Receipt Footer',help="A short text that will be inserted as a footer in the printed receipt"),
         'proxy_ip':       fields.char('IP Address', help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty', size=45),
@@ -351,12 +352,16 @@ class pos_session(osv.osv):
                 'cash_register_id' : False,
                 'cash_control' : False,
             }
-            # TODO: cash_control field is removed.
-            # for st in record.statement_ids:
-            #     if st.journal_id.cash_control == True:
-            #         result[record.id]['cash_control'] = True
-            #         result[record.id]['cash_journal_id'] = st.journal_id.id
-            #         result[record.id]['cash_register_id'] = st.id
+
+            if record.config_id.cash_control:
+                for st in record.statement_ids:
+                    if st.journal_id.type == 'cash':
+                        result[record.id]['cash_control'] = True
+                        result[record.id]['cash_journal_id'] = st.journal_id.id
+                        result[record.id]['cash_register_id'] = st.id
+
+                if not result[record.id]['cash_control']:
+                    raise UserError(_("Cash control can only be applied to cash journals."))
 
         return result
 
@@ -525,6 +530,14 @@ class pos_session(osv.osv):
             'statement_ids': statements,
             'config_id': config_id
         })
+
+        # set the journal_id which should be used by
+        # account.bank.statement to set the opening balance of the
+        # newly created bank statement
+        if pos_config.cash_control:
+            for journal in pos_config.journal_ids:
+                if journal.type == 'cash':
+                    context.update({'journal_id': journal.id})
 
         return super(pos_session, self).create(cr, uid, values, context=context)
 
