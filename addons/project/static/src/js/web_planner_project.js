@@ -107,9 +107,9 @@ planner.PlannerDialog.include({
                     'input_element_stage_12' : '',
                     'input_element_stage_13' : '',
                 }
-            }
-            self.$('#input_element_kanban_stage_pipeline').on('change', function(ev) {
-                var option = self.$(ev.target).find(":selected").val();
+            };
+
+            var stage_handler = function (option) {
                 if (_.has(stages, option)) {
                     var values = stages[option];
                     var keys = _.keys(values);
@@ -118,10 +118,19 @@ planner.PlannerDialog.include({
                         self.$('#' + keys[i] + '_user').val(values[keys[i]]);
                     }
                 }
+            };
+
+            self.$('#input_element_kanban_stage_pipeline').on('change', function(ev) {
+                var option = self.$(ev.target).find(":selected").val();
+                stage_handler(option);
             });
             self.$( ".user_project" ).on('change', function() {
                 self.$("#" + self.$(this).attr("id") + "_user").val(self.$(this).val());
             });
+
+            // Load first option by default
+            var first_option = self.$('#input_element_kanban_stage_pipeline').find('option').first().val();
+            stage_handler(first_option);
         }
     }
 });

@@ -260,8 +260,11 @@
                     <div class="row">
                         <div class="o_planner_notebook_container col-md-12">
                             <ul class="o_planner_notebook">
-                                <li class="o_planner_notebook_header">
-                                    <div class="pull-right">
+                                <li class="row o_planner_notebook_header">
+                                    <div class="col-md-7">
+                                        <h5><strong>Stages and Requirements</strong> for next stage:</h5>
+                                    </div>
+                                    <div class="col-md-5">
                                         <select id="input_element_kanban_stage_pipeline">
                                             <option value="basic_management">Basic Management</option>
                                             <option value="development_process">Development Process</option>
@@ -271,42 +274,69 @@
                                             <option value="repair_workshop">Repair Workshop</option>
                                         </select>
                                     </div>
-                                    <h5><strong>Stages and Requirements</strong> for next stage:</h5>
                                 </li>
-                                <li>
-                                    <span>#1</span>
-                                    <input class="user_project" id="input_element_stage_0" type="text" value="Ideas"/>
-                                    <input class="indented" id="input_element_stage_7" type="text" value="Idea is fully explained"/>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#1</span>
+                                        <input class="user_project" id="input_element_stage_0" type="text" value="Ideas"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_7" type="text"/>
+                                    </div>
                                 </li>
-                                <li>
-                                    <span>#2</span>
-                                    <input class="user_project" id="input_element_stage_1" type="text" value="To Do"/>
-                                    <input class="indented" id="input_element_stage_8" type="text" value="Idea has been transformed into concrete actions"/>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#2</span>
+                                        <input class="user_project" id="input_element_stage_1" type="text" value="To Do"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_8" type="text"/>
+                                    </div>
                                 </li>
-                                <li>
-                                    <span>#3</span>
-                                    <input class="user_project" id="input_element_stage_2" type="text" value="Done"/>
-                                    <input class="indented" id="input_element_stage_9" type="text" value="Task is completed"/>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#3</span>
+                                        <input class="user_project" id="input_element_stage_2" type="text" value="Done"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_9" type="text"/>
+                                    </div>
                                 </li>
-                                <li>
-                                    <span>#4</span>
-                                    <input class="user_project" id="input_element_stage_3" type="text" value="Cancelled"/>
-                                    <input class="indented" id="input_element_stage_10" type="text" value="Reason for cancellation has been documented"/>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#4</span>
+                                        <input class="user_project" id="input_element_stage_3" type="text" value="Cancelled"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_10" type="text"/>
+                                    </div>
                                 </li>
-                                <li>
-                                    <span>#5</span>
-                                    <input class="user_project" id="input_element_stage_4" type="text"/>
-                                    <input class="indented" id="input_element_stage_11" type="text"/>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#5</span>
+                                        <input class="user_project" id="input_element_stage_4" type="text"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_11" type="text"/>
+                                    </div>
                                 </li>
-                                <li>
-                                    <span>#6</span>
-                                    <input class="user_project" id="input_element_stage_5" type="text"/>
-                                    <input class="indented" id="input_element_stage_12" type="text"/>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#6</span>
+                                        <input class="user_project" id="input_element_stage_5" type="text"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_12" type="text"/>
+                                    </div>
                                 </li>
-                                <li>
-                                    <span>#7</span>
-                                    <input class="user_project" id="input_element_stage_6" type="text"/>
-                                    <input class="indented" id="input_element_stage_13" type="text"/>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#7</span>
+                                        <input class="user_project" id="input_element_stage_6" type="text"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_13" type="text"/>
+                                    </div>
                                 </li>
                                 <div class="o_planner_notebook_line_separator"></div>
                             </ul>
