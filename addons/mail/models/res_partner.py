@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import logging
 import threading
 
 from openerp import _, api, fields, models, tools
 
+_logger = logging.getLogger(__name__)
 
 class Partner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
@@ -177,8 +179,11 @@ class Partner(models.Model):
     @api.model
     def get_needaction_count(self):
         """ compute the number of needaction of the current user """
-        self.env.cr.execute("""
-            SELECT count(*) as needaction_count
-            FROM mail_message_res_partner_needaction_rel R
-            WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
-        return self.env.cr.dictfetchall()[0].get('needaction_count')
+        if self.env.user.partner_id:
+            self.env.cr.execute("""
+                SELECT count(*) as needaction_count
+                FROM mail_message_res_partner_needaction_rel R
+                WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
+            return self.env.cr.dictfetchall()[0].get('needaction_count')
+        _logger.error('Call to needaction_count without partner_id')
+        return 0
