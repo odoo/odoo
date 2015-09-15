@@ -115,6 +115,14 @@ class WebKitParser(report_sxw):
                 webkit_path = tools.which('wkhtmltopdf', path=os.pathsep.join(defpath))
             except IOError:
                 webkit_path = None
+        # Windows Development Environment - check standard installation path Program Files and Program Files(x86)
+        if not webkit_path and (os.name == 'nt'):
+            for spath in  [os.getenv("ProgramFiles"), os.getenv("ProgramFiles(x86)")]:
+                testExist = os.path.join(spath,'wkhtmltopdf','bin','wkhtmltopdf.exe')
+                if os.access(testExist,os.X_OK):
+                    webkit_path=testExist
+                    break;
+                    
 
         if webkit_path:
             return webkit_path
