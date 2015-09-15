@@ -1,0 +1,180 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * warning
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 09:17+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
+msgid "Blocking Message"
+msgstr "Informacja blokująca"
+
+#. module: warning
+#: model:ir.model,name:warning.model_account_invoice
+#: model:ir.model.fields,field_description:warning.field_res_partner_invoice_warn
+msgid "Invoice"
+msgstr "Faktura"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_res_partner_invoice_warn_msg
+msgid "Message for Invoice"
+msgstr "Informacja dla faktury"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_res_partner_purchase_warn_msg
+msgid "Message for Purchase Order"
+msgstr "Notatka dla zamówienia zakupu"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_product_template_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr "Informacja dla pozycji zamówienia sprzedaży"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_res_partner_sale_warn_msg
+msgid "Message for Sales Order"
+msgstr "Wiadomość do zamówienia sprzedaży"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_product_template_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr "Wiadomość do pozycji zamówienia sprzedaży"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_res_partner_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr "Wiadomość związana z pobraniem"
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
+msgid "No Message"
+msgstr "Brak informacji"
+
+#. module: warning
+#: model:ir.model,name:warning.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: warning
+#: model:ir.model,name:warning.model_product_template
+msgid "Product Template"
+msgstr "Szablon produktu"
+
+#. module: warning
+#: model:ir.model,name:warning.model_purchase_order
+#: model:ir.model.fields,field_description:warning.field_res_partner_purchase_warn
+msgid "Purchase Order"
+msgstr "Zamówienie zakupu"
+
+#. module: warning
+#: model:ir.model,name:warning.model_purchase_order_line
+#: model:ir.model.fields,field_description:warning.field_product_template_purchase_line_warn
+msgid "Purchase Order Line"
+msgstr "Pozycja zamówienia zakupu"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order
+#: model:ir.model.fields,field_description:warning.field_res_partner_sale_warn
+msgid "Sales Order"
+msgstr "Zamówienie sprzedaży"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+#: model:ir.model.fields,field_description:warning.field_product_template_sale_line_warn
+msgid "Sales Order Line"
+msgstr "Pozycja zamówienia sprzedaży"
+
+#. module: warning
+#: code:addons/warning/warning.py:14
+#: model:ir.model.fields,help:warning.field_product_template_purchase_line_warn
+#: model:ir.model.fields,help:warning.field_product_template_sale_line_warn
+#: model:ir.model.fields,help:warning.field_res_partner_invoice_warn
+#: model:ir.model.fields,help:warning.field_res_partner_picking_warn
+#: model:ir.model.fields,help:warning.field_res_partner_purchase_warn
+#: model:ir.model.fields,help:warning.field_res_partner_sale_warn
+#, python-format
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr "Wybór \"Ostrzeżenie\" spowoduje ostrzeżenie użytkownika informacją. Wybór \"Informacja blokująca\" spowoduje wyświetlenie wyjątku z tekstem informacji i zablowowanie dalszego działania. Informację wpisz w następnym polu."
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_res_partner_picking_warn
+msgid "Stock Picking"
+msgstr "Pobranie"
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Transfer"
+msgstr "Pobierz"
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Ostrzeżenie"
+
+#. module: warning
+#: code:addons/warning/warning.py:57 code:addons/warning/warning.py:93
+#: code:addons/warning/warning.py:130 code:addons/warning/warning.py:160
+#: code:addons/warning/warning.py:207 code:addons/warning/warning.py:242
+#, python-format
+msgid "Warning for %s"
+msgstr "Ostrzeżenie do %s"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
+msgid "Warning on the Invoice"
+msgstr "Ostrzeżenie na fakturze"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
+msgid "Warning on the Picking"
+msgstr "Ostrzeżenie przy pobraniu"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
+msgid "Warning on the Purchase Order"
+msgstr "Ostrzeżenie dla zamówienia zakupu"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
+msgid "Warning on the Sales Order"
+msgstr "Ostrzeżenie przy zamówieniu sprzedaży"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.product_warning_form_view
+msgid "Warning when Purchasing this Product"
+msgstr "Ostrzeżenie przy kupowaniu tego produktu"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.product_warning_form_view
+msgid "Warning when Selling this Product"
+msgstr "Ostrzeżenie przy sprzedaży tego produktu"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
+msgid "Warnings"
+msgstr "Ostrzeżenia"
