@@ -35,7 +35,11 @@ class SaleOrder(models.Model):
     @api.depends('state', 'order_line.invoice_status')
     def _get_invoiced(self):
         for order in self:
-            invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id').ids
+            invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id')
+            # Search for refunds as well
+            refund_ids = self.env['account.invoice'].browse()
+            if invoice_ids:
+                refund_ids = refund_ids.search([('type', '=', 'out_refund'), ('origin', 'in', invoice_ids.mapped('number'))])
 
             if order.state not in ('sale', 'done'):
                 invoice_status = 'no'
@@ -49,8 +53,8 @@ class SaleOrder(models.Model):
                 invoice_status = 'no'
 
             order.update({
-                'invoice_count': len(set(invoice_ids)),
-                'invoice_ids': invoice_ids,
+                'invoice_count': len(set(invoice_ids.ids + refund_ids.ids)),
+                'invoice_ids': invoice_ids.ids + refund_ids.ids,
                 'invoice_status': invoice_status
             })
 
