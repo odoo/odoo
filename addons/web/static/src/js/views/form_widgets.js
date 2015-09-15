@@ -55,6 +55,9 @@ var WidgetButton = common.FormWidget.extend({
         this.execute_action().always(function() {
             self.force_disabled = false;
             self.check_disable();
+            if (self.$el.hasClass('o_wow')) {
+                self.show_wow();
+            }
         });
     },
     execute_action: function() {
@@ -91,6 +94,13 @@ var WidgetButton = common.FormWidget.extend({
         var disabled = (this.force_disabled || !this.view.is_interactible_record());
         this.$el.prop('disabled', disabled);
         this.$el.css('color', disabled ? 'grey' : '');
+    },
+    show_wow: function() {
+        var $body = $('body');
+        $body.addClass('o_wow_marked');
+        setTimeout(function() {
+            $body.removeClass('o_wow_marked');
+        }, 1000);
     }
 });
 
