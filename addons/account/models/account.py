@@ -445,8 +445,8 @@ class AccountJournal(models.Model):
     @api.depends('inbound_payment_method_ids', 'outbound_payment_method_ids')
     def _methods_compute(self):
         for journal in self:
-            journal.at_least_one_inbound = bool(len(self.inbound_payment_method_ids))
-            journal.at_least_one_outbound = bool(len(self.outbound_payment_method_ids))
+            journal.at_least_one_inbound = bool(len(journal.inbound_payment_method_ids))
+            journal.at_least_one_outbound = bool(len(journal.outbound_payment_method_ids))
 
 
 class ResPartnerBank(models.Model):
