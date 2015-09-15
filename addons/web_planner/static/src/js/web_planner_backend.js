@@ -25,6 +25,7 @@ var PlannerLauncher = Widget.extend({
             return self.fetch_application_planner();
         }).then(function(apps) {
             self.do_hide();  // hidden by default
+            self.$('.progress').tooltip({html: true, placement: 'bottom', delay: {'show': 500}});
             self.planner_apps = apps;
             return apps;
         });
@@ -74,7 +75,9 @@ var PlannerLauncher = Widget.extend({
         }
         this.dialog = new PlannerDialog(this, planner);
         this.dialog.appendTo($('<div>'));
-        this.$(".progress").tooltip({html: true, title: this.planner.tooltip_planner, placement: 'bottom', delay: {'show': 500}});
+
+        this.$('.progress').attr('data-original-title', this.planner.tooltip_planner);
+
         this.dialog.on("planner_progress_changed", this, function(percent){
             self.update_parent_progress_bar(percent);
         });
