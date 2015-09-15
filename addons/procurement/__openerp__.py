@@ -37,6 +37,5 @@ Procurements in exception should be checked manually and can be re-run.
         'company_view.xml',
         'product_product_view.xml',
     ],
-    'test': ['test/procurement.yml'],
     'auto_install': True,
 }
