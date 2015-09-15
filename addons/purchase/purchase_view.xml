@@ -149,7 +149,7 @@
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                     <button name="button_done" type="object" string="Set to Done" states="purchase"
-                        help="If a purchase order is done, you can not modify it manually anymore. But you will still be able to bill or receive."/>
+                        help="If a purchase order is done, you cannot modify it manually anymore. You will not be able to receive invoices anymore for this purchase order."/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1" />
                 </header>
                 <sheet>
