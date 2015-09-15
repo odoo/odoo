@@ -9,7 +9,7 @@ OpenERP Website CMS
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website','marketing','google_account'],
+    'depends': ['website', 'marketing', 'google_account', 'mail'],
     'installable': True,
     'data': [
         'security/ir.model.access.csv',
