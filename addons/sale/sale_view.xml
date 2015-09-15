@@ -261,13 +261,9 @@
                                     <field name="invoice_status" invisible="1"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile">
-                                    <field name="product_id"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
-                                       />
-                                    <field name="product_uom_qty"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"/>
-                                    <field name="product_uom"
-                                        groups="product.group_uom" options='{"no_open": True}'/>
+                                    <field name="product_id"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom" groups="product.group_uom"/>
                                     <field name="price_subtotal"/>
                                     <templates>
                                         <t t-name="kanban-box">
