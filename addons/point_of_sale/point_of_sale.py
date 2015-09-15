@@ -15,8 +15,6 @@ from openerp.tools import float_is_zero
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
-import openerp.addons.decimal_precision as dp
-import openerp.addons.product.product
 
 _logger = logging.getLogger(__name__)
 
