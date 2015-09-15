@@ -87,7 +87,7 @@
                             <field name="department_id" invisible="1"/>
                             <field name="analytic_account_id" string="Contract" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="journal_id" domain="[('type', '=', 'purchase'])]" groups="account.group_account_user"
+                            <field name="journal_id" domain="[('type', '=', 'purchase')]" groups="account.group_account_user"
                                 options="{'no_open': True, 'no_create': True}"/>
                             <field name="account_move_id" domain="[('type', '=', 'purchase'])]" readonly="1"/>
                         </group><group>
