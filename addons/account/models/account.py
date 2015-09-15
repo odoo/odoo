@@ -466,6 +466,12 @@ class ResPartnerBank(models.Model):
 # Tax
 #----------------------------------------------------------
 
+class AccountTaxGroup(models.Model):
+    _name = 'account.tax.group'
+    _order = 'sequence asc'
+
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer(default=10)
 
 class AccountTax(models.Model):
     _name = 'account.tax'
@@ -707,9 +713,4 @@ class AccountOperationTemplate(models.Model):
         self.label = self.name
 
 
-class AccountTaxGroup(models.Model):
-    _name = 'account.tax.group'
-    _order = 'sequence asc'
 
-    name = fields.Char(required=True, translate=True)
-    sequence = fields.Integer(default=10)
