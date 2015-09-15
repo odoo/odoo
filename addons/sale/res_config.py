@@ -54,8 +54,8 @@ class sale_configuration(osv.TransientModel):
             ], "Online Quotations"),
         'group_sale_delivery_address': fields.selection([
             (0, "Invoicing and shipping addresses are always the same (Example: services companies)"),
-            (1, 'Have 3 fields on sales orders: customer, invoice address, delivery address')
-            ], "Customer Addresses", implied_group='sale.group_delivery_invoice_address'),
+            (1, 'Display 3 fields on sales orders: customer, invoice address, delivery address')
+            ], "Addresses", implied_group='sale.group_delivery_invoice_address'),
         'sale_pricelist_setting': fields.selection([('fixed', 'A single sale price per product'), ('percentage', 'Different prices per customer segment'), ('formula', 'Advanced pricing based on formula')], required=True,
         help='Fix Price: all price manage from products sale price.\n'
              'Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n'
