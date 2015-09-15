@@ -18,6 +18,7 @@ from openerp.osv import fields, osv
 from openerp.osv.orm import browse_record
 import openerp.report.interface
 from openerp.report.report_sxw import report_sxw, report_rml
+from openerp.tools import ormcache
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 import openerp.workflow
@@ -386,6 +387,27 @@ class ir_actions_act_window(osv.osv):
         data_id = dataobj._get_id (cr, SUPERUSER_ID, module, xml_id)
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
         return self.read(cr, uid, [res_id], [], context)[0]
+
+    @openerp.api.model
+    def create(self, vals):
+        self.clear_caches()
+        return super(ir_actions_act_window, self).create(vals)
+
+    @openerp.api.multi
+    def unlink(self):
+        self.clear_caches()
+        return super(ir_actions_act_window, self).unlink()
+
+    @openerp.api.multi
+    def exists(self):
+        ids = self._existing()
+        return self.filtered(lambda rec: rec.id in ids)
+
+    @openerp.api.model
+    @ormcache()
+    def _existing(self):
+        self._cr.execute("SELECT id FROM %s" % self._table)
+        return set(row[0] for row in self._cr.fetchall())
 
 VIEW_TYPES = [
     ('tree', 'Tree'),

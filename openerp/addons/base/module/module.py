@@ -29,6 +29,7 @@ import openerp.exceptions
 from openerp import modules, tools
 from openerp.modules.db import create_categories
 from openerp.modules import get_module_resource
+from openerp.tools import ormcache
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
 from openerp.osv import osv, orm, fields
@@ -328,6 +329,7 @@ class module(osv.osv):
         #if ids_meta:
         #    self.pool.get('ir.model.data').unlink(cr, uid, ids_meta, context)
 
+        self.clear_caches()
         return super(module, self).unlink(cr, uid, ids, context=context)
 
     @staticmethod
@@ -805,6 +807,15 @@ class module(osv.osv):
         for mod in self.browse(cr, uid, ids, context=context):
             if not mod.description:
                 _logger.warning('module %s: description is empty !', mod.name)
+
+    @api.model
+    @ormcache()
+    def _installed(self):
+        """ Return the set of installed modules as a dictionary {name: id} """
+        return {
+            module.name: module.id
+            for module in self.sudo().search([('state', '=', 'installed')])
+        }
 
 
 DEP_STATES = [
