@@ -32,7 +32,7 @@ class CashBox(models.TransientModel):
 
     @api.one
     def _create_bank_statement_line(self, record):
-        values = self._compute_values_for_statement_line(record)
+        values = self._calculate_values_for_statement_line(record)
         return self.env['account.bank.statement.line'].create(values[0])
 
 
@@ -42,7 +42,7 @@ class CashBoxIn(CashBox):
     ref = fields.Char('Reference')
 
     @api.one
-    def _compute_values_for_statement_line(self, record):
+    def _calculate_values_for_statement_line(self, record):
         if not record.journal_id.company_id.transfer_account_id:
             raise UserError(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
         return {
@@ -59,7 +59,7 @@ class CashBoxOut(CashBox):
     _name = 'cash.box.out'
 
     @api.one
-    def _compute_values_for_statement_line(self, record):
+    def _calculate_values_for_statement_line(self, record):
         if not record.journal_id.company_id.transfer_account_id:
             raise UserError(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
         amount = self.amount or 0.0
