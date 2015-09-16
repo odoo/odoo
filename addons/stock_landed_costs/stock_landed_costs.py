@@ -25,6 +25,7 @@ from openerp.exceptions import Warning
 from openerp.tools import float_compare, float_round
 from openerp.tools.translate import _
 import product
+from openerp import SUPERUSER_ID
 
 
 class stock_landed_cost(osv.osv):
@@ -214,8 +215,7 @@ class stock_landed_cost(osv.osv):
                     else:
                         quant_dict[quant.id] += diff
                 for key, value in quant_dict.items():
-                    print value
-                    quant_obj.write(cr, uid, key, {'cost': value}, context=context)
+                    quant_obj.write(cr, SUPERUSER_ID, key, {'cost': value}, context=context)
                 qty_out = 0
                 for quant in line.move_id.quant_ids:
                     if quant.location_id.usage != 'internal':
