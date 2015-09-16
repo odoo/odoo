@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_address_type" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.base</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group/group/field[@name='type']" position="attributes">
+                <attribute name="groups">sale.group_delivery_invoice_address</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']//field[@name='type']" position="attributes">
+                <attribute name="groups">sale.group_delivery_invoice_address</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
