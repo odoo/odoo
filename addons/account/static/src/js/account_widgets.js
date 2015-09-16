@@ -237,7 +237,7 @@ openerp.account = function (instance) {
                     .then(function (data) {
                         var child_promises = [];
                         while ((datum = data.shift()) !== undefined)
-                            child_promises.push(self.displayReconciliation(datum.st_line.id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition));
+                            child_promises.push(self.displayReconciliation(datum.st_line.id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition, datum.additional_account_domain));
                         $.when.apply($, child_promises).then(function(){
                             self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed);
                             self.getChildren()[0].set("mode", "match");
@@ -429,6 +429,7 @@ openerp.account = function (instance) {
                             initial_data_provided: true,
                             st_line: datum.st_line,
                             reconciliation_proposition: datum.reconciliation_proposition,
+                            additional_account_domain: datum.additional_account_domain,
                         };
                         var widget = new instance.web.account.bankStatementReconciliationLine(self, context);
                         child_promises.push(widget.appendTo(self.$(".reconciliation_lines_container")));
@@ -440,7 +441,7 @@ openerp.account = function (instance) {
                 });
         },
 
-        displayReconciliation: function(st_line_id, mode, animate_entrance, initial_data_provided, st_line, reconciliation_proposition) {
+        displayReconciliation: function(st_line_id, mode, animate_entrance, initial_data_provided, st_line, reconciliation_proposition, additional_account_domain) {
             var self = this;
             animate_entrance = (animate_entrance === undefined ? true : animate_entrance);
             initial_data_provided = (initial_data_provided === undefined ? false : initial_data_provided);
@@ -450,6 +451,7 @@ openerp.account = function (instance) {
                 mode: mode,
                 animate_entrance: animate_entrance,
                 initial_data_provided: initial_data_provided,
+                additional_account_domain: additional_account_domain,
                 st_line: initial_data_provided ? st_line : undefined,
                 reconciliation_proposition: initial_data_provided ? reconciliation_proposition : undefined,
             };
@@ -659,6 +661,7 @@ openerp.account = function (instance) {
                 this.st_line = context.st_line;
                 this.partner_id = context.st_line.partner_id;
                 this.decorateStatementLine(this.st_line);
+                this.additional_account_domain = context.additional_account_domain;
     
                 // Exclude selected move lines
                 if (this.getParent().excluded_move_lines_ids[this.partner_id] === undefined)
@@ -904,6 +907,8 @@ openerp.account = function (instance) {
                 type: "many2one",
                 domain: [['parent_id','=',false], '|', ['customer','=',true], ['supplier','=',true]],
             });
+            field_manager.fields_view.fields["account_id"].domain = field_manager.fields_view.fields["account_id"].domain.concat(
+                self.additional_account_domain || []);
     
             // Returns a function that serves as a xhr response handler
             var hideGroupResponseClosureFactory = function(field_widget, $container, obj_key){
