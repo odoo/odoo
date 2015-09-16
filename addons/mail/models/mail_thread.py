@@ -1792,7 +1792,10 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _message_auto_subscribe_notify(self, partner_ids):
-        """ Notify newly subscribed followers of the last posted message. """
+        """ Notify newly subscribed followers of the last posted message.
+            :param partner_ids : the list of partner to add as needaction partner of the last message
+                                 (This excludes the current partner)
+        """
         if not partner_ids:
             return
         for record_id in self.ids:
@@ -1874,7 +1877,8 @@ class MailThread(models.AbstractModel):
         for pid, subtypes in new_followers.items():
             subtypes = list(subtypes) if subtypes is not None else None
             self.message_subscribe([pid], subtype_ids=subtypes)
-
+        # remove the current user from the needaction partner to avoid to notify the author of the message
+        user_pids = [user_pid for user_pid in user_pids if user_pid != self.env.user.partner_id.id]
         self._message_auto_subscribe_notify(user_pids)
 
         return True
