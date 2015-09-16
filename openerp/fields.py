@@ -1181,9 +1181,10 @@ class Char(_String):
     :param int size: the maximum size of values stored for that field
 
     :param translate: enable the translation of the field's values; use
-        `translate=True` to translate field values as a whole; `translate` may
-        also be a callable such that `translate(callback, value)` translates
-        `value` by using `callback(term)` to retrieve the translation of terms.
+        ``translate=True`` to translate field values as a whole; ``translate``
+        may also be a callable such that ``translate(callback, value)``
+        translates ``value`` by using ``callback(term)`` to retrieve the
+        translation of terms.
     """
     type = 'char'
     _slots = {
@@ -1209,9 +1210,10 @@ class Text(_String):
     have a size and usually displayed as a multiline text box.
 
     :param translate: enable the translation of the field's values; use
-        `translate=True` to translate field values as a whole; `translate` may
-        also be a callable such that `translate(callback, value)` translates
-        `value` by using `callback(term)` to retrieve the translation of terms.
+        ``translate=True`` to translate field values as a whole; ``translate``
+        may also be a callable such that ``translate(callback, value)``
+        translates ``value`` by using ``callback(term)`` to retrieve the
+        translation of terms.
     """
     type = 'text'
 
