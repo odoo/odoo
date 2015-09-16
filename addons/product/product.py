@@ -656,7 +656,7 @@ class product_template(osv.osv):
             return {'value': {'uom_po_id': uom_id}}
         return {}
 
-    def create_variant_ids(self, cr, uid, ids, context=None):
+    def create_variant_ids(self, cr, uid, ids, related_vals=None, context=None):
         product_obj = self.pool.get("product.product")
         ctx = context and context.copy() or {}
 
@@ -712,6 +712,8 @@ class product_template(osv.osv):
                     'product_tmpl_id': tmpl_id.id,
                     'attribute_value_ids': [(6, 0, variant_ids)]
                 }
+                if related_vals:
+                    values.update(related_vals)
                 id = product_obj.create(cr, uid, values, context=ctx)
                 variants_active_ids.append(id)
 
@@ -728,9 +730,6 @@ class product_template(osv.osv):
     def create(self, cr, uid, vals, context=None):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         product_template_id = super(product_template, self).create(cr, uid, vals, context=context)
-        if not context or "create_product_product" not in context:
-            self.create_variant_ids(cr, uid, [product_template_id], context=context)
-        self._set_standard_price(cr, uid, product_template_id, vals.get('standard_price', 0.0), context=context)
 
         # TODO: this is needed to set given values to first variant after creation
         # these fields should be moved to product as lead to confusion
@@ -739,6 +738,11 @@ class product_template(osv.osv):
             related_vals['ean13'] = vals['ean13']
         if vals.get('default_code'):
             related_vals['default_code'] = vals['default_code']
+
+        if not context or "create_product_product" not in context:
+            self.create_variant_ids(cr, uid, [product_template_id], related_vals=related_vals, context=context)
+        self._set_standard_price(cr, uid, product_template_id, vals.get('standard_price', 0.0), context=context)
+
         if related_vals:
             self.write(cr, uid, product_template_id, related_vals, context=context)
 
