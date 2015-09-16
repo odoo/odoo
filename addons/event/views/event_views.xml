@@ -64,6 +64,11 @@
                         <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
+                    <div class="alert alert-warning text-center" style="margin-bottom: 0px; font-size:14px;" attrs="{'invisible':['|','|',('state', '!=', 'confirm'), ('rescheduled_alert', '=', False), ('seats_expected','=',0)]}">
+                        <a class="close" data-dismiss="alert" href="#" aria-hidden="true">x</a>
+                        <b>Do not forget to warn Attendees:</b><button name="%(event.act_event_registration_from_event)d" type="action" class="oe_link"><span style="font-size:14px;">Click here to send mass mail to Attendees.</span>
+                        </button>
+                    </div>
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
                             <button name="toggle_active" type="object"
@@ -88,6 +93,7 @@
                                 <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True}'/>
                                 <field name="organizer_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="rescheduled_alert" invisible="1"/>
                             </group>
                             <group>
                                 <field name="user_id"/>
@@ -407,6 +413,26 @@
           <field name="view_mode">tree,form,calendar,pivot,graph</field>
           <field name="context">{}</field>
           <field name="search_view_id" ref="view_registration_search"/>
+        </record>
+
+        <!--MASS MAILING-->
+        <act_window
+            name="Send Email"
+            res_model="mail.compose.message"
+            src_model="event.registration"
+            view_mode="form"
+            multi="True"
+            target="new"
+            key2="client_action_multi"
+            id="event.action_event_registration_mass_mail"
+            context="{'default_composition_mode': 'mass_mail',
+                      'default_email_to': '{($object.email or \'\')|safe}',
+                      'default_use_template': True,
+                      'default_template_id': ref('event.event_rescheduled_mail'),
+                      }"/>
+
+        <record id="email_template_event_mail" model="mail.template">
+            <field name="ref_ir_act_window" ref="event.action_event_registration_mass_mail"/>
         </record>
 
         <menuitem name="Attendees"

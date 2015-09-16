@@ -122,10 +122,10 @@ class event_event(models.Model):
     date_tz = fields.Selection('_tz_get', string='Timezone', default=lambda self: self.env.user.tz)
     date_begin = fields.Datetime(
         string='Start Date', required=True,
-        readonly=True, states={'draft': [('readonly', False)]})
+        track_visibility=True, states={'done': [('readonly', True)]})
     date_end = fields.Datetime(
         string='End Date', required=True,
-        readonly=True, states={'draft': [('readonly', False)]})
+        track_visibility=True, states={'done': [('readonly', True)]})
     date_begin_located = fields.Datetime(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
 
@@ -169,7 +169,7 @@ class event_event(models.Model):
         help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one.")
     address_id = fields.Many2one(
         'res.partner', string='Location', default=lambda self: self.env.user.company_id.partner_id,
-        readonly=False, states={'done': [('readonly', True)]})
+        readonly=False, track_visibility=True, states={'done': [('readonly', True)]})
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True)
     description = fields.Html(
         string='Description', oldname='note', translate=True,
@@ -180,6 +180,7 @@ class event_event(models.Model):
     badge_innerleft = fields.Html(string='Badge Innner Left')
     badge_innerright = fields.Html(string='Badge Inner Right')
     event_logo = fields.Html(string='Event Logo')
+    rescheduled_alert = fields.Boolean(default=False)
 
     @api.multi
     @api.depends('name', 'date_begin', 'date_end')
@@ -214,6 +215,8 @@ class event_event(models.Model):
 
     @api.multi
     def write(self, vals):
+        if vals.get('date_begin') or vals.get('date_end') or vals.get('address_id'):
+            vals['rescheduled_alert'] = True
         res = super(event_event, self).write(vals)
         if vals.get('organizer_id'):
             self.message_subscribe([vals['organizer_id']])

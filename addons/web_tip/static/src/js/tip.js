@@ -6,6 +6,7 @@ var Model = require('web.DataModel');
 var WebClient = require('web.WebClient');
 var formView = require('web.FormView');
 var utils = require('web.utils');
+var listView = require('web.ListView');
 
 var bus = core.bus;
 var Class = core.Class;
@@ -60,6 +61,12 @@ var Tips = Class.extend({
                 self.on_form_view(action_id, model);
             }
             else if (self.view.hasOwnProperty('editor')) {
+                if (mode == 'tree')
+                {
+                     this.view.on('do_list_select',this, function(){
+                        self.eval_tips(action_id, model, 'tree');
+                    });
+                }
                 self.view.on('view_list_rendered', self, function() {
                     self.eval_tips(action_id, model, mode);
                 });
@@ -337,6 +344,13 @@ formView.include({
     to_view_mode: function() {
         this._super();
         this.trigger('to_view_mode');
+    }
+});
+
+listView.include({
+    do_select: function(ids, records, deselected){
+        this._super(ids, records, deselected);
+        this.trigger('do_list_select');
     }
 });
 
