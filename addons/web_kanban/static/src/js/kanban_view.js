@@ -544,7 +544,7 @@ var KanbanView = View.extend({
                     }
                 });
                 // we use boostrap tooltips for better and faster display
-                self.$('span.o_tag').tooltip();
+                self.$('span.o_tag').tooltip({delay: {'show': 50}});
             });
         });
     },
