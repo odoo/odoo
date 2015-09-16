@@ -303,6 +303,8 @@
             setTimeout(function () {
                 self.img_to_font();
                 self.style_to_class();
+                // fix outlook image rendering bug
+                $("#wrapwrap .o_editable:first").find('img[style*="width"], img[style*="height"]').removeAttr('height width');
             });
         },
 
@@ -317,6 +319,14 @@
             var theme = ($("#o_left_bar .o_panel_body > div:not(.hidden)").attr("class") || "").replace(/^\s*|\s*o_mail_block[^\s]+\s*|\s*oe_snippet\s*|\s*ui-draggable\s*|\s*$/g, '');
             var $theme = $("#wrapwrap .o_editable:first [data-snippet-theme]").removeAttr("data-snippet-theme").removeData("snippet-theme");
             $editable.children().first().attr("data-snippet-theme", theme);
+            // fix outlook image rendering bug
+            _.each(['width', 'height'], function(attribute) {
+                $editable.find('img[style*="width"], img[style*="height"]').attr(attribute, function(){
+                    return $(this)[attribute]()
+                }).css(attribute, function(){
+                    return $(this).get(0).style[attribute] || 'auto';
+                });
+            });
         },
         // convert font awsome into image
         font_to_img: function () {
