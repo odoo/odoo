@@ -1,31 +1,36 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api, _, tools
-from datetime import datetime, date
+from datetime import date
 from dateutil.relativedelta import relativedelta
-import openerp.addons.decimal_precision as dp
 
-class crm_lead(models.Model):
-    _inherit = ['crm.lead']
+from odoo import api, fields, models, _
 
-    @api.one
-    @api.depends('order_ids')
-    def _get_sale_amount_total(self):
-        total = 0.0
-        nbr = 0
-        for order in self.order_ids:
-            if order.state == 'draft':
-                nbr += 1
-            if order.state not in ('draft', 'cancel'):
-                total += order.currency_id.compute(order.amount_untaxed, self.company_currency)
-        self.sale_amount_total = total
-        self.sale_number = nbr
 
-    sale_amount_total= fields.Float(compute='_get_sale_amount_total', string="Sum of Orders", readonly=True, digits=0)
-    sale_number = fields.Integer(compute='_get_sale_amount_total', string="Number of Quotations", readonly=True)
+class CrmLead(models.Model):
+    _inherit = 'crm.lead'
+
+    sale_amount_total= fields.Monetary(compute='_compute_sale_amount_total', string="Sum of Orders", currency_field='company_currency')
+    sale_number = fields.Integer(compute='_compute_sale_amount_total', string="Number of Quotations")
     order_ids = fields.One2many('sale.order', 'opportunity_id', string='Orders')
 
-    def retrieve_sales_dashboard(self, cr, uid, context=None):
-        res = super(crm_lead, self).retrieve_sales_dashboard(cr, uid, context=None)
+    @api.depends('order_ids')
+    def _compute_sale_amount_total(self):
+        for lead in self:
+            total = 0.0
+            nbr = 0
+            for order in lead.order_ids:
+                if order.state == 'draft':
+                    nbr += 1
+                if order.state not in ('draft', 'cancel'):
+                    total += order.currency_id.compute(order.amount_untaxed, self.company_currency)
+            lead.sale_amount_total = total
+            lead.sale_number = nbr
+
+    @api.model
+    def retrieve_sales_dashboard(self):
+        res = super(CrmLead, self).retrieve_sales_dashboard()
+        date_today = date.today()
 
         res['invoiced'] = {
             'this_month': 0,
@@ -33,19 +38,20 @@ class crm_lead(models.Model):
         }
         account_invoice_domain = [
             ('state', 'in', ['open', 'paid']),
-            ('user_id', '=', uid),
-            ('date', '>=', date.today().replace(day=1) - relativedelta(months=+1)),
+            ('user_id', '=', self.env.uid),
+            ('date', '>=', date_today.replace(day=1) - relativedelta(months=+1)),
             ('type', 'in', ['out_invoice', 'out_refund'])
         ]
 
-        invoice_ids = self.pool.get('account.invoice').search_read(cr, uid, account_invoice_domain, ['date', 'amount_untaxed_signed'], context=context)
-        for inv in invoice_ids:
-            if inv['date']:
-                inv_date = datetime.strptime(inv['date'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
-                if inv_date <= date.today() and inv_date >= date.today().replace(day=1):
-                    res['invoiced']['this_month'] += inv['amount_untaxed_signed']
-                elif inv_date < date.today().replace(day=1) and inv_date >= date.today().replace(day=1) - relativedelta(months=+1):
-                    res['invoiced']['last_month'] += inv['amount_untaxed_signed']
+        invoice_data = self.env['account.invoice'].search_read(account_invoice_domain, ['date', 'amount_untaxed_signed'])
 
-        res['invoiced']['target'] = self.pool('res.users').browse(cr, uid, uid, context=context).target_sales_invoiced
+        for invoice in invoice_data:
+            if invoice['date']:
+                invoice_date = fields.Date.from_string(invoice['date'])
+                if invoice_date <= date_today and invoice_date >= date_today.replace(day=1):
+                    res['invoiced']['this_month'] += invoice['amount_untaxed_signed']
+                elif invoice_date < date_today.replace(day=1) and invoice_date >= date_today.replace(day=1) - relativedelta(months=+1):
+                    res['invoiced']['last_month'] += invoice['amount_untaxed_signed']
+
+        res['invoiced']['target'] = self.env.user.target_sales_invoiced
         return res

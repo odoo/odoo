@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
+from odoo import fields, models
 
 
-class res_users(osv.osv):
+class ResUsers(models.Model):
     _inherit = 'res.users'
-    _columns = {
-        'target_sales_invoiced': fields.integer('Invoiced in Sale Orders Target'),
-    }
+
+    target_sales_invoiced = fields.Integer('Invoiced in Sale Orders Target')
