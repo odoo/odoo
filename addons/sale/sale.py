@@ -98,7 +98,7 @@ class SaleOrder(models.Model):
 
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True)
 
-    invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', store=True, readonly=True)
+    invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
     invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
     invoice_status = fields.Selection([
         ('upselling', 'Upselling Opportunity'),
