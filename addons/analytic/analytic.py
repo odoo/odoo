@@ -276,8 +276,9 @@ class account_analytic_account(osv.osv):
         Subobject are actually copied with copy_data"""
         if not default:
             default = {}
-        analytic = self.browse(cr, uid, id, context=context)
-        default['name'] = _("%s (copy)") % analytic['name']
+        if not default.get('name'):
+            analytic = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % analytic['name']
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
 
     def on_change_company(self, cr, uid, id, company_id):
