@@ -20,18 +20,13 @@ class res_currency(osv.osv):
             context = {}
         res = {}
 
+        CurrencyRate = self.pool['res.currency.rate']
         date = context.get('date') or time.strftime('%Y-%m-%d')
         company_id = context.get('company_id') or self.pool['res.users']._get_company(cr, uid, context=context)
         for id in ids:
-            cr.execute("""SELECT rate FROM res_currency_rate 
-                           WHERE currency_id = %s
-                             AND name <= %s
-                             AND (company_id is null
-                                 OR company_id = %s)
-                        ORDER BY company_id, name desc LIMIT 1""",
-                       (id, date, company_id))
-            if cr.rowcount:
-                res[id] = cr.fetchone()[0]
+            rate_ids = CurrencyRate.search(cr, uid, [('currency_id', '=', id), ('name', '<=', date)], limit=1, order='name DESC', context=context)
+            if rate_ids:
+                res[id] = CurrencyRate.browse(cr, uid, rate_ids[0], context=context).rate
             else:
                 res[id] = 1
         return res
