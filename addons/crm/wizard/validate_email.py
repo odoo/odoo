@@ -19,7 +19,6 @@
 
 import re
 import smtplib
-import socket
 
 try:
     import DNS
@@ -107,13 +106,13 @@ def validate_email(email, check_mx=False,verify=False):
                     if status != 250: continue
                     smtp.mail('')
                     status, _ = smtp.rcpt(email)
-                    if status != 250: return False
+                    if status != 250:return False
                     break
-                except smtplib.SMTPServerDisconnected: #Server not permits verify user
+                except smtplib.SMTPServerDisconnected:  # Server not permits verify user
                     break
                 except smtplib.SMTPConnectError:
                     continue
-    except (AssertionError, ServerError): 
+    except (AssertionError, ServerError):
         return False
     return True
 

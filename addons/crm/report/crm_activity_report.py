@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import fields, models
-from openerp import tools
+from odoo import fields, models, tools
 
 
 class crm_activity_report(models.Model):
@@ -12,15 +11,15 @@ class crm_activity_report(models.Model):
     _description = "CRM Activity Analysis"
     _rec_name = 'id'
 
-    date = fields.Datetime('Date', readonly=True)
-    author_id = fields.Many2one('res.partner', 'Author', readonly=True)
-    user_id = fields.Many2one('res.users', 'Responsible', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
-    subtype_id = fields.Many2one('mail.message.subtype', 'Activity', readonly=True)
-    country_id = fields.Many2one('res.country', 'Country', readonly=True)
-    company_id = fields.Many2one('res.company', 'Company', readonly=True)
-    stage_id = fields.Many2one('crm.stage', 'Stage', readonly=True)
-    partner_id = fields.Many2one('res.partner', 'Partner/Customer', readonly=True)
+    date = fields.Datetime(readonly=True)
+    author_id = fields.Many2one('res.partner', string='Author', readonly=True)
+    user_id = fields.Many2one('res.users', string='Responsible', readonly=True)
+    team_id = fields.Many2one('crm.team', string='Sales Team', readonly=True)
+    subtype_id = fields.Many2one('mail.message.subtype', string='Activity', readonly=True)
+    country_id = fields.Many2one('res.country', string='Country', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    stage_id = fields.Many2one('crm.stage', string='Stage', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner/Customer', readonly=True)
     lead_type = fields.Char(
         string='Type',
         selection=[('lead', 'Lead'), ('opportunity', 'Opportunity')],

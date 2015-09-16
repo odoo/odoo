@@ -98,7 +98,5 @@ Dashboard for CRM will include:
         'test/crm_lead_find_stage.yml',
     ],
     'css': ['static/src/css/crm.css'],
-    'installable': True,
     'application': True,
-    'auto_install': False,
 }
