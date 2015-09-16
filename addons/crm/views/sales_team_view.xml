@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-  <data>
+<odoo>
 
         <!-- CRM lead search by Salesteams -->
 
@@ -89,10 +88,10 @@
                     <xpath expr="//div[@name='options_active']" position="inside">
                         <div class="o_row">
                             <span groups="crm.group_use_lead" class="o_row">
-                                <field name="use_leads" on_change="onchange_use_leads_opportunities(use_leads, use_opportunities)"/>
+                                <field name="use_leads"/>
                                 <label for="use_leads" string="Leads"/>
                             </span>
-                            <field name="use_opportunities" on_change="onchange_use_leads_opportunities(use_leads, use_opportunities)"/>
+                            <field name="use_opportunities"/>
                             <label for="use_opportunities"/>
                         </div>
                     </xpath>
@@ -143,5 +142,4 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="sales_team.crm_team_view_tree"/>
         </record>
-  </data>
-</openerp>
+</odoo>

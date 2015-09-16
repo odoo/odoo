@@ -1,43 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields,osv
+from odoo import api, fields, models
 
-class res_partner(osv.osv):
+
+class ResPartner(models.Model):
     """ Inherits partner and adds CRM information in the partner form """
     _inherit = 'res.partner'
 
-    def _opportunity_meeting_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,{'opportunity_count': 0, 'meeting_count': 0}), ids))
-        # the user may not have access rights for opportunities or meetings
-        try:
-            for partner in self.browse(cr, uid, ids, context):
-                if partner.is_company:
-                    operator = 'child_of'
-                else:
-                    operator = '='
-                opp_ids = self.pool['crm.lead'].search(cr, uid, [('partner_id', operator, partner.id), ('type', '=', 'opportunity'), ('probability', '<', '100')], context=context)
-                res[partner.id] = {
-                    'opportunity_count': len(opp_ids),
-                    'meeting_count': len(partner.meeting_ids),
-                }
-        except:
-            pass
-        return res
+    team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id')
+    opportunity_ids = fields.One2many('crm.lead', 'partner_id', string='Opportunities', domain=[('type', '=', 'opportunity')])
+    meeting_ids = fields.Many2many('calendar.event', 'calendar_event_res_partner_rel', 'res_partner_id', 'calendar_event_id', string='Meetings')
+    opportunity_count = fields.Integer(compute='_compute_opportunity_meeting_count', string="Opportunity")
+    meeting_count = fields.Integer(compute='_compute_opportunity_meeting_count', string="# Meetings")
 
-    _columns = {
-        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id'),
-        'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
-            'Opportunities', domain=[('type', '=', 'opportunity')]),
-        'meeting_ids': fields.many2many('calendar.event', 'calendar_event_res_partner_rel','res_partner_id', 'calendar_event_id',
-            'Meetings'),
-        'opportunity_count': fields.function(_opportunity_meeting_count, string="Opportunity", type='integer', multi='opp_meet'),
-        'meeting_count': fields.function(_opportunity_meeting_count, string="# Meetings", type='integer', multi='opp_meet'),
-    }
-
-    def redirect_partner_form(self, cr, uid, partner_id, context=None):
-        search_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'view_res_partner_filter')
-        value = {
+    @api.multi
+    def redirect_partner_form(self, partner_id):
+        self.ensure_one()
+        search_view = self.env.ref('base.view_res_partner_filter')
+        return {
             'domain': "[]",
             'view_type': 'form',
             'view_mode': 'form,tree',
@@ -46,34 +27,41 @@ class res_partner(osv.osv):
             'view_id': False,
             'context': context,
             'type': 'ir.actions.act_window',
-            'search_view_id': search_view and search_view[1] or False
+            'search_view_id': search_view.id or False
         }
-        return value
 
-    def make_opportunity(self, cr, uid, ids, opportunity_summary, planned_revenue=0.0, probability=0.0, partner_id=None, context=None):
-        lead_obj = self.pool.get('crm.lead')
-        tag_ids = self.pool['crm.lead.tag'].search(cr, uid, [])
+    @api.multi
+    def make_opportunity(self, opportunity_summary, planned_revenue=0.0, probability=0.0, partner_id=None):
+        CrmLead = self.env['crm.lead']
+        tag_ids = self.env['crm.lead.tag'].search([])
         opportunity_ids = {}
-        for partner in self.browse(cr, uid, ids, context=context):
+        for partner in self:
             if not partner_id:
                 partner_id = partner.id
-            opportunity_id = lead_obj.create(cr, uid, {
+            opportunity = CrmLead.create({
                 'name' : opportunity_summary,
                 'planned_revenue' : planned_revenue,
                 'probability' : probability,
                 'partner_id' : partner_id,
                 'tag_ids' : tag_ids and tag_ids[0] or [],
                 'type': 'opportunity'
-            }, context=context)
-            opportunity_ids[partner_id] = opportunity_id
+            })
+            opportunity_ids[partner_id] = opportunity.id
         return opportunity_ids
 
-    def schedule_meeting(self, cr, uid, ids, context=None):
-        partner_ids = list(ids)
-        partner_ids.append(self.pool.get('res.users').browse(cr, uid, uid).partner_id.id)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
-        res['context'] = {
-            'search_default_partner_ids': context['partner_name'],
+    def _compute_opportunity_meeting_count(self):
+        for partner in self:
+            operator = 'child_of' if partner.is_company else '='
+            partner.opportunity_count = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('type', '=', 'opportunity'), ('probability', '<', '100')])
+            partner.meeting_count = len(partner.meeting_ids)
+
+    @api.multi
+    def schedule_meeting(self):
+        partner_ids = self.ids
+        partner_ids.append(self.env.user.partner_id.id)
+        result = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
+        result['context'] = {
+            'search_default_partner_ids': self.env.context.get('partner_name'),
             'default_partner_ids': partner_ids,
         }
-        return res
+        return result
