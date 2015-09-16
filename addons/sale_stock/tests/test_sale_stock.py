@@ -164,12 +164,4 @@ class TestSaleStock(TestSale):
         return_pick.do_new_transfer()
 
         # Check invoice
-        self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" before invoicing')
-        # let's do an invoice with refunds
-        adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
-            'advance_payment_method': 'all',
-        })
-        adv_wiz.with_context(open_invoices=True).create_invoices()
-        self.inv_2 = self.so.invoice_ids[1]
-        self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" after invoicing the return')
-        self.assertEqual(self.inv_2.amount_untaxed, self.inv_2.amount_untaxed, 'Sale Stock: amount in SO and invoice should be the same')
+        self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so invoice_status should be "invoiced" after picking return')

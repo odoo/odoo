@@ -166,8 +166,6 @@ class SaleOrderLine(models.Model):
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
             if move.location_dest_id.usage == "customer":
                 qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
-            elif move.location_id.usage == "customer":
-                qty -= self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
         return qty
 
     @api.multi

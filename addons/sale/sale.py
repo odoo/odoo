@@ -421,11 +421,8 @@ class SaleOrderLine(models.Model):
         for line in self:
             qty_invoiced = 0.0
             for invoice_line in line.invoice_lines:
-                if invoice_line.invoice_id.state != 'cancel':
-                    if invoice_line.invoice_id.type == 'out_invoice':
-                        qty_invoiced += invoice_line.quantity
-                    elif invoice_line.invoice_id.type == 'out_refund':
-                        qty_invoiced -= invoice_line.quantity
+                if invoice_line.invoice_id.state != 'cancel' and invoice_line.invoice_id.type == 'out_invoice':
+                    qty_invoiced += invoice_line.quantity
             line.qty_invoiced = qty_invoiced
 
     @api.depends('price_subtotal', 'product_uom_qty')
