@@ -956,9 +956,12 @@ class Field(object):
         spec = [(self, records._ids)]
         for field, path in records._field_triggers[self]:
             if path and field.store:
-                # don't move this line to function top, see log
-                env = records.env(user=SUPERUSER_ID, context={'active_test': False})
-                target = env[field.model_name].search([(path, 'in', records.ids)])
+                if path == 'id':
+                    target = records
+                else:
+                    # don't move this line to function top, see log
+                    env = records.env(user=SUPERUSER_ID, context={'active_test': False})
+                    target = env[field.model_name].search([(path, 'in', records.ids)])
                 if target:
                     spec.append((field, target._ids))
                     # recompute field on target in the environment of records,
