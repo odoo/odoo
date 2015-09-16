@@ -1,6 +1,6 @@
 from openerp import SUPERUSER_ID
 from openerp.tests import common
-from .. import test_models
+
 
 @common.at_install(False)
 @common.post_install(True)
