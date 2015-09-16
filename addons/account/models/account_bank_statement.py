@@ -112,7 +112,14 @@ class AccountBankStatement(models.Model):
         #Search last bank statement and set current opening balance as closing balance of previous one
         journal_id = self._context.get('default_journal_id', False) or self._context.get('journal_id', False)
         if journal_id:
-            self._set_opening_balance(journal_id)
+            last_bnk_stmt = self.search([('journal_id', '=', journal_id), ('state', '=', 'confirm')], order="date desc", limit=1)
+
+            if last_bnk_stmt:
+                return last_bnk_stmt.balance_end
+            else:
+                return 0
+        else:
+            return 0
 
     _name = "account.bank.statement"
     _description = "Bank Statement"
