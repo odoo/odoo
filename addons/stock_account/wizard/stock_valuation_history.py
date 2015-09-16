@@ -1,4 +1,5 @@
 
+from datetime import datetime
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -45,7 +46,7 @@ class stock_history(osv.osv):
         res = super(stock_history, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
         if context is None:
             context = {}
-        date = context.get('history_date')
+        date = context.get('history_date', datetime.now())
         if 'inventory_value' in fields:
             group_lines = {}
             for line in res:
