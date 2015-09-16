@@ -19,7 +19,10 @@ modules.
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['sale', 'crm', 'web_kanban_gauge'],
     'data': [
+        'views/partner_views.xml',
+        'views/sale_order_views.xml',
         'views/crm_lead_views.xml',
+        'views/crm_team_views.xml',
         'security/sale_crm_security.xml',
         'security/ir.model.access.csv',
     ],
