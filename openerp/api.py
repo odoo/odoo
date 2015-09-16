@@ -828,16 +828,13 @@ class Environment(object):
             raise
 
     def field_todo(self, field):
-        """ Check whether ``field`` must be recomputed, and returns a recordset
-            with all records to recompute for ``field``.
-        """
-        if field in self.all.todo:
-            ids = set(rid for recs in self.all.todo[field] for rid in recs.ids)
-            return self[field.model_name].browse(ids)
+        """ Return a recordset with all records to recompute for ``field``. """
+        ids = {rid for recs in self.all.todo.get(field, ()) for rid in recs.ids}
+        return self[field.model_name].browse(ids)
 
     def check_todo(self, field, record):
         """ Check whether ``field`` must be recomputed on ``record``, and if so,
-            returns the corresponding recordset to recompute.
+            return the corresponding recordset to recompute.
         """
         for recs in self.all.todo.get(field, []):
             if recs & record:

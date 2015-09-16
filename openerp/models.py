@@ -3224,39 +3224,43 @@ class BaseModel(object):
         # fetch the records of this model without field_name in their cache
         records = self._in_cache_without(field)
 
+        # determine which fields can be prefetched
+        fs = {field}
+        if self._context.get('prefetch_fields', True) and field.column._prefetch:
+            fs.update(
+                f
+                for f in self._fields.itervalues()
+                # select stored fields that can be prefetched
+                if f.store and f.column._prefetch
+                # discard fields with groups that the user may not access
+                if not (f.groups and not self.user_has_groups(f.groups))
+                # discard fields that must be recomputed
+                if not (f.compute and self.env.field_todo(f))
+            )
+
+        # special case: discard records to recompute for field
+        records -= self.env.field_todo(field)
+
+        # in onchange mode, discard computed fields and fields in cache
+        if self.env.in_onchange:
+            for f in list(fs):
+                if f.compute or (f.name in self._cache):
+                    fs.discard(f)
+                else:
+                    records &= self._in_cache_without(f)
+
+        # prefetch at most PREFETCH_MAX records
         if len(records) > PREFETCH_MAX:
             records = records[:PREFETCH_MAX] | self
 
-        # determine which fields can be prefetched
-        if not self.env.in_onchange and \
-                self._context.get('prefetch_fields', True) and \
-                self._columns[field.name]._prefetch:
-            # prefetch all classic and many2one fields that the user can access
-            fnames = {fname
-                for fname, fcolumn in self._columns.iteritems()
-                if fcolumn._prefetch
-                if not fcolumn.groups or self.user_has_groups(fcolumn.groups)
-            }
-        else:
-            fnames = {field.name}
-
-        # important: never prefetch fields to recompute!
-        get_recs_todo = self.env.field_todo
-        for fname in list(fnames):
-            if get_recs_todo(self._fields[fname]):
-                if fname == field.name:
-                    records -= get_recs_todo(field)
-                else:
-                    fnames.discard(fname)
-
         # fetch records with read()
-        assert self in records and field.name in fnames
+        assert self in records and field in fs
         result = []
         try:
-            result = records.read(list(fnames), load='_classic_write')
+            result = records.read([f.name for f in fs], load='_classic_write')
         except AccessError:
             # not all records may be accessible, try with only current record
-            result = self.read(list(fnames), load='_classic_write')
+            result = self.read([f.name for f in fs], load='_classic_write')
 
         # check the cache, and update it if necessary
         if field not in self._cache:
