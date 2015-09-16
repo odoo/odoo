@@ -792,7 +792,7 @@ class pos_order(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         if not part:
             return {'value': {}}
-        pricelist = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_product_pricelist.id
+        pricelist = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_product_pricelist_id.id
         return {'value': {'pricelist_id': pricelist}}
 
     def _amount_all(self, cr, uid, ids, name, args, context=None):

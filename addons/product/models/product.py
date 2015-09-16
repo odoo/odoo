@@ -62,29 +62,16 @@ class ProductCategory(models.Model):
                         domain = expression.AND(domain)
                     else:
                         domain = expression.OR(domain)
-            product_category_ids = self.search(expression.AND([domain, args]), limit=limit)
+            product_categories = self.search(expression.AND([domain, args]), limit=limit)
         else:
-            product_category_ids = self.search(args, limit=limit)
-        return product_category_ids.name_get()
+            product_categories = self.search(args, limit=limit)
+        return product_categories.name_get()
 
     @api.multi
     def _compute_name_get_fnc(self):
         name_get = dict(self.name_get())
         for pc in self:
             pc.complete_name = name_get[pc.id]
-
-    _name = "product.category"
-    _description = "Product Category"
-
-    name = fields.Char(required=True, translate=True, select=True)
-    complete_name = fields.Char(compute='_name_get_fnc', string='Name')
-    parent_id = fields.Many2one('product.category', string='Parent Category', select=True, ondelete='cascade')
-    child_id = fields.One2many('product.category', 'parent_id', string='Child Categories')
-    sequence = fields.Integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories.")
-    type = fields.Selection([('view','View'), ('normal','Normal')], string='Category Type',
-        help="A category of the view type is a virtual category that can be used as the parent of another category to create a hierarchical structure.", default='normal')
-    parent_left = fields.Integer(string='Left Parent', select=1)
-    parent_right = fields.Integer(string='Right Parent', select=1)
 
     _parent_name = "parent_id"
     _parent_store = True
@@ -106,14 +93,14 @@ class ProducePriceHistory(models.Model):
     _rec_name = 'datetime'
     _order = 'datetime desc'
 
-    def _get_default_company(self):
+    def _default_get_company(self):
         if 'force_company' in self._context:
             return self._context['force_company']
         else:
             company = self.env.user.company_id
         return company.id if company else False
 
-    company_id = fields.Many2one('res.company', required=True, default=_get_default_company)
+    company_id = fields.Many2one('res.company', required=True, default=_default_get_company)
     product_template_id = fields.Many2one('product.template', string='Product Template', required=True, ondelete='cascade')
     datetime = fields.Datetime(string='Date', default=fields.datetime.now())
     cost = fields.Float(string='Cost')
@@ -127,10 +114,10 @@ class ProductTemplate(models.Model):
     _description = "Product Template"
     _order = "name"
 
-    def _get_uom_id(self):
+    def _default_get_uom_id(self):
         return self.env["product.uom"].search([], limit=1, order='id').id
 
-    def _default_category(self):
+    def _default_get_category(self):
         context = self._context or {}
         if 'categ_id' in context and context['categ_id']:
             return context['categ_id']
@@ -817,12 +804,12 @@ class ProductProduct(models.Model):
                     ids = self.search([('default_code', '=', res.group(2))] + args, limit=limit).ids
             # still no results, partner in context: search on supplier info as last hope to find something
             if not ids and context.get('partner_id'):
-                supplier_ids = self.env['product.supplierinfo'].search(
+                suppliers = self.env['product.supplierinfo'].search(
                     [('name', '=', context.get('partner_id')), '|',
                         ('product_code', operator, name),
                         ('product_name', operator, name)])
-                if supplier_ids:
-                    ids = self.search([('product_tmpl_id.seller_ids', 'in', supplier_ids)], limit=limit).ids
+                if suppliers:
+                    ids = self.search([('product_tmpl_id.seller_ids', 'in', suppliers)], limit=limit).ids
         else:
             ids = self.search(args, limit=limit).ids
         return self.browse(ids).name_get()

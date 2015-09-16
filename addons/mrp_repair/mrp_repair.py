@@ -234,7 +234,7 @@ class mrp_repair(osv.osv):
             }
         addr = part_obj.address_get(cr, uid, [part], ['delivery', 'invoice', 'contact'])
         partner = part_obj.browse(cr, uid, part)
-        pricelist = partner.property_product_pricelist and partner.property_product_pricelist.id or False
+        pricelist = partner.property_product_pricelist_id and partner.property_product_pricelist_id.id or False
         return {'value': {
                     'address_id': addr['delivery'] or addr['contact'],
                     'partner_invoice_id': addr['invoice'],
