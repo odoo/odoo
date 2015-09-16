@@ -4,6 +4,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID, api, models
+from openerp.exceptions import UserError
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -280,6 +281,8 @@ class stock_quant(osv.osv):
         acc_valuation = accounts.get('stock_valuation', False)
         if acc_valuation:
             acc_valuation = acc_valuation.id
+        if not accounts.get('stock_journal', False):
+            raise UserError(_('You don\'t have any stock journal defined on your product category, check if you have installed a chart of accounts'))
         journal_id = accounts['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
 
