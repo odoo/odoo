@@ -49,7 +49,7 @@ class AccountVoucher(models.Model):
             total = 0
             tax_amount = 0
             for line in voucher.line_ids:
-                tax_info = line.tax_ids.compute_all(line.price_unit, self.currency_id, line.quantity, line.product_id, voucher.partner_id)
+                tax_info = line.tax_ids.compute_all(line.price_unit, voucher.currency_id, line.quantity, line.product_id, voucher.partner_id)
                 total += tax_info.get('total_included', 0.0)
                 tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)]) 
             voucher.amount = total + voucher.tax_correction
