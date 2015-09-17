@@ -1131,7 +1131,7 @@ class AccountInvoiceLine(models.Model):
                 if company.currency_id != currency:
                     if type in ('in_invoice', 'in_refund'):
                         self.price_unit = product.standard_price
-                    self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.date_invoice)).rate
+                    self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.invoice_id.date_invoice)).rate
 
                 if self.uom_id and self.uom_id.id != product.uom_id.id:
                     self.price_unit = self.env['product.uom']._compute_price(
