@@ -100,7 +100,13 @@ class config(osv.Model):
         try:
             content = urllib2.urlopen(req, timeout=TIMEOUT).read()
         except urllib2.HTTPError, e:
-            raise UserError(_('Error From the Google\n%s' % (e)))
+            error = json.loads(e.read())['error']
+            if error['code'] == 500:
+                msg = """Internal Server Error.
+                    Unable to open this document. Recreate shareable link with proper sharing options and update link in Settings > Google Drive > Templates."""
+            else:
+                msg = error['message']
+            raise UserError(_(msg))
         content = json.loads(content)
         res = {}
         if content.get('alternateLink'):
