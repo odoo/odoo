@@ -1628,7 +1628,7 @@
                                 <field name="warehouse_id"/>
                             </group>
                             <group>
-                                <field name="code" on_change="onchange_picking_code(code)"/>
+                                <field name="code"/>
                                 <field name="return_picking_type_id"/>
                                 <field name="barcode_nomenclature_id" groups="base.group_no_one"/>
                             </group>
@@ -1694,7 +1694,7 @@
                     <field name="name"/>
                     <field name="sequence_id"/>
                     <field name="warehouse_id"/>
-                    <field name="code" on_change="onchange_picking_code(code)"/>
+                    <field name="code"/>
                     <field name="return_picking_type_id"/>
                     <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}"/>
                     <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
