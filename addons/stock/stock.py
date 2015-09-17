@@ -897,18 +897,16 @@ class stock_picking(models.Model):
         return res
 
     def _default_location_destination(self):
-        context = self._context or {}
-        if context.get('default_picking_type_id', False):
-            pick_type = self.env['stock.picking.type'].browse(context['default_picking_type_id'])
-            return pick_type.default_location_dest_id and pick_type.default_location_dest_id.id or False
-        return False
+        # retrieve picking type from context; if none this returns an empty recordset
+        picking_type_id = self._context.get('default_picking_type_id')
+        picking_type = self.env['stock.picking.type'].browse(picking_type_id)
+        return picking_type.default_location_dest_id
 
     def _default_location_source(self):
-        context = self._context or {}
-        if context.get('default_picking_type_id', False):
-            pick_type = self.env['stock.picking.type'].browse(context['default_picking_type_id'])
-            return pick_type.default_location_src_id and pick_type.default_location_src_id.id or False
-        return False
+        # retrieve picking type from context; if none this returns an empty recordset
+        picking_type_id = self._context.get('default_picking_type_id')
+        picking_type = self.env['stock.picking.type'].browse(picking_type_id)
+        return picking_type.default_location_src_id
 
     _columns = {
         'name': fields.char('Reference', select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),
