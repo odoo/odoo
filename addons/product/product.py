@@ -783,7 +783,7 @@ class product_supplierinfo(osv.osv):
         'company_id':fields.many2one('res.company','Company',select=1),
     }
     _defaults = {
-        'qty': lambda *a: 0.0,
+        'min_qty': lambda *a: 0.0,
         'sequence': lambda *a: 1,
         'delay': lambda *a: 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
