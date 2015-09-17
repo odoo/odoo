@@ -3,7 +3,7 @@
     'name': "Jquery Validation plugin for Ecommerce",
 
     'summary': """
-        A plugin to install Jquery Validation plugin that is needed by Ecommerce Data Validation module. Note that this plugin does not work alone. other other data valudation modules depend on it
+        A plugin that works together with our "Ecommerce Data Validation module" to validate billing & shipping information entered by user.
         """,
 
     'description': """
@@ -12,7 +12,7 @@
 
     'author': "Optima ICT Services LTD",
     'website': "http://www.optima.co.ke",
-    'images': ['static/description/main.png'],
+    'images': ['static/description/icon.png'],
     'price': 5,
     'currency': 'EUR',
 

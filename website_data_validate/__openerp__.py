@@ -15,7 +15,7 @@
 
     'author': "Optima ICT Services LTD",
     'website': "http://www.optima.co.ke",
-    'images': ['static/description/main.png'],
+    'images': ['static/description/main2.png'],
     'price': 15,
     'currency': 'EUR',
 
