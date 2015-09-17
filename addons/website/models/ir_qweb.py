@@ -86,9 +86,7 @@ class QWeb(orm.AbstractModel):
 
     def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
         if request and request.website and request.website.cdn_activated:
-            if qwebcontext.context is None:
-                qwebcontext.context = {}
-            qwebcontext.context['url_for'] = request.website.get_cdn_url
+            qwebcontext.context = dict(qwebcontext.context or {}, url_for=request.website.get_cdn_url)
         return super(QWeb, self).render_tag_call_assets(element, template_attributes, generated_attributes, qwebcontext)
 
     def get_converter_for(self, field_type):
