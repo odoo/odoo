@@ -24,19 +24,15 @@ class SaleOrder(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
         required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         default=_default_warehouse_id)
-    picking_ids = fields.One2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this sale')
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this sale')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
 
     @api.multi
     @api.depends('procurement_group_id')
     def _compute_picking_ids(self):
         for order in self:
-            if not order.procurement_group_id:
-                order.picking_ids = []
-                order.delivery_count = 0
-            else:
-                order.picking_ids = self.env['stock.picking'].search([('group_id', '=', order.procurement_group_id.id)]).ids
-                order.delivery_count = len(order.picking_ids.ids)
+            order.picking_ids = self.env['stock.picking'].search([('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
+            order.delivery_count = len(order.picking_ids)
 
     @api.onchange('warehouse_id')
     def _onchange_warehouse_id(self):

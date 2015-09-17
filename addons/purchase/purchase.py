@@ -130,7 +130,7 @@ class PurchaseOrder(models.Model):
         ], string='Invoice Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
 
     picking_count = fields.Integer(compute='_compute_picking', string='Receptions', default=0)
-    picking_ids = fields.One2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False)
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False)
 
     date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', inverse='_inverse_date_planned', required=True, select=True, oldname='minimum_planned_date')
 

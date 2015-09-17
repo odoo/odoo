@@ -76,39 +76,37 @@ class AccountAnalyticLine(models.Model):
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    timesheet_ids = fields.One2many('account.analytic.line', compute='_compute_timesheet_ids', string='Timesheet activities associated to this sale')
+    timesheet_ids = fields.Many2many('account.analytic.line', compute='_compute_timesheet_ids', string='Timesheet activities associated to this sale')
     timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_ids')
 
     @api.multi
     @api.depends('project_id.line_ids')
     def _compute_timesheet_ids(self):
         for order in self:
-            if not order.project_id:
-                order.timesheet_ids = []
-                order.timesheet_count = 0.0
-            else:
-                order.timesheet_ids = self.env['account.analytic.line'].search([('is_timesheet', '=', True), ('account_id', '=', self.project_id.id)]).ids
-                order.timesheet_count = sum([line.unit_amount for line in order.timesheet_ids])
+            order.timesheet_ids = self.env['account.analytic.line'].search([('is_timesheet', '=', True), ('account_id', '=', order.project_id.id)]) if order.project_id else []
+            order.timesheet_count = round(sum([line.unit_amount for line in order.timesheet_ids]), 2)
 
-    @api.one
+    @api.multi
     @api.constrains('order_line')
     def _check_multi_timesheet(self):
-        count = 0
-        for line in self.order_line:
-            if line.product_id.track_service == 'timesheet':
-                count += 1
-            if count > 1:
-                raise UserError(_("You can use only one product on timesheet within the same sale order. You should split your order to include only one contract based on time and material."))
+        for order in self:
+            count = 0
+            for line in order.order_line:
+                if line.product_id.track_service == 'timesheet':
+                    count += 1
+                if count > 1:
+                    raise UserError(_("You can use only one product on timesheet within the same sale order. You should split your order to include only one contract based on time and material."))
         return {}
 
-    @api.one
+    @api.multi
     def action_confirm(self):
         result = super(SaleOrder, self).action_confirm()
-        if not self.project_id:
-            for line in self.order_line:
-                if line.product_id.track_service == 'timesheet':
-                    self._create_analytic_account(prefix=self.product_id.default_code or None)
-                    break
+        for order in self:
+            if not order.project_id:
+                for line in order.order_line:
+                    if line.product_id.track_service == 'timesheet':
+                        order._create_analytic_account(prefix=order.product_id.default_code or None)
+                        break
         return result
 
     @api.multi

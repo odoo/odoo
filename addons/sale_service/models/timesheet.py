@@ -8,18 +8,15 @@ from openerp.tools.translate import _
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    tasks_ids = fields.One2many('project.task', compute='_compute_tasks_ids', string='Tasks associated to this sale')
+    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', string='Tasks associated to this sale')
     tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids')
 
     @api.multi
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
         for order in self:
-            order.tasks_ids = self.env['project.task'].search([('sale_line_id', 'in', order.order_line.ids)]).ids
-            if not order.tasks_ids:
-                order.tasks_count = 0
-            else:
-                order.tasks_count = len(order.tasks_ids.ids)
+            order.tasks_ids = self.env['project.task'].search([('sale_line_id', 'in', order.order_line.ids)])
+            order.tasks_count = len(order.tasks_ids)
 
     @api.multi
     def action_view_task(self):
