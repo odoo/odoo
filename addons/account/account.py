@@ -551,9 +551,10 @@ class account_account(osv.osv):
 
     def _check_consol_children(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids[0], context=context)
-        parent_ids = self.search(cr, uid, [('parent_id', 'child_of', obj.child_consol_ids.ids)], context=context)
-        if (ids[0] in parent_ids):
-            return False
+        if obj.child_consol_ids.ids:
+            parent_ids = self.search(cr, uid, [('parent_id', 'child_of', obj.child_consol_ids.ids)], context=context)
+            if (ids[0] in parent_ids):
+                return False
         return True
 
     def _check_type(self, cr, uid, ids, context=None):
