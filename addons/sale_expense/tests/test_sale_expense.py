@@ -21,7 +21,7 @@ class TestSaleExpense(TestSale):
         init_price = so.amount_total
 
         # create some expense and validate it (expense at cost)
-        prod_exp = self.env.ref('hr_expense.air_ticket')
+        prod_exp_1 = self.env.ref('hr_expense.air_ticket')
         company = self.env.ref('base.main_company')
         journal = self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'HRTPJ', 'type': 'purchase', 'company_id': company.id})
         account_payable = self.env['account.account'].create({'code': 'X1111', 'name': 'HR Expense - Test Payable Account', 'user_type_id': self.env.ref('account.data_account_type_payable').id, 'reconcile': True})
@@ -29,9 +29,9 @@ class TestSaleExpense(TestSale):
         self.user.partner_id.property_account_payable_id = account_payable.id
         exp = self.env['hr.expense'].create({
             'name': 'Air Travel',
-            'product_id': prod_exp.id,
+            'product_id': prod_exp_1.id,
             'analytic_account_id': so.project_id.id,
-            'unit_amount': 700.0,
+            'unit_amount': 621.54,
             'journal_id': journal.id,
             'employee_id': employee.id,
         })
@@ -42,17 +42,17 @@ class TestSaleExpense(TestSale):
         # Create Expense Entries
         exp.action_move_create()
         # expense should now be in sales order
-        self.assertTrue(prod_exp in map(lambda so: so.product_id, so.order_line), 'Sale Expense: expense product should be in so')
-        sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp.id)
-        self.assertEqual((sol.price_unit, sol.qty_delivered), (700.0, 1.0), 'Sale Expense: error when invoicing an expense at cost')
+        self.assertTrue(prod_exp_1 in map(lambda so: so.product_id, so.order_line), 'Sale Expense: expense product should be in so')
+        sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp_1.id)
+        self.assertEqual((sol.price_unit, sol.qty_delivered), (621.54, 1.0), 'Sale Expense: error when invoicing an expense at cost')
         self.assertEqual(so.amount_total, init_price, 'Sale Expense: price of so not updated after adding expense')
 
         # create some expense and validate it (expense at sales price)
         init_price = so.amount_total
-        prod_exp = self.env.ref('hr_expense.car_travel')
+        prod_exp_2 = self.env.ref('hr_expense.car_travel')
         exp = self.env['hr.expense'].create({
             'name': 'Car Travel',
-            'product_id': prod_exp.id,
+            'product_id': prod_exp_2.id,
             'analytic_account_id': so.project_id.id,
             'product_uom_id': self.env.ref('product.product_uom_km').id,
             'unit_amount': 0.15,
@@ -67,13 +67,13 @@ class TestSaleExpense(TestSale):
         # Create Expense Entries
         exp.action_move_create()
         # expense should now be in sales order
-        self.assertTrue(prod_exp in map(lambda so: so.product_id, so.order_line), 'Sale Expense: expense product should be in so')
-        sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp.id)
-        self.assertEqual((sol.price_unit, sol.qty_delivered), (0.32, 100.0), 'Sale Expense: error when invoicing an expense at cost')
+        self.assertTrue(prod_exp_2 in map(lambda so: so.product_id, so.order_line), 'Sale Expense: expense product should be in so')
+        sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp_2.id)
+        self.assertEqual((sol.price_unit, sol.qty_delivered), (prod_exp_2.list_price, 100.0), 'Sale Expense: error when invoicing an expense at cost')
         self.assertEqual(so.amount_total, init_price, 'Sale Expense: price of so not updated after adding expense')
         # self.assertTrue(so.invoice_status, 'no', 'Sale Expense: expenses should not impact the invoice_status of the so')
 
         # both expenses should be invoiced
         inv_id = so.action_invoice_create()
         inv = self.env['account.invoice'].browse(inv_id)
-        self.assertEqual(inv.amount_untaxed, 732.0, 'Sale Expense: invoicing of expense is wrong')
+        self.assertEqual(inv.amount_untaxed, 621.54 + (prod_exp_2.list_price * 100.0), 'Sale Expense: invoicing of expense is wrong')
