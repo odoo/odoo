@@ -340,7 +340,7 @@ class website(osv.osv):
 
     def get_cdn_url(self, cr, uid, uri, context=None):
         # Currently only usable in a website_enable request context
-        if request and request.website and not request.debug:
+        if request and request.website and not request.debug and request.website.user_id.id == request.uid:
             cdn_url = request.website.cdn_url
             cdn_filters = (request.website.cdn_filters or '').splitlines()
             for flt in cdn_filters:
