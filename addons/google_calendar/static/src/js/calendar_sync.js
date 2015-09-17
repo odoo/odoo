@@ -67,10 +67,14 @@ openerp.google_calendar = function(instance) {
     
     instance.web_calendar.CalendarView.include({
         extraSideBar: function() {
-            this._super();
+            var self = this;
+            result = this._super();
             if (this.dataset.model == "calendar.event") {
-                this.$el.find('.oe_calendar_filter').prepend(QWeb.render('GoogleCalendar.buttonSynchro'));
+                return result.then(function() {
+                    self.$el.find('.oe_calendar_filter').prepend(QWeb.render('GoogleCalendar.buttonSynchro'));
+                });
             }
+            return result;
         }
     });
 
