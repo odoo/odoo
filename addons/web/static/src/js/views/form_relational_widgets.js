@@ -1481,6 +1481,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
 
         var self = this;
         this.dataset._model.call('write', [id, {'color': color}]).done(function(){
+            self.dataset.evict_record(id);
             var tag = self.$el.find("span.badge[data-id='" + id + "']");
             var old_color = tag.data('color');
             tag.removeClass('o_tag_color_' + old_color);
