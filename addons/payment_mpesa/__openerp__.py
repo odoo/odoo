@@ -20,13 +20,14 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'mobile_payment'],
+    'depends': ['base', 'mobile_payment', 'website_sale', 'website_jquery_validation'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
         'views/mpesa_aquirer.xml',
 	'views/mpesa_form.xml',
+	'views/mpesa_workflow.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

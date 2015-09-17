@@ -9,7 +9,7 @@
         This modules adds the fields for social media IDs for the company. facebook Id, Twitter Handle and Google-Plus Id. These Ids can then be dispalyed in the reports such as invoice, payslips etc
     """,
     'images': ['static/description/id1.png'],
-    'price': 2,
+    'price': 5,
     'currency': 'EUR',
     'author': "Optima ICT Services LTD",
     'website': "http://www.optima.co.ke",

@@ -11,7 +11,7 @@
     'images': ['static/description/hr.png'],
     'author': "Optima ICT Services LTD",
     'website': "http://www.optima.co.ke",
-    'price': 400,
+    'price': 574,
     'currency': 'EUR',
 
     # Categories can be used to filter modules in modules listing
@@ -25,8 +25,8 @@
 
     # always loaded
     'data': [
-        'security/rules.xml',
         'security/groups.xml',
+        'security/rules.xml',
         'security/ir.model.access.csv',
 	'data.xml',
 	'hr_overtime_data.xml',

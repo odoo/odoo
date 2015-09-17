@@ -9,7 +9,7 @@
         This module will install a customized client invoice report for accounting module.
     """,
     'images': ['static/description/invoice1.png'],
-    'price': 8,
+    'price': 18,
     'currency': 'EUR',
 
 

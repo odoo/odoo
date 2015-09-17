@@ -113,6 +113,7 @@
 	   <field name="condition_select">none</field>
 	   <field name="amount_select">code</field>
 	   <field name="amount_python_compute">
+
 first_margin=10164
 first_rate = 0.10
 second_margin =19740
@@ -122,19 +123,20 @@ third_rate = 0.20
 fourth_margin = 38892
 fourth_rate = 0.25
 fifth_rate = 0.30
+round_up = lambda x: int(x + 1) if int(x) != x else int(x)
 if categories.NET_TAXABLE &lt;= first_margin:
- tax= round(first_rate * categories.NET_TAXABLE)
+ tax= (first_rate * categories.NET_TAXABLE)
 elif categories.NET_TAXABLE &lt;= second_margin and categories.NET_TAXABLE > first_margin :
- tax = round((first_rate * first_margin) + (second_rate * (categories.NET_TAXABLE- first_margin)))
+ tax = ((first_rate * first_margin) + (second_rate * (categories.NET_TAXABLE- first_margin)))
 elif categories.NET_TAXABLE &lt;= third_margin and categories.NET_TAXABLE > second_margin :
- tax = round((first_rate * first_margin) + (second_rate * (second_margin - first_margin)) + (third_rate * (categories.NET_TAXABLE - second_margin)))
+ tax = ((first_rate * first_margin) + (second_rate * (second_margin - first_margin)) + (third_rate * (categories.NET_TAXABLE - second_margin)))
 elif categories.NET_TAXABLE &lt;= fourth_margin and categories.NET_TAXABLE > third_margin :
- tax = round((first_rate * first_margin) + (second_rate * (second_margin - first_margin)) + (third_rate * (third_margin - second_margin)) + (fourth_rate * (categories.NET_TAXABLE - third_margin)))
+ tax = ((first_rate * first_margin) + (second_rate * (second_margin - first_margin)) + (third_rate * (third_margin - second_margin)) + (fourth_rate * (categories.NET_TAXABLE - third_margin)))
 elif categories.NET_TAXABLE > fourth_margin :
- tax = round((first_rate * first_margin) + (second_rate * (second_margin - first_margin)) + (third_rate * (third_margin - second_margin)) + (fourth_rate * (fourth_margin - third_margin)) + (fifth_rate * (categories.NET_TAXABLE-fourth_margin)))
+ tax = ((first_rate * first_margin) + (second_rate * (second_margin - first_margin)) + (third_rate * (third_margin - second_margin)) + (fourth_rate * (fourth_margin - third_margin)) + (fifth_rate * (categories.NET_TAXABLE-fourth_margin)))
 else:
  tax = 0
-result = tax
+result = round_up(tax)
 
 </field>
 	</record>
