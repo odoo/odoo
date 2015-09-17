@@ -357,6 +357,51 @@ class PurchaseOrder(models.Model):
                 except AccessError:  # no write access rights -> just ignore
                     break
 
+    @api.multi
+    def action_view_picking(self):
+        '''
+        This function returns an action that display existing picking orders of given purchase order ids.
+        When only one found, show the picking immediately.
+        '''
+        context = dict(self._context or {})
+        action = self.env.ref('stock.action_picking_tree')
+        result = action.read()[0]
+
+        #override the context to get rid of the default filtering on picking type
+        result['context'] = {}
+        pick_ids = sum([order.picking_ids.ids for order in self], [])
+        #choose the view_mode accordingly
+        if len(pick_ids) > 1:
+            result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
+        elif len(pick_ids) == 1:
+            res = self.env.ref('stock.view_picking_form', False)
+            result['views'] = [(res and res.id or False, 'form')]
+            result['res_id'] = pick_ids and pick_ids[0] or False
+        return result
+
+    @api.multi
+    def action_view_invoice(self):
+        '''
+        This function returns an action that display existing vendor bills of given purchase order ids.
+        When only one found, show the vendor bill immediately.
+        '''
+        context = dict(self._context or {})
+        action = self.env.ref('account.action_invoice_tree2')
+        result = action.read()[0]
+
+        #override the context to get rid of the default filtering
+        result['context'] = {}
+        invoice_ids = sum([order.invoice_ids.ids for order in self], [])
+        #choose the view_mode accordingly
+        if len(invoice_ids) > 1:
+            result['domain'] = "[('id','in',[" + ','.join(map(str, invoice_ids)) + "])]"
+        elif len(invoice_ids) == 1:
+            res = self.env.ref('account.invoice_supplier_form', False)
+            result['views'] = [(res and res.id or False, 'form')]
+            result['res_id'] = invoice_ids and invoice_ids[0] or False
+        return result
+
+
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
     _description = 'Purchase Order Line'

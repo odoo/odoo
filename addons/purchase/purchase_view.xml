@@ -146,7 +146,7 @@
                     <button name="button_confirm" type="object" states="sent" string="Confirm Order" class="oe_highlight" id="bid_confirm"/>
                     <button name="button_approve" type="object" states='to approve' string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
                     <button name="action_rfq_send" states="approved" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
-                    <button name="%(purchase_open_picking)d" string="Receive Products" type="action" attrs="{'invisible': [('state','not in', ('purchase','done'))]}"/>
+                    <button name="action_view_picking" string="Receive Products" type="object" attrs="{'invisible': [('state','not in', ('purchase','done'))]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                     <button name="button_done" type="object" string="Set to Done" states="purchase"
@@ -155,13 +155,13 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box" attrs="{'invisible': [('state', 'not in', ('purchase', 'done', 'cancel'))]}">
-                        <button type="action"
-                            name="%(purchase_open_picking)d"
+                        <button type="object"
+                            name="action_view_picking"
                             class="oe_stat_button"
                             icon="fa-truck">
                             <field name="picking_count" widget="statinfo" string="Shipment" help="Incoming Shipments"/>
                         </button>
-                        <button type="action"  name="%(purchase_open_invoice)d"
+                        <button type="object"  name="action_view_invoice"
                             class="oe_stat_button"
                             icon="fa-pencil-square-o">
                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
