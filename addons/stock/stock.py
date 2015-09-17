@@ -876,19 +876,27 @@ class stock_picking(models.Model):
             packop_ids = [op.id for op in picking.pack_operation_ids]
             self.pool.get('stock.pack.operation').write(cr, uid, packop_ids, {'owner_id': picking.owner_id.id}, context=context)
 
-    def onchange_picking_type(self, cr, uid, ids, picking_type_id, partner_id):
+    def onchange_picking_type(self, cr, uid, ids, picking_type_id, partner_id, context=None):
         res = {}
         if picking_type_id:
-            picking_type = self.pool['stock.picking.type'].browse(cr, uid, picking_type_id)
-            if not picking_type.default_location_src_id and partner_id:
-                partner = self.pool['res.partner'].browse(cr, uid, partner_id)
-                location_id = partner.property_stock_supplier.id
+            picking_type = self.pool['stock.picking.type'].browse(cr, uid, picking_type_id, context=context)
+            if not picking_type.default_location_src_id:
+                if partner_id:
+                    partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
+                    location_id = partner.property_stock_supplier.id
+                else:
+                    customerloc, supplierloc = self.pool['stock.warehouse']._get_partner_locations(cr, uid, [], context=context)
+                    location_id = supplierloc.id
             else:
                 location_id = picking_type.default_location_src_id.id
 
-            if not picking_type.default_location_dest_id and partner_id:
-                partner = self.pool['res.partner'].browse(cr, uid, partner_id)
-                location_dest_id = partner.property_stock_customer.id
+            if not picking_type.default_location_dest_id:
+                if partner_id:
+                    partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
+                    location_dest_id = partner.property_stock_customer.id
+                else:
+                    customerloc, supplierloc = self.pool['stock.warehouse']._get_partner_locations(cr, uid, [], context=context)
+                    location_dest_id = customerloc.id
             else:
                 location_dest_id = picking_type.default_location_dest_id.id
 
@@ -3600,9 +3608,6 @@ class stock_warehouse(osv.osv):
         wh_output_stock_loc = warehouse.wh_output_stock_loc_id
         wh_pack_stock_loc = warehouse.wh_pack_stock_loc_id
 
-        #fetch customer and supplier locations, for references
-        customer_loc, supplier_loc = self._get_partner_locations(cr, uid, warehouse.id, context=context)
-
         #create in, out, internal picking types for warehouse
         input_loc = wh_input_stock_loc
         if warehouse.reception_steps == 'one_step':
@@ -3633,7 +3638,7 @@ class stock_warehouse(osv.osv):
             'use_create_lots': True,
             'use_existing_lots': False,
             'sequence_id': in_seq_id,
-            'default_location_src_id': supplier_loc.id,
+            'default_location_src_id': False,
             'default_location_dest_id': input_loc.id,
             'sequence': max_sequence + 1,
             'color': color}, context=context)
@@ -3646,7 +3651,7 @@ class stock_warehouse(osv.osv):
             'sequence_id': out_seq_id,
             'return_picking_type_id': in_type_id,
             'default_location_src_id': output_loc.id,
-            'default_location_dest_id': customer_loc.id,
+            'default_location_dest_id': False,
             'sequence': max_sequence + 4,
             'color': color}, context=context)
         picking_type_obj.write(cr, uid, [in_type_id], {'return_picking_type_id': out_type_id}, context=context)
