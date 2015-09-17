@@ -7,8 +7,6 @@ import json
 import time
 import sets
 
-import openerp
-from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare, float_round
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -67,17 +65,16 @@ class StockLocation(models.Model):
         self.with_context({'active_test': False})
         return self.search([('id', 'child_of', self.ids)])
 
-    @api.one
-    def _name_get(self):
-        name = self.name
-        if self.location_id and self.usage != 'view':
-            name = self.location_id.name + '/' + self.name
-        return name
+    # def _name_get(self):
+    #     name = self.name
+    #     if self.location_id and self.usage != 'view':
+    #         name = self.location_id.name + '/' + self.name
+    #     return name
 
-    @api.multi
-    def name_get(self):
-        for location in self:
-            location.name = location._name_get()
+    # @api.multi
+    # def name_get(self):
+    #     for location in self:
+    #         location.name = location._name_get()
 
     name = fields.Char('Location Name', required=True, translate=True)
     active = fields.Boolean('Active', help="By unchecking the active field, you may hide a location without deleting it.", default=True)
@@ -171,81 +168,73 @@ class StockLocation(models.Model):
 #----------------------------------------------------------
 # Routes
 #----------------------------------------------------------
-
-class stock_location_route(osv.osv):
+class StockLocationRoute(models.Model):
     _name = 'stock.location.route'
     _description = "Inventory Routes"
     _order = 'sequence'
 
-    _columns = {
-        'name': fields.char('Route Name', required=True, translate=True),
-        'sequence': fields.integer('Sequence'),
-        'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Procurement Rules', copy=True),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the route without removing it."),
-        'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules', copy=True),
-        'product_selectable': fields.boolean('Applicable on Product', help="When checked, the route will be selectable in the Inventory tab of the Product form.  It will take priority over the Warehouse route. "),
-        'product_categ_selectable': fields.boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.  It will take priority over the Warehouse route. "),
-        'warehouse_selectable': fields.boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.  This behaviour can be overridden by the routes on the Product/Product Categories or by the Preferred Routes on the Procurement"),
-        'supplied_wh_id': fields.many2one('stock.warehouse', 'Supplied Warehouse'),
-        'supplier_wh_id': fields.many2one('stock.warehouse', 'Supplying Warehouse'),
-        'company_id': fields.many2one('res.company', 'Company', select=1, help='Leave this field empty if this route is shared between all companies'),
-        #Reverse many2many fields:
-        'product_ids': fields.many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products'),
-        'categ_ids': fields.many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories'),
-        'warehouse_ids': fields.many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses'),
-    }
+    name = fields.Char('Route Name', required=True, translate=True)
+    sequence = fields.Integer(default=lambda self: 0)
+    pull_ids = fields.One2many('procurement.rule', 'route_id', 'Procurement Rules', copy=True)
+    active = fields.Boolean(help="If the active field is set to False, it will allow you to hide the route without removing it.", default=True)
+    push_ids = fields.One2many('stock.location.path', 'route_id', 'Push Rules', copy=True)
+    product_selectable = fields.Boolean('Applicable on Product', help="When checked, the route will be selectable in the Inventory tab of the Product form.  It will take priority over the Warehouse route. ", default=True)
+    product_categ_selectable = fields.Boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.  It will take priority over the Warehouse route. ")
+    warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.  This behaviour can be overridden by the routes on the Product/Product Categories or by the Preferred Routes on the Procurement")
+    supplied_wh_id = fields.Many2one('stock.warehouse', 'Supplied Warehouse')
+    supplier_wh_id = fields.Many2one('stock.warehouse', 'Supplying Warehouse')
+    company_id = fields.Many2one('res.company', 'Company', select=1, help='Leave this field empty if this route is shared between all companies', default=lambda self: self.env.user.company_id)
+    product_ids = fields.Many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products')
+    categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories')
+    warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses')
 
-    _defaults = {
-        'sequence': lambda self, cr, uid, ctx: 0,
-        'active': True,
-        'product_selectable': True,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.location.route', context=c),
-    }
-
-    def write(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         '''when a route is deactivated, deactivate also its pull and push rules'''
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        res = super(stock_location_route, self).write(cr, uid, ids, vals, context=context)
+        res = super(StockLocationRoute, self).write(vals)
         if 'active' in vals:
             push_ids = []
             pull_ids = []
-            for route in self.browse(cr, uid, ids, context=context):
+            for route in self:
                 if route.push_ids:
-                    push_ids += [r.id for r in route.push_ids if r.active != vals['active']]
+                    push_ids.append(route.push_ids(lambda route: route.active != vals['active']))
+                    # push_ids += [r for r in route.push_ids if r.active != vals['active']]
                 if route.pull_ids:
-                    pull_ids += [r.id for r in route.pull_ids if r.active != vals['active']]
+                    pull_ids.append(route.pull_ids(lambda route: route.active != vals['active']))
+                    # pull_ids += [r for r in route.pull_ids if r.active != vals['active']]
             if push_ids:
-                self.pool.get('stock.location.path').write(cr, uid, push_ids, {'active': vals['active']}, context=context)
+                push_ids[0].write({'active': vals['active']})
             if pull_ids:
-                self.pool.get('procurement.rule').write(cr, uid, pull_ids, {'active': vals['active']}, context=context)
+                pull_ids[0].write({'active': vals['active']})
         return res
 
-    def view_product_ids(self, cr, uid, ids, context=None):
+    @api.multi
+    def view_product_ids(self):
         return {
             'name': _('Products'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'product.template',
             'type': 'ir.actions.act_window',
-            'domain': [('route_ids', 'in', ids[0])],
+            'domain': [('route_ids', 'in', self.ids[0])],
         }
 
-    def view_categ_ids(self, cr, uid, ids, context=None):
+    @api.multi
+    def view_categ_ids(self):
         return {
             'name': _('Product Categories'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'product.category',
             'type': 'ir.actions.act_window',
-            'domain': [('route_ids', 'in', ids[0])],
+            'domain': [('route_ids', 'in', self.ids[0])],
         }
 
 
 #----------------------------------------------------------
 # Quants
 #----------------------------------------------------------
-
+from openerp.osv import fields, osv
 class stock_quant(osv.osv):
     """
     Quants are the smallest unit of stock physical instances
