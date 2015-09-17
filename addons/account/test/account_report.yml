@@ -54,24 +54,6 @@
     from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_balance_menu',wiz_data=data_dict, context=ctx, our_module='account')
 -
-  Print the Central Journal Report - From Account
--
-  !python {model: account.journal.period}: |
-    journal_ids = [ref('account.sales_journal'),ref('account.expenses_journal'),ref('account.bank_journal'),ref('account.cash_journal')]
-    ctx={}
-    data_dict = {'chart_account_id':ref('account.chart0')}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_central_journal',wiz_data=data_dict, context=ctx, our_module='account')
--
-  Print the General Journal Report - From Journal
--
-  !python {model: account.journal.period}: |
-    journal_ids = [ref('account.sales_journal'),ref('account.expenses_journal'),ref('account.bank_journal'),ref('account.cash_journal')]
-    ctx={}
-    data_dict = {'chart_account_id':ref('account.chart0')}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_general_journal',wiz_data=data_dict, context=ctx, our_module='account')
--
   Print the General Ledger Report (in Landscape Mode)
 -
   !python {model: account.account}: |
@@ -79,39 +61,6 @@
     data_dict = {'chart_account_id':ref('account.chart0')}
     from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
--
-  Print Journal Report - From Model
--
-  !python {model: account.journal.period}: |
-    journal_ids = [ref('account.sales_journal'),ref('account.expenses_journal'),ref('account.bank_journal'),ref('account.cash_journal')]
-    ctx={}
-    data_dict = {'chart_account_id':ref('account.chart0'), 'period_from':ref('period_1'), 'period_to':ref('period_12')}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_print_journal',wiz_data=data_dict, context=ctx, our_module='account')
--
-  Print the Partner Balance Report
--
-  !python {model: account.account}: |
-    ctx={}
-    data_dict = {'chart_account_id':ref('account.chart0')}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_partner_balance',wiz_data=data_dict, context=ctx, our_module='account')
--
-  Print the Partner Ledger Report
--
-  !python {model: account.account}: |
-    ctx={}
-    data_dict = {'chart_account_id':ref('account.chart0'),'page_split': True}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_partner_ledger',wiz_data=data_dict, context=ctx, our_module='account')
--
-  Print the Partner Ledger-Other Report
--
-  !python {model: res.partner}: |
-    ctx={}
-    data_dict = {'chart_account_id':ref('account.chart0'),'page_split': False}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_partner_ledger',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the Profit-Loss Report in Normal Mode
 -
