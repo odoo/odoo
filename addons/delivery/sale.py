@@ -84,8 +84,7 @@ class sale_order(osv.Model):
             if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
                 price_unit = currency_obj.compute(cr, uid, order.company_id.currency_id.id, order.pricelist_id.currency_id.id,
                     price_unit, context=dict(context or {}, date=order.date_order))
-            #create the sale order line
-            line_id = line_obj.create(cr, uid, {
+            values = {
                 'order_id': order.id,
                 'name': grid.carrier_id.name,
                 'product_uom_qty': 1,
@@ -93,7 +92,10 @@ class sale_order(osv.Model):
                 'product_id': grid.carrier_id.product_id.id,
                 'price_unit': price_unit,
                 'tax_id': [(6, 0, taxes_ids)],
-                'is_delivery': True
-            }, context=context)
+                'is_delivery': True,
+            }
+            if order.order_line:
+                values['sequence'] = order.order_line[-1].sequence + 1
+            line_id = line_obj.create(cr, uid, values, context=context)
             line_ids.append(line_id)
         return line_ids
