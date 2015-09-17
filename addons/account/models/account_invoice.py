@@ -81,7 +81,6 @@ class AccountInvoice(models.Model):
         'move_id.line_ids.currency_id')
     def _compute_residual(self):
         residual = 0.0
-        residual_signed = 0.0
         residual_company_signed = 0.0
         sign = self.type in ['in_refund', 'in_invoice'] and -1 or 1
         for line in self.sudo().move_id.line_ids:
@@ -103,7 +102,7 @@ class AccountInvoice(models.Model):
     def _get_outstanding_info_JSON(self):
         self.outstanding_credits_debits_widget = json.dumps(False)
         if self.state == 'open':
-            domain = [('journal_id.type', 'in', ('bank', 'cash')), ('account_id', '=', self.account_id.id), ('partner_id', '=', self.partner_id.id), ('reconciled', '=', False), ('amount_residual', '!=', 0.0)]
+            domain = [('journal_id.type', 'in', ('bank', 'cash')), ('account_id', '=', self.account_id.id), ('partner_id', '=', self.env['res.partner']._find_accounting_partner(self.partner_id).id), ('reconciled', '=', False), ('amount_residual', '!=', 0.0)]
             if self.type in ('out_invoice', 'in_refund'):
                 domain.extend([('credit', '>', 0), ('debit', '=', 0)])
                 type_payment = _('Outstanding credits')
