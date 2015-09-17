@@ -229,8 +229,8 @@ class ir_actions_report_xml(osv.osv):
         'report_xsl': fields.char('XSL Path'),
         'report_xml': fields.char('XML Path'),
 
-        'report_rml': fields.char('Main Report File Path/controller', help="The path to the main report file/controller (depending on Report Type) or NULL if the content is in another data field"),
-        'report_file': fields.related('report_rml', type="char", required=False, readonly=False, string='Report File', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
+        'report_rml': fields.char('Main Report File Path/controller', help="The path to the main report file/controller (depending on Report Type) or empty if the content is in another data field"),
+        'report_file': fields.related('report_rml', type="char", required=False, readonly=False, string='Report File', help="The path to the main report file (depending on Report Type) or empty if the content is in another field", store=True),
 
         'report_sxw': fields.function(_report_sxw, type='char', string='SXW Path'),
         'report_sxw_content_data': fields.binary('SXW Content'),
