@@ -88,11 +88,11 @@ class MailThread(models.AbstractModel):
         'Unread Messages Counter', compute='_get_message_unread',
         help="Number of unread messages")
     message_needaction = fields.Boolean(
-        'Need Action', compute='_get_message_needaction', search='_search_message_needaction',
-        help="If checked new messages require your attention.")
+        'Action Needed', compute='_get_message_needaction', search='_search_message_needaction',
+        help="If checked, new messages require your attention.")
     message_needaction_counter = fields.Integer(
-        'Need Action Counter', compute='_get_message_needaction',
-        help="Number of needaction messages")
+        'Number of Actions', compute='_get_message_needaction',
+        help="Number of messages which requires an action")
 
     @api.one
     @api.depends('message_follower_ids')
