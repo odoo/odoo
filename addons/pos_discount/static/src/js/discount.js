@@ -23,13 +23,13 @@ var DiscountButton = screens.ActionButtonWidget.extend({
 
         // Remove existing discounts
         var i = 0;
-        do {
+        while ( i < lines.length ) {
             if (lines[i].get_product() === product) {
                 order.remove_orderline(lines[i]);
             } else {
                 i++;
             }
-        } while ( i < lines.length );
+        }
 
         // Add discount
         var discount = - pc / 100.0 * order.get_total_with_tax();

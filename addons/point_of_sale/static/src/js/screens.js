@@ -1510,7 +1510,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
                     self.validate_order();
                 } else if ( event.keyCode === 190 || // Dot
                             event.keyCode === 110 ||  // Decimal point (numpad)
-                            event.keyCode === 188 ) { // Comma
+                            event.keyCode === 188 ||  // Comma
+                            event.keyCode === 46 ) {  // Numpad dot
                     key = '.';
                 } else if (event.keyCode >= 48 && event.keyCode <= 57) { // Numbers
                     key = '' + (event.keyCode - 48);
