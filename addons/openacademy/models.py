@@ -3,8 +3,10 @@
 from datetime import timedelta
 from openerp import models, fields, api, exceptions
 
+
 class Course(models.Model):
     _name = 'openacademy.course'
+    #_inherit = 'mail.thread'
 
     name = fields.Char(string="Title", required=True)
     description = fields.Text()
@@ -41,6 +43,7 @@ class Course(models.Model):
 
 class Session(models.Model):
     _name = 'openacademy.session'
+    _inherit = 'mail.thread'
 
     name = fields.Char(required=True)
     start_date = fields.Date(default=fields.Date.today)
@@ -48,6 +51,8 @@ class Session(models.Model):
     seats = fields.Integer(string="Number of seats")
     active = fields.Boolean(default=True)
     color = fields.Integer()
+
+    #reviewer_id = fields.Many2one('res.users', string='Reviewer', track_visibility='onchange')
 
     instructor_id = fields.Many2one('res.partner', string="Instructor",
         domain=['|', ('instructor', '=', True),
@@ -153,3 +158,20 @@ class Session(models.Model):
     def _check_instructor_not_in_attendees(self):
         if self.instructor_id and self.instructor_id in self.attendee_ids:
             raise exceptions.ValidationError("A session's instructor can't be an attendee")
+
+    # ---------------------------------------------------
+    # Mail gateway
+    # ---------------------------------------------------
+    # def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=None, context=None):
+    #     if auto_follow_fields is None:
+    #         auto_follow_fields = ['user_id', 'reviewer_id']
+    #         if updated_fields is not None and 'reviewer_id' not in updated_fields:
+    #             updated_fields.append('reviewer_id')
+    #     return super(Session, self)._message_get_auto_subscribe_fields(cr, uid, updated_fields, auto_follow_fields, context=context)
+
+
+    # ------------------------------------------------
+    # CRUD overrides
+    # ------------------------------------------------
+
+
