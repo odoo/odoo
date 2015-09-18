@@ -30,6 +30,13 @@ Tour.register({
             }
         },
         {
+            title:  "Wait for next page load",
+            onload: function(){
+                if($('html[lang="fr-BE"]').length)
+                    Tour.nextStep = function(){};
+            }
+        },
+        {
             title:     "Open content menu",
             element:   '#content-menu-button',
         },
