@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    "name" : "Norway - Chart of Accounts",
+    "name" : "Norway - Accounting",
     "version" : "1.1",
     "author" : "Rolv Råen",
     "category" : "Localization/Account Charts",
