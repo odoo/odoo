@@ -357,9 +357,6 @@
                     <field name="partner_id" operator="child_of" string="Customer"/>
                     <field name="create_date"/>
                     <field name="country_id"/>
-                    <separator/>
-                    <filter string="Archived"
-                            domain="[('active', '=', False)]"/>
                     <separator />
                     <filter string="Leads"
                             name="type_lead"
@@ -377,6 +374,7 @@
                             help="No salesperson"/>
                     <separator />
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" domain="[('active', '=', False)]"/>
                     <separator />
                     <filter string="Exclude Opt Out"
                             name='not_opt_out' domain="[('opt_out', '=', False)]"
@@ -623,9 +621,6 @@
                     <field name="probability"/>
                     <field name="lost_reason"/>
                     <separator/>
-                    <filter string="Archived"
-                            domain="[('active', '=', False)]"/>
-                    <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>
                     <filter string="Lost" name="lost"
@@ -651,6 +646,7 @@
                             help="Show all opportunities for which the next action date is today or before"/>
                     <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" context="{'group_by':'team_id'}"/>

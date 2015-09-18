@@ -106,6 +106,7 @@
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
                     <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By" >
                         <filter string="Assigned to" name="Responsible" context="{'group_by':'user_id'}" />
                         <filter string="Project" name="project" context="{'group_by':'project_id'}" />
@@ -116,7 +117,6 @@
                         <separator/>
                         <filter string="Create Day" context="{'group_by':'create_date:day'}" help="Create Date"/>
                         <filter string="Last Message" name="group_message_last_post" context="{'group_by':'message_last_post:week'}"/>
-                        <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     </group>
                 </search>
             </field>
