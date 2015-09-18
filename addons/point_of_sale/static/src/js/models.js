@@ -201,7 +201,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.tax',
-        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type'],
+        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids'],
         domain: null,
         loaded: function(self, taxes){
             self.taxes = taxes;
@@ -210,9 +210,11 @@ exports.PosModel = Backbone.Model.extend({
                 self.taxes_by_id[tax.id] = tax;
             });
             _.each(self.taxes_by_id, function(tax) {
-                tax.child_taxes = {};
-                _.each(tax.child_ids, function(child_tax_id) {
-                    tax.child_taxes[child_tax_id] = self.taxes_by_id[child_tax_id];
+                // children_tax_ids is a m2m, which get loaded as an
+                // array of ids, this just replaces the ids with the
+                // corresponding account.tax references
+                tax.children_tax_ids = _.map(tax.children_tax_ids, function (child_tax_id) {
+                    return self.taxes_by_id[child_tax_id];
                 });
             });
         },
@@ -1351,7 +1353,7 @@ exports.Orderline = Backbone.Model.extend({
                 total_excluded = ret.total_excluded;
                 base = ret.total_excluded;
                 total_included = ret.total_included;
-                list_taxes.concat(ret.taxes);
+                list_taxes = list_taxes.concat(ret.taxes);
             }
             else {
                 var tax_amount = self._compute_all(tax, base, quantity);
