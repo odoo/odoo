@@ -135,7 +135,7 @@ class payroll_advice(osv.osv):
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, [company_id], context=context)[0]
             if company.partner_id.bank_ids:
-                res.update({'bank_id': company.partner_id.bank_ids[0].bank.id})
+                res.update({'bank_id': company.partner_id.bank_ids[0].bank_id.id})
         return {
             'value':res
         }

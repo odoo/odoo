@@ -33,5 +33,5 @@ TODO:
         'views/report_l10nfrfichepaye.xml',
         'l10n_fr_hr_payroll_reports.xml',
     ],
-    'installable': False
+    'installable': True
 }
