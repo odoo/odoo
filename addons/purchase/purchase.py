@@ -1537,7 +1537,7 @@ class procurement_order(osv.osv):
                         'payment_term_id': partner.property_supplier_payment_term.id or False,
                         'dest_address_id': procurement.partner_dest_id.id,
                     }
-                    po_id = self.create_procurement_purchase_order(cr, SUPERUSER_ID, procurement, po_vals, line_vals, context=context)
+                    po_id = self.create_procurement_purchase_order(cr, SUPERUSER_ID, procurement, po_vals, line_vals, context=dict(context, company_id=po_vals['company_id']))
                     po_line_id = po_obj.browse(cr, uid, po_id, context=context).order_line[0].id
                     pass_ids.append(procurement.id)
                 res[procurement.id] = po_line_id
