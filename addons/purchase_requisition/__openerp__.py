@@ -24,12 +24,6 @@ keep track and order all your purchase orders.
             'views/purchase_requisition_workflow.xml',
             'report/purchase_requisition_templates.xml',
             'views/purchase_requisition_view.xml'],
-    'test': [
-        'test/purchase_requisition_users.yml',
-        'test/purchase_requisition_demo.yml',
-        'test/cancel_purchase_requisition.yml',
-        'test/purchase_requisition.yml',
-    ],
     'qweb': [
         'static/src/xml/purchase_requisition.xml',
     ],
