@@ -1305,12 +1305,13 @@ class Root(object):
                         if not manifest.get('installable', True):
                             continue
                         manifest['addons_path'] = addons_path
-                        _logger.debug("Loading %s", module)
-                        if 'openerp.addons' in sys.modules:
-                            m = __import__('openerp.addons.' + module)
-                        else:
-                            m = None
-                        addons_module[module] = m
+                        if not manifest.get('no_autoload', False):
+                            _logger.debug("Loading %s", module)
+                            if 'openerp.addons' in sys.modules:
+                                m = __import__('openerp.addons.' + module)
+                            else:
+                                m = None
+                            addons_module[module] = m
                         addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static
 
