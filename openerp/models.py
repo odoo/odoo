@@ -1622,7 +1622,8 @@ class BaseModel(object):
         """
         res = self.search(cr, user, args, context=context, count=True)
         if isinstance(res, list):
-            return len(res)
+            nr_records = len(res)
+            return res[0] if nr_records == 1 else nr_records
         return res
 
     @api.returns('self')
