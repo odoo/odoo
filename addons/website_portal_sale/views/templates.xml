@@ -64,7 +64,7 @@
                 <thead>
                   <tr class="active">
                     <th>Sale Order #</th>
-                    <th>Confirmation Date</th>
+                    <th>Order Date</th>
                     <th></th>
                     <th>Total</th>
                   </tr>
@@ -74,7 +74,7 @@
                         <td>
                             <a t-att-href="'/my/orders/'+str(order.id)"><t t-esc="order.name"/></a>
                         </td>
-                        <td><span t-field="order.date_confirm"/></td>
+                        <td><span t-field="order.date_order"/></td>
                         <td>
                             <t t-if="order.state == 'progress'">
                                 <span class="label label-info"><i class="fa fa-fw fa-clock-o"/> Invoiced</span>
