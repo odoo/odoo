@@ -1032,7 +1032,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     (isinstance(res_id, basestring) and res_id.isdigit()):
                 dic['res_id'] = int(res_id)
                 if module_name:
-                    dic['module'] = dic['module']
+                    dic['module'] = module_name
             else:
                 # res_id is an xml id
                 dic['res_id'] = None
