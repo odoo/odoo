@@ -181,7 +181,7 @@ class res_users(osv.osv):
             help="Specify a value only when creating a user or if you're "\
                  "changing the user's password, otherwise leave empty. After "\
                  "a change of password, the user has to login again."),
-        'signature': fields.html('Signature'),
+        'signature': fields.html('Signature', translate=True),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at log on for this user, in addition to the standard menu."),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
