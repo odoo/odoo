@@ -22,6 +22,9 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
+        """
+        Compute the total amounts of the SO.
+        """
         for order in self:
             amount_untaxed = amount_tax = 0.0
             for line in order.order_line:
@@ -35,6 +38,18 @@ class SaleOrder(models.Model):
 
     @api.depends('state', 'order_line.invoice_status')
     def _get_invoiced(self):
+        """
+        Compute the invoice status of a SO. Possible statuses:
+        - no: if the SO is not in status 'sale' or 'done', we consider that there is nothing to
+          invoice. This is also hte default value if the conditions of no other status is met.
+        - to invoice: if any SO line is 'to invoice', the whole SO is 'to invoice'
+        - invoiced: if all SO lines are invoiced, the SO is invoiced.
+        - upselling: if all SO lines are invoiced or upselling, the status is upselling.
+
+        The invoice_ids are obtained thanks to the invoice lines of the SO lines, and we also search
+        for possible refunds created directly from existing invoices. This is necessary since such a
+        refund is not directly linked to the SO.
+        """
         for order in self:
             invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id')
             # Search for refunds as well
@@ -72,6 +87,9 @@ class SaleOrder(models.Model):
 
     @api.onchange('fiscal_position_id')
     def _compute_tax_id(self):
+        """
+        Trigger the recompute of the taxes if the fiscal position is changed on the SO.
+        """
         for order in self:
             order.order_line._compute_tax_id()
 
@@ -144,9 +162,11 @@ class SaleOrder(models.Model):
             return 'sale.mt_order_sent'
         return super(SaleOrder, self)._track_subtype(init_values)
 
-
     @api.onchange('partner_shipping_id')
     def onchange_partner_shipping_id(self):
+        """
+        Trigger the change of fiscal position when the shipping address is modified.
+        """
         fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
         if fiscal_position:
             self.fiscal_position_id = fiscal_position
@@ -155,6 +175,13 @@ class SaleOrder(models.Model):
     @api.multi
     @api.onchange('partner_id')
     def onchange_partner_id(self):
+        """
+        Update the following fields when the partner is changed:
+        - Pricelist
+        - Payment term
+        - Invoice address
+        - Delivery address
+        """
         if not self.partner_id:
             self.update({
                 'partner_invoice_id': False,
@@ -182,6 +209,8 @@ class SaleOrder(models.Model):
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
             vals['name'] = self.env['ir.sequence'].next_by_code('sale.order') or 'New'
+
+        # Makes sure partner_invoice_id', 'partner_shipping_id' and 'pricelist_id' are defined
         if any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id']):
             partner = self.env['res.partner'].browse(vals.get('partner_id'))
             addr = partner.address_get(['delivery', 'invoice'])
@@ -193,10 +222,10 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _prepare_invoice(self):
-        """Prepare the dict of values to create the new invoice for a
-           sales order. This method may be overridden to implement custom
-           invoice generation (making sure to call super() to establish
-           a clean extension chain).
+        """
+        Prepare the dict of values to create the new invoice for a sales order. This method may be
+        overridden to implement custom invoice generation (making sure to call super() to establish
+        a clean extension chain).
         """
         self.ensure_one()
         journal_ids = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.company_id.id)], limit=1)
@@ -253,6 +282,13 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
+        """
+        Create the invoice associated to the SO.
+        :param grouped: if True, invoices are grouped by SO id. If False, invoices are grouped by
+                        (partner, currency)
+        :param final: if True, refunds will be generated if necessary
+        :returns: list of created invoices
+        """
         inv_obj = self.env['account.invoice']
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         invoices = {}
@@ -377,6 +413,19 @@ class SaleOrderLine(models.Model):
 
     @api.depends('state', 'product_uom_qty', 'qty_delivered', 'qty_to_invoice', 'qty_invoiced')
     def _compute_invoice_status(self):
+        """
+        Compute the invoice status of a SO line. Possible statuses:
+        - no: if the SO is not in status 'sale' or 'done', we consider that there is nothing to
+          invoice. This is also hte default value if the conditions of no other status is met.
+        - to invoice: we refer to the quantity to invoice of the line. Refer to method
+          `_get_to_invoice_qty()` for more information on how this quantity is calculated.
+        - upselling: we consider the SO line in two situations. First case, the quantity invoiced is
+          larger the the quantity ordered. Second case, the quantity invoiced is at least equal to
+          the quantity ordered, and moreover we have delivered more than ordered. The latter
+          situation could arise if, for example, a project took more time than expected but we
+          decided not to invoice the extra cost to the client.
+        - invoiced: the quantity invoiced is strictly equal to the quantity ordered.
+        """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
             if line.state not in ('sale', 'done'):
@@ -384,8 +433,8 @@ class SaleOrderLine(models.Model):
             elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 line.invoice_status = 'to invoice'
             elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) == 1 or\
-                    float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) >= 0 and\
-                    float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1:
+                    (float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) >= 0 and\
+                    float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1):
                 line.invoice_status = 'upselling'
             elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) == 0:
                 line.invoice_status = 'invoiced'
@@ -394,6 +443,9 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
     def _compute_amount(self):
+        """
+        Compute the amounts of the SO line.
+        """
         for line in self:
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_id)
@@ -410,6 +462,10 @@ class SaleOrderLine(models.Model):
 
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
+        """
+        Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is
+        calculated from the ordered quantity. Otherwise, the quantity delivered is used.
+        """
         for line in self:
             if line.order_id.state in ['sale', 'done']:
                 if line.product_id.invoice_policy == 'order':
@@ -421,6 +477,10 @@ class SaleOrderLine(models.Model):
 
     @api.depends('invoice_lines.invoice_id.state', 'invoice_lines.quantity')
     def _get_invoice_qty(self):
+        """
+        Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
+        that this is the case only if the refund is generated from the SO.
+        """
         for line in self:
             qty_invoiced = 0.0
             for invoice_line in line.invoice_lines:
@@ -470,6 +530,10 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _action_procurement_create(self):
+        """
+        Create procurements based on quantity ordered. If the quantity is increased, new
+        procurements are created. If the quantity is decreased, no automated action is taken.
+        """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         new_procs = self.env['procurement.order'] #Empty recordset
         for line in self:
@@ -500,7 +564,6 @@ class SaleOrderLine(models.Model):
     def _get_analytic_track_service(self):
         return []
 
-    # Create new procurements if quantities purchased changes
     @api.model
     def create(self, values):
         line = super(SaleOrderLine, self).create(values)
@@ -511,7 +574,6 @@ class SaleOrderLine(models.Model):
 
         return line
 
-    # Create new procurements if quantities purchased changes
     @api.multi
     def write(self, values):
         lines = False
@@ -579,12 +641,10 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _prepare_invoice_line(self, qty):
-        """Prepare the dict of values to create the new invoice line for a
-           sales order line. This method may be overridden to implement custom
-           invoice generation (making sure to call super() to establish
-           a clean extension chain).
+        """
+        Prepare the dict of values to create the new invoice line for a sales order line.
 
-           :param qty : float quantity to invoice
+        :param qty: float quantity to invoice
         """
         self.ensure_one()
         res = {}
@@ -614,6 +674,13 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def invoice_line_create(self, invoice_id, qty):
+        """
+        Create an invoice line. The quantity to invoice can be positive (invoice) or negative
+        (refund).
+
+        :param invoice_id: integer
+        :param qty: float quantity to invoice
+        """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
             if not float_is_zero(qty, precision_digits=precision):
