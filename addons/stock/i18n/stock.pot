@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:26+0000\n"
-"PO-Revision-Date: 2015-09-14 10:26+0000\n"
+"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"PO-Revision-Date: 2015-09-18 08:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,13 +40,13 @@ msgid "\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1836
+#: code:addons/stock/stock.py:1834
 #, python-format
 msgid " (%s reserved)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1839
+#: code:addons/stock/stock.py:1837
 #, python-format
 msgid " (reserved)"
 msgstr ""
@@ -543,6 +543,12 @@ msgid "Accurate visibility on all your operations"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_message_needaction
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot_message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_lines_date_active
 #: model:ir.model.fields,field_description:stock.field_stock_incoterms_active
 #: model:ir.model.fields,field_description:stock.field_stock_location_active
@@ -591,6 +597,11 @@ msgid "Advanced routing of products using rules"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Advanced'"
+msgstr ""
+
+#. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Advanced: Apply Procurement Rules"
 msgstr ""
@@ -633,7 +644,7 @@ msgid "All returned moves"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/procurement.py:355
+#: code:addons/stock/procurement.py:360
 #, python-format
 msgid "All stock moves have been cancelled for this procurement."
 msgstr ""
@@ -651,6 +662,13 @@ msgstr ""
 #. module: stock
 #: selection:stock.config.settings,module_stock_dropshipping:0
 msgid "Allow suppliers to deliver directly to your customers"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_config_settings_module_procurement_jit
+msgid "Allows you to automatically reserve the available\n"
+"            products when confirming a sale order.\n"
+"                This installs the module procurement_jit."
 msgstr ""
 
 #. module: stock
@@ -758,7 +776,7 @@ msgid "Back Orders"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1098
+#: code:addons/stock/stock.py:1096
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
 msgstr ""
@@ -907,7 +925,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2011
+#: code:addons/stock/stock.py:2009
 #, python-format
 msgid "Cannot unreserve a done move"
 msgstr ""
@@ -1163,7 +1181,7 @@ msgid "Create Backorder"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1565
+#: code:addons/stock/stock.py:1563
 #, python-format
 msgid "Create Backorder?"
 msgstr ""
@@ -1364,6 +1382,11 @@ msgstr ""
 #: selection:stock.picking,picking_type_code:0
 #: selection:stock.picking.type,code:0
 msgid "Customers"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Daily Operations"
 msgstr ""
 
 #. module: stock
@@ -1579,6 +1602,11 @@ msgid "Depending on the modules installed, this will allow you to define the rou
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Deployment"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_name
 msgid "Description"
 msgstr ""
@@ -1779,6 +1807,11 @@ msgid "Edit its details or add new ones"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "End"
+msgstr ""
+
+#. module: stock
 #: model:stock.location,name:stock.stock_location_7
 msgid "European Customers"
 msgstr ""
@@ -1825,7 +1858,7 @@ msgid "External note..."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1488
+#: code:addons/stock/stock.py:1486
 #, python-format
 msgid "Extra Move: "
 msgstr ""
@@ -1876,12 +1909,6 @@ msgid "For developers, <strong>you can use our\n"
 msgstr ""
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.inventory_planner
-msgid "For the Odoo Team,<br/>\n"
-"                        Fabien Pinckaers, Founder"
-msgstr ""
-
-#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Force Availability"
 msgstr ""
@@ -1921,6 +1948,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_from_loc
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form
 msgid "From"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "From the Odoo Team,<br/>\n"
+"                            Fabien Pinckaers, Founder"
 msgstr ""
 
 #. module: stock
@@ -2110,7 +2143,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8219
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8131
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_id
@@ -2158,11 +2191,15 @@ msgid "If a product is not at the right place, set the checked quantity to 0 and
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_message_needaction
 #: model:ir.model.fields,help:stock.field_stock_picking_message_unread
-#: model:ir.model.fields,help:stock.field_stock_production_lot_message_needaction
 #: model:ir.model.fields,help:stock.field_stock_production_lot_message_unread
 msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_message_needaction
+#: model:ir.model.fields,help:stock.field_stock_production_lot_message_needaction
+msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: stock
@@ -2252,8 +2289,8 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "If you need help, do not hesitate to contact our experts\n"
-"                    using the <span class=\"fa fa-question-circle\"/> button on\n"
-"                    the top bar."
+"                        using the <span class=\"fa fa-question-circle\"/> button on\n"
+"                        the top bar."
 msgstr ""
 
 #. module: stock
@@ -2267,7 +2304,7 @@ msgid "Immediate Transfer"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1548
+#: code:addons/stock/stock.py:1546
 #, python-format
 msgid "Immediate Transfer?"
 msgstr ""
@@ -2319,7 +2356,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "In short, you will get a more efficient warehouse management that will lead\n"
-"                    to inventory reduction and better efficiencies in your daily operations."
+"                        to inventory reduction and better efficiencies in your daily operations."
 msgstr ""
 
 #. module: stock
@@ -2371,6 +2408,11 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Initial Demand"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Initial Inventory"
 msgstr ""
 
 #. module: stock
@@ -3258,18 +3300,6 @@ msgid "Name"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_message_needaction
-#: model:ir.model.fields,field_description:stock.field_stock_production_lot_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_message_needaction_counter
-#: model:ir.model.fields,field_description:stock.field_stock_production_lot_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Negative"
 msgstr ""
@@ -3330,7 +3360,7 @@ msgid "No automatic routing of products"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1578
+#: code:addons/stock/stock.py:1576
 #, python-format
 msgid "No negative quantities allowed"
 msgstr ""
@@ -3382,7 +3412,7 @@ msgid "Notes"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1034
+#: code:addons/stock/stock.py:1032
 #, python-format
 msgid "Nothing to check the availability for."
 msgstr ""
@@ -3395,6 +3425,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Now, all your products have their quantity set correctly."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_message_needaction_counter
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot_message_needaction_counter
+msgid "Number of Actions"
 msgstr ""
 
 #. module: stock
@@ -3415,7 +3451,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_production_lot_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: stock
@@ -3822,6 +3858,11 @@ msgid "Periodical Inventories are used to count the number of products\n"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Periodical Tasks"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Physical Inventories by Month"
 msgstr ""
@@ -3965,13 +4006,13 @@ msgid "Planner"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1535
+#: code:addons/stock/stock.py:1533
 #, python-format
 msgid "Please create some Initial Demand or Mark as Todo and create some Operations. "
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1695
+#: code:addons/stock/stock.py:1693
 #, python-format
 msgid "Please process some quantities to put in the pack first!"
 msgstr ""
@@ -4046,6 +4087,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement_action
+#: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Procurement Exceptions"
 msgstr ""
 
@@ -4245,6 +4287,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_propagate
 #: model:ir.model.fields,field_description:stock.field_stock_move_propagate
 msgid "Propagate cancel and split"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Purchase Flow"
 msgstr ""
 
 #. module: stock
@@ -4568,6 +4615,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product_nbr_reordering_rules
 #: model:ir.model.fields,field_description:stock.field_product_template_nbr_reordering_rules
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_config
+#: model:ir.ui.view,arch_db:stock.inventory_planner
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
@@ -4592,6 +4640,16 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Reserve"
+msgstr ""
+
+#. module: stock
+#: selection:stock.config.settings,module_procurement_jit:0
+msgid "Reserve Sale Orders Immediately On Confirmation"
+msgstr ""
+
+#. module: stock
+#: selection:stock.config.settings,module_procurement_jit:0
+msgid "Reserve Sale Orders Manually or by Running the Schedulers"
 msgstr ""
 
 #. module: stock
@@ -4622,6 +4680,11 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Reset Operations"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Resolve Procurement Exceptions"
 msgstr ""
 
 #. module: stock
@@ -4707,6 +4770,11 @@ msgid "Routes"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Routes Management"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_resupply_route_ids
 msgid "Routes will be created for these resupply warehouses and you can select them on products and product categories"
 msgstr ""
@@ -4728,19 +4796,14 @@ msgid "Run Schedulers"
 msgstr ""
 
 #. module: stock
-#: selection:stock.config.settings,module_procurement_jit:0
-msgid "Run scheduler once a day"
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Sales Flow"
 msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_lot_form
 msgid "Save"
-msgstr ""
-
-#. module: stock
-#: selection:stock.config.settings,module_procurement_jit:0
-msgid "Schedule orders in real time"
 msgstr ""
 
 #. module: stock
@@ -4950,7 +5013,7 @@ msgid "Some products may be sold/purchased in different unit of measures (advanc
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1543
+#: code:addons/stock/stock.py:1541
 #, python-format
 msgid "Some products require lots, so you need to specify those first!"
 msgstr ""
@@ -5279,7 +5342,7 @@ msgid "The default resupply warehouse should be different than the warehouse its
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1186
+#: code:addons/stock/stock.py:1184
 #, python-format
 msgid "The destination location must be the same for all the moves of the picking."
 msgstr ""
@@ -5355,7 +5418,7 @@ msgid "The quantity to split should be smaller than the quantity To Do.  "
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1873
+#: code:addons/stock/stock.py:1871
 #, python-format
 msgid "The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
@@ -5385,7 +5448,7 @@ msgid "The serial number %s is already in stock"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1189
+#: code:addons/stock/stock.py:1187
 #, python-format
 msgid "The source location must be the same for all the moves of the picking."
 msgstr ""
@@ -5408,14 +5471,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_theoretical_qty
 msgid "Theoretical Quantity"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_config_settings_module_procurement_jit
-msgid "This allows Just In Time computation of procurement orders.\n"
-"                All procurement orders will be processed immediately, which could in some\n"
-"                cases entail a small performance impact.\n"
-"                This installs the module procurement_jit."
 msgstr ""
 
 #. module: stock
@@ -5447,7 +5502,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "This guide will help you get started with Odoo Inventory.\n"
-"                    Once you are done, you will benefit from:"
+"                        Once you are done, you will benefit from:"
 msgstr ""
 
 #. module: stock
@@ -5621,7 +5676,8 @@ msgid "Total routes"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1735
+#: code:addons/stock/stock.py:1733
+#: model:ir.ui.view,arch_db:stock.inventory_planner
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -6076,6 +6132,11 @@ msgid "Website communication history"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Welcome"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_warehouse_selectable
 msgid "When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.  This behaviour can be overridden by the routes on the Product/Product Categories or by the Preferred Routes on the Procurement"
 msgstr ""
@@ -6300,6 +6361,26 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category."
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Your Products"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Your Situation"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Your Vendors"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "Your Warehouse"
 msgstr ""
 
 #. module: stock

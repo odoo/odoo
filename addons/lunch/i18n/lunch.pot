@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 10:28+0000\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-09-18 08:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,7 +58,7 @@ msgid "Add"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:267
+#: code:addons/lunch/models/lunch.py:251
 #, python-format
 msgid "Alert"
 msgstr ""
@@ -134,6 +134,7 @@ msgstr ""
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0
 #: selection:lunch.order.line,state:0
 msgid "Cancelled"
@@ -152,6 +153,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_name
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Category"
 msgstr ""
 
@@ -317,6 +319,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
 msgstr ""
 
@@ -374,12 +377,6 @@ msgid "ID"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:91
-#, python-format
-msgid "Insufficient balance"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_state
 msgid "Is an order or a payment"
 msgstr ""
@@ -434,7 +431,7 @@ msgid "Lunch Alert"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:239
+#: code:addons/lunch/models/lunch.py:223
 #, python-format
 msgid "Lunch Cashmove"
 msgstr ""
@@ -491,6 +488,7 @@ msgid "Name/Date"
 msgstr ""
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0
 #: selection:lunch.order.line,state:0
 msgid "New"
@@ -610,6 +608,11 @@ msgid "Product Category:"
 msgstr ""
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Product Search"
+msgstr ""
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_order_line_ids
 #: model:ir.ui.menu,name:lunch.lunch_product_menu
@@ -639,6 +642,7 @@ msgstr ""
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0
 #: selection:lunch.order.line,state:0
 msgid "Received"
@@ -719,15 +723,9 @@ msgid "The company this user is currently working for."
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:114
+#: code:addons/lunch/models/lunch.py:98
 #, python-format
 msgid "The date of your order is in the past."
-msgstr ""
-
-#. module: lunch
-#: code:addons/lunch/models/lunch.py:92
-#, python-format
-msgid "The total amount of the order is larger than the available balance"
 msgstr ""
 
 #. module: lunch
@@ -788,17 +786,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_supplier_ids
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_supplier
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_supplier
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Vendor"
 msgstr ""
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Vendor Orders by Month"
-msgstr ""
-
-#. module: lunch
-#: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "Warning : Your balance is insufficient."
 msgstr ""
 
 #. module: lunch
