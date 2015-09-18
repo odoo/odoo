@@ -26,6 +26,7 @@ from dateutil.relativedelta import relativedelta
 import fnmatch
 import logging
 import os
+import re
 import time
 from operator import itemgetter
 
@@ -153,6 +154,22 @@ class view(osv.osv):
         result.update(map(itemgetter('res_id', 'id'), data_ids))
         return result
 
+    def _convert(self, cr, uid, s, view):
+        matches = re.finditer('[^%]%\((.*?)\)[ds]', s)
+        done = []
+        for m in matches:
+            found = m.group()[1:]
+            if found in done:
+                continue
+            done.append(found)
+            xmlid = m.groups()[0]
+            if '.' not in xmlid:
+                mod = view.get_external_id(cr, uid).get(view.id).split('.')[0]
+                xmlid = '%s.%s' % (mod, xmlid)
+            res = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xmlid)
+            s = s.replace(found, str(res))
+        return s
+
     def _arch_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
 
@@ -162,6 +179,8 @@ class view(osv.osv):
                 # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
                 fullpath = get_resource_path(*view.arch_fs.split('/'))
                 arch_fs = get_view_arch_from_file(fullpath, view.xml_id)
+                # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
+                arch_fs = self._convert(cr, uid, arch_fs, view)
             result[view.id] = arch_fs or view.arch_db
         return result
 
