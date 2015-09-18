@@ -645,7 +645,6 @@ class view(osv.osv):
     # Postprocessing: translation, groups and modifiers
     #------------------------------------------------------
     # TODO: 
-    # - split postprocess so that it can be used instead of translate_qweb
     # - remove group processing from ir_qweb
     #------------------------------------------------------
     def postprocess(self, cr, user, model, node, view_id, in_tree_view, model_fields, context=None):
@@ -909,10 +908,6 @@ class view(osv.osv):
     def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
-
-        if 'lang' in context:
-            arch_tree = self.translate_qweb(cr, uid, view_id, arch_tree, context['lang'], context)
-
         self.distribute_branding(arch_tree)
         root = etree.Element('templates')
         root.append(arch_tree)
@@ -1006,46 +1001,8 @@ class view(osv.osv):
             for attr in node.attrib
         )
 
-    def _translate_qweb(self, cr, uid, arch, translate_func, context=None):
-        # TODO: this should be moved in a place before inheritance is applied
-        #       but process() is only called on fields_view_get()
-        h = HTMLParser.HTMLParser()
-        def get_trans(text):
-            if not text or not text.strip():
-                return None
-            text = text.strip()
-            if len(text) < 2 or (text.startswith('<!') and text.endswith('>')):
-                return None
-            return translate_func(text)
-
-        if type(arch) not in SKIPPED_ELEMENT_TYPES and arch.tag not in SKIPPED_ELEMENTS:
-            text = get_trans(arch.text)
-            if text:
-                arch.text = arch.text.replace(arch.text.strip(), text)
-            tail = get_trans(arch.tail)
-            if tail:
-                arch.tail = arch.tail.replace(arch.tail.strip(), tail)
-
-            for attr_name in ('title', 'alt', 'label', 'placeholder'):
-                attr = get_trans(arch.get(attr_name))
-                if attr:
-                    arch.set(attr_name, attr)
-            for node in arch.iterchildren("*"):
-                self._translate_qweb(cr, uid, node, translate_func, context)
-
     def translate_qweb(self, cr, uid, id_, arch, lang, context=None):
-        view_ids = []
-        view = self.browse(cr, uid, id_, context=context)
-        if view:
-            view_ids.append(view.id)
-        if view.mode == 'primary' and view.inherit_id.mode == 'primary':
-            # template is `cloned` from parent view
-            view_ids.append(view.inherit_id.id)
-        Translations = self.pool['ir.translation']
-        def translate_func(term):
-            trans = Translations._get_source(cr, uid, 'website', 'view', lang, term, view_ids)
-            return trans
-        self._translate_qweb(cr, uid, arch, translate_func, context=context)
+        # Deprecated: templates are translated once read from database
         return arch
 
     @openerp.tools.ormcache('uid', 'id')

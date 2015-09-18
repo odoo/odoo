@@ -431,22 +431,26 @@ class TestNoModel(ViewCase):
         """
         Test if translations work correctly without a model
         """
-        View = self.registry('ir.ui.view')
-        self.registry('res.lang').load_lang(self.cr, self.uid, 'fr_FR')
-        orig_text = "Copyright copyrighter"
-        translated_text = u"Copyrighter, tous droits réservés"
-        self.text_para.text = orig_text 
-        self.registry('ir.translation').create(self.cr, self.uid, {
-            'name': 'website',
-            'type': 'view',
-            'lang': 'fr_FR',
-            'src': orig_text,
-            'value': translated_text,
+        self.env['res.lang'].load_lang('fr_FR')
+        ARCH = '<template name="foo">%s</template>'
+        TEXT_EN = "Copyright copyrighter"
+        TEXT_FR = u"Copyrighter, tous droits réservés"
+        view = self.env['ir.ui.view'].create({
+            'name': 'dummy',
+            'arch': ARCH % TEXT_EN,
+            'inherit_id': False,
+            'type': 'qweb',
         })
-        sarch = View.translate_qweb(self.cr, self.uid, None, self.arch, 'fr_FR')
-
-        self.text_para.text = translated_text
-        self.assertEqual(sarch, self.arch)
+        self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'ir.ui.view,arch_db',
+            'res_id': view.id,
+            'lang': 'fr_FR',
+            'src': TEXT_EN,
+            'value': TEXT_FR,
+        })
+        view = view.with_context(lang='fr_FR')
+        self.assertEqual(view.arch, ARCH % TEXT_FR)
 
 class TestTemplating(ViewCase):
     def setUp(self):
