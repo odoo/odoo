@@ -4438,75 +4438,64 @@ class stock_pack_operation(osv.osv):
              'context': context,
         }
 
-
-class stock_pack_operation_lot(osv.osv):
+from openerp import fields, models, api
+class StockPackOperationLot(models.Model):
     _name = "stock.pack.operation.lot"
     _description = "Specifies lot/serial number for pack operations that need it"
 
-    def _get_processed(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for packlot in self.browse(cr, uid, ids, context=context):
-            res[packlot.id] = (packlot.qty > 0.0)
-        return res
+    @api.multi
+    @api.depends('qty')
+    def _get_processed(self):
+        for packlot in self:
+            packlot.processed = (packlot.qty > 0.0)
 
-    _columns = {
-        'operation_id': fields.many2one('stock.pack.operation'),
-        'qty': fields.float('Quantity'),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'),
-        'lot_name': fields.char('Lot Name'),
-        'qty_todo': fields.float('Quantity'),
-        'processed': fields.function(_get_processed,  type='boolean', store={'stock.pack.operation.lot': (lambda self, cr, uid, ids ,c={}:ids, ['qty'], 10)}),
-    }
+    operation_id = fields.Many2one('stock.pack.operation')
+    qty = fields.Float('Quantity', default=1.0)
+    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
+    lot_name = fields.Char()
+    qty_todo = fields.Float('Quantity')
+    processed = fields.Boolean("_get_processed")
 
-    _defaults = {
-        'qty': lambda cr, uid, ids, c: 1.0,
-    }
-
-    def _check_lot(self, cr, uid, ids, context=None):
-        for packlot in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    @api.depends('lot_id', 'lot_name')
+    def _check_lot(self):
+        for packlot in self:
             if not packlot.lot_name and not packlot.lot_id:
                 return False
         return True
-
-    _constraints = [
-        (_check_lot,
-            'Lot is required',
-            ['lot_id', 'lot_name']),
-    ]
 
     _sql_constraints = [
         ('qty', 'CHECK(qty >= 0.0)','Quantity must be greater than or equal to 0.0!'),
         ('uniq_lot_id', 'unique(operation_id, lot_id)', 'You have already mentioned this lot in another line'),
         ('uniq_lot_name', 'unique(operation_id, lot_name)', 'You have already mentioned this lot name in another line')]
 
-    def do_plus(self, cr, uid, ids, context=None):
-        for packlot in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, [packlot.id], {'qty': packlot.qty + 1}, context=context)
-        pack = self.browse(cr, uid, ids[0], context=context).operation_id.id
-        return self.pool['stock.pack.operation'].split_lot(cr, uid, [pack], context=context)
+    @api.multi
+    def do_plus(self):
+        #return {'type': 'ir.actions.act_window_close'}
+        for packlot in self:
+            packlot.write({'qty': packlot.qty + 1})
+        pack = self[0].operation_id
+        return pack.split_lot()
 
-    def do_minus(self, cr, uid, ids, context=None):
-        for packlot in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, [packlot.id], {'qty': packlot.qty - 1}, context=context)
-        pack = self.browse(cr, uid, ids[0], context=context).operation_id.id
-        return self.pool['stock.pack.operation'].split_lot(cr, uid, [pack], context=context)
+    @api.multi
+    def do_minus(self):
+        for packlot in self:
+            packlot.write({'qty': packlot.qty - 1})
+        pack = self[0].operation_id
+        return pack.split_lot()
 
-
-class stock_move_operation_link(osv.osv):
+class StockMoveOperationLink(models.Model):
     """
     Table making the link between stock.moves and stock.pack.operations to compute the remaining quantities on each of these objects
     """
     _name = "stock.move.operation.link"
     _description = "Link between stock moves and pack operations"
 
-    _columns = {
-        'qty': fields.float('Quantity', help="Quantity of products to consider when talking about the contribution of this pack operation towards the remaining quantity of the move (and inverse). Given in the product main uom."),
-        'operation_id': fields.many2one('stock.pack.operation', 'Operation', required=True, ondelete="cascade"),
-        'move_id': fields.many2one('stock.move', 'Move', required=True, ondelete="cascade"),
-        'reserved_quant_id': fields.many2one('stock.quant', 'Reserved Quant', help="Technical field containing the quant that created this link between an operation and a stock move. Used at the stock_move_obj.action_done() time to avoid seeking a matching quant again"),
-    }
+    qty = fields.Float('Quantity', help="Quantity of products to consider when talking about the contribution of this pack operation towards the remaining quantity of the move (and inverse). Given in the product main uom.")
+    operation_id = fields.Many2one('stock.pack.operation', 'Operation', required=True, ondelete="cascade")
+    move_id = fields.Many2one('stock.move', 'Move', required=True, ondelete="cascade")
+    reserved_quant_id = fields.Many2one('stock.quant', 'Reserved Quant', help="Technical field containing the quant that created this link between an operation and a stock move. Used at the stock_move_obj.action_done() time to avoid seeking a matching quant again")
 
-from openerp import fields, models, api
 class StockWarehouseOrderpoint(models.Model):
     """
     Defines Minimum stock rules.
