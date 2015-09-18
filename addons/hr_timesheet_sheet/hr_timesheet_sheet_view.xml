@@ -127,7 +127,7 @@
                             <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to, 'default_is_timesheet' : 1}" name="timesheet_ids" nolabel="1">
                                 <tree editable="bottom" string="Timesheet Activities">
                                     <field name="date"/>
-                                    <field domain="[('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id, unit_amount, is_timesheet, context)" options="{'no_open': True, 'no_create': True}" context="{'default_use_timesheets': 1}"/>
+                                    <field name="account_id" options="{'no_open': True, 'no_create': True}"/>
                                     <field name="name"/>
                                     <field name="unit_amount" widget="float_time" string="Hours" sum="Hours"/>
                                     <field invisible="1" name="user_id" required="1"/>
@@ -135,7 +135,7 @@
                                 </tree>
                                 <form string="Timesheet Activities">
                                     <field name="date"/>
-                                    <field domain="[('use_timesheets','=',1)]" name="account_id"/>
+                                    <field name="account_id"/>
                                     <field name="name"/>
                                     <field name="unit_amount" widget="float_time"/>
                                     <field name="amount"/>
