@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
+from openerp import api, fields, models, _
+from openerp.exceptions import UserError
 
 
 class SaleOrderLine(models.Model):
@@ -45,6 +46,8 @@ class AccountAnalyticLine(models.Model):
 
     def _get_sale_order_line_vals(self):
         order = self.env['sale.order'].search([('project_id', '=', self.account_id.id), ('state', '=', 'sale')], limit=1)
+        if not order:
+            raise UserError(_('No valid Sale Order was found. Make sure that at least one Sale Order in state "Sale" is linked to the specified contract.'))
 
         last_so_line = self.env['sale.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
