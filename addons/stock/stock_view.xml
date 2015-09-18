@@ -1797,10 +1797,10 @@
                         <group>
                             <group>
                                 <field name="name" />
-                                <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                                <field name="product_id"/>
                             </group>
                             <group>
-                                <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
+                                <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
                                 <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                                 <field name="location_id" groups="stock.group_locations"/>
                                 <field name="group_id" groups="stock.group_adv_location"/>

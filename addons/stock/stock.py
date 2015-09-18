@@ -4506,31 +4506,32 @@ class stock_move_operation_link(osv.osv):
         'reserved_quant_id': fields.many2one('stock.quant', 'Reserved Quant', help="Technical field containing the quant that created this link between an operation and a stock move. Used at the stock_move_obj.action_done() time to avoid seeking a matching quant again"),
     }
 
-
-class stock_warehouse_orderpoint(osv.osv):
+from openerp import fields, models, api
+class StockWarehouseOrderpoint(models.Model):
     """
     Defines Minimum stock rules.
     """
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
 
-    def subtract_procurements_from_orderpoints(self, cr, uid, orderpoint_ids, context=None):
+    @api.multi
+    def subtract_procurements_from_orderpoints(self):
         '''This function returns quantity of product that needs to be deducted from the orderpoint computed quantity because there's already a procurement created with aim to fulfill it.
         '''
 
-        cr.execute("""select op.id, p.id, p.product_uom, p.product_qty, pt.uom_id, sm.product_qty from procurement_order as p left join stock_move as sm ON sm.procurement_id = p.id,
+        self._cr.execute("""select op.id, p.id, p.product_uom, p.product_qty, pt.uom_id, sm.product_qty from procurement_order as p left join stock_move as sm ON sm.procurement_id = p.id,
                                     stock_warehouse_orderpoint op, product_product pp, product_template pt
                                 WHERE p.orderpoint_id = op.id AND p.state not in ('done', 'cancel') AND (sm.state IS NULL OR sm.state not in ('draft'))
                                 AND pp.id = p.product_id AND pp.product_tmpl_id = pt.id
                                 AND op.id IN %s
                                 ORDER BY op.id, p.id
-                    """, (tuple(orderpoint_ids),))
-        results = cr.fetchall()
+                    """, (tuple(self.ids),))
+        results = self._cr.fetchall()
         current_proc = False
         current_op = False
-        uom_obj = self.pool.get("product.uom")
+        uom_obj = self.env["product.uom"]
         op_qty = 0
-        res = dict.fromkeys(orderpoint_ids, 0.0)
+        res = dict.fromkeys(self.ids, 0.0)
         for move_result in results:
             op = move_result[0]
             if current_op != op:
@@ -4540,14 +4541,16 @@ class stock_warehouse_orderpoint(osv.osv):
                 op_qty = 0
             proc = move_result[1]
             if proc != current_proc:
-                op_qty += uom_obj._compute_qty(cr, uid, move_result[2], move_result[3], move_result[4], round=False)
+                op_qty += uom_obj._compute_qty(move_result[2], move_result[3], move_result[4], round=False)
                 current_proc = proc
-            if move_result[5]: #If a move is associated (is move qty)
+            if move_result[5]:  # If a move is associated (is move qty)
                 op_qty -= move_result[5]
         if current_op:
             res[current_op] = op_qty
         return res
 
+    @api.multi
+    @api.depends('product_id', 'product_uom')
     def _check_product_uom(self, cr, uid, ids, context=None):
         '''
         Check if the UoM has the same category as the product standard UoM
@@ -4560,84 +4563,67 @@ class stock_warehouse_orderpoint(osv.osv):
                 return False
         return True
 
-    _columns = {
-        'name': fields.char('Name', required=True, copy=False),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
-        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type', '=', 'product')]),
-        'product_uom': fields.related('product_id', 'uom_id', type='many2one', relation='product.uom', string='Product Unit of Measure', readonly=True, required=True),
-        'product_min_qty': fields.float('Minimum Quantity', required=True,
-            digits_compute=dp.get_precision('Product Unit of Measure'),
-            help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "\
-            "a procurement to bring the forecasted quantity to the Max Quantity."),
-        'product_max_qty': fields.float('Maximum Quantity', required=True,
-            digits_compute=dp.get_precision('Product Unit of Measure'),
-            help="When the virtual stock goes below the Min Quantity, Odoo generates "\
-            "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity."),
-        'qty_multiple': fields.float('Qty Multiple', required=True,
-            digits_compute=dp.get_precision('Product Unit of Measure'),
-            help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.  "),
-        'procurement_ids': fields.one2many('procurement.order', 'orderpoint_id', 'Created Procurements'),
-        'group_id': fields.many2one('procurement.group', 'Procurement Group', help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by procurement rules will be grouped into one big picking.", copy=False),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'lead_days': fields.integer('Lead Time', help="Number of days after the orderpoint is triggered to receive the products or to order to the vendor"),
-        'lead_type': fields.selection([
-            ('net', 'Day(s) to get the products'),
-            ('supplier', 'Day(s) to purchase')
-         ], 'Lead Type', required=True)
-    }
-    _defaults = {
-        'active': lambda *a: 1,
-        'lead_days': lambda *a: 1,
-        'lead_type': lambda *a: 'supplier',
-        'qty_multiple': lambda *a: 1,
-        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').next_by_code(cr, uid, 'stock.orderpoint') or '',
-        'product_uom': lambda self, cr, uid, context: context.get('product_uom', False),
-        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=context)
-    }
+    name = fields.Char(required=True, copy=False, default=lambda self: self.env['ir.sequence'].next_by_code('stock.orderpoint') or '')
+    active = fields.Boolean(help="If the active field is set to False, it will allow you to hide the orderpoint without removing it.", default=lambda *a: 1)
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade")
+    location_id = fields.Many2one('stock.location', 'Location', required=True, ondelete="cascade")
+    product_id = fields.Many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type', '=', 'product')])
+    product_uom = fields.Many2one(related='product_id.uom_id', relation='product.uom', string='Product Unit of Measure', readonly=True, required=True, default=lambda self: self._context.get('product_uom'))
+    product_min_qty = fields.Float('Minimum Quantity', required=True,
+        digits_compute=dp.get_precision('Product Unit of Measure'),
+        help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "\
+        "a procurement to bring the forecasted quantity to the Max Quantity.")
+    product_max_qty = fields.Float('Maximum Quantity', required=True,
+        digits_compute=dp.get_precision('Product Unit of Measure'),
+        help="When the virtual stock goes below the Min Quantity, Odoo generates "\
+        "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity.")
+    qty_multiple = fields.Float('Qty Multiple', required=True,
+        digits_compute=dp.get_precision('Product Unit of Measure'),
+        help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.  ", default=lambda *a: 1)
+    procurement_ids = fields.One2many('procurement.order', 'orderpoint_id', 'Created Procurements')
+    group_id = fields.Many2one('procurement.group', 'Procurement Group', help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by procurement rules will be grouped into one big picking.", copy=False)
+    company_id = fields.Many2one('res.company', 'Company', required=True, default=lambda self: self.env.user.company_id)
+    lead_days = fields.Integer('Lead Time', help="Number of days after the orderpoint is triggered to receive the products or to order to the vendor", default=lambda *a: 1)
+    lead_type = fields.Selection([('net', 'Day(s) to get the products'), ('supplier', 'Day(s) to purchase')], 'Lead Type', required=True, default=lambda *a: 'supplier')
+
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
-    _constraints = [
-        (_check_product_uom, 'You have to select a product unit of measure in the same category than the default unit of measure of the product', ['product_id', 'product_uom']),
-    ]
+    # _constraints = [
+    #     (_check_product_uom, 'You have to select a product unit of measure in the same category than the default unit of measure of the product', ['product_id', 'product_uom']),
+    # ]
 
-    def default_get(self, cr, uid, fields, context=None):
-        warehouse_obj = self.pool.get('stock.warehouse')
-        res = super(stock_warehouse_orderpoint, self).default_get(cr, uid, fields, context)
+    @api.model
+    def default_get(self, fields):
+        warehouse_obj = self.env['stock.warehouse']
+        res = super(StockWarehouseOrderpoint, self).default_get(fields)
         # default 'warehouse_id' and 'location_id'
         if 'warehouse_id' not in res:
-            warehouse_ids = res.get('company_id') and warehouse_obj.search(cr, uid, [('company_id', '=', res['company_id'])], limit=1, context=context) or []
+            warehouse_ids = res.get('company_id') and warehouse_obj.search([('company_id', '=', res['company_id'])], limit=1).ids or []
             res['warehouse_id'] = warehouse_ids and warehouse_ids[0] or False
         if 'location_id' not in res:
-            res['location_id'] = res.get('warehouse_id') and warehouse_obj.browse(cr, uid, res['warehouse_id'], context).lot_stock_id.id or False
+            res['location_id'] = res.get('warehouse_id') and warehouse_obj.browse(res['warehouse_id']).lot_stock_id.id or False
         return res
 
-    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
+    @api.multi
+    @api.onchange('warehouse_id')
+    def onchange_warehouse_id(self):
         """ Finds location id for changed warehouse.
-        @param warehouse_id: Changed id of warehouse.
-        @return: Dictionary of values.
         """
-        if warehouse_id:
-            w = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
-            v = {'location_id': w.lot_stock_id.id}
-            return {'value': v}
-        return {}
+        if self.warehouse_id:
+            self.location_id = self.warehouse_id.lot_stock_id.id
 
-    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
+    @api.multi
+    @api.onchange('product_id')
+    def onchange_product_id(self):
         """ Finds UoM for changed product.
-        @param product_id: Changed id of product.
-        @return: Dictionary of values.
         """
-        if product_id:
-            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            d = {'product_uom': [('category_id', '=', prod.uom_id.category_id.id)]}
-            v = {'product_uom': prod.uom_id.id}
-            return {'value': v, 'domain': d}
+        if self.product_id:
+            d = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
+            self.product_uom = self.product_id.uom_id.id
+            return {'domain': d}
         return {'domain': {'product_uom': []}}
 
-from openerp import fields, models, api
 class StockPickingType(models.Model):
     _name = "stock.picking.type"
     _description = "The picking type determines the picking view"
