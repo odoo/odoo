@@ -140,12 +140,10 @@ def encode(s):
 
 # which elements are translated inline
 TRANSLATED_ELEMENTS = {
-    'abbr', 'audio', 'b', 'bdi', 'bdo', 'br', 'canvas', 'cite', 'code',
-    'data', 'datalist', 'del', 'dfn', 'em', 'embed', 'font', 'i', 'iframe',
-    'ins', 'kbd', 'keygen', 'map', 'mark', 'math', 'meter', 'object', 'output',
-    'progress', 'q', 'ruby', 's', 'samp', 'select', 'small', 'span', 'strong',
-    'sub', 'sup', 'svg', 'template', 'textarea', 'time', 'u', 'var', 'video',
-    'wbr', 'text',
+    'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
+    'font', 'i', 'ins', 'kbd', 'keygen', 'mark', 'math', 'meter', 'output',
+    'progress', 'q', 'ruby', 's', 'samp', 'small', 'span', 'strong', 'sub',
+    'sup', 'time', 'u', 'var', 'wbr', 'text',
 }
 
 # which attributes must be translated
