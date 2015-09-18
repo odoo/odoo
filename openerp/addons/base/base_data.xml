@@ -16,6 +16,7 @@
             <field name="code">en_US</field>
             <field name="name">English</field>
             <field name="translatable">True</field>
+            <field name="grouping">[1,1,1,1,1,1,1,1,1,1,-2]</field>
         </record>
 
         <function name="install_lang" model="res.lang"/>
@@ -124,7 +125,7 @@ Administrator</span>]]></field>
             <field name="name">Public user</field>
             <field name="active" eval="False"/>
         </record>
-        
+
         <record id="public_user" model="res.users">
             <field name="name">Public user</field>
             <field name="login">public</field>
