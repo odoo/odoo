@@ -113,7 +113,7 @@ class res_company(osv.osv):
         return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
 
     _columns = {
-        'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
+        'name': fields.related('partner_id', 'name', string='Company Name', required=True, store=True, type='char'),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
@@ -142,11 +142,11 @@ class res_company(osv.osv):
         'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country.state', string="Fed. State", multi='address'),
         'bank_ids': fields.one2many('res.partner.bank','company_id', 'Bank Accounts', help='Bank accounts related to this company'),
         'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'),
-        'email': fields.related('partner_id', 'email', size=64, type='char', string="Email", store=True),
-        'phone': fields.related('partner_id', 'phone', size=64, type='char', string="Phone", store=True),
+        'email': fields.related('partner_id', 'email', type='char', string="Email", store=True),
+        'phone': fields.related('partner_id', 'phone', type='char', string="Phone", store=True),
         'fax': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Fax", multi='address'),
-        'website': fields.related('partner_id', 'website', string="Website", type="char", size=64),
-        'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32),
+        'website': fields.related('partner_id', 'website', string="Website", type="char"),
+        'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char"),
         'company_registry': fields.char('Company Registry', size=64),
         'rml_paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True, oldname='paper_format'),
     }
