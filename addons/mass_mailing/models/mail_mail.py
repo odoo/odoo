@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import re
 import urlparse
 import werkzeug.urls
 
@@ -78,6 +79,10 @@ class MailMail(osv.Model):
         domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
         base = "<base href='%s'>" % domain
         body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
+        # resolve relative image url to absolute for outlook.com
+        def _sub_relative2absolute(match):
+            return match.group(1) + urlparse.urljoin(domain, match.group(2)) + '"'
+        body = re.sub('(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)"', _sub_relative2absolute, body)
 
         # generate tracking URL
         if mail.statistics_ids:
