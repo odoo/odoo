@@ -1484,11 +1484,17 @@ class stock_picking(models.Model):
         picking = op.picking_id
         ref = product.default_code
         name = '[' + ref + ']' + ' ' + product.name if ref else product.name
+        proc_id = False
+        for m in op.linked_move_operation_ids:
+            if m.move_id.procurement_id:
+                proc_id = m.move_id.procurement_id.id
+                break
         res = {
             'picking_id': picking.id,
             'location_id': picking.location_id.id,
             'location_dest_id': picking.location_dest_id.id,
             'product_id': product.id,
+            'procurement_id': proc_id,
             'product_uom': uom_id,
             'product_uom_qty': qty,
             'name': _('Extra Move: ') + name,
@@ -1506,8 +1512,7 @@ class stock_picking(models.Model):
         operation_obj = self.pool.get('stock.pack.operation')
         moves = []
         for op in picking.pack_operation_ids:
-            for product_id, remaining_qty in operation_obj._get_remaining_prod_quantities(cr, uid, op, context=context).items():
-                product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            for product, remaining_qty in operation_obj._get_remaining_prod_quantities(cr, uid, op, context=context).items():
                 if float_compare(remaining_qty, 0, precision_rounding=product.uom_id.rounding) > 0:
                     vals = self._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
                     moves.append(move_obj.create(cr, uid, vals, context=context))
@@ -4234,14 +4239,14 @@ class stock_pack_operation(osv.osv):
         '''Get the remaining quantities per product on an operation with a package. This function returns a dictionary'''
         #if the operation doesn't concern a package, it's not relevant to call this function
         if not operation.package_id or operation.product_id:
-            return {operation.product_id.id: operation.remaining_qty}
+            return {operation.product_id: operation.remaining_qty}
         #get the total of products the package contains
         res = self.pool.get('stock.quant.package')._get_all_products_quantities(cr, uid, operation.package_id.id, context=context)
         #reduce by the quantities linked to a move
         for record in operation.linked_move_operation_ids:
             if record.move_id.product_id.id not in res:
-                res[record.move_id.product_id.id] = 0
-            res[record.move_id.product_id.id] -= record.qty
+                res[record.move_id.product_id] = 0
+            res[record.move_id.product_id] -= record.qty
         return res
 
     def _get_remaining_qty(self, cr, uid, ids, name, args, context=None):
