@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 10:47+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-09-19 08:34+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +64,7 @@ msgid "Add"
 msgstr "Toevoegen"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:267
+#: code:addons/lunch/models/lunch.py:251
 #, python-format
 msgid "Alert"
 msgstr "Waarchuwing"
@@ -143,6 +143,7 @@ msgstr "Maaltijden annuleren"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "Cancelled"
 msgstr "Geannuleerd"
@@ -160,6 +161,7 @@ msgstr "Balans kasmutatie"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_name
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Category"
 msgstr "Categorie"
 
@@ -326,6 +328,7 @@ msgstr "Vrijdag"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
 msgstr "Groeperen op"
 
@@ -339,7 +342,7 @@ msgstr "Helpt u bij uw lunch benodigdheden. Als u een manager bent kunt u produc
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
-msgstr ""
+msgstr "Hier kan u aan alle categorieën voor de lunchproducten."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
@@ -386,12 +389,6 @@ msgstr "Ik voel me niet rijk"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_id
 msgid "ID"
 msgstr "ID"
-
-#. module: lunch
-#: code:addons/lunch/models/lunch.py:91
-#, python-format
-msgid "Insufficient balance"
-msgstr "Onvoldoende saldo"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_state
@@ -448,7 +445,7 @@ msgid "Lunch Alert"
 msgstr "Lunch waarschuwing"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:239
+#: code:addons/lunch/models/lunch.py:223
 #, python-format
 msgid "Lunch Cashmove"
 msgstr "Lunch kasmutatie"
@@ -505,6 +502,7 @@ msgid "Name/Date"
 msgstr "Naam/Datum"
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "New"
 msgstr "Nieuw"
@@ -623,6 +621,11 @@ msgid "Product Category:"
 msgstr "Productcategorie:"
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Product Search"
+msgstr "Zoek product"
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_order_line_ids
 #: model:ir.ui.menu,name:lunch.lunch_product_menu
@@ -652,6 +655,7 @@ msgstr "Maaltijden ontvangen"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "Received"
 msgstr "Ontvangen"
@@ -718,7 +722,7 @@ msgstr "Status"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
-msgstr ""
+msgstr "Overzicht van alle lunchorders, gegroepeerd op leverancier en op datum."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_sunday
@@ -731,16 +735,10 @@ msgid "The company this user is currently working for."
 msgstr "Het bedrijf waar deze gebruiker momenteel voor werkt."
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:114
+#: code:addons/lunch/models/lunch.py:98
 #, python-format
 msgid "The date of your order is in the past."
 msgstr "De datum van uw order is al gepasseerd."
-
-#. module: lunch
-#: code:addons/lunch/models/lunch.py:92
-#, python-format
-msgid "The total amount of the order is larger than the available balance"
-msgstr "Het totaalbedrag van het order is hoger dan uw beschikbare balans"
 
 #. module: lunch
 #. openerp-web
@@ -800,6 +798,7 @@ msgstr "Gebruikers"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_supplier_ids
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_supplier
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_supplier
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Vendor"
 msgstr "Fabrikant"
 
@@ -807,11 +806,6 @@ msgstr "Fabrikant"
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Vendor Orders by Month"
 msgstr "Leverancier orders per maand"
-
-#. module: lunch
-#: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "Warning : Your balance is insufficient."
-msgstr "Waarschuwing: Uw balans is onvoldoende."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_wednesday

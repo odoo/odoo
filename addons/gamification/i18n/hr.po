@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-07 18:30+0000\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-09-19 08:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -192,6 +192,12 @@ msgstr "Prihvati"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_action_id
 msgid "Action"
 msgstr "Akcija"
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_needaction
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_needaction
+msgid "Action Needed"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_active
@@ -903,12 +909,16 @@ msgid "If a maxium is set"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_message_needaction
 #: model:ir.model.fields,help:gamification.field_gamification_badge_message_unread
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_needaction
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_badge_message_needaction
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
@@ -1141,18 +1151,6 @@ msgid "Name"
 msgstr "Naziv"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_needaction
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_needaction_counter
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: gamification
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Never"
 msgstr "Nikad"
@@ -1199,9 +1197,15 @@ msgid "Notification Messages"
 msgstr ""
 
 #. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_needaction_counter
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_message_needaction_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: gamification

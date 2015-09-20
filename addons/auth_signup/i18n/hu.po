@@ -3,13 +3,14 @@
 # * auth_signup
 # 
 # Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-10 15:14+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-09-19 22:00+0000\n"
+"Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>Egy jelszó visszaállítás szükséges az email-ben elküldött Odoo rendszer fiókhoz..</p>\n\n<p>Megváltoztathatja a jelszavát a következő <a href=\"${object.signup_url}\">hivatkozást követve</a>, mely 24 órán keresztül elérhető.</p>\n\n<p>Megjegyzés: Ha ez az üzenet váratlanul érte, biztonsággal figyelmen kívül hagyhatja ezt az email-t.</p>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -68,14 +69,14 @@ msgstr "${object.company_id.name} meghívás az Odoo rendszer tartalmához"
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr ""
+msgstr "<strong>Ez a felhasználó igényel egy jelszó visszaállítást. A következő elérési úttal/linkkel küldtünk egy e-mail-t:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>Egy meghívó e-mail-t küldtünk a következő feliratkozási linkkel:</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -92,7 +93,7 @@ msgstr "Egy e-mail lett kiküldve a jelszava visszaállításának biztosítás�
 #: code:addons/auth_signup/controllers/main.py:108
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Azonosítás nem sikerült"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -104,12 +105,12 @@ msgstr "Vissza a bejelentkezéshez"
 #: code:addons/auth_signup/res_users.py:277
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Nem küldhető e-mail: a %s felhasználónak nincs e-mail címe."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Confirm"
-msgstr ""
+msgstr "Megerősítés"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -119,7 +120,7 @@ msgstr "Jelszó megerõsítése"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Connected"
-msgstr ""
+msgstr "Kapcsolódott"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:62
@@ -166,7 +167,7 @@ msgstr "Jelszó visszaállítás"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
 msgid "Private Profile"
-msgstr ""
+msgstr "Privát profil"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -177,7 +178,7 @@ msgstr "Jelszó visszaállítása"
 #: code:addons/auth_signup/res_users.py:250
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Jelszó visszaállító: hibás felhasználónév vagy jelszó"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -238,7 +239,7 @@ msgstr "Sablon felhasználó amit a új felhasznlók létrehozásához használ"
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "A teljes elérési út/URL  a dokumentum weboldalon keresztüli eléréséhez."
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 10:43+0000\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-09-19 08:21+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -48,6 +48,13 @@ msgstr "Un dictionar Python care va fi evaluat pentru a furniza valorile implici
 #: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
 #: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
 msgid "Acer Laptop"
+msgstr ""
+
+#. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction
+msgid "Action Needed"
 msgstr ""
 
 #. module: hr_equipment
@@ -475,14 +482,18 @@ msgid "IT Assets"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
+
+#. module: hr_equipment
+#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction
+#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
+#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
@@ -658,20 +669,6 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_0
 msgid "New Request"
 msgstr ""
@@ -687,10 +684,17 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction_counter
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction_counter
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: hr_equipment

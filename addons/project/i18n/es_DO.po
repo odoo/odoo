@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:26+0000\n"
-"PO-Revision-Date: 2015-09-10 15:19+0000\n"
+"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"PO-Revision-Date: 2015-09-19 08:24+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
@@ -94,6 +94,11 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat"
 msgstr ""
 
 #. module: project
@@ -299,7 +304,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
-"                            It replaces the standard Description area in Tasks and Issues, and is extremely useful for several cases."
+"                            It replaces the standard Description area in Tasks and Issues and is extremely useful for several cases."
 msgstr ""
 
 #. module: project
@@ -318,7 +323,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Add a Deadline</strong><br/>\n"
-"                                    The deadline will help you determine if a task or issue is progressing as expected, and to anticipate its next update."
+"                                    The deadline will help you determine if a task or issue is progressing as expected  and to anticipate its next update."
 msgstr ""
 
 #. module: project
@@ -387,12 +392,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Define a Naming Convention</strong><br/>\n"
-"                                    Add keywords in the 'Task title' field, for example [Customer name] or [Website].This will help you navigate and search through the dozens of tasks in your project."
+"                                    Add keywords in the 'Task title' field, for example [Customer name] or [Website]. This will help you navigate and search through the dozens of tasks in your project."
 msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-msgid "<strong>Enter you activities</strong> (every day)"
+msgid "<strong>Enter your activities</strong> (every day)"
 msgstr ""
 
 #. module: project
@@ -454,7 +459,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Have Clear Responsibilities</strong><br/>\n"
-"                                    The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, responsibility for a task can change depending on its stage."
+"                                    The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, the responsibility for a task can change depending on its stage."
 msgstr ""
 
 #. module: project
@@ -490,7 +495,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-msgid "<strong>Need help to structure your projects ?</strong><br/>"
+msgid "<strong>Need help to structure your projects?</strong><br/>"
 msgstr ""
 
 #. module: project
@@ -533,7 +538,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Set Priorities</strong><br/>\n"
-"                                    The <i class=\"fa fa-star\"/> is used to indicate priority: in Kanban view, priority Tasks or Issues will be displayed on top. This is especially useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab."
+"                                    The <i class=\"fa fa-star\"/> is used to indicate priority: in Kanban views, high priority Tasks or Issues will be displayed on top. This is particulary useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab."
 msgstr ""
 
 #. module: project
@@ -571,7 +576,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Use Status Indicator</strong><br/>\n"
-"                                    The Status indicator helps you manage Tasks and Issues by attributing them one of 3 different colour: Grey, Green or Red. The meaning of these Status can be freely configured, for example:"
+"                                    The Status indicator helps you manage Tasks and Issues by giving them one of 3 different colour: Grey, Green or Red. The meaning of these Statuses can be freely configured, for example:"
 msgstr ""
 
 #. module: project
@@ -588,7 +593,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-msgid "<strong>What do you expect</strong> from using Odoo Project?:"
+msgid "<strong>What do you expect</strong> from using Odoo Project?"
 msgstr ""
 
 #. module: project
@@ -602,7 +607,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>You have to manage versions and track changes</strong><br/>\n"
-"                            Etherpad auto-saves the document at regular, short intervals, and users can permanently save specific versions at any time.Plus, a \"time slider\" feature allows anyone to explore the history of the pad."
+"                            Etherpad auto-saves the document at regular short intervals and users can permanently save specific versions at any time. Plus, a \"time slider\" feature also allows anyone to explore the history of the pad."
 msgstr ""
 
 #. module: project
@@ -654,6 +659,19 @@ msgid "Account Preferences"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_message_needaction
+#: model:ir.model.fields,field_description:project.field_project_task_message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/web_planner_project.js:38
+#, python-format
+msgid "Action has a clear description"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Activate 'Allow invoicing based on timesheets' from the <i>Human Resources "
@@ -680,7 +698,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:55
 #, python-format
-msgid "Added in current sprit"
+msgid "Added in current sprint"
 msgstr ""
 
 #. module: project
@@ -858,7 +876,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"Back at the office, the manager splits the customer's demands into several "
+"Back at the office, the manager splits the customer's requests into several "
 "tasks and delegates them to several employees."
 msgstr ""
 
@@ -898,11 +916,16 @@ msgid "Blocked"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_crossovered_budget_line
+msgid "Budget Lines"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "But because change is never easy, we've created this Planner to guide you.<br/>\n"
-"                    For example, you'll understand why you shouldn’t use Odoo to plan, but instead to\n"
-"                    collaborate, or why organizing your projects by role is wrong."
+"                        For example, you'll understand why you shouldn’t use Odoo to plan but instead to\n"
+"                        collaborate, or why organizing your projects by role is wrong."
 msgstr ""
 
 #. module: project
@@ -940,6 +963,11 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_account_analytic_account_use_tasks
 #: model:ir.model.fields,help:project.field_project_project_use_tasks
 msgid "Check this box to manage internal activities through this project"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_use_timesheets
+msgid "Check this field if this project manages timesheets"
 msgstr ""
 
 #. module: project
@@ -1041,7 +1069,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-msgid "Consultancy mission"
+msgid "Consulting mission"
 msgstr ""
 
 #. module: project
@@ -1058,7 +1086,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-msgid "Control quality and satisfaction of projects"
+msgid "Control projects quality and satisfaction"
 msgstr ""
 
 #. module: project
@@ -1087,7 +1115,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"Create a task by sending an email to a project alias, with one of your "
+"Create a task by sending an email to a project alias with one of your "
 "colleagues in copy"
 msgstr ""
 
@@ -1190,7 +1218,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:73
 #, python-format
-msgid "Customer feedback has been asked"
+msgid "Customer feedback has been requested"
 msgstr ""
 
 #. module: project
@@ -1217,6 +1245,11 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer support tickets"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Customization"
 msgstr ""
 
 #. module: project
@@ -1284,9 +1317,14 @@ msgstr "Eliminar"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"Depending on what you need and how you want to manage, there are several "
-"ways to do things in Odoo. First, choose if you want to think in terms of "
-"tasks or issues. Then, activate Timesheets if you need them."
+"Depending on what you need and how you want to operate, there are several "
+"ways to work with Odoo. First, decide if you want to think in terms of tasks"
+" or issues. Then, activate the Timesheets app if you need it."
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Deploy"
 msgstr ""
 
 #. module: project
@@ -1302,11 +1340,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Description"
 msgstr "Descripción"
-
-#. module: project
-#: model:ir.ui.view,arch_db:project.project_planner
-msgid "Detect problems and blocking points more easily"
-msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1428,8 +1461,8 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"Each employee will have their own simple task, while the manager will be "
-"able to follow the global advancement from the Kanban view of the project."
+"Each employee will have his own task, while the manager will be able to "
+"follow the global progress in the Kanban view of the project."
 msgstr ""
 
 #. module: project
@@ -1446,6 +1479,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Emails"
 msgstr "Correo"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "End"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_end_date
@@ -1504,7 +1542,7 @@ msgstr "Ejemplos"
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:74
 #, python-format
-msgid "Expert advice has been asked"
+msgid "Expert advice has been requested"
 msgstr ""
 
 #. module: project
@@ -1598,15 +1636,15 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"For the Odoo Team,<br/>\n"
-"                        Fabien Pinckaers, Founder"
+"For the same reason, don't create a Project based on weeks or time (example:"
+" Scrum)."
 msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"For the same reason, don't create a Project based on weeks or time (example:"
-" Scrum)."
+"From the Odoo Team,<br/>\n"
+"                            Fabien Pinckaers, Founder"
 msgstr ""
 
 #. module: project
@@ -1632,6 +1670,11 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get it on Google Play"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Get more apps"
 msgstr ""
 
 #. module: project
@@ -1672,13 +1715,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Group By"
 msgstr "Agrupar por"
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:38
-#, python-format
-msgid "Has a clear description"
-msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -1771,12 +1807,21 @@ msgid "Ideas"
 msgstr "Ideas"
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project_message_needaction
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Identify problems and blocking points more easily"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,help:project.field_project_project_message_unread
-#: model:ir.model.fields,help:project.field_project_task_message_needaction
 #: model:ir.model.fields,help:project.field_project_task_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_message_needaction
+#: model:ir.model.fields,help:project.field_project_task_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -1808,10 +1853,20 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Implement"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Important Messages"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Improve"
 msgstr ""
 
 #. module: project
@@ -1894,7 +1949,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:75
 #, python-format
-msgid "Issue is solved"
+msgid "Issue is resolved"
 msgstr ""
 
 #. module: project
@@ -1921,14 +1976,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "It is time to think about how you will transform your activities into real projects in Odoo.<br/>\n"
-"                        For that, the most important step is defining the stages of your projects, mainly the different steps a task or an issue can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects."
+"                        For that, the most important part is defining the stages of your projects. Stages are the different steps a task or an issue can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects."
 msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "It's essential to be clear about why you want to use Odoo Project and what your goals are.\n"
-"                        Indeed, there are many ways to manage a project; to find the best one for you, you need know exactly what you want to achieve. And later on, we will hopefully transform your objectives into real improvements for your company."
+"                        Indeed, there are many ways to manage a project, to find the best one for you, you need to know exactly what you want to achieve. And later on, we will hopefully transform your objectives into real improvements for your company."
 msgstr ""
 
 #. module: project
@@ -1958,6 +2013,11 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Kanban Stage"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Kanban Stages"
 msgstr ""
 
 #. module: project
@@ -2148,18 +2208,6 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_needaction
-#: model:ir.model.fields,field_description:project.field_project_task_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_needaction_counter
-#: model:ir.model.fields,field_description:project.field_project_task_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: project
 #: model:project.task.type,legend_blocked:project.project_stage_1
 msgid "Need functional or technical help"
 msgstr ""
@@ -2218,6 +2266,17 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Notifications"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_message_needaction_counter
+#: model:ir.model.fields,field_description:project.field_project_task_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
 msgid "Number of Days to Open the task"
 msgstr ""
@@ -2235,7 +2294,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_task_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: project
@@ -2248,8 +2307,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
-"                    everyone in your company. Follow how things progress, see when things are stuck, know\n"
-"                    who's in charge, everything in one place."
+"                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
+"                        who's in charge, all in one place."
 msgstr ""
 
 #. module: project
@@ -2296,6 +2355,11 @@ msgstr ""
 msgid ""
 "Or, if you are using Issues, by activating 'Activate timesheets on issues', "
 "also in the"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Organize meetings"
 msgstr ""
 
 #. module: project
@@ -2418,6 +2482,11 @@ msgid ""
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document\n"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Prepare"
 msgstr ""
 
 #. module: project
@@ -2652,10 +2721,20 @@ msgid "Repair is completed"
 msgstr ""
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Reporting"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:89
 #, python-format
 msgid "Request for parts has been sent"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Responsibilities"
 msgstr ""
 
 #. module: project
@@ -2996,6 +3075,11 @@ msgid "Tasks"
 msgstr ""
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Tasks &amp; Issues"
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree_filtered
 #: model:ir.ui.view,arch_db:project.view_task_project_user_graph
@@ -3055,11 +3139,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "The Odoo Project app can be used to manage many activities, from the "
-"development of a new product to the daily operation of a customer support. "
-"With a little creativity, it can even be used to manage your marketing "
+"development of a new product to the daily operations of a customer support. "
+"With some creativity, it can even be used to manage your marketing "
 "communications or personal projects. But just because it can be done doesn't"
-" mean it's a good idea: let's start by helping you understand what can be a "
-"good project."
+" mean it's always a good idea: let's start by helping you understand what "
+"can be a good project."
 msgstr ""
 
 #. module: project
@@ -3154,7 +3238,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "This whole process might take you a few hours, but don't worry, you can take a break and\n"
-"                    return to it at any time: your progress is automatically saved."
+"                        return to it at any time: your progress is automatically saved."
 msgstr ""
 
 #. module: project
@@ -3192,6 +3276,11 @@ msgid "Timesheet UoM"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_use_timesheets
+msgid "Timesheets"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets Invoicing"
 msgstr ""
@@ -3201,7 +3290,7 @@ msgstr ""
 msgid ""
 "Timesheets are often essential for running a company.<br/>\n"
 "                    They are also prone to human error, repetitive, annoying, and sometimes stressful to employees.<br/>\n"
-"                    Fortunately, Odoo has may solutions to make them as efficient and painless as possible!<br/>"
+"                    Fortunately, Odoo has several solutions to make them as efficient and painless as possible!<br/>"
 msgstr ""
 
 #. module: project
@@ -3235,7 +3324,7 @@ msgstr "Por hacer"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"To configure these Kanban Status, go to the 'Project Stages' tab of a "
+"To configure these Kanban Statuses, go to the 'Project Stages' tab of a "
 "Project."
 msgstr ""
 
@@ -3292,6 +3381,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
 msgid "Use Tasks as"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Use Timesheets"
 msgstr ""
 
 #. module: project
@@ -3403,6 +3497,11 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
+msgid "Welcome"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "What is the average number of working hours necessary to close an issue?"
 msgstr ""
@@ -3425,7 +3524,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-msgid "What is their average number of tasks or issues worked on / closed ?"
+msgid "What is their average number of tasks or issues worked on / closed?"
 msgstr ""
 
 #. module: project
@@ -3473,7 +3572,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"You can learn more about Timesheets in the Timesheets section of this "
+"You can learn more about Timesheets in the 'Use Timesheets' section of this "
 "planner."
 msgstr ""
 
@@ -3503,6 +3602,21 @@ msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
 "project's tasks and then delete the project or simply deactivate the "
 "project."
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Your Activities"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Your Objectives"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Your Projects"
 msgstr ""
 
 #. module: project

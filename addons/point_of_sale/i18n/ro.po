@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-08 06:37+0000\n"
+"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"PO-Revision-Date: 2015-09-19 08:19+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -93,6 +93,16 @@ msgstr ""
 msgid ""
 "<span class=\"o_stat_text\">Put</span>\n"
 "                                    <span class=\"o_stat_text\">Money In</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "<span class=\"o_stat_text\">Set Closing Balance</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "<span class=\"o_stat_text\">Set Opening Balance</span>"
 msgstr ""
 
 #. module: point_of_sale
@@ -832,6 +842,11 @@ msgid "Carrots"
 msgstr "Morcovi"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_cash_control
+msgid "Cash Control"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_journal_id
 msgid "Cash Journal"
 msgstr "Registru de Numerar"
@@ -845,6 +860,12 @@ msgstr "Jurnale Numerar"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_id
 msgid "Cash Register"
 msgstr "Casa de marcat"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:364
+#, python-format
+msgid "Cash control can only be applied to cash journals."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
@@ -910,6 +931,11 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_product_template_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
 msgstr "Selectati daca doriti ca acest produs sa apara in Punctul de Vanzare"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config_cash_control
+msgid "Check the amount of the cashbox at opening and closing."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_journal_journal_user
@@ -1006,7 +1032,7 @@ msgid "Close"
 msgstr "Închide"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:166
+#: code:addons/point_of_sale/point_of_sale.py:167
 #: selection:pos.session,state:0
 #, python-format
 msgid "Closed & Posted"
@@ -1020,7 +1046,7 @@ msgid "Closing ..."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:165
+#: code:addons/point_of_sale/point_of_sale.py:166
 #: selection:pos.session,state:0
 #, python-format
 msgid "Closing Control"
@@ -1195,7 +1221,7 @@ msgid "Customer"
 msgstr "Client"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1155
+#: code:addons/point_of_sale/point_of_sale.py:1168
 #, python-format
 msgid "Customer Invoice"
 msgstr "Factura client"
@@ -1529,7 +1555,7 @@ msgid "Error ! You cannot create recursive categories."
 msgstr "Eroare ! Nu puteti crea categorii recursive."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1539
+#: code:addons/point_of_sale/point_of_sale.py:1552
 #, python-format
 msgid "Error!"
 msgstr "Eroare!"
@@ -1848,14 +1874,14 @@ msgid "In Cluster Tomatoes"
 msgstr "Rosii in Ciorchine"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:164
+#: code:addons/point_of_sale/point_of_sale.py:165
 #: selection:pos.session,state:0
 #, python-format
 msgid "In Progress"
 msgstr "În desfășurare"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:790
+#: code:addons/point_of_sale/point_of_sale.py:803
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
 msgstr "Pentru a putea sterge o vanzare, trebuie sa fie noua sau anulata."
@@ -2143,7 +2169,7 @@ msgid "Miscellaneous"
 msgstr "Diverse"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:929
+#: code:addons/point_of_sale/point_of_sale.py:942
 #, python-format
 msgid ""
 "Missing source or destination location for picking type %s. Please configure"
@@ -2221,7 +2247,7 @@ msgid "Next Partner Review"
 msgstr "Urmatoarea Verificare a Partenerului"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:731
+#: code:addons/point_of_sale/point_of_sale.py:744
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -2380,7 +2406,7 @@ msgid "Opening Balance"
 msgstr "Sold initial"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:163
+#: code:addons/point_of_sale/point_of_sale.py:164
 #: selection:pos.session,state:0
 #, python-format
 msgid "Opening Control"
@@ -2678,13 +2704,13 @@ msgid "Please Confirm Large Amount"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1282
+#: code:addons/point_of_sale/point_of_sale.py:1295
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Va rugam sa definiti contul de venituri pentru acest produs: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1102
+#: code:addons/point_of_sale/point_of_sale.py:1115
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Va rugam sa furnizati un partener pentru vanzare."
@@ -3066,7 +3092,7 @@ msgid "Resume"
 msgstr "Reluati"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1072
+#: code:addons/point_of_sale/point_of_sale.py:1085
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
@@ -3255,7 +3281,7 @@ msgid "Select User"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1190
+#: code:addons/point_of_sale/point_of_sale.py:1203
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr "Comenzile selectate nu au aceeasi sesiune!"
@@ -3285,7 +3311,7 @@ msgid "Server Error"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:325
+#: code:addons/point_of_sale/point_of_sale.py:326
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_session_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
@@ -3605,7 +3631,7 @@ msgid "Take Money Out"
 msgstr "Scoateti bani"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1312
+#: code:addons/point_of_sale/point_of_sale.py:1325
 #, python-format
 msgid "Tax"
 msgstr "Taxa"
@@ -3652,7 +3678,7 @@ msgid "Tendered"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1269
+#: code:addons/point_of_sale/point_of_sale.py:1282
 #, python-format
 msgid "The POS order must have lines when calling this method"
 msgstr "Comanda din PDV trebuie sa aiba linii atunci cand se foloseste aceasta metoda"
@@ -3793,7 +3819,7 @@ msgid "The transactions are processed by MercuryPay"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:599
+#: code:addons/point_of_sale/point_of_sale.py:612
 #, python-format
 msgid ""
 "The type of the journal for your payment method should be bank or cash "
@@ -3830,7 +3856,7 @@ msgid "There is no cash register for this PoS Session"
 msgstr "Nu exista nicio casa de marcat pentru Sesiunea acestui PdV"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1019
+#: code:addons/point_of_sale/point_of_sale.py:1032
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
@@ -3838,7 +3864,7 @@ msgid ""
 msgstr "Nu exista un cont de creante definit pentru a efectua plata pentru partenerul: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1017
+#: code:addons/point_of_sale/point_of_sale.py:1030
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr "Nu exista un cont de creante definit pentru a face plata."
@@ -3982,7 +4008,7 @@ msgid "To Weigh With Scale"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1056
+#: code:addons/point_of_sale/point_of_sale.py:1069
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
@@ -4067,7 +4093,7 @@ msgid "Total:"
 msgstr "Total:"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1324
+#: code:addons/point_of_sale/point_of_sale.py:1337
 #, python-format
 msgid "Trade Receivables"
 msgstr "Creante Comerciale"
@@ -4083,13 +4109,13 @@ msgid "URI for tuto"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:982
+#: code:addons/point_of_sale/point_of_sale.py:995
 #, python-format
 msgid "Unable to cancel the picking."
 msgstr "Nu s-a putut anula ridicarea."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:500
+#: code:addons/point_of_sale/point_of_sale.py:505
 #, python-format
 msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
@@ -4261,7 +4287,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:777
+#: code:addons/point_of_sale/point_of_sale.py:790
 #, python-format
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
@@ -4269,7 +4295,7 @@ msgid ""
 msgstr "Nu se poate schimba partenerul pe un bon de POS pentru care a fost deja emisa o factură."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:627
+#: code:addons/point_of_sale/point_of_sale.py:640
 #, python-format
 msgid ""
 "You cannot confirm all orders of this session, because they have not the "
@@ -4288,7 +4314,7 @@ msgid "You cannot create two active sessions with the same responsible!"
 msgstr "Nu puteti crea doua sesiuni active cu acelasi responsabil!"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1540
+#: code:addons/point_of_sale/point_of_sale.py:1553
 #, python-format
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
@@ -4305,7 +4331,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:640
+#: code:addons/point_of_sale/point_of_sale.py:653
 #, python-format
 msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
@@ -4325,19 +4351,19 @@ msgid ""
 msgstr "Trebuie sa definiti metoda de plata care trebuie sa fie disponibila in punctul de vanzare refolosind banca si numerarul existent prin \"Contabilitate / Configurare / Registre / Registre\". Selectati un registru si campul \"Metoda de Plata PdV\" din tabul \"Punct de Vanzare\". De asemenea, puteti sa creati noi metode de plata direct din meniul \"Backend PdV / Configurare / Metode de Plata'."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1033
+#: code:addons/point_of_sale/point_of_sale.py:1046
 #, python-format
 msgid "You have to open at least one cashbox."
 msgstr "Trebuie sa deschideti cel putin o caseta de numerar."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1420
+#: code:addons/point_of_sale/point_of_sale.py:1433
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1405
+#: code:addons/point_of_sale/point_of_sale.py:1418
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
@@ -4359,7 +4385,7 @@ msgid "You need to select the customer before you can invoice an order."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:486
+#: code:addons/point_of_sale/point_of_sale.py:491
 #, python-format
 msgid "You should assign a Point of Sale to your session."
 msgstr "Ar trebui sa atribuiti un Punct de Vanzare sesiunii dumneavoastra."
@@ -4379,7 +4405,7 @@ msgid "Your Internet connection is probably down."
 msgstr "Conectivitatea la internet este probabil căzută."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:597
+#: code:addons/point_of_sale/point_of_sale.py:610
 #, python-format
 msgid ""
 "Your ending balance is too different from the theoretical cash closing "
@@ -4487,7 +4513,7 @@ msgid "for an order of"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:170
+#: code:addons/point_of_sale/point_of_sale.py:171
 #, python-format
 msgid "not used"
 msgstr "neutilizat"
@@ -4556,7 +4582,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/point_of_sale.py:736
+#: code:addons/point_of_sale/point_of_sale.py:749
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1392
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1447
 #, python-format

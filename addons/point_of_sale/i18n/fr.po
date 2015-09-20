@@ -3,12 +3,14 @@
 # * point_of_sale
 # 
 # Translators:
+# Sylvain LE GAL <sylvain.legal@grap.coop>, 2015
+# user 2 odoo <user2odoo@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-14 08:24+0000\n"
+"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"PO-Revision-Date: 2015-09-19 08:19+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -93,6 +95,16 @@ msgstr ""
 msgid ""
 "<span class=\"o_stat_text\">Put</span>\n"
 "                                    <span class=\"o_stat_text\">Money In</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "<span class=\"o_stat_text\">Set Closing Balance</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "<span class=\"o_stat_text\">Set Opening Balance</span>"
 msgstr ""
 
 #. module: point_of_sale
@@ -832,6 +844,11 @@ msgid "Carrots"
 msgstr "Carottes"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_cash_control
+msgid "Cash Control"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_journal_id
 msgid "Cash Journal"
 msgstr "Journal de caisse"
@@ -845,6 +862,12 @@ msgstr "Journaux de caisse"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_id
 msgid "Cash Register"
 msgstr "Caisse"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:364
+#, python-format
+msgid "Cash control can only be applied to cash journals."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
@@ -910,6 +933,11 @@ msgstr "Cocher si le produit peut être pesé par une balance éléctronique"
 #: model:ir.model.fields,help:point_of_sale.field_product_template_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
 msgstr "Cochez si vous voulez que cet article apparaisse dans le point de vente"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config_cash_control
+msgid "Check the amount of the cashbox at opening and closing."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_journal_journal_user
@@ -1006,7 +1034,7 @@ msgid "Close"
 msgstr "Fermer"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:166
+#: code:addons/point_of_sale/point_of_sale.py:167
 #: selection:pos.session,state:0
 #, python-format
 msgid "Closed & Posted"
@@ -1020,7 +1048,7 @@ msgid "Closing ..."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:165
+#: code:addons/point_of_sale/point_of_sale.py:166
 #: selection:pos.session,state:0
 #, python-format
 msgid "Closing Control"
@@ -1195,7 +1223,7 @@ msgid "Customer"
 msgstr "Client"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1155
+#: code:addons/point_of_sale/point_of_sale.py:1168
 #, python-format
 msgid "Customer Invoice"
 msgstr "Facture client"
@@ -1529,7 +1557,7 @@ msgid "Error ! You cannot create recursive categories."
 msgstr "Erreur ! Vous ne pouvez pas créer de catégories récursives."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1539
+#: code:addons/point_of_sale/point_of_sale.py:1552
 #, python-format
 msgid "Error!"
 msgstr "Erreur!"
@@ -1848,14 +1876,14 @@ msgid "In Cluster Tomatoes"
 msgstr "Tomates grappe"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:164
+#: code:addons/point_of_sale/point_of_sale.py:165
 #: selection:pos.session,state:0
 #, python-format
 msgid "In Progress"
 msgstr "En cours"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:790
+#: code:addons/point_of_sale/point_of_sale.py:803
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
 msgstr "Avant de pouvoir supprimer une vente, elle doit être à l'état 'Nouveau' ou 'Annulé'"
@@ -2143,7 +2171,7 @@ msgid "Miscellaneous"
 msgstr "Divers"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:929
+#: code:addons/point_of_sale/point_of_sale.py:942
 #, python-format
 msgid ""
 "Missing source or destination location for picking type %s. Please configure"
@@ -2221,7 +2249,7 @@ msgid "Next Partner Review"
 msgstr "Prochaine révision du partenaire"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:731
+#: code:addons/point_of_sale/point_of_sale.py:744
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -2380,7 +2408,7 @@ msgid "Opening Balance"
 msgstr "Solde initial"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:163
+#: code:addons/point_of_sale/point_of_sale.py:164
 #: selection:pos.session,state:0
 #, python-format
 msgid "Opening Control"
@@ -2678,13 +2706,13 @@ msgid "Please Confirm Large Amount"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1282
+#: code:addons/point_of_sale/point_of_sale.py:1295
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Veuillez définir un compte de revenu pour cet article : \"%s\" (id. : %d)"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1102
+#: code:addons/point_of_sale/point_of_sale.py:1115
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Veuiller renseigner un client"
@@ -3066,7 +3094,7 @@ msgid "Resume"
 msgstr "Curriculum vitæ"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1072
+#: code:addons/point_of_sale/point_of_sale.py:1085
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
@@ -3255,7 +3283,7 @@ msgid "Select User"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1190
+#: code:addons/point_of_sale/point_of_sale.py:1203
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr "Les commandes sélectionnées n'ont pas la même session !"
@@ -3285,7 +3313,7 @@ msgid "Server Error"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:325
+#: code:addons/point_of_sale/point_of_sale.py:326
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_session_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
@@ -3605,7 +3633,7 @@ msgid "Take Money Out"
 msgstr "Retirer de l'argent"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1312
+#: code:addons/point_of_sale/point_of_sale.py:1325
 #, python-format
 msgid "Tax"
 msgstr "Taxe"
@@ -3652,7 +3680,7 @@ msgid "Tendered"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1269
+#: code:addons/point_of_sale/point_of_sale.py:1282
 #, python-format
 msgid "The POS order must have lines when calling this method"
 msgstr "Le point de vente doit avoir des lignes lors de l'appel à cette méthode"
@@ -3793,7 +3821,7 @@ msgid "The transactions are processed by MercuryPay"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:599
+#: code:addons/point_of_sale/point_of_sale.py:612
 #, python-format
 msgid ""
 "The type of the journal for your payment method should be bank or cash "
@@ -3830,7 +3858,7 @@ msgid "There is no cash register for this PoS Session"
 msgstr "Il n'y a pas de caisse pour ce point de vente"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1019
+#: code:addons/point_of_sale/point_of_sale.py:1032
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
@@ -3838,7 +3866,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1017
+#: code:addons/point_of_sale/point_of_sale.py:1030
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr ""
@@ -3982,7 +4010,7 @@ msgid "To Weigh With Scale"
 msgstr "A peser avec une balance"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1056
+#: code:addons/point_of_sale/point_of_sale.py:1069
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
@@ -4067,7 +4095,7 @@ msgid "Total:"
 msgstr "Total:"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1324
+#: code:addons/point_of_sale/point_of_sale.py:1337
 #, python-format
 msgid "Trade Receivables"
 msgstr ""
@@ -4083,13 +4111,13 @@ msgid "URI for tuto"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:982
+#: code:addons/point_of_sale/point_of_sale.py:995
 #, python-format
 msgid "Unable to cancel the picking."
 msgstr "Impossible d'annuler le bon de préparation"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:500
+#: code:addons/point_of_sale/point_of_sale.py:505
 #, python-format
 msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
@@ -4261,7 +4289,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:777
+#: code:addons/point_of_sale/point_of_sale.py:790
 #, python-format
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
@@ -4269,7 +4297,7 @@ msgid ""
 msgstr "Vous ne pouvez pas changer le partenaire d'une commande de PdV quand une facture a déjà été créée."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:627
+#: code:addons/point_of_sale/point_of_sale.py:640
 #, python-format
 msgid ""
 "You cannot confirm all orders of this session, because they have not the "
@@ -4288,7 +4316,7 @@ msgid "You cannot create two active sessions with the same responsible!"
 msgstr "Vous ne pouvez pas créer deux sessions actives avec le même responsable !"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1540
+#: code:addons/point_of_sale/point_of_sale.py:1553
 #, python-format
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
@@ -4305,7 +4333,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:640
+#: code:addons/point_of_sale/point_of_sale.py:653
 #, python-format
 msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
@@ -4325,19 +4353,19 @@ msgid ""
 msgstr "Vous devez indiquer les moyen de paiements utilisables dans le point de vente en réutilisant des comptes existant dans \"Comptabilité / Configuration / Journaux / Journaux\". Choisissez un journal, et cochez le champ \"Moyen de paiement PdV\" dans l'onglet \"Point de vente\". Vous pouvez également créer de nouveaux moyens de paiement directement depuis le menu \"Point de vente / Configuration / Moyens de paiement\"."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1033
+#: code:addons/point_of_sale/point_of_sale.py:1046
 #, python-format
 msgid "You have to open at least one cashbox."
 msgstr "Vous devez ouvrir au moins une caisse."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1420
+#: code:addons/point_of_sale/point_of_sale.py:1433
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1405
+#: code:addons/point_of_sale/point_of_sale.py:1418
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
@@ -4359,7 +4387,7 @@ msgid "You need to select the customer before you can invoice an order."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:486
+#: code:addons/point_of_sale/point_of_sale.py:491
 #, python-format
 msgid "You should assign a Point of Sale to your session."
 msgstr "Vous devez affecter un point de vente à votre session."
@@ -4379,7 +4407,7 @@ msgid "Your Internet connection is probably down."
 msgstr "Votre connexion internet est probablement coupée."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:597
+#: code:addons/point_of_sale/point_of_sale.py:610
 #, python-format
 msgid ""
 "Your ending balance is too different from the theoretical cash closing "
@@ -4487,7 +4515,7 @@ msgid "for an order of"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:170
+#: code:addons/point_of_sale/point_of_sale.py:171
 #, python-format
 msgid "not used"
 msgstr "inutilisé"
@@ -4556,7 +4584,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/point_of_sale.py:736
+#: code:addons/point_of_sale/point_of_sale.py:749
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1392
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1447
 #, python-format
