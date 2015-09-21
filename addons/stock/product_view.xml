@@ -199,11 +199,11 @@
                         <button string="Update Qty On Hand"
                             type="action"
                             name="%(action_view_change_product_quantity)d"
-                            attrs="{'invisible': [('type', '!=', 'consu')]}"/>
+                            attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Procurement Request"
                             type="action"
                             name="%(stock.act_make_procurement)d"
-                            attrs="{'invisible': [('type', '!=', 'consu')]}"/>
+                            attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                     <div name="button_box" position="inside">
                         <button class="oe_stat_button"
