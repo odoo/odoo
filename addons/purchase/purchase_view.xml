@@ -13,6 +13,11 @@
         <menuitem id="menu_procurement_management" name="Purchase"
             parent="base.menu_purchase_root" sequence="1" />
 
+        <!--Supplier menu-->
+        <menuitem id="base.menu_procurement_management_supplier_name" name="Vendors"
+            parent="menu_procurement_management"
+            action="base.action_partner_supplier_form" sequence="15"/>
+
         <menuitem id="menu_purchase_config" name="Configuration" parent="base.menu_purchase_root" sequence="100" groups="group_purchase_manager,base.group_configuration"/>
 
         <menuitem
@@ -21,7 +26,7 @@
 
         <menuitem
            action="product.product_supplierinfo_type_action" id="menu_product_pricelist_action2_purchase"
-           parent="menu_purchase_config_pricelist" sequence="1" groups="base.group_no_one"/>
+           parent="menu_procurement_management" sequence="16" groups="purchase.group_manage_vendor_price"/>
 
         <menuitem
             id="menu_product_in_config_purchase" name="Products"
@@ -43,10 +48,6 @@
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
               parent="purchase.menu_product_in_config_purchase" sequence="5"/>
 
-    <!--Supplier menu-->
-    <menuitem id="base.menu_procurement_management_supplier_name" name="Vendors"
-        parent="menu_procurement_management"
-        action="base.action_partner_supplier_form" sequence="15"/>
 
     <!-- Purchase Control Menu -->
     <menuitem id="menu_purchase_control" name="Control" parent="base.menu_purchase_root" sequence="4"/>
@@ -149,7 +150,7 @@
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                     <button name="button_done" type="object" string="Set to Done" states="purchase"
-                        help="If a purchase order is done, you can not modify it manually anymore. But you will still be able to bill or receive."/>
+                        help="If a purchase order is done, you cannot modify it manually anymore. You will not be able to receive invoices anymore for this purchase order."/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1" />
                 </header>
                 <sheet>
@@ -296,7 +297,7 @@
 
 
         <!-- Purchase Orders Kanban View  -->
-        <record model="ir.ui.view" id="view_sale_order_kanban">
+        <record model="ir.ui.view" id="view_purchase_order_kanban">
             <field name="name">purchase.order.kanban</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
@@ -306,6 +307,7 @@
                     <field name="amount_total"/>
                     <field name="state"/>
                     <field name="date_order"/>
+                    <field name="currency_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -313,8 +315,8 @@
                                     <div class="col-xs-6">
                                         <strong><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <strong><span class="pull-right text-right"><t t-esc="record.amount_total.value"/></span></strong>
+                                    <div class="col-xs-6 pull-right text-right">
+                                        <strong><field name="amount_total" widget="monetary"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -524,11 +526,9 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='property_account_income_categ_id']" position="before">
-                        <field name="property_account_creditor_price_difference_categ" domain="[('deprecated','=',False)]"/>
-                    </xpath>
-                </data>
+                <field name="property_account_income_categ_id" position="before">
+                    <field name="property_account_creditor_price_difference_categ" domain="[('deprecated','=',False)]"/>
+                </field>
             </field>
         </record>
 

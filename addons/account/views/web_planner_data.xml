@@ -5,36 +5,49 @@
     <template id="account_planner">
         <t t-call="web_planner.pages">
             <t t-call="web_planner.page">
-                <t t-set="page_title" t-value="'Welcome'"/>
+                <t t-set="page_title">Welcome</t>
                 <t t-set="hide_mark_as_done" t-value="True"/>
-                <i><p>
-                    This guide will help you get started with Odoo Accounting.
-                </p></i>
-                <p>Once you're done, you'll benefit from:</p>
-                <p>
+                <div class="o_planner_intro">
+                    <p>
+                        This guide will help you get started with Odoo Accounting.
+                        Once you're done, you'll benefit from:
+                    </p>
                     <ul>
-                        <li><strong>Reduced data entry:</strong> no need to manually create every invoice, register bank statements, follow-up payments, etc.</li>
-                        <li><strong>Clean customer invoices:</strong> easy to create, beautiful and fully featured invoices (payment terms, multiple taxes, discounts, etc).</li>
-                        <li><strong>Automated documents sending:</strong> automatically print, send and deliver your invoices &amp; letters by regular mail or email.</li>
-                        <li><strong>On-the-fly payment reconciliation:</strong> automatic suggestion of outstanding payments when creating an invoice.</li>
-                        <li><strong>Bank interface:</strong> your bank statements are automatically synchronized with your bank.</li>
+                        <li><strong>Reduced data entry:</strong> no need to manually create invoices, register bank statements, follow-up payments,</li>
+                        <li><strong>Clean customer invoices:</strong> easy to create, beautiful and full featured invoices,</li>
+                        <li><strong>Automated documents sending:</strong> automatically send your invoices by email or regular mail,</li>
+                        <li><strong>On-the-fly payment reconciliation:</strong> automatic suggestion of outstanding payments when creating an invoice,</li>
+                        <li><strong>Bank interface:</strong> with bank feeds synchronization or bank statement import.</li>
                     </ul>
-                </p>
-                <p>If you'd like some help on any subject dont hesitate to contact our Accounting experts by using the <span class="fa fa-question-circle"/> icon on the top bar.</p>
-                <p>Enjoy your Odoo experience,</p>
-                <div class="mt32">
-                    <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
-                    <address>
-                        For the Odoo Team,<br/>
-                        Fabien Pinckaers, Founder
-                    </address>
+                    <p>For the setup, you will need to get access to the following information:</p>
+                    <ul>
+                        <li>Your company: legal name, Tax ID, address, logo.</li>
+                        <li>Your bank accounts: one statement per bank account</li>
+                        <li>Your usual payment terms</li>
+                        <li>Your usual tax rates</li>
+                        <li>Current account balances</li>
+                        <li>Outstanding invoices, payments and undeposited funds</li>
+                    </ul>
+                    <p>
+                        If you'd like some help on any subject dont hesitate to
+                        contact our Accounting experts by using the <span class="fa fa-question-circle"/>
+                        icon on the top bar.
+                    </p>
+                    <p>Enjoy your Odoo experience,</p>
+                    <div class="mt32">
+                        <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
+                        <address>
+                            From the Odoo Team,<br/>
+                            Fabien Pinckaers, Founder
+                        </address>
+                    </div>
                 </div>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Get started'"/>
+                <t t-set="menu_categorytitle">Get started</t>
                 <t t-set="menu_categoryclasses" t-value="'fa fa-flag'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Company'"/>
+                    <t t-set="page_title">Your Company</t>
                     <p class="text-muted">
                         The first step if to setup your company information. These are mostly used
                         to print invoices.
@@ -112,7 +125,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Bank Accounts'"/>
+                    <t t-set="page_title">Your Bank Accounts</t>
                     <p>
                         Once your company information are correct, your should 
                         <strong><a t-att-href="prepare_backend_url('account.action_account_bank_journal_form')">
@@ -131,14 +144,14 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Chart of Accounts'"/>
+                    <t t-set="page_title">Chart of Accounts</t>
                     <t t-if="not is_coa_installed">
                         <p>Before continuing, you must install the Chart of Account related to your country (or the generic one if your country is not listed).</p>
                         <a class="btn btn-sm odoo_purple" t-att-href="prepare_backend_url('account.open_account_charts_modules', 'kanban')">Install Chart of Account</a>
                     </t>
                     <t t-if="is_coa_installed">
                         <p>
-                            A <span t-esc="company_id.country_id and company_id.country_id.name"/> Chart of Accounts has been
+                            A <span t-esc="company_id.country_id.name or ''"/> Chart of Accounts has been
                             installed. You should review it and create any additionnal accounts.
                         </p><p>
                             It's recommended to not delete any accounts even if
@@ -151,7 +164,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Taxes'"/>
+                    <t t-set="page_title">Taxes</t>
                     <p class="text-muted">
                         Odoo has already preconfigured a few taxes according to your country.<br/>Simply review them and check if you need more.
                     </p>
@@ -171,10 +184,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Configure'"/>
+                <t t-set="menu_categorytitle">Configure</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-cog'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Multi Currency'"/>
+                    <t t-set="page_title">Multi Currency</t>
                     <p>
                         The multi-currency option allows you to send or receive
                         invoice in different currencies, to set up bank
@@ -184,7 +197,7 @@
                     <p>To use the <strong>multi-currency option:</strong>
                         <ol>
                             <li>Activate the option in the <a t-att-href="prepare_backend_url('account.action_account_config')">Accounting Settings</a></li>
-                            <li>Review the list of available currencies (from the Configuration menu)</li>
+                            <li>Review the list of available currencies (from the <a t-att-href="prepare_backend_url('base.action_currency_form')">Configuration menu</a>)</li>
                         </ol>
                     </p>
                     <p>
@@ -198,7 +211,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Customers'"/>
+                    <t t-set="page_title">Your Customers</t>
                     <p class="text-muted">
                         Unless you are starting a new business, you probably have a list of customers and vendors you'd like to import.
                     </p>
@@ -214,14 +227,14 @@
                                 </div>
                                 <div class="panel-body">
                                     <p>
-                                        If you have less than 200 contacts, we recommand you
+                                        If you have less than 200 contacts, we recommend you
                                         to create them manually.
                                     </p>
                                     <ul>
                                         <li>
-                                            <a t-att-href="prepare_backend_url('base.action_partner_form','list')">Create Customers</a>
+                                            <a t-att-href="prepare_backend_url('base.action_partner_form','kanban')">Create Customers</a>
                                         </li><li>
-                                            <a t-att-href="prepare_backend_url('base.action_partner_form','list')">Create Vendors</a>, if accounting or purchase is installed
+                                            <a t-att-href="prepare_backend_url('base.action_partner_supplier_form','kanban')">Create Vendors</a>, if accounting or purchase is installed
                                         </li>
                                     </ul>
                                 </div>
@@ -255,7 +268,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Products'"/>
+                    <t t-set="page_title">Your Products</t>
                     <p>A product in Odoo is something you sell or buy. It could
                     be a goods, consumable or services. Choose how you want to
                     create your products:
@@ -268,12 +281,12 @@
                                     <span class="panel-title">
                                         <span class="fa" data-icon="&#xe060;"/>
                                         <strong> Create manually</strong><br/>
-                                        <span class="small">Recommanded if &lt;100 products</span>
+                                        <span class="small">Recommended if &lt;100 products</span>
                                     </span>
                                 </div>
                                 <div class="panel-body">
                                     <ul>
-                                        <li><a t-att-href="prepare_backend_url('product.product_template_action', 'from', 'sale')">Create your products</a></li>
+                                        <li><a t-att-href="prepare_backend_url('product.product_template_action', 'form')">Create your products</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -284,7 +297,7 @@
                                     <span class="panel-title">
                                         <span class="fa" data-icon="&#xe040;"/>
                                         <strong>Import a file</strong><br/>
-                                        <span class="small">Recommanded if &gt;100 products</span>
+                                        <span class="small">Recommended if &gt;100 products</span>
                                     </span>
                                 </div>
                                 <div class="panel-body">
@@ -307,7 +320,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Accounts Balance'"/>
+                    <t t-set="page_title">Accounts Balance</t>
                     <p>
                         Once your chart of account is created, you need to update the
                         balances of every account in Odoo.
@@ -331,7 +344,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Outstanding Transactions'"/>
+                    <t t-set="page_title">Outstanding Transactions</t>
                     <p class="text-muted">
                         If you want to be able to send customers statements from Odoo,
                         you need to record all outstanding transactions in the payable and
@@ -384,7 +397,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Extra Features'"/>
+                    <t t-set="page_title">Extra Features</t>
                     <p class="text-muted">
                         Odoo Accounting has many free extra-features:
                     </p>
@@ -448,10 +461,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Use'"/>
+                <t t-set="menu_categorytitle">Use</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-hand-o-up'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Invite Users'"/>
+                    <t t-set="page_title">Invite Users</t>
                     <p>When inviting users, you need to define which access and rights they are allowed.<br/>This is done by attributing a role to each users.</p>
                     <p><strong>There are 3 different roles in Odoo:</strong></p>
                     <div class="row">
@@ -511,7 +524,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Customer Flow'"/>
+                    <t t-set="page_title">Customer Flow</t>
                     <p><strong>Test these 3 customer flows to get familiar with Odoo:</strong></p>
                     <div class="row">
                         <div class="col-md-4">
@@ -581,7 +594,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Vendor Flow'"/>
+                    <t t-set="page_title">Vendor Flow</t>
                     <p><strong>Test these 3 vendor flows to get used to Odoo:</strong></p>
                     <div class="row">
                         <div class="col-md-4">
@@ -636,7 +649,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'End'"/>
+                    <t t-set="page_title">End</t>
                     <t t-set="hide_title" t-value="True"/>
                     <t t-set="hide_from_menu" t-value="True"/>
                     <t t-set="hide_mark_as_done" t-value="True"/>

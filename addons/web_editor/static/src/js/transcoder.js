@@ -38,7 +38,9 @@ var getMatchedCSSRules = function (a) {
                             selectorText.indexOf(":after") === -1 &&
                             selectorText.indexOf(":active") === -1 &&
                             selectorText.indexOf(":link") === -1 &&
-                            selectorText.indexOf("::") === -1) {
+                            selectorText.indexOf("::") === -1 &&
+                            selectorText.indexOf("\"") === -1 &&
+                            selectorText.indexOf("'") === -1) {
                         var st = selectorText.split(/\s*,\s*/);
                         for (var k=0; k<st.length; k++) {
                             rulesCache.push({ 'selector': st[k], 'style': rules[r].style });

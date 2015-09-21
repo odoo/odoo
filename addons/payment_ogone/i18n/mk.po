@@ -1,71 +1,154 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_ogone
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-11-08 10:33+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-09-19 08:23+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-09 07:34+0000\n"
-"X-Generator: Launchpad (build 17231)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: payment_ogone
-#: field:payment.transaction,ogone_3ds:0
-msgid "3DS Activated"
-msgstr "3DS Activated"
+#: code:addons/payment_ogone/models/ogone.py:239
+#, python-format
+msgid "; multiple order found"
+msgstr ""
 
 #. module: payment_ogone
-#: field:payment.transaction,ogone_3ds_html:0
-msgid "3DS HTML"
-msgstr "3DS HTML"
+#: code:addons/payment_ogone/models/ogone.py:237
+#, python-format
+msgid "; no order found"
+msgstr ""
 
 #. module: payment_ogone
-#: field:payment.acquirer,ogone_userid:0
+#: model:payment.acquirer,cancel_msg:payment_ogone.payment_acquirer_ogone
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr ""
+
+#. module: payment_ogone
+#: model:payment.acquirer,done_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr ""
+
+#. module: payment_ogone
+#: model:payment.acquirer,error_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr ""
+
+#. module: payment_ogone
+#: model:payment.acquirer,pending_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
 msgid "API User ID"
 msgstr "API User ID"
 
 #. module: payment_ogone
-#: field:payment.acquirer,ogone_password:0
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_password
 msgid "API User Password"
 msgstr "API User Password"
 
 #. module: payment_ogone
-#: field:payment.transaction,ogone_complus:0
-msgid "Complus"
-msgstr "Complus"
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_alias_usage
+msgid "Alias Usage"
+msgstr ""
 
 #. module: payment_ogone
-#: view:payment.transaction:payment_ogone.transaction_form_ogone
-msgid "Ogone TX Details"
-msgstr "Ogone TX Details"
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "CVC"
+msgstr ""
 
 #. module: payment_ogone
-#: field:payment.acquirer,ogone_pspid:0
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Card number"
+msgstr "Број на картичка"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Expires"
+msgstr "Истекува"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
+msgid "How to configure your Ogone account?"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer_ogone_alias_usage
+msgid ""
+"If you want to use Ogone Aliases,\n"
+"                                                                this default Alias Usage will be presented to\n"
+"                                                                the customer as the reason you want to\n"
+"                                                                keep his payment data"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "MM / YY"
+msgstr "ММ / ГГ"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Name"
+msgstr "Име"
+
+#. module: payment_ogone
+#: model:payment.acquirer,name:payment_ogone.payment_acquirer_ogone
+msgid "Ogone"
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:247
+#, python-format
+msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:235
+#, python-format
+msgid "Ogone: received data for reference %s"
+msgstr ""
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:228
+#, python-format
+msgid ""
+"Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
+"(%s)"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_pspid
 msgid "PSPID"
 msgstr "PSPID"
 
 #. module: payment_ogone
-#: field:payment.transaction,ogone_payid:0
-msgid "PayID"
-msgstr "PayID"
-
-#. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Стекнувач на плаќање"
-
-#. module: payment_ogone
-#: help:payment.transaction,ogone_payid:0
-msgid "Payment ID, generated by Ogone"
-msgstr "Payment ID, generated by Ogone"
+msgstr "Стакнувач на плаќање"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
@@ -73,11 +156,23 @@ msgid "Payment Transaction"
 msgstr "Трансакција на плаќање"
 
 #. module: payment_ogone
-#: field:payment.acquirer,ogone_shakey_in:0
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_in
 msgid "SHA Key IN"
 msgstr "SHA клуч влез"
 
 #. module: payment_ogone
-#: field:payment.acquirer,ogone_shakey_out:0
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_out
 msgid "SHA Key OUT"
 msgstr "SHA клуч излез"
+
+#. module: payment_ogone
+#: model:payment.acquirer,pre_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"You will be redirected to the Ogone website after clicking on the payment "
+"button."
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_method
+msgid "payment.method"
+msgstr ""

@@ -2,6 +2,7 @@ odoo.define('web_kanban.widgets', function (require) {
 "use strict";
 
 var core = require('web.core');
+var formats = require('web.formats');
 var Priority = require('web.Priority');
 var ProgressBar = require('web.ProgressBar');
 var pyeval = require('web.pyeval');
@@ -239,6 +240,26 @@ var KanbanProgressBar = AbstractField.extend({
     },
 });
 
+var KanbanMonetary = AbstractField.extend({
+    tagName: 'span',
+    renderElement: function() {
+        var kanban_view = this.getParent();
+        var currency_field = (this.options && this.options.currency_field) || 'currency_id';
+        var currency_id = kanban_view.values[currency_field].value[0];
+        var currency = session.get_currency(currency_id);
+        var digits_precision = this.options.digits || (currency && currency.digits);
+        var value = formats.format_value(this.field.raw_value || 0, {type: this.field.type, digits: digits_precision});
+        if (currency) {
+            if (currency.position === "after") {
+                value += currency.symbol;
+            } else {
+                value = currency.symbol + value;
+            }
+        }
+        this.$el.text(value);
+    }
+});
+
 var fields_registry = new Registry();
 
 fields_registry
@@ -247,6 +268,7 @@ fields_registry
     .add("attachment_image", KanbanAttachmentImage)
     .add('progress', KanbanProgressBar)
     .add('float_time', FormatChar)
+    .add('monetary', KanbanMonetary)
     ;
 
 return {

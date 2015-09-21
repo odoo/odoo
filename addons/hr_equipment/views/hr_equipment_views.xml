@@ -199,6 +199,10 @@
         <field name="model">hr.equipment</field>
         <field name="arch" type="xml">
             <form string="Equipments">
+                <header>
+                    <field name="category_id" widget="statusbar" clickable="True"
+                            options="{'fold_field': 'fold'}"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(hr_equipment_request_action_from_equipment)d"
@@ -209,14 +213,14 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Name"/>
+                        <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" string="Name" placeholder="Equipment Name"/></h1>
                         <label for="serial_no" class="oe_edit_only"/>
                         <field name="serial_no"/>
                     </div>
                     <group>
                         <group>
-                            <field name="category_id" groups="base.group_equipment_manager" on_change="1" options="{&quot;no_open&quot;: True}"/>
+                            <field name="category_id" invisible="1" on_change="1" options="{&quot;no_open&quot;: True}"/>
                             <field name="equipment_assign_to" on_change="1" widget="radio"/>
                             <field name="employee_id" string="Employee" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'department'), ('equipment_assign_to', '=', False)]}"/>
                             <field name="department_id" string="Department" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'employee'), ('equipment_assign_to', '=', False)]}"/>
@@ -232,10 +236,16 @@
                             <field name="note"/>
                         </page>
                         <page string="Product Information">
-                            <group col="4">
-                                <field name="partner_id"/>
-                                <field name="cost" groups="base.group_hr_user"/>
-                                <field name="model"/>
+                            <group>
+                                <group>
+                                    <field name="partner_id"/>
+                                    <field name="partner_ref"/>
+                                    <field name="model"/>
+                                </group><group>
+                                    <field name="cost" groups="base.group_hr_user"/>
+                                    <field name="warranty"/>
+                                    <field name="location"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>
@@ -260,6 +270,7 @@
                 <field name="serial_no"/>
                 <field name="model"/>
                 <field name="maintenance_ids"/>
+                <field name="maintenance_open_count"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -291,10 +302,8 @@
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="27" height="27" class="oe_kanban_avatar"/>
                                 </div>
-                                <div class="oe_kanban_footer_left mt4">
-                                    <a t-if="record.maintenance_ids.raw_value" type="action" name="%(hr_equipment_request_action_from_equipment)d">
-                                        <t t-raw="record.maintenance_ids.raw_value.length"/> Maintenance Request
-                                    </a>
+                                <div class="oe_kanban_footer_left mt4 label label-danger" t-if="record.maintenance_open_count.raw_value" >
+                                    <t t-raw="record.maintenance_open_count.raw_value"/> Request
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -328,17 +337,16 @@
         <field name="model">hr.equipment</field>
         <field name="arch" type="xml">
             <search string="Search">
-                <field name="name"/>
-                <field name="serial_no"/>
+                <field name="name"  filter_domain="['|','|','|',('name','ilike',self),('model','ilike',self),('serial_no','ilike',self),('partner_ref', 'ilike', self)]"/>
                 <field name="category_id"/>
                 <field name="employee_id"/>
                 <field name="department_id"/>
-                <field name="model"/>
-                <filter string="New" help="Unassigned" domain="[('employee_id', '=', False), ('department_id', '=', False)]"/>
-                <filter string="To Do" help="Under Maintenance" domain="[('maintenance_ids', '!=', False), ('maintenance_ids.stage_id.fold', '=', False)]"/>
-                <filter string="Assigned" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
+                <filter string="Under Maintenance"  domain="[('maintenance_open_count', '&gt;', 0)]"/>
                 <separator/>
-                <filter string="My Equipments" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
+                <filter string="Assigned" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
+                <filter string="Available" domain="[('employee_id', '=', False), ('department_id', '=', False)]"/>
+                <separator/>
+                <filter string="My Assets" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <group  expand='0' string='Group by...'>
@@ -354,7 +362,7 @@
     </record>
 
     <record id="hr_equipment_action" model="ir.actions.act_window">
-        <field name="name">Equipments</field>
+        <field name="name">IT Assets</field>
         <field name="res_model">hr.equipment</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_id" ref="hr_equipment_view_kanban"/>
@@ -362,8 +370,8 @@
             <p class="oe_view_nocontent_create">
                 Click to add a new equipment.
             </p><p>
-                This application helps you to track all equipment allocated to employees.
-                Create some laptop, printer or phone and link each equipment to an employee or departement.
+                This application helps you to track equipments used by employees.
+                Create some laptops, printers or phones and link each asset to an employee or departement.
                 You will manage allocations, issues and maintenance of equipment.
             </p>
         </field>
@@ -371,7 +379,7 @@
 
     <!-- hr.equiment : actions -->
     <record id="hr_equipment_action_from_category_form" model="ir.actions.act_window">
-        <field name="name">Equipments</field>
+        <field name="name">Assets</field>
         <field name="res_model">hr.equipment</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="hr_equipment_view_search"/>
@@ -384,7 +392,7 @@
             <p class="oe_view_nocontent_create">
                 Click to add a new Engine.
             </p><p>
-                This application helps you to track all equipment allocated to employees.
+                This application helps you to track equipments used by employees.
                 Create some laptop, printer or phone and link each equipment to an employee or departement.
                 You will manage allocations, issues and mainteannce of equipment.
             </p>
@@ -403,7 +411,7 @@
                         class="oe_stat_button"
                         icon="fa-laptop"
                         type="action">
-                        <field string="Equipment" name="equipment_count" widget="statinfo"/>
+                        <field string="Assets" name="equipment_count" widget="statinfo"/>
                     </button>
                     <button name="%(hr_equipment_request_action_link)d"
                         type="action"
@@ -468,7 +476,7 @@
 
     <!-- hr.equipment.category : actions -->
     <record id="hr_equipment_category_action" model="ir.actions.act_window">
-        <field name="name">Equipment Categories</field>
+        <field name="name">Asset Categories</field>
         <field name="res_model">hr.equipment.category</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="hr_equipment_category_view_tree"/>
@@ -498,6 +506,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="fold"/>
+                <field name="done"/>
             </tree>
         </field>
     </record>
@@ -520,7 +529,7 @@
     <!-- Menu items hierachy -->
     <menuitem
         id="menu_equipment_title"
-        name="Equipments"
+        name="IT Assets"
         web_icon="hr_equipment,static/description/icon.png"
         sequence="110"/>
 
@@ -537,15 +546,15 @@
         parent="menu_equipment_title"
         action="hr_equipment_request_action"
         groups="base.group_hr_manager,base.group_hr_user,base.group_user"
-        sequence="1"/>
+        sequence="2"/>
 
     <menuitem
         id="menu_hr_equipment_form"
-        name="Equipments"
+        name="Assets"
         parent="menu_equipment_title"
         action="hr_equipment_action"
         groups="base.group_hr_manager,base.group_hr_user,base.group_user"
-        sequence="2"/>
+        sequence="1"/>
 
     <menuitem
         id="menu_equipment_global_settings"
@@ -556,7 +565,7 @@
 
     <menuitem
         id="menu_equipment_cat"
-        name="Equipment Categories"
+        name="Asset Categories"
         parent="menu_equipment_configuration"
         action="hr_equipment_category_action"
         groups="base.group_no_one"
@@ -573,7 +582,7 @@
     <data noupdate="1">
         <!-- After installation of the module, open the related menu -->
         <record id="action_client_hr_equipment_menu" model="ir.actions.client">
-            <field name="name">Open HR Menu</field>
+            <field name="name">Open Assets Menu</field>
             <field name="tag">reload</field>
             <field name="params" eval="{'menu_id': ref('menu_equipment_title')}"/>
         </record>

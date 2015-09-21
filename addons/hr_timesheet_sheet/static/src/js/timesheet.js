@@ -73,7 +73,8 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         this.updating = true;
 
         var commands = [form_common.commands.delete_all()];
-        _(this.get("sheets")).each(function (data) {
+        _.each(this.get("sheets"), function (_data) {
+            var data = _.clone(_data);
             if(data.id) {
                 commands.push(form_common.commands.link_to(data.id));
                 commands.push(form_common.commands.update(data.id, data));
@@ -125,7 +126,8 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                 start = m_start.toDate();
             }
             // group by account
-            accounts = _(self.get("sheets")).chain()
+            accounts = _.chain(self.get("sheets"))
+            .map(_.clone)
             .each(function(el) {
                 // much simpler to use only the id in all cases
                 if (typeof(el.account_id) === "object") {
@@ -233,7 +235,9 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
             });
         });
         self.display_totals();
-        self.$(".oe_timesheet_button_add").click(_.bind(this.init_add_account, this));
+        if(!this.get('effective_readonly')) {
+            this.init_add_account();
+        }
     },
     init_add_account: function() {
         if (this.dfm) {
@@ -259,10 +263,10 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                 modifiers: '{"required": true}',
             },
         });
-        this.account_m2o.prependTo(this.$(".oe_timesheet_weekly_add_row td")).then(function() {
-            self.account_m2o.$el.addClass('oe_inline');
+        this.account_m2o.prependTo(this.$(".o_add_timesheet_line > div")).then(function() {
+            self.account_m2o.$el.addClass('oe_edit_only');
         });
-        this.$(".oe_timesheet_weekly_add_row button").click(function() {
+        this.$(".oe_timesheet_button_add").click(function() {
             var id = self.account_m2o.get_value();
             if (id === false) {
                 self.dfm.set({display_invalid_fields: true});

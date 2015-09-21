@@ -5,7 +5,9 @@ from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tests import common
 
-class TestPurchaseOrder(common.TransactionCase):
+from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+
+class TestPurchaseOrder(AccountingTestCase):
 
     def setUp(self):
         super(TestPurchaseOrder, self).setUp()

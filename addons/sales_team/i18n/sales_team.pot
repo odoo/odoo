@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-09-18 08:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,21 +17,28 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:154
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:91
+#, python-format
+msgid "3 exp. closing"
+msgstr ""
+
+#. module: sales_team
+#. openerp-web
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:137
 #, python-format
 msgid "35,029.39€"
 msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:141
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:124
 #, python-format
 msgid "78,140.03€"
 msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:186
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:169
 #, python-format
 msgid "80.000€"
 msgstr ""
@@ -52,13 +59,18 @@ msgid "<span>View</span>"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_active
 msgid "Active"
 msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:131
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:114
 #, python-format
 msgid "Activities Done"
 msgstr ""
@@ -72,13 +84,13 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:148
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:152
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:161
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:165
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:169
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:174
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:178
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:182
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:191
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:195
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:199
 #, python-format
 msgid "Click to set"
 msgstr ""
@@ -101,7 +113,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:232
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:215
 #, python-format
 msgid "Create a few opportunities to activate your dashboard."
 msgstr ""
@@ -118,7 +130,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:14
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:16
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
 #: model:ir.ui.menu,name:sales_team.menu_sales_team_act
 #, python-format
@@ -138,13 +150,6 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:51
-#, python-format
-msgid "Expected Closing"
 msgstr ""
 
 #. module: sales_team
@@ -169,7 +174,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:231
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:214
 #, python-format
 msgid "Great sales journeys start with a clean pipeline."
 msgstr ""
@@ -181,7 +186,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:230
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:213
 #, python-format
 msgid "Hi there!"
 msgstr ""
@@ -192,9 +197,13 @@ msgid "ID"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction
 #: model:ir.model.fields,help:sales_team.field_crm_team_message_unread
 msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction
+msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: sales_team
@@ -209,7 +218,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:157
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:140
 #, python-format
 msgid "Invoiced"
 msgstr ""
@@ -231,7 +240,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:205
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:188
 #, python-format
 msgid "Last Month"
 msgstr ""
@@ -279,18 +288,8 @@ msgid "My Salesteams"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:57
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:50
 #, python-format
 msgid "Next 7 days"
 msgstr ""
@@ -303,8 +302,13 @@ msgid "Next Actions"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: sales_team
@@ -314,7 +318,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:76
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr ""
@@ -326,7 +330,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:119
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:102
 #, python-format
 msgid "Performance"
 msgstr ""
@@ -380,7 +384,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:163
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:146
 #, python-format
 msgid "Target"
 msgstr ""
@@ -409,7 +413,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:119
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:102
 #, python-format
 msgid "This Month"
 msgstr ""
@@ -422,16 +426,16 @@ msgstr ""
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:29
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:68
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:93
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:61
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:76
 #, python-format
 msgid "To Activities"
 msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:122
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:206
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:105
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:189
 #, python-format
 msgid "To Activity Report"
 msgstr ""
@@ -439,32 +443,30 @@ msgstr ""
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:16
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:58
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:51
 #, python-format
 msgid "To Calendar"
 msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:148
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:131
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:199
 #, python-format
 msgid "To Invoice Report"
 msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:78
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:103
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:86
 #, python-format
 msgid "To Opportunities"
 msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:135
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:211
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:118
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:194
 #, python-format
 msgid "To Opportunity Report"
 msgstr ""
@@ -509,7 +511,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:144
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:127
 #, python-format
 msgid "Won in Opportunities"
 msgstr ""
@@ -521,22 +523,30 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:76
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
 #, python-format
 msgid "Wrong value entered!"
 msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:233
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
 #, python-format
 msgid "Your Pipeline"
 msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:96
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:106
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:89
+#, python-format
+msgid "exp. closing"
+msgstr ""
+
+#. module: sales_team
+#. openerp-web
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
 msgid "overdue"
 msgstr ""

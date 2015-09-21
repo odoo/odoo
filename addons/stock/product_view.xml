@@ -99,9 +99,9 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="weight" position="after">
+                <div name="weight" position="after">
                     <field name="tracking" on_change="onchange_tracking(tracking)" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_production_lot"/>
-                </field>
+                </div>
                 <field name="company_id" position="after">
                     <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
                     <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
@@ -182,8 +182,8 @@
             <field name="arch" type="xml">
                 <sheet position="before">
                     <header>
-                        <button name="%(action_view_change_product_quantity)d" string="Inventory Adjustement" type="action" groups="product.group_product_variant"/>
-                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" groups="product.group_product_variant"/>
+                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
+                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
                     </header>
                 </sheet>
             </field>
@@ -196,24 +196,37 @@
             <field name="arch" type="xml">
                 <data>
                     <header position="inside">
-                        <button string="Inventory Adjustement"
+                        <button string="Update Qty On Hand"
                             type="action"
                             name="%(action_view_change_product_quantity)d"
-                            groups="product.group_product_variant"/>
+                            attrs="{'invisible': [('type', '!=', 'consu')]}"/>
                         <button string="Procurement Request"
                             type="action"
                             name="%(stock.act_make_procurement)d"
-                            groups="product.group_product_variant"/>
+                            attrs="{'invisible': [('type', '!=', 'consu')]}"/>
                     </header>
                     <div name="button_box" position="inside">
                         <button class="oe_stat_button"
                                name="%(product_open_quants)d"
                                icon="fa-building-o"
-                               type="action" attrs="{'invisible':[('type', '!=', 'service')]}"
-                               groups="stock.group_locations">
-                            <field name="qty_available" widget="statinfo"/>
+                               type="action" attrs="{'invisible':[('type', '!=', 'product')]}">
+                            <field name="qty_available" widget="statinfo" string="On Hand"/>
                         </button>
-                       <button string="Moves"
+                        <button type="action"
+                            name="%(stock.action_stock_level_forecast_report_product)d"
+                            attrs="{'invisible':[('type', '!=', 'product')]}"
+                            class="oe_stat_button" icon="fa-building-o">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value"><field name="virtual_available" widget="statinfo" nolabel="1"/>
+                                    <span attrs="{'invisible':[('outgoing_qty', '=', 0),('incoming_qty','=',0)]}">
+                                        (-<field name="outgoing_qty" widget="statinfo" nolabel="1"/>
+                                        +<field name="incoming_qty" widget="statinfo" nolabel="1"/>)
+                                    </span>
+                                </span>
+                                <span class="o_stat_text">Forecasted</span>
+                            </div>
+                        </button>
+                       <button string="Traceability"
                             type="action"
                             name= "%(act_product_stock_move_open)d"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
@@ -239,7 +252,7 @@
                         </button>
                        <button string="Routes" type="object"
                             name="action_view_routes"
-                            attrs="{'invisible':[('type', '=', 'service')]}"
+                            attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-cogs" groups="stock.group_adv_location"/>
                     </div>
                 </data>
@@ -253,22 +266,29 @@
             <field name="arch" type="xml">
                 <data>
                     <header position="inside" >
-                        <button name="%(action_view_change_product_quantity)d" string="Inventory Adjustement" type="action"/>
-                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action"/>
+                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
+                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'consu')]}"/>
                     </header>
                     <div name="button_box" position="inside">
                         <button type="object"
-                            name="%(stock.product_template_open_quants)d"
+                            name="action_open_quants"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-building-o">
                             <field name="qty_available" widget="statinfo" string="On Hand"/>
                         </button>
-
                         <button type="action"
-                            name="%(stock.action_stock_level_forecast_report)d"
+                            name="%(stock.action_stock_level_forecast_report_template)d"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-building-o">
-                            <field name="virtual_available" widget="statinfo" string="Forecasted Qty"/>
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value"><field name="virtual_available" widget="statinfo" nolabel="1"/>
+                                    <span attrs="{'invisible':[('outgoing_qty', '=', 0),('incoming_qty','=',0)]}" groups="base.group_no_one">
+                                        (-<field name="outgoing_qty" widget="statinfo" nolabel="1"/>
+                                        +<field name="incoming_qty" widget="statinfo" nolabel="1"/>)
+                                    </span>
+                                </span>
+                                <span class="o_stat_text">Forecasted</span>
+                            </div>
                         </button>
                         <button string="Traceability" type="object"
                             name= "action_view_stock_moves"
@@ -284,7 +304,7 @@
                          </button>
                         <button type="object"
                             name="action_view_orderpoints"
-                            attrs="{'invisible':['|',('type', '=', 'product'),('nbr_reordering_rules', '!=', 1)]}"
+                            attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '!=', 1)]}"
                             class="oe_stat_button" icon="fa-refresh">
                             <div class="o_form_field o_stat_info mr4">
                                 <span class="o_stat_text">Min:</span>
@@ -297,7 +317,7 @@
                         </button>
                         <button string="Routes" type="object"
                             name="action_view_routes"
-                            attrs="{'invisible':[('type', '!=', ['product', 'consu'])]}"  
+                            attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-cogs"
                             groups="stock.group_adv_location"/>
                     </div>

@@ -9,7 +9,7 @@
 #              - account types
 
 {
-    "name": "Croatia - RRIF 2012 COA",
+    "name": "Croatia - Accounting (RRIF 2012)",
     "description": """
 Croatian localisation.
 ======================

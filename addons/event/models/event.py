@@ -29,7 +29,7 @@ class event_event(models.Model):
     _order = 'date_begin'
 
     name = fields.Char(
-        string='Name', translate=True, required=True,
+        string='Event Name', translate=True, required=True,
         readonly=False, states={'done': [('readonly', True)]})
     active = fields.Boolean(default=True, track_visibility="onchange")
     user_id = fields.Many2one(
@@ -60,20 +60,20 @@ class event_event(models.Model):
 
     # Seats and computation
     seats_max = fields.Integer(
-        string='Maximum Available Seats', oldname='register_max',
+        string='Maximum Attendees Number', oldname='register_max',
         readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
     seats_availability = fields.Selection(
         [('limited', 'Limited'), ('unlimited', 'Unlimited')],
-        'Available Seat', required=True, default='unlimited')
+        'Maximum Attendees', required=True, default='unlimited')
     seats_min = fields.Integer(
-        string='Minimum Reservation of Seats Required', oldname='register_min',
-        help="For each event you can define a minimum reserved seats(number of attendees), if it does not reach the mentioned registrations the event can not be confirmed (keep 0 to ignore this rule)")
+        string='Minimum Attendees', oldname='register_min',
+        help="For each event you can define a minimum reserved seats (number of attendees), if it does not reach the mentioned registrations the event can not be confirmed (keep 0 to ignore this rule)")
     seats_reserved = fields.Integer(
         oldname='register_current', string='Reserved Seats',
         store=True, readonly=True, compute='_compute_seats')
     seats_available = fields.Integer(
-        oldname='register_avail', string='Available Seats',
+        oldname='register_avail', string='Maximum Attendees',
         store=True, readonly=True, compute='_compute_seats')
     seats_unconfirmed = fields.Integer(
         oldname='register_prospect', string='Unconfirmed Seat Reservations',
@@ -158,7 +158,7 @@ class event_event(models.Model):
         ('confirm', 'Confirmed'), ('done', 'Done')],
         string='Status', default='draft', readonly=True, required=True, copy=False,
         help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
-    auto_confirm = fields.Boolean(string='Auto Confirmation Activated', compute='_compute_auto_confirm')
+    auto_confirm = fields.Boolean(string='Confirmation not required', compute='_compute_auto_confirm')
 
     @api.one
     def _compute_auto_confirm(self):

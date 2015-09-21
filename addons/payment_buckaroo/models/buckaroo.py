@@ -119,7 +119,7 @@ class TxBuckaroo(osv.Model):
         transaction record. """
         reference, pay_id, shasign = data.get('BRQ_INVOICENUMBER'), data.get('BRQ_PAYMENT'), data.get('BRQ_SIGNATURE')
         if not reference or not pay_id or not shasign:
-            error_msg = _('Buckaroo: received data with missing reference (%s) or pay_id (%s) or shashign (%s)') % (reference, pay_id, shasign)
+            error_msg = _('Buckaroo: received data with missing reference (%s) or pay_id (%s) or shasign (%s)') % (reference, pay_id, shasign)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
 

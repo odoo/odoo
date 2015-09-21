@@ -2,52 +2,54 @@
 <templates>
 
     <t t-name="mail.chatter.ComposeMessage">
-        <!-- Log a Note (subtypes)-->
-        <t t-if="widget.options.is_log">
-            <span class="text-muted">
-                Log an internal note which will not be sent to followers.<br/>
-                Note that users reading the document can read internal notes.
-            </span>
-            <!-- Internal subtypes -->
-            <div t-att-class="'form-group col-md-8 ' + (widget.options.internal_subtypes.length &lt;= 1 ? ' hide' : '')">
-                <label class="col-sm-2 control-label">Activity</label>
-                <div class="col-sm-4">
-                    <select class="form-control o_mail_chatter_compose_message_subtype_select">
-                        <t t-foreach="widget.options.internal_subtypes" t-as="subtype">
-                            <option t-att-value="subtype['id']"><t t-raw="subtype['name']"/></option>
-                        </t>
-                    </select>
-                </div>
-            </div>
-        </t>
-        <!-- New Message (list of followers)-->
-        <t t-if="!widget.options.is_log">
-            <!-- Text for followers -->
-            <span class="text-muted">
-                To: Followers of
-                <t t-if="widget.options.record_name">
-                    <t t-raw="'&quot;' + widget.options.record_name + '&quot;'"/>
-                </t>
-                <t t-if="!widget.options.record_name">
-                    this document
-                </t>
-            </span>
-            <!-- List of followers -->
-            <div class="o_mail_chatter_compose_message_suggested_partners">
-                <t t-foreach='widget.suggested_partners' t-as='recipient'>
-                    <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
-                        <input type="checkbox"
-                               t-att-checked="recipient.checked ? 'checked' : undefined"
-                               t-att-data-fullname="recipient.full_name"/>
-                        <t t-esc="recipient.name"/>
-                        <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
-                        <t t-if="!recipient.email_address">(no email address)</t>
+        <div class="mail_chatter_message_composer">
+            <!-- Log a Note (subtypes)-->
+            <t t-if="widget.options.is_log">
+                <span class="text-muted">
+                    Log an internal note which will not be sent to followers.<br/>
+                    Note that users reading the document can read internal notes.
+                </span>
+                <!-- Internal subtypes -->
+                <div t-att-class="'form-group col-md-8 ' + (widget.options.internal_subtypes.length &lt;= 1 ? ' hide' : '')">
+                    <label class="col-sm-2 control-label">Activity</label>
+                    <div class="col-sm-4">
+                        <select class="form-control o_mail_chatter_compose_message_subtype_select">
+                            <t t-foreach="widget.options.internal_subtypes" t-as="subtype">
+                                <option t-att-value="subtype['id']"><t t-raw="subtype['name']"/></option>
+                            </t>
+                        </select>
                     </div>
-                </t>
-            </div>
-        </t>
-        <!-- Composer Message -->
-        <t t-call="mail.ComposeMessage"/>
+                </div>
+            </t>
+            <!-- New Message (list of followers)-->
+            <t t-if="!widget.options.is_log">
+                <!-- Text for followers -->
+                <span class="text-muted">
+                    To: Followers of
+                    <t t-if="widget.options.record_name">
+                        <t t-raw="'&quot;' + widget.options.record_name + '&quot;'"/>
+                    </t>
+                    <t t-if="!widget.options.record_name">
+                        this document
+                    </t>
+                </span>
+                <!-- List of followers -->
+                <div class="o_mail_chatter_compose_message_suggested_partners">
+                    <t t-foreach='widget.suggested_partners' t-as='recipient'>
+                        <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
+                            <input type="checkbox"
+                                   t-att-checked="recipient.checked ? 'checked' : undefined"
+                                   t-att-data-fullname="recipient.full_name"/>
+                            <t t-esc="recipient.name"/>
+                            <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
+                            <t t-if="!recipient.email_address">(no email address)</t>
+                        </div>
+                    </t>
+                </div>
+            </t>
+            <!-- Composer Message -->
+            <t t-call="mail.ComposeMessage"/>
+        </div>
     </t>
 
 

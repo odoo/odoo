@@ -425,6 +425,14 @@
                             font-weight: 300;
                         }
 
+                        .o_planner_intro {
+                            font-size: 120%;
+                        }
+
+                        .label > a {
+                            color: inherit;
+                        }
+
                         .well, .panel, .alert {
                             box-shadow: none;
                             border-radius: 0;
@@ -505,12 +513,20 @@
                                     max-width: 100%;
                                 }
 
+                                input[type="radio"],input[type="checkbox"] {
+                                    margin-right: 5px;
+                                }
+
                                 > li {
                                     list-style: none;
                                     border-bottom: 1px dashed #C1D6DA;
                                     padding: 10px 10px 5px 55px;
                                     text-transform: capitalize;
                                     margin: 0;
+
+                                    .indented {
+                                        padding-left: 32px;
+                                    }
 
                                     span {
                                         position: absolute;

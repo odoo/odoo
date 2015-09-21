@@ -13,7 +13,7 @@
                     <div class="oe_title oe_inline">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name"/>
+                            <field name="name" placeholder="e.g. Computers"/>
                         </h1>
                     </div>
                     <group>
@@ -106,7 +106,7 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name"/>
+                            <field name="name" placeholder="e.g. Laptop iBook"/>
                         </h1>
                     </div>
                     <group>
@@ -235,11 +235,6 @@
                 <field name="asset_category_id"
                     domain="[('type', '=', 'purchase')]"
                     context="{'default_type': 'purchase'}"/>
-            </field>
-            <field name="property_account_income_id" position="before">
-                <field name="deferred_revenue_category_id"
-                    domain="[('type', '=', 'sale')]"
-                    context="{'default_type': 'sale'}"/>
             </field>
         </field>
     </record>

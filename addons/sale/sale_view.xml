@@ -61,6 +61,7 @@
                     <field name="amount_total"/>
                     <field name="date_order"/>
                     <field name="state"/>
+                    <field name="currency_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -68,8 +69,8 @@
                                     <div class="col-xs-6">
                                         <strong><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <strong><span class="pull-right text-right"><t t-esc="record.amount_total.value"/></span></strong>
+                                    <div class="col-xs-6 pull-right text-right">
+                                        <strong><field name="amount_total" widget="monetary"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -143,7 +144,7 @@
                     <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>
                     <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
                     <button name="action_done" type="object" string="Set to Done" states="sale"
-                        help="If a sale order is done, you can not modify it manually anymore. But you will still be able to invoice or deliver."/>
+                        help="If a sale order is done, you cannot modify it manually anymore. However, you will still be able to invoice or deliver. This is used to freeze the sale order."/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale,done"/>
                 </header>
                 <sheet>
@@ -260,13 +261,9 @@
                                     <field name="invoice_status" invisible="1"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile">
-                                    <field name="product_id"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
-                                       />
-                                    <field name="product_uom_qty"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"/>
-                                    <field name="product_uom"
-                                        groups="product.group_uom" options='{"no_open": True}'/>
+                                    <field name="product_id"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom" groups="product.group_uom"/>
                                     <field name="price_subtotal"/>
                                     <templates>
                                         <t t-name="kanban-box">

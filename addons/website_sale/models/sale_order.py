@@ -267,22 +267,28 @@ class website(orm.Model):
                     flag_pricelist = True
                 fiscal_position = sale_order.fiscal_position_id and sale_order.fiscal_position_id.id or False
 
-                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], context=context).get('value', {})
-                if values.get('pricelist_id'):
-                    if values['pricelist_id'] != pricelist_id:
+                # change the partner, and trigger the onchange
+                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], {'partner_id': partner.id}, context=context)
+                sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], context=context)
+
+                # check the pricelist : update it if the pricelist is not the 'forced' one
+                values = {}
+                if sale_order.pricelist_id:
+                    if sale_order.pricelist_id.id != pricelist_id:
                         values['pricelist_id'] = pricelist_id
                         update_pricelist = True
 
-                if values.get('fiscal_position_id'):
-                    order_lines = map(int, sale_order.order_line)
-                    values.update(sale_order_obj.onchange_fiscal_position(
-                        cr, SUPERUSER_ID, [],
-                        values['fiscal_position_id'], [[6, 0, order_lines]], context=context)['value'])
+                # if fiscal position, update the order lines taxes
+                if sale_order.fiscal_position_id:
+                    sale_order._compute_tax_id()
 
-                values['partner_id'] = partner.id
-                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
+                # if values, then make the SO update
+                if values:
+                    sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
 
-                if flag_pricelist or values.get('fiscal_position_id', False) != fiscal_position:
+                # check if the fiscal position has changed with the partner_id update
+                recent_fiscal_position = sale_order.fiscal_position_id and sale_order.fiscal_position_id.id or False
+                if flag_pricelist or recent_fiscal_position != fiscal_position:
                     update_pricelist = True
 
             if (code and code != sale_order.pricelist_id.code) or \

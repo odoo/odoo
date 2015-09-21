@@ -1,65 +1,46 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-14 10:28+0000\n"
+"PO-Revision-Date: 2015-09-08 08:06+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:266
-#, python-format
-msgid "(n/a)"
-msgstr "(ei saatavilla)"
+#: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
+msgid "<strong>Incoterms:</strong>"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.config.settings,module_delivery:0
+#: selection:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
 msgstr "Salli lähetyskulujen lisäys"
 
 #. module: sale_stock
-#: help:sale.config.settings,module_delivery:0
-msgid ""
-"Allows you to add delivery methods in sales orders and delivery orders.\n"
-"You can define your own carrier and delivery grids for prices.\n"
-"-This installs the module delivery."
+#: selection:sale.config.settings,group_mrp_properties:0
+msgid "Allow setting manufacturing order properties per order line (avanced)"
 msgstr ""
 
 #. module: sale_stock
-#: help:sale.config.settings,group_route_so_lines:0
-msgid "Allows you to choose a delivery route on sales order lines"
-msgstr ""
-
-#. module: sale_stock
-#: help:sale.config.settings,group_mrp_properties:0
+#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Allows you to tag sales order lines with properties."
 msgstr "Salli ominaisuuksien merkintä myyntitilausriveille."
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "Cancel Order"
-msgstr "Peruuta tilaus"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:160
-#, python-format
-msgid "Cannot cancel sales order!"
-msgstr "Myyntitilausta ei voi poistaa!"
-
-#. module: sale_stock
-#: field:sale.config.settings,group_route_so_lines:0
-msgid "Choose MTO, drop shipping,... on sales order lines"
+#: selection:sale.config.settings,group_route_so_lines:0
+msgid "Choose specific routes on sales order lines (advanced)"
 msgstr ""
 
 #. module: sale_stock
@@ -68,28 +49,9 @@ msgid "Companies"
 msgstr "Yritykset"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:277
-#: code:addons/sale_stock/sale_stock.py:351
-#, python-format
-msgid "Configuration Error!"
-msgstr "Konfiguraatiovirhe!"
-
-#. module: sale_stock
-#: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
-msgid "Contact Details"
-msgstr "Yhteystiedot"
-
-#. module: sale_stock
-#: view:sale.config.settings:sale_stock.view_sales_config_sale_stock
-msgid "Default Options"
-msgstr "Oletusarvojen vaihtoehdot"
-
-#. module: sale_stock
-#: field:sale.config.settings,default_picking_policy:0
-msgid "Deliver all at once when all products are available."
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
+msgid "Default Shipping Policy"
 msgstr ""
-"Kaikki toimitetaan yhdellä kertaa, heti kun kaikki toimituksen tuoteet ovat "
-"saatavilla."
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -102,20 +64,19 @@ msgid "Deliver each product when available"
 msgstr "Toimita osittaistoimituksina, kun tuote on saatavilla"
 
 #. module: sale_stock
-#: field:sale.order,shipped:0
-msgid "Delivered"
-msgstr "Toimitettu"
+#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Delivery"
+msgstr "Toimitus"
 
 #. module: sale_stock
-#: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
-#: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
-msgid "Deliveries to Invoice"
-msgstr "Toimitusten laskutus"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
+msgid "Delivery Orders"
+msgstr "Toimitustilaukset"
 
 #. module: sale_stock
-#: model:res.groups,name:sale_stock.group_invoice_deli_orders
-msgid "Enable Invoicing Delivery orders"
-msgstr "Salli laskutus toimitustilauksilta"
+#: selection:sale.config.settings,group_mrp_properties:0
+msgid "Don't use manufacturing properties (recommended as its easier)"
+msgstr ""
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -123,28 +84,25 @@ msgid "Enable Route on Sales Order Line"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.config.settings,group_invoice_deli_orders:0
-msgid "Generate invoices after and based on delivery orders"
-msgstr "Luodaan laskut perustuen toimitustilauksiiin."
+#: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
+msgid "Incoterms"
+msgstr "INCOTERMS"
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "Ignore Exception"
-msgstr "Ohita poikkeus"
+#: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
+msgid ""
+"Incoterms are series of sales terms. They are used to divide transaction "
+"costs and responsibilities between buyer and seller and reflect state-of-"
+"the-art transportation practices."
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.order,incoterm:0
-msgid "Incoterm"
-msgstr "Incoterm"
-
-#. module: sale_stock
-#: help:sale.order,incoterm:0
+#: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
-"Kansainväliset toimituslausekkeet eli Incoterms on sarja hyväksyttyjä "
-"kaupallisia ehtoja kansainväliseen kaupankäyntiin."
+msgstr "Kansainväliset toimituslausekkeet eli Incoterms on sarja hyväksyttyjä kaupallisia ehtoja kansainväliseen kaupankäyntiin."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -152,130 +110,84 @@ msgid "Inventory Routes"
 msgstr ""
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on deliveries"
-msgstr "Toimituksiin perustuva lasku"
+#: model:ir.model,name:sale_stock.model_account_invoice
+msgid "Invoice"
+msgstr "Lasku"
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on sales orders"
-msgstr "Myyntitilaukseiin perustuva lasku"
-
-#. module: sale_stock
-#: help:sale.config.settings,task_work:0
-msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to "
-"the Timesheet line entries for particular date and particular user  with the "
-"effect of creating, editing and deleting either ways and to automatically "
-"creates project tasks from procurement lines.\n"
-"-This installs the modules project_timesheet and sale_service."
-msgstr ""
-
-#. module: sale_stock
-#: help:res.company,security_lead:0
+#: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
+msgstr "Ennakkoaika luvattu asiakkaalle, jotta odottamattomat viipeet kompensoidaan. Tuotteet ajoitetaan hankintaan ja valmistukseen tämän verran päivinä aiemmin."
+
+#. module: sale_stock
+#: selection:sale.config.settings,group_route_so_lines:0
+msgid "No order specific routes like MTO or drop shipping"
 msgstr ""
-"Ennakkoaika luvattu asiakkaalle, jotta odottamattomat viipeet kompensoidaan. "
-"Tuotteet ajoitetaan hankintaan ja valmistukseen tämän verran päivinä aiemmin."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:346
+#: selection:sale.config.settings,module_delivery:0
+msgid "No shipping costs on sales orders"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:140
 #, python-format
-msgid "Not enough stock ! : "
-msgstr "Ei tarpeeksi varastoa ! : "
+msgid "Not enough inventory!"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.order.line,number_packages:0
-msgid "Number Packages"
-msgstr "Numeroi paketit"
-
-#. module: sale_stock
-#: code:addons/sale_stock/res_config.py:78
+#: code:addons/sale_stock/res_config.py:42
 #, python-format
 msgid "Only administrators can change the settings"
+msgstr "Vain administraattorit voivat muuttaa asetuksia"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
+msgid "Order Routing"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.order.line,product_packaging:0
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
 msgid "Packaging"
 msgstr "Paketointi"
 
 #. module: sale_stock
-#: help:sale.order,picking_policy:0
-msgid ""
-"Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr ""
-"Valitse \"Toimita osatoimituksina, kun tuote on saatavilla\", jos sallit "
-"osatoimitukset."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:275
-#, python-format
-msgid "Picking Information ! : "
-msgstr "Keräilytiedot ! : "
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_picking
-msgid "Picking List"
-msgstr "Keräilyluettelo"
-
-#. module: sale_stock
-#: field:sale.order,picking_ids:0
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
 msgid "Picking associated to this sale"
-msgstr ""
+msgstr "Tähän myyntiin liittyvä keräily"
 
 #. module: sale_stock
-#: field:sale.config.settings,task_work:0
-msgid "Prepare invoices based on task's activities"
-msgstr "Valmistele laskut perustuen tehtävän aktiviteetteihin"
+#: model:ir.model,name:sale_stock.model_procurement_order
+msgid "Procurement"
+msgstr "Hankinta"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_product_product
-msgid "Product"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order.line,product_tmpl_id:0
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
 msgid "Product Template"
+msgstr "Tuotemalli"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
+msgid "Properties on SO Lines"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.config.settings,group_mrp_properties:0
-msgid "Product properties on order lines"
-msgstr "Tuotteen ominaisuudet tilausriveillä."
-
-#. module: sale_stock
-#: field:sale.config.settings,module_project_timesheet:0
-msgid "Project Timesheet"
-msgstr "Projektin tuntikortti"
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "Recreate Delivery Order"
-msgstr "Luo uudelleen toimitustilaus"
-
-#. module: sale_stock
-#: field:sale.order.line,route_id:0
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
 msgid "Route"
 msgstr ""
 
 #. module: sale_stock
-#: field:stock.picking,sale_id:0
-msgid "Sale Order"
-msgstr "Myyntitilaus"
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_order_so_line_id
+msgid "Sale Order Line"
+msgstr "Myyntitilausrivi"
 
 #. module: sale_stock
-#: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
+#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
 msgid "Sale Order Lines"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.config.settings,module_sale_service:0
-msgid "Sale Service"
-msgstr ""
+msgstr "Myyntitilausrivit"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -285,7 +197,7 @@ msgstr "Myyntitilaus"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Myyntitilausrivi"
+msgstr "Myyntitilauksen Rivi"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -293,33 +205,38 @@ msgid "Sales Orders Statistics"
 msgstr "Myyntitilausten Tilastot"
 
 #. module: sale_stock
-#: help:sale.config.settings,default_picking_policy:0
-msgid ""
-"Sales order by default will be configured to deliver all products at once "
-"instead of delivering each product when it is available. This may have an "
-"impact on the shipping price."
+#: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
+msgid "Sales Safety Days"
 msgstr ""
-"Oletuksena myyntitilaus on konfiguroitu toimittamaan kaikki tuotteet yhdellä "
-"kertaa, kun ovat saatavilla.. Tällä on merkitys toimitusmaksuun."
 
 #. module: sale_stock
-#: field:res.company,security_lead:0
-msgid "Security Days"
-msgstr "Ennakkopäivät"
-
-#. module: sale_stock
-#: field:stock.location.route,sale_selectable:0
+#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
+msgstr "Valittavissa myyntitilausrivillä"
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_picking_policy:0
+msgid "Ship all products at once, without back orders"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
-msgid "Shipped"
-msgstr "Lähetetty"
+#: selection:sale.config.settings,default_picking_policy:0
+msgid "Ship products when some are available, and allow back orders"
+msgstr ""
 
 #. module: sale_stock
-#: field:sale.order,picking_policy:0
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
+#: model:ir.ui.view,arch_db:sale_stock.view_sales_config_inherit_sale_stock
+msgid "Shipping"
+msgstr "Lähetys"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Shipping Information"
+msgstr "Toimitustiedot"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
 msgid "Shipping Policy"
 msgstr "Lähetyssäännöt"
 
@@ -329,84 +246,32 @@ msgid "Stock Move"
 msgstr "Varastosiirto"
 
 #. module: sale_stock
-#: field:sale.config.settings,default_order_policy:0
-msgid "The default invoicing method is"
-msgstr "Laskutuksen oletusmenettely on"
-
-#. module: sale_stock
-#: view:stock.picking:sale_stock.view_picking_internal_search_inherit
-msgid "To Invoice"
+#: code:addons/sale_stock/sale_stock.py:183
+#, python-format
+msgid "This product is packaged by %d %s. You should sell %d %s."
 msgstr ""
 
 #. module: sale_stock
-#: help:sale.config.settings,group_invoice_deli_orders:0
-msgid ""
-"To allow your salesman to make invoices for Delivery Orders using the menu "
-"'Deliveries to Invoice'."
-msgstr ""
-"Salli myyjien tehdä suoraan toimitusmääräyksistä laskuja valinnalla "
-"'Toimitusten laskutus'."
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "View Delivery Order"
-msgstr "Näytä toimitustilaus"
-
-#. module: sale_stock
-#: field:sale.order,warehouse_id:0
-#: field:sale.report,warehouse_id:0
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report_warehouse_id
 msgid "Warehouse"
 msgstr "Varasto"
 
 #. module: sale_stock
-#: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr "Voit luoda laskuja myyntitilausten tai toimitusten pohjalta."
+#: code:addons/sale_stock/sale_stock.py:182
+#, python-format
+msgid "Warning!"
+msgstr "Warning!"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
+#: code:addons/sale_stock/sale_stock.py:141
 #, python-format
 msgid ""
-"You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
-"Peruuta ensin kaikki tähän myyntitilaukseen liittyvät toimitustilaukset."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:342
-#, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available !\n"
-"The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"Suunnitelet myyväsi %.2f %s mutta sinulla on vain %.2f %s saatavilla !\n"
-"Todellinen varasto on %.2f %s (ilman varauksia)"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:270
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging:\n"
-"EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-"Valiittu yksikkö %d ei ole yhteensopiva valitun pakkauksen kanssa.\n"
-"\n"
-"Valitun pakkaustavan kanssa ehdotettu määrä on:\n"
-"EAN: %s, Määrä: %s,  Toimitusyksikön tyyppi: %s"
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "days"
-msgstr "päivät"
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+"You plan to sell %.2f %s but you only have %.2f %s available!\n"
+"The stock on hand is %.2f %s."
 msgstr ""
 
-#~ msgid "Picked"
-#~ msgstr "Kerätty"
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "sale.config.settings"

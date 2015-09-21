@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
+from openerp import api, fields, models, _
+from openerp.exceptions import UserError
 
 
 class SaleOrderLine(models.Model):
@@ -38,10 +39,17 @@ class AccountAnalyticLine(models.Model):
     so_line = fields.Many2one('sale.order.line', string='Sale Order Line')
 
     def _get_invoice_price(self, order):
-        return abs(self.amount / self.unit_amount)
+        price_unit = abs(self.amount / self.unit_amount)
+        if self.currency_id and self.currency_id != order.currency_id:
+            price_unit = self.currency_id.compute(price_unit, order.currency_id)
+        return price_unit
 
     def _get_sale_order_line_vals(self):
-        order = self.env['sale.order'].search([('project_id', '=', self.account_id.id), ('state', '=', 'sale')], limit=1)
+        order = self.env['sale.order'].search([('project_id', '=', self.account_id.id)], limit=1)
+        if not order:
+            return False
+        if order.state != 'sale':
+            raise UserError(_('The Sale Order %s linked to the Analytic Account must be validated before registering expenses.' % order.name))
 
         last_so_line = self.env['sale.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
@@ -72,13 +80,19 @@ class AccountAnalyticLine(models.Model):
                 ('state', '=', 'sale'),
                 ('product_id', '=', self.product_id.id)],
                 limit=1)
-            result.update({'so_line': sol.id})
+            # Use the existing SO line only if the unit prices are the same, otherwise we create
+            # a new line
+            if sol.price_unit == self._get_invoice_price(sol.order_id):
+                result.update({'so_line': sol.id})
+            else:
+                sol = self.so_line
 
         if not sol and self.account_id and self.product_id and self.product_id.invoice_policy == 'cost':
             order_line_vals = self._get_sale_order_line_vals()
-            sol = self.env['sale.order.line'].create(order_line_vals)
-            sol._compute_tax_id()
-            result.update({'so_line': sol.id})
+            if order_line_vals:
+                sol = self.env['sale.order.line'].create(order_line_vals)
+                sol._compute_tax_id()
+                result.update({'so_line': sol.id})
 
         return result
 

@@ -76,27 +76,61 @@ class AccountAnalyticLine(models.Model):
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    @api.one
+    timesheet_ids = fields.Many2many('account.analytic.line', compute='_compute_timesheet_ids', string='Timesheet activities associated to this sale')
+    timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_ids')
+
+    @api.multi
+    @api.depends('project_id.line_ids')
+    def _compute_timesheet_ids(self):
+        for order in self:
+            order.timesheet_ids = self.env['account.analytic.line'].search([('is_timesheet', '=', True), ('account_id', '=', order.project_id.id)]) if order.project_id else []
+            order.timesheet_count = round(sum([line.unit_amount for line in order.timesheet_ids]), 2)
+
+    @api.multi
     @api.constrains('order_line')
     def _check_multi_timesheet(self):
-        count = 0
-        for line in self.order_line:
-            if line.product_id.track_service == 'timesheet':
-                count += 1
-            if count > 1:
-                raise UserError(_("You can use only one product on timesheet within the same sale order. You should split your order to include only one contract based on time and material."))
+        for order in self:
+            count = 0
+            for line in order.order_line:
+                if line.product_id.track_service == 'timesheet':
+                    count += 1
+                if count > 1:
+                    raise UserError(_("You can use only one product on timesheet within the same sale order. You should split your order to include only one contract based on time and material."))
         return {}
 
-    @api.one
+    @api.multi
     def action_confirm(self):
         result = super(SaleOrder, self).action_confirm()
-        if not self.project_id:
-            for line in self.order_line:
-                if line.product_id.track_service == 'timesheet':
-                    self._create_analytic_account(prefix=self.product_id.default_code or None)
-                    break
+        for order in self:
+            if not order.project_id:
+                for line in order.order_line:
+                    if line.product_id.track_service == 'timesheet':
+                        order._create_analytic_account(prefix=order.product_id.default_code or None)
+                        break
         return result
 
+    @api.multi
+    def action_view_timesheet(self):
+        self.ensure_one()
+        imd = self.env['ir.model.data']
+        action = imd.xmlid_to_object('hr_timesheet.act_hr_timesheet_line_evry1_all_form')
+        list_view_id = imd.xmlid_to_res_id('hr_timesheet.hr_timesheet_line_tree')
+        form_view_id = imd.xmlid_to_res_id('hr_timesheet.hr_timesheet_line_form')
+
+        result = {
+            'name': action.name,
+            'help': action.help,
+            'type': action.type,
+            'views': [[list_view_id, 'tree'], [form_view_id, 'form']],
+            'target': action.target,
+            'context': action.context,
+            'res_model': action.res_model,
+        }
+        if self.timesheet_count > 0:
+            result['domain'] = "[('id','in',%s)]" % self.timesheet_ids.ids
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+        return result
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

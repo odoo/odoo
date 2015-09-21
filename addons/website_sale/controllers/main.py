@@ -833,6 +833,7 @@ class website_sale(http.Controller):
                 values.update({
                     'tx_ids': True,
                     'state': state,
+                    'acquirer_id': tx.acquirer_id,
                     'validation': tx.acquirer_id.auto_confirm == 'none',
                     'tx_post_msg': tx.acquirer_id.post_msg or None
                 })

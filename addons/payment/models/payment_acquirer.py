@@ -123,7 +123,7 @@ class PaymentAcquirer(osv.Model):
         'pending_msg': '<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.',
         'done_msg': '<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.',
         'cancel_msg': '<i>Cancel,</i> Your payment has been cancelled.',
-        'error_msg': '<i>Error,</i> An error occurred. We cannot process your payment for the moment, please try again later.'
+        'error_msg': "<i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but won't be paid. Don't hesitate to contact us if you have any questions on the status of your order."
     }
 
     def _check_required_if_provider(self, cr, uid, ids, context=None):
@@ -414,7 +414,7 @@ class PaymentTransaction(osv.Model):
                 'partner_zip': partner and partner.zip or False,
                 'partner_address': _partner_format_address(partner and partner.street or '', partner and partner.street2 or ''),
                 'partner_city': partner and partner.city or False,
-                'partner_country_id': partner and partner.country_id.id or False,
+                'partner_country_id': partner and partner.country_id.id or self._default_partner_country_id(cr, uid, context=context),
                 'partner_phone': partner and partner.phone or False,
             }}
         return {}

@@ -5,7 +5,7 @@
 # http://www.thinkopensolutions.com.
 
 {
-    'name': 'Portugal - Chart of Accounts',
+    'name': 'Portugal - Accounting',
     'version': '0.011',
     'author': 'ThinkOpen Solutions',
     'website': 'http://www.thinkopensolutions.com/',

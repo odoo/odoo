@@ -88,11 +88,11 @@ class MailThread(models.AbstractModel):
         'Unread Messages Counter', compute='_get_message_unread',
         help="Number of unread messages")
     message_needaction = fields.Boolean(
-        'Need Action', compute='_get_message_needaction', search='_search_message_needaction',
-        help="If checked new messages require your attention.")
+        'Action Needed', compute='_get_message_needaction', search='_search_message_needaction',
+        help="If checked, new messages require your attention.")
     message_needaction_counter = fields.Integer(
-        'Need Action Counter', compute='_get_message_needaction',
-        help="Number of needaction messages")
+        'Number of Actions', compute='_get_message_needaction',
+        help="Number of messages which requires an action")
 
     @api.one
     @api.depends('message_follower_ids')
@@ -438,7 +438,7 @@ class MailThread(models.AbstractModel):
                     _logger.debug('subtype %s not found' % subtype_xmlid)
                     continue
                 record.message_post(subtype=subtype_xmlid, tracking_value_ids=tracking_value_ids)
-            else:
+            elif tracking_value_ids:
                 record.message_post(tracking_value_ids=tracking_value_ids)
 
         return True
@@ -1792,7 +1792,10 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _message_auto_subscribe_notify(self, partner_ids):
-        """ Notify newly subscribed followers of the last posted message. """
+        """ Notify newly subscribed followers of the last posted message.
+            :param partner_ids : the list of partner to add as needaction partner of the last message
+                                 (This excludes the current partner)
+        """
         if not partner_ids:
             return
         for record_id in self.ids:
@@ -1874,7 +1877,8 @@ class MailThread(models.AbstractModel):
         for pid, subtypes in new_followers.items():
             subtypes = list(subtypes) if subtypes is not None else None
             self.message_subscribe([pid], subtype_ids=subtypes)
-
+        # remove the current user from the needaction partner to avoid to notify the author of the message
+        user_pids = [user_pid for user_pid in user_pids if user_pid != self.env.user.partner_id.id]
         self._message_auto_subscribe_notify(user_pids)
 
         return True

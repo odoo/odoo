@@ -809,6 +809,7 @@ class AccountMoveLine(models.Model):
             amount = sum([r.amount_residual for r in self])
             vals['credit'] = amount > 0 and amount or 0.0
             vals['debit'] = amount < 0 and abs(amount) or 0.0
+        vals['partner_id'] = self.env['res.partner']._find_accounting_partner(self[0].partner_id).id
         company_currency = self[0].account_id.company_id.currency_id
         account_currency = self[0].account_id.currency_id or company_currency
         if 'amount_currency' not in vals and account_currency != company_currency:
@@ -818,7 +819,6 @@ class AccountMoveLine(models.Model):
         # Writeoff line in the account of self
         first_line_dict = vals.copy()
         first_line_dict['account_id'] = self[0].account_id.id
-        first_line_dict['partner_id'] = self[0].partner_id.id
         if 'analytic_account_id' in vals:
             del vals['analytic_account_id']
 

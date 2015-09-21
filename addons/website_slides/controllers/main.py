@@ -295,8 +295,8 @@ class website_slides(http.Controller):
         payload = request.httprequest.content_length
         # payload is total request content size so it's not exact size of file.
         # already add client validation this is for double check if client alter.
-        if (payload / 1024 / 1024 > 17):
-            return {'error': _('File is too big.')}
+        if (payload / 1024 / 1024 > 15):
+            return {'error': _('File is too big. File size cannot exceed 15MB')}
 
         values = dict((fname, post[fname]) for fname in [
             'name', 'url', 'tag_ids', 'slide_type', 'channel_id',

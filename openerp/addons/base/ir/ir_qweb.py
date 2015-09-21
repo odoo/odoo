@@ -27,12 +27,15 @@ import openerp.http
 import openerp.tools
 from openerp.tools.func import lazy_property
 import openerp.tools.lru
+from openerp.exceptions import QWebException
+from openerp.fields import Datetime
 from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_escape as escape
 from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
+from openerp.modules.module import get_resource_path
 
 _logger = logging.getLogger(__name__)
 
@@ -41,15 +44,6 @@ MAX_CSS_RULES = 4095
 #--------------------------------------------------------------------
 # QWeb template engine
 #--------------------------------------------------------------------
-class QWebException(Exception):
-    def __init__(self, message, **kw):
-        Exception.__init__(self, message)
-        self.qweb = dict(kw)
-    def pretty_xml(self):
-        if 'node' not in self.qweb:
-            return ''
-        return etree.tostring(self.qweb['node'], pretty_print=True)
-
 class QWebTemplateNotFound(QWebException):
     pass
 
@@ -1251,8 +1245,8 @@ class AssetsBundle(object):
         return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_id, context=self.context)
 
     def js(self):
-        attachments = self.get_attachments(type)
-        if not attachments or attachments[0].__last_update < max([asset.last_modified for asset in self.javascripts]):
+        attachments = self.get_attachments('js')
+        if not attachments or attachments[0]['__last_update'] < Datetime.to_string(max([asset.last_modified for asset in self.javascripts])):
             content = ';\n'.join(asset.minify() for asset in self.javascripts)
             return self.save_attachment('js', content)
         return attachments[0]
@@ -1395,21 +1389,19 @@ class WebAsset(object):
 
     def stat(self):
         if not (self.inline or self._filename or self._ir_attach):
-            addon = filter(None, self.url.split('/'))[0]
+            path = filter(None, self.url.split('/'))
+            self._filename = get_resource_path(*path)
+            if self._filename:
+                return
             try:
-                # Test url against modules static assets
-                mpath = openerp.http.addons_manifest[addon]['addons_path']
-                self._filename = mpath + self.url.replace('/', os.path.sep)
+                # Test url against ir.attachments
+                fields = ['__last_update', 'datas', 'mimetype']
+                domain = [('type', '=', 'binary'), ('url', '=', self.url)]
+                ira = self.registry['ir.attachment']
+                attach = ira.search_read(self.cr, openerp.SUPERUSER_ID, domain, fields, context=self.context)
+                self._ir_attach = attach[0]
             except Exception:
-                try:
-                    # Test url against ir.attachments
-                    fields = ['__last_update', 'datas', 'mimetype']
-                    domain = [('type', '=', 'binary'), ('url', '=', self.url)]
-                    ira = self.registry['ir.attachment']
-                    attach = ira.search_read(self.cr, openerp.SUPERUSER_ID, domain, fields, context=self.context)
-                    self._ir_attach = attach[0]
-                except Exception:
-                    raise AssetNotFound("Could not find %s" % self.name)
+                raise AssetNotFound("Could not find %s" % self.name)
 
     def to_html(self):
         raise NotImplementedError()
@@ -1618,8 +1610,7 @@ class LessStylesheetAsset(PreprocessedCSS):
                 lessc = find_in_path('lessc')
         except IOError:
             lessc = 'lessc'
-        webpath = openerp.http.addons_manifest['web']['addons_path']
-        lesspath = os.path.join(webpath, 'web', 'static', 'lib', 'bootstrap', 'less')
+        lesspath = get_resource_path('web', 'static', 'lib', 'bootstrap', 'less')
         return [lessc, '-', '--clean-css', '--no-js', '--no-color', '--include-path=%s' % lesspath]
 
 def rjsmin(script):

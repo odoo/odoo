@@ -166,8 +166,8 @@ class event_event(models.Model):
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
     blog_id = fields.Many2one('blog.blog', 'Event Blog')
-    show_track_proposal = fields.Boolean('Talks Proposals')
-    show_tracks = fields.Boolean('Show Tracks on Website')
+    show_track_proposal = fields.Boolean('Tracks Proposals', compute='_get_show_menu', inverse='_set_show_menu', store=True)
+    show_tracks = fields.Boolean('Show Tracks on Website', compute='_get_show_menu', inverse='_set_show_menu', store=True)
     show_blog = fields.Boolean('News')
     count_tracks = fields.Integer('Tracks', compute='_count_tracks')
     allowed_track_tag_ids = fields.Many2many('event.track.tag', relation='event_allowed_track_tags_rel', string='Available Track Tags')
@@ -185,6 +185,15 @@ class event_event(models.Model):
         if self.show_track_proposal:
             result.append((_('Talk Proposals'), '/event/%s/track_proposal' % slug(self)))
         return result
+
+    @api.one
+    def _set_show_menu(self):
+        # if the number of menu items have changed, then menu items must be regenerated
+        if self.menu_id:
+            nbr_menu_items = len(self._get_new_menu_pages()[0])
+            if nbr_menu_items != len(self.menu_id.child_id):
+                self.menu_id.unlink()
+        return super(event_event, self)._set_show_menu()[0]
 
 
 class event_sponsors_type(models.Model):

@@ -50,7 +50,7 @@ Available manifest fields are:
     name of the module author
 ``website`` (``str``)
     website URL for the module author
-``license`` (``str``, defaults: ``AGPL-3``)
+``license`` (``str``, defaults: ``LGPL-3``)
     distribution license for the module
 ``category`` (``str``, default: ``Uncategorized``)
     classification category within Odoo, rough business domain for the module.

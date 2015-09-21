@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="website_planner" name="website sale planner" inherit_id="website.website_planner">
-        <xpath expr="//t[contains(@t-value, 'Design')]/.." position="after">
+        <xpath expr="//t[@name='design_placeholder']/.." position="after">
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Sell'"/>
+                <t t-set="menu_categorytitle">Sell</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-shopping-cart'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Product Pages'"/>
+                    <t t-set="page_title">Product Pages</t>
                     <p class="text-muted">
                         The best way to start your online shop is by creating 3 products pages directly in the website.<br/>
                         To help you, here are some guidelines that will convert customers:
@@ -89,13 +89,13 @@
                             <div class="well well-lg">
                                 <strong>Contact us now:</strong><br/>
                                 <a href="#" target="_blank" ><i class="fa fa-comment-o"/> Website Live Chat on</a><br/>
-                                <a href="mailto:info@odoo.com?subject=Website%20Planner" target="_blank"><i class="fa fa-envelope-o"/> Email Our Website Expert</a>
+                                <a href="mailto:online@odoo.com?subject=Website%20Planner" target="_blank"><i class="fa fa-envelope-o"/> Email Our Website Expert</a>
                             </div>
                         </div>
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Import Your Products'"/>
+                    <t t-set="page_title">Import Your Products</t>
                     <p class="text-muted">Now you can also <strong>import your existing products:</strong></p>
                     <div class="row">
                         <div class="col-md-6 col-xs-12">
@@ -139,14 +139,14 @@
                                 <div class="well well-lg">
                                     <strong>Contact us now:</strong><br/>
                                     <a href="#" target="_blank" style="margin-right:10px"><span class="fa fa-comment-o"/> Website Live Chat on</a><br/>
-                                    <a href="mailto:info@odoo.com?subject=Website%20Planner" target="_blank"><span class="fa fa-envelope-o"/> Email Our Website Expert</a>
+                                    <a href="mailto:online@odoo.com?subject=Website%20Planner" target="_blank"><span class="fa fa-envelope-o"/> Email Our Website Expert</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Payment Methods'"/>
+                    <t t-set="page_title">Payment Methods</t>
                     <p class="text-muted">
                         In order to take money from customers, you need a way of accepting payments.<br/>
                         That's what a payment gateway is for: it helps you make money, but that does cost money.<br/>
@@ -220,7 +220,7 @@
                     </p>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Delivery Strategy'"/>
+                    <t t-set="page_title">Delivery Strategy</t>
                     <p class="text-muted">
                         Imagine a new customer who comes to your website, finds the product they want and add it to their cart.<br/>
                         Then they get to the checkout page and are hit with the delivery and handling charges.<br/>
@@ -277,9 +277,9 @@
                 </t>
             </t>
         </xpath>
-        <xpath expr="//t[contains(@t-value, 'Translate')]/.." position="after">
+        <xpath expr="//t[@name='translate_placeholder']/.." position="after">
             <t t-call="web_planner.page">
-                <t t-set="page_title" t-value="'Sell More'"/>
+                <t t-set="page_title">Sell More</t>
                 <p class="text-muted">
                     If you have an eCommerce, one of your objectives is of course to grow your revenues by
                     selling more and pricier products. Luckily for you, Odoo integrates three powerful

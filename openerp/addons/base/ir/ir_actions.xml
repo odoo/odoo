@@ -270,7 +270,7 @@
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
+                            <h1><field name="name" placeholder="e.g. Update order quantity"/></h1>
                         </div>
                         <group>
                             <group>
@@ -516,7 +516,7 @@
                     <field name="action_id"/>
                     <field name="type"/>
                     <field name="state" readonly="1"/>
-                    <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
+                    <button name="action_launch" states="open" string="Launch" type="object" icon="fa-cogs" help="Launch Configuration Wizard"/>
                     <button name="action_open" states="done"
                             string="Todo" type="object" help="Set as Todo"
                             icon="gtk-convert"/>
@@ -531,7 +531,7 @@
                   <header>
                         <button name="action_launch"
                             states="open" string="Launch"
-                            type="object" icon="gtk-execute" class="oe_highlight" 
+                            type="object" icon="fa-cogs" class="oe_highlight" 
                             help="Launch Configuration Wizard"/>
                         <button name="action_open" states="done"
                             string="Set as Todo" type="object"

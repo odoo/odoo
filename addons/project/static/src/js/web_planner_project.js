@@ -35,7 +35,7 @@ planner.PlannerDialog.include({
                     'input_element_stage_4' : _t('Done'),
                     'input_element_stage_5' : '',
                     'input_element_stage_6' : '',
-                    'input_element_stage_7' : _t('Has a clear description'),
+                    'input_element_stage_7' : _t('Action has a clear description'),
                     'input_element_stage_8' : _t('Work has started'),
                     'input_element_stage_9' : _t('Ready for layout / copywriting'),
                     'input_element_stage_10' : _t('Ready to be displayed, published or sent'),
@@ -52,7 +52,7 @@ planner.PlannerDialog.include({
                     'input_element_stage_5' : '',
                     'input_element_stage_6' : '',
                     'input_element_stage_7' : _t('Clear description and purpose'),
-                    'input_element_stage_8' : _t('Added in current sprit'),
+                    'input_element_stage_8' : _t('Added in current sprint'),
                     'input_element_stage_9' : _t('Ready for testing'),
                     'input_element_stage_10' : _t('Test is OK, need to document'),
                     'input_element_stage_11' : _t('Ready for release'),
@@ -70,9 +70,9 @@ planner.PlannerDialog.include({
                     'input_element_stage_7' : _t('Customer service has found new issue'),
                     'input_element_stage_8' : _t('Customer has reported new issue'),
                     'input_element_stage_9' : _t('Issue is being worked on'),
-                    'input_element_stage_10' : _t('Customer feedback has been asked'),
-                    'input_element_stage_11' : _t('Expert advice has been asked'),
-                    'input_element_stage_12' : _t('Issue is solved'),
+                    'input_element_stage_10' : _t('Customer feedback has been requested'),
+                    'input_element_stage_11' : _t('Expert advice has been requested'),
+                    'input_element_stage_12' : _t('Issue is resolved'),
                     'input_element_stage_13' : _t('Reason for cancellation has been documented'),
                 },
                 'repair_workshop': {
@@ -107,9 +107,9 @@ planner.PlannerDialog.include({
                     'input_element_stage_12' : '',
                     'input_element_stage_13' : '',
                 }
-            }
-            self.$('#input_element_kanban_stage_pipeline').on('change', function(ev) {
-                var option = self.$(ev.target).find(":selected").val();
+            };
+
+            var stage_handler = function (option) {
                 if (_.has(stages, option)) {
                     var values = stages[option];
                     var keys = _.keys(values);
@@ -118,10 +118,19 @@ planner.PlannerDialog.include({
                         self.$('#' + keys[i] + '_user').val(values[keys[i]]);
                     }
                 }
+            };
+
+            self.$('#input_element_kanban_stage_pipeline').on('change', function(ev) {
+                var option = self.$(ev.target).find(":selected").val();
+                stage_handler(option);
             });
             self.$( ".user_project" ).on('change', function() {
                 self.$("#" + self.$(this).attr("id") + "_user").val(self.$(this).val());
             });
+
+            // Load first option by default
+            var first_option = self.$('#input_element_kanban_stage_pipeline').find('option').first().val();
+            stage_handler(first_option);
         }
     }
 });

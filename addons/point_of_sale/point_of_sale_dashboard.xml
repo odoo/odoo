@@ -51,9 +51,9 @@
                 <field name="session_ids"/>
                 <field name="current_session_id"/>
                 <field name="current_session_state"/>
-                <field name="last_session_closing_cash"/>
                 <field name="last_session_closing_date"/>
                 <field name="pos_session_username"/>
+                <field name="currency_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div>
@@ -94,7 +94,7 @@
                                                 <span>Cash Balance</span>
                                             </div>
                                             <div class="col-xs-6">
-                                                <span><t t-esc="record.last_session_closing_cash.value"/></span>
+                                                <span><field name="last_session_closing_cash" widget="monetary"/></span>
                                             </div>
                                         </div>
                                     </div>

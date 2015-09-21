@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-09-18 08:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -61,14 +61,13 @@ msgid "<br/>\n"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid "<br/>\n"
-"    <strong>Payment Status:</strong>"
+#: model:ir.ui.view,arch_db:website_sale.order_state_message
+msgid "<i class=\"fa fa-cog\"/> Configure Transfer Details"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<i class=\"fa fa-comment-o\"/> Live Chat on"
+msgid "<i class=\"fa fa-comment-o\"/> Website Live Chat on"
 msgstr ""
 
 #. module: website_sale
@@ -114,7 +113,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<span class=\"fa fa-comment-o\"/> Live Chat on"
+msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
 msgstr ""
 
 #. module: website_sale
@@ -306,7 +305,7 @@ msgid "<strong>Order Details:</strong>"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+#: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "<strong>Payment Method:</strong>"
 msgstr ""
@@ -756,6 +755,11 @@ msgid "Defining a good delivery strategy is difficult: you don't want to cut int
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Delivery Strategy"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_quote_description
 msgid "Description for the quote"
 msgstr ""
@@ -789,7 +793,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:91
 #, python-format
-msgid "Drag the 'Big Picture' block and drop it in your page."
+msgid "Drag this website block and drop it in your page."
 msgstr ""
 
 #. module: website_sale
@@ -959,7 +963,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11044
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11179
 msgid "ID"
 msgstr ""
 
@@ -980,6 +984,11 @@ msgstr ""
 msgid "Imagine a new customer who comes to your website, finds the product they want and add it to their cart.<br/>\n"
 "                        Then they get to the checkout page and are hit with the delivery and handling charges.<br/>\n"
 "                        Suddenly, a product that looked like it was a fair price seems little expensive, and the customer leaves your website disappointed."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Import Your Products"
 msgstr ""
 
 #. module: website_sale
@@ -1087,7 +1096,7 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:921
+#: code:addons/website_sale/controllers/main.py:922
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:18
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1207,6 +1216,11 @@ msgid "Payment Method:"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Payment Methods"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_transaction
 msgid "Payment Transaction"
 msgstr ""
@@ -1273,6 +1287,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Product Name"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Product Pages"
 msgstr ""
 
 #. module: website_sale
@@ -1495,6 +1514,16 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_product_purchase_line_warn
 #: model:ir.model.fields,help:website_sale.field_product_product_sale_line_warn
 msgid "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Sell"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Sell More"
 msgstr ""
 
 #. module: website_sale
@@ -1858,7 +1887,7 @@ msgid "Website Pricelist"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:342
+#: code:addons/website_sale/models/sale_order.py:348
 #, python-format
 msgid "Website Pricelist for %s"
 msgstr ""

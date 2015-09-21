@@ -31,15 +31,13 @@
                                 <group>
                                     <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"/>
                                     <label for="street" string="Address"/>
-                                    <div>
-                                        <field name="street" placeholder="Street..."/>
-                                        <field name="street2"/>
-                                        <div>
-                                            <field name="city" placeholder="City" style="width: 40%%"/>
-                                            <field name="state_id" class="oe_no_button" placeholder="State" on_change="onchange_state(state_id)" style="width: 24%%" options='{"no_open": True}'/>
-                                            <field name="zip" placeholder="ZIP" style="width: 34%%"/>
-                                        </div>
-                                        <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' on_change="on_change_country(country_id)"/>
+                                    <div class="o_address_format">
+                                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="city" placeholder="City" class="o_address_city"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}' on_change="on_change_country(country_id)"/>
                                     </div>
                                     <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                                 </group>

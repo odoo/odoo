@@ -87,8 +87,8 @@
             <field name="arch" type="xml">
                 <search string="Products Price Search">
                     <field name="name" string="Products Price"/>
-                    <field name="active"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>
@@ -110,19 +110,21 @@
             <field name="arch" type="xml">
                 <form string="Products Price List">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <div class="oe_title">
                             <h1>
-                                <field name="name"/>
+                                <field name="name" placeholder="e.g. USD Retailers"/>
                             </h1>
                         </div>
-                        <group col="4">
-                            <group>
-                                <field name="active"/>
-                            </group>
-                            <group>
-                                <field name="currency_id" groups="base.group_multi_currency"/>
-                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            </group>
+                        <group>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                         <div groups="product.group_pricelist_item">
                             <separator string="Pricelist Items"/>

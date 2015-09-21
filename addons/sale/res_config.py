@@ -54,8 +54,8 @@ class sale_configuration(osv.TransientModel):
             ], "Online Quotations"),
         'group_sale_delivery_address': fields.selection([
             (0, "Invoicing and shipping addresses are always the same (Example: services companies)"),
-            (1, 'Have 3 fields on sales orders: customer, invoice address, delivery address')
-            ], "Customer Addresses", implied_group='sale.group_delivery_invoice_address'),
+            (1, 'Display 3 fields on sales orders: customer, invoice address, delivery address')
+            ], "Addresses", implied_group='sale.group_delivery_invoice_address'),
         'sale_pricelist_setting': fields.selection([('fixed', 'A single sale price per product'), ('percentage', 'Different prices per customer segment'), ('formula', 'Advanced pricing based on formula')], required=True,
         help='Fix Price: all price manage from products sale price.\n'
              'Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n'
@@ -64,7 +64,10 @@ class sale_configuration(osv.TransientModel):
             ('order', 'Invoice ordered quantities'),
             ('delivery', 'Invoice delivered quantities'),
             ('cost', 'Invoice based on costs (time and material, expenses)')
-            ], 'Default Invoicing', default_model='product.template')
+            ], 'Default Invoicing', default_model='product.template'),
+        'deposit_product_id_setting': fields.many2one('product.product', 'Default Advance Product',\
+            domain="[('type', '=', 'service')]",\
+            help='Default product used for payment advances'),
     }
 
     _defaults = {
@@ -77,12 +80,18 @@ class sale_configuration(osv.TransientModel):
         res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'sale_pricelist_setting', sale_price)
         return res
 
+    def set_deposit_product_id_defaults(self, cr, uid, ids, context=None):
+        deposit_product_id = self.browse(cr, uid, ids, context=context).deposit_product_id_setting
+        res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'deposit_product_id_setting', deposit_product_id.id)
+        return res
+
     def onchange_sale_price(self, cr, uid, ids, sale_pricelist_setting, context=None):
         if sale_pricelist_setting == 'percentage':
             return {'value': {'group_product_pricelist': True, 'group_sale_pricelist': True, 'group_pricelist_item': False}}
         if sale_pricelist_setting == 'formula':
             return {'value': {'group_pricelist_item': True, 'group_sale_pricelist': True, 'group_product_pricelist': False}}
         return {'value': {'group_pricelist_item': False, 'group_sale_pricelist': False, 'group_product_pricelist': False}}
+
 
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'

@@ -66,8 +66,8 @@ class Alias(models.Model):
                                default=lambda self: self.env["ir.config_parameter"].get_param("mail.catchall.domain"))
     alias_parent_model_id = fields.Many2one(
         'ir.model', 'Parent Model',
-        help="Parent model holding the alias. The model holding the alias reference"
-             "is not necessarily the model given by alias_model_id"
+        help="Parent model holding the alias. The model holding the alias reference "
+             "is not necessarily the model given by alias_model_id "
              "(example: project (parent_model) and task (model))")
     alias_parent_thread_id = fields.Integer('Parent Record Thread ID', help="ID of the parent record holding the alias (example: project holding the task creation alias)")
     alias_contact = fields.Selection([

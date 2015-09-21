@@ -250,7 +250,7 @@ var KanbanView = View.extend({
                     def = dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit });
                 }
                 return def.then(function (records) {
-                    self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
+                    self.dataset.ids.push.apply(self.dataset.ids, _.difference(dataset.ids, self.dataset.ids));
                     group.records = records;
                     group.dataset = dataset;
                     is_empty = is_empty && !records.length;
@@ -544,7 +544,7 @@ var KanbanView = View.extend({
                     }
                 });
                 // we use boostrap tooltips for better and faster display
-                self.$('span.o_tag').tooltip();
+                self.$('span.o_tag').tooltip({delay: {'show': 50}});
             });
         });
     },

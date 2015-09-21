@@ -112,6 +112,7 @@ class res_partner_category(osv.Model):
     _name = 'res.partner.category'
     _columns = {
         'name': fields.char('Category Name', required=True, translate=True),
+        'color': fields.integer('Color Index'),
         'parent_id': fields.many2one('res.partner.category', 'Parent Tag', select=True, ondelete='cascade'),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Full Name'),
         'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Child Tag'),

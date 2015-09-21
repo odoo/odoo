@@ -187,7 +187,6 @@ class sale_quote(http.Controller):
                 'amount': order.amount_total,
                 'currency_id': order.pricelist_id.currency_id.id,
                 'partner_id': order.partner_id.id,
-                'partner_country_id': order.partner_id.country_id.id,
                 'reference': order.name,
                 'sale_order_id': order.id,
                 'callback_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"

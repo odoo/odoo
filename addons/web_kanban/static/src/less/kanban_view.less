@@ -5,7 +5,9 @@
 @o-kanban-small-record-width: 240px;
 
 @o-kanban-image-width: 64px;
-@o-kanban-inside-gutter: 8px;
+@o-kanban-inside-vgutter: 8px;
+@o-kanban-inside-hgutter: 8px;
+@o-kanban-inside-hgutter-mobile: @odoo-horizontal-padding;
 
 // mixins
 .o-kanban-icon() {
@@ -47,7 +49,10 @@
             width: @o-kanban-image-width;
 
             + div {
-                padding-left: @o-kanban-image-width + @o-kanban-inside-gutter;
+                padding-left: @o-kanban-image-width + @o-kanban-inside-hgutter;
+                @media (max-width: @screen-xs-max) {
+                    padding-left:  @o-kanban-image-width + @o-kanban-inside-hgutter-mobile;
+                }
             }
         }
 
@@ -94,8 +99,11 @@
         }
 
         .o_kanban_tags {
-            margin: 0 0 8px -8px;
-            height: 9px;
+            margin: 0 0 @o-kanban-inside-vgutter -@o-kanban-inside-hgutter;
+            @media (max-width: @screen-xs-max) {
+                margin-left:  -@o-kanban-inside-hgutter-mobile;
+            }
+            max-height: 9px;
             .o_tag {
                 width: 40px;
                 height: 9px;
@@ -213,7 +221,10 @@
     .o_kanban_record {
         background-color: white;
         box-shadow: 0px 0px 1px 1px lighten(@odoo-main-text-color, 10%);
-        padding: @o-kanban-inside-gutter;
+        padding: @o-kanban-inside-vgutter @o-kanban-inside-hgutter;
+        @media (max-width: @screen-xs-max) {
+            padding: @o-kanban-inside-vgutter @o-kanban-inside-hgutter-mobile;
+        }
 
         &:hover .o_dropdown_kanban {
             visibility: visible;
@@ -257,7 +268,10 @@
             margin-top: 15px;
 
             > button, > a {
-                .o-position-absolute(@right: @o-kanban-inside-gutter, @bottom: @o-kanban-inside-gutter);
+                .o-position-absolute(@right: @o-kanban-inside-hgutter, @bottom: @o-kanban-inside-vgutter);
+                @media (max-width: @screen-xs-max) {
+                    right: @o-kanban-inside-hgutter-mobile;
+                }
             }
         }
 
@@ -370,9 +384,6 @@
                 .o-flex(1, 1, auto);
                 white-space: nowrap;
                 padding-top: 5px;
-            }
-            .o_kanban_quick_add.oe_tip_show_element i {
-                color: @odoo-brand-optional;
             }
             .o_kanban_quick_add i {
                 .o-kanban-icon;

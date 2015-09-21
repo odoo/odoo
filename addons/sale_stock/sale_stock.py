@@ -24,19 +24,15 @@ class SaleOrder(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
         required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         default=_default_warehouse_id)
-    picking_ids = fields.One2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this sale')
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this sale')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
 
     @api.multi
     @api.depends('procurement_group_id')
     def _compute_picking_ids(self):
         for order in self:
-            if not order.procurement_group_id:
-                order.picking_ids = []
-                order.delivery_count = 0
-            else:
-                order.picking_ids = self.env['stock.picking'].search([('group_id', '=', order.procurement_group_id.id)]).ids
-                order.delivery_count = len(order.picking_ids.ids)
+            order.picking_ids = self.env['stock.picking'].search([('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
+            order.delivery_count = len(order.picking_ids)
 
     @api.onchange('warehouse_id')
     def _onchange_warehouse_id(self):
@@ -85,7 +81,6 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self)._prepare_procurement_group()
         res.update({'move_type': self.picking_policy, 'partner_id': self.partner_shipping_id.id})
         return res
-
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
@@ -167,21 +162,21 @@ class SaleOrderLine(models.Model):
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
             if move.location_dest_id.usage == "customer":
                 qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
-            elif move.location_id.usage == "customer":
-                qty -= self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
         return qty
 
     @api.multi
     def _check_package(self):
-        default_uom = self.product_id.product_uom
+        default_uom = self.product_id.uom_id
         pack = self.product_packaging
         qty = self.product_uom_qty
-        q = self.product_id.product_uom._compute_qty(pack.qty, default_uom)
+        q = self.env['product.uom']._compute_qty_obj(default_uom, pack.qty, self.product_uom)
         if qty and q and (qty % q):
             newqty = qty - (qty % q) + q
             return {
-               'title': _('Warning!'),
-               'message': _("This product is packaged by %d %s. You should sell %d %s.") % (pack.qty, default_uom, newqty, default_uom)
+                'warning': {
+                    'title': _('Warning'),
+                    'message': _("This product is packaged by %d . You should sell %d .") % (pack.qty, newqty),
+                },
             }
         return {}
 

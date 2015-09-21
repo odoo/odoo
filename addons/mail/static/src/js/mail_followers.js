@@ -112,7 +112,8 @@ var Followers = form_common.AbstractField.extend({
     on_edit_subtype: function(event) {
         var self = this;
         var $currentTarget = $(event.currentTarget);
-        var user_pid = $currentTarget.data('id');
+        var user_pid = $currentTarget.data('res-id');
+        var follower_id = $currentTarget.data('id');
         self.dialog = new Dialog(this, {
                         size: 'small',
                         title: _t('Edit Subscription of ') + $currentTarget.siblings('a').text(),
@@ -130,7 +131,7 @@ var Followers = form_common.AbstractField.extend({
                                 },
                             ],
                 }).open();
-        return self.fetch_subtypes(user_pid);
+        return self.fetch_subtypes(follower_id);
     },
 
     on_invite_follower: function (channel_only) {
@@ -277,11 +278,11 @@ var Followers = form_common.AbstractField.extend({
     },
 
     /** Fetch subtypes, only if current user is follower */
-    fetch_subtypes: function (user_pid) {
+    fetch_subtypes: function (follower_id) {
         var self = this;
         var dialog = false;
 
-        if (user_pid) {
+        if (follower_id) {
             dialog = true;
         }
         else {
@@ -295,7 +296,7 @@ var Followers = form_common.AbstractField.extend({
             }
         }
         if (this.follower_id) {
-            return ajax.jsonRpc('/mail/read_subscription_data', 'call', {'res_model': this.view.model, 'res_id': this.view.datarecord.id})
+            return ajax.jsonRpc('/mail/read_subscription_data', 'call', {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'follower_id': follower_id})
                 .then(function (data) { self.display_subtypes(data, dialog); });
         } else  {
             return $.Deferred().resolve();
@@ -381,35 +382,38 @@ var Followers = form_common.AbstractField.extend({
         var self = this;
         this.data_subtype = {};
 
+        var kwargs = {};
         var action_subscribe = 'message_subscribe_users';
-        var follower_ids = [session.uid];
         var subtypes = this.$('.o_followers_actions input[type="checkbox"]');
 
         // Subtypes edited from the modal
         if (user_pid) {
             action_subscribe = 'message_subscribe';
-            follower_ids = [user_pid];
             subtypes = this.dialog.$('input[type="checkbox"]');
+            kwargs['partner_ids'] = [user_pid];
+        }else{
+            kwargs['user_ids'] = [session.uid];
         }
 
+        // Get the subtype ids
         var checklist = [];
         _(subtypes).each(function (record) {
             if ($(record).is(':checked')) {
                 checklist.push(parseInt($(record).data('id')));
             }
         });
+        kwargs['subtype_ids'] = checklist;
 
+        // If no more subtype followed, unsubscribe the partner.
         if (!checklist.length) {
             if (!this.do_unfollow(undefined, [user_pid], undefined)) {
                 $(event.target).attr("checked", "checked");
             } else {
                   self.$('.o_subtypes_list ul').empty();
             }
-        }
-        else {
-            var context = new data.CompoundContext(this.build_context(), {});
-            return this.ds_model.call(action_subscribe, [[this.view.datarecord.id], follower_ids, undefined, checklist, context])
-                .then(this.proxy('read_value'));
+        } else {
+            kwargs['context'] = new data.CompoundContext(this.build_context(), {});
+            return this.ds_model._model.call(action_subscribe, [[this.view.datarecord.id]], kwargs).then(this.proxy('read_value'));
         }
     },
 });

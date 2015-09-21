@@ -1,5 +1,5 @@
 {
-    'name': 'Link Tracker',
+    'name': 'Website Link Tracker',
     'category': 'Hidden',
     'description': """
 Website interface to create short and trackable URLs.

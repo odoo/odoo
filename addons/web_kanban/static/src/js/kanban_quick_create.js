@@ -7,8 +7,12 @@ var RecordQuickCreate = Widget.extend({
     template: "KanbanView.QuickCreate",
 
     events: {
-        'click .o_kanban_cancel': 'cancel',
-        'click .o_kanban_add': 'add_record',
+        'click .o_kanban_cancel': function (event) {
+            this.cancel();
+        },
+        'click .o_kanban_add': function (event) {
+            this.add_record();
+        },
         'keypress input': function (event) {
             if (event.keyCode === 13) {
                 this.add_record();
@@ -16,9 +20,11 @@ var RecordQuickCreate = Widget.extend({
         },
         'keydown': function (event) {
             if (event.keyCode === 27) {
-                this.trigger_up('cancel_quick_create');
+                this.cancel();
             }
         },
+        'mousedown .o_kanban_add': 'suppress',
+        'mousedown .o_kanban_cancel': 'suppress',
     },
 
     init: function (parent, width) {
@@ -43,15 +49,23 @@ var RecordQuickCreate = Widget.extend({
         this.trigger_up('quick_create_add_record', {value: value});
         this.$input.focus();
     },
+    suppress: function (e) {
+        e.preventDefault();
+    },
 });
 
 var ColumnQuickCreate = Widget.extend({
     template: 'KanbanView.ColumnQuickCreate',
 
     events: {
+        'click': 'toggle',
         'click .o_kanban_add': function (event) {
             event.stopPropagation();
             this.add_column();
+        },
+        'click .o_kanban_cancel': function (event) {
+            this.folded = true;
+            this.update();
         },
         'click .o_kanban_quick_create': function (event) {
             event.stopPropagation();
@@ -61,16 +75,22 @@ var ColumnQuickCreate = Widget.extend({
                 this.add_column();
             }
         },
-        'click .o_kanban_cancel': function (event) {
-            this.folded = true;
-            this.update();
-        },
         'keydown': function (event) {
             if (event.keyCode === 27) {
                 this.folded = true;
                 this.update();
             }
         },
+        'focusout': function () {
+            var hasFocus = this.$(':focus').length > 0;
+            if (hasFocus) { return; }
+
+            this.folded = true;
+            this.$input.val('');
+            this.update();
+        },
+        'mousedown .o_kanban_add': 'suppress',
+        'mousedown .o_kanban_cancel': 'suppress',
     },
 
     init: function (parent) {
@@ -82,17 +102,6 @@ var ColumnQuickCreate = Widget.extend({
         this.$header = this.$('.o_column_header');
         this.$quick_create = this.$('.o_kanban_quick_create');
         this.$input = this.$('input');
-        this.$el.click(this.proxy('toggle'));
-        var self = this;
-        this.$el.focusout(function () {
-            setTimeout(function() {
-                var hasFocus = !! (self.$(':focus').length > 0);
-                if (! hasFocus) {
-                    self.folded = true;
-                    self.update();
-                }
-            }, 10);
-        });
     },
 
     toggle: function () {
@@ -115,7 +124,10 @@ var ColumnQuickCreate = Widget.extend({
         if (/^\s*$/.test(name)) { return; }
         this.trigger_up('quick_create_add_column', {value: name});
         this.$input.focus();
-    }
+    },
+    suppress: function (e) {
+        e.preventDefault();
+    },
 });
 
 return {

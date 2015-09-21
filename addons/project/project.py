@@ -105,9 +105,12 @@ class project(osv.osv):
             res[id] = (project_attachments or 0) + (task_attachments or 0)
         return res
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
         res={}
-        for tasks in self.browse(cr, uid, ids, dict(context, active_test=False)):
-            res[tasks.id] = len(tasks.task_ids)
+        for project in self.browse(cr, uid, ids, context=context):
+            tasks_undefined_stage = self.pool['project.task'].search_count(cr, uid, [('stage_id', '=', None), ('project_id', '=', project.id)], context=context)
+            res[project.id] = len(project.task_ids) + int(tasks_undefined_stage) 
         return res
     def _get_alias_models(self, cr, uid, context=None):
         """ Overriden in project_issue to offer more options """

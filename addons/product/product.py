@@ -232,7 +232,7 @@ class produce_price_history(osv.osv):
 
     _columns = {
         'company_id': fields.many2one('res.company', required=True),
-        'product_template_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade'),
         'datetime': fields.datetime('Date'),
         'cost': fields.float('Cost'),
     }
@@ -418,30 +418,6 @@ class product_template(osv.osv):
 
         return product.write({'list_price': value})
 
-    def get_history_price(self, cr, uid, product_tmpl, company_id, date=None, context=None):
-        if context is None:
-            context = {}
-        if date is None:
-            date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        price_history_obj = self.pool.get('product.price.history')
-        history_ids = price_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_template_id', '=', product_tmpl), ('datetime', '<=', date)], limit=1)
-        if history_ids:
-            return price_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
-        return 0.0
-
-    def _set_standard_price(self, cr, uid, product_tmpl_id, value, context=None):
-        ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
-        if context is None:
-            context = {}
-        price_history_obj = self.pool['product.price.history']
-        user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        company_id = context.get('force_company', user_company)
-        price_history_obj.create(cr, uid, {
-            'product_template_id': product_tmpl_id,
-            'cost': value,
-            'company_id': company_id,
-        }, context=context)
-
     def _get_product_variant_count(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for product in self.browse(cr, uid, ids, context=context):
@@ -450,13 +426,15 @@ class product_template(osv.osv):
 
     def _compute_product_template_field(self, cr, uid, ids, names, arg, context=None):
         ''' Compute the field from the product_variant if there is only one variant, otherwise returns 0.0 '''
+        if isinstance(names, basestring):
+            names = [names]
         res = {id: {} for id in ids}
         templates = self.browse(cr, uid, ids, context=context)
         unique_templates = [template.id for template in templates if template.product_variant_count == 1]
         for template in templates:
             for name in names:
                 res[template.id][name] = getattr(template.product_variant_ids[0], name) if template.id in unique_templates else 0.0
-        return res     
+        return res
 
     def _set_product_template_field(self, cr, uid, product_tmpl_id, name, value, args, context=None):
         ''' Set the standard price modification on the variant if there is only one variant '''
@@ -464,7 +442,16 @@ class product_template(osv.osv):
         if template.product_variant_count == 1:
             variant = self.pool['product.product'].browse(cr, uid, template.product_variant_ids.id, context=context)
             return variant.write({name: value})
-        return {}        
+        return {}
+
+    def _search_by_standard_price(self, cr, uid, obj, name, domain, context=None):
+        r = self.pool['product.product'].search_read(cr, uid, domain, ['product_tmpl_id'],
+                                                     limit=None, context=context)
+        return [('id', 'in', [x['product_tmpl_id'][0] for x in r])]
+
+    def _get_template_id_from_product(self, cr, uid, ids, context=None):
+        r = self.pool['product.product'].read(cr, uid, ids, ['product_tmpl_id'], context=context)
+        return [x['product_tmpl_id'][0] for x in r]
 
     def _select_seller(self, cr, uid, ids, name, arg, context=None):
         if context is None:
@@ -504,7 +491,8 @@ class product_template(osv.osv):
         'description_sale': fields.text('Sale Description',translate=True,
             help="A description of the Product that you want to communicate to your customers. "
                  "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),
-        'type': fields.selection(_get_product_template_type_wrapper, 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),        
+        'type': fields.selection(_get_product_template_type_wrapper, 'Product Type', required=True,
+            help="A consumable is a product for which you don't manage stock, a service is a non-material product provided by a company or an individual."),
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'price': fields.function(_product_template_price, fnct_inv=_set_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
@@ -515,10 +503,16 @@ class product_template(osv.osv):
             string='Currency'),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
-        'standard_price': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Cost', digits_compute=dp.get_precision('Product Price'), 
-                                          help="Cost of the product, in the default unit of measure of the product.", groups="base.group_user", store=True),
-        'volume': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Volume', help="The volume in m3.", store=True),
-        'weight': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc.", store=True),
+        'standard_price': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, fnct_search=_search_by_standard_price, multi='_compute_product_template_field', type='float', string='Cost', digits_compute=dp.get_precision('Product Price'),
+                                          help="Cost of the product, in the default unit of measure of the product.", groups="base.group_user"),
+        'volume': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Volume', help="The volume in m3.", store={
+            _name: (lambda s,c,u,i,t: i, ['product_variant_ids'], 10),
+            'product.product': (_get_template_id_from_product, ['product_tmpl_id', 'volume'], 10),
+        }),
+        'weight': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc.", store={
+            _name: (lambda s,c,u,i,t: i, ['product_variant_ids'], 10),
+            'product.product': (_get_template_id_from_product, ['product_tmpl_id', 'weight'], 10),
+        }),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
@@ -560,7 +554,7 @@ class product_template(osv.osv):
             help="This is minimum quantity to purchase from Main Vendor."),
         'seller_id': fields.related('selected_seller_id','name', type='many2one', relation='res.partner', string='Main Vendor',
             help="Main vendor who has highest priority in vendor list."),
-        'seller_price': fields.related('selected_seller_id','price', type='float', string='Vendor Price', help="Purchase price from from Main Vendor."),
+        'seller_price': fields.related('selected_seller_id','price', type='float', string='Vendor Price', help="Purchase price from main vendor."),
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
@@ -706,7 +700,6 @@ class product_template(osv.osv):
         product_template_id = super(product_template, self).create(cr, uid, vals, context=context)
         if not context or "create_product_product" not in context:
             self.create_variant_ids(cr, uid, [product_template_id], context=context)
-        self._set_standard_price(cr, uid, product_template_id, vals.get('standard_price', 0.0), context=context)
 
         # TODO: this is needed to set given values to first variant after creation
         # these fields should be moved to product as lead to confusion
@@ -727,12 +720,6 @@ class product_template(osv.osv):
         return product_template_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if 'standard_price' in vals:
-            for prod_template_id in ids:
-                self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
         res = super(product_template, self).write(cr, uid, ids, vals, context=context)
         if 'attribute_line_ids' in vals or vals.get('active'):
             self.create_variant_ids(cr, uid, ids, context=context)
@@ -950,7 +937,7 @@ class product_product(osv.osv):
     _columns = {
         'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
-        'lst_price': fields.function(_product_lst_price, fnct_inv=_set_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
+        'lst_price': fields.function(_product_lst_price, fnct_inv=_set_product_lst_price, type='float', string='Sale Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', select=True),
@@ -1166,10 +1153,44 @@ class product_product(osv.osv):
                 'target': 'new'}
 
     def create(self, cr, uid, vals, context=None):
+        ctx = dict(context or {}, create_product_product=True)
+        product_id = super(product_product, self).create(cr, uid, vals, context=ctx)
+        self._set_standard_price(cr, uid, product_id, vals.get('standard_price', 0.0), context=context)
+        return product_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = super(product_product, self).write(cr, uid, ids, vals, context=context)
+        if 'standard_price' in vals:
+            for product_id in ids:
+                self._set_standard_price(cr, uid, product_id, vals['standard_price'], context=context)
+        return res
+
+    def _set_standard_price(self, cr, uid, product_id, value, context=None):
+        ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
         if context is None:
             context = {}
-        ctx = dict(context or {}, create_product_product=True)
-        return super(product_product, self).create(cr, uid, vals, context=ctx)
+        price_history_obj = self.pool['product.price.history']
+        user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        company_id = context.get('force_company', user_company)
+        price_history_obj.create(cr, uid, {
+            'product_id': product_id,
+            'cost': value,
+            'company_id': company_id,
+        }, context=context)
+
+    def get_history_price(self, cr, uid, product_id, company_id, date=None, context=None):
+        if context is None:
+            context = {}
+        if date is None:
+            date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        price_history_obj = self.pool.get('product.price.history')
+        history_ids = price_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_id', '=', product_id), ('datetime', '<=', date)], limit=1)
+        if history_ids:
+            return price_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
+        return 0.0
 
 
 class product_packaging(osv.osv):

@@ -16,7 +16,7 @@
                             attrs="{'invisible': [('count','&gt;',1)]}"/>
                         <field name="product_id"
                             context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
-                            attrs="{'invisible': [('advance_payment_method','not in', ('fixed','percentage'))]}"/>
+                            attrs="{'invisible': 1}"/>
                         <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
                         <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
                             <field name="amount"
@@ -24,18 +24,16 @@
                             <label string="%%"
                                 attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
                         </div>
+                        <field name="deposit_account_id" class="oe_inline"
+                            attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
+                        <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
+                            attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
                     </group>
-                    <div attrs="{'invisible': [('advance_payment_method', '!=', 'delivered')]}">
-                        <span class="oe_grey">
-                        Note that if you select 'Invoiceable lines (without refunds)', you won't be able to create an invoice with a negative total amount.
-                        </span>
-                    </div>
                     <footer>
                         <button name="create_invoices" string="Create and View Invoices" type="object"
                             context="{'open_invoices': True}" class="btn-primary"/>
                         <button name="create_invoices" string="Create Invoices" type="object"
                             class="btn-primary"/>
-                        or
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>

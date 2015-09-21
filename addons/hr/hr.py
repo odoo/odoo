@@ -19,6 +19,7 @@ class hr_employee_category(osv.Model):
     _description = "Employee Category"
     _columns = {
         'name': fields.char("Employee Tag", required=True),
+        'color': fields.integer('Color Index'),
         'employee_ids': fields.many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', 'Employees'),
     }
     _sql_constraints = [

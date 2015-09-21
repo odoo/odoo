@@ -956,9 +956,12 @@ class Field(object):
         spec = [(self, records._ids)]
         for field, path in records._field_triggers[self]:
             if path and field.store:
-                # don't move this line to function top, see log
-                env = records.env(user=SUPERUSER_ID, context={'active_test': False})
-                target = env[field.model_name].search([(path, 'in', records.ids)])
+                if path == 'id':
+                    target = records
+                else:
+                    # don't move this line to function top, see log
+                    env = records.env(user=SUPERUSER_ID, context={'active_test': False})
+                    target = env[field.model_name].search([(path, 'in', records.ids)])
                 if target:
                     spec.append((field, target._ids))
                     # recompute field on target in the environment of records,
@@ -985,7 +988,7 @@ class Field(object):
             computed = target.browse(env.computed[field])
             if path == 'id':
                 target = records - computed
-            elif path:
+            elif path and env.in_onchange:
                 target = (target.browse(env.cache[field]) - computed).filtered(
                     lambda rec: rec._mapped_cache(path) & records
                 )
@@ -1181,9 +1184,10 @@ class Char(_String):
     :param int size: the maximum size of values stored for that field
 
     :param translate: enable the translation of the field's values; use
-        `translate=True` to translate field values as a whole; `translate` may
-        also be a callable such that `translate(callback, value)` translates
-        `value` by using `callback(term)` to retrieve the translation of terms.
+        ``translate=True`` to translate field values as a whole; ``translate``
+        may also be a callable such that ``translate(callback, value)``
+        translates ``value`` by using ``callback(term)`` to retrieve the
+        translation of terms.
     """
     type = 'char'
     _slots = {
@@ -1209,9 +1213,10 @@ class Text(_String):
     have a size and usually displayed as a multiline text box.
 
     :param translate: enable the translation of the field's values; use
-        `translate=True` to translate field values as a whole; `translate` may
-        also be a callable such that `translate(callback, value)` translates
-        `value` by using `callback(term)` to retrieve the translation of terms.
+        ``translate=True`` to translate field values as a whole; ``translate``
+        may also be a callable such that ``translate(callback, value)``
+        translates ``value`` by using ``callback(term)`` to retrieve the
+        translation of terms.
     """
     type = 'text'
 

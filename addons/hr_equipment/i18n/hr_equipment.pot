@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-09-18 08:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,6 +47,13 @@ msgid "Acer Laptop"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
 msgid "Active"
 msgstr ""
@@ -82,13 +89,42 @@ msgid "Aliased Model"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_equipment_assign_to
-msgid "Allocate To"
+#: sql_constraint:hr.equipment:0
+msgid "Another asset already exists with this serial number!"
 msgstr ""
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
 msgid "Apply"
+msgstr ""
+
+#. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
+msgid "Asset"
+msgstr ""
+
+#. module: hr_equipment
+#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_category_action
+#: model:ir.ui.menu,name:hr_equipment.menu_equipment_cat
+msgid "Asset Categories"
+msgstr ""
+
+#. module: hr_equipment
+#: model:ir.model,name:hr_equipment.model_hr_equipment_category
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5393
+msgid "Asset Category"
+msgstr ""
+
+#. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_name
+msgid "Asset Name"
+msgstr ""
+
+#. module: hr_equipment
+#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action_from_category_form
+#: model:ir.ui.menu,name:hr_equipment.menu_hr_equipment_form
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
+msgid "Assets"
 msgstr ""
 
 #. module: hr_equipment
@@ -139,23 +175,13 @@ msgid "Assigned to Employees and Departments"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+msgid "Available"
+msgstr ""
+
+#. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
 msgid "Blocked"
-msgstr ""
-
-#. module: hr_equipment
-#: selection:hr.equipment,equipment_assign_to:0
-msgid "By Department"
-msgstr ""
-
-#. module: hr_equipment
-#: selection:hr.equipment,equipment_assign_to:0
-msgid "By Employee"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_equipment_assign_to
-msgid "By Employee: equipment assigned to individual Employee, By Department: equipment assigned to group of employees in department"
 msgstr ""
 
 #. module: hr_equipment
@@ -265,6 +291,11 @@ msgid "Created on"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_maintenance_open_count
+msgid "Current Maintenance"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_last_post
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_last_post
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_last_post
@@ -283,6 +314,7 @@ msgid "Delete"
 msgstr ""
 
 #. module: hr_equipment
+#: selection:hr.equipment,equipment_assign_to:0
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_department_id
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
@@ -322,6 +354,7 @@ msgid "Email alias for this equipment category. New emails will automatically cr
 msgstr ""
 
 #. module: hr_equipment
+#: selection:hr.equipment,equipment_assign_to:0
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_employee_id
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
@@ -331,10 +364,7 @@ msgid "Employee"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model,name:hr_equipment.model_hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_equipment_count
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
 msgid "Equipment"
 msgstr ""
 
@@ -346,16 +376,8 @@ msgid "Equipment Assigned"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_category_action
-#: model:ir.ui.menu,name:hr_equipment.menu_equipment_cat
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
 msgid "Equipment Categories"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5271
-msgid "Equipment Category"
 msgstr ""
 
 #. module: hr_equipment
@@ -364,21 +386,7 @@ msgid "Equipment Name"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model,name:hr_equipment.model_hr_equipment_request
-msgid "Equipment Request"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.model,name:hr_equipment.model_hr_equipment_stage
-msgid "Equipment Stage"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action_from_category_form
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_equipment_ids
-#: model:ir.ui.menu,name:hr_equipment.menu_equipment_title
-#: model:ir.ui.menu,name:hr_equipment.menu_hr_equipment_form
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
 msgid "Equipments"
 msgstr ""
@@ -458,13 +466,24 @@ msgid "ID of the parent record holding the alias (example: project holding the t
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction
+#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action
+#: model:ir.model,name:hr_equipment.model_hr_equipment
+#: model:ir.ui.menu,name:hr_equipment.menu_equipment_title
+msgid "IT Assets"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread
 msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: hr_equipment
+#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction
+#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
+#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
+msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: hr_equipment
@@ -532,6 +551,11 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_location
+msgid "Location"
+msgstr ""
+
+#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "Low"
 msgstr ""
@@ -546,7 +570,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
 msgid "Maintenance Request"
 msgstr ""
 
@@ -574,8 +597,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_equipment.hr_equipment_request_action
 #: model:ir.actions.act_window,name:hr_equipment.hr_equipment_request_action_from_equipment
 #: model:ir.actions.act_window,name:hr_equipment.hr_equipment_request_action_link
+#: model:ir.model,name:hr_equipment.model_hr_equipment_request
 #: model:ir.ui.menu,name:hr_equipment.menu_m_request_form
 msgid "Maintenance Requests"
+msgstr ""
+
+#. module: hr_equipment
+#: model:ir.model,name:hr_equipment.model_hr_equipment_stage
+msgid "Maintenance Stage"
 msgstr ""
 
 #. module: hr_equipment
@@ -615,7 +644,7 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "My Equipments"
+msgid "My Assets"
 msgstr ""
 
 #. module: hr_equipment
@@ -624,30 +653,10 @@ msgid "My Requests"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_name
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_name
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_tree
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
 msgid "Name"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "New"
 msgstr ""
 
 #. module: hr_equipment
@@ -666,10 +675,17 @@ msgid "Note"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction_counter
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction_counter
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: hr_equipment
@@ -681,7 +697,7 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.actions.client,name:hr_equipment.action_client_hr_equipment_menu
-msgid "Open HR Menu"
+msgid "Open Assets Menu"
 msgstr ""
 
 #. module: hr_equipment
@@ -706,7 +722,7 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_model_id
-msgid "Parent model holding the alias. The model holding the alias referenceis not necessarily the model given by alias_model_id(example: project (parent_model) and task (model))"
+msgid "Parent model holding the alias. The model holding the alias reference is not necessarily the model given by alias_model_id (example: project (parent_model) and task (model))"
 msgstr ""
 
 #. module: hr_equipment
@@ -759,6 +775,11 @@ msgid "Repaired"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
+msgid "Request"
+msgstr ""
+
+#. module: hr_equipment
 #: model:mail.message.subtype,name:hr_equipment.mt_req_created
 msgid "Request Created"
 msgstr ""
@@ -766,6 +787,11 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_request_date
 msgid "Request Date"
+msgstr ""
+
+#. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_done
+msgid "Request Done"
 msgstr ""
 
 #. module: hr_equipment
@@ -834,7 +860,7 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_software
-msgid "Softwares"
+msgid "Software"
 msgstr ""
 
 #. module: hr_equipment
@@ -890,27 +916,17 @@ msgid "The owner of records created upon receiving emails on this alias. If this
 msgstr ""
 
 #. module: hr_equipment
-#: sql_constraint:hr.equipment:0
-msgid "The serial number of this equipment must be unique !"
-msgstr ""
-
-#. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
-msgid "This application helps you to track all equipment allocated to employees.\n"
+msgid "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
 "                You will manage allocations, issues and mainteannce of equipment."
 msgstr ""
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
-msgid "This application helps you to track all equipment allocated to employees.\n"
-"                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
+msgid "This application helps you to track equipments used by employees.\n"
+"                Create some laptops, printers or phones and link each asset to an employee or departement.\n"
 "                You will manage allocations, issues and maintenance of equipment."
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "To Do"
 msgstr ""
 
 #. module: hr_equipment
@@ -920,7 +936,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Unassigned"
 msgstr ""
 
@@ -949,6 +964,11 @@ msgid "Use the following alias to report internal equipment issue"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_equipment_assign_to
+msgid "Used By"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Users"
@@ -961,8 +981,18 @@ msgid "Vendor"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_partner_ref
+msgid "Vendor Reference"
+msgstr ""
+
+#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "Very Low"
+msgstr ""
+
+#. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_warranty
+msgid "Warranty"
 msgstr ""
 
 #. module: hr_equipment
@@ -980,7 +1010,7 @@ msgid "Website communication history"
 msgstr ""
 
 #. module: hr_equipment
-#: code:addons/hr_equipment/models/hr_equipment.py:70
+#: code:addons/hr_equipment/models/hr_equipment.py:71
 #, python-format
 msgid "You cannot delete an equipment category containing equipments or maintenance requests."
 msgstr ""

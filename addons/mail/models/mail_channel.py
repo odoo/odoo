@@ -488,6 +488,9 @@ class Channel(models.Model):
             :return dict : channel header
         """
         # create the channel
-        new_channel = self.create({'name': name, 'public': privacy})
-        new_channel.action_follow()
+        new_channel = self.create({
+            'name': name,
+            'public': privacy,
+            'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]
+        })
         return new_channel.channel_info()[0]

@@ -4,8 +4,24 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID, api, models
+from openerp.exceptions import UserError
 import logging
 _logger = logging.getLogger(__name__)
+
+
+class stock_inventory(osv.osv):
+    _inherit = "stock.inventory"
+    _columns = {
+        'accounting_date': fields.date('Force Accounting Date', help="Choose the accounting date at which you want to value the stock moves created by the inventory instead of the default one (the inventory end date)"),
+    }
+
+    def post_inventory(self, cr, uid, inv, context=None):
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        if inv.accounting_date:
+            ctx['force_period_date'] = inv.accounting_date
+        return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
 
 
 class account_invoice_line(osv.osv):
@@ -26,7 +42,6 @@ class account_invoice_line(osv.osv):
 
     def _get_price(self, cr, uid, inv, company_currency, i_line, price_unit):
         cur_obj = self.pool.get('res.currency')
-        decimal_precision = self.pool.get('decimal.precision')
         if inv.currency_id.id != company_currency:
             price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, price_unit * i_line.quantity, context={'date': inv.date_invoice})
         else:
@@ -69,7 +84,7 @@ class account_invoice_line(osv.osv):
                     to_unit = i_line.move_id.product_uom.id
                     price_unit = self.pool['product.uom']._compute_price(cr, uid, from_unit, price, to_uom_id=to_unit)
                 else:
-                    price_unit = i_line.product_id.standard_pric
+                    price_unit = i_line.product_id.standard_price
                 return [
                     {
                         'type':'src',
@@ -236,12 +251,11 @@ class stock_quant(osv.osv):
             self._account_entry_move(cr, uid, [quant], move, context)
         return quant
 
-    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, context=None):
-        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id,  dest_package_id, lot_id=lot_id, context=context)
+    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False, context=None):
+        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id,  dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, quants, move, context=context)
         return res
-
 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
         """
@@ -267,6 +281,8 @@ class stock_quant(osv.osv):
         acc_valuation = accounts.get('stock_valuation', False)
         if acc_valuation:
             acc_valuation = acc_valuation.id
+        if not accounts.get('stock_journal', False):
+            raise UserError(_('You don\'t have any stock journal defined on your product category, check if you have installed a chart of accounts'))
         journal_id = accounts['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
 
@@ -295,7 +311,6 @@ class stock_quant(osv.osv):
                     'quantity': qty,
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
-                    'date': move.date,
                     'partner_id': partner_id,
                     'debit': valuation_amount > 0 and valuation_amount or 0,
                     'credit': valuation_amount < 0 and -valuation_amount or 0,
@@ -307,7 +322,6 @@ class stock_quant(osv.osv):
                     'quantity': qty,
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
-                    'date': move.date,
                     'partner_id': partner_id,
                     'credit': valuation_amount > 0 and valuation_amount or 0,
                     'debit': valuation_amount < 0 and -valuation_amount or 0,
@@ -377,12 +391,12 @@ class stock_move(osv.osv):
             #adapt standard price on incomming moves if the product cost_method is 'average'
             if (move.location_id.usage == 'supplier') and (move.product_id.cost_method == 'average'):
                 product = move.product_id
-                prod_tmpl_id = move.product_id.product_tmpl_id.id
-                qty_available = move.product_id.product_tmpl_id.qty_available
-                if tmpl_dict.get(prod_tmpl_id):
-                    product_avail = qty_available + tmpl_dict[prod_tmpl_id]
+                product_id = move.product_id.id
+                qty_available = move.product_id.qty_available
+                if tmpl_dict.get(product_id):
+                    product_avail = qty_available + tmpl_dict[product_id]
                 else:
-                    tmpl_dict[prod_tmpl_id] = 0
+                    tmpl_dict[product_id] = 0
                     product_avail = qty_available
                 if product_avail <= 0:
                     new_std_price = move.price_unit
@@ -390,7 +404,7 @@ class stock_move(osv.osv):
                     # Get the standard price
                     amount_unit = product.standard_price
                     new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
-                tmpl_dict[prod_tmpl_id] += move.product_qty
+                tmpl_dict[product_id] += move.product_qty
                 # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
                 ctx = dict(context or {}, force_company=move.company_id.id)
                 product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=ctx)

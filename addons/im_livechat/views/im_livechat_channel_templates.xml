@@ -139,7 +139,7 @@
                 <t t-set="info" t-value="request.env['im_livechat.channel'].match_rules(request, channel)"/>
             </t>
 
-            <t t-if="info" t-translate="off">
+            <t t-if="info" t-translation="off">
                 document.addEventListener("DOMContentLoaded", function(event) {
 
                     odoo.define('web.session', function (require) {

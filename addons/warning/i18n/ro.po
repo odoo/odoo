@@ -1,75 +1,71 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * warning
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 09:17+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:58+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: warning
 #: selection:product.template,purchase_line_warn:0
 #: selection:product.template,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "Blocking Message"
 msgstr "Mesaj de blocare"
 
 #. module: warning
 #: model:ir.model,name:warning.model_account_invoice
-#: field:res.partner,invoice_warn:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_invoice_warn
 msgid "Invoice"
 msgstr "Factura"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_invoice_warn_msg
 msgid "Message for Invoice"
 msgstr "Mesaj pentru Factură"
 
 #. module: warning
-#: field:res.partner,purchase_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_purchase_warn_msg
 msgid "Message for Purchase Order"
 msgstr "Mesaj pentru Comanda de achiziție"
 
 #. module: warning
-#: field:product.template,purchase_line_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_product_template_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
 msgstr "Mesaj pentru Linia Comenzii de Achizitie"
 
 #. module: warning
-#: field:res.partner,sale_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_sale_warn_msg
 msgid "Message for Sales Order"
 msgstr "Mesaj la Comanda de Vânzare"
 
 #. module: warning
-#: field:product.template,sale_line_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_product_template_sale_line_warn_msg
 msgid "Message for Sales Order Line"
 msgstr "Mesaje la Linia Comenzii de Vânzare"
 
 #. module: warning
-#: field:res.partner,picking_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_picking_warn_msg
 msgid "Message for Stock Picking"
 msgstr "Mesaj pentru Ridicarea stocului"
 
 #. module: warning
 #: selection:product.template,purchase_line_warn:0
 #: selection:product.template,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
 msgid "No Message"
 msgstr "Nici un mesaj"
 
@@ -79,115 +75,106 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: warning
-#: model:ir.model,name:warning.model_stock_picking
-msgid "Picking List"
-msgstr "Lista de ridicare"
-
-#. module: warning
 #: model:ir.model,name:warning.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Șablon produs"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
-#: field:res.partner,purchase_warn:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_purchase_warn
 msgid "Purchase Order"
 msgstr "Comandă de achiziție"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
-#: field:product.template,purchase_line_warn:0
+#: model:ir.model.fields,field_description:warning.field_product_template_purchase_line_warn
 msgid "Purchase Order Line"
 msgstr "Linie comandă de achiziție"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
-#: field:res.partner,sale_warn:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_sale_warn
 msgid "Sales Order"
-msgstr "Comanda de vânzare"
+msgstr "Comanda de vanzare"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
-#: field:product.template,sale_line_warn:0
+#: model:ir.model.fields,field_description:warning.field_product_template_sale_line_warn
 msgid "Sales Order Line"
 msgstr "Linie comanda de vanzare"
 
 #. module: warning
-#: code:addons/warning/warning.py:31
-#: help:product.template,purchase_line_warn:0
-#: help:product.template,sale_line_warn:0
-#: help:res.partner,invoice_warn:0
-#: help:res.partner,picking_warn:0
-#: help:res.partner,purchase_warn:0
-#: help:res.partner,sale_warn:0
+#: code:addons/warning/warning.py:14
+#: model:ir.model.fields,help:warning.field_product_template_purchase_line_warn
+#: model:ir.model.fields,help:warning.field_product_template_sale_line_warn
+#: model:ir.model.fields,help:warning.field_res_partner_invoice_warn
+#: model:ir.model.fields,help:warning.field_res_partner_picking_warn
+#: model:ir.model.fields,help:warning.field_res_partner_purchase_warn
+#: model:ir.model.fields,help:warning.field_res_partner_sale_warn
 #, python-format
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
-msgstr ""
-"Daca selectati optiunea \"Avertizare\" veti instiinta utilizatorul cu un "
-"mesaj, Selectand \"Mesaj de blocare\" veti trimite o exceptie cu mesajul si "
-"va bloca fluxul. Mesajul trebuie scris în campul urmator."
+msgstr "Daca selectati optiunea \"Avertizare\" veti instiinta utilizatorul cu un mesaj, Selectand \"Mesaj de blocare\" veti trimite o exceptie cu mesajul si va bloca fluxul. Mesajul trebuie scris în campul urmator."
 
 #. module: warning
-#: field:res.partner,picking_warn:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_picking_warn
 msgid "Stock Picking"
 msgstr "Ridicare stoc"
 
 #. module: warning
-#: selection:product.template,purchase_line_warn:0
-#: selection:product.template,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Atenționare"
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Transfer"
+msgstr "Transfer"
 
 #. module: warning
-#: code:addons/warning/warning.py:64
-#: code:addons/warning/warning.py:92
-#: code:addons/warning/warning.py:128
-#: code:addons/warning/warning.py:160
-#: code:addons/warning/warning.py:209
-#: code:addons/warning/warning.py:241
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Atentionare"
+
+#. module: warning
+#: code:addons/warning/warning.py:57 code:addons/warning/warning.py:93
+#: code:addons/warning/warning.py:130 code:addons/warning/warning.py:160
+#: code:addons/warning/warning.py:207 code:addons/warning/warning.py:242
 #, python-format
 msgid "Warning for %s"
 msgstr "Avertizare pentru %s"
 
 #. module: warning
-#: view:res.partner:warning.view_partner_warning_form
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
 msgid "Warning on the Invoice"
 msgstr "Avertizare pe Factura"
 
 #. module: warning
-#: view:res.partner:warning.view_partner_warning_form
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
 msgid "Warning on the Picking"
 msgstr "Avertizare la Ridicare"
 
 #. module: warning
-#: view:res.partner:warning.view_partner_warning_form
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
 msgid "Warning on the Purchase Order"
 msgstr "Avertizare pe Comanda de Achiziție"
 
 #. module: warning
-#: view:res.partner:warning.view_partner_warning_form
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
 msgid "Warning on the Sales Order"
 msgstr "Avertisment la Comanda de Vânzare"
 
 #. module: warning
-#: view:product.template:warning.product_warning_form_view
+#: model:ir.ui.view,arch_db:warning.product_warning_form_view
 msgid "Warning when Purchasing this Product"
 msgstr "Avertizare la achizitia acestui produs"
 
 #. module: warning
-#: view:product.template:warning.product_warning_form_view
+#: model:ir.ui.view,arch_db:warning.product_warning_form_view
 msgid "Warning when Selling this Product"
 msgstr "Avertizare la Vanzarea acestui Produs"
 
 #. module: warning
-#: view:product.template:warning.product_warning_form_view
-#: view:res.partner:warning.view_partner_warning_form
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
 msgid "Warnings"
 msgstr "Atenționări"

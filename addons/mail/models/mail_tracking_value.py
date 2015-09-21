@@ -13,12 +13,14 @@ class MailTracking(models.Model):
 
     old_value_integer = fields.Integer('Old Value Integer', readonly=1)
     old_value_float = fields.Float('Old Value Float', readonly=1)
+    old_value_monetary = fields.Float('Old Value Monetary', readonly=1)
     old_value_char = fields.Char('Old Value Char', readonly=1)
     old_value_text = fields.Text('Old Value Text', readonly=1)
     old_value_datetime = fields.Datetime('Old Value DateTime', readonly=1)
 
     new_value_integer = fields.Integer('New Value Integer', readonly=1)
     new_value_float = fields.Float('New Value Float', readonly=1)
+    new_value_monetary = fields.Float('New Value Monetary', readonly=1)
     new_value_char = fields.Char('New Value Char', readonly=1)
     new_value_text = fields.Text('New Value Text', readonly=1)
     new_value_datetime = fields.Datetime('New Value Datetime', readonly=1)
@@ -30,7 +32,7 @@ class MailTracking(models.Model):
         tracked = True
         values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type']}
 
-        if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime']:
+        if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
             values.update({
                 'old_value_%s' % col_info['type']: initial_value,
                 'new_value_%s' % col_info['type']: new_value
@@ -68,7 +70,7 @@ class MailTracking(models.Model):
     def get_old_display_value(self):
         result = []
         for record in self:
-            if record.field_type in ['integer', 'float', 'char', 'text', 'datetime']:
+            if record.field_type in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
                 result.append(getattr(record, 'old_value_%s' % record.field_type))
             elif record.field_type == 'date':
                 if record.old_value_datetime:
@@ -88,7 +90,7 @@ class MailTracking(models.Model):
     def get_new_display_value(self):
         result = []
         for record in self:
-            if record.field_type in ['integer', 'float', 'char', 'text', 'datetime']:
+            if record.field_type in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
                 result.append(getattr(record, 'new_value_%s' % record.field_type))
             elif record.field_type == 'date':
                 if record.new_value_datetime:

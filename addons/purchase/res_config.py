@@ -40,6 +40,11 @@ class purchase_config_settings(osv.osv_memory):
             ], "Dropshipping",
             help='\nCreates the dropship Route and add more complex tests'
                  '-This installs the module stock_dropshipping.'),
+        'group_manage_vendor_price': fields.selection([
+            (0, 'Manage vendor price on the product form'),
+            (1, 'Allow using and importing vendor pricelists')
+            ], "Vendor Price", 
+            implied_group="purchase.group_manage_vendor_price"),
     }
 
 

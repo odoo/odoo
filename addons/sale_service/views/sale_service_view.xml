@@ -31,7 +31,7 @@
             <field name="inherit_id" ref="project.task_type_edit"/>
             <field name="arch" type="xml">
                 <field name="fold" position="after">
-                    <field name="closed"/>
+                    <field name="closed" groups="base.group_no_one"/>
                 </field>
             </field>
         </record>
@@ -44,6 +44,25 @@
                     <field name="sale_line_id" string="Order Line" groups="base.group_no_one"/>
                 </field>
             </field>
+        </record>
+        <record id="view_order_form_inherit_sale_service" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.service</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                   <xpath expr="//button[@name='action_view_invoice']" position="before">
+                       <field name="tasks_ids" invisible="1"/>
+                       <button type="object"
+                           name="action_view_task"
+                           class="oe_stat_button"
+                           icon="fa-tasks"
+                           attrs="{'invisible': [('tasks_count', '=', 0)]}" groups="base.group_user">
+                           <field name="tasks_count" widget="statinfo" string="Tasks"/>
+                       </button>
+                    </xpath>
+                </data>
+           </field>
         </record>
     </data>
 </openerp>

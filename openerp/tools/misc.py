@@ -18,7 +18,7 @@ import threading
 import time
 import werkzeug.utils
 import zipfile
-from collections import defaultdict, Mapping, OrderedDict
+from collections import defaultdict, Hashable, Iterable, Mapping, OrderedDict
 from itertools import islice, izip, groupby
 from lxml import etree
 from which import which
@@ -1047,6 +1047,16 @@ def dumpstacks(sig=None, frame=None):
 
     _logger.info("\n".join(code))
 
+def freehash(arg):
+    if isinstance(arg, Mapping):
+        return hash(frozendict(arg))
+    elif isinstance(arg, Iterable):
+        return hash(frozenset(arg))
+    elif isinstance(arg, Hashable):
+        return hash(arg)
+    else:
+        return id(arg)
+
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
     def __delitem__(self, key):
@@ -1063,6 +1073,8 @@ class frozendict(dict):
         raise NotImplementedError("'setdefault' not supported on frozendict")
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
+    def __hash__(self):
+        return hash(frozenset((key, freehash(val)) for key, val in self.iteritems()))
 
 class Collector(Mapping):
     """ A mapping from keys to lists. This is essentially a space optimization

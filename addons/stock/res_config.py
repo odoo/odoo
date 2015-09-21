@@ -79,12 +79,11 @@ class stock_config_settings(osv.osv_memory):
             implied_group='product.group_product_variant'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'module_procurement_jit': fields.selection([
-            (1, 'Schedule orders in real time'),
-            (0, 'Run scheduler once a day')
+            (1, 'Reserve Sale Orders Immediately On Confirmation'),
+            (0, 'Reserve Sale Orders Manually or by Running the Schedulers')
             ], "Procurements",
-            help="""This allows Just In Time computation of procurement orders.
-                All procurement orders will be processed immediately, which could in some
-                cases entail a small performance impact.
+            help="""Allows you to automatically reserve the available
+            products when confirming a sale order.
                 This installs the module procurement_jit."""),
         'module_claim_from_delivery': fields.selection([
             (0, 'Do not manage claims'),
@@ -123,7 +122,7 @@ class stock_config_settings(osv.osv_memory):
             help="""This allows you to assign a lot (or serial number) to the pickings and moves.  This can make it possible to know which production lot was sent to a certain client, ..."""),
         'group_stock_tracking_lot': fields.selection([
             (0, 'Do not manage packaging'),
-            (1, 'Record packages used on packing: pallets, boxes, ...)')
+            (1, 'Record packages used on packing: pallets, boxes, ...')
             ], "Packages",
             implied_group='stock.group_tracking_lot',
             help="""This allows to manipulate packages.  You can put something in, take something from a package, but also move entire packages and put them even in another package.  """),

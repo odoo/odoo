@@ -4,7 +4,7 @@
         <div class="oe_timesheet_weekly">
             <table class="table table-condensed table-responsive">
                 <tr>
-                    <th class="oe_timesheet_first_col"/>
+                    <th class="oe_timesheet_first_col" colspan="2"/>
                     <t t-foreach="widget.dates" t-as="date">
                         <th t-att-class="'oe_timesheet_weekly_date_head' + (moment().format('DD-MM-YYYY') === moment(date).format('DD-MM-YYYY') ? ' oe_timesheet_weekly_today' : '')">
                             <t t-esc="moment(date).format('ddd')"/><br/>
@@ -14,7 +14,7 @@
                     <th class="oe_timesheet_weekly_date_head">Total</th>
                 </tr>
                 <tr t-foreach="widget.accounts" t-as="account">
-                    <td class="oe_timesheet_weekly_account"><a href="javascript:void(0)" t-att-data-id="JSON.stringify(account.account)"><t t-esc="widget.account_names[account.account]"/></a></td>
+                    <td class="oe_timesheet_weekly_account" colspan="2"><a href="javascript:void(0)" t-att-data-id="JSON.stringify(account.account)"><t t-esc="widget.account_names[account.account]"/></a></td>
                     <t t-set="day_count" t-value="0"/>
                     <t t-foreach="account.days" t-as="day">
                         <td t-att-class="moment().format('DD-MM-YYYY') === moment(day.day).format('DD-MM-YYYY') ? 'oe_timesheet_weekly_today' : ''">
@@ -27,14 +27,13 @@
                     </t>
                     <td t-att-data-account-total="account.account" class="oe_timesheet_total"/>
                 </tr>
-                <tr class="oe_timesheet_weekly_add_row">
-                    <td t-att-colspan="widget.dates.length + 2">
-                        <button class="btn btn-sm btn-default">Add</button>
+                <tr>
+                    <td class="o_add_timesheet_line">
+                        <div>
+                            <button t-if="!widget.get('effective_readonly')" class="btn btn-sm btn-primary oe_edit_only oe_timesheet_button_add">Add a Line</button>
+                        </div>
                     </td>
-                </tr>
-                <tr class="oe_timesheet_total">
-                    <td>
-                        <button t-if="!widget.get('effective_readonly')" class="btn btn-sm btn-primary oe_edit_only oe_timesheet_button_add">Add a Line</button>
+                    <td class="oe_timesheet_total">
                         Total
                     </td>
                     <t t-set="day_count" t-value="0"/>

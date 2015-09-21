@@ -25,7 +25,7 @@
     name: Ice Cream
     type: product
     categ_id: product.product_category_1
-    list_price: 100.0
+    lst_price: 100.0
     standard_price: 70.0
     weight: 1.0
     uom_id: product.product_uom_kgm
@@ -133,7 +133,7 @@
     picking_type_id: stock.picking_type_in
     origin: 'incoming_shipment for test'
     location_id: stock_location_suppliers
-    location_dest_id: stock_location_14
+    location_dest_id: stock_location_stock
 -
  !record {model: stock.move, id: incomming_shipment_icecream}:
     product_id: product_icecream
@@ -141,7 +141,8 @@
     product_uom_qty: 50.0
     picking_type_id: stock.picking_type_in
     location_id: stock_location_suppliers
-    location_dest_id: stock_location_14
+    location_dest_id: stock_location_stock
+    picking_id: incomming_shipment
 -
  !record {model: stock.picking, id: incomming_shipment1}:
     picking_type_id: stock.picking_type_in

@@ -104,7 +104,7 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name"/>
+                                <field name="name" placeholder="e.g. Inspiring Business Talk"/>
                             </h1>
                             <label for="event_id" class="oe_edit_only"/>
                             <h3>
@@ -217,8 +217,7 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="res_model">event.track.location</field>
         </record>
         <menuitem name="Locations" id="menu_event_track_location"
-            action="action_event_track_location" parent="event.menu_event_configuration"
-            groups="base.group_no_one"/>
+            action="action_event_track_location" parent="event.menu_event_configuration"/>
 
         <!-- EVENTS/CONFIGURATION/EVENT Sponsor Types -->
         <record model="ir.ui.view" id="view_event_sponsor_type_form">
@@ -249,7 +248,8 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="name">Sponsor Types</field>
             <field name="res_model">event.sponsor.type</field>
         </record>
-        <menuitem id="menu_event_sponsor_type" action="action_event_sponsor_type" parent="event.menu_event_configuration" groups="base.group_no_one"/>
+        <menuitem id="menu_event_sponsor_type" action="action_event_sponsor_type"
+            parent="event.menu_event_configuration"/>
 
         <!-- EVENT.SPONSOR VIEWS -->
         <record model="ir.ui.view" id="view_event_sponsor_tree">
@@ -309,8 +309,8 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="name">Track Tags</field>
             <field name="res_model">event.track.tag</field>
         </record>
-        <menuitem id="menu_event_track_tag" action="action_event_track_tag" 
-            parent="event.menu_event_configuration" groups="base.group_no_one"/>
+        <menuitem id="menu_event_track_tag" action="action_event_track_tag"
+            parent="event.menu_event_configuration"/>
 
         <!-- Events Organisation/CONFIGURATION/EVENTS -->
         <record model="ir.ui.view" id="view_event_form">
@@ -319,27 +319,28 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="model">event.event</field>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button name="%(action_event_track_from_event)d" 
-                            type="action" 
-                            class="oe_stat_button" 
-                            icon="fa-inbox">
+                    <button name="%(action_event_track_from_event)d"
+                            type="action"
+                            class="oe_stat_button"
+                            icon="fa-inbox"
+                            attrs="{'invisible': [('show_tracks', '=', False), ('show_track_proposal', '=', False)]}">
                         <field name="count_tracks" widget="statinfo"/>
                     </button>
                     <button name="%(action_event_sponsor_from_event)d"
                             type="action"
                             class="oe_stat_button"
                             icon="fa-users">
-                        <field name="count_sponsor" widget="statinfo" string="Sponsorships"/>
+                        <field name="count_sponsor" widget="statinfo" string="Sponsors"/>
                     </button>
                 </div>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <div name="event_checkboxes">
-                        <field name="show_menu" groups="base.group_no_one"/>
-                        <label for="show_menu" groups="base.group_no_one"/>
-                        <field name="show_tracks"/>
-                        <label for="show_tracks"/>
-                        <field name="show_track_proposal"/>
-                        <label for="show_track_proposal"/>
+                        <field name="show_menu"/>
+                        <label for="show_menu"/>
+                        <field name="show_tracks" attrs="{'invisible': [('show_menu', '=', False)]}"/>
+                        <label for="show_tracks" attrs="{'invisible': [('show_menu', '=', False)]}"/>
+                        <field name="show_track_proposal" attrs="{'invisible': [('show_menu', '=', False)]}"/>
+                        <label for="show_track_proposal" attrs="{'invisible': [('show_menu', '=', False)]}"/>
                     </div>
                 </xpath>
             </field>

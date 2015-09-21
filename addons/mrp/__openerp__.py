@@ -8,7 +8,7 @@
     'website': 'https://www.odoo.com/page/manufacturing',
     'category': 'Manufacturing',
     'sequence': 14,
-    'summary': 'Manufacturing Orders, Bill of Materials, Work Order Operations',
+    'summary': 'Manufacturing Orders, Bill of Materials, Routings',
     'depends': ['product', 'procurement', 'stock_account', 'resource', 'report'],
     'description': """
 Manage the Manufacturing process in OpenERP
@@ -23,7 +23,7 @@ Key Features
 * Make to Stock/Make to Order
 * Multi-level bill of materials, no limit
 * Multi-level routing, no limit
-* Work Order Operations and work center integrated with analytic accounting
+* Routings and work center integrated with analytic accounting
 * Periodical scheduler computation 
 * Allows to browse bills of materials in a complete structure that includes child and phantom bills of materials
 

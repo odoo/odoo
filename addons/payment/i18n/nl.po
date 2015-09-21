@@ -1,71 +1,131 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment
+# 
+# Translators:
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-09-01 12:19+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-18 10:35+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-02 07:34+0000\n"
-"X-Generator: Launchpad (build 17192)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment
-#: help:account.config.settings,module_payment_adyen:0
+#: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
+msgid ""
+"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"                self.env['my.model'].payment_validated(self)"
+msgstr "            Wordt safe_eval met `self` zijnde de huidige transactie. d.w.z:\n                self.env['my.model'].payment_validated(self)"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
 msgid "-It installs the module payment_adyen."
 msgstr "- het installeert de module payment_adyen."
 
 #. module: payment
-#: help:account.config.settings,module_payment_buckaroo:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
+msgid "-It installs the module payment_authorize."
+msgstr "- Het installeert de module payment_authorize."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
 msgid "-It installs the module payment_buckaroo."
 msgstr "- het installeert de module payment_buckaroo."
 
 #. module: payment
-#: help:account.config.settings,module_payment_ogone:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
 msgid "-It installs the module payment_ogone."
 msgstr "- het installeert de module payment_ogone."
 
 #. module: payment
-#: help:account.config.settings,module_payment_paypal:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
 msgid "-It installs the module payment_paypal."
 msgstr "- het installeert de module payment_paypal."
 
 #. module: payment
-#: field:payment.transaction,acquirer_id:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
+msgid "-It installs the module payment_transfer."
+msgstr "- Het installeert de module payment_transfer."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
+msgid "3D Secure HTML"
+msgstr "3D veilige HTML"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
 msgstr "Verwerver"
 
 #. module: payment
-#: field:payment.transaction,acquirer_reference:0
-msgid "Acquirer Order Reference"
-msgstr "Verwerver order referentie"
+#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_id
+msgid "Acquirer Account"
+msgstr "Account verwerver"
 
 #. module: payment
-#: field:payment.transaction,partner_address:0
+#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_ref
+msgid "Acquirer Ref."
+msgstr "Verwerver Ref."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
+msgid "Acquirer Reference"
+msgstr "Verwerver referentie"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method_active
+msgid "Active"
+msgstr "Actief"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
+msgid "Add Extra Fees"
+msgstr "Voeg extra kosten toe"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Address"
 msgstr "Adres"
 
 #. module: payment
-#: field:payment.transaction,amount:0
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
+#: model:ir.model.fields,help:payment.field_payment_transaction_amount
 msgid "Amount"
 msgstr "Bedrag"
 
 #. module: payment
-#: help:payment.transaction,amount:0
-msgid "Amount in cents"
-msgstr "Bedrag in centen"
+#: selection:payment.acquirer,auto_confirm:0
+msgid "At payment no acquirer confirmation needed"
+msgstr "Bij betaling met verwerving bevestiging nodig"
 
 #. module: payment
-#: selection:payment.acquirer,validation:0
-msgid "Automatic"
-msgstr "Automatisch"
+#: selection:payment.acquirer,auto_confirm:0
+msgid "At payment with acquirer confirmation"
+msgstr "Bij betaling met verwerving bevestiging"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
+msgid "Cancel Message"
+msgstr "Annuleringsbericht"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -73,56 +133,96 @@ msgid "Canceled"
 msgstr "Geannuleerd"
 
 #. module: payment
-#: field:payment.transaction,partner_city:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "City"
 msgstr "Plaats"
 
 #. module: payment
-#: field:payment.acquirer,company_id:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
 msgstr "Bedrijf"
 
 #. module: payment
-#: field:payment.acquirer,fees_active:0
-msgid "Compute fees"
-msgstr "Bereken toeslagen"
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "Configuration"
+msgstr "Instellingen"
 
 #. module: payment
-#: field:payment.transaction,partner_country_id:0
+#: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
+msgid "Configure payment acquiring methods"
+msgstr "Betaalmethodes instellen"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_count
+msgid "Count Payment Method"
+msgstr "Aantal betalingsmethodes"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Country"
 msgstr "Land"
 
 #. module: payment
-#: field:payment.acquirer,create_uid:0
-#: field:payment.transaction,create_uid:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_method_create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: payment
-#: field:payment.acquirer,create_date:0
-#: field:payment.transaction,create_date:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_date
+#: model:ir.model.fields,field_description:payment.field_payment_method_create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: payment
-#: field:payment.transaction,date_create:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_date
 msgid "Creation Date"
 msgstr "Aanmaakdatum"
 
 #. module: payment
-#: field:payment.transaction,currency_id:0
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "Credentials"
+msgstr "Inloggegevens"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
+msgid "Credit card(s)"
+msgstr "Kredietkaart(en)"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
 msgid "Currency"
 msgstr "Valuta"
 
 #. module: payment
-#: help:payment.transaction,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "Datum van het laatste bericht verstuurt op deze regel."
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Customer Details"
+msgstr "Klantgegevens"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
+msgid "Determine the display order"
+msgstr "Bepaal de weergave volgorde"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_method_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
+msgid "Display Name"
+msgstr "Naam weergeven"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Done"
-msgstr "Gereed"
+msgstr "Voltooid"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
+msgid "Done Message"
+msgstr "Gedaan bericht"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -130,12 +230,17 @@ msgid "Draft"
 msgstr "Concept"
 
 #. module: payment
-#: field:payment.transaction,partner_email:0
-msgid "Email"
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "E-mail"
 msgstr "E-mail"
 
 #. module: payment
-#: field:payment.acquirer,environment:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
+msgid "Email"
+msgstr "Email"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
 msgid "Environment"
 msgstr "Omgeving"
 
@@ -145,37 +250,34 @@ msgid "Error"
 msgstr "Fout"
 
 #. module: payment
-#: field:payment.transaction,fees:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_error_msg
+msgid "Error Message"
+msgstr "Foutmelding"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
 msgid "Fees"
-msgstr "Toeslagen"
+msgstr "Vergoedingen"
 
 #. module: payment
-#: help:payment.transaction,fees:0
+#: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
-"Toeslagbedrag; ingesteld door het systeem omdat dit afhangt van de verwerver."
+msgstr "Toeslagbedrag; ingesteld door het systeem omdat dit afhangt van de verwerver."
 
 #. module: payment
-#: help:payment.transaction,state_message:0
+#: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
-"Veld gebruikt om errors en/of validatieberichten voor informatie in op te "
-"slaan."
+msgstr "Veld gebruikt om errors en/of validatieberichten voor informatie in op te slaan."
 
 #. module: payment
-#: field:payment.acquirer,fees_dom_fixed:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
 msgid "Fixed domestic fees"
 msgstr "Vaste huishoudelijke toeslagen"
 
 #. module: payment
-#: field:payment.acquirer,fees_int_fixed:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
 msgid "Fixed international fees"
 msgstr "Vaste internationale vergoedingen"
-
-#. module: payment
-#: field:payment.transaction,message_follower_ids:0
-msgid "Followers"
-msgstr "Volgers"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -183,164 +285,196 @@ msgid "Form"
 msgstr "Formulier"
 
 #. module: payment
-#: field:payment.acquirer,view_template_id:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
 msgid "Form Button Template"
 msgstr "Van knop sjabloon"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_search
+#: selection:payment.transaction,type:0
+msgid "Form with credentials storage"
+msgstr "Formulier met gegevens opslag"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Group By"
 msgstr "Groeperen op"
 
 #. module: payment
-#: help:payment.transaction,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
-"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
-"ingevoegd."
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
+msgid "Help Message"
+msgstr "Help berichten"
 
 #. module: payment
-#: field:payment.acquirer,id:0
-#: field:payment.transaction,id:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
+#: model:ir.model.fields,field_description:payment.field_payment_method_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_id
 msgid "ID"
 msgstr "ID"
 
 #. module: payment
-#: help:payment.transaction,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
+msgid "Image"
+msgstr "Afbeelding"
 
 #. module: payment
-#: field:payment.transaction,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Is een volger"
+#: model:ir.model.fields,help:payment.field_payment_transaction_reference
+msgid "Internal reference of the TX"
+msgstr "Interne referentie van de TX"
 
 #. module: payment
-#: field:payment.transaction,partner_lang:0
-msgid "Lang"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
+msgid "Language"
 msgstr "Taal"
 
 #. module: payment
-#: field:payment.transaction,message_last_post:0
-msgid "Last Message Date"
-msgstr "Laatste bericht datum"
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_method___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
 
 #. module: payment
-#: field:payment.acquirer,write_uid:0
-#: field:payment.transaction,write_uid:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_method_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
 msgid "Last Updated by"
-msgstr "Laatst aangepast door"
+msgstr "Laatst bijgewerkt door"
 
 #. module: payment
-#: field:payment.acquirer,write_date:0
-#: field:payment.transaction,write_date:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_method_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
 msgid "Last Updated on"
-msgstr "Laatst aangepast op"
+msgstr "Laatst bijgewerkt op"
 
 #. module: payment
-#: help:payment.acquirer,website_published:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
 msgstr "Maak deze betaalverwerver beschikbaar (Klant facturen, etc.)"
 
 #. module: payment
-#: field:account.config.settings,module_payment_adyen:0
-msgid "Manage Payments Using Adyen"
-msgstr "Beheer betaling met Adyen"
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
+msgid "Medium-sized image"
+msgstr "Middelgrote afbeelding"
 
 #. module: payment
-#: field:account.config.settings,module_payment_buckaroo:0
-msgid "Manage Payments Using Buckaroo"
-msgstr "Beheer betaling met Buckaroo"
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image_medium
+msgid ""
+"Medium-sized image of this provider. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved. Use this field in form views "
+"or some kanban views."
+msgstr "Middelgrote afbeelding van deze aanbieder. Het wordt automatisch aangepast naar 128x128px, met behoud van de verhouding. Gebruik dit veld in formulierweergaves en sommige kanban weergaves."
 
 #. module: payment
-#: field:account.config.settings,module_payment_ogone:0
-msgid "Manage Payments Using Ogone"
-msgstr "Beheer betaling met Ogone"
-
-#. module: payment
-#: field:account.config.settings,module_payment_paypal:0
-msgid "Manage Payments Using Paypal"
-msgstr "Beheer betaling met Paypal"
-
-#. module: payment
-#: selection:payment.acquirer,validation:0
-msgid "Manual"
-msgstr "Handmatig"
-
-#. module: payment
-#: field:payment.acquirer,pre_msg:0
-#: field:payment.transaction,state_message:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Message"
 msgstr "Bericht"
 
 #. module: payment
-#: help:payment.acquirer,post_msg:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
 msgid "Message displayed after having done the payment process."
 msgstr "Bericht dat wordt weergegeven nadat het betalingsproces is voltooid."
 
 #. module: payment
-#: help:payment.acquirer,pre_msg:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
-"Bericht dat wordt weergegeven om uitleg te geven en te helpen bij het "
-"betalingsproces."
+msgstr "Bericht dat wordt weergegeven om uitleg te geven en te helpen bij het betalingsproces."
 
 #. module: payment
-#: field:payment.transaction,message_ids:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
+msgid "Message displayed, if error is occur during the payment process."
+msgstr "Bericht dat wordt getoond wanneer een fout optreed tijdens het betalingsproces."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
+msgid "Message displayed, if order is cancel during the payment process."
+msgstr "Bericht dat wordt getoond als een order geannuleerd is tijdens het betalingsproces."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
+msgid ""
+"Message displayed, if order is done successfully after having done the "
+"payment process."
+msgstr "Bericht dat wordt getoond als de order succesvol verwerkt is na het betalingsproces."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
+msgid ""
+"Message displayed, if order is in pending state after having done the "
+"payment process."
+msgstr "Bericht dat wordt getoond als de order in de status afwachting staat nadat het betalingsproces verwerkt is."
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Messages"
 msgstr "Berichten"
 
 #. module: payment
-#: help:payment.transaction,message_ids:0
-msgid "Messages and communication history"
-msgstr "Berichten en communicatie historie"
-
-#. module: payment
-#: field:payment.acquirer,name:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
+#: model:ir.model.fields,field_description:payment.field_payment_method_name
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Name"
 msgstr "Naam"
 
 #. module: payment
-#: field:payment.transaction,reference:0
-msgid "Order Reference"
-msgstr "Order referentie"
+#: model:ir.model.fields,help:payment.field_payment_method_name
+msgid "Name of the payment method"
+msgstr "Naam van de betalingsmethode"
 
 #. module: payment
-#: field:payment.transaction,partner_id:0
+#: selection:payment.acquirer,auto_confirm:0
+msgid "No automatic confirmation"
+msgstr "Geen automatische bevestiging"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_ogone
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
+msgid "Order Confirmation"
+msgstr "Order bevestiging"
+
+#. module: payment
+#: model:ir.model,name:payment.model_res_partner
+#: model:ir.model.fields,field_description:payment.field_payment_method_partner_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
 msgid "Partner"
 msgstr "Relatie"
 
 #. module: payment
-#: field:payment.transaction,partner_name:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_name
 msgid "Partner Name"
 msgstr "Relatienaam"
 
 #. module: payment
-#: field:payment.transaction,partner_reference:0
-msgid "Partner Reference"
-msgstr "Relatie referentie"
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:273
-#, python-format
-msgid "Pay safely online"
-msgstr "Betaal veilig online"
-
-#. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
 msgstr "Betaling verwerver"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
-#: view:payment.acquirer:payment.acquirer_list
+#: model:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
 msgstr "Betaling verwervers"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_method_id
+msgid "Payment Method"
+msgstr "Betaalwijze"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_ids
+#: model:ir.ui.view,arch_db:payment.payment_method_form_view
+#: model:ir.ui.view,arch_db:payment.payment_method_tree_view
+#: model:ir.ui.view,arch_db:payment.payment_method_view_search
+msgid "Payment Methods"
+msgstr "Betalingsmethodes"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -349,31 +483,43 @@ msgstr "Betalingstransactie"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
+#: model:ir.actions.act_window,name:payment.action_payment_tx_ids
+#: model:ir.actions.act_window,name:payment.payment_transaction_action_child
+#: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
+#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
-#: view:payment.transaction:payment.transaction_form
-#: view:payment.transaction:payment.transaction_list
+#: model:ir.ui.view,arch_db:payment.transaction_form
+#: model:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
 msgstr "Betalingstransacties"
 
 #. module: payment
+#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.payment_method_form_view
 msgid "Payments"
 msgstr "Betalingen"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_paypal
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr "In behandeling"
+msgstr "In afwachting"
 
 #. module: payment
-#: field:payment.transaction,partner_phone:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
+msgid "Pending Message"
+msgstr "Bericht in afwachting"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
 msgid "Phone"
 msgstr "Telefoon"
-
-#. module: payment
-#: field:payment.acquirer,validation:0
-msgid "Process Method"
-msgstr "Verwerk methode"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -381,20 +527,20 @@ msgid "Production"
 msgstr "Productie"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_search
-#: field:payment.acquirer,provider:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
+#: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Provider"
 msgstr "Provider"
 
 #. module: payment
-#: help:payment.transaction,acquirer_reference:0
-msgid "Reference of the TX as stored in the acquirer database"
-msgstr "Referentie van de TX zoals opgeslagen inde verwervers database"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
+msgid "Reference"
+msgstr "Referentie"
 
 #. module: payment
-#: help:payment.transaction,partner_reference:0
-msgid "Reference of the customer in the acquirer database"
-msgstr "Referentie van de klant zoals opgeslagen inde verwervers database"
+#: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
+msgid "Reference of the TX as stored in the acquirer database"
+msgstr "Referentie van de TX zoals opgeslagen in de verwervers database"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -402,9 +548,26 @@ msgid "Required fields not filled"
 msgstr "Verplichte velden niet ingevuld"
 
 #. module: payment
-#: view:payment.transaction:payment.transaction_form
-msgid "Send a message to the group"
-msgstr "Stuur een bericht naar de groep"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_eval
+msgid "S2S Callback"
+msgstr "S2S terugbel actie"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
+msgid "S2S Form Template"
+msgstr "S2S formulier sjabloon"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.payment_method_action
+#: model:ir.ui.menu,name:payment.finance_pay_method_menu
+#: model:ir.ui.menu,name:payment.payment_method_menu
+msgid "Saved Payment Data"
+msgstr "Bewaarde betalingsdata"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
+msgid "Sequence"
+msgstr "Reeks"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -412,22 +575,27 @@ msgid "Server To Server"
 msgstr "Server naar server"
 
 #. module: payment
-#: help:payment.acquirer,validation:0
-msgid ""
-"Static payments are payments like transfer, that require manual steps."
-msgstr ""
-"Statische betalingen zijn betalingen, zoals overschrijvingen, welke "
-"handmatige actie vragen."
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
+msgid "Small-sized image"
+msgstr "Kleine afbeelding"
 
 #. module: payment
-#: field:payment.transaction,state:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
+msgid ""
+"Small-sized image of this provider. It is automatically resized as a 64x64px"
+" image, with aspect ratio preserved. Use this field anywhere a small image "
+"is required."
+msgstr "Kleine afbeelding van deze aanbieder. De afbeelding wordt automatisch verkleind naar 64x64px, met behoud van de verhoudingen. Gebruik dit veld, waar een kleine afbeelding benodigd is."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_state
 msgid "Status"
 msgstr "Status"
 
 #. module: payment
-#: field:payment.transaction,message_summary:0
-msgid "Summary"
-msgstr "Samenvatting"
+#: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
+msgid "Template for method registration"
+msgstr "Sjabloon voor methode registratie"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -435,121 +603,131 @@ msgid "Test"
 msgstr "Test"
 
 #. module: payment
-#: field:payment.acquirer,post_msg:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_post_msg
 msgid "Thanks Message"
 msgstr "Bedanktbericht"
 
 #. module: payment
-#: sql_constraint:payment.transaction:0
+#: constraint:payment.transaction:0
 msgid "The payment transaction reference must be unique!"
 msgstr "De referentie van de betalingstransactie moet uniek zijn!"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image
+msgid ""
+"This field holds the image used for this provider, limited to 1024x1024px"
+msgstr "Dit veld bevat de afbeelding welke wordt gebruikt voor de provider, beperkt tot 1024x1024px."
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                    It is be rendered with qWeb with the "
-"following evaluation context:"
-msgstr ""
-"Dit sjabloon genereert de verwerver knop met alle benodigde waardes.\n"
-"                                    Het wordt aangemaakt met qWeb en met de "
-"volgende evaluatie context:"
+"                                            It is be rendered with qWeb with the following evaluation context:"
+msgstr "Dit sjabloon genereert de verwerver knop met alle benodigde waardes.\nHet wordt aangemaakt met qWeb en met de volgende evaluatie context:"
 
 #. module: payment
-#: field:payment.transaction,type:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_type
 msgid "Type"
-msgstr "Type"
+msgstr "Soort"
 
 #. module: payment
-#: field:payment.transaction,message_unread:0
-msgid "Unread Messages"
-msgstr "Ongelezen berichten"
-
-#. module: payment
-#: field:payment.transaction,date_validate:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate
 msgid "Validation Date"
-msgstr "Validatiedatum"
+msgstr "Controledatum"
 
 #. module: payment
-#: field:payment.acquirer,fees_dom_var:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
 msgid "Variable domestic fees (in percents)"
 msgstr "Variabele binnenlandse kosten (in percentage)"
 
 #. module: payment
-#: field:payment.acquirer,fees_int_var:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
 msgid "Variable international fees (in percents)"
 msgstr "Variabele internationale vergoedingen (in percentage)"
 
 #. module: payment
-#: field:payment.acquirer,website_published:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
 msgid "Visible in Portal / Website"
 msgstr "Zichtbaar in portaal / website"
 
 #. module: payment
-#: field:payment.transaction,website_message_ids:0
-msgid "Website Messages"
-msgstr "Website berichten"
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_transfer
+msgid "Wire Transfer"
+msgstr "Overschrijving"
 
 #. module: payment
-#: help:payment.transaction,website_message_ids:0
-msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "ZIP"
+msgstr "Postcode"
 
 #. module: payment
-#: field:payment.transaction,partner_zip:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
 msgid "Zip"
 msgstr "Postcode"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model,name:payment.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
 msgstr "acquirer: payment.acquirer browse record"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
 msgstr "Bedrag: het transactiebedrag, een decimaal getal"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "context: the current context dictionary"
 msgstr "context: de huidige context dictionary"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
 msgstr "valuta: de transactie valuta browse record"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
 msgstr "relatie: de koper relatie, browse record. Niet altijd ingesteld"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr ""
-"partner_values: specifieke waardes over de koper, bijvoorbeeld afkomend van "
-"een pakbon"
+msgstr "partner_values: specifieke waardes over de koper, bijvoorbeeld afkomend van een pakbon"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model,name:payment.model_payment_method
+msgid "payment.method"
+msgstr "payment.method"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
 msgstr "Referentie: het referentienummer van de transactie"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
 msgstr "tx_url: transactie URL om het formulier te plaatsen"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
 msgstr "tx_values: transactiewaardes"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+msgid "unknown"
+msgstr "onbekend"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "gebruiker: huidige gebruiker browse record"

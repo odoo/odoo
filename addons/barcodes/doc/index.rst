@@ -1,4 +1,11 @@
+==============================
 Barcodes module documentation
+==============================
+
+This module brings barcode encoding logic and client-side barcode scanning utilities.
+
+
+Barcodes encoding
 ==============================
 
 The Barcodes module defines barcode nomenclatures whose rules identify specific type 
@@ -73,3 +80,52 @@ a rule whose encoding is EAN-13, if the barcode is of length 12 and, by prependi
 the last digit is the correct checksum, we automatically prepend the barcode by 0 and try to
 find a match with this new barcode. If "Use strict EAN13" is set to True, we look for a pattern
 matching the original, 12-digit long, barcode.
+
+
+
+Barcodes scanning
+==============================
+
+
+Barcode events
+------------------------------
+
+When the module barcodes is installed, it instanciate a singleton of the javascript class BarcodeEvents.
+The purpose of this component is to listen to keypresses to detect barcodes, then dispatch those barcodes
+on core.bus inside a 'barcode_event'.
+All keypress events are buffered until there is no more keypress during 50ms or a carriage return / tab is
+inputted (because most barcode scanners use this as a suffix).
+If the buffered keys looks like a barcode (match the the regexp /.{3,}[\n\r\t]*), an event is triggered :
+core.bus.trigger('barcode_scanned', barcode);
+Otherwise, the keypresses are 'resent'. However, for security reasons, a keypress event programmatically
+crafted doesn't trigger native browser behaviors. For this reason, BarcodeEvents doesn't intercept keypresses
+whose target is an editable element (eg. input) or when ctrl/cmd/alt is pushed.
+To catch keypresses targetting an editable element, it must have the attribute barcode_events="true".
+
+
+Barcode handlers
+------------------------------
+
+To keep the web client consistent, components that want to listen to barcode events should include BarcodeHandlerMixin.
+It requires method on_barcode_scanned(barcode) to be implemented and exposes methods start_listening and stop_listening
+As long as it is the descendant of a View managed by a ViewManager is only listens while the view is attached.
+
+
+Form view barcode handler
+------------------------------
+
+It is possible for a form view to listen to barcode events, handle them client side and/or server-side.
+When the barcode is handled server-side, it works like an onchange. The relevant model must include the
+BarcodeEventsMixin and redefine method on_barcode_scanned. This method receives the barcode scanned and
+the `self` is a pseudo-record representing the content of the form view, just like in @api.onchange methods.
+Barcodes prefixed with 'O-CMD' or 'O-BTN' are reserved for special features and are never passed to on_barcode_scanned.
+The form view barcode handler can be extended to add client-side handling. Please refer to the (hopefully
+well enough) documented file for more informations.
+
+
+Button barcode handler
+------------------------------
+
+Add an attribute 'barcode_trigger' to a button to be able to trigger it by scanning a barcode. Example :
+<button name="validate" type="object" barcode_trigger="validate"/> will be triggered when a barcode containing
+"O-BTN.validate" is scanned.

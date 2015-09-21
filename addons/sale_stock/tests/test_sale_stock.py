@@ -82,14 +82,15 @@ class TestSaleStock(TestSale):
         # let's do an invoice for a deposit of 5%
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'percentage',
-            'amount': 5.0
+            'amount': 5.0,
+            'product_id': self.env.ref('sale.advance_product_0').id,
         })
         act = adv_wiz.with_context(open_invoices=True).create_invoices()
         inv = self.env['account.invoice'].browse(act['res_id'])
         self.assertEqual(inv.amount_untaxed, self.so.amount_untaxed * 5.0 / 100.0, 'Sale Stock: deposit invoice is wrong')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so should be to invoice after invoicing deposit')
         # invoice on order: everything should be invoiced
-        self.so.action_invoice_create()
+        self.so.action_invoice_create(final=True)
         self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so should be fully invoiced after second invoice')
 
         # deliver, check the delivered quantities
@@ -163,12 +164,4 @@ class TestSaleStock(TestSale):
         return_pick.do_new_transfer()
 
         # Check invoice
-        self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" before invoicing')
-        # let's do an invoice with refunds
-        adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
-            'advance_payment_method': 'all',
-        })
-        adv_wiz.with_context(open_invoices=True).create_invoices()
-        self.inv_2 = self.so.invoice_ids[1]
-        self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" after invoicing the return')
-        self.assertEqual(self.inv_2.amount_untaxed, self.inv_2.amount_untaxed, 'Sale Stock: amount in SO and invoice should be the same')
+        self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so invoice_status should be "invoiced" after picking return')

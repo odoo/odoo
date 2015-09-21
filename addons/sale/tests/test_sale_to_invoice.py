@@ -48,7 +48,7 @@ class TestSale(TestMail):
             'email': 'testcustomer@test.com',
             'property_account_receivable_id': account_recv_id,
         })
-        
+
         # In order to test I create sale order and confirmed it.
         order = self.env['sale.order'].create({
             'partner_id': partner.id,
@@ -60,7 +60,11 @@ class TestSale(TestMail):
         context = {"active_model": 'sale.order', "active_ids": [order.id], "active_id": order.id}
         order.with_context(context).action_confirm()
         # Now I create invoice.
-        payment = self.env['sale.advance.payment.inv'].create({'advance_payment_method': 'fixed', 'amount': 5})
+        payment = self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'fixed',
+            'amount': 5,
+            'product_id': self.env.ref('sale.advance_product_0').id,
+        })
         invoice = payment.with_context(context).create_invoices()
         assert order.invoice_ids, "No any invoice is created for this sale order"
         # Now I validate pay invoice wihth Test User(invoicing and payment).

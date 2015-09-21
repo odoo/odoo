@@ -781,7 +781,7 @@ class groups_view(osv.osv):
             xml1.append(E.separator(string=_('Application'), colspan="2"))
             for app, kind, gs in self.get_groups_by_application(cr, uid, user_context):
                 # hide groups in category 'Hidden' (except to group_no_one)
-                attrs = {'groups': 'base.group_no_one'} if app and app.xml_id == 'base.module_category_hidden' else {}
+                attrs = {'groups': 'base.group_no_one'} if app and (app.xml_id == 'base.module_category_hidden' or app.xml_id == 'base.module_category_extra') else {}
                 if kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(map(int, gs))
@@ -803,7 +803,7 @@ class groups_view(osv.osv):
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
-            view.with_context(context).write({'arch': xml_content})
+            view.with_context(context, lang=None).write({'arch': xml_content})
         return True
 
     def get_application_groups(self, cr, uid, domain=None, context=None):

@@ -40,7 +40,7 @@
 
         <menuitem id="menu_event_configuration" name="Configuration" parent="event_main_menu"
             sequence="100" groups="base.group_configuration"/>
-        <menuitem name="Events Types" id="menu_event_type" action="action_event_type" parent="menu_event_configuration" groups="base.group_no_one"/>
+        <menuitem name="Events Types" id="menu_event_type" action="action_event_type" parent="menu_event_configuration"/>
 
         <!-- EVENT.REGISTRATION ACTIONS -->
         <record id="act_event_registration_from_event" model="ir.actions.act_window">
@@ -101,10 +101,18 @@
                             <page name="registrations" string="Registrations">
                                 <group>
                                     <group>
-                                        <field name="auto_confirm" invisible="1"/>
                                         <field name="seats_min"/>
-                                        <field name="seats_availability" widget='radio'/>
-                                        <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
+                                        <label for="seats_availability"/>
+                                        <div>
+                                            <field name="seats_availability" widget='radio'/>
+                                            <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
+                                                to 
+                                            </span>
+                                            <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <field name="auto_confirm" groups="base.group_no_one"/>
                                     </group>
                                 </group>
                             </page>
@@ -198,11 +206,11 @@
                                     </div>
                                     <h4>
                                         <a name="%(act_event_registration_from_event)d" type="action">
-                                            <t t-esc="record.seats_expected.raw_value"> Attendees Expected</t>
+                                            <t t-esc="record.seats_expected.raw_value"> Attendees expected</t>
                                         </a>
                                         <t t-if="(record.seats_reserved.raw_value + record.seats_used.raw_value) > 0 "><br/>
-                                             <t t-esc="record.seats_reserved.raw_value + record.seats_used.raw_value"/> Attendees Confirmed
-                                        <a name="action_event_registration_report" type="object" >&#40;Report&#41;</a>
+                                             <t t-esc="record.seats_reserved.raw_value + record.seats_used.raw_value"/> Attendees confirmed
+                                        <a name="action_event_registration_report" type="object" >&#40;stats&#41;</a>
                                         </t>
                                     </h4>
                                 </div>
@@ -235,13 +243,14 @@
                     <separator/>
                     <filter string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                     <filter string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <separator/>
                     <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <separator/>
                     <filter string="Upcoming" name="upcoming" domain="[('date_begin','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
                     <field name="event_type_id"/>
                     <field name="user_id"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible" context="{'group_by': 'user_id'}"/>
                         <filter string="Event Type" context="{'group_by':'event_type_id'}"/>

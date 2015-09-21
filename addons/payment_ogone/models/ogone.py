@@ -225,7 +225,7 @@ class PaymentTxOgone(osv.Model):
         transaction record. Create a payment method if an alias is returned."""
         reference, pay_id, shasign, alias = data.get('orderID'), data.get('PAYID'), data.get('SHASIGN'), data.get('ALIAS')
         if not reference or not pay_id or not shasign:
-            error_msg = _('Ogone: received data with missing reference (%s) or pay_id (%s) or shashign (%s)') % (reference, pay_id, shasign)
+            error_msg = _('Ogone: received data with missing reference (%s) or pay_id (%s) or shasign (%s)') % (reference, pay_id, shasign)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
 
@@ -288,11 +288,20 @@ class PaymentTxOgone(osv.Model):
 
         status = int(data.get('STATUS', '0'))
         if status in self._ogone_valid_tx_status:
-            tx.write({
+            vals = {
                 'state': 'done',
-                'date_validate': datetime.datetime.strptime(data['TRXDATE'],'%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date_validate': datetime.datetime.strptime(data['TRXDATE'], '%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': data['PAYID'],
-            })
+            }
+            if data.get('ALIAS') and tx.partner_id and tx.type == 'form_save':
+                pm_id = self.pool['payment.method'].create(cr, uid, {
+                    'partner_id': tx.partner_id.id,
+                    'acquirer_id': tx.acquirer_id.id,
+                    'acquirer_ref': data.get('ALIAS'),
+                    'name': '%s - %s' % (data.get('CARDNO'), data.get('CN'))
+                }, context=context)
+                vals.update(payment_method_id=pm_id)
+            tx.write(vals)
             if tx.callback_eval:
                 safe_eval(tx.callback_eval, {'self': tx})
             return True
@@ -338,7 +347,7 @@ class PaymentTxOgone(osv.Model):
             'CURRENCY': tx.currency_id.name,
             'OPERATION': 'SAL',
             'ECI': 2,   # Recurring (from MOTO)
-            'ALIAS': tx.partner_reference,
+            'ALIAS': tx.payment_method_id.acquirer_ref,
             'RTIMEOUT': 30,
         }
 

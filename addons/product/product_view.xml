@@ -40,6 +40,7 @@
                     <filter string="Products" name="consumable" domain="[('type','=','consu')]" help="Products your store in the inventory"/>
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',1)]"/>
+                    <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field string="Attributes" name="attribute_line_ids"/>
                     <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
@@ -125,11 +126,9 @@
                                         <field name="categ_id" string="Internal Category"/>
                                     </group>
                                     <group name="group_lots_and_weight">
-                                        <label for="weight"/>
-                                        <div class="o_row">
-                                            <field digits="(14, 3)" name="weight" string="Weight"
-                                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
-                                            <span>kg</span>
+                                        <label for="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
+                                        <div class="o_row" name="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                            <field name="weight" string="Weight"/>
                                         </div>
                                     </group>
                                 </group>
@@ -137,7 +136,7 @@
                                 <field name="seller_ids"/>
                                 <group name="packaging" string="Packaging"
                                     colspan="4"
-                                    attrs="{'invisible':[('type', 'not in', ['product, consu'])]}"
+                                    attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                                     groups="product.group_stock_packaging">
                                     <field name="packaging_ids" nolabel="1"/>
                                 </group>
@@ -145,7 +144,7 @@
                             <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
                                 <div name="pricelist_item" groups="product.group_product_pricelist">
                                     <separator string="Pricing"/>
-                                    <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1'}">
+                                    <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
                                         <tree string="Pricelist Items" editable="bottom">
                                             <field name="pricelist_id" string="Pricelist" required='1'/>
                                             <field name="fixed_price" string="Price" required='1'/>
@@ -233,7 +232,7 @@
                         <field name="image_medium" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Product Name"/>
-                            <h1><field name="name"/></h1>
+                            <h1><field name="name" placeholder="e.g. Odoo Enterprise Susbcription"/></h1>
                         </div>
                         <group>
                             <p>All general settings about this product are managed on <button name="open_product_template" type="object" string="the product template" class="oe_link"/></p>
@@ -248,6 +247,7 @@
                             </group>
                             <group>
                                 <field name="active"/>
+                                <field name="type" invisible="1"/>
                             </group>
                         </group>
                         <group>
@@ -265,7 +265,7 @@
                                     </div>
                                     <label for="weight"/>
                                     <div class="o_row">
-                                        <field digits="(14, 3)" name="weight"/>
+                                        <field name="weight"/>
                                         <span>kg</span>
                                     </div>
                                 </group>
@@ -354,6 +354,7 @@
                     <field name="is_product_variant"/>
                     <field name="product_variant_count"/>
                     <field name="product_variant_ids"/>
+                    <field name="currency_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -372,7 +373,7 @@
                                     </div>
                                     <div name="tags"/>
                                     <ul>
-                                        <li>Price: <field name="lst_price"></field></li>
+                                        <li>Price: <field name="lst_price" widget="monetary"></field></li>
                                     </ul>
                                     <div name="tags"/>
                                 </div>
@@ -455,18 +456,6 @@
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
                 </form>
-                <notebook position="before">
-                    <group>
-                        <p>All general settings about this product are managed on <button name="open_product_template" type="object" string="the product template" class="oe_link"/></p>
-                    </group>
-                </notebook>
-                <field name="seller_ids" position="replace">
-                    <field name="seller_ids" readonly="1"/>
-                </field>
-                <field name="description_purchase" position="replace">
-                    <field name="description_purchase" nolabel="1"
-                        placeholder="This note will be displayed on requests for quotation..." readonly="1"/>
-                </field>
                 <field name="type" position="after">
                     <field name="default_code"/>
                     <field name="barcode"/>
@@ -474,19 +463,8 @@
                 <field name="list_price" position="attributes">
                    <attribute name="name">lst_price</attribute>
                 </field>
-                <field name="name" position="replace">
-                    <field name="name" attrs="{'invisible': [('id', '!=', False)]}"/>
-                    <field name="product_tmpl_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)], 'required': [('id', '!=', False)]}"/>
-                </field>
-                <field name="standard_price" position="replace">
-                    <field name="standard_price" attrs="{'invisible':[('product_variant_count','=', 1)]}"
-                            widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                </field>
-                <field name="weight" position="replace">
-                    <field digits="(14, 3)" name="volume"
-                        attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']),('product_variant_count','=',1)]}"/>
-                    <field digits="(14, 3)" name="weight"
-                        attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']),('product_variant_count','=',1)]}"/>
+                <field name="name" position="after">
+                    <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>
                 </field>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
@@ -615,18 +593,14 @@
             <field name="name">product.category.form</field>
             <field name="model">product.category</field>
             <field name="arch" type="xml">
-                <form string="Product Categories">
+                <form class="oe_form_configuration">
                     <div class="oe_title">
-                        <label for="name" string="Category Name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
+                        <label for="name" string="Category name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. Lamps"/></h1>
                     </div>
-                    <group name="parent">
-                        <group string="Category Type">
-                            <field name="parent_id"/>
-                            <field name="type"/>
-                        </group>
+                    <group name="first" col="4" string="Category Type">
+                        <field name="parent_id"/>
+                        <field name="type"/>
                     </group>
                 </form>
             </field>

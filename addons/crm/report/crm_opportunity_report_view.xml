@@ -97,11 +97,6 @@
             <field name="model">crm.opportunity.report</field>
             <field name="arch" type="xml">
                 <search string="Opportunities Analysis">
-                    <filter string="Archived" name="archived"
-                            domain="[('active', '=', False)]"/>
-                    <filter string="Current" name="current"
-                            domain="[('active', '=', True)]"/>
-                    <separator/>
                     <filter string="My Opportunities" name="my"
                             domain="[('user_id', '=', uid)]"/>
                     <separator/>
@@ -114,6 +109,9 @@
                             domain="['probability', '=', 0), ('active', '=', False)]"/>
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="user_id" string="Salesperson"/>
+                    <separator/>
+                    <filter string="Current" name="current" domain="[('active', '=', True)]"/>
+                    <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Extended Filters">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="stage_id" domain="[('team_ids', '=', 'team_id')]" />
@@ -161,7 +159,7 @@
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')})]"/>
              <field name="help">Pipeline Analysis gives you an instant access to
 your opportunities with information such as the expected revenue, planned cost,
-µmissed deadlines or the number of interactions per opportunity. This report is
+missed deadlines or the number of interactions per opportunity. This report is
 mainly used by the sales manager in order to do the periodic review with the
 teams of the sales pipeline.</field>
         </record>
@@ -180,9 +178,9 @@ teams of the sales pipeline.</field>
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')})]"/>
              <field name="help">Pipeline Analysis gives you an instant access to
 your opportunities with information such as the expected revenue, planned cost,
-µmissed deadlines or the number of interactions per opportunity. This report is
-mainly used by the sales manager in order to do the periodic review with the
-teams of the sales pipeline.</field>
+missed deadlines or the number of interactions per opportunity. This report is
+mainly used by the sales manager in order to periodically review the pipeline
+with the the sales teams.</field>
         </record>
 
         <record id="crm_opportunity_report_action_lead" model="ir.actions.act_window">

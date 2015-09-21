@@ -1,108 +1,141 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_twitter
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-10-27 14:20+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 11:02+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-28 07:58+0000\n"
-"X-Generator: Launchpad (build 17203)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
+msgid "<span class=\"oe_snippet_thumbnail_title\">Twitter Scroller</span>"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+msgid "<strong>Callback URL: </strong> leave it blank"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+msgid "<strong>Description: </strong> Odoo Tweet Scroller"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+msgid "<strong>Name: </strong> Odoo Tweet Scroller"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+msgid "<strong>Website: </strong>"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid "Accept terms of use and click on the Create button at the bottom"
-msgstr ""
-"Прифатете ги условите за користење и кликнете на копчето Креирај на дното"
+msgstr "Прифатете ги условите за користење и кликнете на копчето Креирај на дното"
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
-msgid "Callback URL:"
+#: code:addons/website_twitter/models/twitter_config.py:38
+#, python-format
+msgid ""
+"Authentication credentials were missing or incorrect. Maybe screen name "
+"tweets are protected."
 msgstr ""
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid "Copy/Paste API Key and Secret below"
 msgstr ""
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid "Create a new Twitter application on"
 msgstr "Креирајте нова Twitter апликација на"
 
 #. module: website_twitter
-#: field:website.twitter.tweet,create_uid:0
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_uid
 msgid "Created by"
 msgstr "Креирано од"
 
 #. module: website_twitter
-#: field:website.twitter.tweet,create_date:0
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_date
 msgid "Created on"
 msgstr "Креирано на"
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
-msgid "Description:"
-msgstr "Опис:"
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid ""
 "Enter the screen name from which you want to load favorite Tweets (does not "
 "need to be the same as the API keys)"
-msgstr ""
-"Внесете го корисничкото име од кое сакате да ги вчитате омлиените Твитови "
-"(не мора да биде исто со API клучевите)"
+msgstr "Внесете го корисничкото име од кое сакате да ги вчитате омлиените Твитови (не мора да биде исто со API клучевите)"
 
 #. module: website_twitter
-#: field:website,twitter_screen_name:0
-#: field:website.config.settings,twitter_screen_name:0
+#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_screen_name
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_screen_name
 msgid "Get favorites from this screen name"
 msgstr "Земи омилени од ова корисничко име"
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
+#: code:addons/website_twitter/models/twitter_config.py:49
+#, python-format
+msgid "HTTP Error: Something is misconfigured"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid "How to configure the Twitter API access"
 msgstr "Како да го конфигурирате Твитер API пристапот"
 
 #. module: website_twitter
-#: field:website.twitter.tweet,id:0
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_twitter
-#: field:website.twitter.tweet,write_uid:0
+#: code:addons/website_twitter/models/twitter_config.py:62
+#, python-format
+msgid "Internet connection refused"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet___last_update
+msgid "Last Modified on"
+msgstr "Последна промена на"
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_write_uid
 msgid "Last Updated by"
 msgstr "Последно ажурирање од"
 
 #. module: website_twitter
-#: field:website.twitter.tweet,write_date:0
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_write_date
 msgid "Last Updated on"
 msgstr "Последно ажурирање на"
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
-msgid "Name:"
-msgstr "Име:"
-
-#. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
-msgid "Odoo Tweet Scroller"
-msgstr ""
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:36
+#: code:addons/website_twitter/models/twitter_config.py:64
+#: code:addons/website_twitter/models/twitter_config.py:65
 #, python-format
-msgid "Please double-check your Twitter API Key and Secret"
-msgstr "Ве молиме проверете ги два пати вашите Твитер API клуч и лозинка"
+msgid "Please double-check your Twitter API Key and Secret!"
+msgstr ""
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:25
@@ -110,16 +143,13 @@ msgstr "Ве молиме проверете ги два пати вашите �
 msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
 "Settings (it does not have to be yours)"
-msgstr ""
-"Ве молиме подесете Твитер корисничко име за да вчитате омилени од него, во "
-"вебсајт подесувања (не мора да биде вашето)"
+msgstr "Ве молиме подесете Твитер корисничко име за да вчитате омилени од него, во вебсајт подесувања (не мора да биде вашето)"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:21
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
-msgstr ""
-"Ве молиме подесете ги Твитер API клучот и лозинката во вебсајт подесувања"
+msgstr "Ве молиме подесете ги Твитер API клучот и лозинката во вебсајт подесувања"
 
 #. module: website_twitter
 #. openerp-web
@@ -129,87 +159,126 @@ msgid "Reload"
 msgstr "Вчитај повторно"
 
 #. module: website_twitter
-#: field:website.twitter.tweet,screen_name:0
+#: code:addons/website_twitter/models/twitter_config.py:40
+#, python-format
+msgid ""
+"Request cannot be served due to the applications rate limit having been "
+"exhausted for the resource."
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_screen_name
 msgid "Screen Name"
 msgstr "Име што ќе се прикажува"
 
 #. module: website_twitter
-#: help:website.config.settings,twitter_screen_name:0
+#: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_screen_name
 msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
-msgstr ""
-"Корисничко име на Твитер налогот од кој сакате да се вчитат омилени. Не мора "
-"да се совпаѓа со API клучот/Лозинката"
+msgstr "Корисничко име на Твитер налогот од кој сакате да се вчитат омилени. Не мора да се совпаѓа со API клучот/Лозинката"
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid ""
-"Set your Twitter API access below to be able to use the Twitter Scroller "
-"Website snippet."
+"Set your Twitter API access below to be able to use the Twitter Scroller Website snippet.<br/>\n"
+"                             You can get your API credentials from"
 msgstr ""
-"Подесете го вашиот Твитер API пристап подолу за да можете да го користите "
-"Твитер Scroller Website snippet."
 
 #. module: website_twitter
-#: field:website.config.settings,twitter_tutorial:0
+#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_tutorial
 msgid "Show me how to obtain the Twitter API Key and Secret"
 msgstr "Покажи ми како да ги добијам Твитер API клучот и лозинката"
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
-msgid "Switch to the API Keys tab:"
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+msgid "Switch to the API Keys tab: <br/>"
 msgstr ""
 
 #. module: website_twitter
-#: field:website.twitter.tweet,tweet_id:0
+#: code:addons/website_twitter/models/twitter_config.py:43
+#, python-format
+msgid ""
+"The Twitter servers are up, but overloaded with requests. Try again later."
+msgstr ""
+
+#. module: website_twitter
+#: code:addons/website_twitter/models/twitter_config.py:44
+#, python-format
+msgid ""
+"The Twitter servers are up, but the request could not be serviced due to "
+"some failure within our stack. Try again later."
+msgstr ""
+
+#. module: website_twitter
+#: code:addons/website_twitter/models/twitter_config.py:39
+#, python-format
+msgid ""
+"The request is understood, but it has been refused or access is not allowed."
+" Please check your Twitter API Key and Secret."
+msgstr ""
+
+#. module: website_twitter
+#: code:addons/website_twitter/models/twitter_config.py:37
+#, python-format
+msgid ""
+"The request was invalid or cannot be otherwise served. Requests without "
+"authentication are considered invalid and will yield this response."
+msgstr ""
+
+#. module: website_twitter
+#: code:addons/website_twitter/models/twitter_config.py:36
+#, python-format
+msgid "There was no new data to return."
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet_id
 msgid "Tweet ID"
 msgstr "Tweet ID"
 
 #. module: website_twitter
-#: field:website.twitter.tweet,tweet:0
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet
 msgid "Tweets"
 msgstr "Твитови"
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid "Twitter API"
 msgstr "Твитер API"
 
 #. module: website_twitter
-#: help:website,twitter_api_key:0
-#: field:website.config.settings,twitter_api_key:0
+#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_key
+#: model:ir.model.fields,help:website_twitter.field_website_twitter_api_key
 msgid "Twitter API Key"
 msgstr "Твитер API клуч"
 
 #. module: website_twitter
-#: help:website,twitter_api_secret:0
+#: model:ir.model.fields,help:website_twitter.field_website_twitter_api_secret
 msgid "Twitter API Secret"
 msgstr "Твитер API лозинка"
 
 #. module: website_twitter
-#: field:website,twitter_api_key:0
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_key
 msgid "Twitter API key"
 msgstr "Твитер API клуч"
 
 #. module: website_twitter
-#: help:website.config.settings,twitter_api_key:0
+#: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/app/new"
-msgstr ""
-"Твитер API клуч можете да направите на https://apps.twitter.com/app/new"
+msgstr "Твитер API клуч можете да направите на https://apps.twitter.com/app/new"
 
 #. module: website_twitter
-#: field:website,twitter_api_secret:0
-#: field:website.config.settings,twitter_api_secret:0
+#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_secret
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_secret
 msgid "Twitter API secret"
 msgstr "Твитер API лозинка"
 
 #. module: website_twitter
-#: help:website.config.settings,twitter_api_secret:0
+#: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_api_secret
 msgid ""
 "Twitter API secret you can get it from https://apps.twitter.com/app/new"
-msgstr ""
-"Твитер API лозинка можете да направите на https://apps.twitter.com/app/new"
+msgstr "Твитер API лозинка можете да направите на https://apps.twitter.com/app/new"
 
 #. module: website_twitter
 #. openerp-web
@@ -219,63 +288,67 @@ msgid "Twitter Configuration"
 msgstr "Конфигурација на Twitter"
 
 #. module: website_twitter
-#: view:website:website.snippets
-msgid "Twitter Scroller"
-msgstr ""
-
-#. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "Twitter Tweets"
 msgstr "Твитер Твитови"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:36
+#: code:addons/website_twitter/models/twitter_config.py:65
 #, python-format
 msgid "Twitter authorization error!"
 msgstr "Грешка при авторизација со Twitter!"
 
 #. module: website_twitter
+#: code:addons/website_twitter/models/twitter_config.py:42
+#, python-format
+msgid "Twitter is down or being upgraded."
+msgstr ""
+
+#. module: website_twitter
+#: code:addons/website_twitter/models/twitter_config.py:41
+#, python-format
+msgid ""
+"Twitter seems broken. Please retry later. You may consider posting an issue "
+"on Twitter forums to get help."
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:36
 #, python-format
 msgid ""
-"Twitter user @%(username)s has less than 12 favorite tweets. Please add more "
-"or choose a different screen name."
+"Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
+" or choose a different screen name."
+msgstr "Твитер корисникот @%(username)s има помалку од 12 омилени твитови. Ве молиме додадете повеќе или изберете друго корисничко име."
+
+#. module: website_twitter
+#: code:addons/website_twitter/models/twitter_config.py:61
+#: code:addons/website_twitter/models/twitter_config.py:62
+#, python-format
+msgid "We failed to reach a twitter server."
 msgstr ""
-"Твитер корисникот @%(username)s има помалку од 12 омилени твитови. Ве молиме "
-"додадете повеќе или изберете друго корисничко име."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
-#: field:website.twitter.tweet,website_id:0
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_website_id
 msgid "Website"
-msgstr "Веб сајт"
+msgstr "Вебсајт"
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
-msgid "Website:"
-msgstr "Веб сајт:"
-
-#. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
-msgid "You can get your API credentials from"
-msgstr "Ги добивате вашите API креденцијали од"
-
-#. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid "https://apps.twitter.com/app/new"
 msgstr "https://apps.twitter.com/app/new"
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid "https://www.odoo.com"
 msgstr "https://www.odoo.com"
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
-msgid "leave it blank"
-msgstr "оставете празно"
+#: model:ir.model,name:website_twitter.model_website_config_settings
+msgid "website.config.settings"
+msgstr ""
 
 #. module: website_twitter
-#: view:website.config.settings:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid "with the following values:"
 msgstr "со следните вредности:"

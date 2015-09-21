@@ -650,10 +650,11 @@ var Tour = {
                 step.autoComplete(tour);
             }
 
+            var $element = $(step.element);
+            if ((step.element === "body" && step.backdrop) || !$element.size()) return;
+
             $(".popover.tour [data-role='next']").click();
 
-            var $element = $(step.element);
-            if (!$element.size()) return;
             if (state.log === "events") console.log("Event handlers:", $element[0], $element.getHandlers());
 
             var click_event = function(type) {
@@ -698,6 +699,7 @@ var Tour = {
                 click_event("mouseover");
                 click_event("mousedown");
                 click_event("mouseup");
+                $element.trigger('mouseenter'); // click_event("mouseenter") doesn't work because jquery event handler register mouseenter as mouseover
                 click_event("click");
                 if ($element.is("input, textarea, select") && !$element.is(":focus")) {
                     $element.focus();

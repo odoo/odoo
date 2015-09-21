@@ -24,6 +24,7 @@ class TestHrEquipment(TransactionCase):
             email="empuser@yourcompany.example.com",
             groups_id=[(6, 0, [res_hr_user.id])]
         ))
+        self.env.ref('hr.employee_qdp').write({'user_id': self.hr_user.id})
 
         self.hr_manager = self.user.create(dict(
             name="HR Manager",
@@ -40,7 +41,7 @@ class TestHrEquipment(TransactionCase):
         equipment_01 = self.equipment.sudo(self.hr_manager).create({
             'name': 'Samsung Monitor "15',
             'category_id': self.ref('hr_equipment.hr_equipment_monitor'),
-            'employee_id': self.ref('hr.employee_al'),
+            'employee_id': self.ref('hr.employee_qdp'),
             'user_id': self.ref('base.user_root'),
             'assign_date': time.strftime('%Y-%m-%d'),
             'serial_no': 'MT/127/18291015',
