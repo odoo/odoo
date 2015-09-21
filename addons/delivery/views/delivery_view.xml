@@ -22,9 +22,6 @@
             <field name="model">delivery.carrier</field>
             <field name="arch" type="xml">
                 <form string="Carrier">
-                    <header>
-                        <field name="state" widget="statusbar" attrs="{'invisible':['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}" clickable="True"/>
-                    </header>
                     <sheet>
                         <div class="oe_title" name="title">
                             <label for="name" string="Name" class="oe_edit_only"/>
