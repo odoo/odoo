@@ -901,7 +901,15 @@ class DataSet(http.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
-
+        d = [t for t in domain if not isinstance(t, basestring)]
+        for (x, operator, y) in d:
+            if operator == 'child_of':
+                m = request.env[model][x]._name
+                M = request.session.model(m)
+                res = M.name_search(y)
+                if not res:
+                    index = domain.index([x, operator, y])
+                    domain[index] = ['id', 'in', []]
         records = Model.search_read(domain, fields, offset or 0, limit or False, sort or False,
                            request.context)
         if not records:
