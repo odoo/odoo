@@ -8,11 +8,6 @@ _logger = logging.getLogger(__name__)
 class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
-    def _register_hook(self, cr):
-        """ Patch models in order to copy l10n template translation after module has been installed.
-        """
-        self.process_coa_translations(cr, SUPERUSER_ID, [], {})
-
     @api.multi
     def process_translations(self, langs, in_field, in_ids, out_ids):
         """
@@ -49,34 +44,27 @@ class AccountChartTemplate(models.Model):
 
     @api.multi
     def process_coa_translations(self):
-        #This method is called by _register_hook(), meaning that self is probably an empty recordset
         installed_lang_ids = self.env['res.lang'].search([])
         installed_langs = [x.code for x in installed_lang_ids]
-        #Search for companies that have installed a chart_template
-        company_ids = self.env['res.company'].search([('chart_template_id', '!=', False)])
-        for company in company_ids:
-                
+        company_obj = self.env['res.company']
+        for chart_template_id in self:
             langs = []
-            if company.chart_template_id.spoken_languages:
-                for lang in company.chart_template_id.spoken_languages.split(';'):
+            if chart_template_id.spoken_languages:
+                for lang in chart_template_id.spoken_languages.split(';'):
                     if lang not in installed_langs:
                         # the language is not installed, so we don't need to load its translations
                         continue
                     else:
-                        # the language is already installed, we have two use case now, if we already have copied
-                        # the translations of templates, do nothing. Otherwise we have to copy the translations
-                        # of templates to the right objects
-                        if self.env['ir.translation'].search([('name', '=', 'account.account,name'), ('type', '=', 'model'), ('lang', '=', lang)]):
-                            continue
-                        else:
-                            langs.append(lang)
+                        langs.append(lang)
                 if langs:
-                    # write account.account translations in the real COA
-                    company.chart_template_id._process_accounts_translations(company.id, langs, 'name')
-                    # copy account.tax translations
-                    company.chart_template_id._process_taxes_translations(company.id, langs, 'name')
-                    # copy account.fiscal.position translations
-                    company.chart_template_id._process_fiscal_pos_translations(company.id, langs, 'name')
+                    company_ids = company_obj.search([('chart_template_id', '=', chart_template_id.id)])
+                    for company in company_ids:
+                        # write account.account translations in the real COA
+                        chart_template_id._process_accounts_translations(company.id, langs, 'name')
+                        # copy account.tax translations
+                        chart_template_id._process_taxes_translations(company.id, langs, 'name')
+                        # copy account.fiscal.position translations
+                        chart_template_id._process_fiscal_pos_translations(company.id, langs, 'name')
         return True
 
     @api.multi
