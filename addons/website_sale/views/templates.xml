@@ -584,7 +584,7 @@
 <!-- extend the generic mail thread message template to add rating widget -->
 <template id="message_thread_rating" inherit_id="website_mail.message_thread" name="Chatter with rating">
   <xpath expr="//section[contains(@class, 'o_website_mail_thread')]" position="attributes">
-    <attribute name="data-rating-enabled">1</attribute>
+    <attribute name="t-att-data-rating-enabled">rating_message_values and 1 or 0</attribute>
   </xpath>
   <xpath expr="//textarea[@name='message']" position="before">
     <t t-if="rating_enable">
