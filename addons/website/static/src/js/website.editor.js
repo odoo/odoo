@@ -1292,7 +1292,7 @@ define(['summernote/summernote'], function () {
                     setTimeout(function () {$destroy.destroy();},150); // setTimeout to remove flickering when change to editable zone (re-create an editor)
                     $last = null;
                 }
-                if ($editable.size() && (!$last || $last[0] != $editable[0]) &&
+                if ($editable.not('.o_skip_rte').size() && (!$last || $last[0] != $editable[0]) &&
                         ($target.closest('[contenteditable]').attr('contenteditable') || "").toLowerCase() !== 'false') {
                     $editable.summernote(self._config());
                     $editable.data('NoteHistory', self.history);

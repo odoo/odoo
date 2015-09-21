@@ -34,24 +34,25 @@
         edit: function () {
             var self = this;
             var mysuper = this._super;
+            var $editables = $('[data-oe-model]:not([data-oe-type="html"])').addClass('o_skip_rte');
             if (!localStorage[nodialog]) {
                 var dialog = new website.TranslatorDialog();
                 dialog.appendTo($(document.body));
                 dialog.on('activate', this, function () {
                     localStorage[nodialog] = dialog.$('input[name=do_not_show]').prop('checked') || '';
                     dialog.$el.modal('hide');
+                    mysuper.call(self, !$('[data-oe-type="html"]').length);
                     self.translate().then(function () {
-                        mysuper.call(self, true);
                         if(self.gengo_translate){
-                            self.translation_gengo_display()
+                            self.translation_gengo_display();
                         }
                     });
                 });
             } else {
+                mysuper.call(self, !$('[data-oe-type="html"]').length);
                 this.translate().then(function () {
-                    mysuper.call(self, true);
                     if(self.gengo_translate){
-                        self.translation_gengo_display()
+                        self.translation_gengo_display();
                     }
                 });
             }
@@ -153,7 +154,9 @@
             var self = this;
             var trans = {};
             // this._super.apply(this, arguments);
-            $('.oe_translatable_text.o_dirty').each(function () {
+            $('.oe_translatable_text.o_dirty').filter(function () {
+                return self.getInitialContent(this) !== $(this).text();
+            }).each(function () {
                 var $node = $(this);
                 var data = $node.data();
                 if (!trans[data.oeTranslationViewId]) {
