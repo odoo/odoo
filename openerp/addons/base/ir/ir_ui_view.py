@@ -128,19 +128,6 @@ xpath_utils['hasclass'] = _hasclass
 
 TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
 
-def valid_inheritance(arch):
-    """ Check whether view inheritance is based on translated attribute. """
-    for node in arch.xpath('//*[@position]'):
-        # inheritance may not use a translated attribute as selector
-        if node.tag == 'xpath':
-            match = TRANSLATED_ATTRS_RE.search(node.get('expr', ''))
-            if match:
-                raise ValidationError("View inheritance may not use attribute %r as a selector." % match.group(1))
-        else:
-            for attr in TRANSLATED_ATTRS:
-                if node.get(attr):
-                    raise ValidationError("View inheritance may not use attribute %r as a selector." % attr)
-    return True
 
 class view(osv.osv):
     _name = 'ir.ui.view'
@@ -275,6 +262,22 @@ class view(osv.osv):
                 frng.close()
         return self._relaxng_validator
 
+    def _valid_inheritance(self, view, arch):
+        """ Check whether view inheritance is based on translated attribute. """
+        for node in arch.xpath('//*[@position]'):
+            # inheritance may not use a translated attribute as selector
+            if node.tag == 'xpath':
+                match = TRANSLATED_ATTRS_RE.search(node.get('expr', ''))
+                if match:
+                    message = "View inheritance may not use attribute %r as a selector." % match.group(1)
+                    self.raise_view_error(view._cr, view._uid, message, view.id)
+            else:
+                for attr in TRANSLATED_ATTRS:
+                    if node.get(attr):
+                        message = "View inheritance may not use attribute %r as a selector." % attr
+                        self.raise_view_error(view._cr, view._uid, message, view.id)
+        return True
+
     def _check_xml(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -284,8 +287,7 @@ class view(osv.osv):
         # Any exception raised below will cause a transaction rollback.
         for view in self.browse(cr, uid, ids, context):
             view_arch = etree.fromstring(encode(view.arch))
-            if not valid_inheritance(view_arch):
-                return False
+            self._valid_inheritance(view, view_arch)
             view_def = self.read_combined(cr, uid, view.id, ['arch'], context=context)
             view_arch_utf8 = view_def['arch']
             if view.type != 'qweb':
