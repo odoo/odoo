@@ -38,11 +38,16 @@ odoo.define('website_mail.thread', function(require) {
                 $button.prepend('<i class="fa fa-refresh fa-spin"></i> ');
                 // post message, shw/hide error message and empty textarea
                 ajax.jsonRpc(action, 'call', data).then(function (result) {
-                    if (result) {
-                        $error.fadeOut();
-                        self.prepend_message(result);
-                        $form.find('textarea').val('');
-                    } else {
+                    if (!result['error']) {
+                        if(result['redirect']){
+                            window.location.replace(result['redirect']);
+                        }else{
+                            $error.fadeOut();
+                            self.prepend_message(result);
+                            $form.find('textarea').val('');
+                        }
+                    } else { // display error message from server
+                        $error.html(result['error']);
                         $error.fadeIn();
                     }
                     $button.html(button_bk);

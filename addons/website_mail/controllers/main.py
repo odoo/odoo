@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import urllib
+
 from hashlib import sha1
 from time import time
 from werkzeug.exceptions import NotFound
+from werkzeug import url_encode
 
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, _
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 
@@ -65,6 +69,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
             res = res.sudo()
         else:
             raise NotFound()
+    kw.pop('force_display', False)
     return res.with_context({'mail_create_nosubscribe': nosubscribe}).message_post(body=message,
                                                                                    message_type=kw.pop('message_type', False) or "comment",
                                                                                    subtype=kw.pop('subtype', False) or "mt_comment",
@@ -147,27 +152,47 @@ class WebsiteMail(http.Controller):
                         ], context=context)) == 1
         return values
 
+    def _generate_login_url(self):
+        url_params = request.params
+        url_params.pop('force_display')
+        url_params.update(redirect=request.httprequest.referrer)
+        redirect_login_url = '/website_mail/post/post' + '?' + url_encode(url_params)
+        url = '/web/login?redirect=%s' % urllib.quote(redirect_login_url)
+        return url
+
     @http.route(['/website_mail/post/json'], type='json', auth='public', website=True)
     def chatter_json(self, res_model='', res_id=None, message='', **kw):
+        # if the chatter is displayed but the user is not logged, redirect him to login page
+        if kw.get('force_display') and not request.session.uid:
+            return {'redirect': self._generate_login_url()}
+        # otherwise, try to post the comment
         res_id = int(res_id)
         try:
-            msg = _message_post_helper(res_model, res_id, message, **kw)
-            data = {
-                'id': msg.id,
-                'body': msg.body,
-                'date': msg.date,
-                'author': msg.author_id.name,
-                'image_url': request.website.image_url(msg.author_id, 'image_small')
-            }
-            return data
+            if message:
+                msg = _message_post_helper(res_model, res_id, message, **kw)
+                data = {
+                    'id': msg.id,
+                    'body': msg.body,
+                    'date': msg.date,
+                    'author': msg.author_id.name,
+                    'image_url': request.website.image_url(msg.author_id, 'image_small')
+                }
+                return data
+            else:
+                return {'error': _('Empty comments are not allowed. Please fill the textearea.')}
         except Exception:
-            return False
+            return {'error': _('Oops! Something went wrong. Try to reload the page and to log in.')}
 
     @http.route(['/website_mail/post/post'], type='http', method=['POST'], auth='public', website=True)
     def chatter_post(self, res_model='', res_id=None, message='', redirect=None, **kw):
-        res_id = int(res_id)
         url = request.httprequest.referrer
-        if message:
-            message = _message_post_helper(res_model, res_id, message, **kw)
-            url = url + "#message-%s" % (message.id,)
+        if kw.get('force_display') and not request.session.uid:
+            # set the redirection param to be redirect here when logged in
+            url = self._generate_login_url()
+        else:
+            res_id = int(res_id)
+            url = redirect or url
+            if message:
+                message = _message_post_helper(res_model, res_id, message, **kw)
+                url = url + "#message-%s" % (message.id,)
         return request.redirect(url)

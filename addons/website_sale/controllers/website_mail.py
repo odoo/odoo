@@ -15,24 +15,24 @@ class WebsiteMailController(WebsiteMail):
     def chatter_json(self, res_model='', res_id=None, message='', **kw):
         params = kw.copy()
         params.pop('rating', False)
-        message_data = super(WebsiteMailController, self).chatter_json(res_model=res_model, res_id=res_id, message=message, **params)
-        if message_data and kw.get('rating') and res_model == 'product.template':  # restrict rating only for product template
+        result = super(WebsiteMailController, self).chatter_json(res_model=res_model, res_id=res_id, message=message, **params)
+        if result and result.get('id') and kw.get('rating') and res_model == 'product.template':  # restrict rating only for product template
             rating = request.env['rating.rating'].create({
                 'rating': float(kw.get('rating')),
                 'res_model': res_model,
                 'res_id': res_id,
-                'message_id': message_data['id'],
+                'message_id': result['id'],
             })
-            message_data.update({
+            result.update({
                 'rating_default_value': rating.rating,
                 'rating_disabled': True,
             })
-        return message_data
+        return result
 
     @http.route(['/website_mail/post/post'], type='http', method=['POST'], auth='public', website=True)
     def chatter_post(self, res_model='', res_id=None, message='', redirect=None, **kw):
         params = kw.copy()
-        params.pop('rating')
+        params.pop('rating', False)
         response = super(WebsiteMailController, self).chatter_post(res_model=res_model, res_id=res_id, message=message, redirect=redirect, **params)
         if kw.get('rating') and res_model == 'product.template':  # restrict rating only for product template
             try:
