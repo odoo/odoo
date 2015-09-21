@@ -38,20 +38,6 @@
   <xpath expr="//div[@class='col-sm-7 col-md-7 col-lg-7']/span[@t-field='product.image']" position="replace">
      <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "optima_product_image"}'/>
   </xpath>
-  <xpath expr="//div[@class='col-sm-7 col-md-7 col-lg-7']/span[@t-field='product.image']" position="before">
-      <t t-foreach="product.website_style_ids" t-as="styl">
-     <div t-att-id="styl.shape.css" t-attf-style="background:##{styl.bg_color};
-            color:##{styl.bg_color}; 
-            width:#{styl.width}px; 
-            height:#{styl.height}px; 
-            position: absolute !important;
-            top: #{styl.top}%;
-            left: #{styl.left}%;
-            ">
-       <div id="optima_promo_text" t-attf-style="color:##{styl.text_color}; font-size: #{styl.font_size}px; top: #{styl.text_top}px;"> <p><t t-esc="styl.msg"/></p></div>
-     </div>
-   </t>
-  </xpath>
 </template>
     </data>
 </openerp>
