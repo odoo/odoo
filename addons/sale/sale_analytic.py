@@ -45,9 +45,11 @@ class AccountAnalyticLine(models.Model):
         return price_unit
 
     def _get_sale_order_line_vals(self):
-        order = self.env['sale.order'].search([('project_id', '=', self.account_id.id), ('state', '=', 'sale')], limit=1)
+        order = self.env['sale.order'].search([('project_id', '=', self.account_id.id)], limit=1)
         if not order:
-            raise UserError(_('No valid Sale Order was found. Make sure that at least one Sale Order in state "Sale" is linked to the specified contract.'))
+            return False
+        if order.state != 'sale':
+            raise UserError(_('The Sale Order %s linked to the Analytic Account must be validated before registering expenses.' % order.name))
 
         last_so_line = self.env['sale.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
@@ -87,9 +89,10 @@ class AccountAnalyticLine(models.Model):
 
         if not sol and self.account_id and self.product_id and self.product_id.invoice_policy == 'cost':
             order_line_vals = self._get_sale_order_line_vals()
-            sol = self.env['sale.order.line'].create(order_line_vals)
-            sol._compute_tax_id()
-            result.update({'so_line': sol.id})
+            if order_line_vals:
+                sol = self.env['sale.order.line'].create(order_line_vals)
+                sol._compute_tax_id()
+                result.update({'so_line': sol.id})
 
         return result
 
