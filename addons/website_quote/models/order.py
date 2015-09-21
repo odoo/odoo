@@ -191,7 +191,7 @@ class sale_order(osv.osv):
 
     def onchange_template_id(self, cr, uid, ids, template_id, partner=False, fiscal_position=False, pricelist_id=False, context=None):
         if not template_id:
-            return True
+            return {}
 
         if partner:
             context = dict(context or {})
@@ -309,7 +309,7 @@ class sale_order(osv.osv):
     def create(self, cr, uid, values, context=None):
         if not values.get('template_id'):
             defaults = self.default_get(cr, uid, ['template_id'], context=context)
-            template_values = self.onchange_template_id(cr, uid, [], defaults.get('template_id'), partner=values.get('partner_id'), fiscal_position=values.get('fiscal_position'), context=context)['value']
+            template_values = self.onchange_template_id(cr, uid, [], defaults.get('template_id'), partner=values.get('partner_id'), fiscal_position=values.get('fiscal_position'), context=context).get('value', {})
             values = dict(template_values, **values)
         return super(sale_order, self).create(cr, uid, values, context=context)
 
