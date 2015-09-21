@@ -56,7 +56,10 @@ class ir_translation_import_cursor(object):
     def push(self, trans_dict):
         """Feed a translation, as a dictionary, into the cursor
         """
-        params = dict(trans_dict, state="translated" if trans_dict['value'] else "to_translate")
+        if not trans_dict['value']:
+            return
+
+        params = dict(trans_dict, state="translated")
 
         if params['type'] == 'view':
             # ugly hack for QWeb views - pending refactoring of translations in master
