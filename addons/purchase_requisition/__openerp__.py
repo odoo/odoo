@@ -32,5 +32,8 @@ keep track and order all your purchase orders.
         'test/cancel_purchase_requisition.yml',
         'test/purchase_requisition.yml',
     ],
+    'qweb': [
+        'static/src/xml/purchase_requisition.xml',
+    ],
     'installable': True,
 }

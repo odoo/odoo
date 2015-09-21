@@ -237,14 +237,14 @@ class purchase_requisition(osv.osv):
             if tender.state == 'done':
                 raise UserError(_('You have already generate the purchase order(s).'))
 
-            # confirm = False
-            # #check that we have at least confirm one line
-            # for po_line in tender.po_line_ids:
-            #     if po_line.state == 'confirmed':
-            #         confirm = True
-            #         break
-            # if not confirm:
-            #     raise UserError(_('You have no line selected for buying.'))
+            confirm = False
+            #check that we have at least confirm one line
+            for po_line in tender.po_line_ids:
+                if po_line.quantity_tendered > 0:
+                    confirm = True
+                    break
+            if not confirm:
+                raise UserError(_('You have no line selected for buying.'))
 
             #check for complete RFQ
             for quotation in tender.purchase_ids:
@@ -255,7 +255,7 @@ class purchase_requisition(osv.osv):
             #get other confirmed lines per supplier
             for po_line in tender.po_line_ids:
                 #only take into account confirmed line that does not belong to already confirmed purchase order
-                if po_line.order_id.state in ['draft', 'sent', 'to approve']:
+                if po_line.quantity_tendered > 0 and po_line.order_id.state in ['draft', 'sent', 'to approve']:
                     if id_per_supplier.get(po_line.partner_id.id):
                         id_per_supplier[po_line.partner_id.id].append(po_line)
                     else:
@@ -362,6 +362,15 @@ class purchase_order_line(osv.osv):
     def generate_po(self, cr, uid, tender_id, context=None):
         #call generate_po from tender with active_id. Called from js widget
         return self.pool.get('purchase.requisition').generate_po(cr, uid, [tender_id], context=context)
+
+    def button_confirm(self, cr, uid, ids, context=None):
+        for element in self.browse(cr, uid, ids, context=context):
+            self.write(cr, uid, element.id, {'quantity_tendered': element.product_qty}, context=context)
+        return True
+
+    def button_cancel(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'quantity_tendered': 0}, context=context)
+        return True
 
 
 class product_template(osv.osv):
