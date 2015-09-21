@@ -24,16 +24,10 @@ Tour.register({
         },
         {
             title:     "go to english version",
+            waitFor:   'html[lang*="fr"]',
             element:   '.js_language_selector a[data-lang="en_US"]',
             onload: function () {
                 localStorage.removeItem('website_translator_nodialog');
-            }
-        },
-        {
-            title:  "Wait for next page load",
-            onload: function(){
-                if($('html[lang="fr-BE"]').length)
-                    Tour.nextStep = function(){};
             }
         },
         {
@@ -75,6 +69,7 @@ Tour.register({
         },
         {
             title:     "click on french version",
+            waitFor:   'html[lang*="en"]',
             waitNot:   'button[data-action=save]',
             element:   '.js_language_selector a[data-lang="fr_BE"]',
         },
@@ -130,6 +125,7 @@ Tour.register({
         },
         {
             title:     "return to english version",
+            waitFor:   'html[lang*="fr"]',
             waitNot:   '#wrap p span',
             element:   '.js_language_selector a[data-lang="en_US"]',
         },
@@ -161,6 +157,7 @@ Tour.register({
         },
         {
             title:     "return in french",
+            waitFor:   'html[lang*="en"]',
             waitNot:   'button[data-action=save]',
             element:   'html[lang="en-US"] .js_language_selector a[data-lang="fr_BE"]',
         },
