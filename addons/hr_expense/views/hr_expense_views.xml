@@ -85,7 +85,7 @@
                             <field name="employee_id"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="department_id" invisible="1"/>
-                            <field name="analytic_account_id" string="Contract" groups="analytic.group_analytic_accounting"/>
+                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="journal_id" domain="[('type', '=', 'purchase')]" groups="account.group_account_user"
                                 options="{'no_open': True, 'no_create': True}"/>
@@ -199,7 +199,7 @@
                         <filter string="Department" domain="[]" context="{'group_by': 'department_id'}" groups="hr.group_multi_departments"/>
                         <filter string="Company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
-                        <filter string="Contract" domain="[]" context="{'group_by': 'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
+                        <filter domain="[]" context="{'group_by': 'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
                         <filter string="Expenses Month" domain="[]" context="{'group_by': 'date'}" help="Expenses by Month"/>
                     </group>
                     <separator />
