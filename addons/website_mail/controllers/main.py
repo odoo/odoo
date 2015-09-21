@@ -166,5 +166,8 @@ class WebsiteMail(http.Controller):
     @http.route(['/website_mail/post/post'], type='http', method=['POST'], auth='public', website=True)
     def chatter_post(self, res_model='', res_id=None, message='', redirect=None, **kw):
         res_id = int(res_id)
-        message = _message_post_helper(res_model, res_id, message, **kw)
-        return request.redirect(request.httprequest.referrer + "#message-%s" % (message.id,))
+        url = request.httprequest.referrer
+        if message:
+            message = _message_post_helper(res_model, res_id, message, **kw)
+            url = url + "#message-%s" % (message.id,)
+        return request.redirect(url)
