@@ -419,6 +419,14 @@ class PaymentTransaction(osv.Model):
             }}
         return {}
 
+    def get_next_reference(self, cr, uid, reference, context=None):
+        ref_suffix = 1
+        init_ref = reference
+        while self.pool['payment.transaction'].search_count(cr, uid, [('reference', '=', reference)], context=context):
+            reference = init_ref + '-' + str(ref_suffix)
+            ref_suffix += 1
+        return reference
+
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------

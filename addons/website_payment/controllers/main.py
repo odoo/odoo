@@ -41,11 +41,7 @@ class website_payment(http.Controller):
         acquirer = env['payment.acquirer'].with_context(submit_class='btn btn-primary pull-right',
                                                         submit_txt=_('Pay Now')).browse(acquirer_id)
         # auto-increment reference with a number suffix if the reference already exists
-        ref_suffix = 1
-        init_ref = reference
-        while request.env['payment.transaction'].sudo().search_count([('reference', '=', reference)]):
-            reference = init_ref + '-' + str(ref_suffix)
-            ref_suffix += 1
+        reference = request.env['payment.transaction'].get_next_reference(reference)
 
         partner_id = user.partner_id.id if user.partner_id.id != request.website.partner_id.id else False
 
