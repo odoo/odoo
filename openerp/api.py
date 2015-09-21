@@ -383,6 +383,15 @@ def one(method):
             names = recs.method(args)
 
             names = model.method(cr, uid, ids, args, context=context)
+
+        .. deprecated:: 9.0
+
+            :func:`~.one` often makes the code less clear and behaves in ways
+            developers and readers may not expect.
+
+            It is strongly recommended to use :func:`~.multi` and either
+            iterate on the ``self`` recordset or ensure that the recordset
+            is a single record with :meth:`~openerp.models.Model.ensure_one`.
     """
     split = get_context_split(method)
     downgrade = get_downgrade(method)

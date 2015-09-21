@@ -76,6 +76,14 @@ class EscposDriver(Thread):
 
         printers = usb.core.find(find_all=True, custom_match=FindUsbClass(7))
 
+        # Currently we ask customers to put the STAR TSP650II into
+        # 'USB Mode' Vendor class instead of Printer class. When set
+        # to Printer class it doesn't show up under Linux at
+        # all. Vendor class does work, but that means that it's not
+        # going to have an interfaceClass 7.
+        if not printers:
+            printers = usb.core.find(find_all=True, idVendor=0x0519)
+
         for printer in printers:
             connected.append({
                 'vendor': printer.idVendor,

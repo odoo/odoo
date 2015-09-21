@@ -467,16 +467,31 @@ class website_sale(http.Controller):
     mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id"]
     optional_shipping_fields = ["state_id", "zip"]
 
+    def _get_mandatory_billing_fields(self):
+        return self.mandatory_billing_fields
+
+    def _get_optional_billing_fields(self):
+        return self.optional_billing_fields
+
+    def _get_mandatory_shipping_fields(self):
+        return self.mandatory_shipping_fields
+
+    def _get_optional_shipping_fields(self):
+        return self.optional_shipping_fields
+
+    def _post_prepare_query(self, query, data, address_type):
+        return query
+
     def checkout_parse(self, address_type, data, remove_prefix=False):
         """ data is a dict OR a partner browse record
         """
         # set mandatory and optional fields
         assert address_type in ('billing', 'shipping')
         if address_type == 'billing':
-            all_fields = self.mandatory_billing_fields + self.optional_billing_fields
+            all_fields = self._get_mandatory_billing_fields() + self._get_optional_billing_fields()
             prefix = ''
         else:
-            all_fields = self.mandatory_shipping_fields + self.optional_shipping_fields
+            all_fields = self._get_mandatory_shipping_fields() + self._get_optional_shipping_fields()
             prefix = 'shipping_'
 
         # set data
@@ -497,6 +512,8 @@ class website_sale(http.Controller):
         if query.get(prefix + 'vat'):
             query[prefix + 'vat_subjected'] = True
 
+        query = self._post_prepare_query(query, data, address_type)
+
         if not remove_prefix:
             return query
 
@@ -509,7 +526,7 @@ class website_sale(http.Controller):
         error_message = []
 
         # Validation
-        for field_name in self.mandatory_billing_fields:
+        for field_name in self._get_mandatory_billing_fields():
             if not data.get(field_name):
                 error[field_name] = 'missing'
 
@@ -531,7 +548,7 @@ class website_sale(http.Controller):
                 error["vat"] = 'error'
 
         if data.get("shipping_id") == -1:
-            for field_name in self.mandatory_shipping_fields:
+            for field_name in self._get_mandatory_shipping_fields():
                 field_name = 'shipping_' + field_name
                 if not data.get(field_name):
                     error[field_name] = 'missing'
@@ -541,6 +558,12 @@ class website_sale(http.Controller):
             error_message.append(_('Some required fields are empty.'))
 
         return error, error_message
+
+    def _get_shipping_info(self, checkout):
+        shipping_info = {}
+        shipping_info.update(self.checkout_parse('shipping', checkout, True))
+        shipping_info['type'] = 'delivery'
+        return shipping_info
 
     def checkout_form_save(self, checkout):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
@@ -578,11 +601,9 @@ class website_sale(http.Controller):
 
         # create a new shipping partner
         if checkout.get('shipping_id') == -1:
-            shipping_info = {}
+            shipping_info = self._get_shipping_info(checkout)
             if partner_lang:
                 shipping_info['lang'] = partner_lang
-            shipping_info.update(self.checkout_parse('shipping', checkout, True))
-            shipping_info['type'] = 'delivery'
             shipping_info['parent_id'] = partner_id
             checkout['shipping_id'] = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
 
