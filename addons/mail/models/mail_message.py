@@ -608,6 +608,7 @@ class Message(models.Model):
                 - otherwise: raise
             - write: if
                 - author_id == pid, uid is the author, OR
+                - uid is in the recipients (partner_ids) OR
                 - uid has write or create access on the related document if model, res_id
                 - otherwise: raise
             - unlink: if
@@ -645,7 +646,7 @@ class Message(models.Model):
         # Read mail_message.ids to have their values
         message_values = dict((res_id, {}) for res_id in self.ids)
 
-        if operation == 'read':
+        if operation in ['read', 'write']:
             self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id, partner_rel.res_partner_id, channel_partner.channel_id as channel_id
                 FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
@@ -693,10 +694,10 @@ class Message(models.Model):
             notified_ids += [mid for mid, message in message_values.iteritems()
                              if message.get('parent_id') in not_parent_ids]
 
-        # Notification condition, for read (check for received notifications and create (in message_follower_ids)) -> could become an ir.rule, but not till we do not have a many2one variable field
+        # Recipients condition, for read and write (partner_ids) and create (message_follower_ids)
         other_ids = set(self.ids).difference(set(author_ids), set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
-        if operation == 'read':
+        if operation in ['read', 'write']:
             notified_ids = [mid for mid, message in message_values.iteritems() if message.get('partner_id') or message.get('channel_id')]
         elif operation == 'create':
             for doc_model, doc_ids in model_record_ids.items():
