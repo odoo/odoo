@@ -8,7 +8,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_is_zero, float_compare
 import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, AccessError
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
@@ -352,8 +352,10 @@ class PurchaseOrder(models.Model):
                 vals = {
                     'seller_ids': [(0, 0, supplierinfo)],
                 }
-                line.product_id.write(vals)
-
+                try:
+                    line.product_id.write(vals)
+                except AccessError:  # no write access rights -> just ignore
+                    break
 
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
@@ -586,11 +588,6 @@ class PurchaseOrderLine(models.Model):
             'date': date,
             'quantity': quantity_seller_uom_id,
         })
-
-        # Switch quantity back in product_uom
-        quantity = max(quantity_seller_uom_id, product.seller_qty)
-        if quantity and seller_product_uom != product_uom:
-            quantity = seller_product_uom._compute_qty_obj(seller_product_uom, quantity, product_uom)
 
         price_unit = product.seller_price
         if price_unit and seller_currency_id != currency_id:
