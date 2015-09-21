@@ -546,27 +546,6 @@ class pos_session(osv.osv):
                 statement.unlink(context=context)
         return super(pos_session, self).unlink(cr, uid, ids, context=context)
 
-    def open_cb(self, cr, uid, ids, context=None):
-        """
-        call the Point Of Sale interface and set the pos.session to 'opened' (in progress)
-        """
-        if context is None:
-            context = dict()
-
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
-        this_record = self.browse(cr, uid, ids[0], context=context)
-        this_record.signal_workflow('open')
-
-        context.update(active_id=this_record.id)
-
-        return {
-            'type' : 'ir.actions.act_url',
-            'url'  : '/pos/web/',
-            'target': 'self',
-        }
-
     def login(self, cr, uid, ids, context=None):
         this_record = self.browse(cr, uid, ids[0], context=context)
         this_record.write({
@@ -584,7 +563,7 @@ class pos_session(osv.osv):
             for st in record.statement_ids:
                 st.button_open()
 
-        return self.open_frontend_cb(cr, uid, ids, context=context)
+        return True
 
     def wkf_action_opening_control(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state' : 'opening_control'}, context=context)
