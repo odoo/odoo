@@ -451,8 +451,8 @@ def content_disposition(filename):
     version = int((request.httprequest.user_agent.version or '0').split('.')[0])
     if browser == 'msie' and version < 9:
         return "attachment; filename=%s" % escaped
-    elif browser == 'safari':
-        return u"attachment; filename=%s" % filename
+    elif browser == 'safari' and version < 537:
+        return u"attachment; filename=%s" % filename.encode('ascii', 'replace')
     else:
         return "attachment; filename*=UTF-8''%s" % escaped
 
