@@ -543,7 +543,7 @@ class PurchaseOrderLine(models.Model):
            :rtype: datetime
            :return: desired Schedule Date for the PO line
         """
-        supplier_delay = int(product.seller_delay) if product else 0
+        supplier_delay = int(product.selected_seller_id.delay) if product else 0
         if po:
             date_order = po.date_order
         else:
@@ -635,7 +635,7 @@ class PurchaseOrderLine(models.Model):
             'quantity': quantity_seller_uom_id,
         })
 
-        price_unit = product.seller_price
+        price_unit = product.selected_seller_id.price
         if price_unit and seller_currency_id != currency_id:
             price_unit = seller_currency_id.compute(price_unit, currency_id)
 
@@ -736,7 +736,7 @@ class ProcurementOrder(models.Model):
     @api.v8
     def _get_purchase_order_date(self, schedule_date):
         self.ensure_one()
-        seller_delay = int(self.product_id.seller_delay)
+        seller_delay = int(self.product_id.selected_seller_id.delay)
         return schedule_date - relativedelta(days=seller_delay)
 
     @api.v7
@@ -750,7 +750,7 @@ class ProcurementOrder(models.Model):
            :rtype: datetime
            :return: the desired Order Date for the PO
         """
-        seller_delay = int(procurement.product_id.seller_delay)
+        seller_delay = int(procurement.product_id.selected_seller_id.delay)
         return schedule_date - relativedelta(days=seller_delay)
 
     @api.multi

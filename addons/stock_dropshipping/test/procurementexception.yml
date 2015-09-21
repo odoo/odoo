@@ -35,7 +35,7 @@
 -
   I set the at least one supplier on the product.
 -
-  !record {model: product.product, id: product_with_no_seller}:
+  !record {model: product.product, id: product_with_no_seller, view: False}:
     seller_ids:
       - delay: 1
         name: base.res_partner_2

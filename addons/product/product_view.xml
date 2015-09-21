@@ -133,7 +133,7 @@
                                     </group>
                                 </group>
                                 <separator string="Vendors"/>
-                                <field name="seller_ids"/>
+                                <field name="seller_ids" context="{'default_product_tmpl_id': active_id}"/>
                                 <group name="packaging" string="Packaging"
                                     colspan="4"
                                     attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
@@ -769,6 +769,7 @@
                             <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                             <field name="product_name"/>
                             <field name="product_code"/>
+                            <field name="product_id" domain="[('product_tmpl_id', '=', product_tmpl_id)]" invisible="1"/>
                             <label for="delay"/>
                             <div>
                                 <field name="delay" class="oe_inline"/> days

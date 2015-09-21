@@ -453,28 +453,6 @@ class product_template(osv.osv):
         r = self.pool['product.product'].read(cr, uid, ids, ['product_tmpl_id'], context=context)
         return [x['product_tmpl_id'][0] for x in r]
 
-    def _select_seller(self, cr, uid, ids, name, arg, context=None):
-        if context is None:
-            context = {}
-        res = {}
-        partner = context.get('partner_id')
-        minimal_quantity = context.get('quantity', 0.0)
-        date = context.get('date', time.strftime(DEFAULT_SERVER_DATE_FORMAT))
-        for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = False
-            for seller in product.seller_ids:
-                if seller.date_start and seller.date_start > date:
-                    continue
-                if seller.date_end and seller.date_end < date:
-                    continue
-                if partner and seller.name.id != partner:
-                    continue
-                if minimal_quantity and minimal_quantity < seller.qty:
-                    continue
-                res[product.id] = seller
-                break
-        return res
-
     def _get_product_template_type(self, cr, uid, context=None):
         return [('consu', 'Consumable'), ('service', 'Service')]
     _get_product_template_type_wrapper = lambda self, *args, **kwargs: self._get_product_template_type(*args, **kwargs)
@@ -547,14 +525,6 @@ class product_template(osv.osv):
             help="Gives the different ways to package the same product. This has no impact on "
                  "the picking order and is mainly used if you use the EDI module."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Vendor'),
-        'selected_seller_id': fields.function(_select_seller, type='many2one', relation='product.supplierinfo', string='Selected Seller', help='Technical field that selects a seller based on priority (sequence) and an optional partner and/or a minimal quantity in the context'),
-        'seller_delay': fields.related('selected_seller_id','delay', type='integer', string='Vendor Lead Time',
-            help="This is the average delay in days between the purchase order confirmation and the receipts for this product and for the default vendor. It is used by the scheduler to order requests based on reordering delays."),
-        'seller_qty': fields.related('selected_seller_id','qty', type='float', string='Vendor Quantity',
-            help="This is minimum quantity to purchase from Main Vendor."),
-        'seller_id': fields.related('selected_seller_id','name', type='many2one', relation='res.partner', string='Main Vendor',
-            help="Main vendor who has highest priority in vendor list."),
-        'seller_price': fields.related('selected_seller_id','price', type='float', string='Vendor Price', help="Purchase price from main vendor."),
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
@@ -934,6 +904,30 @@ class product_product(osv.osv):
             result[product.id] = price_extra
         return result
 
+    def _select_seller(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        res = {}
+        partner = context.get('partner_id')
+        minimal_quantity = context.get('quantity', 0.0)
+        date = context.get('date', time.strftime(DEFAULT_SERVER_DATE_FORMAT))
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = False
+            for seller in product.seller_ids:
+                if seller.date_start and seller.date_start > date:
+                    continue
+                if seller.date_end and seller.date_end < date:
+                    continue
+                if partner and seller.name.id != partner:
+                    continue
+                if minimal_quantity and minimal_quantity < seller.qty:
+                    continue
+                if seller.product_id and seller.product_id != product:
+                    continue
+                res[product.id] = seller
+                break
+        return res
+
     _columns = {
         'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
@@ -970,6 +964,7 @@ class product_product(osv.osv):
                                           groups="base.group_user", string="Cost"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc."),
+        'selected_seller_id': fields.function(_select_seller, type='many2one', relation='product.supplierinfo', string='Selected Seller', help='Technical field that selects a seller based on priority (sequence) and an optional partner and/or a minimal quantity in the context'),
     }
 
     _defaults = {
@@ -1047,7 +1042,10 @@ class product_product(osv.osv):
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
-                sellers = filter(lambda x: x.name.id in partner_ids, product.seller_ids)
+                if variant:
+                    sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
+                if not sellers:
+                    sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and not x.product_id]
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and (
@@ -1238,6 +1236,7 @@ class product_supplierinfo(osv.osv):
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', select=True, oldname='product_id'),
         'delay': fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'company_id': fields.many2one('res.company', string='Company', select=1),
+        'product_id': fields.many2one('product.product', string='Product Variant'),
     }
     _defaults = {
         'min_qty': 0.0,
