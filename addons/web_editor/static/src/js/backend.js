@@ -295,7 +295,9 @@ var FieldTextHtml = widget.extend({
             }
         } else {
             this.$content.html(value);
-            this.$iframe.css("height", (this.$body.height()+20) + "px");
+            if (this.$iframe[0].contentWindow) {
+                this.$iframe.css("height", (this.$body.height()+20) + "px");
+            }
         }
     },
     is_false: function() {
