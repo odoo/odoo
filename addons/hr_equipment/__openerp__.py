@@ -5,7 +5,7 @@
     'version': '1.0',
     'sequence': 125,
     'description': """
-        Track employees' IT assets: computers, printers, software licenses and manage makntenance requests.""",
+        Track employees' IT assets: computers, printers, software licenses and manage maintenance requests.""",
     'author': 'Odoo S.A.',
     'depends': ['hr'],
     'summary': 'Equipments, IT Assets, Internal Hardware',
