@@ -219,7 +219,7 @@ class view(osv.osv):
         'arch_db': fields.text('Arch Blob', translate=xml_translate, oldname='arch'),
         'arch_fs': fields.char('Arch Filename'),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='restrict', select=True),
-        'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
+        'inherit_children_ids': fields.one2many('ir.ui.view', 'inherit_id', 'Views which inherit form this one'),
         'field_parent': fields.char('Child Field'),
         'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data",
                                          store={
