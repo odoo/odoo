@@ -31,9 +31,9 @@ class ResCompany(models.Model):
     expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id',
         string="Loss Exchange Rate Account", domain="[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id)]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
-    property_stock_account_input_categ_id = fields.Many2one('account.account', oldname="property_stock_account_input_categ")
-    property_stock_account_output_categ_id = fields.Many2one('account.account', oldname="property_stock_account_output_categ")
-    property_stock_valuation_account_id = fields.Many2one('account.account')
+    property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation", oldname="property_stock_account_input_categ")
+    property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation", oldname="property_stock_account_output_categ")
+    property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     overdue_msg = fields.Text(string='Overdue Payments Message', translate=True,
         default='''Dear Sir/Madam,

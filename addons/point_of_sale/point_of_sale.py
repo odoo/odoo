@@ -1366,15 +1366,6 @@ class pos_order(osv.osv):
         self.create_account_move(cr, uid, ids, context=context)
         return True
 
-class account_bank_statement(osv.osv):
-    _inherit = 'account.bank.statement'
-    _columns= {
-        'user_id': fields.many2one('res.users', 'User', readonly=True),
-    }
-    _defaults = {
-        'user_id': lambda self,cr,uid,c={}: uid
-    }
-
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
     _columns= {

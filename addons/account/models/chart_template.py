@@ -80,13 +80,13 @@ class AccountChartTemplate(models.Model):
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     property_account_receivable_id = fields.Many2one('account.account.template', string='Receivable Account', oldname="property_account_receivable")
     property_account_payable_id = fields.Many2one('account.account.template', string='Payable Account', oldname="property_account_payable")
-    property_account_expense_categ_id = fields.Many2one('account.account.template', string='Expense Category Account', oldname="property_account_expense_categ")
-    property_account_income_categ_id = fields.Many2one('account.account.template', string='Income Category Account', oldname="property_account_income_categ")
+    property_account_expense_categ_id = fields.Many2one('account.account.template', string='Category of Expense Account', oldname="property_account_expense_categ")
+    property_account_income_categ_id = fields.Many2one('account.account.template', string='Category of Income Account', oldname="property_account_income_categ")
     property_account_expense_id = fields.Many2one('account.account.template', string='Expense Account on Product Template', oldname="property_account_expense")
     property_account_income_id = fields.Many2one('account.account.template', string='Income Account on Product Template', oldname="property_account_income")
-    property_stock_account_input_categ_id = fields.Many2one('account.account.template', oldname="property_stock_account_input_categ")
-    property_stock_account_output_categ_id = fields.Many2one('account.account.template', oldname="property_stock_account_output_categ")
-    property_stock_valuation_account_id = fields.Many2one('account.account.template')
+    property_stock_account_input_categ_id = fields.Many2one('account.account.template', string="Input Account for Stock Valuation", oldname="property_stock_account_input_categ")
+    property_stock_account_output_categ_id = fields.Many2one('account.account.template', string="Output Account for Stock Valuation", oldname="property_stock_account_output_categ")
+    property_stock_valuation_account_id = fields.Many2one('account.account.template', string="Account Template for Stock Valuation")
 
     @api.one
     def try_loading_for_current_company(self):

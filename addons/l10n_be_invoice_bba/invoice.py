@@ -194,7 +194,7 @@ class account_invoice(osv.osv):
         return super(account_invoice, self).copy(cr, uid, id, default, context=context)
 
     _columns = {
-        'reference_type': fields.selection(_get_reference_type, 'Communication Type',
+        'reference_type': fields.selection(_get_reference_type, 'Payment Reference',
             required=True, readonly=True),
     }
     _constraints = [
