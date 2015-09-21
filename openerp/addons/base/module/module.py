@@ -800,7 +800,7 @@ class module(osv.osv):
             filter_lang = [lang.code for lang in res_lang.browse(cr, uid, lang_ids)]
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
-        modules = [m.name for m in self.browse(cr, uid, ids) if m.state == 'installed']
+        modules = [m.name for m in self.browse(cr, uid, ids) if m.state in ('installed', 'to install', 'to upgrade')]
         self.pool.get('ir.translation').load_module_terms(cr, modules, filter_lang, context=context)
 
     def check(self, cr, uid, ids, context=None):
