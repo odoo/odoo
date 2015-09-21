@@ -5,8 +5,8 @@ from openerp.osv import osv
 
 class hr_payslip_employees(osv.osv_memory):
 
-    _inherit ='hr.payslip.employees'
-    
+    _inherit = 'hr.payslip.employees'
+
     def compute_sheet(self, cr, uid, ids, context=None):
         run_pool = self.pool.get('hr.payslip.run')
         if context is None:

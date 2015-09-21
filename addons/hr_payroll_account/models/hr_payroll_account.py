@@ -1,7 +1,6 @@
 #-*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
-from datetime import date, datetime, timedelta
 
 from openerp import api
 from openerp.osv import fields, osv
@@ -182,25 +181,6 @@ class hr_payslip(osv.osv):
             self.write(cr, uid, [slip.id], {'move_id': move_id, 'date' : date}, context=context)
             move_pool.post(cr, uid, [move_id], context=context)
         return super(hr_payslip, self).process_sheet(cr, uid, [slip.id], context=context)
-
-
-class hr_salary_rule(osv.osv):
-    _inherit = 'hr.salary.rule'
-    _columns = {
-        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
-        'account_tax_id':fields.many2one('account.tax', 'Tax'),
-        'account_debit': fields.many2one('account.account', 'Debit Account', domain=[('deprecated', '=', False)]),
-        'account_credit': fields.many2one('account.account', 'Credit Account', domain=[('deprecated', '=', False)]),
-    }
-
-class hr_contract(osv.osv):
-
-    _inherit = 'hr.contract'
-    _description = 'Employee Contract'
-    _columns = {
-        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
-        'journal_id': fields.many2one('account.journal', 'Salary Journal'),
-    }
 
 class hr_payslip_run(osv.osv):
 
