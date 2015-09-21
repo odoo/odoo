@@ -606,10 +606,6 @@ class module(osv.osv):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
 
-    def button_update_translations(self, cr, uid, ids, context=None):
-        self.update_translations(cr, uid, ids)
-        return True
-
     @staticmethod
     def get_values_from_terp(terp):
         return {
