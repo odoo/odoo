@@ -4358,8 +4358,8 @@ class stock_pack_operation(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', ondelete="CASCADE"),  # 1
         'product_uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'product_qty': fields.float('To Do', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
-        'qty_done': fields.float('Processed', digits_compute=dp.get_precision('Product Unit of Measure')),
-        'processed_boolean': fields.function(_get_bool, fnct_inv=_set_processed_qty, type='boolean', string='Processed'),
+        'qty_done': fields.float('Done', digits_compute=dp.get_precision('Product Unit of Measure')),
+        'processed_boolean': fields.function(_get_bool, fnct_inv=_set_processed_qty, type='boolean', string='Done'),
         'package_id': fields.many2one('stock.quant.package', 'Source Package'),  # 2
         'pack_lot_ids': fields.one2many('stock.pack.operation.lot', 'operation_id', 'Lots Used'),
         'result_package_id': fields.many2one('stock.quant.package', 'Destination Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade'),
@@ -4486,23 +4486,28 @@ class stock_pack_operation_lot(osv.osv):
     _name = "stock.pack.operation.lot"
     _description = "Specifies lot/serial number for pack operations that need it"
 
-    def _get_processed(self, cr, uid, ids, field_name, arg, context=None):
+    def _get_plus(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for packlot in self.browse(cr, uid, ids, context=context):
-            res[packlot.id] = (packlot.qty > 0.0)
+            if packlot.operation_id.product_id.tracking == 'serial':
+                res[packlot.id] = (packlot.qty == 0.0)
+            else:
+                res[packlot.id] = (packlot.qty_todo == 0.0) or (packlot.qty < packlot.qty_todo)
         return res
 
     _columns = {
         'operation_id': fields.many2one('stock.pack.operation'),
-        'qty': fields.float('Quantity'),
+        'qty': fields.float('Done'),
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'),
         'lot_name': fields.char('Lot Name'),
-        'qty_todo': fields.float('Quantity'),
-        'processed': fields.function(_get_processed,  type='boolean', store={'stock.pack.operation.lot': (lambda self, cr, uid, ids ,c={}:ids, ['qty'], 10)}),
+        'qty_todo': fields.float('To Do'),
+        'plus_visible': fields.function(_get_plus, type='boolean'),
     }
 
     _defaults = {
         'qty': lambda cr, uid, ids, c: 1.0,
+        'qty_todo': lambda cr, uid, ids, c: 0.0,
+        'plus_visible': True,
     }
 
     def _check_lot(self, cr, uid, ids, context=None):
@@ -4525,12 +4530,14 @@ class stock_pack_operation_lot(osv.osv):
     def do_plus(self, cr, uid, ids, context=None):
         for packlot in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [packlot.id], {'qty': packlot.qty + 1}, context=context)
+            self.pool['stock.pack.operation'].write(cr, uid, [packlot.operation_id.id], {'qty_done': packlot.operation_id.qty_done + 1}, context=context)
         pack = self.browse(cr, uid, ids[0], context=context).operation_id.id
         return self.pool['stock.pack.operation'].split_lot(cr, uid, [pack], context=context)
 
     def do_minus(self, cr, uid, ids, context=None):
         for packlot in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [packlot.id], {'qty': packlot.qty - 1}, context=context)
+            self.pool['stock.pack.operation'].write(cr, uid, [packlot.operation_id.id], {'qty_done': packlot.operation_id.qty_done - 1}, context=context)
         pack = self.browse(cr, uid, ids[0], context=context).operation_id.id
         return self.pool['stock.pack.operation'].split_lot(cr, uid, [pack], context=context)
 
