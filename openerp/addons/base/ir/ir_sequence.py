@@ -212,15 +212,21 @@ class ir_sequence(models.Model):
             return ''
 
         def _interpolation_dict():
+            now = datetime.now(pytz.timezone(self.env.context.get('tz') or 'UTC'))
             if self.env.context.get('ir_sequence_date'):
                 t = datetime.strptime(self.env.context.get('ir_sequence_date'), '%Y-%m-%d')
             else:
-                t = datetime.now(pytz.timezone(self.env.context.get('tz') or 'UTC'))
+                t = now
             sequences = {
                 'year': '%Y', 'month': '%m', 'day': '%d', 'y': '%y', 'doy': '%j', 'woy': '%W',
                 'weekday': '%w', 'h24': '%H', 'h12': '%I', 'min': '%M', 'sec': '%S'
             }
-            return {key: t.strftime(sequence) for key, sequence in sequences.iteritems()}
+            res = {}
+            for key, sequence in sequences.iteritems():
+                res[key] = now.strftime(sequence)
+                res['range_' + key] = t.strftime(sequence)
+
+            return res
 
         d = _interpolation_dict()
         try:
