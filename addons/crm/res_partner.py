@@ -73,7 +73,7 @@ class res_partner(osv.osv):
         partner_ids.append(self.pool.get('res.users').browse(cr, uid, uid).partner_id.id)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
         res['context'] = {
-            'search_default_partner_ids': list(ids),
+            'search_default_partner_ids': context['partner_name'],
             'default_partner_ids': partner_ids,
         }
         return res
