@@ -159,8 +159,10 @@ class note_note(osv.osv):
 
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
         res = super(note_note, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'note.action_note_note')
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, action_id=new_action_id)
         res['user'] = {
-            'actions': [{'url': self._notification_link_helper(cr, uid, ids, 'new', context=context), 'title': _('New Note')}]
+            'actions': [{'url': new_action, 'title': _('New Note')}]
         }
         return res
 

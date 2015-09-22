@@ -334,7 +334,7 @@ class project_issue(osv.Model):
 
         new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project_issue.project_issue_categ_act0')
         take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
-        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, view_id=new_action_id)
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, action_id=new_action_id)
 
         task_record = self.browse(cr, uid, ids[0], context=context)
         actions = []

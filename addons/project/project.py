@@ -750,7 +750,8 @@ class task(osv.osv):
         res = super(task, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
 
         take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
-        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, view_xmlid='project.action_view_task')
+        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project.action_view_task')
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, action_id=new_action_id)
 
         task_record = self.browse(cr, uid, ids[0], context=context)
         actions = []

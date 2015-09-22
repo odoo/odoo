@@ -531,7 +531,7 @@ class MailThread(models.AbstractModel):
             params = dict(base_params, method=method, params=kwargs)
             link = '/mail/method?%s' % url_encode(params)
         elif link_type == 'new':
-            params = dict(base_params, view_id=kwargs.get('view_id'))
+            params = dict(base_params, action_id=kwargs.get('action_id'))
             link = '/mail/new?%s' % url_encode(params)
         return link
 

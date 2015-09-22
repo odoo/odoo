@@ -170,8 +170,8 @@ class MailController(http.Controller):
         if model not in request.env:
             return self._redirect_to_messaging()
         params = {'view_type': 'form', 'model': model}
-        if kwargs.get('view_id'):
-            params['action'] = kwargs['view_id']
+        if kwargs.get('action_id'):
+            params['action'] = kwargs['action_id']
         return werkzeug.utils.redirect('/web?#%s' % url_encode(params))
 
     @http.route('/mail/method', type='http', auth='user')
@@ -182,7 +182,7 @@ class MailController(http.Controller):
         Model = request.env[model]
         try:
             record = Model.browse(int(res_id)).exists()
-            getattr(record, method)
+            getattr(record, method)()
         except:
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
