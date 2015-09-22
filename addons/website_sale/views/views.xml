@@ -5,7 +5,7 @@
         <field name="model">product.pricelist</field>
         <field name="inherit_id" ref="product.product_pricelist_view"/>
         <field name="arch" type="xml">
-            <field name="active" position="after">
+            <field name="currency_id" position="before">
                 <field name="code"/>
             </field>
         </field>
