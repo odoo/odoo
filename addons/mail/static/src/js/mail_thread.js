@@ -30,6 +30,7 @@ var MailComposeMessage = Widget.extend({
     events: {
         "keydown .o_mail_compose_message_input": "on_keydown",
         "keyup .o_mail_compose_message_input": "on_keyup",
+        "keypress .o_mail_compose_message_input": "on_keypress",
         "change input.o_form_input_file": "on_attachment_change",
         "click .o_mail_attachment_delete": "on_attachment_delete",
         "click .o_mail_compose_message_button_attachment": 'on_click_attachment',
@@ -131,6 +132,11 @@ var MailComposeMessage = Widget.extend({
                     this.message_send();
                 }
                 break;
+            // UP, DOWN : when navigate on the dropdown, prevent moving the cursor position in the input text
+            case $.ui.keyCode.UP:
+            case $.ui.keyCode.DOWN:
+                event.preventDefault();
+                break;
         }
     },
     message_send: function(){
@@ -140,6 +146,16 @@ var MailComposeMessage = Widget.extend({
         }
         this.$input.val("");
         this.message_post(mes, _.pluck(this.get('attachment_ids'), 'id'));
+    },
+    on_keypress: function(event){
+        switch(event.which) {
+            // ENTER : prevent moving cursor position when selecting a mention proposition in dropdown
+            case $.ui.keyCode.ENTER:
+                if(this.get('mention_partners').length){
+                    event.preventDefault();
+                }
+                break;
+        }
     },
     on_keyup: function(event){
         switch(event.which) {
