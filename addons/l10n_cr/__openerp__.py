@@ -35,7 +35,7 @@
 {
     'name': 'Costa Rica - Accounting',
     'version': '1.0',
-    'url': 'http://launchpad.net/openerp-costa-rica',
+    'url': 'https://www.transifex.com/odoo/odoo-9/language/es_CR/',
     'author': 'ClearCorp S.A.',
     'website': 'http://clearcorp.co.cr',
     'category': 'Localization/Account Charts',
