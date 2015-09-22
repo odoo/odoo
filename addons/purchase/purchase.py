@@ -1636,14 +1636,37 @@ class account_invoice(osv.Model):
         orders, logging the invoice receipt or payment. """
     _inherit = 'account.invoice'
 
+    def get_invoiced_moves_from_invoices(self, cr, uid, ids, context=None):
+        # Inspired from def _get_invoice_line_vals in stock.move
+        # To get the move ids  that must be written in state = 'invoiced'
+        po_line_obj = self.pool.get('purchase.order.line')
+        invoices = self.browse(cr, uid, ids)
+        po_line_ids = po_line_obj.search(cr, uid, [('invoice_lines', 'in', invoices.invoice_line.ids)], context=context)
+        po_lines = po_line_obj.browse(cr, uid, po_line_ids, context=context)
+        res = []
+        for line in invoices.invoice_line:
+            for move in po_lines.move_ids:
+                if move.product_id.id == line.product_id.id and move.invoice_state != 'invoiced' and not(move.id in res):
+                    if move.product_uos and line.uos_id.id == move.product_uos.id and line.quantity == move.product_uos_qty:
+                        res.append(move.id)
+                        break
+                    elif line.uos_id.id == move.product_uom.id and line.quantity == move.product_uom_qty:
+                        res.append(move.id)
+                        break
+        return res
+
     def invoice_validate(self, cr, uid, ids, context=None):
         res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
         purchase_order_obj = self.pool.get('purchase.order')
+        move_obj = self.pool.get('stock.move')
         # read access on purchase.order object is not required
         if not purchase_order_obj.check_access_rights(cr, uid, 'read', raise_exception=False):
             user_id = SUPERUSER_ID
         else:
             user_id = uid
+        move_ids = self.get_invoiced_moves_from_invoices(cr, uid, ids, context=None)
+        move_obj.write(cr, uid, move_ids, {'invoice_state': 'invoiced'}, context=context)
+
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
         for po_id in po_ids:
             purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice received"), context=context)
