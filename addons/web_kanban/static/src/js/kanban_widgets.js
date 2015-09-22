@@ -109,9 +109,9 @@ var KanbanSelection = AbstractField.extend({
         var stage_id = self.parent.values.stage_id.value[0];
         var stage_data = {
             id: stage_id,
-            legend_normal: self.parent.values.legend_normal.value,
-            legend_blocked : self.parent.values.legend_blocked.value, 
-            legend_done: self.parent.values.legend_done.value,
+            legend_normal: self.parent.values.legend_normal ? self.parent.values.legend_normal.value : undefined,
+            legend_blocked: self.parent.values.legend_blocked ? self.parent.values.legend_blocked.value: undefined, 
+            legend_done: self.parent.values.legend_done ? self.parent.values.legend_done.value: undefined,
         };
         _.map(self.field.selection || [], function(res) {
             var value = {

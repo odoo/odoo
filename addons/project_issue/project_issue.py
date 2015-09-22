@@ -184,6 +184,9 @@ class project_issue(osv.Model):
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'legend_blocked': fields.related("stage_id", "legend_blocked", type="char", string='Kanban Blocked Explanation'),
+        'legend_done': fields.related("stage_id", "legend_done", type="char", string='Kanban Valid Explanation'),
+        'legend_normal': fields.related("stage_id", "legend_normal", type="char", string='Kanban Ongoing Explanation'),
     }
 
     _defaults = {

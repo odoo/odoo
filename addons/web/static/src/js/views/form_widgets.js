@@ -184,9 +184,9 @@ var KanbanSelection = FieldChar.extend({
         var current_stage_id = self.view.datarecord.stage_id[0];
         var stage_data = {
             id: current_stage_id,
-            legend_normal: self.view.datarecord.legend_normal,
-            legend_blocked : self.view.datarecord.legend_blocked,
-            legend_done: self.view.datarecord.legend_done,
+            legend_normal: self.view.datarecord.legend_normal || undefined,
+            legend_blocked : self.view.datarecord.legend_blocked || undefined,
+            legend_done: self.view.datarecord.legend_done || undefined,
         };
         _.map(self.field.selection || [], function(selection_item) {
             var value = {
