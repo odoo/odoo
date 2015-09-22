@@ -390,6 +390,8 @@ class SaleOrder(models.Model):
                     if line.product_id.invoice_policy == 'cost':
                         order._create_analytic_account()
                         break
+        if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
+            self.action_done()
 
     @api.multi
     def _create_analytic_account(self, prefix=None):
