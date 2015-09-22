@@ -249,16 +249,13 @@ class HrEquipmentRequest(models.Model):
 
     @api.multi
     def archive_equipment_request(self):
-        """ Archive an hr.equipment.request as it was refused """
-        for equipment_request in self:
-            equipment_request.write({'active': False})
+        self.write({'active': False})
 
     @api.multi
     def reset_equipment_request(self):
-        """ Reinsert the equipment request into the maintenance pipe"""
-        for equipment_request in self:
-            first_stage_obj = self.env['hr.equipment.stage'].search([], order="sequence asc", limit=1)
-            equipment_request.write({'active': True, 'stage_id': first_stage_obj.id})
+        """ Reinsert the equipment request into the maintenance pipe in the first stage"""
+        first_stage_obj = self.env['hr.equipment.stage'].search([], order="sequence asc", limit=1)
+        self.write({'active': True, 'stage_id': first_stage_obj.id})
 
     @api.onchange('employee_id', 'department_id')
     def onchange_department_or_employee_id(self):

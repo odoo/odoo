@@ -439,13 +439,11 @@ class Applicant(models.Model):
 
     @api.multi
     def archive_applicant(self):
-        """ Archive an hr.applicant as it was refused """
-        for applicant in self:
-            applicant.write({'active': False})
+        self.write({'active': False})
 
     @api.multi
     def reset_applicant(self):
-        """ Reinsert the applicant into the recruitment pipe"""
+        """ Reinsert the applicant into the recruitment pipe in the first stage"""
         for applicant in self:
             first_stage_obj = self.env['hr.recruitment.stage'].search([('job_ids', 'in', applicant.job_id.id)], order="sequence asc", limit=1)
             applicant.write({'active': True, 'stage_id': first_stage_obj.id})
