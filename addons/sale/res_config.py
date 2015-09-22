@@ -65,7 +65,7 @@ class sale_configuration(osv.TransientModel):
             ('delivery', 'Invoice delivered quantities'),
             ('cost', 'Invoice based on costs (time and material, expenses)')
             ], 'Default Invoicing', default_model='product.template'),
-        'deposit_product_id_setting': fields.many2one('product.product', 'Default Advance Product',\
+        'deposit_product_id_setting': fields.many2one('product.product', 'Deposit Product',\
             domain="[('type', '=', 'service')]",\
             help='Default product used for payment advances'),
         'auto_done_setting': fields.selection([
