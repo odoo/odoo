@@ -1014,7 +1014,8 @@ class purchase_order(osv.osv):
                     if (po_line.move_ids and
                             all(move.state in ('done', 'cancel') for move in po_line.move_ids) and
                             not all(move.state == 'cancel' for move in po_line.move_ids) and
-                            all(move.invoice_state == 'invoiced' for move in po_line.move_ids if move.state == 'done')):
+                            all(move.invoice_state == 'invoiced' for move in po_line.move_ids if move.state == 'done')
+                            and po_line.invoice_lines and all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines)):
                         is_invoiced.append(po_line.id)
             else:
                 for po_line in po.order_line:
