@@ -1216,6 +1216,7 @@ class view(osv.osv):
                    LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
                        WHERE md.module IS NULL
                          AND v.model = %s
+                         AND v.active = true
                     GROUP BY coalesce(v.inherit_id, v.id)
                    """, (model,))
 

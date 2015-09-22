@@ -29,8 +29,9 @@ class TestResourceCommon(common.TransactionCase):
     def setUp(self):
         super(TestResourceCommon, self).setUp()
         cr, uid = self.cr, self.uid
-        if not hasattr(self, 'context'):
-            self.context = {}
+        self.context = context = dict(tz='UTC')
+
+        self.registry('res.users').write(cr, uid, uid, {'tz': 'UTC'}, context=context)
 
         # Usefull models
         self.resource_resource = self.registry('resource.resource')
@@ -56,7 +57,7 @@ class TestResourceCommon(common.TransactionCase):
         self.calendar_id = self.resource_calendar.create(
             cr, uid, {
                 'name': 'TestCalendar',
-            }
+            }, context=context
         )
         self.att1_id = self.resource_attendance.create(
             cr, uid, {
@@ -65,7 +66,7 @@ class TestResourceCommon(common.TransactionCase):
                 'hour_from': 8,
                 'hour_to': 16,
                 'calendar_id': self.calendar_id,
-            }
+            }, context=context
         )
         self.att2_id = self.resource_attendance.create(
             cr, uid, {
@@ -74,7 +75,7 @@ class TestResourceCommon(common.TransactionCase):
                 'hour_from': 8,
                 'hour_to': 13,
                 'calendar_id': self.calendar_id,
-            }
+            }, context=context
         )
         self.att3_id = self.resource_attendance.create(
             cr, uid, {
@@ -83,7 +84,7 @@ class TestResourceCommon(common.TransactionCase):
                 'hour_from': 16,
                 'hour_to': 23,
                 'calendar_id': self.calendar_id,
-            }
+            }, context=context
         )
         self.resource1_id = self.resource_resource.create(
             cr, uid, {
@@ -91,7 +92,7 @@ class TestResourceCommon(common.TransactionCase):
                 'resource_type': 'user',
                 'time_efficiency': 150.0,
                 'calendar_id': self.calendar_id,
-            }
+            }, context=context
         )
         self.leave1_id = self.resource_leaves.create(
             cr, uid, {
@@ -99,7 +100,7 @@ class TestResourceCommon(common.TransactionCase):
                 'calendar_id': self.calendar_id,
                 'date_from': self.leave1_start,
                 'date_to': self.leave1_end,
-            }
+            }, context=context
         )
         self.leave2_id = self.resource_leaves.create(
             cr, uid, {
@@ -108,7 +109,7 @@ class TestResourceCommon(common.TransactionCase):
                 'resource_id': self.resource1_id,
                 'date_from': self.leave2_start,
                 'date_to': self.leave2_end,
-            }
+            }, context=context
         )
         self.leave3_id = self.resource_leaves.create(
             cr, uid, {
@@ -117,7 +118,7 @@ class TestResourceCommon(common.TransactionCase):
                 'resource_id': self.resource1_id,
                 'date_from': self.leave3_start,
                 'date_to': self.leave3_end,
-            }
+            }, context=context
         )
         # Some browse data
-        self.calendar = self.resource_calendar.browse(cr, uid, self.calendar_id)
+        self.calendar = self.resource_calendar.browse(cr, uid, self.calendar_id, context=context)
