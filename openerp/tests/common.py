@@ -144,11 +144,12 @@ class TransactionCase(BaseCase):
         #: :class:`~openerp.api.Environment` for the current test case
         self.env = api.Environment(self.cr, self.uid, {})
 
-    def tearDown(self):
-        # rollback and close the cursor, and reset the environments
-        self.env.reset()
-        self.cr.rollback()
-        self.cr.close()
+        @self.addCleanup
+        def reset():
+            # rollback and close the cursor, and reset the environments
+            self.env.reset()
+            self.cr.rollback()
+            self.cr.close()
 
     def patch_order(self, model, order):
         m_e = self.env[model]
