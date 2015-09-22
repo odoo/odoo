@@ -71,6 +71,11 @@ class SaleOrder(models.Model):
         return result
 
     @api.multi
+    def action_cancel(self):
+        self.order_line.mapped('procurement_ids').cancel()
+        super(SaleOrder, self).action_cancel()
+
+    @api.multi
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
         invoice_vals['incoterms_id'] = self.incoterm.id or False
@@ -139,6 +144,16 @@ class SaleOrderLine(models.Model):
                             (self.product_uom_qty, self.product_uom.name or self.product_id.uom_id.name, product.virtual_available, self.product_uom.name or self.product_id.uom_id.name, product.qty_available, self.product_uom.name or self.product_id.uom_id.name)
                     }
                     return {'warning': warning_mess}
+        return {}
+
+    @api.onchange('product_uom_qty')
+    def _onchange_product_uom_qty(self):
+        if self.state == 'sale' and self.product_id.type != 'service':
+            warning_mess = {
+                'title': _('Ordered quantity changed!'),
+                'message' : _('You have changed the quantity ordered! If the quantity was decreased, you need to modify manually the delivery order.'),
+            }
+            return {'warning': warning_mess}
         return {}
 
     @api.multi
