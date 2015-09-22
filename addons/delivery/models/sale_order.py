@@ -56,7 +56,7 @@ class SaleOrder(models.Model):
                         raise UserError(_('No carrier matching.'))
                     price_unit = carrier.get_price_available(order)
                     if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
-                        price_unit = order.company_id.currency_id.with_context(date=order.date_order).compute(order.pricelist_id.currency_id.id, price_unit)
+                        price_unit = order.company_id.currency_id.with_context(date=order.date_order).compute(price_unit, order.pricelist_id.currency_id)
 
                 account_id = carrier.product_id.property_account_income_id.id
                 if not account_id:
