@@ -114,6 +114,7 @@ class SaleOrderLine(models.Model):
         if not self.product_id:
             self.product_packaging = False
             return {}
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         self.product_tmpl_id = self.product_id.product_tmpl_id
         if self.product_id.type == 'product':
             product = self.product_id.with_context(
@@ -124,7 +125,7 @@ class SaleOrderLine(models.Model):
                 uom=self.product_uom.id,
                 warehouse_id=self.order_id.warehouse_id.id
             )
-            if float_compare(product.virtual_available, self.product_uom_qty, precision_rounding=self.product_uom.rounding) == -1:
+            if float_compare(product.virtual_available, self.product_uom_qty, precision_digits=precision) == -1:
                 # Check if MTO, Cross-Dock or Drop-Shipping
                 is_available = False
                 for route in self.route_id+self.product_id.route_ids:
@@ -132,11 +133,12 @@ class SaleOrderLine(models.Model):
                         if pull.location_id.id == self.order_id.warehouse_id.lot_stock_id.id:
                             is_available = True
                 if not is_available:
-                    return {
+                    warning_mess = {
                         'title': _('Not enough inventory!'),
                         'message' : _('You plan to sell %.2f %s but you only have %.2f %s available!\nThe stock on hand is %.2f %s.') % \
-                            (self.product_uom_qty, self.product_uom.name, product.virtual_available, self.product_uom.name, product.qty_available, self.product_uom.name)
+                            (self.product_uom_qty, self.product_uom.name or self.product_id.uom_id.name, product.virtual_available, self.product_uom.name or self.product_id.uom_id.name, product.qty_available, self.product_uom.name or self.product_id.uom_id.name)
                     }
+                    return {'warning': warning_mess}
         return {}
 
     @api.multi
