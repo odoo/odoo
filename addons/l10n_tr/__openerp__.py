@@ -13,8 +13,8 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
       bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.
     """,
     'author': 'Ahmet Altınışık',
-    'maintainer':'https://launchpad.net/~openerp-turkey',
-    'website':'https://launchpad.net/openerp-turkey',
+    'maintainer':'https://www.transifex.com/odoo/odoo-9/language/tr/',
+    'website':'https://www.transifex.com/odoo/odoo-9/language/tr/',
     'depends': [
         'account',
         'base_vat',
