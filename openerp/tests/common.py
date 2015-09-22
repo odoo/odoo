@@ -147,7 +147,7 @@ class TransactionCase(BaseCase):
         @self.addCleanup
         def reset():
             # rollback and close the cursor, and reset the environments
-        self.registry.clear_caches()
+            self.registry.clear_caches()
             self.env.reset()
             self.cr.rollback()
             self.cr.close()

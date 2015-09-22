@@ -30,7 +30,6 @@ class CashBox(osv.osv_memory):
             for record in records:
                 if not record.journal_id:
                     raise UserError(_("Please check that the field 'Journal' is set on the Bank Statement"))
-                    
                 if not record.journal_id.internal_account_id:
                     raise UserError(_("Please check that the field 'Internal Transfers Account' is set on the payment method '%s'.") % (record.journal_id.name,))
 
@@ -40,8 +39,7 @@ class CashBox(osv.osv_memory):
 
     def _create_bank_statement_line(self, cr, uid, box, record, context=None):
         if record.state == 'confirm':
-            raise osv.except_osv(_('Error!'),
-                                 _("You cannot put/take money in/out for a bank statement which is closed."))
+            raise UserError(_("You cannot put/take money in/out for a bank statement which is closed."))
         values = self._compute_values_for_statement_line(cr, uid, box, record, context=context)
         return self.pool.get('account.bank.statement').write(cr, uid, [record.id], {'line_ids': [(0, False, values)]}, context=context)
 
