@@ -119,7 +119,7 @@ class Forum(models.Model):
     karma_comment_own = fields.Integer(string='Comment own posts', default=1)
     karma_comment_all = fields.Integer(string='Comment all posts', default=1)
     karma_comment_convert_own = fields.Integer(string='Convert own answers to comments and vice versa', default=50)
-    karma_comment_convert_all = fields.Integer(string='Convert all answers to answers and vice versa', default=500)
+    karma_comment_convert_all = fields.Integer(string='Convert all answers to comments and vice versa', default=500)
     karma_comment_unlink_own = fields.Integer(string='Unlink own comments', default=50)
     karma_comment_unlink_all = fields.Integer(string='Unlink all comments', default=500)
     karma_retag = fields.Integer(string='Change question tags', default=75)
