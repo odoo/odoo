@@ -181,7 +181,7 @@ var ChatterMailComposeMessage = mail_thread.MailComposeMessage.extend({
         // update subtype
         if(this.options.is_log) {
             var subtype_id = parseInt(this.$('.o_mail_chatter_compose_message_subtype_select').val());
-            if(_.indexOf(_.pluck(this.internal_subtypes, 'id'), subtype_id) == -1) {
+            if(_.indexOf(_.pluck(this.options.internal_subtypes, 'id'), subtype_id) == -1) {
                 values.subtype = 'mail.mt_note';
             }else{
                 values.subtype_id = subtype_id;
