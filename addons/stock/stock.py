@@ -235,6 +235,7 @@ class StockLocationRoute(models.Model):
 # Quants
 #----------------------------------------------------------
 
+
 class StockQuant(models.Model):
     """
     Quants are the smallest unit of stock physical instances
@@ -331,7 +332,8 @@ class StockQuant(models.Model):
 
     @api.model
     def quants_reserve(self, quants, move, link=False):
-        '''This function reserves quants for the given move (and optionally given link). If the total of quantity reserved is enough, the move's state is also set to 'assigned'
+        '''This function reserves quants for the given move (and optionally given link). If the total of quantity reserved is enough, the move's state
+        is also set to 'assigned'
         '''
         toreserve = []
         reserved_availability = move.reserved_availability
@@ -342,11 +344,12 @@ class StockQuant(models.Model):
             if not quant:
                 continue
             self._quant_split(quant, qty)
-            toreserve.append(quant)
+            toreserve.append(quant.id)
             reserved_availability += quant.qty
         #reserve quants
         if toreserve:
-            toreserve[0].sudo().write({'reservation_id': move.id})
+            toreserve_obj = self.browse(toreserve)
+            toreserve_obj.sudo().write({'reservation_id': move.id})
         #check if move'state needs to be set as 'assigned'
         rounding = move.product_id.uom_id.rounding
         if float_compare(reserved_availability, move.product_qty, precision_rounding=rounding) == 0 and move.state in ('confirmed', 'waiting'):
@@ -355,7 +358,7 @@ class StockQuant(models.Model):
             move.write({'partially_available': True})
 
     @api.model
-    def quants_move(self, quants, move, location_to, location_from=False, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False):
+    def quants_move(self, quants, move, location_to, location_from=False, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, entire_pack=False):
         """Moves all given stock.quant in the given destination location.  Unreserve from current move.
         """
         quants_reconcile = []
@@ -367,12 +370,13 @@ class StockQuant(models.Model):
                 quant = self._quant_create(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=location_from, force_location_to=location_to)
             else:
                 self._quant_split(quant, qty)
-                to_move_quants.append(quant)
+                to_move_quants.append(quant.id)
             quants_reconcile.append(quant)
+        to_move_quants_obj = self.browse(to_move_quants)
         if to_move_quants:
-            to_recompute_move_ids = [x.reservation_id.id for x in to_move_quants if x.reservation_id and x.reservation_id.id != move.id]
-            self.move_quants_write(to_move_quants, move, location_to, dest_package_id, lot_id=lot_id)
-            self.env['stock.move'].recalculate_move_state(to_recompute_move_ids)
+            to_recompute_move_ids = to_move_quants_obj.filtered(lambda x: x.reservation_id and x.reservation_id.id == move.id).reservation_id
+            self.move_quants_write(to_move_quants_obj, move, location_to, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
+            to_recompute_move_ids.recalculate_move_state()
         if location_to.usage == 'internal':
             # Do manual search for quant to avoid full table scan (order by id)
             self._cr.execute("""
@@ -384,13 +388,13 @@ class StockQuant(models.Model):
                     self._quant_reconcile_negative(quant, move)
 
     @api.model
-    def move_quants_write(self, quants, move, location_dest_id, dest_package_id, lot_id=False):
+    def move_quants_write(self, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
         vals = {'location_id': location_dest_id.id,
                 'history_ids': [(4, move.id)],
                 'reservation_id': False}
         if lot_id and any(x.id for x in quants if not x.lot_id.id):
             vals['lot_id'] = lot_id
-        if not self._context.get('entire_pack'):
+        if not entire_pack:
             vals.update({'package_id': dest_package_id})
         quants.sudo().write(vals)
 
@@ -449,7 +453,8 @@ class StockQuant(models.Model):
             if res_qty_cmp > 0:
                 #try to replace the last tuple (None, res_qty) with something that wasn't chosen at first because of the preferred order
                 quants.pop()
-                tmp_quants = self.quants_get(res_qty, move, ops=ops, domain=domain + preferred_domain, removal_strategy=removal_strategy)
+                tmp_quants = self.quants_get(res_qty, move, ops=ops, domain=domain + preferred_domain,
+                                             removal_strategy=removal_strategy)
                 for quant in tmp_quants:
                     if quant[0]:
                         res_qty -= quant[1]
@@ -461,10 +466,6 @@ class StockQuant(models.Model):
         """
         Use the removal strategies of product to search for the correct quants
         If you inherit, put the super at the end of your method.
-
-        :location: browse record of the parent location where the quants have to be found
-        :product: browse record of the product to find
-        :qty in UoM of product
         """
         domain = domain or [('qty', '>', 0.0)]
         return self.apply_removal_strategy(qty, move, ops=ops, domain=domain, removal_strategy=removal_strategy)
@@ -509,7 +510,7 @@ class StockQuant(models.Model):
             negative_vals['negative_move_id'] = move.id
             negative_vals['package_id'] = src_package_id
             negative_quant_id = self.sudo().create(negative_vals)
-            vals.update({'propagated_from_id': negative_quant_id})
+            vals.update({'propagated_from_id': negative_quant_id.id})
 
         # In case of serial tracking, check if the product does not exist somewhere internally already
         picking_type = move.picking_id and move.picking_id.picking_type_id or False
@@ -537,7 +538,7 @@ class StockQuant(models.Model):
         self._cr.execute("""SELECT move_id FROM stock_quant_move_rel WHERE quant_id = %s""", (quant.id,))
         res = self._cr.fetchall()
         new_quant = quant.sudo().copy(default={'qty': new_qty_round, 'history_ids': [(4, x[0]) for x in res]})
-        quant.sudo().write(quant.id, {'qty': qty_round})
+        quant.sudo().write({'qty': qty_round})
         return new_quant
 
     @api.multi
@@ -603,11 +604,11 @@ class StockQuant(models.Model):
             if not to_solve_quant_ids:
                 continue
             solving_qty = qty
-            solved_quant_ids = set()
-            for to_solve_quant in self.browse(to_solve_quant_ids):
+            solved_quant_ids = []
+            for to_solve_quant in to_solve_quant_ids:
                 if float_compare(solving_qty, 0, precision_rounding=product_uom_rounding) <= 0:
                     continue
-                solved_quant_ids += to_solve_quant
+                solved_quant_ids.append(to_solve_quant.id)
                 self._quant_split(to_solve_quant, min(solving_qty, to_solve_quant.qty))
                 solving_qty -= min(solving_qty, to_solve_quant.qty)
             remaining_solving_quant = self._quant_split(solving_quant, qty)
@@ -617,15 +618,16 @@ class StockQuant(models.Model):
                 remaining_to_solve_quant_ids = self.search([('propagated_from_id', '=', quant_neg.id), ('id', 'not in', solved_quant_ids)])
                 if remaining_to_solve_quant_ids:
                     remaining_to_solve_quant_ids.sudo().write({'propagated_from_id': remaining_neg_quant.id})
-            if solving_quant.propagated_from_id and solved_quant_ids:
-                solved_quant_ids.sudo().write({'propagated_from_id': solving_quant.propagated_from_id.id})
+            solved_quant = self.browse(solved_quant_ids)
+            if solving_quant.propagated_from_id and solved_quant:
+                solved_quant.sudo().write({'propagated_from_id': solving_quant.propagated_from_id.id})
             #delete the reconciled quants, as it is replaced by the solved quants
-            quant_neg.unlink()
-            if solved_quant_ids:
+            quant_neg.sudo().unlink()
+            if solved_quant:
                 #price update + accounting entries adjustments
-                solved_quant_ids._price_update(solving_quant.cost)
+                solved_quant._price_update(solving_quant.cost)
                 #merge history (and cost?)
-                self._quants_merge(solved_quant_ids, solving_quant)
+                self._quants_merge(solved_quant, solving_quant)
             solving_quant.sudo().unlink()
             solving_quant = remaining_solving_quant
 
