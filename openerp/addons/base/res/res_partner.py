@@ -165,14 +165,6 @@ class res_partner(osv.Model, format_address):
             (p.id, datetime.datetime.now(pytz.timezone(p.tz or 'GMT')).strftime('%z'))
             for p in self)
 
-    @api.multi
-    def _get_image(self, name, args):
-        return dict((p.id, tools.image_get_resized_images(p.image)) for p in self)
-
-    @api.one
-    def _set_image(self, name, value, args):
-        return self.write({'image': tools.image_resize_image_big(value)})
-
     def _commercial_partner_compute(self, cr, uid, ids, name, args, context=None):
         """ Returns the partner that is considered the commercial
         entity of this partner. The commercial entity holds the master data
@@ -266,25 +258,6 @@ class res_partner(osv.Model, format_address):
                  'by hand instead of a true function field. When migrating to '
                  'the new API the code should be simplified.'),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
-        # image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Image",
-            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image",
-            store={
-                'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized image of this contact. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Small-sized image", type="binary", multi="_get_image",
-            store={
-                'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized image of this contact. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
@@ -293,6 +266,34 @@ class res_partner(osv.Model, format_address):
         # technical field used for managing commercial fields
         'commercial_partner_id': fields.function(_commercial_partner_id, type='many2one', relation='res.partner', string='Commercial Entity', store=_commercial_partner_store_triggers)
     }
+
+    # image: all image fields are base64 encoded and PIL-supported
+    image = openerp.fields.Binary("Image", attachment=True,
+        help="This field holds the image used as avatar for this contact, limited to 1024x1024px")
+    image_medium = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+        help="Medium-sized image of this contact. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved. "\
+             "Use this field in form views or some kanban views.")
+    image_small = openerp.fields.Binary("Small-sized image",
+        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+        help="Small-sized image of this contact. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
+
+    @api.depends('image')
+    def _compute_images(self):
+        for rec in self:
+            rec.image_medium = tools.image_resize_image_medium(rec.image)
+            rec.image_small = tools.image_resize_image_small(rec.image)
+
+    def _inverse_image_medium(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_medium)
+
+    def _inverse_image_small(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_small)
 
     @api.model
     def _default_category(self):

@@ -6,7 +6,7 @@ import operator
 import re
 import threading
 
-import openerp.modules
+import openerp
 from openerp.osv import fields, osv
 from openerp import api, tools
 from openerp.http import request
@@ -175,15 +175,6 @@ class ir_ui_menu(osv.osv):
                 icon_file.close()
         return icon_image
 
-    def _get_image_icon(self, cr, uid, ids, names, args, context=None):
-        res = {}
-        for menu in self.browse(cr, uid, ids, context=context):
-            res[menu.id] = r = {}
-            for fn in names:
-                fn_src = fn[:-5]    # remove _data
-                r[fn] = self.read_image(menu[fn_src])
-        return res
-
     def _get_needaction_enabled(self, cr, uid, ids, field_names, args, context=None):
         """ needaction_enabled: tell whether the menu has a related action
             that uses the needaction mechanism. """
@@ -333,7 +324,6 @@ class ir_ui_menu(osv.osv):
                 "If this field is empty, Odoo will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, string='Full Path', type='char'),
         'web_icon': fields.char('Web Icon File'),
-        'web_icon_data': fields.function(_get_image_icon, string='Web Icon Image', type='binary', readonly=True, store=True, multi='icon'),
         'needaction_enabled': fields.function(_get_needaction_enabled,
             type='boolean',
             store=True,
@@ -348,6 +338,14 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.client', 'ir.actions.client'),
         ]),
     }
+
+    web_icon_data = openerp.fields.Binary('Web Icon Image',
+        compute="_compute_web_icon", store=True, attachment=True)
+
+    @api.depends('web_icon')
+    def _compute_web_icon(self):
+        for menu in self:
+            menu.web_icon_data = self.read_image(menu.web_icon)
 
     _constraints = [
         (osv.osv._check_recursion, 'Error ! You can not create recursive Menu.', ['parent_id'])
