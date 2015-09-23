@@ -207,7 +207,7 @@ class res_partner(osv.Model, format_address):
 
     _order = "display_name"
     _columns = {
-        'name': fields.char('Name', required=True, select=True),
+        'name': fields.char('Name', select=True),
         'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
@@ -340,6 +340,10 @@ class res_partner(osv.Model, format_address):
 
     _constraints = [
         (osv.osv._check_recursion, 'You cannot create recursive Partner hierarchies.', ['parent_id']),
+    ]
+
+    _sql_constraints = [
+        ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
 
     @api.one
@@ -578,8 +582,10 @@ class res_partner(osv.Model, format_address):
             ids = [ids]
         res = []
         for record in self.browse(cr, uid, ids, context=context):
-            name = record.name
+            name = record.name or ''
             if record.parent_id and not record.is_company:
+                if not name and record.type in ['invoice', 'delivery', 'other']:
+                    name = dict(self.fields_get(cr, uid, context=context)['type']['selection'])[record.type]
                 name = "%s, %s" % (record.parent_name, name)
             if context.get('show_address_only'):
                 name = self._display_address(cr, uid, record, without_company=True, context=context)
