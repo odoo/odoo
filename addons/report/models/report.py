@@ -5,6 +5,7 @@ from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.exceptions import AccessError
 from openerp.osv import osv, fields
+from openerp.sql_db import TestCursor
 from openerp.tools import config
 from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
@@ -142,6 +143,13 @@ class Report(osv.Model):
 
         if html is None:
             html = self.get_html(cr, uid, ids, report_name, data=data, context=context)
+
+        # The test cursor prevents the use of another environnment while the current
+        # transaction is not finished, leading to a deadlock when the report requests
+        # an asset bundle during the execution of test scenarios. In this case, return
+        # the html version.
+        if isinstance(cr, TestCursor):
+            return html
 
         html = html.decode('utf-8')  # Ensure the current document is utf-8 encoded.
 
