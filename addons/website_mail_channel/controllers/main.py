@@ -49,16 +49,65 @@ class MailGroup(http.Controller):
         values = {'groups': groups, 'group_data': group_data}
         return request.website.render('website_mail_channel.mail_channels', values)
 
-    @http.route(["/groups/subscription/"], type='json', auth="user")
-    def subscription(self, group_id=0, action=False, **post):
-        """ TDE FIXME: seems dead code """
-        cr, uid, context = request.cr, request.uid, request.context
-        group_obj = request.registry.get('mail.channel')
-        if action:
-            group_obj.message_subscribe_users(cr, uid, [group_id], context=context)
-        else:
-            group_obj.message_unsubscribe_users(cr, uid, [group_id], context=context)
-        return []
+    @http.route(["/groups/is_member"], type='json', auth="public", website=True)
+    def is_member(self, channel_id=0, **kw):
+        """ Determine if the current user is member of the given channel_id
+            :param channel_id : the channel_id to check
+        """
+        current_user_id = request.uid
+        session_partner_id = request.session.get('partner_id')
+        public_id = request.website.user_id.id
+        partner = None
+        # find the current partner
+        if current_user_id != public_id:
+            partner = request.env['res.users'].sudo().browse(current_user_id).partner_id
+        elif session_partner_id:
+            partner = request.env['res.partner'].sudo().browse(session_partner_id)
+
+        values = {
+            'is_user': current_user_id != public_id,
+            'email': partner and partner.email or "",
+            'is_member': False,
+            'alias_name': False,
+        }
+        # check if the current partner is member or not
+        channel = request.env['mail.channel'].browse(int(channel_id))
+        if channel.exists() and partner is not None:
+            values['is_member'] = bool(partner in channel.sudo().channel_partner_ids)
+        return values
+
+    @http.route(["/groups/subscription"], type='json', auth="public", website=True)
+    def subscription(self, channel_id=0, subscription="on", email='', **kw):
+        """ Subscribe to a mailing list : this will create a partner with its email address (if public user not
+            registered yet) and add it as channel member
+            :param channel_id : the channel id to join/quit
+            :param subscription : 'on' to unsubscribe the user, 'off' to subscribe
+        """
+        subscribe = subscription == 'on'
+        channel = request.env['mail.channel'].browse(int(channel_id))
+        partner_ids = []
+
+        # search partner_id
+        current_user_id = request.uid
+        public_id = request.website.user_id.id
+        if current_user_id != public_id:
+            partner_ids = [request.env['res.users'].browse(current_user_id).partner_id.id]
+        else:  # mail_thread method
+            partner_ids = channel.sudo()._find_partner_from_emails([email], check_followers=True)
+            if not partner_ids or not partner_ids[0]:
+                name = email.split('@')[0]
+                partner_ids = [request.env['res.partner'].sudo().create({'name': name, 'email': email}).id]
+
+        # add or remove channel members
+        if subscribe:
+            channel.check_access_rule('read')
+            channel.sudo().write({'channel_partner_ids': [(3, partner_id) for partner_id in partner_ids]})
+            return False
+        else:  # add partner to the channel
+            request.session['partner_id'] = partner_ids[0]
+            channel.check_access_rule('read')
+            channel.sudo().write({'channel_partner_ids': [(4, partner_id) for partner_id in partner_ids]})
+        return True
 
     @http.route([
         "/groups/<model('mail.channel'):group>",

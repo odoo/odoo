@@ -10,15 +10,15 @@ animation.registry.follow_alias = animation.Class.extend({
     start: function (editable_mode) {
         var self = this;
         this.is_user = false;
-        ajax.jsonRpc('/website_mail/is_follower', 'call', {
+        ajax.jsonRpc('/groups/is_member', 'call', {
             model: this.$target.data('object'),
-            id: this.$target.data('id'),
+            channel_id: this.$target.data('id'),
             get_alias_info: true,
         }).always(function (data) {
             self.is_user = data.is_user;
             self.email = data.email;
             self.$target.find('.js_mg_link').attr('href', '/groups/' + self.$target.data('id'));
-            self.toggle_subscription(data.is_follower, data.email);
+            self.toggle_subscription(data.is_member, data.email);
             self.$target.removeClass("hidden");
         });
 
@@ -43,10 +43,10 @@ animation.registry.follow_alias = animation.Class.extend({
         }
         this.$target.removeClass('has-error');
 
-        ajax.jsonRpc('/website_mail/follow', 'call', {
-            'id': +this.$target.data('id'),
+        ajax.jsonRpc('/groups/subscription', 'call', {
+            'channel_id': +this.$target.data('id'),
             'object': this.$target.data('object'),
-            'message_is_follower': this.$target.attr("data-follow") || "off",
+            'subscription': this.$target.attr("data-follow") || "off",
             'email': $email.length ? $email.val() : false,
         }).then(function (follow) {
             self.toggle_subscription(follow, self.email);
