@@ -837,14 +837,14 @@
   border-radius: 4px;
 }
 
-.fade {
+.fade:not(.modal-backdrop) {
   opacity: 0;
   -webkit-transition: opacity 0.15s linear;
   -o-transition: opacity 0.15s linear;
   transition: opacity 0.15s linear;
 }
 
-.fade.in {
+.fade.in:not(.modal-backdrop) {
   opacity: 1;
 }
 
