@@ -1915,6 +1915,8 @@ return {
     ScreenWidget: ScreenWidget,
     PaymentScreenWidget: PaymentScreenWidget,
     OrderWidget: OrderWidget,
+    NumpadWidget: NumpadWidget,
+    ProductScreenWidget: ProductScreenWidget,
 };
 
 });
