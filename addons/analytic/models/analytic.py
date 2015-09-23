@@ -77,17 +77,6 @@ class account_analytic_account(models.Model):
         recs = self.search(['|', '|', ('code', operator, name), ('partner_id', operator, name), ('name', operator, name)] + args, limit=limit)
         return recs.name_get()
 
-    @api.multi
-    def _track_subtype(self, init_values):
-        self.ensure_one()
-        if 'state' in init_values and self.state == 'open':
-            return 'analytic.mt_account_opened'
-        elif 'state' in init_values and self.state == 'close':
-            return 'analytic.mt_account_closed'
-        elif 'state' in init_values and self.state == 'pending':
-            return 'analytic.mt_account_pending'
-        return super(account_analytic_account, self)._track_subtype(init_values)
-
 
 class account_analytic_line(models.Model):
     _name = 'account.analytic.line'
