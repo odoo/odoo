@@ -182,7 +182,7 @@ class lang(osv.osv):
         if vals.get('active') == False:
             users = self.pool.get('res.users')
             if self.search_count(cr, uid, [('id', 'in', ids), ('code', '=', 'en_US')], context=context):
-                raise UserError(_("Base Language 'en_US' can not be desactivated!"))
+                raise UserError(_("Base Language 'en_US' can not be deactivated!"))
 
             for current_id in ids:
                 current_language = self.browse(cr, uid, current_id, context=context)
