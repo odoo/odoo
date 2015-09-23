@@ -1061,7 +1061,10 @@ class product_product(osv.osv):
 
         result = []
         for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            variant = ", ".join([v.name for v in product.attribute_value_ids])
+            # Display only the variable attributes
+            # variable attribute means you can have different values for given product template
+            variable_attributes = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
+            variant = ", ".join([v.name for v in product.attribute_value_ids if v.attribute_id in variable_attributes])
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
