@@ -9,8 +9,8 @@
             <field name="arch" type="xml">
                 <group name="accounting" position="inside">
                     <group>
-                        <field name="landed_cost_ok" class="oe_inline" attrs="{'invisible':[('type', 'not in', ['product', 'consu', 'service'])]}"/>
-                        <field name="split_method" attrs="{'invisible':['|', ('landed_cost_ok', '=' ,False), ('type', 'not in', ['product', 'consu', 'service'])]}"/>
+                        <field name="landed_cost_ok" class="oe_inline" attrs="{'invisible':[('product_type', 'not in', ['product', 'consu', 'service'])]}"/>
+                        <field name="split_method" attrs="{'invisible':['|', ('landed_cost_ok', '=' ,False), ('product_type', 'not in', ['product', 'consu', 'service'])]}"/>
                      </group>
                  </group>
             </field>

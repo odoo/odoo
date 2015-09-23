@@ -99,7 +99,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_qty_delivered_updateable(self):
         for line in self:
-            if line.product_id.type not in ('consu', 'product'):
+            if line.product_id.product_type not in ('consu', 'product'):
                 return super(SaleOrderLine, self)._compute_qty_delivered_updateable()
             line.qty_delivered_updateable = False
 
@@ -120,7 +120,7 @@ class SaleOrderLine(models.Model):
             self.product_packaging = False
             return {}
         self.product_tmpl_id = self.product_id.product_tmpl_id
-        if self.product_id.type == 'product':
+        if self.product_id.product_type == 'product':
             product = self.product_id.with_context(
                 lang=self.order_id.partner_id.lang,
                 partner_id=self.order_id.partner_id.id,

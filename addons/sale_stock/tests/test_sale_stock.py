@@ -35,7 +35,7 @@ class TestSaleStock(TestSale):
         wiz.process()
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after partial delivery')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
-        del_qties_truth = [1.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
+        del_qties_truth = [1.0 if sol.product_id.product_type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
         # invoice on delivery: only stockable products
         inv_id = self.so.action_invoice_create()
@@ -53,7 +53,7 @@ class TestSaleStock(TestSale):
         self.assertIsNone(pick_2.do_new_transfer(), 'Sale Stock: second picking should be final without need for a backorder')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after complete delivery')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
-        del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
+        del_qties_truth = [2.0 if sol.product_id.product_type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after complete delivery')
         # invoice on delivery
         inv_id = self.so.action_invoice_create()
@@ -98,7 +98,7 @@ class TestSaleStock(TestSale):
         pick.pack_operation_product_ids.write({'qty_done': 2})
         self.assertIsNone(pick.do_new_transfer(), 'Sale Stock: complete delivery should not need a backorder')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
-        del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
+        del_qties_truth = [2.0 if sol.product_id.product_type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
         # invoice on delivery: nothing to invoice
         self.assertFalse(self.so.action_invoice_create(), 'Sale Stock: there should be nothing to invoice')

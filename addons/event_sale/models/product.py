@@ -10,9 +10,9 @@ class product_template(osv.osv):
         'event_type_id': fields.many2one('event.type', 'Type of Event', help='Select event types so when we use this product in sales order lines, it will filter events of this type only.'),
     }
 
-    def onchange_event_ok(self, cr, uid, ids, type, event_ok, context=None):
+    def onchange_event_ok(self, cr, uid, ids, product_type, event_ok, context=None):
         if event_ok:
-            return {'value': {'type': 'service'}}
+            return {'value': {'product_type': 'service'}}
         return {}
 
 
@@ -22,8 +22,8 @@ class product(osv.osv):
         'event_ticket_ids': fields.one2many('event.event.ticket', 'product_id', 'Event Tickets'),
     }
 
-    def onchange_event_ok(self, cr, uid, ids, type, event_ok, context=None):
+    def onchange_event_ok(self, cr, uid, ids, product_type, event_ok, context=None):
         """ Redirection, inheritance mechanism hides the method on the model """
         if event_ok:
-            return {'value': {'type': 'service'}}
+            return {'value': {'product_type': 'service'}}
         return {}

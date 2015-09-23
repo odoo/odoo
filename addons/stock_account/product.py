@@ -75,9 +75,9 @@ class product_template(osv.osv):
             vals['property_valuation'] = vals.pop('valuation')
         return super(product_template, self).create(cr, uid, vals, context=context)
 
-    @api.onchange('type')
+    @api.onchange('product_type')
     def onchange_type_valuation(self):
-        if self.type != 'product':
+        if self.product_type != 'product':
             self.valuation = 'manual_periodic'
         return {}
 
@@ -163,9 +163,9 @@ class product_template(osv.osv):
 class product_product(osv.osv):
     _inherit = 'product.product'
 
-    @api.onchange('type')
+    @api.onchange('product_type')
     def onchange_type_valuation(self):
-        if self.type != 'product':
+        if self.product_type != 'product':
             self.valuation = 'manual_periodic'
         return {}
 

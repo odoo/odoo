@@ -87,7 +87,7 @@ class AccountInvoiceLine(models.Model):
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id
         if i_line.product_id and i_line.product_id.valuation == 'real_time':
-            if i_line.product_id.type != 'service':
+            if i_line.product_id.product_type != 'service':
                 # get the price difference account at the product
                 acc = i_line.product_id.property_account_creditor_price_difference and i_line.product_id.property_account_creditor_price_difference.id
                 if not acc:

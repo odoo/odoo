@@ -142,9 +142,10 @@ class ProductTemplate(models.Model):
     description_sale = fields.Text(string='Sale Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund")
-    type = fields.Selection('_get_product_template_type', string='Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual.", default='consu')
+    product_type = fields.Selection('_get_product_template_type', string='Product Type', required=True, oldname='type', default='consu',
+        help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual.")
     rental = fields.Boolean(string='Can be Rent')
-    categ_id = fields.Many2one('product.category', string='Internal Category', required=True, change_default=True, domain="[('type', '=', 'normal')]",
+    categ_id = fields.Many2one('product.category', string='Internal Category', required=True, change_default=True, domain="[('category_type', '=', 'normal')]",
         help="Select category for the current product", default=_default_get_category)
 
     price = fields.Float(compute='_product_template_price', inverse='_set_product_template_price', string='Price', digits_compute=dp.get_precision('Product Price'))
@@ -361,8 +362,8 @@ class ProductTemplate(models.Model):
                 res[product.id] = currency_id.compute(res[product.id], to_cureency)
         return res
 
-    @api.onchange('type')
-    def onchange_type(self):
+    @api.onchange('product_type')
+    def onchange_product_type(self):
         return {}
 
     @api.onchange('uom_id', 'uom_po_id')
@@ -716,8 +717,8 @@ class ProductProduct(models.Model):
         unlink_product_tmpl.unlink()
         return res
 
-    @api.onchange('type')
-    def onchange_type(self):
+    @api.onchange('product_type')
+    def onchange_product_type(self):
         return {}
 
     @api.onchange('uom_id')

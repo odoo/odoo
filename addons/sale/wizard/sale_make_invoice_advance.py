@@ -37,7 +37,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         ('percentage', 'Deposit (percentage)'),
         ('fixed', 'Deposit (fixed amount)')
         ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
-    product_id = fields.Many2one('product.product', string='Deposit Product', domain=[('type', '=', 'service')], default=_get_advance_product)
+    product_id = fields.Many2one('product.product', string='Deposit Product', domain=[('product_type', '=', 'service')], default=_get_advance_product)
     count = fields.Integer(default=_count, string='# of Orders')
     amount = fields.Float('Deposit Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
     deposit_property_account_income_id = fields.Many2one(
@@ -129,7 +129,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     amount = self.amount
                 if self.product_id.invoice_policy != 'order':
                     raise UserError(_('The product used to invoice a deposit should have an invoice policy set to "Ordered quantities". Please update your deposit product to be able to create a deposit invoice.'))
-                if self.product_id.type != 'service':
+                if self.product_id.product_type != 'service':
                     raise UserError(_("The product used to invoice an deposit should be of type 'Service'. Please use another product or update this product."))
                 so_line = sale_line_obj.create({
                     'name': _('Advance: %s') % (time.strftime('%m %Y'),),

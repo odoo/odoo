@@ -915,7 +915,7 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
 
         for order in self.browse(cr, uid, ids, context=context):
-            if all(t == 'service' for t in order.lines.mapped('product_id.type')):
+            if all(t == 'service' for t in order.lines.mapped('product_id.product_type')):
                 continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_type = order.picking_type_id
@@ -945,7 +945,7 @@ class pos_order(osv.osv):
 
             move_list = []
             for line in order.lines:
-                if line.product_id and line.product_id.type not in ['product', 'consu']:
+                if line.product_id and line.product_id.product_type not in ['product', 'consu']:
                     continue
 
                 move_list.append(move_obj.create(cr, uid, {

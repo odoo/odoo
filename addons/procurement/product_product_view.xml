@@ -11,7 +11,7 @@
                    <button class="oe_stat_button" name="%(procurement.procurement_order_action_product_template_stat)d"
                            icon="fa-truck" string="Procurements" type="action" 
                            groups="stock.group_adv_location" 
-                           attrs="{'invisible':[('type', '=', 'service')]}"/>
+                           attrs="{'invisible':[('product_type', '=', 'service')]}"/>
                 </xpath>
             </field>
         </record>
@@ -25,7 +25,7 @@
                    <button class="oe_stat_button" name="%(procurement.procurement_order_action_product_product_stat)d"
                            icon="fa-truck" string="Procurements" type="action" 
                            groups="stock.group_adv_location"
-                           attrs="{'invisible':[('type', '=', 'service')]}"/>
+                           attrs="{'invisible':[('product_type', '=', 'service')]}"/>
                 </xpath>
             </field>
         </record>

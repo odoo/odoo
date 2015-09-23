@@ -15,7 +15,7 @@
                         <field name="advance_payment_method" class="oe_inline" widget="radio"
                             attrs="{'invisible': [('count','&gt;',1)]}"/>
                         <field name="product_id"
-                            context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
+                            context="{'search_default_services': 1, 'default_product_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
                             invisible="1"/>
                         <field name="deposit_property_account_income_id" attrs="{'invisible': [('advance_payment_method','not in', ('fixed','percentage'))]}" class="oe_inline"/>
                         <field name="deposit_taxes_ids" widget="many2many_tags" attrs="{'invisible': [('advance_payment_method','not in', ('fixed','percentage'))]}" class="oe_inline"/>

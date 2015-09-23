@@ -193,7 +193,7 @@ class xml_decl(osv.TransientModel):
             where
                 inv.state in ('open','paid')
                 and inv.company_id=%s
-                and not product_template.type='service'
+                and not product_template.product_type='service'
                 and (res_country.intrastat=true or (inv.intrastat_country_id is null
                                                     and countrypartner.intrastat=true))
                 and ((res_country.code is not null and not res_country.code=%s)

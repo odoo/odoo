@@ -50,7 +50,7 @@
     date_planned = order.date_planned
     for move_line in order.move_lines:
         for order_line in order.product_lines:
-          if move_line.product_id.type not in ('product', 'consu'):
+          if move_line.product_id.product_type not in ('product', 'consu'):
             continue
           if move_line.product_id.id == order_line.product_id.id:
             assert move_line.date == date_planned, "Planned date does not correspond in 'To consume line'."
@@ -78,7 +78,7 @@
     for proc in self.browse(cr, uid, procurements):
       for order_line in order.product_lines:
         date_planned = order.date_planned
-        if proc.product_id.type not in ('product', 'consu'):
+        if proc.product_id.product_type not in ('product', 'consu'):
           continue
         if proc.product_id.id == order_line.product_id.id:
           assert proc.date_planned == date_planned, "Planned date does not correspond"

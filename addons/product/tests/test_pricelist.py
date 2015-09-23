@@ -80,7 +80,7 @@ class TestPricelist(TransactionCase):
                                               'uom_id': self.tonne_id.id,
                                               'uom_po_id': self.tonne_id.id,
                                               'list_price': tonne_price,
-                                              'type': 'consu',
+                                              'product_type': 'consu',
                                             })
         self.env['product.pricelist.item'].create({'pricelist_id': self.public_pricelist_id.id,
                                                        'sequence': 10,

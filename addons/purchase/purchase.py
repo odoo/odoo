@@ -340,7 +340,7 @@ class PurchaseOrder(models.Model):
     @api.multi
     def _action_picking_create(self):
         for order in self:
-            ptypes = order.order_line.mapped('product_id.type')
+            ptypes = order.order_line.mapped('product_id.product_type')
             if ('product' in ptypes) or ('consu' in ptypes):
                 picking = order._create_picking()
                 moves = order.order_line._create_stock_moves(picking)
@@ -377,7 +377,7 @@ class PurchaseOrderLine(models.Model):
             if line.order_id.state not in ['purchase', 'done']:
                 line.qty_received = 0.0
                 continue
-            if line.product_id.type not in ['consu', 'product']:
+            if line.product_id.product_type not in ['consu', 'product']:
                 line.qty_received = line.product_qty
                 continue
             total = 0.0

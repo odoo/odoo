@@ -36,7 +36,7 @@ class DeliveryCarrier(models.Model):
     sequence = fields.Integer(help="Determine the display order", default=10)
     # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
     delivery_type = fields.Selection([('fixed', 'Fixed Price'), ('base_on_rule', 'Based on Rules')], string='Price Computation', default='fixed', required=True)
-    product_type = fields.Selection(related='product_id.type', default='service')
+    product_type = fields.Selection(related='product_id.product_type', default='service')
     product_sale_ok = fields.Boolean(related='product_id.sale_ok', default=False)
     partner_id = fields.Many2one('res.partner', string='Transporter Company', required=True, help="The partner that is doing the delivery service.")
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete="cascade")

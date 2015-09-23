@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='track_service']" position="attributes">
                     <attribute name="invisible">False</attribute>
-                    <attribute name="attrs">{'invisible': [('type','!=','service')]}</attribute>
+                    <attribute name="attrs">{'invisible': [('product_type','!=','service')]}</attribute>
                 </xpath>
             </field>
         </record>
