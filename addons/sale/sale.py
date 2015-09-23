@@ -241,7 +241,7 @@ class sale_order(osv.osv):
         'name': lambda obj, cr, uid, context: '/',
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
-        'note': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.sale_note,
+        'note': lambda self, cr, uid, context: self.get_salenote(cr, uid, [], context.get('partner_id'), context=context),
         'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
     }
     _sql_constraints = [
