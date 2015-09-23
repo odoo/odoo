@@ -115,13 +115,12 @@
         <field name="name">Next Activities</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">crm.lead</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
         <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
         <field name="view_ids"
-               eval="[(5, 0, 0),
-                      (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_lead_view_tree_activity')}),
-                      (0, 0, {'view_mode': 'form', 'view_id': ref('crm_case_form_view_oppor')}), 
-                      (0, 0, {'view_mode': 'kanban'})]"/>
+               eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_lead_view_tree_activity')}),
+                      (0, 0, {'view_mode': 'form', 'view_id': ref('crm_case_form_view_oppor')}),
+                      (0, 0, {'view_mode': 'kanban'}), (0, 0, {'view_mode': 'calendar'}), (0, 0, {'view_mode': 'pivot'}), (0, 0, {'view_mode': 'graph'})]"/>
         <field name="domain">[('type','=','opportunity')]</field>
         <field name="context">{
                 'default_type': 'opportunity',
