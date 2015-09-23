@@ -88,14 +88,7 @@ class BaseCase(unittest2.TestCase):
     """
 
     def cursor(self):
-        cr = self.registry.cursor()
-
-        @self.addCleanup
-        def close_cursor():
-            if not cr.closed:
-                cr.close()
-
-        return cr
+        return self.registry.cursor()
 
     def ref(self, xid):
         """ Returns database ID for the provided :term:`external identifier`,
