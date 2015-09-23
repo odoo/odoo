@@ -1,2 +1,3 @@
-import product
+import product_template
 import sale_order
+import sale_order_line

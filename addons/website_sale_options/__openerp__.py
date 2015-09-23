@@ -10,11 +10,11 @@ Odoo E-Commerce
         """,
     'depends': ['website_sale'],
     'data': [
-        'views/views.xml',
-        'views/templates.xml',
+        'views/product_template_views.xml',
+        'views/product_templates.xml',
     ],
     'demo': [
-        'data/demo.xml',
+        'data/product_demo.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
