@@ -24,7 +24,7 @@
     </t>
 
     <t t-name="DashboardApps">
-        <i class="fa fa-cog fa-4x text-muted"></i>
+        <i class="fa fa-cog fa-4x text-muted o_browse_apps"></i>
         <div class="o_web_settings_dashboard_header">
             <t t-if="installed_apps">
                 <t t-esc="installed_apps"></t>
@@ -41,7 +41,7 @@
     </t>
     <t t-name="DashboardInvitations">
         <div class="text-center o_web_settings_dashboard_invitations">
-            <i class="fa fa-users fa-4x text-muted"></i>
+            <i class="fa fa-users fa-4x text-muted o_web_settings_dashboard_access_rights"></i>
             <div class="o_web_settings_dashboard_header">
                 <t t-set="active_users" t-value="widget.data.active_users"></t>
                 <t t-set="pending_users" t-value="widget.data.pending_users"></t>
