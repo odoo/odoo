@@ -109,8 +109,7 @@ class project(osv.osv):
             context = {}
         res={}
         for project in self.browse(cr, uid, ids, context=context):
-            tasks_undefined_stage = self.pool['project.task'].search_count(cr, uid, [('stage_id', '=', None), ('project_id', '=', project.id)], context=context)
-            res[project.id] = len(project.task_ids) + int(tasks_undefined_stage) 
+            res[project.id] = len(project.task_ids)
         return res
     def _get_alias_models(self, cr, uid, context=None):
         """ Overriden in project_issue to offer more options """
@@ -164,7 +163,7 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Tasks",),
         'task_ids': fields.one2many('project.task', 'project_id',
-                                    domain=[('stage_id.fold', '=', False)]),
+                                    domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)]),
         'color': fields.integer('Color Index'),
         'user_id': fields.many2one('res.users', 'Project Manager'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
