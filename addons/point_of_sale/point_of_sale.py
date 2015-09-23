@@ -542,8 +542,7 @@ class pos_session(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            for statement in obj.statement_ids:
-                statement.unlink(context=context)
+            self.pool.get('account.bank.statement').unlink(cr, uid, obj.statement_ids.ids, context=context)
         return super(pos_session, self).unlink(cr, uid, ids, context=context)
 
     def login(self, cr, uid, ids, context=None):
