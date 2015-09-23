@@ -45,7 +45,7 @@ class WebsiteMembership(http.Controller):
             today = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
             base_line_domain += [
                     ('membership_id', '=', membership_id), ('date_to', '>=', today),
-                    ('date_from', '<', today), ('state', '=', 'paid')
+                    ('date_from', '<=', today), ('state', '=', 'paid')
             ]
             membership = product_obj.browse(cr, uid, membership_id, context=context)
         else:
