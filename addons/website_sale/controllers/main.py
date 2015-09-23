@@ -140,16 +140,6 @@ class website_sale(http.Controller):
 
     def _get_search_domain(self, search, category, attrib_values):
         domain = request.website.sale_product_domain()
-
-        if ppg:
-            try:
-                ppg = int(ppg)
-            except ValueError:
-                ppg = PPG
-            post["ppg"] = ppg
-        else:
-            ppg = PPG
-
         if search:
             for srch in search.split(" "):
                 domain += [
