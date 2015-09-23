@@ -617,7 +617,7 @@ var PivotView = View.extend({
             display_total = this.main_col.width > 1;
 
         var groupby_labels = _.map(this.main_row.groupbys, function (gb) {
-            return self.groupable_fields[gb.split(':')[0]].string;
+            return self.fields[gb.split(':')[0]].string;
         });
         var measure_types = this.active_measures.map(function (name) {
             return self.measures[name].type;

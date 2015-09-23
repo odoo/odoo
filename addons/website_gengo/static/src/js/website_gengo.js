@@ -65,8 +65,8 @@ website.TopBar.include({
                             trans[data.oeTranslationViewId] = [];
                         }
                         trans[data.oeTranslationViewId].push({
-                            initial_content: self.getInitialContent(this),
-                            new_content:self.getInitialContent(this),
+                            initial_content: qweb.tools.html_escape(self.getInitialContent(this)),
+                            new_content: qweb.tools.html_escape(self.getInitialContent(this)),
                             translation_id: data.oeTranslationId || null,
                             gengo_translation: gengo_service_level,
                             gengo_comment:"\nOriginal Page: " + document.URL

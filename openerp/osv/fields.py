@@ -38,19 +38,8 @@ from openerp import SUPERUSER_ID, registry
 @contextmanager
 def _get_cursor():
     # yield a valid cursor from any environment or create a new one if none found
-    from openerp.api import Environment
-    from openerp.http import request
-    try:
-        request.env     # force request's env to be computed
-    except RuntimeError:
-        pass    # ignore if not in a request
-    for env in Environment.envs:
-        if not env.cr.closed:
-            yield env.cr
-            break
-    else:
-        with registry().cursor() as cr:
-            yield cr
+    with registry().cursor() as cr:
+        yield cr
 
 EMPTY_DICT = frozendict()
 
@@ -814,12 +803,9 @@ class one2many(_column):
                     else:
                         cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
                 elif act[0] == 4:
-                    # table of the field (parent_model in case of inherit)
-                    field = obj.pool[self._obj]._fields[self._fields_id]
-                    field_model = field.base_field.model_name
-                    field_table = obj.pool[field_model]._table
-                    cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
-                    if not cr.fetchone():
+                    # check whether the given record is already linked
+                    rec = obj.browse(cr, SUPERUSER_ID, act[1], {'prefetch_fields': False})
+                    if int(rec[self._fields_id]) != id:
                         # Must use write() to recompute parent_store structure if needed and check access rules
                         obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
                 elif act[0] == 5:

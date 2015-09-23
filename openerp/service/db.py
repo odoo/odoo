@@ -31,10 +31,9 @@ class DatabaseExists(Warning):
 #----------------------------------------------------------
 
 def check_super(passwd):
-    if passwd == openerp.tools.config['admin_passwd']:
+    if passwd and passwd == openerp.tools.config['admin_passwd']:
         return True
-    else:
-        raise openerp.exceptions.AccessDenied()
+    raise openerp.exceptions.AccessDenied()
 
 # This should be moved to openerp.modules.db, along side initialize().
 def _initialize_db(id, db_name, demo, lang, user_password):

@@ -36,6 +36,12 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
      ])
 
 
+class _Cleaner(clean.Cleaner):
+    def allow_element(self, el):
+        if el.tag == 'object' and el.get('type') == "image/svg+xml":
+            return True
+        return super(_Cleaner, self).allow_element(el)
+
 def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_classes=False):
     if not src:
         return src
@@ -85,7 +91,7 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_class
 
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
-        cleaner = clean.Cleaner(**kwargs)
+        cleaner = _Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
         # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
         cleaned = cleaned.replace('%24', '$')

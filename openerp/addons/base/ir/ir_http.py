@@ -194,7 +194,7 @@ class ir_http(osv.AbstractModel):
             installed = {
                 module.name
                 for module in Modules.search([
-                    ('state', '=', 'installed'),
+                    ('state', 'in', ('installed', 'to remove', 'to upgrade')),
                     ('name', '!=', 'web')
                 ])
             }

@@ -84,12 +84,18 @@ var DateTimeWidget = Widget.extend({
     set_datetime_default: function(){
         //when opening datetimepicker the date and time by default should be the one from
         //the input field if any or the current day otherwise
-        if (this.type_of_date === 'datetime') {
+        if (_.contains(['datetime', 'date'], this.type_of_date)) {
             var value = moment().second(0);
             if (this.$input.val().length !== 0 && this.is_valid_()){
                 value = this.$input.val();
             }
-            this.$('.oe_datepicker_main').data('DateTimePicker').setValue(value);
+            var dt = this.$('.oe_datepicker_main').data('DateTimePicker');
+            // temporarily set pickTime to true to bypass datetimepicker hiding on setValue
+            // see https://github.com/Eonasdan/bootstrap-datetimepicker/issues/603
+            var saved_picktime = dt.options.pickTime;
+            dt.options.pickTime = true;
+            dt.setValue(value);
+            dt.options.pickTime = saved_picktime;
         }
     },
     change_datetime: function(e) {

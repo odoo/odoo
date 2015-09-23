@@ -80,17 +80,20 @@ CalendarView.include({
         }).always(function(o) { self.$google_button.prop('disabled', false); });
     },
     extraSideBar: function() {
-        this._super();
-
+        var self = this;
+        var result = this._super();
         this.$google_button = $();
         if (this.dataset.model === "calendar.event") {
-            this.$google_button = $('<button/>', {type: 'button', html: _t("Sync with <b>Google</b>")})
+            return result.then(function() {
+                this.$google_button = $('<button/>', {type: 'button', html: _t("Sync with <b>Google</b>")})
                                     .addClass('o_google_sync_button oe_button btn btn-sm btn-default')
                                     .prepend($('<img/>', {
                                         src: "/google_calendar/static/src/img/calendar_32.png",
                                     }))
-                                    .prependTo(this.$('.o_calendar_filter'));
+                                    .prependTo(self.$('.o_calendar_filter'));
+            });
         }
+        return result;
     },
 });
 

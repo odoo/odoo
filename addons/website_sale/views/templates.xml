@@ -447,7 +447,7 @@
 <template id="variants">
   <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
   <ul t-attf-class="list-unstyled js_add_cart_variants #{ul_class}" t-att-data-attribute_value_ids="attribute_value_ids">
-    <t t-foreach="product.attribute_line_ids" t-as="variant_id">
+    <t t-foreach="product.attribute_line_ids.sorted(key=lambda x: x.attribute_id.sequence)" t-as="variant_id">
       <li t-if="len(variant_id.value_ids) > 1">
 
         <strong t-field="variant_id.attribute_id.name"/>
@@ -539,7 +539,7 @@
   <xpath expr="//p[@t-field='product.description_sale']" position="after">
     <hr t-if="sum([(1 if len(l.value_ids)==1 else 0) for l in product.attribute_line_ids])"/>
     <p class="text-muted">
-      <t t-foreach="product.attribute_line_ids" t-as="variant_id">
+      <t t-foreach="product.attribute_line_ids.sorted(key=lambda x: x.attribute_id.sequence)" t-as="variant_id">
         <t t-if="len(variant_id.value_ids)==1">
           <span t-field="variant_id.attribute_id"/>: <span t-field="variant_id.value_ids[0].name"/><br/>
         </t>

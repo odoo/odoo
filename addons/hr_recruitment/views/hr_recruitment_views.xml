@@ -405,7 +405,7 @@
                         <field name="survey_id"/>
                         <button string="Display Interview Form" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_link"/>
                     </div>
-                    <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]"/>
+                    <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]" options="{'always_reload': True}"/>
                 </group>
             </group>
             <xpath expr="//field[@name='department_id']" position="after">

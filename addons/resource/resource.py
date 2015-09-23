@@ -12,6 +12,7 @@ from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
+import pytz
 
 class resource_calendar(osv.osv):
     """ Calendar model for a resource. It has
@@ -327,22 +328,23 @@ class resource_calendar(osv.osv):
             return intervals
 
         working_intervals = []
+        tz_info = fields.datetime.context_timestamp(cr, uid, work_dt, context=context).tzinfo
         for calendar_working_day in self.get_attendances_for_weekday(cr, uid, id, start_dt, context=context):
             if context and context.get('no_round_hours'):
                 min_from = int((calendar_working_day.hour_from - int(calendar_working_day.hour_from)) * 60)
                 min_to = int((calendar_working_day.hour_to - int(calendar_working_day.hour_to)) * 60)
-                working_interval = (
-                    work_dt.replace(hour=int(calendar_working_day.hour_from), minute=min_from),
-                    work_dt.replace(hour=int(calendar_working_day.hour_to), minute=min_to),
-                    calendar_working_day.id,
-                )
+                dt_f = work_dt.replace(hour=int(calendar_working_day.hour_from), minute=min_from)
+                dt_t = work_dt.replace(hour=int(calendar_working_day.hour_to), minute=min_to)
             else:
-                working_interval = (
-                    work_dt.replace(hour=int(calendar_working_day.hour_from)),
-                    work_dt.replace(hour=int(calendar_working_day.hour_to)),
-                    calendar_working_day.id,
-                )
+                dt_f = work_dt.replace(hour=int(calendar_working_day.hour_from))
+                dt_t = work_dt.replace(hour=int(calendar_working_day.hour_to))
 
+            # adapt tz
+            working_interval = (
+                dt_f.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None),
+                dt_t.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None),
+                calendar_working_day.id
+            )
             working_intervals += self.interval_remove_leaves(cr, uid, working_interval, work_limits, context=context)
 
         # find leave intervals
@@ -602,7 +604,7 @@ class resource_calendar(osv.osv):
         for dt_str, hours, calendar_id in date_and_hours_by_cal:
             result = self.schedule_hours(
                 cr, uid, calendar_id, hours,
-                day_dt=datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S').replace(minute=0, second=0),
+                day_dt=datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S').replace(second=0),
                 compute_leaves=True, resource_id=resource,
                 default_interval=(8, 16)
             )

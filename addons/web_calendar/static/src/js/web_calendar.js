@@ -360,7 +360,9 @@ var CalendarView = View.extend({
 
         return $.when();
     },
-    extraSideBar: function() {},
+    extraSideBar: function() {
+        return $.when();
+    },
 
     get_quick_create_class: function () {
         return widgets.QuickCreate;
@@ -699,9 +701,19 @@ var CalendarView = View.extend({
                 }
 
                 var current_event_source = self.event_source;
+                    var event_domain = self.get_range_domain(domain, start, end);
+                    if (self.useContacts && (!self.all_filters[-1] || !self.all_filters[-1].is_checked)) {
+                        var partner_ids = $.map(self.all_filters, function(o) { if (o.is_checked) { return o.value; }});
+                        if (!_.isEmpty(partner_ids)) {
+                            event_domain = new instance.web.CompoundDomain(
+                                event_domain,
+                                [[self.attendee_people, 'in', partner_ids]]
+                            );
+                        }
+                    }
                 self.dataset.read_slice(_.keys(self.fields), {
                     offset: 0,
-                    domain: self.get_range_domain(domain, start, end),
+                    domain: event_domain,
                     context: context,
                 }).done(function(events) {
                     if (self.dataset.index === null) {
@@ -761,21 +773,6 @@ var CalendarView = View.extend({
                         }
 
                     }
-                    else { //WE USE CONTACT
-                        if (self.attendee_people !== undefined) {
-                            //if we don't filter on 'Everybody's Calendar
-                            if (!self.all_filters[-1] || !self.all_filters[-1].is_checked) {
-                                var checked_filter = $.map(self.all_filters, function(o) { if (o.is_checked) { return o.value; }});
-                                // If we filter on contacts... we keep only events from coworkers
-                                events = $.map(events, function (e) {
-                                    if (_.intersection(checked_filter,e[self.attendee_people]).length) {
-                                        return e;
-                                    }
-                                    return null;
-                                });
-                            }
-                        }
-                    }
                     var all_attendees = $.map(events, function (e) { return e[self.attendee_people]; });
                     all_attendees = _.chain(all_attendees).flatten().uniq().value();
 
@@ -810,22 +807,12 @@ var CalendarView = View.extend({
     get_range_domain: function(domain, start, end) {
         var format = time.date_to_str;
         
-        var extend_domain = [[this.date_start, '>=', format(start)],
-                 [this.date_start, '<=', format(end)]];
+        var extend_domain = [[this.date_start, '<=', format(end)]];
 
         if (this.date_stop) {
-            //add at start 
-            extend_domain.splice(0,0,'|','|','&');
-            //add at end 
             extend_domain.push(
-                            '&',
-                            [this.date_start, '<=', format(start)],
-                            [this.date_stop, '>=', format(start)],
-                            '&',
-                            [this.date_start, '<=', format(end)],
-                            [this.date_stop, '>=', format(start)]
+                    [this.date_stop, '>=', format(start)]
             );
-            //final -> (A & B) | (C & D) | (E & F) ->  | | & A B & C D & E F
         }
         return new CompoundDomain(domain, extend_domain);
     },

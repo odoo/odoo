@@ -139,10 +139,21 @@ class view(osv.osv):
         result.update(map(itemgetter('res_id', 'id'), data_ids))
         return result
 
-    def _views_from_model_data(self, cr, uid, ids, context=None):
-        IMD = self.pool['ir.model.data']
-        data_ids = IMD.search_read(cr, uid, [('id', 'in', ids), ('model', '=', 'ir.ui.view')], ['res_id'], context=context)
-        return map(itemgetter('res_id'), data_ids)
+    def _convert(self, cr, uid, s, view):
+        matches = re.finditer('[^%]%\((.*?)\)[ds]', s)
+        done = []
+        for m in matches:
+            found = m.group()[1:]
+            if found in done:
+                continue
+            done.append(found)
+            xmlid = m.groups()[0]
+            if '.' not in xmlid:
+                mod = view.get_external_id(cr, uid).get(view.id).split('.')[0]
+                xmlid = '%s.%s' % (mod, xmlid)
+            res = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xmlid)
+            s = s.replace(found, str(res))
+        return s
 
     def _arch_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
@@ -152,6 +163,8 @@ class view(osv.osv):
                 # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
                 fullpath = get_resource_path(*view.arch_fs.split('/'))
                 arch_fs = get_view_arch_from_file(fullpath, view.xml_id)
+                # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
+                arch_fs = self._convert(cr, uid, arch_fs, view)
             result[view.id] = arch_fs or view.arch_db
         return result
 
@@ -208,11 +221,7 @@ class view(osv.osv):
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='restrict', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view', 'inherit_id', 'Views which inherit from this one'),
         'field_parent': fields.char('Child Field'),
-        'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data",
-                                         store={
-                                             _name: (lambda s, c, u, i, ctx=None: i, None, 10),
-                                             'ir.model.data': (_views_from_model_data, ['model', 'res_id'], 10),
-                                         }),
+        'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data", store=True),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   help="ID of the view defined in xml file"),
         'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
@@ -543,11 +552,21 @@ class view(osv.osv):
                         node.getparent().remove(node)
                 elif pos == 'attributes':
                     for child in spec.getiterator('attribute'):
-                        attribute = (child.get('name'), child.text or None)
-                        if attribute[1]:
-                            node.set(attribute[0], attribute[1])
-                        elif attribute[0] in node.attrib:
-                            del node.attrib[attribute[0]]
+                        attribute = child.get('name')
+                        value = child.text or ''
+                        if child.get('add') or child.get('remove'):
+                            assert not child.text
+                            separator = child.get('separator', ',')
+                            if separator == ' ':
+                                separator = None    # squash spaces
+                            to_add = map(str.strip, child.get('add', '').split(separator))
+                            to_remove = map(str.strip, child.get('remove', '').split(separator))
+                            values = map(str.strip, node.get(attribute, '').split(separator))
+                            value = (separator or ' ').join(filter(lambda s: s not in to_remove, values) + to_add)
+                        if value:
+                            node.set(attribute, value)
+                        elif attribute in node.attrib:
+                            del node.attrib[attribute]
                 else:
                     sib = node.getnext()
                     for child in spec:
@@ -1137,6 +1156,7 @@ class view(osv.osv):
                    LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
                        WHERE md.module IS NULL
                          AND v.model = %s
+                         AND v.active = true
                     GROUP BY coalesce(v.inherit_id, v.id)
                    """, (model,))
 

@@ -90,6 +90,9 @@ class ir_http(orm.AbstractModel):
                 record = self._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
 
+    def get_page_key(self):
+        return (self._name, "cache", request.uid, request.lang, request.httprequest.full_path)
+
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
         request.website = None
@@ -169,7 +172,7 @@ class ir_http(orm.AbstractModel):
         cache_enable = cache_time and request.httprequest.method == "GET" and request.website.user_id.id == request.uid
         cache_response = None
         if cache_enable:
-            key = (self._name, "cache", request.uid, request.lang, request.httprequest.full_path)
+            key = self.get_page_key()
             try:
                 r = self.pool.cache[key]
                 if r['time'] + cache_time > time.time():

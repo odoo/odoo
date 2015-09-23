@@ -1245,7 +1245,8 @@ class BaseModel(object):
         for fun, msg, names in self._constraints:
             try:
                 # validation must be context-independent; call ``fun`` without context
-                valid = not (set(names) & field_names) or fun(self._model, cr, uid, ids)
+                valid = names and not (set(names) & field_names)
+                valid = valid or fun(self._model, cr, uid, ids)
                 extra_error = None
             except Exception, e:
                 _logger.debug('Exception while validating constraint', exc_info=True)
@@ -3957,8 +3958,8 @@ class BaseModel(object):
         # for recomputing new-style fields
         recs.modified(upd_todo)
 
-        unknown_fields = updend[:]
-        for table in self._inherits:
+        unknown_fields = set(updend)
+        for table, inherit_field in self._inherits.iteritems():
             col = self._inherits[table]
             nids = []
             for sub_ids in cr.split_for_in_conditions(ids):
@@ -3967,10 +3968,11 @@ class BaseModel(object):
                 nids.extend([x[0] for x in cr.fetchall()])
 
             v = {}
-            for val in updend:
-                if self._inherit_fields[val][0] == table:
-                    v[val] = vals[val]
-                    unknown_fields.remove(val)
+            for fname in updend:
+                field = self._fields[fname]
+                if field.inherited and field.related[0] == inherit_field:
+                    v[fname] = vals[fname]
+                    unknown_fields.discard(fname)
             if v:
                 self.pool[table].write(cr, user, nids, v, context)
 
@@ -4779,8 +4781,10 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_data_seen', {})
-        if id in seen_map.setdefault(self._name, []):
+        if '__copy_data_seen' not in context:
+            context = dict(context, __copy_data_seen=defaultdict(list))
+        seen_map = context['__copy_data_seen']
+        if id in seen_map[self._name]:
             return
         seen_map[self._name].append(id)
 
@@ -4850,8 +4854,10 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_translations_seen',{})
-        if old_id in seen_map.setdefault(self._name,[]):
+        if '__copy_translations_seen' not in context:
+            context = dict(context, __copy_translations_seen=defaultdict(list))
+        seen_map = context['__copy_translations_seen']
+        if old_id in seen_map[self._name]:
             return
         seen_map[self._name].append(old_id)
 
@@ -5426,7 +5432,11 @@ class BaseModel(object):
         """
         if self:
             vals = [func(rec) for rec in self]
-            return reduce(operator.or_, vals) if isinstance(vals[0], BaseModel) else vals
+            if isinstance(vals[0], BaseModel):
+                # return the union of all recordsets in O(n)
+                ids = set(itertools.chain(*[rec._ids for rec in vals]))
+                return vals[0].browse(ids)
+            return vals
         else:
             vals = func(self)
             return vals if isinstance(vals, BaseModel) else []

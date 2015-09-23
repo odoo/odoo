@@ -22,7 +22,7 @@ function reload_favorite_list(result) {
     if (result.view) {
         self = result.view;
     }
-    new Model("res.users")
+    return new Model("res.users")
     .query(["partner_id"])
     .filter([["id", "=", self.dataset.context.uid]])
     .first()
@@ -78,10 +78,11 @@ function reload_favorite_list(result) {
 
 CalendarView.include({
     extraSideBar: function() {
-        this._super();
+        var result = this._super();
         if (this.useContacts) {
-            reload_favorite_list(this);
+            return result.then(reload_favorite_list(this));
         }
+        return result;
     }
 });
 
@@ -128,7 +129,7 @@ widgets.SidebarFilter.include({
     add_filter: function() {
         var self = this;
         var defs = [];
-        new Model("res.users")
+        defs.push(new Model("res.users")
         .query(["partner_id"])
         .filter([["id", "=",this.view.dataset.context.uid]])
         .first()
@@ -139,9 +140,9 @@ widgets.SidebarFilter.include({
                     defs.push(self.ds_message.call("create", [{'partner_id': index}]));
                 }
             });
-        });
-        $.when.apply(null, defs).done(function() {
-            reload_favorite_list(self);
+        }));
+        return $.when.apply(null, defs).then(function() {
+            return reload_favorite_list(self);
         });
     },
     destroy_filter: function(e) {

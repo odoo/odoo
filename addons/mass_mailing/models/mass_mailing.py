@@ -607,6 +607,7 @@ class MassMailing(osv.Model):
         'reply_to': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
         'mailing_model': 'mail.mass_mailing.contact',
         'contact_ab_pc': 100,
+        'mailing_domain': [],
     }
 
     def onchange_mass_mailing_campaign_id(self, cr, uid, id, mass_mailing_campaign_ids, context=None):
@@ -682,7 +683,7 @@ class MassMailing(osv.Model):
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
         else:
-            value['mailing_domain'] = False
+            value['mailing_domain'] = []
         value['body_html'] = "on_change_model_and_list"
         return {'value': value}
 
