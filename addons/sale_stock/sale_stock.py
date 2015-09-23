@@ -151,7 +151,7 @@ class SaleOrderLine(models.Model):
         if self.state == 'sale' and self.product_id.type != 'service':
             warning_mess = {
                 'title': _('Ordered quantity changed!'),
-                'message' : _('You have changed the quantity ordered! If the quantity was decreased, you need to modify manually the delivery order.'),
+                'message' : _('You are changing the ordered quantity! If you decreased the initial quantity, do not forget to manually update the delivery order if needed.'),
             }
             return {'warning': warning_mess}
         return {}
