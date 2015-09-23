@@ -301,6 +301,13 @@
             <t t-call="web.layout">
                 <t t-set="head">
                     <t t-call-assets="web.assets_common"/>
+                    <script type="text/javascript">
+                        odoo.define('web.csrf', function (require) {
+                            var token = "<t t-esc="request.csrf_token(None)"/>";
+                            require('web.core').csrf_token = token;
+                            require('qweb').default_dict.csrf_token = token;
+                        });
+                    </script>
                     <t t-call-assets="web.assets_backend"/>
                     &lt;!--[if lte IE 9]&gt; <link rel="stylesheet" href="/web/static/src/css/ie.css"/> &lt;![endif]--&gt;
                     <script type="text/javascript">

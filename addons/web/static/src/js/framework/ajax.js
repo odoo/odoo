@@ -1,6 +1,7 @@
 odoo.define('web.ajax', function (require) {
 "use strict";
 
+var core = require('web.core');
 var time = require('web.time');
 var utils = require('web.utils');
 
@@ -238,6 +239,11 @@ function get_file(options) {
             method: 'POST'
         }).appendTo(document.body);
     }
+    if (core.csrf_token) {
+        $('<input type="hidden" name="csrf_token">')
+                .val(core.csrf_token)
+                .appendTo($form_data);
+    }
 
     var hparams = _.extend({}, options.data || {}, {token: token});
     _.each(hparams, function (value, key) {
@@ -292,19 +298,16 @@ function post (controller_url, data) {
     };
 
     var Def = $.Deferred();
-    var compatibility = !(typeof(FormData));
-    var postData = compatibility ? new FormDataCompatibility() : new FormData();
+    var postData = new FormData();
     
     $.each(data, function(i,val) {
         postData.append(i, val);
     });
-
-    var xhr = new XMLHttpRequest();
-    if(compatibility) {
-        postData.setContentTypeHeader(xhr);
-        postData = postData.buildBody();
+    if (core.csrf_token) {
+        postData.append('csrf_token', core.csrf_token);
     }
 
+    var xhr = new XMLHttpRequest();
     if(xhr.upload) xhr.upload.addEventListener('progress', progressHandler(Def), false);
       
     var ajaxDef = $.ajax(controller_url, {

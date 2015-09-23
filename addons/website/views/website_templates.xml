@@ -130,6 +130,13 @@
             <t t-call-assets="website.assets_frontend" t-js="false"/>
             <t t-call-assets="web.assets_common" t-css="false"/>
             <t t-call-assets="website.assets_frontend" t-css="false"/>
+            <script type="text/javascript">
+                odoo.define('web.csrf', function (require) {
+                    var token = "<t t-esc="request.csrf_token(None)"/>";
+                    require('web.core').csrf_token = token;
+                    require('qweb').default_dict.csrf_token = token;
+                });
+            </script>
 
             <t t-raw="head or ''" name='layout_head'/>
         </head>
