@@ -1000,7 +1000,7 @@ class website_sale(http.Controller):
             product = line.product_id
             ret.append({
                 'id': line.order_id and line.order_id.id,
-                'sku': product.ean13 or product.id,
+                'sku': product.barcode or product.id,
                 'name': product.name or '-',
                 'category': product.categ_id and product.categ_id.name or '-',
                 'price': line.price_unit,
