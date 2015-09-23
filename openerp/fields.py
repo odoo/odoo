@@ -1398,6 +1398,12 @@ class Datetime(Field):
 
 class Binary(Field):
     type = 'binary'
+    _slots = {
+        'attachment': False,            # whether value is stored in attachment
+    }
+
+    _column_attachment = property(attrgetter('attachment'))
+    _description_attachment = property(attrgetter('attachment'))
 
 
 class Selection(Field):
