@@ -30,7 +30,7 @@ _logger = logging.getLogger(__name__)
 
 # The openerp library is supposed already configured.
 ADDONS_PATH = openerp.tools.config['addons_path']
-HOST = '127.0.0.1'
+HOST = openerp.tools.config['xmlrpc_interface'] or '127.0.0.1'
 PORT = openerp.tools.config['xmlrpc_port']
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = openerp.SUPERUSER_ID
@@ -261,7 +261,7 @@ class HttpCase(TransactionCase):
 
     def url_open(self, url, data=None, timeout=10):
         if url.startswith('/'):
-            url = "http://localhost:%s%s" % (PORT, url)
+            url = "http://%s:%s%s" % (HOST, PORT, url)
         return self.opener.open(url, data, timeout)
 
     def authenticate(self, user, password):
