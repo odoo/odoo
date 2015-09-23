@@ -148,10 +148,10 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
-        if self.state == 'sale' and self.product_id.type != 'service':
+        if self.state == 'sale' and self.product_id.type != 'service' and self.product_uom_qty < self._origin.product_uom_qty:
             warning_mess = {
-                'title': _('Ordered quantity changed!'),
-                'message' : _('You are changing the ordered quantity! If you decreased the initial quantity, do not forget to manually update the delivery order if needed.'),
+                'title': _('Ordered quantity decreased!'),
+                'message' : _('You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed.'),
             }
             return {'warning': warning_mess}
         return {}
