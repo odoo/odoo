@@ -185,8 +185,6 @@ class Message(models.Model):
             :param list messages: list of message, as get_dict result
             :param dict message_tree: {[msg.id]: msg browse record}
         """
-        pid = self.env.user.partner_id.id
-
         # 1. Aggregate partners (author_id and partner_ids), attachments and tracking values
         partners = self.env['res.partner']
         attachments = self.env['ir.attachment']
@@ -248,13 +246,13 @@ class Message(models.Model):
                     tracking_value_ids.append(tracking_tree[tracking_value.id])
 
             message_dict.update({
-                #'is_author': pid == author[0],
                 'author_id': author,
                 'partner_ids': partner_ids,
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
-                #'user_pid': pid
-                })
+            })
+            body_short = tools.html_email_clean(message_dict['body'], remove=True)
+            message_dict['body_short'] = body_short != message_dict['body'] and body_short or False
 
         return True
 
@@ -326,6 +324,7 @@ class Message(models.Model):
                 - int: number of messages read (status 'unread' to 'read')
                 - list: list of threads [[messages_of_thread1], [messages_of_thread2]]
         """
+        # TDE note: seems deprecated, not used but however still kept - why ?
         assert thread_level in [0, 1], 'message_read() thread_level should be 0 (flat) or 1 (1 level of thread); given %s.' % thread_level
 
         domain = domain if domain is not None else []

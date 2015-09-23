@@ -378,6 +378,7 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         "click .o_mail_thread_show_more > button": "message_load_history",
         // events from MailThreadMixin
         "click .o_mail_redirect": "on_click_redirect",
+        "click .o_mail_expand": "on_message_body_toggle",
         "click .o_mail_thread_message_star": "on_message_star",
         // events specific for ChatMailThread
         "click .o_mail_chat_channel_item": "on_click_channel",

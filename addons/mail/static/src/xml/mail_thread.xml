@@ -141,7 +141,19 @@
                     </t>
                     <!-- normal message -->
                     <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
-                        <t t-raw="message.body"/>
+                        <t t-if="message.body_short">
+                            <div class="o_mail_body_short">
+                                <t t-raw="message.body_short"/>
+                                <span class="o_mail_expand"><a href="#">... read more</a></span>
+                            </div>
+                            <div class="o_mail_body_long">
+                                <t t-raw="message.body"/>
+                                <span class="o_mail_expand"><a href="#">... read less</a></span>
+                            </div>
+                        </t>
+                        <t t-if="! message.body_short">
+                            <t t-raw="message.body"/>
+                        </t>
                     </t>
                     <!-- Attachments -->
                     <t t-foreach="message.attachment_ids" t-as="attachment">

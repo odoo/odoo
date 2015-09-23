@@ -619,6 +619,16 @@ var MailThreadMixin = {
 
     },
     /**
+     * Toggle short / long body when present (hide signature / crop long
+       messages)
+     */
+    on_message_body_toggle: function (event) {
+        event.preventDefault();
+        var $source = this.$(event.currentTarget);
+        $source.parents('.o_mail_thread_message_core').find('.o_mail_body_short').toggle();
+        $source.parents('.o_mail_thread_message_core').find('.o_mail_body_long').toggle();
+    },
+    /**
      * Toggle a message as 'starred' (or not), by toggling the 'o_mail_message_starred' css class.
      * Trigger when clicking on selector '.o_mail_thread_message_star'.
      */
