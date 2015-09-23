@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
-    	<record id="analytic_account_inherited_form" model="ir.ui.view">
-            <field name="name">account.analytic.account.form.inherit</field>
+        <record id="analytic_account_inherited_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.form.inherit.analytic</field>
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
@@ -15,5 +14,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

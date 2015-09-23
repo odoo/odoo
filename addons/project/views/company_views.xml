@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
-    	<record id="task_company" model="ir.ui.view">
-            <field name="name">res.company.task.config</field>
+        <record id="task_company" model="ir.ui.view">
+            <field name="name">res.company.form.inherit.base</field>
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
@@ -15,5 +14,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

@@ -1,24 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
-from odoo.osv import fields, osv
+from odoo import fields, models
+from odoo.tools import drop_view_if_exists
 
 
-class project_task_history_cumulative(osv.osv):
+class ProjectTaskHistoryCumulative(models.Model):
     _name = 'project.task.history.cumulative'
     _table = 'project_task_history_cumulative'
     _inherit = 'project.task.history'
     _auto = False
 
-    _columns = {
-        'end_date': fields.date('End Date'),
-        'nbr_tasks': fields.integer('# of Tasks', readonly=True),
-        'project_id': fields.many2one('project.project', 'Project'),
-    }
+    end_date = fields.Date('End Date')
+    nbr_tasks = fields.Integer('# of Tasks', readonly=True)
+    project_id = fields.Many2one('project.project', 'Project')
 
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'project_task_history_cumulative')
+        drop_view_if_exists(cr, 'project_task_history_cumulative')
 
         cr.execute(""" CREATE VIEW project_task_history_cumulative AS (
             SELECT
@@ -40,6 +38,7 @@ class project_task_history_cumulative(osv.osv):
                   h.id,
                   h.task_id,
                   t.project_id
+
             ) AS history
         )
         """)
