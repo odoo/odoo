@@ -6,7 +6,7 @@
     'version': '0.1',
     'author': 'Uruguay l10n Team & Guillem Barba',
     'category': 'Localization/Account Charts',
-    'website': 'https://launchpad.net/openerp-uruguay',
+    'website': 'https://www.transifex.com/odoo/odoo-9/language/es_UY/',
     'description': """
 General Chart of Accounts.
 ==========================

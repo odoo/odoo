@@ -35,7 +35,7 @@
 {
     'name': 'Costa Rica - Accounting',
     'version': '1.0',
-    'url': 'http://launchpad.net/openerp-costa-rica',
+    'url': 'https://www.transifex.com/odoo/odoo-9/language/es_CR/',
     'author': 'ClearCorp S.A.',
     'website': 'http://clearcorp.co.cr',
     'category': 'Localization/Account Charts',
@@ -50,7 +50,7 @@ Includes:
     * account.chart.template
 
 Everything is in English with Spanish translation. Further translations are welcome,
-please go to http://translations.launchpad.net/openerp-costa-rica.
+please go to https://www.transifex.com/odoo/odoo-9/language/es_CR/.
     """,
     'depends': ['account'],
     'data': [
