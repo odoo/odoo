@@ -65,6 +65,7 @@ animation.registry.newsletter_popup = animation.Class.extend({
     start: function (editable_mode) {
         var self = this;
         var popupcontent = self.$target.find(".o_popup_content_dev").empty();
+        if (!self.$target.data('list-id')) return;
 
         ajax.jsonRpc('/website_mass_mailing/get_content', 'call', {
             newsletter_id: self.$target.data('list-id')
