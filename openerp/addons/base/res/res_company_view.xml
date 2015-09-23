@@ -111,14 +111,6 @@
             <field name="help">Create and manage the companies that will be managed by Odoo from here. Shops or subsidiaries can be created and maintained from here.</field>
         </record>
         <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_users" groups="base.group_light_multi_company"/>
-        <record id="action_res_company_tree" model="ir.actions.act_window">
-            <field name="name">Company's Structure</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.company</field>
-            <field name="domain">[('parent_id','=',False)]</field>
-            <field name="view_type">tree</field>
-        </record>
-        <menuitem action="action_res_company_tree" groups="base.group_multi_company" id="menu_action_res_company_tree" parent="base.menu_users" sequence="2"/>
 
         <record id="ir_open_company" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
