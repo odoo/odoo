@@ -113,21 +113,27 @@
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
                 <kanban>
+                    <field name="id"/>
                     <field name="mimetype"/>
-                    <field name="url"/>
+                    <field name="type"/>
+                    <field name="datas_fname"/>
                     <field name="name"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="oe_kanban_vignette">
                                     <div class="oe_attachment">
-                                        <div>
-                                            <t t-set="webimage" t-value="new RegExp('image.*(gif|jpe|jpg|png)').test(record.mimetype.value)"/>
-                                            <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
-                                            <img t-if="webimage" t-att-src="record.url.value"/>
-                                        </div>
                                         <div class="oe_name">
                                             <field name="name"/>
+                                        </div>
+                                        <div t-if="record.type.raw_value == 'binary'">
+                                            <a t-attf-href="/web/content/#{record.id.value}?download=1">
+                                                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                                <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
+                                                <div t-if="webimage" class="o_kanban_attachment_image">
+                                                    <img t-attf-src="/web/image/#{record.id.value}?download=1"/>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -141,7 +147,7 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to attach new document.
+                Click here to attach a new document.
               </p>
             </field>
         </record>
