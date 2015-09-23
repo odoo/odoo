@@ -101,8 +101,8 @@ class website_event(http.Controller):
         type_count = event_obj.search(request.cr, request.uid, domain,
                                       count=True, context=request.context)
         types.insert(0, {
-            'type_count': type_count,
-            'type': ("all", _("All Categories"))
+            'event_type_id_count': type_count,
+            'event_type_id': ("all", _("All Categories"))
         })
 
         domain = dom_without('country')
