@@ -565,12 +565,6 @@ class Home(http.Controller):
             values['error'] = "Wrong login/password"
         return request.render('web.login', values)
 
-    @http.route('/login', type='http', auth="none")
-    def login(self, db, login, key, redirect="/web", **kw):
-        if not http.db_filter([db]):
-            return werkzeug.utils.redirect('/', 303)
-        return login_and_redirect(db, login, key, redirect_url=redirect)
-
 class WebClient(http.Controller):
 
     @http.route('/web/webclient/csslist', type='json', auth="none")
