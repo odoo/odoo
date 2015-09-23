@@ -377,7 +377,7 @@ Tour.register({
             title:     "check the image style",
         },
         {
-            waitFor:   '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(66,139,202)/27"]',
+            waitFor:   '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(66,139,202)/32"]',
             title:     "check the font image src",
         },
         {

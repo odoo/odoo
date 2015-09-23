@@ -48,7 +48,7 @@
         <record id="bank_statement_draft_form_inherit2" model="ir.ui.view">
             <field name="name">bank.statement.draft.form.inherit2</field>
             <field name="model">account.bank.statement</field>
-            <field name="inherit_id" ref="account.view_bank_statement_form2"/>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='button_cancel']" position="after">
                     <button name="button_draft" states="confirm" string="Reset to New" type="object"/>
@@ -84,7 +84,7 @@
         <record id="bank_statement_cancel_form_inherit2" model="ir.ui.view">
             <field name="name">bank.statement.cancel.form.inherit2</field>
             <field name="model">account.bank.statement</field>
-            <field name="inherit_id" ref="account.view_bank_statement_form2"/>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <field name="line_ids" position="attributes">
                     <attribute name="options">{'reload_on_button': true}</attribute>
