@@ -625,7 +625,7 @@ class StockQuant(models.Model):
             quant_neg.sudo().unlink()
             if solved_quant:
                 #price update + accounting entries adjustments
-                solved_quant._price_update(solving_quant.cost)
+                self._price_update(solving_quant.cost)
                 #merge history (and cost?)
                 self._quants_merge(solved_quant, solving_quant)
             solving_quant.sudo().unlink()
