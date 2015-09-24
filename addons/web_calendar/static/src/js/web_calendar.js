@@ -705,7 +705,7 @@ var CalendarView = View.extend({
                     if (self.useContacts && (!self.all_filters[-1] || !self.all_filters[-1].is_checked)) {
                         var partner_ids = $.map(self.all_filters, function(o) { if (o.is_checked) { return o.value; }});
                         if (!_.isEmpty(partner_ids)) {
-                            event_domain = new instance.web.CompoundDomain(
+                            event_domain = new data.CompoundDomain(
                                 event_domain,
                                 [[self.attendee_people, 'in', partner_ids]]
                             );
