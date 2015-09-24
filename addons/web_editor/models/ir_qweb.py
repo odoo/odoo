@@ -241,7 +241,7 @@ class DateTime(orm.AbstractModel):
             return False
 
         # parse from string to datetime
-        dt = datetime.datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)
+        dt = parser.parse(value)
 
         # convert back from user's timezone to UTC
         tz_name = context.get('tz') \
