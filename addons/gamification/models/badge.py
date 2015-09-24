@@ -133,7 +133,8 @@ class gamification_badge(osv.Model):
     _columns = {
         'name': fields.char('Badge', required=True, translate=True),
         'description': fields.text('Description'),
-        'image': fields.binary("Image", help="This field holds the image used for the badge, limited to 256x256"),
+        'image': fields.binary("Image", attachment=True,
+            help="This field holds the image used for the badge, limited to 256x256"),
         'rule_auth': fields.selection([
                 ('everyone', 'Everyone'),
                 ('users', 'A selected list of users'),

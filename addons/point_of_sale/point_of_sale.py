@@ -9,6 +9,7 @@ import sets
 
 from functools import partial
 
+import openerp
 from openerp import tools, models, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import float_is_zero
@@ -1482,15 +1483,6 @@ class pos_category(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
-    
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
@@ -1498,29 +1490,39 @@ class pos_category(osv.osv):
         'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         
-        # NOTE: there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
-        # for at least one category, then we display a default image on the other, so that the buttons have consistent styling.
-        # In this case, the default image is set by the js code.
-        # NOTE2: image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Image",
-            help="This field holds the image used as image for the cateogry, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image",
-            store={
-                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized image of the category. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized image", type="binary", multi="_get_image",
-            store={
-                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized image of the category. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
     }
+
+    # NOTE: there is no 'default image', because by default we don't show
+    # thumbnails for categories. However if we have a thumbnail for at least one
+    # category, then we display a default image on the other, so that the
+    # buttons have consistent styling.
+    # In this case, the default image is set by the js code.
+    image = openerp.fields.Binary("Image", attachment=True,
+        help="This field holds the image used as image for the cateogry, limited to 1024x1024px.")
+    image_medium = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+        help="Medium-sized image of the category. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved. "\
+             "Use this field in form views or some kanban views.")
+    image_small = openerp.fields.Binary("Small-sized image",
+        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+        help="Small-sized image of the category. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
+
+    @openerp.api.depends('image')
+    def _compute_images(self):
+        for rec in self:
+            rec.image_medium = tools.image_resize_image_medium(rec.image)
+            rec.image_small = tools.image_resize_image_small(rec.image)
+
+    def _inverse_image_medium(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_medium)
+
+    def _inverse_image_small(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_small)
 
 class product_template(osv.osv):
     _inherit = 'product.template'

@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
 import time
 import datetime
+from dateutil.relativedelta import relativedelta
+
+import openerp
 from openerp import tools
 from openerp.exceptions import UserError
+from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from dateutil.relativedelta import relativedelta
 
 def str_to_datetime(strdate):
     return datetime.datetime.strptime(strdate, tools.DEFAULT_SERVER_DATE_FORMAT)
@@ -134,39 +136,36 @@ class fleet_vehicle_model(osv.Model):
 class fleet_vehicle_model_brand(osv.Model):
     _name = 'fleet.vehicle.model.brand'
     _description = 'Brand model of the vehicle'
-
     _order = 'name asc'
 
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
+    name = openerp.fields.Char('Make', required=True)
 
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+    image = openerp.fields.Binary("Logo", attachment=True,
+        help="This field holds the image used as logo for the brand, limited to 1024x1024px.")
+    image_medium = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+        help="Medium-sized logo of the brand. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved. "\
+             "Use this field in form views or some kanban views.")
+    image_small = openerp.fields.Binary("Small-sized image",
+        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+        help="Small-sized logo of the brand. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
 
-    _columns = {
-        'name': fields.char('Make', required=True),
-        'image': fields.binary("Logo",
-            help="This field holds the image used as logo for the brand, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized photo", type="binary", multi="_get_image",
-            store = {
-                'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized logo of the brand. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized photo", type="binary", multi="_get_image",
-            store = {
-                'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized photo of the brand. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
-    }
+    @openerp.api.depends('image')
+    def _compute_images(self):
+        for rec in self:
+            rec.image_medium = tools.image_resize_image_medium(rec.image)
+            rec.image_small = tools.image_resize_image_small(rec.image)
+
+    def _inverse_image_medium(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_medium)
+
+    def _inverse_image_small(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_small)
 
 
 class fleet_vehicle(osv.Model):

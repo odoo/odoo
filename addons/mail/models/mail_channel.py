@@ -67,16 +67,18 @@ class Channel(models.Model):
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
     # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary("Photo", default=_get_default_image,
-                          help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium-sized photo', compute='_get_image', inverse='_set_image', store=True,
-                                 help="Medium-sized photo of the group. It is automatically "
-                                      "resized as a 128x128px image, with aspect ratio preserved. "
-                                      "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Small-sized photo', compute='_get_image', inverse='_set_image', store=True,
-                                help="Small-sized photo of the group. It is automatically "
-                                     "resized as a 64x64px image, with aspect ratio preserved. "
-                                     "Use this field anywhere a small image is required.")
+    image = fields.Binary("Photo", default=_get_default_image, attachment=True,
+        help="This field holds the image used as photo for the group, limited to 1024x1024px.")
+    image_medium = fields.Binary('Medium-sized photo',
+        compute='_get_image', inverse='_set_image_medium', store=True, attachment=True,
+        help="Medium-sized photo of the group. It is automatically "
+             "resized as a 128x128px image, with aspect ratio preserved. "
+             "Use this field in form views or some kanban views.")
+    image_small = fields.Binary('Small-sized photo',
+        compute='_get_image', inverse='_set_image_small', store=True, attachment=True,
+        help="Small-sized photo of the group. It is automatically "
+             "resized as a 64x64px image, with aspect ratio preserved. "
+             "Use this field anywhere a small image is required.")
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete="restrict", required=True,
         help="The email address associated with this group. New emails received will automatically create new topics.")
@@ -84,12 +86,14 @@ class Channel(models.Model):
     @api.one
     @api.depends('image')
     def _get_image(self):
-        res = tools.image_get_resized_images(self.image)
-        self.image_medium = res['image_medium']
-        self.image_small = res['image_small']
+        self.image_medium = tools.image_resize_image_medium(self.image)
+        self.image_small = tools.image_resize_image_small(self.image)
 
-    def _set_image(self):
-        self.image = tools.image_resize_image_big(self.image)
+    def _set_image_medium(self):
+        self.image = tools.image_resize_image_big(self.image_medium)
+
+    def _set_image_small(self):
+        self.image = tools.image_resize_image_big(self.image_small)
 
     @api.model
     def create(self, vals):

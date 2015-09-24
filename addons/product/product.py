@@ -4,6 +4,7 @@
 import re
 import time
 
+import openerp
 from openerp import api, tools, SUPERUSER_ID
 from openerp.osv import osv, fields, expression
 from openerp.tools.translate import _
@@ -368,15 +369,6 @@ class product_template(osv.osv):
     _description = "Product Template"
     _order = "name"
 
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image, avoid_resize_medium=True)
-        return result
-
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-
     def _is_product_variant(self, cr, uid, ids, name, arg, context=None):
         return self._is_product_variant_impl(cr, uid, ids, name, arg, context=context)
 
@@ -501,25 +493,6 @@ class product_template(osv.osv):
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
-        # image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Image",
-            help="This field holds the image used as image for the product, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image", 
-            store={
-                'product.template': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized image of the product. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved, "\
-                 "only when the image exceeds one of those sizes. Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Small-sized image", type="binary", multi="_get_image",
-            store={
-                'product.template': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized image of the product. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
         'packaging_ids': fields.one2many(
             'product.packaging', 'product_tmpl_id', 'Logistical Units',
             help="Gives the different ways to package the same product. This has no impact on "
@@ -539,6 +512,34 @@ class product_template(osv.osv):
         'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
         'item_ids': fields.one2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items'),
     }
+
+    # image: all image fields are base64 encoded and PIL-supported
+    image = openerp.fields.Binary("Image", attachment=True,
+        help="This field holds the image used as image for the product, limited to 1024x1024px.")
+    image_medium = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+        help="Medium-sized image of the product. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved, "\
+             "only when the image exceeds one of those sizes. Use this field in form views or some kanban views.")
+    image_small = openerp.fields.Binary("Small-sized image",
+        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+        help="Small-sized image of the product. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
+
+    @api.depends('image')
+    def _compute_images(self):
+        for rec in self:
+            rec.image_medium = tools.image_resize_image_medium(rec.image, avoid_if_small=True)
+            rec.image_small = tools.image_resize_image_small(rec.image)
+
+    def _inverse_image_medium(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_medium)
+
+    def _inverse_image_small(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_small)
 
     def _price_get(self, cr, uid, products, ptype='list_price', context=None):
         if context is None:
@@ -946,7 +947,7 @@ class product_product(osv.osv):
         'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', ondelete='restrict'),
         'is_product_variant': fields.function( _is_product_variant_impl, type='boolean', string='Is a product variant'),
         # image: all image fields are base64 encoded and PIL-supported
-        'image_variant': fields.binary("Variant Image",
+        'image_variant': fields.binary("Variant Image", attachment=True,
             help="This field holds the image used as image for the product variant, limited to 1024x1024px."),
 
         'image': fields.function(_get_image_variant, fnct_inv=_set_image_variant,

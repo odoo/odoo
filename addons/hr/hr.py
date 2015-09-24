@@ -3,6 +3,7 @@
 
 import logging
 
+import openerp
 from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
@@ -136,15 +137,6 @@ class hr_employee(osv.osv):
 
     _mail_post_access = 'read'
 
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
-
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-
     _columns = {
         #we need a related field in order to be able to sort the employee by name
         'name_related': fields.related('resource_id', 'name', type='char', string='Name', readonly=True, store=True),
@@ -170,31 +162,40 @@ class hr_employee(osv.osv):
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True, auto_join=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job Title'),
-        # image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Photo",
-            help="This field holds the image used as photo for the employee, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized photo", type="binary", multi="_get_image",
-            store = {
-                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized photo of the employee. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Small-sized photo", type="binary", multi="_get_image",
-            store = {
-                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized photo of the employee. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
         'passport_id': fields.char('Passport No'),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
         'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1),
     }
+
+    # image: all image fields are base64 encoded and PIL-supported
+    image = openerp.fields.Binary("Photo", attachment=True,
+        help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
+    image_medium = openerp.fields.Binary("Medium-sized photo",
+        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+        help="Medium-sized photo of the employee. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved. "\
+             "Use this field in form views or some kanban views.")
+    image_small = openerp.fields.Binary("Small-sized photo",
+        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+        help="Small-sized photo of the employee. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
+
+    @api.depends('image')
+    def _compute_images(self):
+        for rec in self:
+            rec.image_medium = tools.image_resize_image_medium(rec.image)
+            rec.image_small = tools.image_resize_image_small(rec.image)
+
+    def _inverse_image_medium(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_medium)
+
+    def _inverse_image_small(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_small)
 
     def _get_default_image(self, cr, uid, context=None):
         image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')

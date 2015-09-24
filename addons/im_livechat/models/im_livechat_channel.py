@@ -43,16 +43,18 @@ class ImLivechatChannel(models.Model):
     rating_percentage_satisfaction = fields.Integer('% Happy', compute='_compute_percentage_satisfaction', store=False, default=-1)
 
     # images fields
-    image = fields.Binary('Image', default=_default_image,
+    image = fields.Binary('Image', default=_default_image, attachment=True,
         help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_small = fields.Binary('Thumbnail', compute='_compute_image', store=True,
-        help="Small-sized photo of the group. It is automatically "\
-             "resized as a 64x64px image, with aspect ratio preserved. "\
-             "Use this field anywhere a small image is required.")
-    image_medium = fields.Binary('Medium', compute='_compute_image', store=True,
+    image_medium = fields.Binary('Medium',
+        compute='_compute_image', store=True, attachment=True,
         help="Medium-sized photo of the group. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
+    image_small = fields.Binary('Thumbnail',
+        compute='_compute_image', store=True, attachment=True,
+        help="Small-sized photo of the group. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
 
     # relationnal fields
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Operators', default=_default_user_ids)
@@ -67,12 +69,8 @@ class ImLivechatChannel(models.Model):
     @api.one
     @api.depends('image')
     def _compute_image(self):
-        if self.image:
-            self.image_small = tools.image_resize_image_small(self.image)
-            self.image_medium = tools.image_resize_image_medium(self.image)
-        else:
-            self.image_small = False
-            self.image_medium = False
+        self.image_medium = tools.image_resize_image_medium(self.image)
+        self.image_small = tools.image_resize_image_small(self.image)
 
     @api.multi
     def _compute_script_external(self):
