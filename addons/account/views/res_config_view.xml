@@ -83,8 +83,9 @@
                     <group string="Fiscal Year">
                         <label for="id" string="Fiscal Year Last Day"/>
                         <div>
-                            <field name="fiscalyear_last_day" class="oe_inline"/>
                             <field name="fiscalyear_last_month" class="oe_inline"/>
+                            <span style="margin-right:5px;"></span>
+                            <field name="fiscalyear_last_day" class="oe_inline oe_text_right"/>
                         </div>
                         <label for="id" string="Lock Entries"/>
                         <div>
@@ -141,22 +142,22 @@
                     <group>
                         <label for="id" string="Customer"/>
                         <div name="customer_payments">
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
-                                <label for="default_sale_tax_id"/>
-                                <field name="default_sale_tax_id"
-                                    domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"
-                                    class="oe_inline"/>
-                            </div>
                             <div>
                                 <field name="group_proforma_invoices" class="oe_inline"/>
                                 <label for="group_proforma_invoices"/>
                             </div>
                         </div>
                     </group>
-                    <group>
-                        <label for="id" string="Vendor"/>
-                        <div name="other_cofing">
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                    <group attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                        <label for="id" string="Taxes"/>
+                        <div name="invoice_taxes">
+                            <div>
+                                <label for="default_sale_tax_id"/>
+                                <field name="default_sale_tax_id"
+                                    domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"
+                                    class="oe_inline"/>
+                            </div>
+                            <div>
                                 <label for="default_purchase_tax_id"/>
                                 <field name="default_purchase_tax_id"
                                     domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"
