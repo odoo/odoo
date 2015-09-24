@@ -78,7 +78,6 @@ editor.Class = Widget.extend({
     start: function() {
         var self = this;
 
-        this.$('button[data-action=save]').prop('disabled', true);
         $('.dropdown-toggle').dropdown();
 
         this.display_placeholder();
