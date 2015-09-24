@@ -904,28 +904,29 @@ class product_product(osv.osv):
             result[product.id] = price_extra
         return result
 
-    def _select_seller(self, cr, uid, ids, name, arg, context=None):
+    def _select_seller(self, cr, uid, product_id, partner_id=False, quantity=0.0, date=time.strftime(DEFAULT_SERVER_DATE_FORMAT), uom_id=False, context=None):
         if context is None:
             context = {}
-        res = {}
-        partner = context.get('partner_id')
-        minimal_quantity = context.get('quantity', 0.0)
-        date = context.get('date', time.strftime(DEFAULT_SERVER_DATE_FORMAT))
-        for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = False
-            for seller in product.seller_ids:
-                if seller.date_start and seller.date_start > date:
-                    continue
-                if seller.date_end and seller.date_end < date:
-                    continue
-                if partner and seller.name.id != partner:
-                    continue
-                if minimal_quantity and minimal_quantity < seller.qty:
-                    continue
-                if seller.product_id and seller.product_id != product:
-                    continue
-                res[product.id] = seller
-                break
+        res = self.pool.get('product.supplierinfo').browse(cr, uid, [])
+        for seller in product_id.seller_ids:
+            # Set quantity in UoM of seller
+            quantity_uom_seller = quantity
+            if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
+                quantity_uom_seller = uom_id._compute_qty_obj(uom_id, quantity_uom_seller, seller.product_uom)
+
+            if seller.date_start and seller.date_start > date:
+                continue
+            if seller.date_end and seller.date_end < date:
+                continue
+            if partner_id and seller.name != partner_id:
+                continue
+            if quantity_uom_seller and quantity_uom_seller < seller.qty:
+                continue
+            if seller.product_id and seller.product_id != product_id:
+                continue
+
+            res |= seller
+            break
         return res
 
     _columns = {
@@ -964,7 +965,6 @@ class product_product(osv.osv):
                                           groups="base.group_user", string="Cost"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc."),
-        'selected_seller_id': fields.function(_select_seller, type='many2one', relation='product.supplierinfo', string='Selected Seller', help='Technical field that selects a seller based on priority (sequence) and an optional partner and/or a minimal quantity in the context'),
     }
 
     _defaults = {
@@ -1236,7 +1236,7 @@ class product_supplierinfo(osv.osv):
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', select=True, oldname='product_id'),
         'delay': fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'company_id': fields.many2one('res.company', string='Company', select=1),
-        'product_id': fields.many2one('product.product', string='Product Variant'),
+        'product_id': fields.many2one('product.product', string='Product Variant', help="When this field is filled in, the vendor data will only apply to the variant."),
     }
     _defaults = {
         'min_qty': 0.0,

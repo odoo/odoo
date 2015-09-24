@@ -531,7 +531,7 @@ class PurchaseOrderLine(models.Model):
         return super(PurchaseOrderLine, self).unlink()
 
     @api.model
-    def _get_date_planned(self, product, po=False):
+    def _get_date_planned(self, seller, po=False):
         """Return the datetime value to use as Schedule Date (``date_planned``) for
            PO Lines that correspond to the given product.seller_ids,
            when ordered at `date_order_str`.
@@ -543,15 +543,11 @@ class PurchaseOrderLine(models.Model):
            :rtype: datetime
            :return: desired Schedule Date for the PO line
         """
-        supplier_delay = int(product.selected_seller_id.delay) if product else 0
-        if po:
-            date_order = po.date_order
-        else:
-            date_order = self.order_id.date_order
+        date_order = po.date_order if po else self.order_id.date_order
         if date_order:
-            return datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=supplier_delay)
+            return datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=seller.delay if seller else 0)
         else:
-            return datetime.today() + relativedelta(days=supplier_delay)
+            return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
     @api.onchange('product_id', 'product_qty', 'product_uom')
     def onchange_product_id(self):
@@ -563,18 +559,27 @@ class PurchaseOrderLine(models.Model):
             self.product_uom = self.product_id.uom_po_id
         result['domain'] = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
 
-        res = self._get_name_price_quantity_date(
+        seller = self.product_id._select_seller(
             self.product_id,
-            self.partner_id,
-            self.order_id.date_order and self.order_id.date_order[:10],
-            self.product_qty,
-            self.product_uom,
-            self.order_id.currency_id)
+            partner_id=self.partner_id,
+            quantity=self.product_qty,
+            date=self.order_id.date_order and self.order_id.date_order[:10],
+            uom_id=self.product_uom)
 
-        self.name = res['name']
-        self.product_qty = res['quantity'] if not res['quantity'] else max(self.product_qty, res['quantity'])
-        self.price_unit = res['price_unit']
-        self.date_planned = res['date_planned']
+        price_unit = seller.price if seller else 0.0
+        if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
+            price_unit = seller.currency_id.compute(price_unit, self.order_id.currency_id)
+        self.price_unit = price_unit
+
+        self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
+        product_lang = self.product_id.with_context({
+            'lang': self.partner_id.lang,
+            'partner_id': self.partner_id.id,
+        })
+        self.name = product_lang.display_name
+        if product_lang.description_purchase:
+            self.name += '\n' + product_lang.description_purchase
 
         taxes = self.product_id.supplier_taxes_id
         fpos = self.order_id.fiscal_position_id
@@ -590,67 +595,6 @@ class PurchaseOrderLine(models.Model):
         }
 
         return result
-
-    @api.model
-    def _get_name_price_quantity_date(self, product_id, partner_id, date, quantity, product_uom, currency_id, order_id=False):
-        """Return the name of the product, the seller quantity, the unit price and
-           the date planned of a given product.
-
-           :param browse_record product_id: product.product, for which we want to
-                get the information
-           :param browse_record partner_id: res.partner, supplier of the product
-           :param str date: order date
-           :param float quantity: quantity of product in product_uom UoM
-           :param browse_record product_uom: product.uom, product_uom UoM in which is
-                expressed the quantity
-           :param browse_record currency_id: res.currency, currency in which we want the price
-           :param browse_record | False order_id: purchase.order, purchase order in case we
-                try to get the data for a PO line not yet attached to a PO.
-           :rtype: dict
-           :return: name, seller quantity, seller price, date planned
-        """
-        # This is useful in case partner is not registered supplier
-        if not product_id or not partner_id or not product_uom or not currency_id:
-            return {
-                'name': False,
-                'quantity': 0.0,
-                'price_unit': 0.0,
-                'date_planned': False,
-            }
-
-        # The first browse is used to know the uom_id and the currency_id for the given vendor
-        product = product_id.with_context({'partner_id': partner_id.id})
-        seller_currency_id = product.selected_seller_id.currency_id if product.selected_seller_id else partner_id.currency_id
-        seller_product_uom = product.selected_seller_id.product_uom if product.selected_seller_id else product_id.uom_id
-
-        # Switch quantity to uom_id
-        quantity_seller_uom_id = quantity
-        if quantity_seller_uom_id and seller_product_uom != product_uom:
-            quantity_seller_uom_id = product_uom._compute_qty_obj(product_uom, quantity_seller_uom_id, seller_product_uom)
-
-        product = product_id.with_context({
-            'lang': partner_id.lang,
-            'partner_id': partner_id.id,
-            'date': date,
-            'quantity': quantity_seller_uom_id,
-        })
-
-        price_unit = product.selected_seller_id.price
-        if price_unit and seller_currency_id != currency_id:
-            price_unit = seller_currency_id.compute(price_unit, currency_id)
-
-        date_planned = self._get_date_planned(product, po=order_id).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
-        name = product.display_name
-        if product.description_purchase:
-            name += '\n' + product.description_purchase
-
-        return {
-            'name': name,
-            'quantity': quantity,
-            'price_unit': price_unit,
-            'date_planned': date_planned,
-        }
 
 
 class ProcurementRule(models.Model):
@@ -684,16 +628,16 @@ class ProcurementOrder(models.Model):
 
                 precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
                 if not float_is_zero(product_qty, precision_digits=precision):
-                    res = self.env['purchase.order.line']._get_name_price_quantity_date(
+                    seller = procurement.product_id._select_seller(
                         procurement.product_id,
-                        procurement.purchase_line_id.partner_id,
-                        procurement.purchase_line_id.order_id.date_order and procurement.purchase_line_id.order_id.date_order[:10],
-                        product_qty,
-                        procurement.product_uom,
-                        procurement.purchase_line_id.order_id.currency_id)
+                        partner_id=procurement.purchase_line_id.partner_id,
+                        quantity=product_qty,
+                        date=procurement.purchase_line_id.order_id.date_order and procurement.purchase_line_id.order_id.date_order[:10],
+                        uom_id=procurement.product_uom)
 
-                    product_qty = res['quantity']
-                    price_unit = res['price_unit']
+                    price_unit = seller.price if seller else 0.0
+                    if price_unit and seller and procurement.purchase_line_id.order_id.currency_id and seller.currency_id != procurement.purchase_line_id.order_id.currency_id:
+                        price_unit = seller.currency_id.compute(price_unit, procurement.purchase_line_id.order_id.currency_id)
 
                 procurement.purchase_line_id.product_qty = product_qty
                 procurement.purchase_line_id.price_unit = price_unit
@@ -736,7 +680,7 @@ class ProcurementOrder(models.Model):
     @api.v8
     def _get_purchase_order_date(self, schedule_date):
         self.ensure_one()
-        seller_delay = int(self.product_id.selected_seller_id.delay)
+        seller_delay = int(self.product_id._select_seller(self.product_id).delay)
         return schedule_date - relativedelta(days=seller_delay)
 
     @api.v7
@@ -750,26 +694,33 @@ class ProcurementOrder(models.Model):
            :rtype: datetime
            :return: the desired Order Date for the PO
         """
-        seller_delay = int(procurement.product_id.selected_seller_id.delay)
+        seller_delay = int(procurement.product_id._select_seller(procurement.product_id).delay)
         return schedule_date - relativedelta(days=seller_delay)
 
     @api.multi
     def _prepare_purchase_order_line(self, po, supplier):
         self.ensure_one()
 
-        res = self.env['purchase.order.line']._get_name_price_quantity_date(
+        seller = self.product_id._select_seller(
             self.product_id,
-            supplier.name,
-            po.date_order and po.date_order[:10],
-            self.product_qty,
-            self.product_uom,
-            po.currency_id,
-            order_id=po)
+            partner_id=supplier.name,
+            quantity=self.product_qty,
+            date=po.date_order and po.date_order[:10],
+            uom_id=self.product_uom)
 
-        name = res['name']
-        product_qty = res['quantity']
-        price_unit = res['price_unit']
-        date_planned = res['date_planned']
+        price_unit = seller.price if seller else 0.0
+        if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
+            price_unit = seller.currency_id.compute(price_unit, po.currency_id)
+
+        product_lang = self.product_id.with_context({
+            'lang': supplier.name.lang,
+            'partner_id': supplier.name.id,
+        })
+        name = product_lang.display_name
+        if product_lang.description_purchase:
+            name += '\n' + product_lang.description_purchase
+
+        date_planned = self.env['purchase.order.line']._get_date_planned(seller, po=po).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         taxes = self.product_id.supplier_taxes_id
         fpos = po.fiscal_position_id
@@ -777,7 +728,7 @@ class ProcurementOrder(models.Model):
 
         return {
             'name': name,
-            'product_qty': product_qty,
+            'product_qty': self.product_qty,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom.id,
             'price_unit': price_unit,
@@ -844,17 +795,20 @@ class ProcurementOrder(models.Model):
             po_line = False
             for line in po.order_line:
                 if line.product_id == procurement.product_id and line.product_uom == procurement.product_uom:
-                    res = self.env['purchase.order.line']._get_name_price_quantity_date(
+                    seller = self.product_id._select_seller(
                         self.product_id,
-                        partner,
-                        po.date_order and po.date_order[:10],
-                        line.product_qty + procurement.product_qty,
-                        self.product_uom,
-                        po.currency_id)
+                        partner_id=partner,
+                        quantity=line.product_qty + procurement.product_qty,
+                        date=po.date_order and po.date_order[:10],
+                        uom_id=self.product_uom)
+
+                    price_unit = seller.price if seller else 0.0
+                    if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
+                        price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
                     po_line = line.write({
-                        'product_qty': res['quantity'],
-                        'price_unit': res['price_unit'],
+                        'product_qty': line.product_qty + procurement.product_qty,
+                        'price_unit': price_unit,
                         'procurement_ids': [(4, procurement.id)]
                     })
             if not po_line:

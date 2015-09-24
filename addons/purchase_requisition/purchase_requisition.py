@@ -147,24 +147,35 @@ class purchase_requisition(osv.osv):
         taxes_id = fpos.map_tax(taxes) if fpos else []
 
         po = po_obj.browse(cr, uid, [purchase_id], context=context)
-        res = po_line_obj._get_name_price_quantity_date(cr, uid,
+        seller = requisition_line.product_id._select_seller(
             requisition_line.product_id,
-            supplier,
-            date_order and date_order[:10],
-            qty,
-            product.uom_po_id,
-            po.currency_id,
-            order_id=po,
-            context=context)
+            partner_id=supplier,
+            quantity=qty,
+            date=date_order and date_order[:10],
+            uom_id=product.uom_po_id)
+
+        price_unit = seller.price if seller else 0.0
+        if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
+            price_unit = seller.currency_id.compute(price_unit, po.currency_id)
+
+        date_planned = po_line_obj._get_date_planned(cr, uid, seller, po=po, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
+        product_lang = requisition_line.product_id.with_context({
+            'lang': supplier.lang,
+            'partner_id': supplier.id,
+        })
+        name = product_lang.display_name
+        if product_lang.description_purchase:
+            name += '\n' + product_lang.description_purchase
 
         vals = {
-            'name': res['name'],
+            'name': name,
             'order_id': purchase_id,
-            'product_qty': res['quantity'],
+            'product_qty': qty,
             'product_id': product.id,
             'product_uom': default_uom_po_id,
-            'price_unit': res['price_unit'],
-            'date_planned': res['date_planned'],
+            'price_unit': price_unit,
+            'date_planned': date_planned,
             'taxes_id': [(6, 0, taxes_id)],
             'account_analytic_id': requisition_line.account_analytic_id.id,
         }
