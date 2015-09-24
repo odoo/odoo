@@ -48,6 +48,7 @@ from openerp import pooler
 from report_helper import WebKitHelper
 from openerp.report.report_sxw import *
 from openerp import addons
+from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.osv.osv import except_osv
@@ -76,7 +77,7 @@ class WebKitParser(report_sxw):
     def get_lib(self, cursor, uid):
         """Return the lib wkhtml path"""
         proxy = self.pool.get('ir.config_parameter')
-        webkit_path = proxy.get_param(cursor, uid, 'webkit_path')
+        webkit_path = proxy.get_param(cursor, SUPERUSER_ID, 'webkit_path')
 
         if not webkit_path:
             try:
