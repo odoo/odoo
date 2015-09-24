@@ -10,12 +10,12 @@ Delivery Costs
 """,
     'depends': ['website_sale', 'delivery'],
     'data': [
-        'views/website_sale_delivery.xml',
-        'views/website_sale_delivery_view.xml',
-        'demo/website_sale_delivery_data.xml'
+        'views/delivery_carrier_templates.xml',
+        'views/delivery_carrier_views.xml',
+        'data/delivery_carrier_data.xml'
     ],
     'demo': [
-        'data/website_sale_delivery_demo.xml'
+        'data/delivery_carrier_demo.xml'
     ],
     'qweb': [],
     'installable': True,
