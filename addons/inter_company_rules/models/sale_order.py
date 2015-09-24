@@ -31,6 +31,7 @@ class sale_order(models.Model):
             :param company : the company of the created PO
             :rtype company : res.company record
         """
+        self = self.with_context(force_company=company.id)
         PurchaseOrder = self.env['purchase.order']
         company_partner = self.company_id and self.company_id.partner_id or False
         if not company or not company_partner.id:

@@ -30,6 +30,7 @@ class purchase_order(models.Model):
             :param company : the company of the created PO
             :rtype company : res.company record
         """
+        self = self.with_context(force_company=company.id)
         SaleOrder = self.env['sale.order']
         company_partner = self.company_id.partner_id
 
@@ -75,9 +76,13 @@ class purchase_order(models.Model):
             :rtype direct_delivery_address : res.partner record
         """
         partner_addr = partner.sudo().address_get(['default', 'invoice', 'delivery', 'contact'])
+        warehouse = company.warehouse_id and company.warehouse_id.company_id.id == company.id and company.warehouse_id or False
+        if not warehouse:
+            raise Warning(_('Configure correct warehouse for company(%s) from Menu: Settings/companies/companies' % (company.name)))
         return {
             'name': self.env['ir.sequence'].sudo().next_by_code('sale.order') or '/',
             'company_id': company.id,
+            'warehouse_id': warehouse.id,
             'client_order_ref': name,
             'partner_id': partner.id,
             'pricelist_id': partner.property_product_pricelist.id,
