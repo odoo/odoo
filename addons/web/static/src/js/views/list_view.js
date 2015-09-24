@@ -1633,9 +1633,9 @@ ListView.Groups = Class.extend( /** @lends instance.web.ListView.Groups# */{
                     return;
                 }
 
-                list.records.remove(to_move);
+                list.records.remove(to_move, {silent: true});
                 var to = target_id ? list.records.indexOf(target) + 1 : 0;
-                list.records.add(to_move, { at: to });
+                list.records.add(to_move, { at: to, silent: true });
 
                 // resequencing time!
                 var record, index = to,
