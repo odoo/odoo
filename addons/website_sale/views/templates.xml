@@ -130,6 +130,21 @@
 </template>
 
 <!-- /shop product listing -->
+<template id="pricelist_list" name="Pricelists Dropdown">
+  <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)"/>
+  <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)>1 and 'dropdown' or 'hidden'} btn-group">
+    <t t-set="curr_pl" t-value="website.get_current_pricelist()"/>
+    <a href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
+      <t t-esc="curr_pl and curr_pl.name or ' - '" />
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" role="menu">
+      <li t-foreach="website_sale_pricelists" t-as="pl" >
+        <a t-att-href="'/shop/change_pricelist/%s' % pl.id"><span class='switcher_pricelist' t-att-data-pl_id="pl.id" t-esc="pl.name"/></a>
+      </li>
+    </ul>
+  </div>
+</template>
 
 <template id="products" name="Products">
   <t t-call="website.layout">
@@ -139,7 +154,8 @@
         <div class="container oe_website_sale">
           <div class="products_pager">
             <div class="row" style="width: 100%;">
-              <t t-call="website_sale.search"><t t-set="search_class">pagination form-inline col-md-3</t></t>
+              <t t-call="website_sale.search"><t t-set="search_class">pagination form-inline</t></t>
+              <t t-call="website_sale.pricelist_list"/>
               <t t-call="website.pager"/>
             </div>
           </div>
@@ -327,15 +343,18 @@
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
             </div>
-            <div class="col-sm-3">
-              <t t-call="website_sale.search"><t t-set="search_class">pull-right</t></t>
+            <div class="col-sm-3 mb8">
+              <t t-call="website_sale.search"/>
             </div>
-            <div id="website_published_button" class="col-sm-4" groups="base.group_sale_manager">
-                <t t-call="website.publish_management">
+            <div id="website_published_button" class="col-sm-3">
+                <t t-call="website.publish_management" groups="base.group_sale_manager">
                   <t t-set="object" t-value="product"/>
                   <t t-set="publish_edit" t-value="True"/>
                   <t t-set="action" t-value="'product.product_template_action'"/>
                 </t>
+            </div>
+            <div class="col-sm-2 text-right">
+              <t t-call="website_sale.pricelist_list"/>
             </div>
           </div>
           <div class="row">
@@ -1454,24 +1473,6 @@
             <span t-esc="ol.product_id.name"/>
         </a>
     </xpath>
-</template>
-
-<template id="pricelist_selector" inherit_id="website.layout" name="Website Sale - Switcher Pricelist">
-  <xpath expr="//header//ul[@id='top_menu']/li" position="before">
-      <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)"/>
-      <li t-att-class="website_sale_pricelists and len(website_sale_pricelists)>1 and 'dropdown' or 'hidden'">
-        <t t-set="curr_pl" t-value="website.get_current_pricelist()"/>
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <t t-esc="curr_pl and curr_pl.name or ' - '" />
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu" role="menu">
-          <li t-foreach="website_sale_pricelists" t-as="pl" >
-            <a t-att-href="'/shop/change_pricelist/%s' % pl.id"><span class='switcher_pricelist' t-att-data-pl_id="pl.id" t-esc="pl.name"/></a>
-          </li>
-        </ul>
-      </li>
-  </xpath>
 </template>
 
 </data>
