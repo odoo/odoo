@@ -9,7 +9,7 @@
         </div>
     </xpath>
     <xpath expr="//div[@class='page']/p[@id='fiscal_position_remark']" position="after">
-        <div t-if="doc.options and doc.state in ['draft', 'sent']">
+        <div t-if="doc.options and doc.state in ['draft', 'sent']" style="page-break-before:always;">
             <h2>
                 <span>Suggested Products</span>
             </h2>
