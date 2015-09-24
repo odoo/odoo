@@ -663,16 +663,12 @@ class account_bank_statement_line(osv.osv):
             lines = mv_line_pool.browse(cr, uid, line_ids, context=context)
             make_one_more_loop = False
             for line in lines:
-                if line.reconcile_partial_id and \
-                        (line.reconcile_partial_id.id in reconcile_partial_ids or \
-                        abs(line.debit - line.credit) < abs(line.amount_residual)):
-                    #if we filtered a line because it is partially reconciled with an already selected line, we must do one more loop
-                    #in order to get the right number of items in the pager
+                if line.reconcile_partial_id and abs(line.debit - line.credit) < abs(line.amount_residual):
+                    # if we filtered a line because it is partially reconciled with an already selected line, we must do one more loop
+                    # in order to get the right number of items in the pager
                     make_one_more_loop = True
                     continue
                 filtered_lines.append(line)
-                if line.reconcile_partial_id:
-                    reconcile_partial_ids.append(line.reconcile_partial_id.id)
 
             if not limit or not make_one_more_loop or len(filtered_lines) >= limit:
                 break

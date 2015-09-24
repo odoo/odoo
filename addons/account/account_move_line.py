@@ -146,7 +146,10 @@ class account_move_line(osv.osv):
             line_total_in_company_currency =  move_line.debit - move_line.credit
             context_unreconciled = context.copy()
             if move_line.reconcile_partial_id:
+                partial_reconciliation_invoices = set()
                 for payment_line in move_line.reconcile_partial_id.line_partial_ids:
+                    if payment_line.invoice and move_line.invoice.type == payment_line.invoice.type:
+                        partial_reconciliation_invoices.update([payment_line.invoice.id])
                     if payment_line.id == move_line.id:
                         continue
                     if payment_line.currency_id and move_line.currency_id and payment_line.currency_id.id == move_line.currency_id.id:
@@ -159,6 +162,9 @@ class account_move_line(osv.osv):
                         else:
                             move_line_total += (payment_line.debit - payment_line.credit)
                     line_total_in_company_currency += (payment_line.debit - payment_line.credit)
+                if partial_reconciliation_invoices:
+                    move_line_total = move_line_total / len(partial_reconciliation_invoices)
+                    line_total_in_company_currency = line_total_in_company_currency / len(partial_reconciliation_invoices)
 
             result = move_line_total
             res[move_line.id]['amount_residual_currency'] =  sign * (move_line.currency_id and self.pool.get('res.currency').round(cr, uid, move_line.currency_id, result) or result)
