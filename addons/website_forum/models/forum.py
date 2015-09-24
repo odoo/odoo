@@ -51,8 +51,8 @@ class Forum(models.Model):
     description = fields.Text(
         'Description',
         translate=True,
-        default='This community is for professionals and enthusiasts of our products and services.'
-                'Share and discuss the best content and new marketing ideas,'
+        default='This community is for professionals and enthusiasts of our products and services. '
+                'Share and discuss the best content and new marketing ideas, '
                 'build your professional profile and become a better marketer together.')
     welcome_message = fields.Html(
         'Welcome Message',
@@ -85,12 +85,12 @@ class Forum(models.Model):
     allow_discussion = fields.Boolean('Discussions', default=True)
     allow_link = fields.Boolean('Links', help="When clicking on the post, it redirects to an external link", default=True)
     allow_bump = fields.Boolean('Allow Bump', default=True,
-                                help='Posts without answers older than 10 days will display a popup'
-                                     'when displayed on the website to propose users to share them '
-                                     'on social networks, bumping the question at top of the thread.')
+                                help='Check this box to display a popup for posts older than 10 days '
+                                     'without any given answer. The popup will offer to share it on social '
+                                     'networks. When shared, a question is bumped at the top of the forum.')
     allow_share = fields.Boolean('Sharing Options', default=True,
-                                 help='After posting the user will be proposed to share its question'
-                                      'or answer on social networks, enabling social network propagation'
+                                 help='After posting the user will be proposed to share its question '
+                                      'or answer on social networks, enabling social network propagation '
                                       'of the forum content.')
     count_posts_waiting_validation = fields.Integer(string="Number of posts waiting for validation", compute='_compute_count_posts_waiting_validation')
     count_flagged_posts = fields.Integer(string='Number of flagged posts', compute='_compute_count_flagged_posts')
@@ -219,8 +219,8 @@ class Post(models.Model):
     create_uid = fields.Many2one('res.users', string='Created by', select=True, readonly=True)
     write_date = fields.Datetime('Update on', select=True, readonly=True)
     bump_date = fields.Datetime('Bumped on', readonly=True,
-                                help="Technical field allowing to bump a question. Writing on this field will trigger"
-                                     "a write on write_date and therefore bump the post. Directly writing on write_date"
+                                help="Technical field allowing to bump a question. Writing on this field will trigger "
+                                     "a write on write_date and therefore bump the post. Directly writing on write_date "
                                      "is currently not supported and this field is a workaround.")
     write_uid = fields.Many2one('res.users', string='Updated by', select=True, readonly=True)
     relevancy = fields.Float('Relevance', compute="_compute_relevancy", store=True)
