@@ -3,6 +3,7 @@
 
 import sale
 import sale_analytic
+import sale_layout
 import sales_team
 import res_partner
 import wizard

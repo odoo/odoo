@@ -32,6 +32,8 @@ You can choose flexible invoicing methods:
 * *On Delivery Order*: Invoices are generated from picking (delivery)
 * *Before Delivery*: A Draft invoice is created and must be paid before delivery
 
+With this module you can personnalize the sale order and invoice report with
+separators, page-breaks or subtotals.
 
 The Dashboard for the Sales Manager will include
 ------------------------------------------------
@@ -39,7 +41,7 @@ The Dashboard for the Sales Manager will include
 * Monthly Turnover (Graph)
     """,
     'website': 'https://www.odoo.com/page/crm',
-    'depends': ['sales_team','account', 'procurement', 'report'],
+    'depends': ['sales_team', 'account', 'procurement', 'report'],
     'data': [
         'wizard/sale_make_invoice_advance.xml',
         'security/sale_security.xml',
@@ -47,6 +49,7 @@ The Dashboard for the Sales Manager will include
         'sale_sequence.xml',
         'sale_report.xml',
         'sale_data.xml',
+        'sale_layout_category_data.xml',
         'sale_view.xml',
         'sales_team_view.xml',
         'res_partner_view.xml',
@@ -55,6 +58,9 @@ The Dashboard for the Sales Manager will include
         'res_config_view.xml',
         'views/report_saleorder.xml',
         'views/sale.xml',
+        'views/report_invoice_layouted.xml',
+        'views/sale_layout_category_view.xml',
+        'views/sale_layout_template.xml',
         'sales_team_dashboard.xml',
         'sale_tip_data.xml',
     ],

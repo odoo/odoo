@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import groupby
 from datetime import datetime, timedelta
 from openerp import SUPERUSER_ID
 from openerp import api, fields, models, _
@@ -420,11 +421,29 @@ class SaleOrder(models.Model):
             })
             order.project_id = analytic
 
+    @api.multi
+    def layout_categories(self):
+        """
+        Returns this order lines ordered by sale_layout_category sequence. Used to render the report.
+        """
+        self.ensure_one()
+        grouped_lines = []
+        for category, lines in groupby(self.order_line, lambda l: l.layout_category_id):
+            grouped_lines.append({
+                'name': category and category.name or 'Uncategorized',
+                'subtotal': category and category.subtotal,
+                'separator': category and category.separator,
+                'pagebreak': category and category.pagebreak,
+                'lines': list(lines)
+            })
+
+        return grouped_lines
+
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
-    _order = 'order_id desc, sequence, id'
+    _order = 'order_id, layout_category_id, sequence, id'
 
     @api.depends('state', 'product_uom_qty', 'qty_delivered', 'qty_to_invoice', 'qty_invoiced')
     def _compute_invoice_status(self):
@@ -656,6 +675,10 @@ class SaleOrderLine(models.Model):
         help="Number of days between the order confirmation and the shipping of the products to the customer", oldname="delay")
     procurement_ids = fields.One2many('procurement.order', 'sale_line_id', string='Procurements')
 
+    layout_category_id = fields.Many2one('sale.layout_category', string='Section')
+    layout_category_sequence = fields.Integer(related='layout_category_id.sequence', string='Layout Sequence', store=True)
+    #  Store is intentionally set in order to keep the "historic" order.
+
     @api.multi
     def _prepare_invoice_line(self, qty):
         """
@@ -683,6 +706,8 @@ class SaleOrderLine(models.Model):
             'quantity': qty,
             'discount': self.discount,
             'uom_id': self.product_uom.id,
+            'product_id': self.product_id.id or False,
+            'layout_category_id': self.layout_category_id and self.layout_category_id.id or False,
             'product_id': self.product_id.id or False,
             'invoice_line_tax_ids': [(6, 0, self.tax_id.ids)],
             'account_analytic_id': self.order_id.project_id.id,
@@ -812,10 +837,31 @@ class AccountInvoice(models.Model):
             order.message_post(body=_("Invoice %s paid") % (name))
         return res
 
+    @api.multi
+    def layout_categories(self):
+        """
+        Returns this sale order lines ordered by sale_layout_category sequence. Used to render the report.
+        """
+        self.ensure_one()
+        grouped_lines = []
+        for category, lines in groupby(self.invoice_line_ids, lambda l: l.layout_category_id):
+            grouped_lines.append({
+                'name': category and category.name or 'Uncategorized',
+                'subtotal': category and category.subtotal,
+                'separator': category and category.separator,
+                'pagebreak': category and category.pagebreak,
+                'lines': list(lines)
+            })
+
+        return grouped_lines
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
+    _order = 'invoice_id, layout_category_id, sequence, id'
+
     sale_line_ids = fields.Many2many('sale.order.line', 'sale_order_line_invoice_rel', 'invoice_line_id', 'order_line_id', string='Sale Order Lines', readonly=True, copy=False)
+    layout_category_id = fields.Many2one('sale.layout_category', string='Section')
+    layout_category_sequence = fields.Integer(related='layout_category_id.sequence', string='Layout Sequence', store=True, default=0)
 
 
 class ProcurementOrder(models.Model):
