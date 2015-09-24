@@ -26,47 +26,96 @@
                   </tr>
               </thead>
               <tbody>
-                  <tr t-foreach="quotation.order_line" t-as="line">
-                      <td>
-                          <span t-field="line.name"/>
-                      </td>
-                      <td>
-                          <div id="quote_qty">
-                              <span t-field="line.product_uom_qty"/>
-                              <span t-field="line.product_uom"/>
-                          </div>
-                      </td>
-                      <td>
-                          <div t-foreach="line.tax_id" t-as="tax">
-                              <t t-esc="tax.name"/>
-                          </div>
-                      </td>
-                      <td>
-                          <strong t-if="line.discount" class="text-info">
-                              <t t-esc="((line.discount % 1) and '%s' or '%d') % line.discount"/>% discount
-                          </strong>
-                      </td>
-                      <td>
-                            <div t-field="line.price_unit"
-                                t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
-                                t-att-style="line.discount and 'text-decoration: line-through' or ''"
-                                t-att-class="(line.discount and 'text-danger' or '') + 'text-right'"/>
-                            <!-- TODO: apply monetary widget formating -->
-                            <div t-if="line.discount">
-                                <t t-esc="'%.2f' % ((1-line.discount / 100.0) * line.price_unit)"/>
-                            </div>
-                      </td>
-                      <td>
-                          <div class="text-right"
-                              t-field="line.price_subtotal"
-                              t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
-                      </td>
-                      <td class="text-center">
-                          <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json hidden-print" t-if="line.option_line_id">
-                              <span class="fa fa-trash-o"></span>
-                          </a>
-                      </td>
-                  </tr>
+                  <t t-foreach="quotation.layout_categories()" t-as="layout_category">
+
+                      <t t-if="layout_category_size > 1" groups="sale.group_sale_layout">
+                          <tr class="active">
+                              <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                  <t t-esc="layout_category['name']"/>
+                              </td>
+                          </tr>
+                      </t>
+
+                      <!-- Lines associated -->
+                      <t t-foreach="layout_category['lines']" t-as="line">
+                          <tr>
+                            <td>
+                                <span t-field="line.name"/>
+                            </td>
+                            <td>
+                                <div id="quote_qty">
+                                    <span t-field="line.product_uom_qty"/>
+                                    <span t-field="line.product_uom"/>
+                                </div>
+                            </td>
+                            <td>
+                                <div t-foreach="line.tax_id" t-as="tax">
+                                    <t t-esc="tax.name"/>
+                                </div>
+                            </td>
+                            <td>
+                                <strong t-if="line.discount" class="text-info">
+                                    <t t-esc="((line.discount % 1) and '%s' or '%d') % line.discount"/>% discount
+                                </strong>
+                            </td>
+                            <td>
+                                  <div t-field="line.price_unit"
+                                      t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                                      t-att-style="line.discount and 'text-decoration: line-through' or ''"
+                                      t-att-class="(line.discount and 'text-danger' or '') + 'text-right'"/>
+                                  <!-- TODO: apply monetary widget formating -->
+                                  <div t-if="line.discount">
+                                      <t t-esc="'%.2f' % ((1-line.discount / 100.0) * line.price_unit)"/>
+                                  </div>
+                            </td>
+                            <td>
+                                <div class="text-right"
+                                    t-field="line.price_subtotal"
+                                    t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                            </td>
+                            <td class="text-center">
+                                <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json hidden-print" t-if="line.option_line_id">
+                                    <span class="fa fa-trash-o"></span>
+                                </a>
+                            </td>
+                        </tr>
+                      </t>
+
+                      <t t-if="layout_category_size > 1 and layout_category['subtotal']" groups="sale.group_sale_layout">
+                          <tr>
+                              <td></td><td></td><td></td><td></td>
+                              <td class="text-right"><strong>Subtotal:</strong></td>
+                              <td class="text-right">
+                                  <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
+                                  <strong data-id="total_amount" t-esc="subtotal" t-esc-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
+                              </td>
+                          </tr>
+                      </t>
+
+                      <t t-if="layout_category_size > 1 and layout_category['pagebreak']" groups="sale.group_sale_layout">
+                          <![CDATA[
+                                  </tbody>
+                              </table>
+                              <p style="page-break-before:always;"> </p>
+                              <table class="table table-condensed">
+                          ]]>
+                          <thead>
+                              <tr>
+                                  <th>Products</th>
+                                  <th>Quantity</th>
+                                  <th>Taxes</th>
+                                  <th><span t-if="True in [line.discount > 0 for line in quotation.order_line]">Discount</span></th>
+                                  <th class="text-right">Unit Price</th>
+                                  <th class="text-right">Tax Excluded Price</th>
+                                  <th></th>
+                              </tr>
+                          </thead>
+                          <![CDATA[
+                              <tbody>
+                          ]]>
+                      </t>
+                  </t>
+
                   <tr>
                       <td></td><td></td><td></td><td></td>
                       <td class="text-right"><strong>Subtotal:</strong></td>
@@ -74,6 +123,7 @@
                           <strong data-id="total_amount" t-field="quotation.amount_untaxed" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
                       </td>
                   </tr>
+
                   <tr>
                       <td></td><td></td><td></td><td></td>
                       <td class="text-right">Taxes:</td>

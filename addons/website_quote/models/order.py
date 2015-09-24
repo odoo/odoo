@@ -36,6 +36,7 @@ class sale_quote_template(osv.osv):
             'url': '/quote/template/%d' % quote_id[0]
         }
 
+
 class sale_quote_line(osv.osv):
     _name = "sale.quote.line"
     _description = "Quotation Template Lines"
@@ -44,6 +45,7 @@ class sale_quote_line(osv.osv):
         'quote_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', required=True, ondelete='cascade', select=True),
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
+        'layout_category_id': fields.many2one('sale.layout_category', string='Section'),
         'website_description': fields.related('product_id', 'product_tmpl_id', 'quote_description', string='Line Description', type='html', translate=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
@@ -217,6 +219,7 @@ class sale_order(osv.osv):
                 'discount': line.discount,
                 'product_uom_qty': line.product_uom_qty,
                 'product_id': line.product_id.id,
+                'layout_category_id': line.layout_category_id,
                 'product_uom': line.product_uom_id.id,
                 'website_description': line.website_description,
                 'state': 'draft',
@@ -232,6 +235,7 @@ class sale_order(osv.osv):
                 price = option.price_unit
             options.append((0, 0, {
                 'product_id': option.product_id.id,
+                'layout_category_id': option.layout_category_id,
                 'name': option.name,
                 'quantity': option.quantity,
                 'uom_id': option.uom_id.id,
@@ -309,6 +313,7 @@ class sale_quote_option(osv.osv):
         'template_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', ondelete='cascade', select=True, required=True),
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
+        'layout_category_id': fields.many2one('sale.layout_category', string='Section'),
         'website_description': fields.html('Option Description', translate=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
@@ -356,6 +361,7 @@ class sale_order_option(osv.osv):
         'line_id': fields.many2one('sale.order.line', on_delete="set null"),
         'name': fields.text('Description', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)]),
+        'layout_category_id': fields.many2one('sale.layout_category', string='Section'),
         'website_description': fields.html('Line Description'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
@@ -417,6 +423,37 @@ class sale_order_option(osv.osv):
             self.price_unit = pricelist.with_context(uom=self.uom_id.id).price_get(product.id, self.quantity, partner_id)[pricelist.id]
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return {'domain': domain}
+
+    @api.multi
+    def button_add_to_order(self):
+        order = self.order_id
+        if order.state not in ['draft', 'sent']:
+            return False
+        option = self
+
+        if option.product_id in [line.product_id for line in order.order_line]:
+            line = [line for line in order.order_line if line.product_id == option.product_id][0]
+            vals = {
+                'product_uom_qty': line.product_uom_qty + 1,
+            }
+            line.write(vals)
+        else:
+            vals = {
+                'price_unit': option.price_unit,
+                'website_description': option.website_description,
+                'name': option.name,
+                'order_id': order.id,
+                'product_id': option.product_id.id,
+                'layout_category_id': option.layout_category_id.id,
+                'product_uom_qty': option.quantity,
+                'product_uom': option.uom_id.id,
+                'discount': option.discount,
+            }
+            line = self.env['sale.order.line'].create(vals)
+
+        self.env['sale.order.line']._compute_tax_id()
+        self.env['sale.order.option'].write({'line_id': line})
+        return {'type':'ir.actions.client', 'tag':'reload'}
 
 
 class product_template(osv.Model):
