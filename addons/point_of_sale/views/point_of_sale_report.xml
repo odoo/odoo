@@ -66,5 +66,223 @@
             name="point_of_sale.report_sessionsummary"
             file="point_of_sale.report_sessionsummary"
          />
+
+         <!-- report -->
+
+        <record model="ir.ui.view" id="view_pos_trans_user_form">
+            <field name="name">report.trans.pos.user.form</field>
+            <field name="model">report.transaction.pos</field>
+            <field name="arch" type="xml">
+                <form string="POS ">
+                    <group col="4">
+                        <field name="user_id"/>
+                        <field name="journal_id"/>
+                        <field name="jl_id"/>
+                        <field name="date_create" widget="date"/>
+                        <field name="no_trans"/>
+                        <field name="amount"/>
+                        <field name="invoice_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_trans_pos_user_tree">
+            <field name="name">Sales by user</field>
+            <field name="model">report.transaction.pos</field>
+            <field name="arch" type="xml">
+                <tree string="POS">
+                    <field name="date_create" widget="date" />
+                    <field name="user_id"/>
+                    <field name="journal_id"/>
+                    <field name="jl_id"/>
+                    <field name="no_trans" sum="Total Transaction"/>
+                    <field name="amount" sum="Amount total"/>
+                    <field name="product_nb" />
+                    <field name="invoice_id"/>
+                    <field name="disc"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_report_transaction_pos_calendar">
+            <field name="name">report.transaction.pos.calendar</field>
+            <field name="model">report.transaction.pos</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="user_id" date_start="date_create" string="POS Report">
+                    <field name="journal_id"/>
+                    <field name="amount"/>
+                </calendar>
+            </field>
+         </record>
+
+         <record model="ir.ui.view" id="view_report_transaction_pos_graph">
+            <field name="name">report.transaction.pos.graph</field>
+            <field name="model">report.transaction.pos</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <graph  type="bar" string="POS Report">
+                    <field name="user_id" />
+                    <field name="amount"/>
+                    <field group="True" name="journal_id"/>
+                </graph>
+            </field>
+         </record>
+
+        <record model="ir.actions.act_window" id="action_trans_pos_tree_today">
+            <field name="name">Sales by day</field>
+            <field name="res_model">report.transaction.pos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,calendar,form,graph</field>
+            <field name="domain">[('date_create','=',time.strftime('%Y-%m-%d'))]</field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_trans_pos_tree_month">
+            <field name="name">Sales by month</field>
+            <field name="res_model">report.transaction.pos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,calendar,form,graph</field>
+            <field name="domain">[('date_create','like',time.strftime('%Y-%m'))]</field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_trans_pos_tree">
+            <field name="name">Sales by user</field>
+            <field name="res_model">report.transaction.pos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,calendar,form,graph</field>
+            <field name="view_id" ref="view_trans_pos_user_tree"/>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_form">
+            <field name="name">report.sales.by.user.pos.form</field>
+            <field name="model">report.sales.by.user.pos</field>
+            <field name="arch" type="xml">
+                <form string="POS ">
+                    <group col="4">
+                        <field name="date_order" widget="date"/>
+                        <field name="qty"/>
+                        <field name="amount"/>
+                        <field name="user_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_tree">
+            <field name="name">report.sales.by.user.pos.tree</field>
+            <field name="model">report.sales.by.user.pos</field>
+            <field name="arch" type="xml">
+                <tree string="POS">
+                    <field name="date_order" widget="date"/>
+                    <field name="qty"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_calendar">
+            <field name="name">report.sales.by.user.pos.calendar</field>
+            <field name="model">report.sales.by.user.pos</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="user_id" date_start="date_order" string="POS Report">
+                    <field name="qty"/>
+                    <field name="amount" />
+                </calendar>
+            </field>
+         </record>
+
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_graph">
+            <field name="name">report.sales.by.user.pos.graph</field>
+            <field name="model">report.sales.by.user.pos</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <graph  type="bar" string="Sales by User">
+                    <field name="user_id" />
+                    <field name="amount"/>
+                </graph>
+            </field>
+         </record>
+
+         <record model="ir.actions.act_window" id="action_report_sales_by_user_pos_today">
+            <field name="name">Sales by User</field>
+            <field name="res_model">report.sales.by.user.pos</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,calendar,form,graph</field>
+            <field name="domain">[('date_order','=',time.strftime('%Y-%m-%d'))]</field>
+         </record>
+
+
+        <!-- Sales of user by month -->
+
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_form">
+            <field name="name">report.sales.by.user.pos.month.form</field>
+            <field name="model">report.sales.by.user.pos.month</field>
+            <field name="arch" type="xml">
+                <form string="POS ">
+                    <group col="4">
+                        <field name="date_order" widget="date"/>
+                        <field name="qty"/>
+                        <field name="amount"/>
+                        <field name="user_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_tree">
+            <field name="name">report.sales.by.user.pos.month.tree</field>
+            <field name="model">report.sales.by.user.pos.month</field>
+            <field name="arch" type="xml">
+                <tree string="POS">
+                    <field name="date_order" widget="date"/>
+                    <field name="qty"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_calendar">
+            <field name="name">report.sales.by.user.pos.month.calendar</field>
+            <field name="model">report.sales.by.user.pos.month</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="user_id" date_start="date_order" string="POS Report">
+                    <field name="qty"/>
+                    <field name="amount" />
+                </calendar>
+            </field>
+         </record>
+
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_graph">
+            <field name="name">report.sales.by.user.pos.month.graph</field>
+            <field name="model">report.sales.by.user.pos.month</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <graph  type="bar" string="Sales by User">
+                    <field name="user_id" />
+                    <field name="amount"/>
+                </graph>
+            </field>
+         </record>
+
+
+         <record model="ir.actions.act_window" id="action_report_sales_by_user_pos_month">
+            <field name="name">Sales by User Monthly</field>
+            <field name="res_model">report.sales.by.user.pos.month</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,calendar,form,graph</field>
+            <field name="domain">[('date_order','like',time.strftime('%Y-%m'))]</field>
+        </record>
+
     </data>
 </openerp>
