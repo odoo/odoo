@@ -1098,14 +1098,19 @@ class Monetary(Field):
     type = 'monetary'
     _slots = {
         'currency_field': None,
+        'group_operator': None,         # operator for aggregating values
     }
 
     def __init__(self, string=None, currency_field=None, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
 
-    _column_currency_field = property(attrgetter('currency_field'))
     _related_currency_field = property(attrgetter('currency_field'))
+    _related_group_operator = property(attrgetter('group_operator'))
+
     _description_currency_field = property(attrgetter('currency_field'))
+
+    _column_currency_field = property(attrgetter('currency_field'))
+    _column_group_operator = property(attrgetter('group_operator'))
 
     def _setup_regular_base(self, model):
         super(Monetary, self)._setup_regular_base(model)

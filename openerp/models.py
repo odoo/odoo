@@ -2069,7 +2069,7 @@ class BaseModel(object):
             if f not in ('id', 'sequence')
             if f not in groupby_fields
             if f in self._fields
-            if self._fields[f].type in ('integer', 'float')
+            if self._fields[f].type in ('integer', 'float', 'monetary')
             if getattr(self._fields[f].base_field.column, '_classic_write', False)
         ]
 
