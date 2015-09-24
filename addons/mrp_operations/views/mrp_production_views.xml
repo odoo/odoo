@@ -268,24 +268,6 @@
         <field name="filter" eval="True"/>
     </record>
 
-    <record model="ir.actions.act_window" id="mrp_production_operation_action">
-        <field name="name">Operations</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp_operations.operation</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,calendar,form</field>
-        <field name="view_id" ref="mrp_production_operation_tree_view"/>
-    </record>
-
-    <record model="ir.actions.act_window" id="mrp_production_code_action">
-        <field name="name">Operation Codes</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp_operations.operation.code</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="mrp_production_code_tree_view"/>
-    </record>
-
     <record model="ir.values" id="mrp_production_wc_action_open">
         <field name="key2" eval="'tree_but_open'"/>
         <field name="model" eval="'mrp.production.workcenter.line'"/>
