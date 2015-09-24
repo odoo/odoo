@@ -843,7 +843,7 @@ var BufferedDataSet = DataSetStatic.extend({
 
         var return_records = function() {
             var records = _.map(ids, function(id) {
-                return self.get_cache(id).values;
+                return _.clone(self.get_cache(id).values);
             });
             if (self.debug_mode) {
                 if (_.include(records, undefined)) {
