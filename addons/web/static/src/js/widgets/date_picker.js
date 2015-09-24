@@ -8,67 +8,66 @@ var Widget = require('web.Widget');
 
 var _t = core._t;
 
-var DateTimeWidget = Widget.extend({
+var DateWidget = Widget.extend({
     template: "web.datepicker",
-    type_of_date: "datetime",
+    type_of_date: "date",
     events: {
-        'dp.change .oe_datepicker_main': 'change_datetime',
-        'dp.show .oe_datepicker_main': 'set_datetime_default',
-        'change .oe_datepicker_master': 'change_datetime',
+        'dp.change': 'change_datetime',
+        'dp.show': 'set_datetime_default',
+        'change .o_datepicker_input': 'change_datetime',
     },
-    init: function(parent) {
-        this._super(parent);
-        this.name = parent.name;
-    },
-    start: function() {
+    init: function(parent, options) {
+        this._super.apply(this, arguments);
+
         var l10n = _t.database.parameters;
-        var options = {
-            pickTime: true,
-            useSeconds: true,
+
+        this.name = parent.name;
+        this.options = _.defaults(options || {}, {
+            pickTime: this.type_of_date === 'datetime',
+            useSeconds: this.type_of_date === 'datetime',
             startDate: moment({ y: 1900 }),
             endDate: moment().add(200, "y"),
             calendarWeeks: true,
-            icons : {
+            icons: {
                 time: 'fa fa-clock-o',
                 date: 'fa fa-calendar',
                 up: 'fa fa-chevron-up',
                 down: 'fa fa-chevron-down'
-               },
+            },
             language : moment.locale(),
-            format : time.strftime_to_moment_format(l10n.date_format +' '+ l10n.time_format),
-        };
-        this.$input = this.$el.find('input.oe_datepicker_master');
-        if (this.type_of_date === 'date') {
-            options.pickTime = false;
-            options.useSeconds = false;
-            options.format = time.strftime_to_moment_format(l10n.date_format);
-        }
-        this.picker = this.$('.oe_datepicker_main').datetimepicker(options);
-        this.set_readonly(false);
-        this.set({'value': false});
+            format : time.strftime_to_moment_format((this.type_of_date === 'datetime')? (l10n.date_format + ' ' + l10n.time_format) : l10n.date_format),
+        });
     },
-    set_value: function(value_) {
-        this.set({'value': value_});
-        this.$input.val(value_ ? this.format_client(value_) : '');
+    start: function() {
+        this.$input = this.$('input.o_datepicker_input');
+        this.$el.datetimepicker(this.options);
+        this.picker = this.$el.data('DateTimePicker');
+        this.set_readonly(false);
+        this.set_value(false);
+    },
+    set_value: function(value) {
+        this.set({'value': value});
+        this.$input.val((value)? this.format_client(value) : '');
+        this.picker.setValue(value);
     },
     get_value: function() {
         return this.get('value');
     },
-    set_value_from_ui_: function() {
-        var value_ = this.$input.val() || false;
-        this.set_value(this.parse_client(value_));
+    set_value_from_ui: function() {
+        var value = this.$input.val() || false;
+        this.set_value(this.parse_client(value));
     },
     set_readonly: function(readonly) {
         this.readonly = readonly;
         this.$input.prop('readonly', this.readonly);
     },
-    is_valid_: function() {
-        var value_ = this.$input.val();
-        if (value_ === "") {
+    is_valid: function() {
+        var value = this.$input.val();
+        if(value === "") {
             return true;
         } else {
             try {
-                this.parse_client(value_);
+                this.parse_client(value);
                 return true;
             } catch(e) {
                 return false;
@@ -81,40 +80,43 @@ var DateTimeWidget = Widget.extend({
     format_client: function(v) {
         return formats.format_value(v, {"widget": this.type_of_date});
     },
-    set_datetime_default: function(){
+    set_datetime_default: function() {
         //when opening datetimepicker the date and time by default should be the one from
         //the input field if any or the current day otherwise
-        if (_.contains(['datetime', 'date'], this.type_of_date)) {
-            var value = moment().second(0);
-            if (this.$input.val().length !== 0 && this.is_valid_()){
-                value = this.$input.val();
-            }
-            var dt = this.$('.oe_datepicker_main').data('DateTimePicker');
-            // temporarily set pickTime to true to bypass datetimepicker hiding on setValue
-            // see https://github.com/Eonasdan/bootstrap-datetimepicker/issues/603
-            var saved_picktime = dt.options.pickTime;
-            dt.options.pickTime = true;
-            dt.setValue(value);
-            dt.options.pickTime = saved_picktime;
+        var value = moment().second(0);
+        if(this.$input.val().length !== 0 && this.is_valid()) {
+            value = this.$input.val();
         }
+
+        // temporarily set pickTime to true to bypass datetimepicker hiding on setValue
+        // see https://github.com/Eonasdan/bootstrap-datetimepicker/issues/603
+        var saved_picktime = this.picker.options.pickTime;
+        this.picker.options.pickTime = true;
+        this.picker.setValue(value);
+        this.picker.options.pickTime = saved_picktime;
     },
     change_datetime: function(e) {
-        if ((e.type !== "keypress" || e.which === 13) && this.is_valid_()) {
-            this.set_value_from_ui_();
+        if(this.is_valid()) {
+            this.set_value_from_ui();
             this.trigger("datetime_changed");
         }
     },
-    commit_value: function () {
+    commit_value: function() {
         this.change_datetime();
+    },
+    destroy: function() {
+        this.picker.destroy();
+        this._super.apply(this, arguments);
     },
 });
 
-var DateWidget = DateTimeWidget.extend({
-    type_of_date: "date"
+var DateTimeWidget = DateWidget.extend({
+    type_of_date: "datetime"
 });
 
 return {
-    DateTimeWidget: DateTimeWidget,
     DateWidget: DateWidget,
+    DateTimeWidget: DateTimeWidget,
 };
+
 });

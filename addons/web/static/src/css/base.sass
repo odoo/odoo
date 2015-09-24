@@ -1058,14 +1058,14 @@ $sheet-padding: 16px
             > select, > input
                 width: -webkit-calc(100% - 20px)
                 width: calc(100% - 20px)
-            .oe_datepicker_main
+            .o_datepicker
                 width: -webkit-calc(100% - 20px)
                 width: calc(100% - 20px)
-            .oe_datepicker_master
-                width: 100%
-            .fa-calendar
-                margin-left: -21px
-                cursor: pointer
+                .o_datepicker_input
+                    width: 100%
+                .o_datepicker_button
+                    margin-left: -21px
+                    cursor: pointer
         span.remove-filter
             position: absolute
             top: 6px
@@ -1900,9 +1900,9 @@ $sheet-padding: 16px
                     width: 100% !important
                     text-align: right
             &.oe_form_field_datetime,&.oe_form_field_date
-                input.oe_datepicker_master
+                input.o_datepicker_input
                     width: 100% !important
-                .oe_datepicker_main
+                .o_datepicker
                     width: -webkit-calc(100% - 20px)
                     width: calc(100% - 20px)
             &.oe_form_field_reference

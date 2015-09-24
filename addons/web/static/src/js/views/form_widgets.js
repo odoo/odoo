@@ -500,7 +500,7 @@ var FieldDatetime = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     },
     is_syntax_valid: function() {
         if (!this.get("effective_readonly") && this.datewidget) {
-            return this.datewidget.is_valid_();
+            return this.datewidget.is_valid();
         }
         return true;
     },
