@@ -227,7 +227,7 @@ class website_sale(http.Controller):
 
         product_count = product_obj.search_count(cr, uid, domain, context=context)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
-        product_ids = product_obj.search(cr, uid, domain, limit=ppg, offset=pager['offset'], order='website_published desc, website_sequence asc', context=context)
+        product_ids = product_obj.search(cr, uid, domain, limit=ppg, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
         products = product_obj.browse(cr, uid, product_ids, context=context)
 
         attributes_obj = request.registry['product.attribute']
@@ -960,6 +960,7 @@ class website_sale(http.Controller):
 
         remove = []
         active = False
+        style_id = int(style_id)
         for style in product.website_style_ids:
             if style.id == style_id:
                 remove.append(style.id)
