@@ -1642,23 +1642,25 @@ ListView.Groups = Class.extend( /** @lends instance.web.ListView.Groups# */{
                     // if drag to 1st row (to = 0), start sequencing from 0
                     // (exclusive lower bound)
                     seq = to ? list.records.at(to - 1).get(seqname) : 0;
+                var defs = [];
                 var fct = function (dataset, id, seq) {
-                    $.async_when().done(function () {
+                    defs.push($.async_when().then(function () {
                         var attrs = {};
                         attrs[seqname] = seq;
-                        dataset.write(id, attrs);
-                    });
+                        return dataset.write(id, attrs, {internal_dataset_changed: true});
+                    }));
                 };
                 while (++seq, (record = list.records.at(index++))) {
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
                     // give a fig about when they're done
-                    // FIXME: breaks on o2ms (e.g. Accounting > Financial
-                    //        Accounting > Taxes > Taxes, child tax accounts)
-                    //        when synchronous (without setTimeout)
                     fct(dataset, record.get('id'), seq);
                     record.set(seqname, seq);
                 }
+                $.when.apply($, defs).then(function () {
+                    // use internal_dataset_changed and trigger one onchange after all writes
+                    dataset.trigger("dataset_changed");
+                });
             }
         });
     },
