@@ -373,7 +373,7 @@
                 <h1 itemprop="name" t-field="product.name">Product Name</h1>
                 <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
 
-                <form t-att-action="keep('/shop/cart/update')" class="js_add_cart_variants" method="POST">
+                <form t-att-action="keep('/shop/cart/update')" class="js_add_cart_variants" t-att-data-attribute_value_ids="product.product_variant_ids.ids" method="POST">
 
                   <div class="js_product">
                     <t t-placeholder="select">
