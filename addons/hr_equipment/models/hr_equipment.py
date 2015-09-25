@@ -76,7 +76,7 @@ class HrEquipmentCategory(models.Model):
 class HrEquipment(models.Model):
     _name = 'hr.equipment'
     _inherit = ['mail.thread']
-    _description = 'IT Assets'
+    _description = 'Equipment'
 
     @api.multi
     def _track_subtype(self, init_values):
