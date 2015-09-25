@@ -361,9 +361,14 @@ class Image(orm.AbstractModel):
             # url might be /web/image/<model>/<id>[_<checksum>]/<field>[/<width>x<height>]
             fragments = url_object.path.split('/')
             query = dict(urlparse.parse_qsl(url_object.query))
-            model = query.get('model', fragments[3])
-            oid = query.get('id', fragments[4].split('_')[0])
-            field = query.get('field', fragments[5])
+            if fragments[3].isdigit():
+                model = 'ir.attachment'
+                oid = fragments[3]
+                field = 'datas'
+            else:
+                model = query.get('model', fragments[3])
+                oid = query.get('id', fragments[4].split('_')[0])
+                field = query.get('field', fragments[5])
             item = self.pool[model].browse(cr, uid, int(oid), context=context)
             return item[field]
 
