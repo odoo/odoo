@@ -96,10 +96,16 @@ var WidgetButton = common.FormWidget.extend({
         this.$el.css('color', disabled ? 'grey' : '');
     },
     show_wow: function() {
+        var class_to_add = 'o_wow_thumbs';
+        if (Math.random() > 0.9) {
+            var other_classes = ['o_wow_peace', 'o_wow_heart'];
+            class_to_add = other_classes[Math.floor(Math.random()*other_classes.length)];
+        }
+
         var $body = $('body');
-        $body.addClass('o_wow_marked');
+        $body.addClass(class_to_add);
         setTimeout(function() {
-            $body.removeClass('o_wow_marked');
+            $body.removeClass(class_to_add);
         }, 1000);
     }
 });
