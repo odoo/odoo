@@ -29,6 +29,7 @@
                         <field name="date_order"/>
                         <field name="session_id" />
                         <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
+                        <field name="fiscal_position_id" options="{'no_create': True}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
@@ -38,7 +39,7 @@
                                     <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)"/>
                                     <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
                                     <field name="discount"  on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
-                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                     <field name="price_subtotal_incl" widget="monetary"/>
                                 </tree>
@@ -661,6 +662,7 @@
                             <field name="group_by" groups="account.group_account_user"/>
                             <field name="barcode_nomenclature_id" />
                             <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
+                            <field name="fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>

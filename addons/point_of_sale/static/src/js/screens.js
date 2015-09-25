@@ -1908,6 +1908,36 @@ var PaymentScreenWidget = ScreenWidget.extend({
 });
 gui.define_screen({name:'payment', widget: PaymentScreenWidget});
 
+var set_fiscal_position_button = ActionButtonWidget.extend({
+    template: 'SetFiscalPositionButton',
+    button_click: function () {
+        var self = this;
+        var selection_list = _.map(self.pos.fiscal_positions, function (fiscal_position) {
+            return {
+                label: fiscal_position.name,
+                item: fiscal_position
+            };
+        });
+        self.gui.show_popup('selection',{
+            title: _t('Select Fiscal Position'),
+            list: selection_list,
+            confirm: function (fiscal_position) {
+                var order = self.pos.get_order();
+                order.fiscal_position = fiscal_position;
+                order.trigger('change');
+            }
+        });
+    },
+});
+
+define_action_button({
+    'name': 'set_fiscal_position',
+    'widget': set_fiscal_position_button,
+    'condition': function(){
+        return this.pos.fiscal_positions.length > 0;
+    },
+});
+
 return {
     ReceiptScreenWidget: ReceiptScreenWidget,
     ActionButtonWidget: ActionButtonWidget,

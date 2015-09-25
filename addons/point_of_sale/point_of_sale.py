@@ -126,6 +126,7 @@ class pos_config(osv.osv):
         'group_pos_manager_id': fields.many2one('res.groups','Point of Sale Manager Group', help='This field is there to pass the id of the pos manager group to the point of sale client'),
         'group_pos_user_id':    fields.many2one('res.groups','Point of Sale User Group', help='This field is there to pass the id of the pos user group to the point of sale client'),
         'tip_product_id':       fields.many2one('product.product','Tip Product', help="The product used to encode the customer tip. Leave empty if you do not accept tips."),
+        'fiscal_position_ids': fields.many2many('account.fiscal.position', string='Fiscal Positions')
     }
 
     def _check_company_location(self, cr, uid, ids, context=None):
@@ -640,8 +641,10 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "id desc"
 
-    def _amount_line_tax(self, cr, uid, line, context=None):
+    def _amount_line_tax(self, cr, uid, line, fiscal_position_id, context=None):
         taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
+        if fiscal_position_id:
+            taxes = fiscal_position_id.map_tax(taxes)
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
         cur = line.order_id.pricelist_id.currency_id
         taxes = taxes.compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
@@ -659,7 +662,8 @@ class pos_order(osv.osv):
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
             'pos_reference':ui_order['name'],
             'partner_id':   ui_order['partner_id'] or False,
-            'date_order':   ui_order['creation_date']
+            'date_order':   ui_order['creation_date'],
+            'fiscal_position_id': ui_order['fiscal_position_id']
         }
 
     def _payment_fields(self, cr, uid, ui_paymentline, context=None):
@@ -800,7 +804,7 @@ class pos_order(osv.osv):
                 res[order.id]['amount_paid'] +=  payment.amount
                 res[order.id]['amount_return'] += (payment.amount < 0 and payment.amount or 0)
             for line in order.lines:
-                val1 += self._amount_line_tax(cr, uid, line, context=context)
+                val1 += self._amount_line_tax(cr, uid, line, order.fiscal_position_id, context=context)
                 val2 += line.price_subtotal
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val1)
             amount_untaxed = cur_obj.round(cr, uid, cur, val2)
@@ -845,6 +849,7 @@ class pos_order(osv.osv):
         'nb_print': fields.integer('Number of Print', readonly=True, copy=False),
         'pos_reference': fields.char('Receipt Ref', readonly=True, copy=False),
         'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='account.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
+        'fiscal_position_id': fields.many2one('account.fiscal.position', 'Fiscal Position')
     }
 
     def _default_session(self, cr, uid, context=None):
@@ -1127,6 +1132,10 @@ class pos_order(osv.osv):
                 invoice_line = inv_line_ref.new(cr, SUPERUSER_ID, inv_line, context=local_context)
                 invoice_line._onchange_product_id()
                 invoice_line.invoice_line_tax_ids = [tax.id for tax in invoice_line.invoice_line_tax_ids if tax.company_id.id == company_id]
+                fiscal_position_id = line.order_id.fiscal_position_id
+                if fiscal_position_id:
+                    invoice_line.invoice_line_tax_ids = fiscal_position_id.map_tax(invoice_line.invoice_line_tax_ids)
+                invoice_line.invoice_line_tax_ids = [tax.id for tax in invoice_line.invoice_line_tax_ids]
                 # We convert a new id object back to a dictionary to write to bridge between old and new api
                 inv_line = invoice_line._convert_to_write(invoice_line._cache)
                 inv_line.update(price_unit=line.price_unit, discount=line.discount)
@@ -1367,7 +1376,11 @@ class pos_order_line(osv.osv):
         account_tax_obj = self.pool.get('account.tax')
         for line in self.browse(cr, uid, ids, context=context):
             cur = line.order_id.pricelist_id.currency_id
-            taxes_ids = [ tax.id for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id ]
+            taxes = [ tax for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id ]
+            fiscal_position_id = line.order_id.fiscal_position_id
+            if fiscal_position_id:
+                taxes = fiscal_position_id.map_tax(taxes)
+            taxes_ids = [ tax.id for tax in taxes ]
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             res[line.id]['price_subtotal'] = res[line.id]['price_subtotal_incl'] = price * line.qty
             if taxes_ids:
@@ -1412,6 +1425,12 @@ class pos_order_line(osv.osv):
             result['price_subtotal_incl'] = taxes['total_included']
         return {'value': result}
 
+    def _get_tax_ids_after_fiscal_position(self, cr, uid, ids, field_name, args, context=None):
+        res = dict.fromkeys(ids, False)
+        for line in self.browse(cr, uid, ids, context=context):
+            res[line.id] = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
+        return res
+
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'name': fields.char('Line No', required=True, copy=False),
@@ -1419,12 +1438,13 @@ class pos_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
         'price_unit': fields.float(string='Unit Price', digits=0),
         'qty': fields.float('Quantity', digits=0),
-        'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal w/o Tax', store=True),
-        'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal', store=True),
+        'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal w/o Tax'),
+        'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal'),
         'discount': fields.float('Discount (%)', digits=0),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'tax_ids': fields.many2many('account.tax', string='Taxes', readonly=True),
+        'tax_ids': fields.many2many('account.tax', string='Taxes'),
+        'tax_ids_after_fiscal_position': fields.function(_get_tax_ids_after_fiscal_position, type='many2many', relation='account.tax', string='Taxes')
     }
 
     _defaults = {
