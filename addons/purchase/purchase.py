@@ -168,6 +168,7 @@ class purchase_order(osv.osv):
         type_obj = self.pool.get('stock.picking.type')
         user_obj = self.pool.get('res.users')
         company_id = user_obj.browse(cr, uid, uid, context=context).company_id.id
+        company_id = context.get('company_id') or company_id
         types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)], context=context)
         if not types:
             types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id', '=', False)], context=context)
