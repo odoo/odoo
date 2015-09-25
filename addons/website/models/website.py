@@ -669,7 +669,7 @@ class website_menu(osv.osv):
             self.unlink(cr, uid, to_delete, context=context)
         for menu in data['data']:
             mid = menu['id']
-            if isinstance(mid, str):
+            if isinstance(mid, (str, unicode)):
                 new_id = self.create(cr, uid, {'name': menu['name']}, context=context)
                 replace_id(mid, new_id)
         for menu in data['data']:
