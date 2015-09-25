@@ -443,7 +443,7 @@ var RTE = Widget.extend({
                 $el.data('oe-id'),
                 markup,
                 $el.data('oe-xpath') || null,
-                context || base.get_context()
+                _.omit(context || base.get_context(), 'lang')
             ],
         });
     },
