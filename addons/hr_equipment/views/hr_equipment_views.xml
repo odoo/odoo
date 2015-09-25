@@ -199,10 +199,6 @@
         <field name="model">hr.equipment</field>
         <field name="arch" type="xml">
             <form string="Equipments">
-                <header>
-                    <field name="category_id" widget="statusbar" clickable="True"
-                            options="{'fold_field': 'fold'}"/>
-                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(hr_equipment_request_action_from_equipment)d"
@@ -215,13 +211,14 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" string="Name" placeholder="Equipment Name"/></h1>
+                        <label for="category_id" class="oe_edit_only"/>
+                        <field name="category_id" options="{&quot;no_open&quot;: True}"/>
                         <label for="serial_no" class="oe_edit_only"/>
                         <field name="serial_no"/>
                     </div>
                     <group>
                         <group>
-                            <field name="category_id" invisible="1" on_change="1" options="{&quot;no_open&quot;: True}"/>
-                            <field name="equipment_assign_to" on_change="1" widget="radio"/>
+                            <field name="equipment_assign_to" widget="radio"/>
                             <field name="employee_id" string="Employee" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'department'), ('equipment_assign_to', '=', False)]}"/>
                             <field name="department_id" string="Department" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'employee'), ('equipment_assign_to', '=', False)]}"/>
                         </group>
