@@ -1403,6 +1403,10 @@ class pos_order_line(osv.osv):
 
         result = self.onchange_qty(cr, uid, ids, pricelist, product_id, 0.0, qty, price, context=context)
         result['value']['price_unit'] = price
+
+        prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+        result['value']['tax_ids'] = prod.taxes_id.ids
+
         return result
 
     def onchange_qty(self, cr, uid, ids, pricelist, product, discount, qty, price_unit, context=None):
