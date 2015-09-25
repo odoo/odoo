@@ -1,10 +1,7 @@
 define([
-  'summernote/core/list',
-  'summernote/core/agent'
-], function (list, agent) {
+  'summernote/core/list'
+], function (list) {
   /**
-   * @class module.Button
-   *
    * Button
    */
   var Button = function () {
@@ -31,7 +28,6 @@ define([
       /**
        * update button state(active or not).
        *
-       * @private
        * @param {String} selector
        * @param {Function} pred
        */
@@ -44,30 +40,30 @@ define([
         var $img = $(styleInfo.image);
 
         btnState('button[data-event="imageShape"][data-value="img-rounded"]', function () {
-          return $img.hasClass('img-rounded');
+          return $img.hasClass("img-rounded");
         });
         btnState('button[data-event="imageShape"][data-value="img-circle"]', function () {
-          return $img.hasClass('img-circle');
+          return $img.hasClass("img-circle");
         });
         btnState('button[data-event="imageShape"][data-value="img-thumbnail"]', function () {
-          return $img.hasClass('img-thumbnail');
+          return $img.hasClass("img-thumbnail");
         });
         btnState('button[data-event="imageShape"]:not([data-value])', function () {
-          return !$img.is('.img-rounded, .img-circle, .img-thumbnail');
+          return !$img.is(".img-rounded, .img-circle, .img-thumbnail");
         });
 
-        var imgFloat = $img.css('float');
+        var imgFloat = $img.css("float");
         btnState('button[data-event="floatMe"][data-value="left"]', function () {
-          return imgFloat === 'left';
+          return imgFloat === "left";
         });
         btnState('button[data-event="floatMe"][data-value="right"]', function () {
-          return imgFloat === 'right';
+          return imgFloat === "right";
         });
         btnState('button[data-event="floatMe"][data-value="none"]', function () {
-          return imgFloat !== 'left' && imgFloat !== 'right';
+          return imgFloat !== "left" && imgFloat !== "right";
         });
 
-        var style = $img.attr('style');
+        var style = $img.attr("style");
         btnState('button[data-event="resize"][data-value="1"]', function () {
           return !!/(^|\s)(max-)?width\s*:\s*100%/.test(style);
         });
@@ -85,18 +81,10 @@ define([
       if ($fontname.length) {
         var selectedFont = styleInfo['font-family'];
         if (!!selectedFont) {
-
-          var list = selectedFont.split(',');
-          for (var i = 0, len = list.length; i < len; i++) {
-            selectedFont = list[i].replace(/[\'\"]/g, '').replace(/\s+$/, '').replace(/^\s+/, '');
-            if (agent.isFontInstalled(selectedFont)) {
-              break;
-            }
-          }
-          
+          selectedFont = list.head(selectedFont.split(','));
+          selectedFont = selectedFont.replace(/\'/g, '');
           $fontname.find('.note-current-fontname').text(selectedFont);
           checkDropdownMenu($fontname, selectedFont);
-
         }
       }
 
@@ -152,7 +140,7 @@ define([
      *
      * @param {Node} button
      * @param {String} eventName
-     * @param {Mixed} value
+     * @param {value} value
      */
     this.updateRecentColor = function (button, eventName, value) {
       var $color = $(button).closest('.note-color');

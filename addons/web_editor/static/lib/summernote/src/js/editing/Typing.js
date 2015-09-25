@@ -1,24 +1,12 @@
 define([
   'summernote/core/dom',
-  'summernote/core/range',
-  'summernote/editing/Bullet'
-], function (dom, range, Bullet) {
+  'summernote/core/range'
+], function (dom, range) {
 
-  /**
-   * @class editing.Typing
-   *
-   * Typing
-   *
-   */
   var Typing = function () {
 
-    // a Bullet instance to toggle lists off
-    var bullet = new Bullet();
-
     /**
-     * insert tab
-     *
-     * @param {jQuery} $editable
+     * @param {jQuery} $editable 
      * @param {WrappedRange} rng
      * @param {Number} tabsize
      */
@@ -49,22 +37,14 @@ define([
       var nextPara;
       // on paragraph: split paragraph
       if (splitRoot) {
-        // if it is an empty line with li
-        if (dom.isEmpty(splitRoot) && dom.isLi(splitRoot)) {
-          // disable UL/OL and escape!
-          bullet.toggleList(splitRoot.parentNode.nodeName);
-          return;
-        // if new line has content (not a line break)
-        } else {
-          nextPara = dom.splitTree(splitRoot, rng.getStartPoint());
+        nextPara = dom.splitTree(splitRoot, rng.getStartPoint());
 
-          var emptyAnchors = dom.listDescendant(splitRoot, dom.isEmptyAnchor);
-          emptyAnchors = emptyAnchors.concat(dom.listDescendant(nextPara, dom.isEmptyAnchor));
+        var emptyAnchors = dom.listDescendant(splitRoot, dom.isEmptyAnchor);
+        emptyAnchors = emptyAnchors.concat(dom.listDescendant(nextPara, dom.isEmptyAnchor));
 
-          $.each(emptyAnchors, function (idx, anchor) {
-            dom.remove(anchor);
-          });
-        }
+        $.each(emptyAnchors, function (idx, anchor) {
+          dom.remove(anchor);
+        });
       // no paragraph: insert empty paragraph
       } else {
         var next = rng.sc.childNodes[rng.so];
@@ -77,7 +57,6 @@ define([
       }
 
       range.create(nextPara, 0).normalize().select();
-
     };
 
   };

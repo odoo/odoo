@@ -892,47 +892,6 @@ range.WrappedRange.prototype.deleteContents = function (towrite) {
       prevBP.eo
     );
 };
-// isOnImg: judge whether range is an image node or not
-range.WrappedRange.prototype.isOnImg = function () {
-    var nb = 0;
-    var image;
-    var startPoint = {node: this.sc.childNodes.length && this.sc.childNodes[this.so] || this.sc};
-    startPoint.offset = startPoint.node === this.sc ? this.so : 0;
-    var endPoint = {node: this.ec.childNodes.length && this.ec.childNodes[this.eo] || this.ec};
-    endPoint.offset = endPoint.node === this.ec ? this.eo : 0;
-
-    if (dom.isImg(startPoint.node)) {
-        nb ++;
-        image = startPoint.node;
-    }
-    dom.walkPoint(startPoint, endPoint, function (point) {
-        if (!dom.isText(endPoint.node) && point.node === endPoint.node && point.offset === endPoint.offset) {
-            return;
-        }
-        var node = point.node.childNodes.length && point.node.childNodes[point.offset] || point.node;
-        var offset = node === point.node ? point.offset : 0;
-        var isImg = dom.ancestor(node, dom.isImg);
-        if (!isImg && ((!dom.isBR(node) && !dom.isText(node)) || (offset && node.textContent.length !== offset && node.textContent.match(/\S|\u00A0/)))) {
-            nb++;
-        }
-        if (isImg && image !== isImg) {
-            image = isImg;
-            nb ++;
-        }
-    });
-    return nb === 1 && image;
-};
-range.WrappedRange.prototype.deleteContents = function (towrite) {
-    var prevBP = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
-
-    $(dom.node(prevBP.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
-    return new range.WrappedRange(
-      prevBP.sc,
-      prevBP.so,
-      prevBP.ec,
-      prevBP.eo
-    );
-};
 range.WrappedRange.prototype.clean = function (mergeFilter, all) {
     var node = dom.node(this.sc === this.ec ? this.sc : this.commonAncestor());
         node = node || $(this.sc).closest('[contenteditable]')[0];
@@ -1834,8 +1793,8 @@ $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, va
     event.preventDefault();
     return false;
 };
-var fn_boutton_updateRecentColor = eventHandler.modules.toolbar.button.updateRecentColor;
-eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent, sValue) {
+var fn_boutton_updateRecentColor = eventHandler.toolbar.button.updateRecentColor;
+eventHandler.toolbar.button.updateRecentColor = function (elBtn, sEvent, sValue) {
     fn_boutton_updateRecentColor.call(this, elBtn, sEvent, sValue);
     var font = $(elBtn).closest('.note-color').find('.note-recent-color i')[0];
 
@@ -1868,29 +1827,16 @@ $(document).on('click keyup', function () {
     $('button[data-event="redo"]', editor).attr('disabled', !popover_history.hasRedo());
 });
 
-eventHandler.modules.editor.undo = function ($popover) {
+eventHandler.editor.undo = function ($popover) {
     if(!$popover.attr('disabled')) $popover.data('NoteHistory').undo();
 };
-eventHandler.modules.editor.redo = function ($popover) {
+eventHandler.editor.redo = function ($popover) {
     if(!$popover.attr('disabled'))  $popover.data('NoteHistory').redo();
 };
-
-// use image toolbar if current range is on image
-var fn_editor_currentstyle = eventHandler.modules.editor.currentStyle;
-eventHandler.modules.editor.currentStyle = function(target) {
-    var styleInfo = fn_editor_currentstyle.apply(this, arguments);
-    if(!styleInfo.image) {
-        var rng = range.create();
-        if(rng)
-            styleInfo.image = rng.isOnImg();
-    }
-    return styleInfo;
-}
 
 options.fontSizes = [_t('Default'), 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 62];
 $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color, bgcolor, size) {
     var rng = range.create();
-    if(!rng) return;
     var startPoint = rng.getStartPoint();
     var endPoint = rng.getEndPoint();
 
@@ -2262,8 +2208,8 @@ function summernote_table_update (oStyle) {
         'color': '#00ff00'
     });
 }
-var fn_popover_update = eventHandler.modules.popover.update;
-eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
+var fn_popover_update = eventHandler.popover.update;
+eventHandler.popover.update = function ($popover, oStyle, isAirMode) {
     fn_popover_update.call(this, $popover, oStyle, isAirMode);
     if(!!(isAirMode ? $popover : $popover.parent()).find('.note-table').length) {
         summernote_table_update(oStyle);
@@ -2303,16 +2249,16 @@ function summernote_paste (event) {
 
 var fn_attach = eventHandler.attach;
 eventHandler.attach = function (oLayoutInfo, options) {
-    var $editable = oLayoutInfo.editor().hasClass('note-editable') ? oLayoutInfo.editor() : oLayoutInfo.editor().find('.note-editable');
+    var $editable = oLayoutInfo.editor.hasClass('note-editable') ? oLayoutInfo.editor : oLayoutInfo.editor.find('.note-editable');
     fn_attach.call(this, oLayoutInfo, options);
-    oLayoutInfo.editor().on("paste", summernote_paste);
+    oLayoutInfo.editor.on("paste", summernote_paste);
     $editable.on("scroll", summernote_table_scroll);
 };
 var fn_detach = eventHandler.detach;
 eventHandler.detach = function (oLayoutInfo, options) {
-    var $editable = oLayoutInfo.editor().hasClass('note-editable') ? oLayoutInfo.editor() : oLayoutInfo.editor().find('.note-editable');
+    var $editable = oLayoutInfo.editor.hasClass('note-editable') ? oLayoutInfo.editor : oLayoutInfo.editor.find('.note-editable');
     fn_detach.call(this, oLayoutInfo, options);
-    oLayoutInfo.editor().off("paste", summernote_paste);
+    oLayoutInfo.editor.off("paste", summernote_paste);
     $editable.off("scroll", summernote_table_scroll);
     $('.o_table_handler').remove();
 };

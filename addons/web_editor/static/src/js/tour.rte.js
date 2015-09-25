@@ -72,11 +72,6 @@ Tour.register({
         {
             element:   'div[data-target-event="foreColor"]:visible .note-color-row:eq(1) button[data-event="foreColor"]:first',
             title:     "change text color",
-            onload: function () {
-                /* TODO: find why phantomjs lose the focus and remove this onload */
-                var $el = $('#wrapwrap > main > div > section .row > div:first:not(:has(p font)) h1 font');
-                $.summernote.core.range.create($el[0].firstChild, 5, $el[0].firstChild, 10).select();
-            }
         },
         {
             waitFor:   '#editable_area > section .row > div:first h1 font:eq(2)',
