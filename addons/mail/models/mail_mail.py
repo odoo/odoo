@@ -126,6 +126,24 @@ class MailMail(models.Model):
 
         return filtered_mails
 
+    def process_mail_server_quota(self):
+        filtered_mails = self.env['mail.mail']
+        default_mail_server = self.env['ir.mail_server']._get_default_mail_server()
+        mail_server_list = {}
+        for mail in self:
+            ms = mail.mail_server_id or default_mail_server
+            if ms in mail_server_list:
+                mail_server_list[ms] |= mail
+            else:
+                mail_server_list[ms] = mail
+
+        # Prioritize and respect quota for mails
+        for ms, mails in mail_server_list.iteritems():
+            default = default_mail_server == ms
+            filtered_mails |= self._get_mails_quota_aware(ms, mails, default=default)
+
+        return filtered_mails
+
     @api.model
     def process_email_queue(self, ids=None):
         """Send immediately queued messages after filtering in case of
@@ -147,28 +165,12 @@ class MailMail(models.Model):
                 filters.extend(self._context['filters'])
             ids = self.search(filters).ids
 
-        queued_mails = self.browse(ids)
-        filtered_mails = self
-        default_mail_server = self.env['ir.mail_server']._get_default_mail_server()
-        mail_server_list = {}
-        for mail in queued_mails:
-            ms = mail.mail_server_id or default_mail_server
-            if ms in mail_server_list:
-                mail_server_list[ms] |= mail
-            else:
-                mail_server_list[ms] = mail
-
-        # Prioritize and respect quota for mails
-        for ms, mails in mail_server_list.iteritems():
-            default = default_mail_server == ms
-            filtered_mails |= self._get_mails_quota_aware(ms, mails, default=default)
-
         res = None
         try:
             # Force auto-commit - this is meant to be called by
             # the scheduler, and we can't allow rolling back the status
             # of previously sent emails!
-            res = filtered_mails.send(auto_commit=True)
+            res = self.browse(ids).process_mail_server_quota().send(auto_commit=True)
         except Exception:
             _logger.exception("Failed processing mail queue")
         return res
