@@ -135,7 +135,7 @@
             node.setAttribute('data-oe-translation-view-id', view_id);
             var content = $(node).text().trim();
             var trans = this.translations.filter(function (t) {
-                return t.res_id === view_id && t.value.trim() === content;
+                return t.res_id === view_id && t.value && t.value.trim() === content;
             });
             if (trans.length) {
                 node.setAttribute('data-oe-translation-id', trans[0].id);
