@@ -138,15 +138,14 @@ var LivechatButton = Widget.extend({
         });
     },
     load_qweb_template: function(){
-        var self = this;
-        var defs = [];
-        var templates = ['/mail/static/src/xml/mail_chat_common.xml', '/im_livechat/static/src/xml/im_livechat.xml'];
-        _.each(templates, function(tmpl){
-            defs.push(user_session.rpc('/web/proxy/load', {path: tmpl}).then(function(xml) {
-                QWeb.add_template(xml);
-            }));
+        return $.when(
+            $.get('/mail/static/src/xml/mail_chat_common.xml'),
+            $.get('/im_livechat/static/src/xml/im_livechat.xml')
+        ).then(function (mail_result, livechat_result) {
+            // results are triplets of [dom: XMLDocument, status: String, xhr: jqXHR]
+            QWeb.add_template(mail_result[0]);
+            QWeb.add_template(livechat_result[0]);
         });
-        return $.when.apply($, defs);
     },
     load_mail_channel: function(display_warning){
         var self = this;

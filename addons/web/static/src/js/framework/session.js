@@ -236,14 +236,13 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         return d;
     },
     load_qweb: function(mods) {
-        var self = this;
-        self.qweb_mutex.exec(function() {
-            return self.rpc('/web/proxy/load', {path: '/web/webclient/qweb?mods=' + mods}).then(function(xml) {
-                if (!xml) { return; }
-                qweb.add_template(_.str.trim(xml));
+        this.qweb_mutex.exec(function() {
+            return $.get('/web/webclient/qweb?mods=' + mods).then(function (doc) {
+                if (!doc) { return; }
+                qweb.add_template(doc);
             });
         });
-        return self.qweb_mutex.def;
+        return this.qweb_mutex.def;
     },
     on_modules_loaded: function() {
         var openerp = window.openerp;
