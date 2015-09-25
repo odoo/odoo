@@ -785,15 +785,25 @@ class account_move_line(osv.osv):
         ret = []
 
         for line in lines:
+            partial_debit = 0
+            partial_ref = ''
+            partial_name = ''
             partial_reconciliation_siblings_ids = []
             if line.reconcile_partial_id:
+                partial_name = 'partial reconciliation'
                 partial_reconciliation_siblings_ids = self.search(cr, uid, [('reconcile_partial_id', '=', line.reconcile_partial_id.id)], context=context)
+                for li in self.browse(cr, uid, partial_reconciliation_siblings_ids, context=context):
+                    partial_debit += li.debit
+                    partial_ref += li.ref + " "
+                    if line.amount_residual < 0 and li.amount_residual > 0:
+                        line = li
+
                 partial_reconciliation_siblings_ids.remove(line.id)
 
             ret_line = {
                 'id': line.id,
-                'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
-                'ref': line.move_id.ref or '',
+                'name': partial_name or (line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name),
+                'ref': partial_ref or line.move_id.ref or '',
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.type,
@@ -808,8 +818,8 @@ class account_move_line(osv.osv):
             }
 
             # Amount residual can be negative
-            debit = line.debit
-            credit = line.credit
+            debit = partial_debit or line.debit
+            credit = 0 if partial_debit else line.credit
             amount = line.amount_residual
             amount_currency = line.amount_residual_currency
             if line.amount_residual < 0:
