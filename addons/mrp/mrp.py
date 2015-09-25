@@ -157,7 +157,7 @@ class mrp_bom(osv.osv):
         'position': fields.char('Internal Reference', help="Reference to a position in an external plan."),
         'product_tmpl_id': fields.many2one('product.template', 'Product', domain="[('type', 'in', ['product', 'consu'])]", required=True),
         'product_id': fields.many2one('product.product', 'Product Variant',
-            domain="['&', ('product_tmpl_id','=',product_tmpl_id), ('type', 'in', ['product', 'consu']]",
+            domain="['&', ('product_tmpl_id','=',product_tmpl_id), ('type', 'in', ['product', 'consu'])]",
             help="If a product variant is defined the BOM is available only for this product."),
         'bom_line_ids': fields.one2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True),
         'product_qty': fields.float('Product Quantity', required=True, digits_compute=dp.get_precision('Product Unit of Measure')),
