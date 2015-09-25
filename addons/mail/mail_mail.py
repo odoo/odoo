@@ -26,6 +26,8 @@ from email.utils import formataddr
 from urllib import urlencode
 from urlparse import urljoin
 
+import psycopg2
+
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
@@ -337,6 +339,12 @@ class mail_mail(osv.Model):
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed
+                raise
+            except psycopg2.Error:
+                # If an error with the database occurs, chances are that the cursor is unusable.
+                # This will lead to an `psycopg2.InternalError` being raised when trying to write
+                # `state`, shadowing the original exception and forbid a retry on concurrent
+                # update. Let's bubble it.
                 raise
             except Exception:
                 _logger.exception('failed sending mail.mail %s', mail.id)
