@@ -4,6 +4,7 @@ import base64
 import logging
 from email.utils import formataddr
 from urlparse import urljoin
+from datetime import datetime, timedelta
 
 from openerp import _, api, fields, models
 from openerp import tools
@@ -80,11 +81,55 @@ class MailMail(models.Model):
     def cancel(self):
         return self.write({'state': 'cancel'})
 
+    @api.multi
+    def _handle_smtp_quota(self, mail_server, default=False):
+        """Get currently available quantity in case a quota is configured!
+
+           :param mail_server: Defined outgoing mail server.
+           :param optional: Indicate that the mail server is default
+        """
+        mail_server.ensure_one()
+        process_datetime = datetime.utcnow()
+        quota_frame = process_datetime - timedelta(seconds=mail_server.smtp_quota_seconds)
+        domain = [
+            ('write_date', '>=', quota_frame.strftime('%Y-%m-%d %H:%M:%S')),
+            ('state', '=', 'sent')
+        ]
+        if default:
+            domain.append(('mail_server_id', 'in', [False, mail_server.id]))
+        else:
+            domain.append(('mail_server_id', '=', mail_server.id))
+        return mail_server.smtp_quota_limit - self.search_count(domain)
+
+    @api.multi
+    def _get_mails_quota_aware(self, mail_server, mails, default=False):
+        """Check whether there is a mail quota set and add the maximum of
+           mails for a given mail server!
+
+           :param mail_server: Defined outgoing mail server.
+           :param recordset mails: Queued mails to be filtered
+           :param optional: Indicate that the mail server is default
+        """
+        mail_server.ensure_one()
+        filtered_mails = self
+        if mail_server.use_smtp_quota:
+            default_avail_quota = self._handle_smtp_quota(mail_server, default=default)
+            for mail in mails.sorted(key=lambda r: r.date):
+                if default_avail_quota > 0:
+                    filtered_mails |= mail
+                    default_avail_quota -= 1
+                else:
+                    break
+        else:
+            filtered_mails |= mails
+
+        return filtered_mails
+
     @api.model
     def process_email_queue(self, ids=None):
-        """Send immediately queued messages, committing after each
-           message is sent - this is not transactional and should
-           not be called during another transaction!
+        """Send immediately queued messages after filtering in case of
+           a mail quota, committing after each message is sent - this is not
+           transactional and should not be called during another transaction!
 
            :param list ids: optional list of emails ids to send. If passed
                             no search is performed, and these ids are used
@@ -100,12 +145,29 @@ class MailMail(models.Model):
             if 'filters' in self._context:
                 filters.extend(self._context['filters'])
             ids = self.search(filters).ids
+
+        queued_mails = self.browse(ids)
+        filtered_mails = self
+        default_mail_server = self.env['ir.mail_server']._get_default_mail_server()
+        mail_server_list = {}
+        for mail in queued_mails:
+            ms = mail.mail_server_id or default_mail_server
+            if ms in mail_server_list:
+                mail_server_list[ms] |= mail
+            else:
+                mail_server_list[ms] = mail
+
+        # Prioritize and respect quota for mails
+        for ms, mails in mail_server_list.iteritems():
+            default = default_mail_server == ms
+            filtered_mails |= self._get_mails_quota_aware(ms, mails, default=default)
+
         res = None
         try:
             # Force auto-commit - this is meant to be called by
             # the scheduler, and we can't allow rolling back the status
             # of previously sent emails!
-            res = self.browse(ids).send(auto_commit=True)
+            res = filtered_mails.send(auto_commit=True)
         except Exception:
             _logger.exception("Failed processing mail queue")
         return res

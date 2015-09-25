@@ -16,11 +16,24 @@
                         <field name="smtp_port"/>
                         <field name="smtp_debug" groups="base.group_no_one"/>
                      </group>
-                     <group string="Security and Authentication" colspan="4">
-                        <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
-                        <field name="smtp_user"/>
-                        <field name="smtp_pass" password="True"/>
-                        <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network"/>
+                     <group string="Security and Authentication">
+                        <group>
+                            <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
+                            <field name="smtp_user"/>
+                            <field name="smtp_pass" password="True"/>
+                            <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network"/>
+                        </group>
+                        <group></group>
+                    </group>
+                    <div class="oe_horizontal_separator">Other Configuration</div>
+                    <field name="use_smtp_quota" /><label for="use_smtp_quota" />
+                    <group attrs="{'invisible': [('use_smtp_quota', '=', False)]}">
+                        <group>
+                            <field name="smtp_quota_limit" />
+                            <field name="smtp_quota_seconds" />
+                        </group>
+                        <group>
+                        </group>
                     </group>
                   </sheet>  
                 </form>
