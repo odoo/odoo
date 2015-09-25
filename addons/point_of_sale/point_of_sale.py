@@ -126,7 +126,6 @@ class pos_config(osv.osv):
         'group_pos_manager_id': fields.many2one('res.groups','Point of Sale Manager Group', help='This field is there to pass the id of the pos manager group to the point of sale client'),
         'group_pos_user_id':    fields.many2one('res.groups','Point of Sale User Group', help='This field is there to pass the id of the pos user group to the point of sale client'),
         'tip_product_id':       fields.many2one('product.product','Tip Product', help="The product used to encode the customer tip. Leave empty if you do not accept tips."),
-        'fiscal_position_id': fields.many2one('account.fiscal.position', 'Fiscal Position'),
     }
 
     def _check_company_location(self, cr, uid, ids, context=None):
@@ -642,7 +641,7 @@ class pos_order(osv.osv):
     _order = "id desc"
 
     def _amount_line_tax(self, cr, uid, line, context=None):
-        taxes = (line.tax_ids or line.product_id.taxes_id).filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
+        taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
         cur = line.order_id.pricelist_id.currency_id
         taxes = taxes.compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
@@ -1127,10 +1126,10 @@ class pos_order(osv.osv):
                 #Oldlin trick
                 invoice_line = inv_line_ref.new(cr, SUPERUSER_ID, inv_line, context=local_context)
                 invoice_line._onchange_product_id()
+                invoice_line.invoice_line_tax_ids = [tax.id for tax in invoice_line.invoice_line_tax_ids if tax.company_id.id == company_id]
                 # We convert a new id object back to a dictionary to write to bridge between old and new api
                 inv_line = invoice_line._convert_to_write(invoice_line._cache)
-                taxes = (line.tax_ids or invoice_line.invoice_line_tax_ids).filtered(lambda t: t.company_id.id == company_id)
-                inv_line.update(price_unit=line.price_unit, discount=line.discount, invoice_line_tax_ids=[(6, 0, taxes.ids)])
+                inv_line.update(price_unit=line.price_unit, discount=line.discount)
                 inv_line_ref.create(cr, SUPERUSER_ID, inv_line, context=local_context)
             inv_ref.compute_taxes(cr, SUPERUSER_ID, [inv_id], context=local_context)
             self.signal_workflow(cr, uid, [order.id], 'invoice')
@@ -1292,10 +1291,12 @@ class pos_order(osv.osv):
 
                 # Create the tax lines
                 taxes = []
-                taxes = (line.tax_ids or line.product_id.taxes_id).filtered(lambda t: t.company_id.id == current_company.id)
+                for t in line.product_id.taxes_id:
+                    if t.company_id.id == current_company.id:
+                        taxes.append(t.id)
                 if not taxes:
                     continue
-                for tax in taxes.compute_all(line.price_unit * (100.0-line.discount) / 100.0, cur, line.qty)['taxes']:
+                for tax in account_tax_obj.browse(cr,uid, taxes, context=context).compute_all(line.price_unit * (100.0-line.discount) / 100.0, cur, line.qty)['taxes']:
                     insert_data('tax', {
                         'name': _('Tax') + ' ' + tax['name'],
                         'product_id': line.product_id.id,
@@ -1363,18 +1364,19 @@ class pos_order_line(osv.osv):
 
     def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
         res = dict([(i, {}) for i in ids])
+        account_tax_obj = self.pool.get('account.tax')
         for line in self.browse(cr, uid, ids, context=context):
             cur = line.order_id.pricelist_id.currency_id
-            taxes = (line.tax_ids or line.product_id.taxes_id).filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
+            taxes_ids = [ tax.id for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id ]
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             res[line.id]['price_subtotal'] = res[line.id]['price_subtotal_incl'] = price * line.qty
-            if taxes:
-                dict_taxes = taxes.compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
-                res[line.id]['price_subtotal'] = dict_taxes['total_excluded']
-                res[line.id]['price_subtotal_incl'] = dict_taxes['total_included']
+            if taxes_ids:
+                taxes = account_tax_obj.browse(cr, uid, taxes_ids, context).compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+                res[line.id]['price_subtotal'] = taxes['total_excluded']
+                res[line.id]['price_subtotal_incl'] = taxes['total_included']
         return res
 
-    def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, session_id=False, context=None):
+    def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
         context = context or {}
         if not product_id:
            return {}
@@ -1386,30 +1388,28 @@ class pos_order_line(osv.osv):
         price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                product_id, qty or 1.0, partner_id)[pricelist]
 
-        result = self.onchange_qty(cr, uid, ids, pricelist=pricelist, product=product_id, discount=0.0, qty=qty, price_unit=price, session_id=session_id, context=context)
+        result = self.onchange_qty(cr, uid, ids, pricelist, product_id, 0.0, qty, price, context=context)
         result['value']['price_unit'] = price
         return result
 
-    def onchange_qty(self, cr, uid, ids, pricelist, product, discount, qty, price_unit, session_id=False, context=None):
+    def onchange_qty(self, cr, uid, ids, pricelist, product, discount, qty, price_unit, context=None):
         result = {}
         if not product:
             return result
         if not pricelist:
            raise UserError(_('You have to select a pricelist in the sale form !'))
 
-        session = self.pool['pos.session'].browse(cr, uid, session_id, context)
+        account_tax_obj = self.pool.get('account.tax')
+
         prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        taxes = prod.taxes_id
-        if session.config_id and session.config_id.fiscal_position_id:
-            taxes = session.config_id.fiscal_position_id.map_tax(prod.taxes_id)
+
         price = price_unit * (1 - (discount or 0.0) / 100.0)
         result['price_subtotal'] = result['price_subtotal_incl'] = price * qty
         cur = self.pool.get('product.pricelist').browse(cr, uid, [pricelist], context=context).currency_id
-        if (taxes):
-            dict_taxes = taxes.compute_all(price, cur, qty, product=prod, partner=False)
-            result['price_subtotal'] = dict_taxes['total_excluded']
-            result['price_subtotal_incl'] = dict_taxes['total_included']
-            result['tax_ids'] = taxes
+        if (prod.taxes_id):
+            taxes = prod.taxes_id.compute_all(price, cur, qty, product=prod, partner=False)
+            result['price_subtotal'] = taxes['total_excluded']
+            result['price_subtotal_incl'] = taxes['total_included']
         return {'value': result}
 
     _columns = {
@@ -1424,7 +1424,7 @@ class pos_order_line(osv.osv):
         'discount': fields.float('Discount (%)', digits=0),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'tax_ids': fields.many2many('account.tax', string='Taxes'),
+        'tax_ids': fields.many2many('account.tax', string='Taxes', readonly=True),
     }
 
     _defaults = {
