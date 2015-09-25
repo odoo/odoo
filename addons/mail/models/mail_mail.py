@@ -113,11 +113,12 @@ class MailMail(models.Model):
         mail_server.ensure_one()
         filtered_mails = self
         if mail_server.use_smtp_quota:
-            default_avail_quota = self._handle_smtp_quota(mail_server, default=default)
+            avail_quota = self._handle_smtp_quota(mail_server, default=default)
             for mail in mails.sorted(key=lambda r: r.date):
-                if default_avail_quota > 0:
+                no_recipients = len(mail.send_get_email_list())
+                if avail_quota - no_recipients >= 0:
                     filtered_mails |= mail
-                    default_avail_quota -= 1
+                    avail_quota -= no_recipients
                 else:
                     break
         else:
@@ -237,6 +238,16 @@ class MailMail(models.Model):
         return res
 
     @api.multi
+    def send_get_email_list(self):
+        self.ensure_one()
+        email_list = []
+        if self.email_to:
+            email_list.append(self.send_get_email_dict())
+        for partner in self.recipient_ids:
+            email_list.append(self.send_get_email_dict(partner=partner))
+        return email_list
+
+    @api.multi
     def send(self, auto_commit=False, raise_exception=False):
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
@@ -271,11 +282,7 @@ class MailMail(models.Model):
                                for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas'])]
 
                 # specific behavior to customize the send email for notified partners
-                email_list = []
-                if mail.email_to:
-                    email_list.append(mail.send_get_email_dict())
-                for partner in mail.recipient_ids:
-                    email_list.append(mail.send_get_email_dict(partner=partner))
+                email_list = mail.send_get_email_list()
 
                 # headers
                 headers = {}
