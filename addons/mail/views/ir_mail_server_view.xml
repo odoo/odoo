@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- ir.mail.server -->
+        <record model="ir.ui.view" id="ir_mail_server_form">
+            <field name="model">ir.mail_server</field>
+            <field name="inherit_id" ref="base.ir_mail_server_form"></field>
+            <field name="arch" type="xml">
+                <data>
+                    <page name="connect" position="after">
+                        <page name="other_config" string="Other Configuration">
+                            <div class="oe_horizontal_separator">SMTP Quota</div>
+                            <field name="use_smtp_quota" /><label for="use_smtp_quota" />
+                            <group attrs="{'invisible': [('use_smtp_quota', '=', False)]}">
+                                <group>
+                                    <field name="smtp_quota_limit" />
+                                    <field name="smtp_quota_seconds" />
+                                </group>
+                                <group />
+                            </group>
+                        </page>
+                        <page name="outgoing_mails" string="Outgoing mails">
+                            <field name="mail_log_ids" readonly="1">
+                                <tree>
+                                    <field name="subject" />
+                                    <field name="date" />
+                                    <field name="nbr_recipients" />
+                                </tree>
+                            </field>
+                        </page>
+                    </page>
+                </data>
+            </field>
+        </record>
+    </data>
+</openerp>

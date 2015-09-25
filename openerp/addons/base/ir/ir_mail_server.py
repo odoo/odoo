@@ -160,9 +160,6 @@ class ir_mail_server(osv.osv):
                                                        "(this is very verbose and may include confidential info!)"),
         'sequence': fields.integer('Priority', help="When no specific mail server is requested for a mail, the highest priority one "
                                                     "is used. Default priority is 10 (smaller number = higher priority)"),
-        'use_smtp_quota': fields.boolean('SMTP Mail Quota'),
-        'smtp_quota_seconds': fields.integer('Time Frame (Seconds)'),
-        'smtp_quota_limit': fields.integer('Quantity'),
         'active': fields.boolean('Active')
     }
 
@@ -370,7 +367,6 @@ class ir_mail_server(osv.osv):
             return '%s@%s' % (postmaster, domain)
 
     def _get_default_mail_server(self, cr, uid, context=None):
-        context = dict(context) or {}
         mail_server_ids = self.search(cr, SUPERUSER_ID, [], order='sequence', limit=1)
         if mail_server_ids:
             return self.browse(cr, SUPERUSER_ID, mail_server_ids[0])
