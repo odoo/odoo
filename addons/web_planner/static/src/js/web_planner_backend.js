@@ -13,7 +13,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 var PlannerDialog = planner.PlannerDialog;
 
-var PlannerLauncher = Widget.extend({
+var PlannerLauncher = Widget.extend(planner.PlannerHelpMixin, {
     template: "PlannerLauncher",
     init: function(parent) {
         this._super(parent);
@@ -70,33 +70,6 @@ var PlannerLauncher = Widget.extend({
         if (this.dialog) {
             this.dialog.$el.modal('hide');
             this.dialog.$el.detach();
-        }
-    },
-    on_menu_help: function(ev) {
-        ev.preventDefault();
-
-        var menu = $(ev.currentTarget).data('menu');
-        if (menu === 'about') {
-            var self = this;
-            self.rpc("/web/webclient/version_info", {}).done(function(res) {
-                var $help = $(QWeb.render("PlannerLauncher.about", {version_info: res}));
-                $help.find('a.oe_activate_debug_mode').click(function (e) {
-                    e.preventDefault();
-                    window.location = $.param.querystring( window.location.href, 'debug');
-                });
-                new Dialog(this, {
-                    size: 'medium',
-                    dialogClass: 'o_act_window',
-                    title: _t("About"),
-                    $content: $help
-                }).open();
-            });
-        } else if (menu === 'documentation') {
-            window.open('https://www.odoo.com/documentation/user', '_blank');
-        } else if (menu === 'planner') {
-            if (this.dialog) this.show_dialog();
-        } else if (menu === 'support') {
-            window.open('https://www.odoo.com/pricing?noredirect=1', '_blank');
         }
     },
     setup: function(planner) {
