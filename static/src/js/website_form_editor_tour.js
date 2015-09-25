@@ -109,7 +109,7 @@ odoo.define('website_form_editor.tour', function(require) {
                     element:        ".oe_overlay_options:visible li[data-website_form_field_modal] a"
                 },
                 {
-                    title:          "Select the subject field",
+                    title:          "Select the record_name field",
                     element:        "select[name='field_selection']",
                     sampleText:     "record_name"
                 },
@@ -154,7 +154,7 @@ odoo.define('website_form_editor.tour', function(require) {
                     element:        ".oe_overlay_options:visible li[data-website_form_field_modal] a"
                 },
                 {
-                    title:          "Select the subject field",
+                    title:          "Select the body_html field",
                     element:        "select[name='field_selection']",
                     sampleText:     "body_html"
                 },
@@ -182,6 +182,33 @@ odoo.define('website_form_editor.tour', function(require) {
                     waitFor:        ".form-field.o_website_form_required_custom" +
                                     ":has(textarea[name=body_html][required])" +
                                     ":has(label:contains('Your Message'))"
+                },
+
+                // Add recipient_ids relational field
+                {
+                    title:          "Click on Form snippet",
+                    element:        ".s_website_form[data-model_name]"
+                },
+                {
+                    title:          "Click on Customize",
+                    element:        ".oe_overlay_options:visible a[title='Customize']"
+                },
+                {
+                    title:          "Click on Add a model field",
+                    element:        ".oe_overlay_options:visible li[data-website_form_field_modal] a"
+                },
+                {
+                    title:          "Select the recipient_ids field",
+                    element:        "select[name='field_selection']",
+                    sampleText:     "recipient_ids"
+                },
+                {
+                    title:          "Click on Save",
+                    element:        ".modal-footer #modal-save"
+                },
+                {
+                    title:          "Check the resulting field",
+                    waitFor:        ".form-field:has(.control-label:contains('To (Partners)'))"
                 },
 
                 // Add a custom multiple checkboxes field
@@ -434,7 +461,7 @@ odoo.define('website_form_editor.tour', function(require) {
                     element:        ".oe_overlay_options:visible li[data-website_form_field_modal] a"
                 },
                 {
-                    title:          "Select the subject field",
+                    title:          "Select the attachment_ids field",
                     element:        "select[name='field_selection']",
                     sampleText:     "attachment_ids"
                 },

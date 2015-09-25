@@ -305,7 +305,7 @@ odoo.define('website_form_editor', function (require) {
                     model:  field.relation,
                     method: 'search_read',
                     args: [
-                        // field.domain,  TODO: Handle field domains
+                        [],  // field.domain,  TODO: Handle field domains
                         ['display_name']
                     ],
                     kwargs:{"context": base.get_context()}
