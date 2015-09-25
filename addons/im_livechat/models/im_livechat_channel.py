@@ -171,6 +171,7 @@ class ImLivechatChannel(models.Model):
             'channel_type': 'livechat',
             'name': ', '.join([anonymous_name, user.name]),
             'public': 'public',
+            'email_send': False,
         })
         return mail_channel.sudo().with_context(im_livechat_operator_partner_id=operator_partner_id).channel_info()[0]
 

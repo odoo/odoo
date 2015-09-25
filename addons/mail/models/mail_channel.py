@@ -332,6 +332,7 @@ class Channel(models.Model):
                     'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner_id}) for partner_id in partners_to],
                     'public': 'private',
                     'channel_type': 'chat',
+                    'email_send': False,
                     'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
                 })
                 # broadcast the channel header to the other partner (not me)
@@ -495,6 +496,7 @@ class Channel(models.Model):
         new_channel = self.create({
             'name': name,
             'public': privacy,
+            'email_send': False,
             'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]
         })
         return new_channel.channel_info()[0]
