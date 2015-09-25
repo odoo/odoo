@@ -214,7 +214,7 @@ li > p {
 }
 
 font[style*='background'], font[class*='bg-'] {
-  padding: 0 2px
+  padding: 0 2px;
 }
 
 .o_ul_toggle_self, .o_ul_toggle_next {
@@ -287,7 +287,7 @@ td {
   font-size: 120%;
 }
 
-.jumbotron.para_large p{
+.jumbotron.para_large p {
   font-size: 150%;
 }
 
@@ -355,9 +355,7 @@ body > nav.navbar {
     padding-top: 34px;
   }
 }
-
 /* ----- BOOTSTRAP FIX ----- */
-
 @-moz-document url-prefix() {
   .table .img-responsive {
     width: 100%;
@@ -988,4 +986,7 @@ div.carousel .item.text_only .container > .carousel-image {
   margin-right: 0 !important;
 }
 
-/*# sourceMappingURL=website.css.map */
+/* ---- footer style ---- {{{ */
+#footer div.row {
+  word-wrap: break-word;
+}

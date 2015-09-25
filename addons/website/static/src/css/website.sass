@@ -191,9 +191,8 @@ td
 .para_large
     font-size: 120%
 
-.jumbotron.para_large p{
-  font-size: 150%;
-}
+.jumbotron.para_large p
+    font-size: 150%
 
 .readable
     font-size: 120%
@@ -245,7 +244,7 @@ body > nav.navbar
     width: 100%
     position: absolute
     z-index: 10000
-@media (max-min: 767px)
+@media (min-width: 767px)
     nav.navbar + #wrapwrap
         padding-top: 34px
 
@@ -785,3 +784,7 @@ div.carousel
         font-size: 13px
     .navbar-nav.navbar-right:last-child
         margin-right: 0 !important
+
+/* ---- footer style ---- {{{ */
+#footer div.row
+    word-wrap: break-word
