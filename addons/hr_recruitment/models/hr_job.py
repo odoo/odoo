@@ -100,7 +100,7 @@ class Job(models.Model):
             'default_res_model': self._name,
             'default_res_id': self.ids[0]
         }
-        action['domain'] = '%s' % ['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids), '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.mapped('application_ids'))]
+        action['domain'] = ['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids), '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.mapped('application_ids').ids)]
         return action
 
     @api.multi
