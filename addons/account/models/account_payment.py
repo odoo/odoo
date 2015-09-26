@@ -326,7 +326,7 @@ class account_payment(models.Model):
                 raise UserError(_("Only a draft payment can be posted. Trying to post a payment in state %s.") % rec.state)
 
             if any(inv.state != 'open' for inv in rec.invoice_ids):
-                raise ValidationError(_("The payment cannot be processed because an invoice of the payment is not open !"))
+                raise ValidationError(_("The payment cannot be processed because the invoice is not open!"))
 
             # Use the right sequence to set the name
             if rec.payment_type == 'transfer':
