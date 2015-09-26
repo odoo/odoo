@@ -951,15 +951,13 @@
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name='origin']" position="before">
+                <field name="origin" position="before">
                     <field name="bom_id" domain="[('product_id','=',product_id)]"/>
                     <field name="production_id" attrs="{'invisible': [('production_id','=',False)]}"/>
-                </xpath>
-                <xpath expr="//field[@name='origin']" position="after">
-                    <group colspan="4"  groups="product.group_mrp_properties">
-                        <field colspan="4" name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
-                    </group>
-                </xpath>
+                </field>
+                <field name="origin" position="after">
+                    <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
+                </field>
                </data>
             </field>
         </record>

@@ -915,8 +915,16 @@ html[data-translatable] .oe_field_translate
         display: block !important
     .media_iframe_video .css_editable_mode_display
         display: block !important
- 
-.oe_empty[data-oe-placeholder]:empty
+
+    [placeholder]:empty
+        content: " \00a0 " attr(placeholder)
+    [placeholder]:empty:active:after, [placeholder]:empty:focus:after
+        content: none
+    input, textarea, select
+        &[placeholder]:empty
+            content: none
+
+.oe_empty[placeholder]:empty
     min-height: 220px !important
     background-repeat: no-repeat
     background-position: center
@@ -934,7 +942,6 @@ html[data-translatable] .oe_field_translate
         text-align: center
         padding-top: 160px
         display: block
-        content: " \00a0 " attr(data-oe-placeholder)
         font-size: 24px
 
     &.o_no_placeholder_image
@@ -945,7 +952,7 @@ html[data-translatable] .oe_field_translate
     &[data-oe-type=html]
         &:after
             font-size: 16px
-.editor_has_snippets .oe_empty[data-oe-placeholder]:empty
+.editor_has_snippets .oe_empty[placeholder]:empty
     background-image: url('/web_editor/static/src/img/drag_here.png') !important
 
 #web_editor-top-edit

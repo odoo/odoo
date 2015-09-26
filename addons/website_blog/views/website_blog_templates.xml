@@ -225,25 +225,6 @@
         <div id="blog_content" t-field="blog_post.content" class="blog_content mt32"/>
 
 
-    <section id="comments" class="read_width">
-        <hr t-if="comments"/>
-        <ul class="media-list" id="comments-list">
-            <li t-foreach="comments" t-as="message" class="media">
-                <span class="pull-left">
-                    <img t-if="message.author_avatar" class="media-object img img-circle" t-att-src="website.image_url(message, 'author_avatar')" style="width: 30px"/>
-                </span>
-                <div class="media-body">
-                    <t t-call="website.publish_short">
-                        <t t-set="object" t-value="message"/>
-                    </t>
-                    <strong t-field="message.author_id" class="o_not_editable"/>
-                    <span class="text-muted">on <span t-field="message.date"/></span>
-                    <div t-field="message.body" class="discussion_scroll_post col-sm-10"/>
-                </div>
-            </li>
-        </ul>
-    </section>
-
     <t t-if="next_post">
         <div class="cover cover_footer mb0 text-center" t-ignore="True">
             <div id="js_blogcover" t-attf-class="cover_footer_bg #{next_post_cover_properties.get('background-color')}" t-attf-style="background-image: #{next_post_cover_properties.get('background-image')};opacity:#{next_post_cover_properties.get('opacity')}"></div>
@@ -291,23 +272,13 @@
 <!-- Options: Blog Post: user can reply -->
 <template id="opt_blog_post_complete_comment" name="Allow blog post comment"
         inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
-    <xpath expr="//hr" position="attributes">
-        <attribute name="t-if">True</attribute>
-    </xpath>
-    <xpath expr="//ul[@id='comments-list']" position="before">
-        <section class="mb32 read_width css_editable_mode_hidden">
-            <form id="comment" class="js_website_submit_form" t-attf-action="/blog/post_comment/#{blog_post.id}" method="POST">
-                <div class="media">
-                    <span class="pull-left">
-                        <img t-if="user_id.partner_id.image_small" class="img img-circle media-object" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 30px"/>
-                    </span>
-                    <div class="media-body">
-                        <input name="blog_post_id" t-att-value="blog_post.id" type="hidden"/>
-                        <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                        <button type="submit" class="btn btn-primary mt8">Post</button>
-                    </div>
-                </div>
-            </form>
+    <xpath expr="//div[@id='blog_content']" position="after">
+        <section id="comments" class="read_width">
+            <hr/>
+            <t t-call="website_mail.message_thread">
+              <t t-set="object" t-value="blog_post"/>
+              <t t-set="chatter_mode" t-value="'json'"/>
+            </t>
         </section>
     </xpath>
 </template>

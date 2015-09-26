@@ -199,10 +199,6 @@
         <field name="model">hr.equipment</field>
         <field name="arch" type="xml">
             <form string="Equipments">
-                <header>
-                    <field name="category_id" widget="statusbar" clickable="True"
-                            options="{'fold_field': 'fold'}"/>
-                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(hr_equipment_request_action_from_equipment)d"
@@ -215,13 +211,14 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" string="Name" placeholder="Equipment Name"/></h1>
+                        <label for="category_id" class="oe_edit_only"/>
+                        <field name="category_id" options="{&quot;no_open&quot;: True}"/>
                         <label for="serial_no" class="oe_edit_only"/>
                         <field name="serial_no"/>
                     </div>
                     <group>
                         <group>
-                            <field name="category_id" invisible="1" on_change="1" options="{&quot;no_open&quot;: True}"/>
-                            <field name="equipment_assign_to" on_change="1" widget="radio"/>
+                            <field name="equipment_assign_to" widget="radio"/>
                             <field name="employee_id" string="Employee" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'department'), ('equipment_assign_to', '=', False)]}"/>
                             <field name="department_id" string="Department" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'employee'), ('equipment_assign_to', '=', False)]}"/>
                         </group>
@@ -346,7 +343,7 @@
                 <filter string="Assigned" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
                 <filter string="Available" domain="[('employee_id', '=', False), ('department_id', '=', False)]"/>
                 <separator/>
-                <filter string="My Assets" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter string="My Equipments" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <group  expand='0' string='Group by...'>
@@ -362,7 +359,7 @@
     </record>
 
     <record id="hr_equipment_action" model="ir.actions.act_window">
-        <field name="name">IT Assets</field>
+        <field name="name">Equipments</field>
         <field name="res_model">hr.equipment</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_id" ref="hr_equipment_view_kanban"/>
@@ -371,15 +368,16 @@
                 Click to add a new equipment.
             </p><p>
                 This application helps you to track equipments used by employees.
-                Create some laptops, printers or phones and link each asset to an employee or departement.
-                You will manage allocations, issues and maintenance of equipment.
+                Create some laptop, printer or phone and link each equipment to
+                an employee or departement. You will manage allocations, issues
+                and maintenance of equipment.
             </p>
         </field>
     </record>
 
     <!-- hr.equiment : actions -->
     <record id="hr_equipment_action_from_category_form" model="ir.actions.act_window">
-        <field name="name">Assets</field>
+        <field name="name">Equipments</field>
         <field name="res_model">hr.equipment</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="hr_equipment_view_search"/>
@@ -411,7 +409,7 @@
                         class="oe_stat_button"
                         icon="fa-laptop"
                         type="action">
-                        <field string="Assets" name="equipment_count" widget="statinfo"/>
+                        <field string="Equipments" name="equipment_count" widget="statinfo"/>
                     </button>
                     <button name="%(hr_equipment_request_action_link)d"
                         type="action"
@@ -476,7 +474,7 @@
 
     <!-- hr.equipment.category : actions -->
     <record id="hr_equipment_category_action" model="ir.actions.act_window">
-        <field name="name">Asset Categories</field>
+        <field name="name">Equipment Categories</field>
         <field name="res_model">hr.equipment.category</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="hr_equipment_category_view_tree"/>
@@ -529,7 +527,7 @@
     <!-- Menu items hierachy -->
     <menuitem
         id="menu_equipment_title"
-        name="IT Assets"
+        name="Equipments"
         web_icon="hr_equipment,static/description/icon.png"
         sequence="110"/>
 
@@ -550,7 +548,7 @@
 
     <menuitem
         id="menu_hr_equipment_form"
-        name="Assets"
+        name="Equipments"
         parent="menu_equipment_title"
         action="hr_equipment_action"
         groups="base.group_hr_manager,base.group_hr_user,base.group_user"
@@ -565,7 +563,7 @@
 
     <menuitem
         id="menu_equipment_cat"
-        name="Asset Categories"
+        name="Equipment Categories"
         parent="menu_equipment_configuration"
         action="hr_equipment_category_action"
         groups="base.group_no_one"
@@ -582,7 +580,7 @@
     <data noupdate="1">
         <!-- After installation of the module, open the related menu -->
         <record id="action_client_hr_equipment_menu" model="ir.actions.client">
-            <field name="name">Open Assets Menu</field>
+            <field name="name">Open Equipments Menu</field>
             <field name="tag">reload</field>
             <field name="params" eval="{'menu_id': ref('menu_equipment_title')}"/>
         </record>

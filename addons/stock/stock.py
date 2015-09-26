@@ -2396,13 +2396,15 @@ class stock_move(osv.osv):
                     lot_qty[pack_lot.lot_id.id] = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, pack_lot.qty, ops.product_id.uom_id.id)
                 for record in ops.linked_move_operation_ids:
                     move_qty = record.qty
+                    move = record.move_id
                     domain = main_domain[move.id]
                     for lot in lot_qty:
                         if float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(move_qty, 0, precision_rounding=rounding) > 0:
                             qty = min(lot_qty[lot], move_qty)
                             quants = quant_obj.quants_get_preferred_domain(cr, uid, qty, move, ops=ops, lot_id=lot, domain=domain, preferred_domain_list=[], context=context)
-                            quants_to_reserve = [x for x in quants if x[0] and x[0].lot_id]
-                            quant_obj.quants_reserve(cr, uid, quants_to_reserve, move, record, context=context)
+                            quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
+                            lot_qty[lot] -= qty
+                            move_qty -= qty
 
         for move in todo_moves:
             if move.linked_move_operation_ids:
@@ -2489,62 +2491,62 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [move.id], vals, context=context)
 
     def _move_quants_by_lot(self, cr, uid, ops, lot_qty, quants_taken, false_quants, lot_move_qty, quant_dest_package_id, context=None):
+        """
+        This function is used to process all the pack operation lots of a pack operation
+        For every move:
+            First, we check the quants with lot already reserved (and those are already subtracted from the lots to do)
+            Then go through all the lots to process:
+                Add reserved false lots lot by lot
+                Check if there are not reserved quants or reserved elsewhere with that lot or without lot (with the traditional method)
+        """
         quant_obj = self.pool['stock.quant']
-        move_quants_dict = {}
-        domain = [('qty', '>', 0)]
         fallback_domain = [('reservation_id', '=', False)]
         fallback_domain2 = ['&', ('reservation_id', 'not in', [x for x in lot_move_qty.keys()]), ('reservation_id', '!=', False)]
         preferred_domain_list = [fallback_domain] + [fallback_domain2]
         rounding = ops.product_id.uom_id.rounding
-        # Iterate for every move through the different lots taken
-        # Take the reserved quants with the correct lot first
-        # Afterwards take the not reserved quants (or reserved on another move) with the correct lot
-        # If nothing found, take first the quants reserved with False lots before taking others
         for move in lot_move_qty:
-            move_quants_dict[move] = {}
+            move_quants_dict = {}
             move_rec = self.pool['stock.move'].browse(cr, uid, move, context=context)
-            #Needs to be divided by lot still
+            # Assign quants already reserved with lot to the correct
             for quant in quants_taken:
-                move_quants_dict[move].setdefault(quant[0].lot_id.id, [])
-                move_quants_dict[move][quant[0].lot_id.id] += [quant]
+                move_quants_dict.setdefault(quant[0].lot_id.id, [])
+                move_quants_dict[quant[0].lot_id.id] += [quant]
             false_quants_move = [x for x in false_quants if x[0].reservation_id.id == move]
             for lot in lot_qty:
-                move_quants_dict[move].setdefault(lot, [])
+                move_quants_dict.setdefault(lot, [])
+                redo_false_quants = False
+                # Take remaining reserved quants with  no lot first
+                # (This will be used mainly when incoming had no lot and you do outgoing with)
+                while false_quants_move and float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(lot_move_qty[move], 0, precision_rounding=rounding) > 0:
+                    qty_min = min(lot_qty[lot], lot_move_qty[move])
+                    if false_quants_move[0].qty > qty_min:
+                        move_quants_dict[lot] += [(false_quants_move[0], qty_min)]
+                        qty = qty_min
+                        redo_false_quants = True
+                    else:
+                        move_quants_dict[lot] += [false_quants_move[0]]
+                        qty = false_quants_move[0][1]
+                        false_quants_move.pop(0)
+                    lot_qty[lot] -= qty
+                    lot_move_qty[move] -= qty
+
+                # Search other with first matching lots and then without lots
                 if float_compare(lot_move_qty[move], 0, precision_rounding=rounding) > 0 and float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0:
                     # Search if we can find quants with that lot
-                    quants = quant_obj.quants_get_preferred_domain(cr, uid, lot_move_qty[move], move_rec, ops=ops, lot_id=lot, domain=domain,
+                    domain = [('qty', '>', 0)]
+                    qty = min(lot_qty[lot], lot_move_qty[move])
+                    quants = quant_obj.quants_get_preferred_domain(cr, uid, qty, move_rec, ops=ops, lot_id=lot, domain=domain,
                                                         preferred_domain_list=preferred_domain_list, context=context)
-                    while quants and float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(lot_move_qty[move], 0, precision_rounding=rounding) > 0:
-                        quant = quants.pop(0)
-                        if quant[0] and quant[0].lot_id:
-                            qty = min (lot_qty[lot], lot_move_qty[move], quant[1])
-                            move_quants_dict[move][lot] += [(quant[0], qty)]
-                            lot_qty[lot] -= qty
-                            lot_move_qty[move] -= qty
-                        else:
-                            #Take reserved False quants first if no quants with lot anymore
-                            while false_quants_move and float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(lot_move_qty[move], 0, precision_rounding=rounding) > 0:
-                                qty_min = min(lot_qty[lot], lot_move_qty[move])
-                                if false_quants_move[0][1] > qty_min:
-                                    false_quants_move[0][1] -= qty_min
-                                    move_quants_dict[move][lot] += [(false_quants_move[0][0], qty_min)]
-                                    qty = qty_min
-                                else:
-                                    move_quants_dict[move][lot] += [false_quants_move[0]]
-                                    qty = false_quants_move[0][1]
-                                    false_quants_move.pop(0)
-                                lot_qty[lot] -= qty
-                                lot_move_qty[move] -= qty
-                            if float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(lot_move_qty[move], 0,precision_rounding=rounding) > 0:
-                                qty = min (lot_qty[lot], lot_move_qty[move], quant[1])
-                                move_quants_dict[move][lot] += [(quant[0], qty)]
-                                lot_qty[lot] -= qty
-                                lot_move_qty[move] -= qty
+                    move_quants_dict[lot] += quants
 
                 #Move all the quants related to that lot/move
-                quant_obj.quants_move(cr, uid, move_quants_dict[move][lot], move_rec, ops.location_dest_id, location_from=ops.location_id,
+                if move_quants_dict[lot]:
+                    quant_obj.quants_move(cr, uid, move_quants_dict[lot], move_rec, ops.location_dest_id, location_from=ops.location_id,
                                                     lot_id=lot, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id,
                                                     dest_package_id=quant_dest_package_id, context=context)
+                    if redo_false_quants:
+                        move_rec = self.pool['stock.move'].browse(cr, uid, move, context=context)
+                        false_quants_move = [(x, x.qty) for x in move_rec.reserved_quant_ids if not x.lot_id]
 
     def action_done(self, cr, uid, ids, context=None):
         """ Process completely the moves given as ids and if all moves are done, it will finish the picking.

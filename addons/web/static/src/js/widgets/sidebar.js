@@ -179,7 +179,7 @@ var Sidebar = Widget.extend({
         _.each(attachments,function(a) {
             a.label = a.name;
             if(a.type === "binary") {
-                a.url = '/web/content/'  + a.id + '?download=true&t=' + (new Date().getTime());
+                a.url = '/web/content/'  + a.id + '?download=true';
             }
         });
         this.items.files = attachments;

@@ -316,16 +316,15 @@ var RTE = Widget.extend({
                 $node.addClass('o_is_inline_editable');
             }
 
-            // start element observation
-            $node.one('content_changed', function () {
-                $(this).addClass('o_dirty');
-            });
-
             $node.data('initInnerHTML', $node.html());
         });
 
-        $(document).on('content_changed', '.o_editable', function () {
+        // start element observation
+        $(document).on('content_changed', '.o_editable', function (event) {
             self.trigger('change', this);
+            if(!$(this).hasClass('o_dirty')) {
+                $(this).addClass('o_dirty');
+            }
         });
 
         $('#wrapwrap, .o_editable').on('click', '*', this, this.onClick);

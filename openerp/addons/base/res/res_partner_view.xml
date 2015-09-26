@@ -78,7 +78,7 @@
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Name" />
+                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                         </h1>
                         <field name="parent_id"
                             placeholder="Company"
@@ -157,7 +157,7 @@
                             on_change="on_change_company_type(company_type)"
                             options="{'horizontal': true}"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Name" required="1"/>
+                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
@@ -285,7 +285,7 @@
                                                 </div>
                                             </group>
                                             <group>
-                                                <field name="name" string="Contact Name"/>
+                                                <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                                                 <field name="title" placeholder="e.g. Mr."
                                                     attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
