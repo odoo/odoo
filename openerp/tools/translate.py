@@ -843,16 +843,19 @@ def trans_generate(lang, modules, cr):
         lambda m: m['name'],
         registry['ir.module.module'].search_read(cr, uid, [('state', '=', 'installed')], fields=['name']))
 
-    path_list = list(openerp.modules.module.ad_paths)
+    path_list = [(path, True) for path in openerp.modules.module.ad_paths]
     # Also scan these non-addon paths
-    for bin_path in ['osv', 'report' ]:
-        path_list.append(os.path.join(config.config['root_path'], bin_path))
+    for bin_path in ['osv', 'report', 'modules', 'service', 'tools']:
+        path_list.append((os.path.join(config.config['root_path'], bin_path), True))
 
+    # non-recursive scan for individual files in root directory but without
+    # scanning subdirectories that may contain addons
+    path_list.append((config.config['root_path'], False))
     _logger.debug("Scanning modules at paths: %s", path_list)
 
     def get_module_from_path(path):
-        for mp in path_list:
-            if path.startswith(mp) and os.path.dirname(path) != mp:
+        for (mp, rec) in path_list:
+            if rec and path.startswith(mp) and os.path.dirname(path) != mp:
                 path = path[len(mp)+1:]
                 return path.split(os.path.sep)[0]
         return 'base' # files that are not in a module are considered as being in 'base' module
@@ -887,7 +890,7 @@ def trans_generate(lang, modules, cr):
         finally:
             src_file.close()
 
-    for path in path_list:
+    for (path, recursive) in path_list:
         _logger.debug("Scanning files of modules at %s", path)
         for root, dummy, files in osutil.walksymlinks(path):
             for fname in fnmatch.filter(files, '*.py'):
@@ -906,6 +909,9 @@ def trans_generate(lang, modules, cr):
                 for fname in fnmatch.filter(files, '*.xml'):
                     babel_extract_terms(fname, path, root, 'openerp.tools.translate:babel_extract_qweb',
                                         extra_comments=[WEB_TRANSLATION_COMMENT])
+            if not recursive:
+                # due to topdown, first iteration is in first level
+                break
 
     out = []
     # translate strings marked as to be translated
@@ -1025,7 +1031,8 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             if isinstance(res_id, (int, long)) or \
                     (isinstance(res_id, basestring) and res_id.isdigit()):
                 dic['res_id'] = int(res_id)
-                dic['module'] = module_name
+                if module_name:
+                    dic['module'] = module_name
             else:
                 # res_id is an xml id
                 dic['res_id'] = None
@@ -1033,7 +1040,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 if '.' in res_id:
                     dic['module'], dic['imd_name'] = res_id.split('.', 1)
                 else:
-                    dic['module'], dic['imd_name'] = False, res_id
+                    dic['module'], dic['imd_name'] = module_name, res_id
 
             irt_cursor.push(dic)
 

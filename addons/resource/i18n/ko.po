@@ -1,0 +1,404 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * resource
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-08-18 08:38+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: resource
+#: code:addons/resource/resource.py:685
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (사본)"
+
+#. module: resource
+#: code:addons/resource/faces/resource.py:340
+#, python-format
+msgid "(vacation)"
+msgstr "(휴가)"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Define working hours and time table that could be scheduled to your project members\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                프로젝트 참여자가 예약할 수 있는 근무 시간 및 시간표 정의\n              </p>\n            "
+
+#. module: resource
+#: field:resource.resource,active:0
+msgid "Active"
+msgstr "활성"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
+msgid "Closing Days"
+msgstr "종료일"
+
+#. module: resource
+#: field:resource.resource,code:0
+msgid "Code"
+msgstr "코드"
+
+#. module: resource
+#: field:resource.calendar,company_id:0
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: field:resource.calendar.leaves,company_id:0
+#: view:resource.resource:resource.view_resource_resource_search
+#: field:resource.resource,company_id:0
+msgid "Company"
+msgstr "회사"
+
+#. module: resource
+#: code:addons/resource/resource.py:773
+#, python-format
+msgid "Configuration Error!"
+msgstr "환경 설정 오류!"
+
+#. module: resource
+#: field:resource.calendar,create_uid:0
+#: field:resource.calendar.attendance,create_uid:0
+#: field:resource.calendar.leaves,create_uid:0
+#: field:resource.resource,create_uid:0
+msgid "Created by"
+msgstr "작성자"
+
+#. module: resource
+#: field:resource.calendar,create_date:0
+#: field:resource.calendar.attendance,create_date:0
+#: field:resource.calendar.leaves,create_date:0
+#: field:resource.resource,create_date:0
+msgid "Created on"
+msgstr "작성일"
+
+#. module: resource
+#: field:resource.calendar.attendance,dayofweek:0
+msgid "Day of Week"
+msgstr "요일"
+
+#. module: resource
+#: help:resource.resource,calendar_id:0
+msgid "Define the schedule of resource"
+msgstr "자원 일정 정의"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
+msgid "Duration"
+msgstr "기간"
+
+#. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency Factor"
+msgstr "효율 계수"
+
+#. module: resource
+#: field:resource.calendar.leaves,date_to:0
+msgid "End Date"
+msgstr "종료일"
+
+#. module: resource
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr "오류! 휴가 시작일은 휴가 종료일보다 이전이어야 합니다."
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
+msgstr "금요일"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Group By"
+msgstr "그룹화"
+
+#. module: resource
+#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_form
+msgid "Hours"
+msgstr "시간"
+
+#. module: resource
+#: selection:resource.resource,resource_type:0
+msgid "Human"
+msgstr "사람"
+
+#. module: resource
+#: field:resource.calendar,id:0 field:resource.calendar.attendance,id:0
+#: field:resource.calendar.leaves,id:0 field:resource.resource,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: resource
+#: help:resource.calendar.leaves,resource_id:0
+msgid ""
+"If empty, this is a generic holiday for the company. If a resource is set, "
+"the holiday/leave is only for this resource"
+msgstr "비어있는 경우 이것은 회사의 일반 공휴일입니다. 자원을 설정하면 공휴일/휴가는 자원이 됩니다."
+
+#. module: resource
+#: help:resource.resource,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 자원 기록을 숨길 수 있습니다."
+
+#. module: resource
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Inactive"
+msgstr "비활성"
+
+#. module: resource
+#: field:resource.calendar,write_uid:0
+#: field:resource.calendar.attendance,write_uid:0
+#: field:resource.calendar.leaves,write_uid:0
+#: field:resource.resource,write_uid:0
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: resource
+#: field:resource.calendar,write_date:0
+#: field:resource.calendar.attendance,write_date:0
+#: field:resource.calendar.leaves,write_date:0
+#: field:resource.resource,write_date:0
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_leaves
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_tree
+msgid "Leave Detail"
+msgstr "휴가 세부사항"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Leave Month"
+msgstr "월 휴가"
+
+#. module: resource
+#: field:resource.calendar,leave_ids:0
+msgid "Leaves"
+msgstr "휴가"
+
+#. module: resource
+#: code:addons/resource/resource.py:773
+#, python-format
+msgid "Make sure the Working time has been configured with proper week days!"
+msgstr "근무시간이 적절히 구성되어 있는지 확인하십시오!"
+
+#. module: resource
+#: selection:resource.resource,resource_type:0
+msgid "Material"
+msgstr "재료"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Monday"
+msgstr "월요일"
+
+#. module: resource
+#: field:resource.calendar,name:0 field:resource.calendar.attendance,name:0
+#: field:resource.calendar.leaves,name:0 field:resource.resource,name:0
+msgid "Name"
+msgstr "명칭"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_tree
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Reason"
+msgstr "사유"
+
+#. module: resource
+#: help:resource.resource,user_id:0
+msgid "Related user name for the resource to manage its access."
+msgstr "이것에 접근을 관리하는 자원에 대한 관련된 사용자 이름."
+
+#. module: resource
+#: model:ir.ui.menu,name:resource.menu_resource_config
+#: view:resource.calendar.leaves:resource.view_resource_calendar
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: field:resource.calendar.leaves,resource_id:0
+#: view:resource.resource:resource.resource_resource_form
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Resource"
+msgstr "자원"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar
+msgid "Resource Calendar"
+msgstr "자원 달력"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_resource
+msgid "Resource Detail"
+msgstr "자원 세부사항"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+msgid "Resource Leaves"
+msgstr "휴가 자원"
+
+#. module: resource
+#: field:resource.resource,resource_type:0
+msgid "Resource Type"
+msgstr "자원 유형"
+
+#. module: resource
+#: field:resource.calendar.attendance,calendar_id:0
+msgid "Resource's Calendar"
+msgstr "자원 달력"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_resource_tree
+#: model:ir.ui.menu,name:resource.menu_resource_resource
+#: view:resource.resource:resource.resource_resource_tree
+msgid "Resources"
+msgstr "자원"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
+msgid "Resources Leaves"
+msgstr "휴가 자원"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
+msgstr "특정 프로젝트 단계에 참여해야 하는 자원 관리와 작성을 허용합니다. 또한 귀하는 자신의 주당 근로 시간을 기준으로 효율성 수준 및 업무 부하를 설정할 수 있습니다."
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Saturday"
+msgstr "토요일"
+
+#. module: resource
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Search Resource"
+msgstr "자원 검색"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Search Working Period Leaves"
+msgstr "근무 기간 휴가 검색"
+
+#. module: resource
+#: view:resource.calendar:resource.view_resource_calendar_search
+msgid "Search Working Time"
+msgstr "근무 시간 검색"
+
+#. module: resource
+#: field:resource.calendar.leaves,date_from:0
+msgid "Start Date"
+msgstr "시작일"
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Start and End time of working."
+msgstr "근무 시작 및 종료 시간"
+
+#. module: resource
+#: field:resource.calendar.attendance,date_from:0
+msgid "Starting Date"
+msgstr "시작일"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Starting Date of Leave by Month"
+msgstr "월별 휴가 시작일"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Sunday"
+msgstr "일요일"
+
+#. module: resource
+#: help:resource.resource,time_efficiency:0
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
+msgstr "이 필드는 완료 작업에 자원 효율을 묘사한다. 예를 들어 자원을 그에게 할당된 5개의 업무를 5일에 걸쳐 혼자 하도록 한다면 기본적으로 이 단계를 100% 부하로 표시합니다. 그런데 효율을 200%로 놓을 경우 부하는 50%가 됩니다."
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Thursday"
+msgstr "목요일"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Tuesday"
+msgstr "화요일"
+
+#. module: resource
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Type"
+msgstr "유형"
+
+#. module: resource
+#: view:resource.resource:resource.view_resource_resource_search
+#: field:resource.resource,user_id:0
+msgid "User"
+msgstr "사용자"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
+msgstr "수요일"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "근무 세부사항"
+
+#. module: resource
+#: field:resource.calendar.attendance,hour_from:0
+msgid "Work from"
+msgstr "근무 시작"
+
+#. module: resource
+#: field:resource.calendar.attendance,hour_to:0
+msgid "Work to"
+msgstr "근무 종료"
+
+#. module: resource
+#: field:resource.calendar,manager:0
+msgid "Workgroup Manager"
+msgstr "작업 그룹 관리자"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Working Period"
+msgstr "근무 기간"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: model:ir.ui.menu,name:resource.menu_resource_calendar
+#: view:resource.calendar:resource.resource_calendar_form
+#: view:resource.calendar:resource.view_resource_calendar_search
+#: view:resource.calendar:resource.view_resource_calendar_tree
+#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_form
+#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_tree
+#: field:resource.calendar.leaves,calendar_id:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Time"
+msgstr "근무시간"

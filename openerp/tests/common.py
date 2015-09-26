@@ -144,11 +144,24 @@ class TransactionCase(BaseCase):
         #: :class:`~openerp.api.Environment` for the current test case
         self.env = api.Environment(self.cr, self.uid, {})
 
-    def tearDown(self):
-        # rollback and close the cursor, and reset the environments
-        self.env.reset()
-        self.cr.rollback()
-        self.cr.close()
+        @self.addCleanup
+        def reset():
+            # rollback and close the cursor, and reset the environments
+            self.env.reset()
+            self.cr.rollback()
+            self.cr.close()
+
+    def patch_order(self, model, order):
+        m_e = self.env[model]
+        m_r = self.registry(model)
+
+        old_order = m_e._order
+
+        @self.addCleanup
+        def cleanup():
+            m_r._order = type(m_e)._order = old_order
+
+        m_r._order = type(m_e)._order = order
 
 
 class SingleTransactionCase(BaseCase):
@@ -332,6 +345,7 @@ class HttpCase(TransactionCase):
                 phantom.terminate()
                 phantom.wait()
             self._wait_remaining_requests()
+            # we ignore phantomjs return code as we kill it as soon as we have ok
             _logger.info("phantom_run execution finished")
 
     def _wait_remaining_requests(self):

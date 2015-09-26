@@ -688,9 +688,9 @@ openerp.web_calendar = function(instance) {
                             var color_field = self.fields[self.color_field];
                             _.each(events, function (e) {
                                 var key,val = null;
-                                if (self.color_field.type == "selection") {
+                                if (color_field.type == "selection") {
                                     key = e[self.color_field];
-                                    val = _.find( self.color_field.selection, function(name){ return name[0] === key;});
+                                    val = _.find(color_field.selection, function(name){ return name[0] === key;});
                                 }
                                 else {
                                     key = e[self.color_field][0];
@@ -716,7 +716,7 @@ openerp.web_calendar = function(instance) {
                                 self.sidebar.filter.set_filters();
                                 
                                 events = $.map(events, function (e) {
-                                    var key = self.color_field.type == "selection" ? e[self.color_field] : e[self.color_field][0];
+                                    var key = color_field.type == "selection" ? e[self.color_field] : e[self.color_field][0];
                                     if (_.contains(self.now_filter_ids, key) &&  self.all_filters[key].is_checked) {
                                         return e;
                                     }

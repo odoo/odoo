@@ -505,6 +505,7 @@ ALL_LANGUAGES = {
         'es_UY': u'Spanish (UY) / Español (UY)',
         'es_VE': u'Spanish (VE) / Español (VE)',
         'et_EE': u'Estonian / Eesti keel',
+        'eu_ES': u'Basque / Euskara',
         'fa_IR': u'Persian / فارس',
         'fi_FI': u'Finnish / Suomi',
         'fr_BE': u'French (BE) / Français (BE)',

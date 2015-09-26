@@ -944,23 +944,15 @@
     });
 
     website.snippet.options.slider = website.snippet.Option.extend({
-        unique_id: function () {
-            var id = 0;
-            $(".carousel").each(function () {
-                var cid = 1 + parseInt($(this).attr("id").replace(/[^0123456789]/g, ''),10);
-                if (id < cid) id = cid;
-            });
-            return "myCarousel" + id;
-        },
         drop_and_build_snippet: function() {
-            this.id = this.unique_id();
+            this.id = "myCarousel_" + new Date().getTime();
             this.$target.attr("id", this.id);
             this.$target.find("[data-slide]").attr("data-cke-saved-href", "#" + this.id);
             this.$target.find("[data-target]").attr("data-target", "#" + this.id);
             this.rebind_event();
         },
         on_clone: function ($clone) {
-            var id = this.unique_id();
+            var id = "myCarousel_" + new Date().getTime();
             $clone.attr("id", id);
             $clone.find("[data-slide]").attr("href", "#" + id);
             $clone.find("[data-slide-to]").attr("data-target", "#" + id);

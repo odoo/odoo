@@ -1,0 +1,536 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment
+# 
+# Translators:
+# 珠海-老天 <liangjia@qq.com>, 2015
+# mrshelly <mrshelly@hotmail.com>, 2015
+# THL <wt39181819@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-08-24 15:04+0000\n"
+"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment
+#: help:account.config.settings,module_payment_adyen:0
+msgid "-It installs the module payment_adyen."
+msgstr "-安装模块 payment_adyen 。"
+
+#. module: payment
+#: help:account.config.settings,module_payment_buckaroo:0
+msgid "-It installs the module payment_buckaroo."
+msgstr "-为此将安装“ payment_buckaroo”模块。"
+
+#. module: payment
+#: help:account.config.settings,module_payment_ogone:0
+msgid "-It installs the module payment_ogone."
+msgstr "-它安装模块“payment_ogone”。"
+
+#. module: payment
+#: help:account.config.settings,module_payment_paypal:0
+msgid "-It installs the module payment_paypal."
+msgstr "-为此将安装 payment_paypal 模块。"
+
+#. module: payment
+#: field:payment.transaction,acquirer_id:0
+msgid "Acquirer"
+msgstr "采购方"
+
+#. module: payment
+#: field:payment.transaction,acquirer_reference:0
+msgid "Acquirer Order Reference"
+msgstr "采购单参考"
+
+#. module: payment
+#: field:payment.transaction,partner_address:0
+msgid "Address"
+msgstr "地址"
+
+#. module: payment
+#: field:payment.transaction,amount:0
+msgid "Amount"
+msgstr "本位币金额"
+
+#. module: payment
+#: help:payment.transaction,amount:0
+msgid "Amount in cents"
+msgstr "多少价值"
+
+#. module: payment
+#: selection:payment.acquirer,validation:0
+msgid "Automatic"
+msgstr "自动"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Canceled"
+msgstr "已作废"
+
+#. module: payment
+#: field:payment.transaction,partner_city:0
+msgid "City"
+msgstr "城市"
+
+#. module: payment
+#: field:payment.acquirer,company_id:0
+msgid "Company"
+msgstr "公司"
+
+#. module: payment
+#: field:payment.acquirer,fees_active:0
+msgid "Compute fees"
+msgstr "计算费用"
+
+#. module: payment
+#: field:payment.transaction,partner_country_id:0
+msgid "Country"
+msgstr "国家"
+
+#. module: payment
+#: field:payment.acquirer,create_uid:0 field:payment.transaction,create_uid:0
+msgid "Created by"
+msgstr "创建人"
+
+#. module: payment
+#: field:payment.acquirer,create_date:0
+#: field:payment.transaction,create_date:0
+msgid "Created on"
+msgstr "创建"
+
+#. module: payment
+#: field:payment.transaction,date_create:0
+msgid "Creation Date"
+msgstr "创建日期"
+
+#. module: payment
+#: field:payment.transaction,currency_id:0
+msgid "Currency"
+msgstr "币别"
+
+#. module: payment
+#: help:payment.transaction,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "发布到记录上的最后信息的日期"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Done"
+msgstr "已完成"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Draft"
+msgstr "草稿"
+
+#. module: payment
+#: field:payment.transaction,partner_email:0
+msgid "Email"
+msgstr "电子邮件"
+
+#. module: payment
+#: field:payment.acquirer,environment:0
+msgid "Environment"
+msgstr "环境"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Error"
+msgstr "错误"
+
+#. module: payment
+#: field:payment.transaction,fees:0
+msgid "Fees"
+msgstr "费用"
+
+#. module: payment
+#: help:payment.transaction,fees:0
+msgid "Fees amount; set by the system because depends on the acquirer"
+msgstr "结算金额;由系统设置中的采购设置自动生成"
+
+#. module: payment
+#: help:payment.transaction,state_message:0
+msgid "Field used to store error and/or validation messages for information"
+msgstr "用来存储错误或信息的验证信息领域"
+
+#. module: payment
+#: field:payment.acquirer,fees_dom_fixed:0
+msgid "Fixed domestic fees"
+msgstr "国内固定费用"
+
+#. module: payment
+#: field:payment.acquirer,fees_int_fixed:0
+msgid "Fixed international fees"
+msgstr "固定的手续费"
+
+#. module: payment
+#: field:payment.transaction,message_follower_ids:0
+msgid "Followers"
+msgstr "关注者"
+
+#. module: payment
+#: selection:payment.transaction,type:0
+msgid "Form"
+msgstr "表单"
+
+#. module: payment
+#: field:payment.acquirer,view_template_id:0
+msgid "Form Button Template"
+msgstr "Form按钮模板"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_search
+msgid "Group By"
+msgstr "分组"
+
+#. module: payment
+#: help:payment.transaction,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "保存聊天摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是HTML格式。"
+
+#. module: payment
+#: field:payment.acquirer,id:0 field:payment.transaction,id:0
+msgid "ID"
+msgstr "标识"
+
+#. module: payment
+#: help:payment.transaction,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "如果勾选此项，需要你关注新消息。"
+
+#. module: payment
+#: field:payment.transaction,message_is_follower:0
+msgid "Is a Follower"
+msgstr "是一个关注者"
+
+#. module: payment
+#: field:payment.transaction,partner_lang:0
+msgid "Lang"
+msgstr "长度"
+
+#. module: payment
+#: field:payment.transaction,message_last_post:0
+msgid "Last Message Date"
+msgstr "最后信息日期"
+
+#. module: payment
+#: field:payment.acquirer,write_uid:0 field:payment.transaction,write_uid:0
+msgid "Last Updated by"
+msgstr "最后更新"
+
+#. module: payment
+#: field:payment.acquirer,write_date:0 field:payment.transaction,write_date:0
+msgid "Last Updated on"
+msgstr "最后一次更新"
+
+#. module: payment
+#: help:payment.acquirer,website_published:0
+msgid "Make this payment acquirer available (Customer invoices, etc.)"
+msgstr "创建采购付款单据(客户发票等)"
+
+#. module: payment
+#: field:account.config.settings,module_payment_adyen:0
+msgid "Manage Payments Using Adyen"
+msgstr "使用Adyen管理付款"
+
+#. module: payment
+#: field:account.config.settings,module_payment_buckaroo:0
+msgid "Manage Payments Using Buckaroo"
+msgstr "使用 Buckaroo管理付款"
+
+#. module: payment
+#: field:account.config.settings,module_payment_ogone:0
+msgid "Manage Payments Using Ogone"
+msgstr "使用Ogone管理付款"
+
+#. module: payment
+#: field:account.config.settings,module_payment_paypal:0
+msgid "Manage Payments Using Paypal"
+msgstr "使用Paypal（贝宝）进行付款管理"
+
+#. module: payment
+#: selection:payment.acquirer,validation:0
+msgid "Manual"
+msgstr "手动"
+
+#. module: payment
+#: field:payment.acquirer,pre_msg:0 field:payment.transaction,state_message:0
+msgid "Message"
+msgstr "消息"
+
+#. module: payment
+#: help:payment.acquirer,post_msg:0
+msgid "Message displayed after having done the payment process."
+msgstr "在付款完成后显示完成消息通知"
+
+#. module: payment
+#: help:payment.acquirer,pre_msg:0
+msgid "Message displayed to explain and help the payment process."
+msgstr "在支付过程中显示说明及帮助信息."
+
+#. module: payment
+#: field:payment.transaction,message_ids:0
+msgid "Messages"
+msgstr "消息"
+
+#. module: payment
+#: help:payment.transaction,message_ids:0
+msgid "Messages and communication history"
+msgstr "消息和通信历史"
+
+#. module: payment
+#: field:payment.acquirer,name:0
+msgid "Name"
+msgstr "名称"
+
+#. module: payment
+#: field:payment.transaction,reference:0
+msgid "Order Reference"
+msgstr "订单关联"
+
+#. module: payment
+#: field:payment.transaction,partner_id:0
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: payment
+#: field:payment.transaction,partner_name:0
+msgid "Partner Name"
+msgstr "业务伙伴名称"
+
+#. module: payment
+#: field:payment.transaction,partner_reference:0
+msgid "Partner Reference"
+msgstr "联系人参考"
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:274
+#, python-format
+msgid "Pay safely online"
+msgstr "安全在线支付"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_acquirer
+#: view:payment.acquirer:payment.acquirer_form
+msgid "Payment Acquirer"
+msgstr "付款方式"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_acquirer
+#: model:ir.ui.menu,name:payment.payment_acquirer_menu
+#: view:payment.acquirer:payment.acquirer_list
+msgid "Payment Acquirers"
+msgstr "收单银行"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "支付交易"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_transaction
+#: model:ir.ui.menu,name:payment.payment_transaction_menu
+#: view:payment.transaction:payment.transaction_form
+#: view:payment.transaction:payment.transaction_list
+msgid "Payment Transactions"
+msgstr "支付交易"
+
+#. module: payment
+#: model:ir.ui.menu,name:payment.root_payment_menu
+msgid "Payments"
+msgstr "付款"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Pending"
+msgstr "待处理"
+
+#. module: payment
+#: field:payment.transaction,partner_phone:0
+msgid "Phone"
+msgstr "电话"
+
+#. module: payment
+#: field:payment.acquirer,validation:0
+msgid "Process Method"
+msgstr "过程方法"
+
+#. module: payment
+#: selection:payment.acquirer,environment:0
+msgid "Production"
+msgstr "生产单编码"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_search
+#: field:payment.acquirer,provider:0
+msgid "Provider"
+msgstr "提供者"
+
+#. module: payment
+#: help:payment.transaction,acquirer_reference:0
+msgid "Reference of the TX as stored in the acquirer database"
+msgstr "存储在主数据库的TX作为参考"
+
+#. module: payment
+#: help:payment.transaction,partner_reference:0
+msgid "Reference of the customer in the acquirer database"
+msgstr "供应商数据参照"
+
+#. module: payment
+#: constraint:payment.acquirer:0
+msgid "Required fields not filled"
+msgstr "必须填写的信息没有填写"
+
+#. module: payment
+#: view:payment.transaction:payment.transaction_form
+msgid "Send a message to the group"
+msgstr "发送信息到该组"
+
+#. module: payment
+#: selection:payment.transaction,type:0
+msgid "Server To Server"
+msgstr "服务器间"
+
+#. module: payment
+#: help:payment.acquirer,validation:0
+msgid "Static payments are payments like transfer, that require manual steps."
+msgstr "像转账类的静态付款，需要手动步骤。"
+
+#. module: payment
+#: field:payment.transaction,state:0
+msgid "Status"
+msgstr "状态"
+
+#. module: payment
+#: field:payment.transaction,message_summary:0
+msgid "Summary"
+msgstr "摘要"
+
+#. module: payment
+#: selection:payment.acquirer,environment:0
+msgid "Test"
+msgstr "测试"
+
+#. module: payment
+#: field:payment.acquirer,post_msg:0
+msgid "Thanks Message"
+msgstr "感谢留言"
+
+#. module: payment
+#: sql_constraint:payment.transaction:0
+msgid "The payment transaction reference must be unique!"
+msgstr "支付的订单必须是唯一的"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid ""
+"This template renders the acquirer button with all necessary values.\n"
+"                                    It is be rendered with qWeb with the following evaluation context:"
+msgstr "这个模板将会在指定状态时显示采购按钮"
+
+#. module: payment
+#: field:payment.transaction,type:0
+msgid "Type"
+msgstr "类型"
+
+#. module: payment
+#: field:payment.transaction,message_unread:0
+msgid "Unread Messages"
+msgstr "未读信息"
+
+#. module: payment
+#: field:payment.transaction,date_validate:0
+msgid "Validation Date"
+msgstr "审核日期"
+
+#. module: payment
+#: field:payment.acquirer,fees_dom_var:0
+msgid "Variable domestic fees (in percents)"
+msgstr "动态内部费用(百分比)"
+
+#. module: payment
+#: field:payment.acquirer,fees_int_var:0
+msgid "Variable international fees (in percents)"
+msgstr "可变的交易费用（百分比）"
+
+#. module: payment
+#: field:payment.acquirer,website_published:0
+msgid "Visible in Portal / Website"
+msgstr "在门户/网站可见"
+
+#. module: payment
+#: field:payment.transaction,website_message_ids:0
+msgid "Website Messages"
+msgstr "网站消息"
+
+#. module: payment
+#: help:payment.transaction,website_message_ids:0
+msgid "Website communication history"
+msgstr "网站沟通记录"
+
+#. module: payment
+#: field:payment.transaction,partner_zip:0
+msgid "Zip"
+msgstr "邮编"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "acquirer: payment.acquirer browse record"
+msgstr "采购: payment.acquirer 浏览数据"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "amount: the transaction amount, a float"
+msgstr "金额:交易金额,浮点数"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "context: the current context dictionary"
+msgstr "context:当前上下相关字典"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "currency: the transaction currency browse record"
+msgstr "货币：货币交易浏览记录"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "partner: the buyer partner browse record, not necessarily set"
+msgstr "联系人:客户浏览历史(不完全)"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid ""
+"partner_values: specific values about the buyer, for example coming from a "
+"shipping form"
+msgstr "partner_values: 关于购买的运费需要参考具体的货运方法,如航空等"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "reference: the transaction reference number"
+msgstr "reference: 参考订单号"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "tx_url: transaction URL to post the form"
+msgstr "tx_url:交易后的形式的URL"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "tx_values: transaction values"
+msgstr "tx_values:交易价值"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "user: current user browse record"
+msgstr "user: 当前用户浏览记录"

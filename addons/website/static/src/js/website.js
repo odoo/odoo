@@ -368,8 +368,8 @@
             // retrieve the hash before the redirect
             var redirect = {
                 lang: self.data('lang'),
-                url: self.attr('href'),
-                hash: location.hash
+                url: encodeURIComponent(self.attr('href')),
+                hash: encodeURIComponent(location.hash)
             };
             location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
         });

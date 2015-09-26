@@ -836,9 +836,9 @@ class account_move_line(osv.osv):
                 ret_line['credit_currency'] = actual_credit
                 ret_line['debit_currency'] = actual_debit
                 if target_currency == company_currency:
-                    actual_debit = debit
-                    actual_credit = credit
-                    total_amount = debit or credit
+                    actual_debit = debit > 0 and amount or 0.0
+                    actual_credit = credit > 0 and amount or 0.0
+                    total_amount = abs(debit - credit)
                 else:
                     ctx = context.copy()
                     ctx.update({'date': line.date})

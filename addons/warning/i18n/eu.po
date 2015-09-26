@@ -1,0 +1,179 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * warning
+# 
+# Translators:
+# Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-09-09 12:56+0000\n"
+"Last-Translator: Oihane Crucelaegui <oihanecruce@gmail.com>\n"
+"Language-Team: Basque (http://www.transifex.com/odoo/odoo-8/language/eu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: eu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
+msgid "Blocking Message"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_account_invoice
+#: field:res.partner,invoice_warn:0
+msgid "Invoice"
+msgstr "Faktura"
+
+#. module: warning
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr ""
+
+#. module: warning
+#: field:res.partner,purchase_warn_msg:0
+msgid "Message for Purchase Order"
+msgstr ""
+
+#. module: warning
+#: field:product.template,purchase_line_warn_msg:0
+msgid "Message for Purchase Order Line"
+msgstr ""
+
+#. module: warning
+#: field:res.partner,sale_warn_msg:0
+msgid "Message for Sales Order"
+msgstr ""
+
+#. module: warning
+#: field:product.template,sale_line_warn_msg:0
+msgid "Message for Sales Order Line"
+msgstr ""
+
+#. module: warning
+#: field:res.partner,picking_warn_msg:0
+msgid "Message for Stock Picking"
+msgstr ""
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
+msgid "No Message"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_res_partner
+msgid "Partner"
+msgstr "Kidea"
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Picking List"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_purchase_order
+#: field:res.partner,purchase_warn:0
+msgid "Purchase Order"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_purchase_order_line
+#: field:product.template,purchase_line_warn:0
+msgid "Purchase Order Line"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order field:res.partner,sale_warn:0
+msgid "Sales Order"
+msgstr "Salmenta eskaria"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+#: field:product.template,sale_line_warn:0
+msgid "Sales Order Line"
+msgstr "Salmenta lerroa"
+
+#. module: warning
+#: code:addons/warning/warning.py:31
+#: help:product.template,purchase_line_warn:0
+#: help:product.template,sale_line_warn:0 help:res.partner,invoice_warn:0
+#: help:res.partner,picking_warn:0 help:res.partner,purchase_warn:0
+#: help:res.partner,sale_warn:0
+#, python-format
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: warning
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr ""
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr ""
+
+#. module: warning
+#: code:addons/warning/warning.py:64 code:addons/warning/warning.py:94
+#: code:addons/warning/warning.py:132 code:addons/warning/warning.py:166
+#: code:addons/warning/warning.py:216 code:addons/warning/warning.py:250
+#, python-format
+msgid "Warning for %s"
+msgstr ""
+
+#. module: warning
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Invoice"
+msgstr ""
+
+#. module: warning
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Picking"
+msgstr ""
+
+#. module: warning
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Purchase Order"
+msgstr ""
+
+#. module: warning
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Sales Order"
+msgstr ""
+
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+msgid "Warning when Purchasing this Product"
+msgstr ""
+
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+msgid "Warning when Selling this Product"
+msgstr ""
+
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warnings"
+msgstr ""

@@ -19,8 +19,16 @@
 #
 ##############################################################################
 
+import datetime
 from openerp.exceptions import AccessError
+
+##############################################################################
+#
+#    OLD API
+#
+##############################################################################
 from openerp.osv import osv, fields
+
 
 class res_partner(osv.Model):
     _inherit = 'res.partner'
@@ -41,6 +49,48 @@ class res_partner(osv.Model):
     }
 
 
+class TestFunctionCounter(osv.Model):
+    _name = 'test_old_api.function_counter'
+
+    def _compute_cnt(self, cr, uid, ids, fname, arg, context=None):
+        res = {}
+        for cnt in self.browse(cr, uid, ids, context=context):
+            res[cnt.id] = cnt.access and cnt.cnt + 1 or 0
+        return res
+
+    _columns = {
+        'access': fields.datetime('Datetime Field'),
+        'cnt': fields.function(
+            _compute_cnt, type='integer', string='Function Field', store=True),
+    }
+
+
+class TestFunctionNoInfiniteRecursion(osv.Model):
+    _name = 'test_old_api.function_noinfiniterecursion'
+
+    def _compute_f1(self, cr, uid, ids, fname, arg, context=None):
+        res = {}
+        for tf in self.browse(cr, uid, ids, context=context):
+            res[tf.id] = 'create' in tf.f0 and 'create' or 'write'
+        cntobj = self.pool['test_old_api.function_counter']
+        cnt_id = self.pool['ir.model.data'].xmlid_to_res_id(
+            cr, uid, 'test_new_api.c1')
+        cntobj.write(
+            cr, uid, cnt_id, {'access': datetime.datetime.now()},
+            context=context)
+        return res
+
+    _columns = {
+        'f0': fields.char('Char Field'),
+        'f1': fields.function(
+            _compute_f1, type='char', string='Function Field', store=True),
+    }
+
+##############################################################################
+#
+#    NEW API
+#
+##############################################################################
 from openerp import models, fields, api, _
 
 

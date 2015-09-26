@@ -253,7 +253,7 @@ class PaymentTxOgone(osv.Model):
                 'state': 'cancel',
                 'acquirer_reference': data.get('PAYID'),
             })
-        elif status in self._ogone_pending_tx_status:
+        elif status in self._ogone_pending_tx_status or status in self._ogone_wait_tx_status:
             tx.write({
                 'state': 'pending',
                 'acquirer_reference': data.get('PAYID'),
@@ -395,11 +395,11 @@ class PaymentTxOgone(osv.Model):
         tx = self.browse(cr, uid, id, context=context)
 
         tx_data = self.ogone_s2s_generate_values(cr, uid, id, values, context=context)
-        _logger.info('Generated Ogone s2s data %s', pformat(tx_data))  # debug
+        _logger.debug('Generated Ogone s2s data %s', pformat(tx_data))
 
         request = urllib2.Request(tx.acquirer_id.ogone_direct_order_url, urlencode(tx_data))
         result = urllib2.urlopen(request).read()
-        _logger.info('Contacted Ogone direct order; result %s', result)  # debug
+        _logger.debug('Contacted Ogone direct order; result %s', result)
 
         tree = objectify.fromstring(result)
         payid = tree.get('PAYID')

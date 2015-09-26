@@ -65,5 +65,17 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(mother._columns['state'].selection,
                          [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
 
+    def test_50_search_one2many(self):
+        """ check search on one2many field based on inherited many2one field. """
+        # create a daughter record attached to partner Demo
+        partner_demo = self.env.ref('base.partner_demo')
+        daughter = self.env['test.inherit.daughter'].create({'partner_id': partner_demo.id})
+        self.assertEqual(daughter.partner_id, partner_demo)
+        self.assertIn(daughter, partner_demo.daughter_ids)
+
+        # search the partner from the daughter record
+        partners = self.env['res.partner'].search([('daughter_ids', 'in', daughter.ids)])
+        self.assertIn(partner_demo, partners)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

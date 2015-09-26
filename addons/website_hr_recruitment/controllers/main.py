@@ -90,6 +90,12 @@ class website_hr_recruitment(http.Controller):
             'default': default,
         })
 
+    def _get_applicant_char_fields(self):
+        return ['email_from', 'partner_name', 'description']
+
+    def _get_applicant_relational_fields(self):
+        return ['department_id', 'job_id']
+
     @http.route('/jobs/thankyou', methods=['POST'], type='http', auth="public", website=True)
     def jobs_thankyou(self, **post):
         error = {}
@@ -110,9 +116,9 @@ class website_hr_recruitment(http.Controller):
             'source_id' : env.ref('hr_recruitment.source_website_company').id,
             'name': '%s\'s Application' % post.get('partner_name'), 
         }
-        for f in ['email_from', 'partner_name', 'description']:
+        for f in self._get_applicant_char_fields():
             value[f] = post.get(f)
-        for f in ['department_id', 'job_id']:
+        for f in self._get_applicant_relational_fields():
             value[f] = int(post.get(f) or 0)
         # Retro-compatibility for saas-3. "phone" field should be replace by "partner_phone" in the template in trunk.
         value['partner_phone'] = post.pop('phone', False)

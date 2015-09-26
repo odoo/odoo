@@ -25,6 +25,7 @@ from openerp.exceptions import Warning
 from openerp.tools import float_compare, float_round
 from openerp.tools.translate import _
 import product
+from openerp import SUPERUSER_ID
 
 
 class stock_landed_cost(osv.osv):
@@ -65,12 +66,11 @@ class stock_landed_cost(osv.osv):
                 if move.product_id.valuation != 'real_time' or move.product_id.cost_method != 'real':
                     continue
                 total_cost = 0.0
-                total_qty = move.product_qty
                 weight = move.product_id and move.product_id.weight * move.product_qty
                 volume = move.product_id and move.product_id.volume * move.product_qty
                 for quant in move.quant_ids:
-                    total_cost += quant.cost
-                vals = dict(product_id=move.product_id.id, move_id=move.id, quantity=move.product_uom_qty, former_cost=total_cost * total_qty, weight=weight, volume=volume)
+                    total_cost += quant.cost * quant.qty
+                vals = dict(product_id=move.product_id.id, move_id=move.id, quantity=move.product_uom_qty, former_cost=total_cost, weight=weight, volume=volume)
                 lines.append(vals)
         if not lines:
             raise osv.except_osv(_('Error!'), _('The selected picking does not contain any move that would be impacted by landed costs. Landed costs are only possible for products configured in real time valuation with real price costing method. Please make sure it is the case, or you selected the correct picking'))
@@ -215,8 +215,7 @@ class stock_landed_cost(osv.osv):
                     else:
                         quant_dict[quant.id] += diff
                 for key, value in quant_dict.items():
-                    print value
-                    quant_obj.write(cr, uid, key, {'cost': value}, context=context)
+                    quant_obj.write(cr, SUPERUSER_ID, key, {'cost': value}, context=context)
                 qty_out = 0
                 for quant in line.move_id.quant_ids:
                     if quant.location_id.usage != 'internal':

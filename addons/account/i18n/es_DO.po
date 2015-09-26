@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-01 22:51+0000\n"
+"PO-Revision-Date: 2015-09-04 20:09+0000\n"
 "Last-Translator: Eneldo Serrata <eneldoserrata@gmail.com>\n"
-"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/projects/p/odoo-8/language/es_DO/)\n"
+"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-8/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -7788,7 +7788,7 @@ msgstr "Nota de crédito de proveedor"
 #: code:addons/account/account.py:3189
 #, python-format
 msgid "Purchase Refund Journal"
-msgstr "Diario de abono de compras"
+msgstr "Diario de nota de crédito proveedor"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart
@@ -7814,7 +7814,7 @@ msgstr "Diario de compra"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr "Diario de Notas de crédito de compras"
+msgstr "Diario de nota de crédito proveedor"
 
 #. module: account
 #: field:account.config.settings,purchase_tax_rate:0
@@ -9144,6 +9144,11 @@ msgstr "Secuencia de factura de proveedor"
 #: model:ir.ui.menu,name:account.menu_finance_payables
 msgid "Suppliers"
 msgstr "Proveedores"
+
+#. module: account
+#: view:website:account.report_invoice_document
+msgid "TIN:"
+msgstr ""
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
@@ -11654,3 +11659,16 @@ msgstr "Utilizado en el dominio de conciliación de extractos, pero no debería 
 #: selection:account.subscription,period_type:0
 msgid "year"
 msgstr "año"
+
+#. module: account
+#: model:res.company,overdue_msg:stock.res_company_1
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr "Estimado Señor / Señora,\n\nNuestros registros indican que algunos de los pagos en su cuenta todavía debe. Encuentre detalles a continuación.\nSi ya se ha pagado la cantidad, por favor ignore este aviso. De lo contrario, por favor enviar la cantidad total se indica a continuación.\nSi tiene cualquier pregunta relacionada con su cuenta, por favor póngase en contacto con nosotros.\n\nGracias de antemano por su colaboración.\nAtentamente,"

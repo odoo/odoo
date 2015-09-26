@@ -1,0 +1,691 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-8/language/bs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_tree
+msgid "# of Products"
+msgstr ""
+
+#. module: stock_account
+#: view:product.template:stock_account.view_template_property_form
+msgid "- update"
+msgstr "- ažuriraj"
+
+#. module: stock_account
+#: view:product.category:stock_account.view_category_property_form
+msgid "Account Stock Properties"
+msgstr "Svojstva računovodstvene zalihe"
+
+#. module: stock_account
+#: view:stock.config.settings:stock_account.view_stock_config_settings_inherit
+msgid "Accounting"
+msgstr "Računovodstvo"
+
+#. module: stock_account
+#: view:stock.location:stock_account.view_location_form_inherit
+msgid "Accounting Information"
+msgstr "Računovodstvene informacije"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_change_standard_price.py:76
+#, python-format
+msgid "Active ID is not set in Context."
+msgstr "Aktivni ID nije postavljn u kontekstu."
+
+#. module: stock_account
+#: help:stock.config.settings,group_stock_inventory_valuation:0
+msgid ""
+"Allows to configure inventory valuations on products and product categories."
+msgstr "Dozvoljava da konfigurišete vrednovanje inventure na proizvodima i kategorijama proizvoda."
+
+#. module: stock_account
+#: selection:product.template,cost_method:0
+msgid "Average Price"
+msgstr "Prosječna Cijena"
+
+#. module: stock_account
+#: field:stock.config.settings,module_stock_landed_costs:0
+msgid "Calculate landed costs on products"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+#: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid "Cancel"
+msgstr "Otkaži"
+
+#. module: stock_account
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+msgid "Change Price"
+msgstr "Promjeni cijenu"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_view_change_standard_price
+#: model:ir.model,name:stock_account.model_stock_change_standard_price
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+msgid "Change Standard Price"
+msgstr "Promjeni standardnu cijenu"
+
+#. module: stock_account
+#: field:wizard.valuation.history,choose_date:0
+msgid "Choose a Particular Date"
+msgstr ""
+
+#. module: stock_account
+#: help:stock.inventory,period_id:0
+msgid ""
+"Choose the accounting period where you want to value the stock moves created"
+" by the inventory instead of the default one (chosen by the inventory end "
+"date)"
+msgstr ""
+
+#. module: stock_account
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid ""
+"Choose the date for which you want to get the stock valuation of your products.\n"
+"\n"
+"                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
+"                        you had, and gives you the inventory value according to the standard price used at that time."
+msgstr ""
+
+#. module: stock_account
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid "Choose your date"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_search
+#: field:stock.history,company_id:0
+msgid "Company"
+msgstr "Kompanija"
+
+#. module: stock_account
+#: view:product.template:stock_account.view_template_property_form
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+msgid "Cost Price"
+msgstr "Cijena koštanja"
+
+#. module: stock_account
+#: field:product.template,cost_method:0
+msgid "Costing Method"
+msgstr "Metoda koštanja"
+
+#. module: stock_account
+#: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
+msgid "Create"
+msgstr "Kreiraj"
+
+#. module: stock_account
+#: selection:stock.invoice.onshipping,journal_type:0
+msgid "Create Customer Invoice"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_invoice_onshipping
+msgid "Create Draft Invoices"
+msgstr "Kreiraj fakturu u pripremi"
+
+#. module: stock_account
+#: view:stock.picking:stock_account.view_picking_inherit_form2
+msgid "Create Invoice"
+msgstr "Kreriaj Fakturu"
+
+#. module: stock_account
+#: selection:stock.invoice.onshipping,journal_type:0
+msgid "Create Supplier Invoice"
+msgstr ""
+
+#. module: stock_account
+#: field:stock.config.settings,module_stock_invoice_directly:0
+msgid "Create and open the invoice when the user finish a delivery order"
+msgstr "Kreiraj i otvori fakturu kada korisnik završi narudžbu dostave."
+
+#. module: stock_account
+#: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
+msgid "Create invoice"
+msgstr "Kreiraj fakturu"
+
+#. module: stock_account
+#: field:stock.change.standard.price,create_uid:0
+#: field:stock.invoice.onshipping,create_uid:0
+#: field:wizard.valuation.history,create_uid:0
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: stock_account
+#: field:stock.change.standard.price,create_date:0
+#: field:stock.invoice.onshipping,create_date:0
+#: field:wizard.valuation.history,create_date:0
+msgid "Created on"
+msgstr "Kreirano"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_history_tree
+#: model:ir.ui.menu,name:stock_account.menu_action_history_tree
+msgid "Current Inventory Valuation"
+msgstr ""
+
+#. module: stock_account
+#: field:wizard.valuation.history,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: stock_account
+#: field:stock.invoice.onshipping,journal_id:0
+msgid "Destination Journal"
+msgstr "Dnevnik odredišta"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:83
+#: code:addons/stock_account/product.py:116
+#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:91
+#, python-format
+msgid "Error!"
+msgstr "Greška !"
+
+#. module: stock_account
+#: field:stock.inventory,period_id:0
+msgid "Force Valuation Period"
+msgstr ""
+
+#. module: stock_account
+#: field:stock.config.settings,group_stock_inventory_valuation:0
+msgid "Generate accounting entries per stock movement"
+msgstr "Generši računovodstvene zapise po svakom kretanju zalihe"
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_search
+msgid "Group By"
+msgstr "Grupiši po"
+
+#. module: stock_account
+#: field:stock.invoice.onshipping,group:0
+msgid "Group by partner"
+msgstr "Grupisanje po partneru"
+
+#. module: stock_account
+#: field:stock.change.standard.price,id:0 field:stock.history,id:0
+#: field:stock.invoice.onshipping,id:0 field:wizard.valuation.history,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_account
+#: help:stock.change.standard.price,new_price:0
+msgid ""
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+msgstr "Ako je cijena koštanja povećana, konto vrijednosti zalihe će dugovati i konto izlaza zalihe će potraživati za vrijednost = (razlika u vrijednosti * dostupna zaliha)\nAko je cijena koštanja smanjena, konto vrijenosti zalihe će potraživati i konto izlaza zalihe će dugovati."
+
+#. module: stock_account
+#: help:product.template,valuation:0
+msgid ""
+"If real-time valuation is enabled for a product, the system will "
+"automatically write journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
+msgstr ""
+
+#. module: stock_account
+#: help:stock.config.settings,module_stock_landed_costs:0
+msgid ""
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_inventory
+msgid "Inventory"
+msgstr "Popis"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_location
+msgid "Inventory Locations"
+msgstr ""
+
+#. module: stock_account
+#: view:product.template:stock_account.view_template_property_form
+#: field:product.template,valuation:0
+msgid "Inventory Valuation"
+msgstr "Vrednovanje inventure"
+
+#. module: stock_account
+#: field:stock.history,inventory_value:0
+msgid "Inventory Value"
+msgstr ""
+
+#. module: stock_account
+#: field:procurement.order,invoice_state:0 field:stock.move,invoice_state:0
+#: field:stock.picking,invoice_state:0
+msgid "Invoice Control"
+msgstr "Kontrola fakturisanja"
+
+#. module: stock_account
+#: field:stock.invoice.onshipping,invoice_date:0
+msgid "Invoice Date"
+msgstr "Datum fakturiranja"
+
+#. module: stock_account
+#: field:procurement.rule,invoice_state:0
+#: field:stock.location.path,invoice_state:0
+msgid "Invoice Status"
+msgstr "Status fakture"
+
+#. module: stock_account
+#: selection:procurement.order,invoice_state:0
+#: selection:procurement.rule,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+#: selection:stock.move,invoice_state:0
+#: selection:stock.picking,invoice_state:0
+msgid "Invoiced"
+msgstr "Fakturisano"
+
+#. module: stock_account
+#: field:stock.return.picking,invoice_state:0
+msgid "Invoicing"
+msgstr "Fakturisanje"
+
+#. module: stock_account
+#: field:stock.invoice.onshipping,journal_type:0
+msgid "Journal Type"
+msgstr ""
+
+#. module: stock_account
+#: field:stock.change.standard.price,write_uid:0
+#: field:stock.invoice.onshipping,write_uid:0
+#: field:wizard.valuation.history,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: stock_account
+#: field:stock.change.standard.price,write_date:0
+#: field:stock.invoice.onshipping,write_date:0
+#: field:wizard.valuation.history,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_search
+#: field:stock.history,location_id:0
+msgid "Location"
+msgstr "Lokacija"
+
+#. module: stock_account
+#: model:res.groups,name:stock_account.group_inventory_valuation
+msgid "Manage Inventory Valuation and Costing Methods"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_search
+msgid "Move"
+msgstr "Prijenos"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:116
+#, python-format
+msgid "No difference between standard price and new price!"
+msgstr "Nema razlike između standardne cijene i nove cijene!"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:91
+#, python-format
+msgid "No invoice created!"
+msgstr ""
+
+#. module: stock_account
+#: selection:stock.return.picking,invoice_state:0
+msgid "No invoicing"
+msgstr "Nema fakturisanja"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:82
+#, python-format
+msgid "None of these picking lists require invoicing."
+msgstr "Ni jedan od ovih listi prikupljanja proizvoda ne zahtjeva fakturisanje."
+
+#. module: stock_account
+#: selection:procurement.order,invoice_state:0
+#: selection:procurement.rule,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+#: selection:stock.move,invoice_state:0
+#: selection:stock.picking,invoice_state:0
+msgid "Not Applicable"
+msgstr "Nije primjenjivo"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:83
+#, python-format
+msgid ""
+"One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:\n"
+"    Product: %s\n"
+"    Stock Input Account: %s\n"
+"    Stock Output Account: %s\n"
+"    Stock Valuation Account: %s\n"
+"    Stock Journal: %s\n"
+"    "
+msgstr ""
+
+#. module: stock_account
+#: field:stock.history,date:0
+msgid "Operation Date"
+msgstr ""
+
+#. module: stock_account
+#: selection:product.template,valuation:0
+msgid "Periodical (manual)"
+msgstr "Periodično (ručno)"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_picking
+msgid "Picking List"
+msgstr "Lista prikupljanja proizvoda"
+
+#. module: stock_account
+#: field:stock.change.standard.price,new_price:0
+msgid "Price"
+msgstr "Cijena"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_procurement_order
+msgid "Procurement"
+msgstr "Nabavka"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_procurement_rule
+msgid "Procurement Rule"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_search
+#: field:stock.history,product_id:0
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_category
+#: view:stock.history:stock_account.view_stock_history_report_search
+#: field:stock.history,product_categ_id:0
+msgid "Product Category"
+msgstr "Kategorija proizvoda"
+
+#. module: stock_account
+#: field:stock.history,quantity:0
+msgid "Product Quantity"
+msgstr "Količina proizvoda"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_template
+msgid "Product Template"
+msgstr "Prijedlog proizvoda"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_location_path
+msgid "Pushed Flows"
+msgstr "Gurnuti tokovi"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_quant
+msgid "Quants"
+msgstr ""
+
+#. module: stock_account
+#: selection:product.template,cost_method:0
+msgid "Real Price"
+msgstr ""
+
+#. module: stock_account
+#: selection:product.template,valuation:0
+msgid "Real Time (automated)"
+msgstr "Stvarno vrijeme (automatizovano)"
+
+#. module: stock_account
+#: selection:stock.invoice.onshipping,journal_type:0
+msgid "Refund Purchase"
+msgstr ""
+
+#. module: stock_account
+#: selection:stock.invoice.onshipping,journal_type:0
+msgid "Refund Sale"
+msgstr ""
+
+#. module: stock_account
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid "Retrieve the Inventory Value"
+msgstr ""
+
+#. module: stock_account
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid "Retrieve the stock valuation of your products at current day"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Prikupljanje proizvoda povrata"
+
+#. module: stock_account
+#: field:stock.history,source:0
+msgid "Source"
+msgstr "Izvorno"
+
+#. module: stock_account
+#: selection:product.template,cost_method:0
+msgid "Standard Price"
+msgstr "Standardna cijena"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:137
+#: code:addons/stock_account/product.py:144
+#, python-format
+msgid "Standard Price changed"
+msgstr ""
+
+#. module: stock_account
+#: help:product.template,cost_method:0
+msgid ""
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+
+#. module: stock_account
+#: field:product.category,property_stock_account_input_categ:0
+#: field:product.template,property_stock_account_input:0
+msgid "Stock Input Account"
+msgstr "Konto zaliha (primka)"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_invoice_onshipping
+msgid "Stock Invoice Onshipping"
+msgstr "Fakturiši zalihu nakon isporuke"
+
+#. module: stock_account
+#: field:product.category,property_stock_journal:0
+msgid "Stock Journal"
+msgstr "Dnevnik zaliha"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_move
+#: field:stock.history,move_id:0
+msgid "Stock Move"
+msgstr "Kretanje zalihe"
+
+#. module: stock_account
+#: field:product.category,property_stock_account_output_categ:0
+#: field:product.template,property_stock_account_output:0
+msgid "Stock Output Account"
+msgstr "Izlazni nalog zaliha"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
+#: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
+msgid "Stock Valuation"
+msgstr ""
+
+#. module: stock_account
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
+msgstr "Konto vrednovanja zaliha"
+
+#. module: stock_account
+#: field:stock.location,valuation_in_account_id:0
+msgid "Stock Valuation Account (Incoming)"
+msgstr "Konto vrednovanja zalihe (Dolazni)"
+
+#. module: stock_account
+#: field:stock.location,valuation_out_account_id:0
+msgid "Stock Valuation Account (Outgoing)"
+msgstr "Konto vrednovanja zalihe (Odlazni)"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_history.py:30
+#: view:stock.history:stock_account.view_stock_history_report_graph
+#: view:stock.history:stock_account.view_stock_history_report_search
+#: view:stock.history:stock_account.view_stock_history_report_tree
+#, python-format
+msgid "Stock Value At Date"
+msgstr ""
+
+#. module: stock_account
+#: help:stock.config.settings,module_stock_invoice_directly:0
+msgid ""
+"This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
+"-This installs the module stock_invoice_directly."
+msgstr ""
+
+#. module: stock_account
+#: selection:procurement.order,invoice_state:0
+#: selection:procurement.rule,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+#: selection:stock.move,invoice_state:0
+#: selection:stock.picking,invoice_state:0
+msgid "To Be Invoiced"
+msgstr "Za fakturisanje"
+
+#. module: stock_account
+#: selection:stock.return.picking,invoice_state:0
+msgid "To be refunded/invoiced"
+msgstr "Za refundiranje/fakturisanje"
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_tree
+msgid "Total Value"
+msgstr "Ukupna vrijednost"
+
+#. module: stock_account
+#: help:stock.location,valuation_in_account_id:0
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved from an internal location into this location, instead of the "
+"generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr "Koristi se za vrednovanje inventure u stvarnom vremenu. Kada je postavljeno na virtualnu lokaciju (ne internog tipa), ovaj konto će se koristiti da nosi vrijednost proizvoda koji se kreće iz interne lokacije u ovu lokaciju, umjesto generisanja konta izlaza zalihe postavljenog na proizvodu. Ovo ne utiče na interne lokacije."
+
+#. module: stock_account
+#: help:stock.location,valuation_out_account_id:0
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved out of this location and into an internal location, instead of "
+"the generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr "Koristi se za vrednovanje inventure u stvarnom vremenu. Kada je postavljeno na virtuelnu lokaciju (ne internog tipa), ovaj konto će se koristiti za vrijednost proizvoda prenesenih van ove lokacije u neku internu lokaciju, umjesto opšteg konta izlaza zalihe postavljenog na proizvodu. Ovo nema efekta za interne lokacije."
+
+#. module: stock_account
+#: field:stock.history,price_unit_on_quant:0
+msgid "Value"
+msgstr "Vrijednost"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:82
+#, python-format
+msgid "Warning!"
+msgstr "Upozorenje!"
+
+#. module: stock_account
+#: help:product.category,property_stock_account_input_categ:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. This is the default "
+"value for all products in this category. It can also directly be set on each"
+" product"
+msgstr "Kada se radi inventura u stvanom vremenu, protukonto stavki dnevnika za sva ulazna kretanja zalihe će biti knjižena na ovaj konto, osim ako ne postoji specifični konto vrednovanja inventure postavljen na izvornoj lokaciji. Ovo je zadana vrijednost za sve proizvode u ovoj kategoriji. Može također da bude postavljen na svakom proizvodu"
+
+#. module: stock_account
+#: help:product.template,property_stock_account_input:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. When not set on the "
+"product, the one from the product category is used."
+msgstr "Kada se radi vrednovanje inventure u stvarnom vremenu, protustavke stavkama dnevnika za sve dolazeće poruke će biti knjižena na ovaj konto, osim u slučaju da je specifični konto vrednovanja postavljen na izvornu lokaciju. Kada nije postavljen na proizvodu, onaj sa kategorije proizvoda se koristi."
+
+#. module: stock_account
+#: help:product.category,property_stock_account_output_categ:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. This is the "
+"default value for all products in this category. It can also directly be set"
+" on each product"
+msgstr "Kada se radi vrednovanje inventure u realnom vremenu, protustavke stavki dnevnika za sva izlazna kretanja će se knjižiti na ovaj konto, osim ako ne postoji postavljen konto vrednovanja na lokaciji odredišta. Ovo je zadata vrijednost svih proizvoda u ovoj kategoriji. Može također da bude postavljen direktno na svaki proizvod."
+
+#. module: stock_account
+#: help:product.template,property_stock_account_output:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. When not set on "
+"the product, the one from the product category is used."
+msgstr "Kada se radi vredovanje inventure u stvarnom vremenu, protukonto stavkama dnevnika knjiženja za kretanja zaliha će biti knjižena na ovaj konto, osim ako ne specifirate konto vrednovanja postavljenog na odredišnoj lokaciji. Kada nije postavljeno na proizvodu, onaj sa kategorije proizvoda se koristi."
+
+#. module: stock_account
+#: help:product.category,property_stock_journal:0
+msgid ""
+"When doing real-time inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr "Kada se radi inventura u stvarnom vremenu, ovo je računovodstveni dnevnik u kojem će se zapisi automatski knjižiti kada se obrade kretanja zalihe."
+
+#. module: stock_account
+#: help:product.category,property_stock_valuation_account_id:0
+msgid ""
+"When real-time inventory valuation is enabled on a product, this account "
+"will hold the current value of the products."
+msgstr "Kada je stvarna procjena inventure omogućena na proizvodu, ovaj konto će nositi trenutnu vrijednost proizvoda."
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_wizard_valuation_history
+msgid "Wizard that opens the stock valuation history table"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+msgid "_Apply"
+msgstr "_Primjeni"
+
+#. module: stock_account
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+#: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid "or"
+msgstr "ili"
