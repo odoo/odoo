@@ -724,7 +724,7 @@ class ProcurementOrder(models.Model):
 
         taxes = self.product_id.supplier_taxes_id
         fpos = po.fiscal_position_id
-        taxes_id = fpos.map_tax(taxes) if fpos else []
+        taxes_id = fpos.map_tax(taxes).ids if fpos else []
 
         return {
             'name': name,
