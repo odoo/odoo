@@ -156,7 +156,7 @@ class account_journal(models.Model):
                     account_sum = query_results[0].get('sum')
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
-            title = _('Bills you need to pay') if self.type == 'purchase' else _('Invoices owed to you')
+            title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
             # optimization to find total and sum of invoice that are in draft, open state
             query = """SELECT state, count(id) AS count, sum(amount_total) AS total FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel') GROUP BY state;"""
             self.env.cr.execute(query, (self.id,))
