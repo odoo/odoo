@@ -158,7 +158,8 @@
                     <!-- Attachments -->
                     <t t-foreach="message.attachment_ids" t-as="attachment">
                         <div t-attf-class="o_mail_attachment" t-att-title="attachment.name">
-                                <a class="o_image" t-att-href='attachment.url' target="_blank" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80">
+                                <a t-att-href='attachment.url' target="_blank">
+                                    <span class="o_image" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"></span>
                                     <div class='o_mail_attachment_name'>
                                         <t t-raw='attachment.name'/>
                                     </div>
