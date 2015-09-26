@@ -82,6 +82,12 @@ class MailMail(models.Model):
     def cancel(self):
         return self.write({'state': 'cancel'})
 
+    def prepare_filtered_mails(self):
+        """Filter hook that it is possible to prepare further filter steps
+           easily by inheritance before processing the email queue pending.
+        """
+        return self
+
     @api.model
     def process_email_queue(self, ids=None):
         """Send immediately queued messages, committing after each
@@ -102,12 +108,13 @@ class MailMail(models.Model):
             if 'filters' in self._context:
                 filters.extend(self._context['filters'])
             ids = self.search(filters).ids
+        filtered_mails = self.browse(ids).prepare_filtered_mails()
         res = None
         try:
             # Force auto-commit - this is meant to be called by
             # the scheduler, and we can't allow rolling back the status
             # of previously sent emails!
-            res = self.browse(ids).send(auto_commit=True)
+            res = filtered_mails.send(auto_commit=True)
         except Exception:
             _logger.exception("Failed processing mail queue")
         return res
@@ -177,6 +184,18 @@ class MailMail(models.Model):
         return res
 
     @api.multi
+    def send_get_email_list(self):
+        """Return a list of email dictionaries.
+        """
+        self.ensure_one()
+        email_list = []
+        if self.email_to:
+            email_list.append(self.send_get_email_dict())
+        for partner in self.recipient_ids:
+            email_list.append(self.send_get_email_dict(partner=partner))
+        return email_list
+
+    @api.multi
     def send(self, auto_commit=False, raise_exception=False):
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
@@ -211,11 +230,7 @@ class MailMail(models.Model):
                                for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas'])]
 
                 # specific behavior to customize the send email for notified partners
-                email_list = []
-                if mail.email_to:
-                    email_list.append(mail.send_get_email_dict())
-                for partner in mail.recipient_ids:
-                    email_list.append(mail.send_get_email_dict(partner=partner))
+                email_list = mail.send_get_email_list()
 
                 # headers
                 headers = {}
