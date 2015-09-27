@@ -624,9 +624,12 @@ class account_account(osv.osv):
         default = {} if default is None else default.copy()
         if done_list is None:
             done_list = []
+        if hasattr(id, '__iter__'):
+            assert len(id) == 1
+            id = id[0]
         account = self.browse(cr, uid, id, context=context)
         new_child_ids = []
-        default.update(code=_("%s (copy)") % (account['code'] or ''))
+        default.update(code=_("%s (copy)") % (account.code or ''))
         if not local:
             done_list = []
         if account.id in done_list:
