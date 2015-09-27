@@ -107,6 +107,13 @@ def initialize_sys_path():
     if base_path not in ad_paths:
         ad_paths.append(base_path)
 
+    # add addons provided by python namespace packages
+    # https://pythonhosted.org/setuptools/pkg_resources.html#namespace-package-support
+    for ad in __import__('openerp.addons').__path__:
+        ad = os.path.abspath(ad)
+        if ad not in ad_paths:
+            ad_paths.append(ad)
+
     if not hooked:
         sys.meta_path.append(AddonsImportHook())
         hooked = True
