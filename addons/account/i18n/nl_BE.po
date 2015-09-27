@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:17+0000\n"
+"POT-Creation-Date: 2015-09-21 13:37+0000\n"
+"PO-Revision-Date: 2015-09-23 09:41+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/language/nl_BE/)\n"
 "MIME-Version: 1.0\n"
@@ -997,6 +997,12 @@ msgid "Account Template"
 msgstr "Rekeningsjabloon"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_valuation_account_id
+#: model:ir.model.fields,field_description:account.field_res_company_property_stock_valuation_account_id
+msgid "Account Template for Stock Valuation"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_account_template_form
 msgid "Account Templates"
 msgstr "Rekeningsjablonen"
@@ -1102,7 +1108,6 @@ msgstr "Boekhouder"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
-#: model:ir.ui.menu,name:account.menu_finance
 #: model:ir.ui.view,arch_db:account.product_template_form_view
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting"
@@ -2192,6 +2197,16 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
 msgid "Cashbox start id"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_categ_id
+msgid "Category of Expense Account"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_income_categ_id
+msgid "Category of Income Account"
 msgstr ""
 
 #. module: account
@@ -3645,11 +3660,6 @@ msgid "Expense Account on Product Template"
 msgstr "Kostenrekening van productsjabloon"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_categ_id
-msgid "Expense Category Account"
-msgstr "Kostencategorierekening"
-
-#. module: account
 #: model:account.account.type,name:account.data_account_type_expenses
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Expenses"
@@ -4389,11 +4399,6 @@ msgid "Income Account on Product Template"
 msgstr "Inkomstenrekening van productsjabloon"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_income_categ_id
-msgid "Income Category Account"
-msgstr "Opbrengstencategorierekening"
-
-#. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1793
 #, python-format
@@ -4410,6 +4415,12 @@ msgstr "Informatie"
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
 msgid "Information addendum"
 msgstr "Addenduminfo"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_input_categ_id
+#: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_input_categ_id
+msgid "Input Account for Stock Valuation"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4628,6 +4639,11 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to validate"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_finance
+msgid "Invoicing"
 msgstr ""
 
 #. module: account
@@ -5884,6 +5900,12 @@ msgid "Outbound"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_output_categ_id
+#: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_output_categ_id
+msgid "Output Account for Stock Valuation"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Outstanding Transactions"
 msgstr ""
@@ -6568,24 +6590,6 @@ msgid "Properties"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_input_categ_id
-#: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_input_categ_id
-msgid "Property stock account input categ id"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_output_categ_id
-#: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_output_categ_id
-msgid "Property stock account output categ id"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_valuation_account_id
-#: model:ir.model.fields,field_description:account.field_res_company_property_stock_valuation_account_id
-msgid "Property stock valuation account id"
-msgstr ""
-
-#. module: account
 #: selection:account.journal,type:0
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
@@ -6980,6 +6984,7 @@ msgid "Residual Amount in Currency"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_user_id
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Responsible"
 msgstr ""
@@ -8701,11 +8706,6 @@ msgstr ""
 msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_user_id
-msgid "User"
 msgstr ""
 
 #. module: account

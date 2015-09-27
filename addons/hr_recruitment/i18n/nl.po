@@ -3,14 +3,15 @@
 # * hr_recruitment
 # 
 # Translators:
+# Eric Geens <ericgeens@yahoo.com>, 2015
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 11:05+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
+"PO-Revision-Date: 2015-09-22 11:36+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgid ""
 "            </p>\n"
 "            <p>Please welcome him/her and help him/her finding his/her marks.</p>\n"
 "            "
-msgstr ""
+msgstr "\n            <p>\n                %if object.department_id:\n                    Ik ben blij u te kunnen meedelen dat <strong> ${object.name} </strong> ons zal versterken als ${object.job_id.name}\n                    in ${object.department_id.name}.\n                %else:\n                    Ik ben blij u te kunnen meedelen dat <strong> ${object.name} </strong> ons zal versterken als ${object.job_id.name}.\n                %endif\n            </p>\n            <p>Geef hem/haar een warm welkom, en help hem/haar op weg in ons bedrijf.</p>\n            "
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
@@ -77,17 +78,17 @@ msgstr "71+"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Contact:</b>"
-msgstr ""
+msgstr "<b>Contact:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Degree:</b>"
-msgstr ""
+msgstr "<b>Graad:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Departement:</b>"
-msgstr ""
+msgstr "<b>Departement:</b>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.applicant_interest
@@ -118,26 +119,26 @@ msgstr "<p>Beste ${object.partner_name or 'applicant'},</p>\n        <p>We wille
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "<span class=\"o_stat_text\">Meetings</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Meetings</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid ""
 "<span class=\"o_stat_text\">Print</span>\n"
 "                            <span class=\"o_stat_text\">Interview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Print</span>\n                            <span class=\"o_stat_text\">Interview</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid ""
 "<span class=\"o_stat_text\">Start</span>\n"
 "                            <span class=\"o_stat_text\">Interview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Start</span>\n                            <span class=\"o_stat_text\">Interview</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Trackers</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -194,7 +195,7 @@ msgstr "Alias contact beveiliging"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
 msgid "Alias ID"
-msgstr ""
+msgstr "Alias ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
@@ -266,7 +267,7 @@ msgid ""
 "Applicants and their attached CV are created automatically when an email is sent.\n"
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
-msgstr ""
+msgstr "Sollicitanten en het bijgevoegde CV worden automatisch aangemaakt wanneer zij een email versturen. Als u de document management modules installeert, worden alle CV's automatisch geïndexeerd, zodat u eenvoudig de inhoud ervan kunt doorzoeken. "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -274,7 +275,7 @@ msgid ""
 "Applicants and their attached CV are created automatically when an email is sent.\n"
 "            If you install the document management modules, all resumes are indexed automatically, \n"
 "            so that you can easily search through their content."
-msgstr ""
+msgstr "Sollicitanten en het bijgevoegde CV worden automatisch aangemaakt wanneer zij een email versturen. Als u de document management modules installeert, worden alle CV's automatisch geïndexeerd, zodat u eenvoudig de inhoud ervan kunt doorzoeken. "
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -299,7 +300,7 @@ msgstr "Sollicitatie afgewezen"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Application(s)"
-msgstr ""
+msgstr "Applicatie(s)"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
@@ -426,7 +427,7 @@ msgstr "Kies een interview formulier voor deze functie. Dit geeft u de mogelijkh
 msgid ""
 "Click here to create a new job. You can remove the \"In Recruitment\" filter"
 " to display all the job positions."
-msgstr ""
+msgstr "Klik hier om een nieuwe functie aan te maken. U kunt de filter \"Wordt geworven\" verwijderen om alle vacatures te tonen."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -437,7 +438,7 @@ msgstr "Klik om een nieuwe werknemer toe te voegen."
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Click to add a new stage in the recruitment process."
-msgstr ""
+msgstr "Klik om een nieuwe fase in het wervingsproces toe te voegen."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
@@ -466,12 +467,12 @@ msgstr "Instellingen"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
 msgid "Configure HR Recruitment"
-msgstr ""
+msgstr "Configureer HR aanwerving"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
 msgid "Configure Recruitment"
-msgstr ""
+msgstr "Configureer aanwerving"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:382
@@ -494,7 +495,7 @@ msgstr "Contract"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
 msgid "Contract Proposal"
-msgstr ""
+msgstr "Contractvoorstel"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
@@ -514,21 +515,21 @@ msgstr "Werknemer aanmaken"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Create alias"
-msgstr ""
+msgstr "Maak alias"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
 "Create email and url for each distinct source. <br/>\n"
 "                When the applicant will arrive, you will know from wich source the Job position is coming."
-msgstr ""
+msgstr "Maak een emailadres en een url aan voor elke afzonderlijke bron. <br/>\nWanneer de sollicitant zich aanbiedt, weet u onmiddellijk van waar de vacature werd gevonden."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
 "Create here some alias...\n"
 "                That will allow you to track from where the applicant is coming from..."
-msgstr ""
+msgstr "Maak hier een alias...\nDeze staat u toe om te traceren waar de sollicitant vandaan komt..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -594,7 +595,7 @@ msgid ""
 "Define here your stages of the recruitment process, for example:\n"
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
-msgstr ""
+msgstr "Definieer hier de fases in het wervingsproces, bijvoorbeeld:\nkwalificatie, eerste interview, tweede interview, afgewezen,\naangenomen."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
@@ -603,7 +604,7 @@ msgid ""
 "Define job position profile and manage recruitment in a context of a "
 "particular job: print interview survey, define number of expected new "
 "employees, and manage its recruitment pipe"
-msgstr ""
+msgstr "Bepaal het profiel voor de vacature en beheer de werving voor een specifieke functie: wervingsenquête afdrukken, definiëren van het aantal verwachte nieuwe werknemers en het beheren van de wervingsreserve."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -658,7 +659,7 @@ msgstr "Bureauruimte"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Display Interview Form"
-msgstr ""
+msgstr "Toon interview formulier"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_display_name
@@ -674,7 +675,7 @@ msgstr "Schermnaam"
 #. module: hr_recruitment
 #: selection:hr.recruitment.config.settings,module_document:0
 msgid "Do not manage CVs and motivation letter"
-msgstr ""
+msgstr "CV en motivatiebrief niet beheren"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -684,7 +685,7 @@ msgstr "Doctorstitel"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Document(s)"
-msgstr ""
+msgstr "Document(en)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_documents_count
@@ -700,7 +701,7 @@ msgstr "Documenten"
 msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
-msgstr ""
+msgstr "Vergeet niet de afdeling te specificeren, indien het wervingsproces\nafwijkt voor de functie."
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_11
@@ -767,7 +768,7 @@ msgstr "Uitmuntend"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_expected_employee
 msgid "Expected Employee"
-msgstr ""
+msgstr "Verwachte werknemer"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected
@@ -991,12 +992,12 @@ msgstr "Functie"
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
-msgstr ""
+msgstr "Job campagne"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
 msgid "Job ID"
-msgstr ""
+msgstr "Job ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_address_id
@@ -1011,12 +1012,12 @@ msgstr "Functie"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_department_new
 msgid "Job Position Created"
-msgstr ""
+msgstr "Job positie aangemaakt"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new
 msgid "Job Position created"
-msgstr ""
+msgstr "Job positie aangemaakt"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
@@ -1028,7 +1029,7 @@ msgstr "Functies"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_stage_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_ids
 msgid "Job Stages"
-msgstr ""
+msgstr "Job fases"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -1043,7 +1044,7 @@ msgstr "Sollicitatie formulier"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
 msgid "Jobs Sources"
-msgstr ""
+msgstr "Job bronnen"
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_2_1
@@ -1154,7 +1155,7 @@ msgstr "Belangrijkste"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "My"
-msgstr ""
+msgstr "Mijn"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_name
@@ -1177,17 +1178,17 @@ msgstr "Nieuwe sollicitant"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "New Applicants"
-msgstr ""
+msgstr "Nieuwe sollicitanten"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
 msgid "New Application"
-msgstr ""
+msgstr "Nieuwe sollicitant"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_from_department
 msgid "New Applications"
-msgstr ""
+msgstr "Nieuwe sollicitanten"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:428
@@ -1198,22 +1199,22 @@ msgstr "Nieuwe werknemer %s aangenomen"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
 msgid "New Hired"
-msgstr ""
+msgstr "Nieuw aangenomen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_new_hired_employee
 msgid "New Hired Employee"
-msgstr ""
+msgstr "Nieuw aangenomen werknemer"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
 msgid "Newly Hired Employees"
-msgstr ""
+msgstr "Nieuw aangenomen werknemers"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee_newly_hired_employee
 msgid "Newly hired employee"
-msgstr ""
+msgstr "Nieuw aangenomen werknemer"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_title_action
@@ -1233,7 +1234,7 @@ msgstr "Volgende acties"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "No Interview Form"
-msgstr ""
+msgstr "Geen interview formulier"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:395
@@ -1287,14 +1288,14 @@ msgstr "Aantal ongelezen berichten"
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
-msgstr ""
+msgstr "Odoo helpt u bij het werven van sollicitanten en volgt\nalle handelingen op: vergaderingen, interviews, enz."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
-msgstr ""
+msgstr "Odoo helpt u bij het werven van sollicitanten en volgt\nalle handelingen op: vergaderingen, interviews, enz."
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_3
@@ -1436,7 +1437,7 @@ msgstr "Verantwoordelijke aanwerver"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "Recruitments"
-msgstr ""
+msgstr "Werving"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
@@ -1472,7 +1473,7 @@ msgstr "Vereisten"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reset Application"
-msgstr ""
+msgstr "Reset aanvraag"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_response_id
@@ -1489,7 +1490,7 @@ msgstr "Verantwoordelijke"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_module_document
 msgid "Resumes"
-msgstr ""
+msgstr "CV's"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_resumes
@@ -1545,7 +1546,7 @@ msgstr "Zoek sollicitanten"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "Search through resumes and motivation letters."
-msgstr ""
+msgstr "Zoek door CV's en motivatiebrieven."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -1625,7 +1626,7 @@ msgstr "Fase veranderd"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_name
 msgid "Stage name"
-msgstr ""
+msgstr "Fasenaam"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -1649,7 +1650,7 @@ msgstr "Fases"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Start Recruitment"
-msgstr ""
+msgstr "Start werving"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_5
@@ -1696,7 +1697,7 @@ msgstr "Het antwoord dat u heeft ingevuld heeft een ongeldig formaat."
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_availability
 msgid "The date at which the applicant will be available to start working"
-msgstr ""
+msgstr "De datum waarop de sollicitant beschikbaar is om te starten met werken"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_model_id
@@ -1749,7 +1750,7 @@ msgstr "Dit jaar"
 #: model:survey.survey,description:hr_recruitment.recruitment_form
 msgid ""
 "This form is intended to help the responsible of a recruitment interview."
-msgstr ""
+msgstr "Dit formulier is bedoeld om de verantwoordelijke van een sollicitatiegesprek te helpen."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_campaign_id
@@ -1789,7 +1790,7 @@ msgstr "Deze vraagt moet beantwoord worden."
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr ""
+msgstr "Deze fase is gevouwen in de kanban weergave, wanneer er geen regels zijn in deze fase om weer te geven."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1856,7 +1857,7 @@ msgstr "Website communicatie geschiedenis"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.hr_welcome_new_employee
 msgid "Welcoming ${object.name} "
-msgstr ""
+msgstr "Verwelkoming ${object.name}"
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_3
@@ -1874,7 +1875,7 @@ msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
-msgstr ""
+msgstr "Met slechts een snelle blik op het Odoo werknemer scherm kan u\ngemakkelijk alle informatie vinden die u nodig heeft voor elke persoon;\ncontact data, job positie, beschikbaarheid, enz."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:432
@@ -1890,7 +1891,7 @@ msgstr "Bijv. bellen voor een sollicitatiegesprek"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_config_settings
 msgid "hr.recruitment.config.settings"
-msgstr ""
+msgstr "hr.recruitment.config.settings"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:300

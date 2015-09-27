@@ -3,14 +3,19 @@
 # * account
 # 
 # Translators:
+# Ermin Trevisan <trevi@twanda.com>, 2015
 # Henry Mineehen <info@mineehen.de>, 2015
+# JackTheHunter <Maximilian.N98@gmail.com>, 2015
+# Maik Steinfeld <info@streward.de>, 2015
+# Markus Mattes <mmattes87@gmail.com>, 2015
+# Mathias Neef <mn@copado.de>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 15:43+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-21 13:37+0000\n"
+"PO-Revision-Date: 2015-09-26 13:07+0000\n"
+"Last-Translator: Markus Mattes <mmattes87@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,7 +100,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr ""
+msgstr " * Der \"Entwurf\"-Status wird verwendet, wenn ein Benutzer eine Rechnung erstellt, aber noch nicht gebucht hat.\n* Der \"Pro-forma\" Status wird nach dessen Auswahl  angezeigt, es wird aber noch keine Rechnungsnummer vergeben. \n* Die Rechnung ist im \"Offen\" Status, wenn Sie gebucht wurde, dadurch eine Rechnungsnummer bekommen hat, aber noch nicht vom Kunden bezahlt wurde. \n* Der\"Bezahlt\"-Status wird automatisch vergeben, wenn die offene Rechnung vom Kunden bezahlt wurde.\n* Eine Anzeige im \"Abgebrochen\"-Status erfolgt immer dann, wenn die Rechnung storniert wurde."
 
 #. module: account
 #. openerp-web
@@ -997,6 +1002,12 @@ msgid "Account Template"
 msgstr "Kontenvorlage"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_valuation_account_id
+#: model:ir.model.fields,field_description:account.field_res_company_property_stock_valuation_account_id
+msgid "Account Template for Stock Valuation"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_account_template_form
 msgid "Account Templates"
 msgstr "Kontenvorlagen"
@@ -1102,7 +1113,6 @@ msgstr "Finanzbuchhalter"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
-#: model:ir.ui.menu,name:account.menu_finance
 #: model:ir.ui.view,arch_db:account.product_template_form_view
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting"
@@ -2192,6 +2202,16 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
 msgid "Cashbox start id"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_categ_id
+msgid "Category of Expense Account"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_income_categ_id
+msgid "Category of Income Account"
 msgstr ""
 
 #. module: account
@@ -3645,11 +3665,6 @@ msgid "Expense Account on Product Template"
 msgstr "Aufwandskonto für Produktvorlage"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_categ_id
-msgid "Expense Category Account"
-msgstr "Aufwandskonto"
-
-#. module: account
 #: model:account.account.type,name:account.data_account_type_expenses
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Expenses"
@@ -4389,11 +4404,6 @@ msgid "Income Account on Product Template"
 msgstr "Erlöskonto für Produktvorlage"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_income_categ_id
-msgid "Income Category Account"
-msgstr "Erlöskonto"
-
-#. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1793
 #, python-format
@@ -4410,6 +4420,12 @@ msgstr "Information"
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
 msgid "Information addendum"
 msgstr "Informationsanhang"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_input_categ_id
+#: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_input_categ_id
+msgid "Input Account for Stock Valuation"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4628,6 +4644,11 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to validate"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_finance
+msgid "Invoicing"
 msgstr ""
 
 #. module: account
@@ -5884,6 +5905,12 @@ msgid "Outbound"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_output_categ_id
+#: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_output_categ_id
+msgid "Output Account for Stock Valuation"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Outstanding Transactions"
 msgstr ""
@@ -6568,24 +6595,6 @@ msgid "Properties"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_input_categ_id
-#: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_input_categ_id
-msgid "Property stock account input categ id"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_output_categ_id
-#: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_output_categ_id
-msgid "Property stock account output categ id"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_valuation_account_id
-#: model:ir.model.fields,field_description:account.field_res_company_property_stock_valuation_account_id
-msgid "Property stock valuation account id"
-msgstr ""
-
-#. module: account
 #: selection:account.journal,type:0
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
@@ -6980,6 +6989,7 @@ msgid "Residual Amount in Currency"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_user_id
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Responsible"
 msgstr ""
@@ -8701,11 +8711,6 @@ msgstr ""
 msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_user_id
-msgid "User"
 msgstr ""
 
 #. module: account

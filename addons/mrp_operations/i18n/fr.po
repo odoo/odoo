@@ -1,0 +1,661 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_operations
+# 
+# Translators:
+# Friderici Claude, 2015
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"PO-Revision-Date: 2015-09-25 13:12+0000\n"
+"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_nbr
+msgid "# of Lines"
+msgstr "Nb. de lignes"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_state
+msgid ""
+"* When a work order is created it is set in 'Draft' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
+"* When the user cancels the work order it will be set in 'Canceled' status.\n"
+"* When order is completely processed that time it is set in 'Finished' status."
+msgstr "* Quand un ordre de fabrication est créé, il est en 'Brouillon'.\n* Quand l'utilisateur défini un ordre de travail comme démarré, l'OF passe à 'En cours'.\n* Quand un ordre de travail est en cours, si l'utilisateur veut stopper ou modifier l'ordre, alors il peut définir le statut de l'OF à 'En attente'.\n* Quand l'utilisateur annule l'ordre de travail, le statut est à 'Annulé'.\n* Quand l'ordre est complètement exécuté, le statut est à 'Terminé'."
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Actual Production Date"
+msgstr "Date effective de production"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_bom_id
+msgid "Bill of Material"
+msgstr "Nomenclature"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.operation_calendar_view
+msgid "Calendar View"
+msgstr "Vue calendrier"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Cancel Order"
+msgstr "Annuler l'ordre"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Canceled"
+msgstr "Annulé"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Cancelled"
+msgstr "Annulé"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_allow_reorder
+msgid ""
+"Check this to be able to move independently all production orders, without "
+"moving dependent ones."
+msgstr "Cocher cette case pour pouvoir déplacer indépendamment chaque ordre de fabrication, sans déplacer les ordres dépendants."
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_stock_move_move_dest_id_lines
+msgid "Children Moves"
+msgstr "Mouvements enfants"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid "Click to start a new work order."
+msgstr "Cliquez pour démarrer un nouvel ordre de travail"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_code
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id_10488
+msgid "Code"
+msgstr "Code"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
+msgid "Confirmed Work Orders"
+msgstr "Ordres de travail confirmés"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_create_uid
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_create_date
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Current"
+msgstr "Actuel"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_current_production
+msgid "Current Production"
+msgstr "Production actuelle"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_date
+msgid "Date"
+msgstr "Date"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_delay
+msgid "Delay"
+msgstr "Délai"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_display_name
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_display_name
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Done"
+msgstr "Terminé"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Duration"
+msgstr "Durée"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_date_finished
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_finished
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_planned_end
+msgid "End Date"
+msgstr "Date de fin"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Finish Order"
+msgstr "Terminer l'ordre"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Finished"
+msgstr "Terminé"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_allow_reorder
+msgid "Free Serialisation"
+msgstr "Attribution libre du n° de série"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
+msgid "Future Work Orders"
+msgstr "Ordres de travail à venir"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Group By"
+msgstr "Regrouper par"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.graph_in_hrs_workcenter
+msgid "Hours by Work Center"
+msgstr "Heures par poste de charge"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "In Production"
+msgstr "En cours de production"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "In Progress"
+msgstr "En cours"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:438
+#, python-format
+msgid ""
+"In order to Finish the operation, it must be in the Start or Resume state!"
+msgstr "Pour terminer cette opération, il faut que son état soit \"Démarrée\" ou \"Reprise\"!"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:429
+#, python-format
+msgid ""
+"In order to Pause the operation, it must be in the Start or Resume state!"
+msgstr "Pour mettre en attente une opération, l'état doit être \"Démarrée\" ou \"Reprise\"!"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:433
+#, python-format
+msgid "In order to Resume the operation, it must be in the Pause state!"
+msgstr "Pour reprendre une opération, elle doit être dans l'état \"En attente\" !"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Information"
+msgstr "Information"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation___last_update
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code___last_update
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder___last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_write_uid
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_write_uid
+msgid "Last Updated by"
+msgstr "Mis à jour par"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_write_date
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_write_date
+msgid "Last Updated on"
+msgstr "Mis à jour le"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Late"
+msgstr "En retard"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Ordre de fabrication"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:105
+#, python-format
+msgid "Manufacturing order cannot be started in state \"%s\"!"
+msgstr "Impossible de démarrer l'ordre de fabrication dans l'état \"%s\"!"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:445
+#, python-format
+msgid "No operation to cancel."
+msgstr "Aucune opération à annuler."
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
+msgid "Operation Codes"
+msgstr "Codes des opérations"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_name
+msgid "Operation Name"
+msgstr "Nom de l'opération"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:425
+#, python-format
+msgid ""
+"Operation has already started! You can either Pause/Finish/Cancel the "
+"operation."
+msgstr "L'opération a déjà commencé ! Vous pouvez suspendre, finir ou annuler cette opération."
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:441
+#, python-format
+msgid "Operation is Already Cancelled!"
+msgstr "L'opération est déjà annulée!"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:448
+#, python-format
+msgid "Operation is already finished!"
+msgstr "L'opération est déjà terminée!"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:418
+#, python-format
+msgid "Operation is not started yet!"
+msgstr "L'opération n'est pas encore démarrée!"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
+#: model:ir.ui.view,arch_db:mrp_operations.workcenter_line_calendar
+#: model:ir.ui.view,arch_db:mrp_operations.workcenter_line_gantt
+msgid "Operations"
+msgstr "Opérations"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_order_date
+msgid "Order Date"
+msgstr "Date de l'ordre"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Pause"
+msgstr "Mettre en attente"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Pause Work Order"
+msgstr "Mettre en attente l'ordre de travail"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,state:0
+msgid "Pending"
+msgstr "En attente"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Planned Date"
+msgstr "Date planifiée"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Planned Month"
+msgstr "Mois prévu"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_product
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Product"
+msgstr "Article"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_category_id
+msgid "Product Category"
+msgstr "Catégorie d'articles"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_qty
+msgid "Product Qty"
+msgstr "Qté d'articles"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_tmpl_id
+msgid "Product Template"
+msgstr "Modèle d'article"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Product to Produce"
+msgstr "Article à fabriquer"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_production_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_production_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Production"
+msgstr "Fabrication"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_operation_tree_view
+msgid "Production Operation"
+msgstr "Opération de production"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_form_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_tree_view
+msgid "Production Operation Code"
+msgstr "Code d'opération de production"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_production_state
+msgid "Production Status"
+msgstr "État de fabrication"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Production Workcenter"
+msgstr "Poste de charge"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Production started late"
+msgstr "Production démarrée en retard"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_qty
+msgid "Qty"
+msgstr "Qté"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_quantity_produced
+msgid "Quantity Produced"
+msgstr "Quantité produite"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Ready to Produce"
+msgstr "Prêt à fabriquer"
+
+#. module: mrp_operations
+#: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
+msgid "Reports"
+msgstr "Rapports"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_user_id
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Resume"
+msgstr "Reprendre"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Resume Work Order"
+msgstr "Reprendre l'ordre de travail"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_routing_id
+msgid "Routing"
+msgstr "Gamme"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_planned
+msgid "Scheduled Date"
+msgstr "Date prévue"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Scheduled Date by Month"
+msgstr "Date planifiée, par mois"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Scheduled Month"
+msgstr "Mois planifié"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Search"
+msgstr "Recherche"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Search Work Orders"
+msgstr "Recherche dans les ordres de travail"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Set Draft"
+msgstr "Mettre en brouillon"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Set to Draft"
+msgstr "Mettre en brouillon"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Start"
+msgstr "Démarrer"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_date_start
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_start
+msgid "Start Date"
+msgstr "Date de début"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Start Working"
+msgstr "Commencer le travail"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Started"
+msgstr "Démarré"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_start_stop
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_state
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_state
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Status"
+msgstr "Statut"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_stock_move
+msgid "Stock Move"
+msgstr "Mouvement de stock"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_delay
+msgid "The elapsed time between operation start and stop in this Work Center"
+msgstr "Le temps écoulé entre le début et la fin de l'opération à ce poste de charge"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid ""
+"To manufacture or assemble products, and use raw materials and\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
+"            operations will have different impacts on the costs of\n"
+"            manufacturing and planning depending on the available workload."
+msgstr "Pour fabriquer ou assembler des produits, et utiliser des matières premières et\ndes produits finis vous devez également gérer les opérations de fabrication.\nLes opérations de fabrication sont souvent appelées ordres de travail. \nLes différentes opérations influeront différemment sur les coûts de\nfabrication et sur la planification selon la charge de travail disponible."
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_cycles
+msgid "Total Cycles"
+msgstr "Cycles totaux"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_hours
+msgid "Total Hours"
+msgstr "Heures totales"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_uom
+msgid "Unit of Measure"
+msgstr "Unité de mesure"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Waiting Goods"
+msgstr "En attente de marchandises"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_workcenter_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_workcenter_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Work Center"
+msgstr "Poste de charge"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
+msgid "Work Centers"
+msgstr "Postes de charge"
+
+#. module: mrp_operations
+#: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
+msgid "Work Centers Barcode"
+msgstr "Code-barre des postes de charge"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
+#: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
+msgid "Work Order"
+msgstr "Ordre de travail"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_workorder
+msgid "Work Order Report"
+msgstr "Rapport des ordres de travail"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_tree_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_graph
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_pivot
+msgid "Work Orders"
+msgstr "Ordres de travail"
+
+#. module: mrp_operations
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
+msgid "Work Orders By Resource"
+msgstr "Ordres de travail par ressource"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
+msgid "Work Orders Planning"
+msgstr "Planification des ordres de travail"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+msgid ""
+"Work Orders is the list of operations to be performed for each\n"
+"            manufacturing order. Once you start the first work order of a\n"
+"            manufacturing order, the manufacturing order is automatically\n"
+"            marked as started. Once you finish the latest operation of a\n"
+"            manufacturing order, the MO is automatically done and the related\n"
+"            products are produced."
+msgstr "Les ordres de travail sont la liste des opérations à effectuer pour chaque\nordre de fabrication. Dès que commence le premier ordre de travail \nd'un ordre de fabrication, celui-ci est automatiquement considéré comme commencé. \nUne fois la dernière opération d'un ordre de production terminée, \nl'OF est automatiquement considéré comme terminé et les produits liés sont fabriqués."
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_delay
+msgid "Working Hours"
+msgstr "Heures de travail"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_workload
+msgid "Workload"
+msgstr "Charge de travail"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation
+msgid "mrp_operations.operation"
+msgstr "mrp_operations.operation"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
+msgid "mrp_operations.operation.code"
+msgstr "mrp_operations.operation.code"

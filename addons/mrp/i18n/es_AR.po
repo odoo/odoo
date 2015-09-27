@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:18+0000\n"
+"POT-Creation-Date: 2015-09-21 09:18+0000\n"
+"PO-Revision-Date: 2015-09-26 22:33+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-9/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
@@ -434,11 +434,6 @@ msgid "Click to add a work center."
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_routing_action
-msgid "Click to create a Work Order Operations."
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "Click to create a bill of material."
 msgstr ""
@@ -456,6 +451,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
 msgid "Click to create a new property."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
+msgid "Click to create a new routing."
 msgstr ""
 
 #. module: mrp
@@ -1329,7 +1329,7 @@ msgstr "LdM madre"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
-msgid "Parent Work Order Operations"
+msgid "Parent Routing"
 msgstr ""
 
 #. module: mrp
@@ -1691,15 +1691,48 @@ msgid "Rounding efficiency"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_routing_id
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Routing"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Routing Work Centers"
 msgstr "Enrutamiento de Centros de Producción"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_routing_action
+#: model:ir.model,name:mrp.model_mrp_routing
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_mrp_routings
+#: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Routings"
 msgstr "Enrutamientos"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
+msgid ""
+"Routings allow you to create and manage the manufacturing\n"
+"                operations that should be followed within your work centers in\n"
+"                order to produce a product.  They are attached to bills of\n"
+"                materials that will define the required raw materials."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
+msgid ""
+"Routings indicates all the Work Centers used, for how long and/or cycles.If "
+"Routings is set then,the third tab of a production order (Work Centers) will"
+" be automatically pre-completed."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned
@@ -2181,45 +2214,12 @@ msgid "Work Order"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_routing_action
-#: model:ir.model,name:mrp.model_mrp_routing
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_routing_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_routing_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_routing_id
-#: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-msgid "Work Order Operations"
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_routing_action
-msgid ""
-"Work Order Operations allow you to create and manage the manufacturing\n"
-"                operations that should be followed within your work centers in\n"
-"                order to produce a product.  They are attached to bills of\n"
-"                materials that will define the required raw materials."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_mrp_routings
 msgid ""
 "Work Order Operations allow you to create and manage the manufacturing "
 "operations that should be followed within your work centers in order to "
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
-msgid ""
-"Work Order Operations indicates all the Work Centers used, for how long "
-"and/or cycles.If Work Order Operations is indicated then,the third tab of a "
-"production order (Work Centers) will be automatically pre-completed."
 msgstr ""
 
 #. module: mrp
