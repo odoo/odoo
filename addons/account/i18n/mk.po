@@ -3,6 +3,7 @@
 # * account
 # 
 # Translators:
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015
 # Anica Milanova, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
@@ -10,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-19 09:27+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-09-24 10:17+0000\n"
+"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -380,7 +381,7 @@ msgid ""
 "                your bank statements.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nКликнете за да креирате урнек на изводна операција.\n</p><p>\nСе користат за брзо креирање на движечка ставка во случај кога ги поврзувате вашите банкарски изводи.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -423,7 +424,7 @@ msgid ""
 "                one or several tax code.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете за да дефинирате нов даночен код.\n              </p><p>\n                Во зависност од земјата, даночниот код обично е ќелија која треба \n                да се пополни во даночната пријава. Odoo ви дозволува да ја\n                дефинирате даночната структура и секоја даночна пресметка ќе биде \n                регистрирана во еден или неколку даночни кодови.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -496,7 +497,7 @@ msgid ""
 "                account and the counterpart \"Account Payable\".\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nСелектирајте го периодот и дневникот кој што сакате да го пополнете.\n</p><p>\nОвој приказ може да се користи од сметководители со цел да ги\nзапишуваат внесовите побрзо во Odoo. Ако сакате да запишете влезна фактура, \nзапочнете со запишување на ставката од сметката на трошоци. Odoo автоматски ќе ви ги\nприложи данокот поврзан со оваа \nсметка и противконтото \"Account Payable\".\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_tree
@@ -511,7 +512,7 @@ msgid ""
 "            accounts will be created automatically based on these data.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nКликнете за да подесите нова банкарска сметка.\n</p><p>\nКонфигурирајте ја банкарската сметка на вашата компанија и изберете ги тие сметки што \nмораат да се појават на дното од вашиот извештај.\n</p><p>\nАко ја користите сметководствената апликација на Odoo, дневниците и \nсметките ќе ви бидат креирани автоматски според овие податоци.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_manual_reconcile
@@ -619,7 +620,7 @@ msgstr "Сметка"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr ""
+msgstr "Сметководствен застарен бруто билансен извештај"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
@@ -675,7 +676,7 @@ msgstr "Код и име на сметка"
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
-msgstr ""
+msgstr "Извештај за сметка на заедничка сметка"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
@@ -995,7 +996,7 @@ msgstr "Период на сметка"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_vat
 msgid "Account tax"
-msgstr ""
+msgstr "Данок на сметка"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
@@ -1071,7 +1072,7 @@ msgstr "Сметководствени извештаи"
 #. module: account
 #: view:res.partner:account.view_partner_property_form
 msgid "Accounting-related settings are managed on"
-msgstr ""
+msgstr "Сметко-поврзаните ажурирања се менаџирани на"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -1180,7 +1181,7 @@ msgid ""
 "Odoo then calculates a table of credit balance by period. So if you request "
 "an interval of 30 days Odoo generates an analysis of creditors for the past "
 "month, past two months, and so on."
-msgstr ""
+msgstr "Старосна структура на обврски/побарувања- претставува подетален извештај на примањата со по интервали. Кога отварате извештај, Odoo прашува за името на компанијата, фискалниот период и големината на интервалот кој треба да се анализира (во денови). Odoo тогаш калкулира маса на кредитна состојба во период. Така што, доколку побарате интервал од 30 дена, Odoo ќе генерира анализа на кредитирање од минатиот месец, или за два месеци, итн."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
@@ -5467,7 +5468,7 @@ msgstr "Фактурата е веќе порамнета."
 #: code:addons/account/account_invoice.py:576
 #, python-format
 msgid "Invoice line account's company and invoice's company does not match."
-msgstr ""
+msgstr "Фактурната ставка од сметката на компанијата и фактурата од компанијата не си одговараат."
 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
@@ -5697,7 +5698,7 @@ msgstr "Внесови во дневник"
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Journal Entries by Month"
-msgstr ""
+msgstr "Внесови во дневник по месец"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
@@ -5759,7 +5760,7 @@ msgstr "Ставка на дневник"
 msgid ""
 "Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not "
 "balanced!"
-msgstr ""
+msgstr "Ставката од дневникот '%s' (id: %s) не може да биде користена во порамнувањето, поради тоа што не е балансирана!"
 
 #. module: account
 #: code:addons/account/account_move_line.py:888
@@ -6807,7 +6808,7 @@ msgstr "Само администратори можат да ги промен�
 #: code:addons/account/static/src/js/account_widgets.js:539
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
-msgstr ""
+msgstr "Користете го \"ctrl-enter\" краткиот начин за валидирање на порамнувањата."
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -6939,7 +6940,7 @@ msgstr "Почетен меѓузбир"
 #. module: account
 #: help:account.cashbox.line,number_opening:0
 msgid "Opening Unit Numbers"
-msgstr ""
+msgstr "Отварање на број на единици"
 
 #. module: account
 #: field:account.journal,with_last_closing_balance:0
@@ -7515,7 +7516,7 @@ msgstr "Потврдете дека сметката е дефинирана в�
 msgid ""
 "Please verify the price of the invoice!\n"
 "The encoded total does not match the computed total."
-msgstr ""
+msgstr "Ве молиме верификувајте ја цената од фактурата!\nШифрираниот тотал не се совпаѓа со компјутираниот тотал."
 
 #. module: account
 #: view:account.move:account.view_move_form
@@ -7569,7 +7570,7 @@ msgstr "Зачувај го знакот на салдото"
 #: model:ir.model,name:account.model_account_statement_operation_template
 msgid ""
 "Preset for the lines that can be created in a bank statement reconciliation"
-msgstr ""
+msgstr "Пресет за ставките кој може да биде креиран во порамнувањето на банкарски извод"
 
 #. module: account
 #: view:account.aged.trial.balance:account.account_aged_balance_view
@@ -8025,7 +8026,7 @@ msgstr "Порамнети трансакции"
 #. module: account
 #: field:account.entries.report,reconcile_id:0
 msgid "Reconciliation number"
-msgstr ""
+msgstr "Број на порамнување"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_bank_reconcile
@@ -8642,7 +8643,7 @@ msgstr "Избери период за анализи"
 #, python-format
 msgid ""
 "Selected Entry Lines does not have any account move entries in draft state."
-msgstr ""
+msgstr "Избраните ставки на внес немаат ниедно движење во внес на сметката во нацрт состојба."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:64
@@ -8668,7 +8669,7 @@ msgstr "Испратено по Е-пошта"
 #. module: account
 #: field:account.config.settings,module_product_email_template:0
 msgid "Send products tools and information at the invoice confirmation"
-msgstr ""
+msgstr "Испрати производни алатки и информации на фактурното потврдување"
 
 #. module: account
 #: field:account.invoice,sent:0
@@ -9148,7 +9149,7 @@ msgstr "Добавувачи"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "TIN:"
-msgstr ""
+msgstr "Даночен број :"
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
@@ -10465,17 +10466,17 @@ msgstr "Вкупно задолжување"
 #. module: account
 #: help:account.bank.statement,total_entry_encoding:0
 msgid "Total of cash transaction lines."
-msgstr ""
+msgstr "Вкупно од ставки на готовинска трансакција"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "Total of closing cash control lines."
-msgstr ""
+msgstr "Вкупно од ставки на готовинска контрола при затварање"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "Total of opening cash control lines"
-msgstr ""
+msgstr "Вкупно од ставки на готовинска контрола при отварање"
 
 #. module: account
 #: view:website:account.report_analyticcostledger
@@ -10580,7 +10581,7 @@ msgstr "Единствен број на фактурата, пресметан 
 #. module: account
 #: field:analytic.entries.report,unit_amount:0
 msgid "Unit Amount"
-msgstr ""
+msgstr "Износ на единица"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -11051,7 +11052,7 @@ msgid ""
 "You are selecting transactions from both a payable and a receivable account.\n"
 "\n"
 "In order to proceed, you first need to deselect the %s transactions."
-msgstr ""
+msgstr "Ги селектирате трансакциите од обете сметки на побарувања и обврски.\n\nЗа да продолжете, прво треба да ги деселектирате %s трансакциите."
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -11075,7 +11076,7 @@ msgstr "Не можете повторно да отворите период к
 #. module: account
 #: constraint:account.fiscal.position:0
 msgid "You can not select a country and a group of countries"
-msgstr ""
+msgstr "Не можете да изберете држава и група на држави"
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:38

@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-09-08 21:17+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
+"POT-Creation-Date: 2015-09-08 14:50+0000\n"
+"PO-Revision-Date: 2015-09-18 14:22+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,6 +93,27 @@ msgid ""
 msgstr "\n\nMüşteri Şikayetlerini Yönetme.\n=======================\nBu uygulama size müşteriler/tedarikçiler iddiaları ve şikayetlerini izlemenize olanak sağlar.\n\nIt is fully integrated with the email gateway so that you can create\nautomatically new claims based on incoming emails.\n    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_jp
+msgid ""
+"\n"
+"\n"
+"Overview:\n"
+"---------\n"
+"\n"
+"* Chart of Accounts and Taxes template for companies in Japan.\n"
+"* This probably does not cover all the necessary accounts for a company. You are expected to add/delete/modify accounts based on this template.\n"
+"\n"
+"Note:\n"
+"-----\n"
+"\n"
+"* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  You may not need to use these at all under normal circumstances.\n"
+"\n"
+"[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: base
 #: code:addons/base/res/res_config.py:379
 #, python-format
 msgid ""
@@ -100,6 +121,15 @@ msgid ""
 "\n"
 "This addon is already installed on your system"
 msgstr "\n\nBu eklenti halihazırda sisteminizde kurulu"
+
+#. module: base
+#: code:addons/model.py:146
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -156,6 +186,19 @@ msgid ""
 "    Display your network of certified people on your website\n"
 "    "
 msgstr "\n    Web sitenizde sertifikalı kişilerin ağınıza görüntüler\n    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_procurement_jit_stock
+msgid ""
+"\n"
+"    If you install this module, it can make sure that not only\n"
+"    the ship of pick-pack-ship will be created in batch, but\n"
+"    the pick and the pack also.  (which will dramatically improve performance)\n"
+"\n"
+"    Will be removed from Saas-6 and will be put in procurement_jit\n"
+"    over there, where procurement_jit will depend on stock\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -813,6 +856,59 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_eu_service
+msgid ""
+"\n"
+"EU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and electronic services\n"
+"=============================================================================================\n"
+"\n"
+"As of January 1rst, 2015, telecommunications, broadcasting\n"
+"and electronic services sold within the European Union\n"
+"have to be always taxed in the country where the customer\n"
+"belongs. In order to simplify the application of this EU\n"
+"directive, the Mini One Stop Shop (MOSS) registration scheme\n"
+"allows businesses to make a unique tax declaration.\n"
+"\n"
+"This module makes it possible by helping with the creation\n"
+"of the required EU fiscal positions and taxes in order to\n"
+"automatically apply and record the required taxes.\n"
+"\n"
+"This module installs a wizard to help setup fiscal positions\n"
+"and taxes for selling electronic services inside EU.\n"
+"\n"
+"The wizard lets you select:\n"
+" - the EU countries to which you are selling these\n"
+"   services\n"
+" - your national VAT tax for services, to be mapped\n"
+"   to the target country's tax\n"
+" - optionally: a template fiscal position, in order\n"
+"   to copy the account mapping. Should be your\n"
+"   existing B2C Intra-EU fiscal position. (defaults\n"
+"   to no account mapping)\n"
+" - optionally: an account to use for collecting the\n"
+"   tax amounts (defaults to the account used by your\n"
+"   national VAT tax for services)\n"
+"\n"
+"It creates the corresponding fiscal positions and taxes,\n"
+"automatically applicable for EU sales with a customer\n"
+"in the selected countries.\n"
+"The wizard can be run again for adding more countries.\n"
+"\n"
+"The wizard creates a separate Chart of Taxes for collecting the\n"
+"VAT amounts of the MOSS declaration, so extracting the MOSS\n"
+"data should be easy.\n"
+"Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
+"Taxes Report menu (Generic Accounting Report).\n"
+"\n"
+"References\n"
+"++++++++++\n"
+"- Directive 2008/8/EC\n"
+"- Council Implementing Regulation (EU) No 1042/2013\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
 msgid ""
 "\n"
@@ -963,6 +1059,15 @@ msgid ""
 "You can define price lists in analytic account, make some theoretical revenue\n"
 "reports."
 msgstr "\nGiderlerden, Zaman Çizelgesi Kayıtlarından Faturalarınızı oluşturun.\n========================================================\n\nMaliyetlere göre fatura oluşturan modül (insan kaynaklar, giderler, ...).\n\nAnalitik hesaplarda fiyat listeleri tanımlayabilirsiniz, bazı kuramsal gelir raporları yapabilirsiniz."
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_intrastat
+msgid ""
+"\n"
+"Generates Intrastat XML report for declaration\n"
+"Based on invoices.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_account
@@ -2611,10 +2716,15 @@ msgid ""
 "This is the base module to manage the accounting chart for Luxembourg.\n"
 "======================================================================\n"
 "\n"
-"    * the Luxembourg Official Chart of Accounts (law of June 2009 + 2011 chart and Taxes),\n"
+"    * the Luxembourg Official Chart of Accounts (law of June 2009 + 2015 chart and Taxes),\n"
 "    * the Tax Code Chart for Luxembourg\n"
 "    * the main taxes used in Luxembourg\n"
-"    * default fiscal position for local, intracom, extracom "
+"    * default fiscal position for local, intracom, extracom\n"
+"\n"
+"Notes:\n"
+"    * the 2015 chart of taxes is implemented to a large extent,\n"
+"      see the first sheet of tax.xls for details of coverage\n"
+"    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
 msgstr ""
 
 #. module: base
@@ -3752,6 +3862,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_payment_sips
+msgid ""
+"\n"
+"Worldline SIPS Payment Acquirer for online payments\n"
+"\n"
+"Works with Worldline keys version 2.0, contains implementation of\n"
+"payments acquirer using Worldline SIPS."
+msgstr ""
+
+#. module: base
 #: code:addons/base/res/res_company.py:68
 #, python-format
 msgid " (copy)"
@@ -3855,12 +3975,21 @@ msgstr "%p - AM veya PM karşılığı"
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:36
-#: code:addons/base/res/res_partner.py:356
-#: code:addons/base/res/res_users.py:120 code:addons/base/res/res_users.py:371
-#: code:addons/base/res/res_users.py:373
+#: code:addons/base/res/res_currency.py:143
+#: code:addons/base/res/res_partner.py:360
+#: code:addons/base/res/res_users.py:124 code:addons/base/res/res_users.py:398
+#: code:addons/base/res/res_users.py:400
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
+
+#. module: base
+#: code:addons/models.py:6082
+#, python-format
+msgid ""
+"%s This might be '%s' in the current model, or a field of the same name in "
+"an o2m."
+msgstr ""
 
 #. module: base
 #: view:res.lang:base.res_lang_form
@@ -3878,7 +4007,7 @@ msgid "%y - Year without century [00,99]."
 msgstr "%y - Yüzyıl olmadan Yıl [00,99]."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1015
+#: code:addons/base/ir/ir_model.py:1027
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -3886,25 +4015,25 @@ msgid ""
 msgstr "'%s' çok fazla nokta içermektedir. XML belirteçlerinde nokta bulunmaz ! Nokta diğer modüllerin verilerine atıfta bulunmak için kullanılır. Örneğin, module.reference_id ."
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:172
+#: code:addons/base/ir/ir_fields.py:189
 #, python-format
 msgid "'%s' does not seem to be a number for field '%%(field)s'"
 msgstr "'%s' bu '%%(field)s' alanı için bir sayı olarak görünmüyor"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:188
+#: code:addons/base/ir/ir_fields.py:207
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
 msgstr "'%s' alan için geçerli bir tarih görünmüyor '%%(field)s'"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:219
+#: code:addons/base/ir/ir_fields.py:240
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:163
+#: code:addons/base/ir/ir_fields.py:178
 #, python-format
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
 msgstr "'%s' bu alan '%%(field)s' için bir tamsayı olarak görünmüyor"
@@ -4135,6 +4264,12 @@ msgid "======================================================"
 msgstr "======================================================"
 
 #. module: base
+#: code:addons/models.py:3458
+#, python-format
+msgid "A document was modified since you last viewed it (%s:%d)"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,help:base.action_res_groups
 msgid ""
 "A group is a set of functional areas that will be assigned to the user in "
@@ -4167,13 +4302,18 @@ msgstr "Import/Export test etmek için bir modül."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_new_api
-msgid "A module to test the new API."
-msgstr "Yeni API test etmek için bir modül."
+msgid "A module to test the API."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_uninstall
 msgid "A module to test the uninstall feature."
 msgstr "Kaldırma özelliği test etmek için bir modül."
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_inherits
+msgid "A module to verify the inheritance using _inherits."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherit
@@ -4186,7 +4326,7 @@ msgid "A module with dummy methods."
 msgstr "Bir modül kukla yöntemleri ile."
 
 #. module: base
-#: code:addons/base/ir/ir_qweb.py:882
+#: code:addons/base/ir/ir_qweb.py:893
 #, python-format
 msgid "A unit must be provided to duration widgets"
 msgstr "Bir birim süre widget için sağlanmalıdır"
@@ -4200,11 +4340,6 @@ msgstr "A4"
 #: field:res.partner.title,shortcut:0
 msgid "Abbreviation"
 msgstr "Kısaltma"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Abkhazian / аҧсуа"
-msgstr "Abazaca / аҧсуа"
 
 #. module: base
 #: field:res.company,user_ids:0
@@ -4236,7 +4371,8 @@ msgid "Access Controls List"
 msgstr "Erişim Kısıtlama Listesi"
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:257
+#: code:addons/base/ir/ir_attachment.py:259 code:addons/models.py:3478
+#: code:addons/models.py:3520
 #, python-format
 msgid "Access Denied"
 msgstr "Erişim Engellendi"
@@ -4264,6 +4400,12 @@ msgstr "Erişim Hakları"
 #: view:ir.model:base.view_model_form view:res.groups:base.view_groups_form
 msgid "Access Rules"
 msgstr "Erişim Kuralları"
+
+#. module: base
+#: code:addons/models.py:4485
+#, python-format
+msgid "AccessError"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -4586,7 +4728,7 @@ msgstr "Bir ülkenin idari bölümleri. örn. Eyalet, Bölge, Kanton"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:566 code:addons/base/ir/ir_model.py:627
-#: code:addons/base/ir/ir_model.py:1134
+#: code:addons/base/ir/ir_model.py:1146
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "Bu modülü kaldırmak için Yönetici erişim gereklidir"
@@ -4626,11 +4768,6 @@ msgstr "Afganistan"
 #: selection:res.currency,position:0
 msgid "After Amount"
 msgstr "Tutardan Sonra"
-
-#. module: base
-#: model:ir.ui.menu,name:base.menu_aftersale
-msgid "After-Sale Services"
-msgstr "Satış Sonrası Servisler"
 
 #. module: base
 #: model:res.country,name:base.al
@@ -4677,7 +4814,7 @@ msgid "Always Searchable"
 msgstr "Her Zaman Aranabilir"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:350
+#: code:addons/base/ir/ir_fields.py:379
 #, python-format
 msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
@@ -4763,7 +4900,7 @@ msgid "Applicant Resumes and Letters"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:739
+#: code:addons/base/res/res_users.py:763
 #: model:ir.model,name:base.model_ir_module_category
 #: field:ir.module.module,application:0 field:res.groups,category_id:0
 #: view:res.users:base.user_groups_view
@@ -4782,7 +4919,7 @@ msgid "Apply"
 msgstr "Uygula"
 
 #. module: base
-#: code:addons/base/module/module.py:569
+#: code:addons/base/module/module.py:565
 #: view:base.module.upgrade:base.view_base_module_upgrade_install
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #, python-format
@@ -4873,8 +5010,6 @@ msgstr "Varlık Yönetimi"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_association
-#: model:ir.ui.menu,name:base.menu_association
-#: model:ir.ui.menu,name:base.menu_report_association
 msgid "Association"
 msgstr "Üyelik"
 
@@ -4919,7 +5054,6 @@ msgstr "Eklentiler"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
-#: model:res.groups,name:base.group_hr_attendance
 msgid "Attendances"
 msgstr "Katılımcılar"
 
@@ -4953,6 +5087,12 @@ msgstr "LDAP ile kimlik doğrulama"
 #: field:ir.module.module,author:0
 msgid "Author"
 msgstr "Yazan"
+
+#. module: base
+#: model:ir.module.module,description:base.module_payment_authorize
+#: model:ir.module.module,shortdesc:base.module_payment_authorize
+msgid "Authorize.Net Payment Acquirer"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window,auto_search:0
@@ -5001,6 +5141,12 @@ msgstr "Azerbaycan"
 #, python-format
 msgid "BANK"
 msgstr "BANKA"
+
+#. module: base
+#: code:addons/translate.py:990
+#, python-format
+msgid "Bad file format"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -5109,11 +5255,6 @@ msgid "Banks"
 msgstr "Bankalar"
 
 #. module: base
-#: help:res.partner,ean13:0
-msgid "BarCode"
-msgstr "BarKode"
-
-#. module: base
 #: model:res.country,name:base.bb
 msgid "Barbados"
 msgstr "Barbados"
@@ -5183,6 +5324,11 @@ msgid "Base view"
 msgstr "Temel görünüm"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Basque / Euskara"
+msgstr ""
+
+#. module: base
 #: selection:res.currency,position:0
 msgid "Before Amount"
 msgstr "Tutar Önce"
@@ -5191,6 +5337,11 @@ msgstr "Tutar Önce"
 #: model:res.country,name:base.by
 msgid "Belarus"
 msgstr "Beyaz Rusya"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
+msgid "Belgian Intrastat Declaration"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.be
@@ -5419,20 +5570,20 @@ msgid "Campaign in Mass Mailing"
 msgstr "Toplu posta kampanya"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:347
+#: code:addons/base/ir/ir_fields.py:376
 #, python-format
 msgid ""
 "Can not create Many-To-One records indirectly, import the field separately"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:347
+#: code:addons/base/res/res_users.py:374
 #, python-format
 msgid "Can not remove root user!"
 msgstr "Root kullanıcısı kaldırılamaz!"
 
 #. module: base
-#: code:addons/base/module/module.py:549
+#: code:addons/base/module/module.py:545
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "'%s' modülü güncellenemiyor. Kurulu değil"
@@ -5579,7 +5730,7 @@ msgid "Change the user password."
 msgstr "Kullanıcı şifresini değiştirin."
 
 #. module: base
-#: code:addons/base/res/res_partner.py:379
+#: code:addons/base/res/res_partner.py:383
 #, python-format
 msgid ""
 "Changing the company of a contact should only be done if it was never "
@@ -5922,6 +6073,11 @@ msgid "Company Bank Accounts"
 msgstr "Firma Banka Hesapları"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_17
+msgid "Company Contact"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_inventory_form
 #: model:ir.ui.menu,name:base.menu_action_inventory_form
 msgid "Company Defaults"
@@ -6019,10 +6175,6 @@ msgstr "Yapılandırma Sihirbazı Adımları"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
 #: model:ir.ui.menu,name:base.menu_config
-#: model:ir.ui.menu,name:base.menu_definitions
-#: model:ir.ui.menu,name:base.menu_event_config
-#: model:ir.ui.menu,name:base.menu_marketing_config_association
-#: model:ir.ui.menu,name:base.menu_marketing_config_root
 #: model:ir.ui.menu,name:base.menu_reporting_config
 #: view:res.company:base.view_company_form
 #: view:res.config:base.res_config_view_base
@@ -6092,6 +6244,12 @@ msgstr "Bağlantı Testi Başarılı!"
 #: field:ir.model.constraint,name:0 selection:ir.translation,type:0
 msgid "Constraint"
 msgstr "Kısıtlama"
+
+#. module: base
+#: code:addons/model.py:129
+#, python-format
+msgid "Constraint Error"
+msgstr ""
 
 #. module: base
 #: field:ir.model.constraint,type:0
@@ -6210,7 +6368,13 @@ msgid "Costa Rica - Accounting"
 msgstr "Kosta Rika - Muhasebe"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:638
+#: code:addons/loading.py:292
+#, python-format
+msgid "Could not load base module"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_partner.py:642
 #, python-format
 msgid "Couldn't create contact without email address!"
 msgstr "E-posta adresi olmayan kişi oluşturulamadı!"
@@ -6283,7 +6447,6 @@ msgstr "Erişim Yetkisi Oluştur"
 
 #. module: base
 #: field:ir.logging,create_date:0 field:ir.ui.view,create_date:0
-#: field:res.partner,create_date:0 field:res.users,create_date:0
 msgid "Create Date"
 msgstr "Oluşturma Tarihi"
 
@@ -6453,11 +6616,13 @@ msgstr "Oluşturan"
 #: field:res.country.group,create_date:0 field:res.country.state,create_date:0
 #: field:res.currency,create_date:0 field:res.currency.rate,create_date:0
 #: field:res.font,create_date:0 field:res.groups,create_date:0
-#: field:res.lang,create_date:0 field:res.partner.bank,create_date:0
+#: field:res.lang,create_date:0 field:res.partner,create_date:0
+#: field:res.partner.bank,create_date:0
 #: field:res.partner.bank.type,create_date:0
 #: field:res.partner.bank.type.field,create_date:0
 #: field:res.partner.category,create_date:0
 #: field:res.partner.title,create_date:0 field:res.request.link,create_date:0
+#: field:res.users,create_date:0
 #: field:wizard.ir.model.menu.create,create_date:0
 #: field:workflow,create_date:0 field:workflow.activity,create_date:0
 #: field:workflow.transition,create_date:0
@@ -6709,6 +6874,14 @@ msgid "Database Structure"
 msgstr "Veritabanı Yapısı"
 
 #. module: base
+#: code:addons/models.py:3382
+#, python-format
+msgid ""
+"Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
+"type incoherence in a previous request"
+msgstr ""
+
+#. module: base
 #: help:ir.values,res_id:0
 msgid ""
 "Database identifier of the record to which this applies. 0 = for all records"
@@ -6729,11 +6902,6 @@ msgstr "Oluşturulma Tarihi"
 #: field:res.lang,date_format:0
 msgid "Date Format"
 msgstr "Tarih Biçimi"
-
-#. module: base
-#: field:ir.attachment,write_date:0
-msgid "Date Modified"
-msgstr "Değiştirme Tarihi"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -6769,19 +6937,6 @@ msgstr "Gün: %(gün)ler"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Günler"
-
-#. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr "Sayın Yetkili,\n\nKayıtlarımıza göre hesabınızda halen yapılmamış ödemeler bulunmaktadır. Lütfen aşağıdaki ayrıntıları inceleyin.\nEğer ödeme yaptıysanız, lütfen bu yazımızı dikkate almayın. Aksi durumda, aşağıda belirtilen tutarı tarafımıza ödemenizi rica ederiz.\nHesabınızla ilgili herhangi bir sorunuz olursa, lütfen bize danışın.\n\nİşbirliğiniz için şimdiden teşekkür ederiz.\n\nSaygılarımızla,"
 
 #. module: base
 #: field:ir.mail_server,smtp_debug:0
@@ -6855,7 +7010,7 @@ msgid "Delete Access Right"
 msgstr "Erişim Yetkilerini Sil"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:841
+#: code:addons/base/ir/ir_actions.py:827
 #, python-format
 msgid "Deletion of the action record failed."
 msgstr "Eylem kaydı silinemedi."
@@ -6979,11 +7134,6 @@ msgid "Display"
 msgstr "Görüntü"
 
 #. module: base
-#: model:res.groups,name:base.group_website_publisher
-msgid "Display Editor Bar on Website"
-msgstr "Websitesinde Yapımcı Barını Göster"
-
-#. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Display an option on related documents to run this sever action"
 msgstr ""
@@ -7031,11 +7181,6 @@ msgid "Djibouti"
 msgstr "Cibuti"
 
 #. module: base
-#: model:res.groups,name:base.group_mono_salesteams
-msgid "Do Not Use Sales Teams"
-msgstr "Satış Ekiplerini Kullanamazsınız"
-
-#. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
 msgid "Doctor"
 msgstr "Doktor"
@@ -7046,7 +7191,7 @@ msgid "Document Management System"
 msgstr "Döküman Yönetim Sistemi"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:789 code:addons/base/ir/ir_model.py:792
+#: code:addons/base/ir/ir_model.py:793 code:addons/base/ir/ir_model.py:796
 #, python-format
 msgid "Document model"
 msgstr "Döküman modeli"
@@ -7121,10 +7266,15 @@ msgid "Duplicating workflows is not possible, please create a new workflow"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_qweb.py:880
+#: code:addons/base/ir/ir_qweb.py:891
 #, python-format
 msgid "Durations can't be negative"
 msgstr "Süreler negatif değerli olamaz"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Dutch (BE) / Nederlands (BE)"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7144,6 +7294,11 @@ msgstr "EAN13"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
 msgid "ESC/POS Hardware Driver"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_eu_service
+msgid "EU Mini One Stop Shop (MOSS)"
 msgstr ""
 
 #. module: base
@@ -7182,7 +7337,7 @@ msgid "Electronic Data Interchange (EDI)"
 msgstr "Elektronik Veri Değiş tokuşu (EDI)"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:482
+#: code:addons/base/ir/ir_ui_view.py:475
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr ""
@@ -7244,8 +7399,8 @@ msgstr "Personeller"
 
 #. module: base
 #: selection:base.language.install,lang:0
-msgid "English (CA)"
-msgstr "İngilizce (CA)"
+msgid "English (AU)"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7280,17 +7435,18 @@ msgid "Eritrea"
 msgstr "Eritre"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:846 code:addons/base/ir/ir_model.py:183
+#: code:addons/base/ir/ir_actions.py:832 code:addons/base/ir/ir_model.py:183
 #: code:addons/base/ir/ir_model.py:299 code:addons/base/ir/ir_model.py:313
 #: code:addons/base/ir/ir_model.py:353 code:addons/base/ir/ir_model.py:376
 #: code:addons/base/ir/ir_model.py:381 code:addons/base/ir/ir_model.py:384
-#: code:addons/base/ir/ir_translation.py:401
-#: code:addons/base/module/module.py:339 code:addons/base/module/module.py:381
-#: code:addons/base/module/module.py:386 code:addons/base/module/module.py:396
-#: code:addons/base/module/module.py:523 code:addons/base/module/module.py:549
-#: code:addons/base/module/module.py:563
-#: code:addons/base/res/res_currency.py:230
-#: code:addons/base/res/res_users.py:126 code:addons/custom.py:554
+#: code:addons/base/ir/ir_translation.py:418
+#: code:addons/base/module/module.py:340 code:addons/base/module/module.py:377
+#: code:addons/base/module/module.py:382 code:addons/base/module/module.py:392
+#: code:addons/base/module/module.py:519 code:addons/base/module/module.py:545
+#: code:addons/base/module/module.py:559
+#: code:addons/base/res/res_currency.py:241
+#: code:addons/base/res/res_users.py:130 code:addons/custom.py:554
+#: code:addons/models.py:418 code:addons/models.py:3608
 #, python-format
 msgid "Error"
 msgstr "Hata"
@@ -7307,11 +7463,17 @@ msgid "Error ! You can not create recursive categories."
 msgstr "Hata ! İç içe tekrarlanan sınıflar oluşturamazsınız."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:355
+#: code:addons/base/ir/ir_ui_view.py:348
 #, python-format
 msgid ""
 "Error context:\n"
 "View `%(view_name)s`"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:1266
+#, python-format
+msgid "Error details:"
 msgstr ""
 
 #. module: base
@@ -7320,7 +7482,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:466 code:addons/base/ir/ir_model.py:468
 #: code:addons/base/ir/ir_model.py:475 code:addons/base/ir/ir_model.py:478
 #: code:addons/base/module/wizard/base_update_translations.py:39
-#: code:addons/base/res/res_currency.py:59
+#: code:addons/base/res/res_currency.py:60
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
@@ -7594,10 +7756,16 @@ msgid "Field Type"
 msgstr "Alan Türü"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:841
+#: code:addons/base/ir/ir_ui_view.py:830
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "`%(field_name)s` alanı mevcut değil"
+
+#. module: base
+#: code:addons/models.py:1268
+#, python-format
+msgid "Field(s) `%s` failed against a constraint: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -7723,11 +7891,6 @@ msgid "Fleet Management"
 msgstr "Filo Yönetimi"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Flemish (BE) / Vlaams (BE)"
-msgstr "Flaman dili (BE) / Vlaams (BE)"
-
-#. module: base
 #: selection:ir.property,type:0
 msgid "Float"
 msgstr "Kaydırma"
@@ -7820,6 +7983,15 @@ msgid "For selection fields, the Selection Options must be given!"
 msgstr "Seçim alanları için, Seçim tercihleri mutlaka sağlanmalı."
 
 #. module: base
+#: code:addons/models.py:3521
+#, python-format
+msgid ""
+"For this kind of document, you may only access records you created yourself.\n"
+"\n"
+"(Document type: %s)"
+msgstr ""
+
+#. module: base
 #: selection:ir.actions.act_window,view_type:0
 #: selection:ir.actions.act_window.view,view_mode:0
 #: view:ir.ui.view:base.view_view_search selection:ir.ui.view,type:0
@@ -7853,7 +8025,7 @@ msgid "Forum, FAQ, Q&A"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:320
+#: code:addons/base/ir/ir_fields.py:344
 #, python-format
 msgid "Found multiple matches for field '%%(field)s' (%d matches)"
 msgstr "Alan için birden fazla eşleşme bulundu  '%%(alan)lar' (%d eşleşen)"
@@ -8013,6 +8185,11 @@ msgstr "Jenerik Modüller"
 #: model:res.country,name:base.ge
 msgid "Georgia"
 msgstr "Gürcistan"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Georgian / ქართული ენა"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8744,11 +8921,6 @@ msgid "Implementation"
 msgstr "Gerçekleştirme"
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_import_crm
-msgid "Import & Synchronize"
-msgstr "İçe Aktarım ve Senkronize"
-
-#. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
 msgid "Import / Export"
 msgstr "İçe Aktarım / Dışa Aktarım"
@@ -8787,8 +8959,8 @@ msgid "Increment Number"
 msgstr "Artırma Numarası"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:134
-#: code:addons/base/ir/ir_sequence.py:160
+#: code:addons/base/ir/ir_sequence.py:136
+#: code:addons/base/ir/ir_sequence.py:162
 #, python-format
 msgid "Increment number must not be zero."
 msgstr "Arttırma sayı sıfır olamaz."
@@ -8890,13 +9062,7 @@ msgid "Inline View"
 msgstr "Satırda Görme"
 
 #. module: base
-#: code:addons/base/maintenance/migrations/stock/7.saas~5.1.1/post-10-warehouseconf.py:57
-#, python-format
-msgid "Input"
-msgstr "Giriş"
-
-#. module: base
-#: code:addons/base/module/module.py:440
+#: code:addons/base/module/module.py:436
 #: view:ir.module.module:base.module_form
 #: view:ir.module.module:base.module_view_kanban
 #, python-format
@@ -8952,9 +9118,29 @@ msgid "Instant Messaging Bus allow you to send messages to users, in live."
 msgstr ""
 
 #. module: base
+#: code:addons/models.py:1460
+#, python-format
+msgid "Insufficient fields for Calendar View!"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:1472
+#, python-format
+msgid ""
+"Insufficient fields to generate a Calendar View for %s, missing a date_stop "
+"or a date_delay"
+msgstr ""
+
+#. module: base
 #: selection:ir.property,type:0
 msgid "Integer"
 msgstr "Tamsayı"
+
+#. module: base
+#: code:addons/model.py:149 code:addons/model.py:151
+#, python-format
+msgid "Integrity Error"
+msgstr ""
 
 #. module: base
 #: view:ir.rule:base.view_rule_form
@@ -8987,15 +9173,31 @@ msgid "Introspection report on objects"
 msgstr "Nesneler üzerinde içgözlem raporu"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Inuktitut / ᐃᓄᒃᑎᑐᑦ"
-msgstr "Eskimo / ᐃᓄᒃᑎᑐᑦ"
+#: code:addons/models.py:4485
+#, python-format
+msgid ""
+"Invalid \"order\" specified. A valid \"order\" specification is a comma-"
+"separated list of valid field names (optionally followed by asc/desc for the"
+" direction)"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:1543
+#, python-format
+msgid "Invalid Architecture!"
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_bank.py:189
 #, python-format
 msgid "Invalid Bank Account Type Name format."
 msgstr "Geçersiz Banka Hesap Türü Ad biçimi."
+
+#. module: base
+#: code:addons/models.py:1460 code:addons/models.py:1471
+#, python-format
+msgid "Invalid Object Architecture!"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:92
@@ -9009,19 +9211,19 @@ msgid "Invalid arguments"
 msgstr "Geçersiz parametreler"
 
 #. module: base
-#: code:addons/base/res/res_users.py:850
+#: code:addons/base/res/res_users.py:874
 #, python-format
 msgid "Invalid context default_groups_ref value (model.name_id) : \"%s\""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:850
+#: code:addons/base/res/res_users.py:874
 #, python-format
 msgid "Invalid context value"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:302
+#: code:addons/base/ir/ir_fields.py:325
 #, python-format
 msgid "Invalid database id '%s' for the field '%%(field)s'"
 msgstr ""
@@ -9032,6 +9234,20 @@ msgid ""
 "Invalid date/time format directive specified. Please refer to the list of "
 "allowed directives, displayed when you edit a language."
 msgstr "Geçersiz tarih/zaman yönergesi belirlenmiş. Lütfen bir dil düzenlerken görüntülenen izin verilen yönerge listesine bakın."
+
+#. module: base
+#: code:addons/models.py:2095
+#, python-format
+msgid "Invalid group_by"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:2096
+#, python-format
+msgid ""
+"Invalid group_by specification: \"%s\".\n"
+"A group_by specification must be a list of valid fields."
+msgstr ""
 
 #. module: base
 #: sql_constraint:ir.ui.view:0
@@ -9047,13 +9263,13 @@ msgid "Invalid model name in the action definition."
 msgstr "İşlem tanımlamasında geçersiz model adı."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:474
+#: code:addons/base/ir/ir_ui_view.py:467
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:260
+#: code:addons/base/ir/ir_sequence.py:259
 #, python-format
 msgid "Invalid prefix or suffix for sequence '%s'"
 msgstr "Dizisi için geçersiz önek veya sonek '%s'"
@@ -9092,11 +9308,6 @@ msgstr "Teslimatı Doğrudan Faturala"
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_invoice
 msgid "Invoice on Timesheets"
 msgstr "Zaman Çizelgeleride Faturalama"
-
-#. module: base
-#: model:ir.ui.menu,name:base.menu_invoiced
-msgid "Invoicing"
-msgstr "Faturalama"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
@@ -9180,6 +9391,11 @@ msgid "Japan"
 msgstr "Japonya"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_jp
+msgid "Japan - Accounting"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Japanese / 日本語"
 msgstr "Japonca / 日本語"
@@ -9235,6 +9451,16 @@ msgid "Just In Time Scheduling"
 msgstr "Zamanında Planlama"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_procurement_jit_stock
+msgid "Just In Time Scheduling with Stock"
+msgstr ""
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Kabyle / Taqbaylit"
+msgstr ""
+
+#. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
 #: view:ir.ui.view:base.view_view_search selection:ir.ui.view,type:0
 msgid "Kanban"
@@ -9272,11 +9498,6 @@ msgid "Kiribati"
 msgstr "Kiribati"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Klingon"
-msgstr "Klingon"
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_knowledge_management
 msgid "Knowledge"
 msgstr "Bilgi Banaksı"
@@ -9310,6 +9531,11 @@ msgstr "Kuveyt"
 #: model:res.country,name:base.kg
 msgid "Kyrgyz Republic (Kyrgyzstan)"
 msgstr "Kırgızistan"
+
+#. module: base
+#: selection:ir.module.module,license:0
+msgid "LGPL Version 3"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.res_partner_address_report
@@ -9374,11 +9600,6 @@ msgid "Last Modification Date"
 msgstr "Son Değişiklik Tarihi"
 
 #. module: base
-#: field:ir.attachment,write_uid:0
-msgid "Last Modification User"
-msgstr "Son Kullanıcı Değişikliği"
-
-#. module: base
 #: field:base.language.export,write_uid:0
 #: field:base.language.import,write_uid:0
 #: field:base.language.install,write_uid:0
@@ -9393,15 +9614,16 @@ msgstr "Son Kullanıcı Değişikliği"
 #: field:ir.actions.act_window_close,write_uid:0
 #: field:ir.actions.actions,write_uid:0 field:ir.actions.client,write_uid:0
 #: field:ir.actions.report.xml,write_uid:0 field:ir.actions.server,write_uid:0
-#: field:ir.actions.todo,write_uid:0 field:ir.config_parameter,write_uid:0
-#: field:ir.cron,write_uid:0 field:ir.default,write_uid:0
-#: field:ir.exports,write_uid:0 field:ir.exports.line,write_uid:0
-#: field:ir.fields.converter,write_uid:0 field:ir.filters,write_uid:0
-#: field:ir.logging,write_uid:0 field:ir.mail_server,write_uid:0
-#: field:ir.model,write_uid:0 field:ir.model.access,write_uid:0
-#: field:ir.model.constraint,write_uid:0 field:ir.model.data,write_uid:0
-#: field:ir.model.fields,write_uid:0 field:ir.model.relation,write_uid:0
-#: field:ir.module.category,write_uid:0 field:ir.module.module,write_uid:0
+#: field:ir.actions.todo,write_uid:0 field:ir.attachment,write_uid:0
+#: field:ir.config_parameter,write_uid:0 field:ir.cron,write_uid:0
+#: field:ir.default,write_uid:0 field:ir.exports,write_uid:0
+#: field:ir.exports.line,write_uid:0 field:ir.fields.converter,write_uid:0
+#: field:ir.filters,write_uid:0 field:ir.logging,write_uid:0
+#: field:ir.mail_server,write_uid:0 field:ir.model,write_uid:0
+#: field:ir.model.access,write_uid:0 field:ir.model.constraint,write_uid:0
+#: field:ir.model.data,write_uid:0 field:ir.model.fields,write_uid:0
+#: field:ir.model.relation,write_uid:0 field:ir.module.category,write_uid:0
+#: field:ir.module.module,write_uid:0
 #: field:ir.module.module.dependency,write_uid:0 field:ir.property,write_uid:0
 #: field:ir.rule,write_uid:0 field:ir.sequence,write_uid:0
 #: field:ir.sequence.type,write_uid:0 field:ir.server.object.lines,write_uid:0
@@ -9442,15 +9664,15 @@ msgstr "Son Güncelleyen"
 #: field:ir.actions.actions,write_date:0 field:ir.actions.client,write_date:0
 #: field:ir.actions.report.xml,write_date:0
 #: field:ir.actions.server,write_date:0 field:ir.actions.todo,write_date:0
-#: field:ir.config_parameter,write_date:0 field:ir.cron,write_date:0
-#: field:ir.default,write_date:0 field:ir.exports,write_date:0
-#: field:ir.exports.line,write_date:0 field:ir.fields.converter,write_date:0
-#: field:ir.filters,write_date:0 field:ir.logging,write_date:0
-#: field:ir.mail_server,write_date:0 field:ir.model,write_date:0
-#: field:ir.model.access,write_date:0 field:ir.model.constraint,write_date:0
-#: field:ir.model.data,write_date:0 field:ir.model.fields,write_date:0
-#: field:ir.model.relation,write_date:0 field:ir.module.category,write_date:0
-#: field:ir.module.module,write_date:0
+#: field:ir.attachment,write_date:0 field:ir.config_parameter,write_date:0
+#: field:ir.cron,write_date:0 field:ir.default,write_date:0
+#: field:ir.exports,write_date:0 field:ir.exports.line,write_date:0
+#: field:ir.fields.converter,write_date:0 field:ir.filters,write_date:0
+#: field:ir.logging,write_date:0 field:ir.mail_server,write_date:0
+#: field:ir.model,write_date:0 field:ir.model.access,write_date:0
+#: field:ir.model.constraint,write_date:0 field:ir.model.data,write_date:0
+#: field:ir.model.fields,write_date:0 field:ir.model.relation,write_date:0
+#: field:ir.module.category,write_date:0 field:ir.module.module,write_date:0
 #: field:ir.module.module.dependency,write_date:0
 #: field:ir.property,write_date:0 field:ir.rule,write_date:0
 #: field:ir.sequence,write_date:0 field:ir.sequence.type,write_date:0
@@ -9532,11 +9754,6 @@ msgstr "Launchpad"
 #: model:ir.module.module,shortdesc:base.module_crm_project_issue
 msgid "Lead to Issue"
 msgstr "Aday Sorunları"
-
-#. module: base
-#: model:ir.ui.menu,name:base.menu_crm_config_lead
-msgid "Leads & Opportunities"
-msgstr "Adaylar & Fırsatlar"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
@@ -9805,13 +10022,13 @@ msgid "Madam"
 msgstr "Bayan"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:474
+#: code:addons/base/ir/ir_mail_server.py:503
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr "Posta Gönderiminde Hata"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:470
+#: code:addons/base/ir/ir_mail_server.py:499
 #, python-format
 msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
@@ -9844,11 +10061,6 @@ msgid "Malawi"
 msgstr "Malavi"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Malayalam / മലയാളം"
-msgstr "Malayalam dili / മലയാളം"
-
-#. module: base
 #: model:res.country,name:base.my
 msgid "Malaysia"
 msgstr "Malezya"
@@ -9867,16 +10079,6 @@ msgstr "Mali"
 #: model:res.country,name:base.mt
 msgid "Malta"
 msgstr "Malta"
-
-#. module: base
-#: model:res.groups,name:base.group_multi_salesteams
-msgid "Manage Sales Teams"
-msgstr "Satış Ekiplerini Yönet"
-
-#. module: base
-#: model:res.groups,name:base.group_website_designer
-msgid "Manage Website and qWeb view"
-msgstr "Websitesini yönet ve qWeb göster"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
@@ -9911,9 +10113,7 @@ msgid ""
 msgstr "Sisteminizdeki Partner  ünvanlarını yönetin. Partner ünvanları şirketlerin yasal durumlarını gösterir: A.Ş., LTD, Şahıs Firması, SA, vs."
 
 #. module: base
-#: model:res.groups,name:base.group_hr_manager
 #: model:res.groups,name:base.group_sale_manager
-#: model:res.groups,name:base.group_tool_manager
 msgid "Manager"
 msgstr "Yönetici"
 
@@ -9937,8 +10137,6 @@ msgstr "Üretici"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
-#: model:ir.ui.menu,name:base.menu_mrp_config
-#: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
 msgstr "Üretim"
 
@@ -9978,8 +10176,6 @@ msgstr "Satış siparişindeki kar marjları"
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
 #: model:ir.module.module,shortdesc:base.module_marketing
-#: model:ir.ui.menu,name:base.marketing_menu
-#: model:ir.ui.menu,name:base.marketing_reporting_menu
 msgid "Marketing"
 msgstr "Pazarlama"
 
@@ -10147,10 +10343,22 @@ msgid "Miss"
 msgstr "Bayan"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:448
+#: code:addons/base/ir/ir_mail_server.py:477
 #, python-format
 msgid "Missing SMTP Server"
 msgstr "SMTP Sunucusu Yok"
+
+#. module: base
+#: code:addons/models.py:6067
+#, python-format
+msgid "Missing required value for the field '%s' (%s)"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:6064
+#, python-format
+msgid "Missing required value for the field '%s'."
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -10249,7 +10457,7 @@ msgid ""
 msgstr "Çağrılacak yöntemin bulunduğu model adı, örn. 'res.partner'"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:584 code:addons/base/ir/ir_ui_view.py:798
+#: code:addons/base/ir/ir_ui_view.py:576 code:addons/base/ir/ir_ui_view.py:790
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr " %(model)s bulunamadı"
@@ -10326,7 +10534,15 @@ msgid "Module dependency"
 msgstr "Modül bağımlılığı"
 
 #. module: base
-#: code:addons/base/module/module.py:685
+#: code:addons/convert.py:963
+#, python-format
+msgid ""
+"Module loading %s failed: file %s could not be processed:\n"
+" %s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:681
 #, python-format
 msgid "Module not found"
 msgstr "Modül bulunamadı"
@@ -10639,10 +10855,16 @@ msgid "Niue"
 msgstr "Niue"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:59
+#: code:addons/base/res/res_currency.py:60
 #, python-format
 msgid "No currency rate associated for currency '%s' for the given period"
 msgstr "Verilen süre için para '%s' için ilişkili yok kur"
+
+#. module: base
+#: code:addons/models.py:1543
+#, python-format
+msgid "No default view of type '%s' could be found !"
+msgstr ""
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -10656,7 +10878,7 @@ msgid "No language with code \"%s\" exists"
 msgstr "\"%s\" kodu ile tanımlı dil yok"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:328
+#: code:addons/base/ir/ir_fields.py:357
 #, python-format
 msgid ""
 "No matching record found for %(field_type)s '%(value)s' in field "
@@ -10664,7 +10886,7 @@ msgid ""
 msgstr "'%%(field)s' Alanında %(field_type)s '%(value)s' için eşleşen kayıt bulunamadı"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:230
+#: code:addons/base/res/res_currency.py:241
 #, python-format
 msgid ""
 "No rate found \n"
@@ -10814,11 +11036,6 @@ msgid "Object:"
 msgstr "Nesne:"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Occitan (FR, post 1500) / Occitan"
-msgstr "Oksitanca (FR, sonrası 1500) / Oksitanca"
-
-#. module: base
 #. openerp-web
 #: code:addons/base/static/src/js/apps.js:179
 #, python-format
@@ -10841,11 +11058,6 @@ msgstr "Odoo otomatik olarak gerekli dolgu boyutu almak için 'İleri sayısı' 
 #: model:res.partner.category,name:base.res_partner_category_12
 msgid "Office Supplies"
 msgstr "Büro Malzemeleri"
-
-#. module: base
-#: model:res.groups,name:base.group_hr_user
-msgid "Officer"
-msgstr "Sorumlusu"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_ogone
@@ -10885,6 +11097,22 @@ msgid "On delete property for many2one fields"
 msgstr "many2one alanlarda silinmede gerçekleştirilecek özellik"
 
 #. module: base
+#: code:addons/models.py:3395 code:addons/models.py:3490
+#, python-format
+msgid ""
+"One of the documents you are trying to access has been deleted, please try "
+"again after refreshing."
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:3892
+#, python-format
+msgid ""
+"One of the records you are trying to modify has already been deleted "
+"(Document type: %s)."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
 msgid "Online Billing"
 msgstr "Çevrimiçi Fatura"
@@ -10911,7 +11139,7 @@ msgid "Only administrators can change the settings"
 msgstr "adece yöneticiler ayarları değiştirebilirs"
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:81
+#: code:addons/base/ir/ir_attachment.py:80
 #, python-format
 msgid "Only administrators can execute this action."
 msgstr "Sadece yöneticiler bu eylemi yürütebilirler."
@@ -10936,7 +11164,7 @@ msgid "Only if this bank account belong to your company"
 msgstr "Sadece eğer bu banka hesapları şirketinize ait ise"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:789
+#: code:addons/base/ir/ir_model.py:793
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -10989,7 +11217,7 @@ msgid "OpenOffice Report Designer"
 msgstr "OpenOffice Rapor Tasarımcısı"
 
 #. module: base
-#: code:addons/base/res/res_users.py:158
+#: code:addons/base/res/res_users.py:163
 #, python-format
 msgid "Operation Canceled"
 msgstr "Operasyon İptalEdildi"
@@ -10999,11 +11227,6 @@ msgstr "Operasyon İptalEdildi"
 #, python-format
 msgid "Operation Forbidden"
 msgstr "Operasyon Yasak"
-
-#. module: base
-#: model:ir.ui.menu,name:base.menu_crm_config_opportunity
-msgid "Opportunities"
-msgstr "Fırsatlar"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
@@ -11058,7 +11281,7 @@ msgid "Original View"
 msgstr "Orijinal Görünüm"
 
 #. module: base
-#: code:addons/base/res/res_users.py:750 code:addons/base/res/res_users.py:902
+#: code:addons/base/res/res_users.py:774 code:addons/base/res/res_users.py:928
 #: selection:res.partner,type:0 view:res.users:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -11100,12 +11323,6 @@ msgid "Outgoing Transitions"
 msgstr "Dışa Giden Dönüşümler"
 
 #. module: base
-#: code:addons/base/maintenance/migrations/stock/7.saas~5.1.1/post-10-warehouseconf.py:64
-#, python-format
-msgid "Output"
-msgstr "Çıkış"
-
-#. module: base
 #: field:base.language.import,overwrite:0
 #: field:base.language.install,overwrite:0
 msgid "Overwrite Existing Terms"
@@ -11136,12 +11353,6 @@ msgstr "PO(T) biçimi: PO düzenleyici ile düzenlemeniz gerekebilir, örnek ola
 #: view:base.language.export:base.wizard_lang_export
 msgid "POEdit"
 msgstr "POEdit"
-
-#. module: base
-#: code:addons/base/maintenance/migrations/stock/7.saas~5.1.1/post-10-warehouseconf.py:70
-#, python-format
-msgid "Packing Zone"
-msgstr "Paket Bölgesi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
@@ -11260,11 +11471,6 @@ msgid "Partner Assignation & Geolocation"
 msgstr "İş Ortağı Atama ve Coğrafi Konum"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_mass_mail
-msgid "Partner Mass Mailing"
-msgstr "İş Ortağı Toplu Posta"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner Module for Website"
 msgstr "Web sitesi için İş Ortağı Modülü"
@@ -11307,7 +11513,7 @@ msgid "Partners Geo-Localization"
 msgstr "İş Ortağı Coğ-Yerelleştirmesi"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:774
+#: code:addons/base/res/res_partner.py:780
 #, python-format
 msgid "Partners: "
 msgstr "Partnerler: "
@@ -11344,6 +11550,11 @@ msgid "Payment Acquirer: Adyen Implementation"
 msgstr "Ödeme Alıcı: Adyen Uygulanması"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_payment_authorize
+msgid "Payment Acquirer: Authorize.net Implementation"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_payment_buckaroo
 msgid "Payment Acquirer: Buckaroo Implementation"
 msgstr ""
@@ -11362,11 +11573,6 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_payment_transfer
 msgid "Payment Acquirer: Transfer Implementation"
 msgstr ""
-
-#. module: base
-#: model:ir.ui.menu,name:base.menu_sales_followup
-msgid "Payment Follow-up"
-msgstr "Ödeme Takibi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_followup
@@ -11403,7 +11609,7 @@ msgstr "Periyodik Değerlendirmeler, Ölçümleri, Anketler"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:566 code:addons/base/ir/ir_model.py:627
-#: code:addons/base/ir/ir_model.py:1134
+#: code:addons/base/ir/ir_model.py:1146
 #, python-format
 msgid "Permission Denied"
 msgstr "İzin Reddedildi"
@@ -11466,14 +11672,14 @@ msgid "Plano de contas SNC para Portugal"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:792
+#: code:addons/base/ir/ir_model.py:796
 #, python-format
 msgid ""
 "Please contact your system administrator if you think this is an error."
 msgstr "Bunun bir hata olduğunu düşünüyorsanız lütfen sistem yöneticinize başvurun."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:449
+#: code:addons/base/ir/ir_mail_server.py:478
 #, python-format
 msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
@@ -11499,13 +11705,13 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:846
+#: code:addons/base/ir/ir_actions.py:832
 #, python-format
 msgid "Please specify an action to launch!"
 msgstr "Başlatmak için bir eylem belirtin!"
 
 #. module: base
-#: code:addons/base/res/res_users.py:158
+#: code:addons/base/res/res_users.py:163
 #, python-format
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
@@ -11696,11 +11902,6 @@ msgid "Product extension to track sales and purchases"
 msgstr "Ürün uzantısı satış ve satın alma izlemek için"
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_product
-msgid "Products"
-msgstr "Ürünler"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
 msgstr "Ürünler & FiyatListeleri"
@@ -11722,9 +11923,6 @@ msgstr "Profesör"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_project_management
-#: model:ir.ui.menu,name:base.menu_main_pm
-#: model:ir.ui.menu,name:base.menu_project_config
-#: model:ir.ui.menu,name:base.menu_project_report
 msgid "Project"
 msgstr "Proje"
 
@@ -11817,11 +12015,6 @@ msgid "Puerto Rico"
 msgstr "Porto Riko"
 
 #. module: base
-#: model:ir.ui.menu,name:base.next_id_73
-msgid "Purchase"
-msgstr "Satınalma"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_analytic_plans
 msgid "Purchase Analytic Plans"
 msgstr "Satınalma Analitik Planları"
@@ -11843,7 +12036,6 @@ msgstr "Satınalma Talebleri"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_purchase_management
-#: model:ir.ui.menu,name:base.menu_purchase_root
 msgid "Purchases"
 msgstr "Satınalma"
 
@@ -11882,12 +12074,6 @@ msgstr "Katar"
 #: field:ir.values,key2:0
 msgid "Qualifier"
 msgstr "Eleme"
-
-#. module: base
-#: code:addons/base/maintenance/migrations/stock/7.saas~5.1.1/post-10-warehouseconf.py:68
-#, python-format
-msgid "Quality Control"
-msgstr "Kalite Kontrolu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock
@@ -11979,6 +12165,12 @@ msgid "Record"
 msgstr "Kayıtl"
 
 #. module: base
+#: code:addons/models.py:4769
+#, python-format
+msgid "Record #%d of %s not found, cannot copy!"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.act_window,res_id:0 field:ir.actions.server,id_value:0
 #: field:ir.model.data,res_id:0 field:ir.translation,res_id:0
 #: field:ir.values,res_id:0
@@ -12004,14 +12196,15 @@ msgid "Record cannot be modified right now"
 msgstr "Kayıt şuan değiştirilemiyor"
 
 #. module: base
+#: code:addons/models.py:4894
+#, python-format
+msgid "Record does not exist or has been deleted."
+msgstr ""
+
+#. module: base
 #: view:ir.rule:base.view_rule_form view:ir.rule:base.view_rule_tree
 msgid "Record rules"
 msgstr "Kayıt kuralları"
-
-#. module: base
-#: model:ir.ui.menu,name:base.menu_crm_case_job_req_main
-msgid "Recruitment"
-msgstr "İşe Alım Süreci"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
@@ -12024,7 +12217,7 @@ msgid "Recurring Documents"
 msgstr "Tekrarlanan Dökümanlar"
 
 #. module: base
-#: code:addons/base/module/module.py:386
+#: code:addons/base/module/module.py:382
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr "Modül bağımlılılklarında özyineleme hatası !"
@@ -12035,9 +12228,9 @@ msgid "Recursion found in child server actions"
 msgstr "Özyineleme alt sunucu eylemleri bulundu"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.res_request_link-act
-#: model:ir.ui.menu,name:base.menu_res_request_link_act
-msgid "Referencable Models"
+#: code:addons/models.py:3995
+#, python-format
+msgid "Recursivity Detected."
 msgstr ""
 
 #. module: base
@@ -12049,6 +12242,12 @@ msgstr "Referans Rehberi"
 #: field:ir.actions.server,ref_object:0
 msgid "Reference record"
 msgstr "Referansı kaydı"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.res_request_link-act
+#: model:ir.ui.menu,name:base.menu_res_request_link_act
+msgid "Referenceable Models"
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_company.py:168
@@ -12205,6 +12404,12 @@ msgid "Resellers"
 msgstr "Bayiler"
 
 #. module: base
+#: code:addons/models.py:1085
+#, python-format
+msgid "Resolve other errors first"
+msgstr ""
+
+#. module: base
 #: field:ir.exports,resource:0
 #: model:ir.module.module,shortdesc:base.module_resource
 #: field:ir.property,res_id:0
@@ -12320,7 +12525,7 @@ msgid "Rules can not be applied on the Record Rules model."
 msgstr "Kurallar Kayıt Kuralları model üzerinde uygulanamaz."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:823
+#: code:addons/base/ir/ir_actions.py:809
 #, python-format
 msgid "Run %s"
 msgstr "Çalışan %s"
@@ -12445,9 +12650,7 @@ msgstr "Satış Düzen, sayfa sonu, alt toplamlar, ayırıcılar, rapor"
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_management
 #: model:ir.ui.menu,name:base.menu_base_partner
-#: model:ir.ui.menu,name:base.menu_sale_config
-#: model:ir.ui.menu,name:base.menu_sale_config_sales
-#: model:ir.ui.menu,name:base.menu_sales model:ir.ui.menu,name:base.next_id_64
+#: model:ir.ui.menu,name:base.menu_sales
 msgid "Sales"
 msgstr "Satış"
 
@@ -12592,20 +12795,16 @@ msgid "Security and Authentication"
 msgstr "Güvenlik ve Kimlik Doğrulama"
 
 #. module: base
-#: model:res.groups,name:base.group_sale_salesman
-msgid "See Own Leads"
-msgstr "Adaylarını Görsün"
-
-#. module: base
-#: model:res.groups,name:base.group_sale_salesman_all_leads
-msgid "See all Leads"
-msgstr "Tüm Adayları Görme"
-
-#. module: base
-#: code:addons/base/ir/ir_fields.py:284
+#: code:addons/base/ir/ir_fields.py:306
 #, python-format
 msgid "See all possible values"
 msgstr "Olası tüm değerleri göster"
+
+#. module: base
+#: code:addons/common.py:50
+#, python-format
+msgid "See http://openerp.com"
+msgstr ""
 
 #. module: base
 #: help:multi_company.default,field_id:0
@@ -12746,6 +12945,12 @@ msgid "Serialization Field"
 msgstr "Serileştirme Alanı"
 
 #. module: base
+#: code:addons/models.py:418
+#, python-format
+msgid "Serialization field `%s` not found for sparse field `%s`!"
+msgstr ""
+
+#. module: base
 #: selection:ir.logging,type:0
 msgid "Server"
 msgstr "Sunucu"
@@ -12799,7 +13004,7 @@ msgid ""
 msgstr "Rapor başlığındaki fontu ayarlayın, kullanıcı firmanın RML raporlarında varsayılan font olarak kullanılacaktır."
 
 #. module: base
-#: code:addons/base/res/res_users.py:512
+#: code:addons/base/res/res_users.py:536
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr "Güvenlik nedeniyle boş parolalara izin verilmemektedir!"
@@ -12888,11 +13093,6 @@ msgid "Singapore - Accounting"
 msgstr "Singapur - Muhasebesi"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Sinhalese / සිංහල"
-msgstr "Sinhalese / සිංහල"
-
-#. module: base
 #: model:res.country,name:base.sx
 msgid "Sint Maarten (Dutch part)"
 msgstr "Sint Maarten (Hollanda bölümü)"
@@ -12979,29 +13179,35 @@ msgid "Sometimes called BIC or Swift."
 msgstr "Bazen BIC ya da SWIFT olarak geçer."
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:257
-#: code:addons/base/ir/ir_model.py:783
+#: code:addons/base/ir/ir_attachment.py:259
+#: code:addons/base/ir/ir_model.py:787
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "Maalesef, bu dokümana erişim izniniz yok."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:785
+#: code:addons/base/ir/ir_model.py:789
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "Maalesef, belge bu tür oluşturmak için izin verilmez."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:786
+#: code:addons/base/ir/ir_model.py:790
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "Üzgünüz, bu belgeyi silmek için izin verilmez."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:784
+#: code:addons/base/ir/ir_model.py:788
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "Üzgünüz, bu belgeyi değiştirmek için izin verilmez."
+
+#. module: base
+#: code:addons/models.py:4618
+#, python-format
+msgid "Sorting field %s not found on model %s"
+msgstr ""
 
 #. module: base
 #: field:ir.translation,source:0
@@ -13102,18 +13308,8 @@ msgstr "İspanyolca (GT) / Español (GT)"
 
 #. module: base
 #: selection:base.language.install,lang:0
-msgid "Spanish (HN) / Español (HN)"
-msgstr "İspanyolca (HN) / Español (HN)"
-
-#. module: base
-#: selection:base.language.install,lang:0
 msgid "Spanish (MX) / Español (MX)"
 msgstr "İspanyolca (MX) / Español (MX)"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Spanish (NI) / Español (NI)"
-msgstr "İspanyolca (NI) / Español (NI)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -13127,18 +13323,8 @@ msgstr "İspanyolca (PE) / Español (PE)"
 
 #. module: base
 #: selection:base.language.install,lang:0
-msgid "Spanish (PR) / Español (PR)"
-msgstr "İspanyolca (PR) / Español (PR)"
-
-#. module: base
-#: selection:base.language.install,lang:0
 msgid "Spanish (PY) / Español (PY)"
 msgstr "İspanyolca (PY) / Español (PY)"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Spanish (SV) / Español (SV)"
-msgstr "İspanyolca (SV) / Español (SV)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -13198,11 +13384,6 @@ msgstr ""
 #: model:res.country,name:base.lk
 msgid "Sri Lanka"
 msgstr "Sri Lanka"
-
-#. module: base
-#: model:ir.ui.menu,name:base.menu_project_config_project
-msgid "Stages"
-msgstr "Aşamalar"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -13356,7 +13537,6 @@ msgstr "Tedarikçi Partnerler"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
-#: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: view:res.partner:base.view_res_partner_filter
 msgid "Suppliers"
 msgstr "Tedarikçiler"
@@ -13380,16 +13560,6 @@ msgstr "Surinam"
 #: model:ir.module.module,shortdesc:base.module_survey
 msgid "Survey"
 msgstr "Anket"
-
-#. module: base
-#: model:res.groups,name:base.group_survey_manager
-msgid "Survey / Manager"
-msgstr "Anket / Yönetici"
-
-#. module: base
-#: model:res.groups,name:base.group_survey_user
-msgid "Survey / User"
-msgstr "Anket / Kullanıcı"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey_crm
@@ -13602,7 +13772,6 @@ msgstr "Teknik Adı"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
-#: view:res.users:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Teknik Ayarlar"
 
@@ -13610,11 +13779,6 @@ msgstr "Teknik Ayarlar"
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
 msgstr "Teknik klavuz"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_17
-msgid "Telecom sector"
-msgstr "Telekom Sektörü"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -13632,14 +13796,14 @@ msgid "Template of Charts of Accounts"
 msgstr "Hesap Planı Şablonu"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_new_api
+msgid "Test API"
+msgstr ""
+
+#. module: base
 #: view:ir.mail_server:base.ir_mail_server_form
 msgid "Test Connection"
 msgstr "Bağlantıyı Sına"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_test_new_api
-msgid "Test New API"
-msgstr "Yeni API'yi Test Edin"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
@@ -13717,7 +13881,7 @@ msgid ""
 msgstr "(Ayraç düzeni yardım metni. İngilizcesi çok karışık olduğundan çevrilmedi)"
 
 #. module: base
-#: code:addons/base/module/module.py:686
+#: code:addons/base/module/module.py:682
 #, python-format
 msgid ""
 "The `%s` module appears to be unavailable at the moment, please try again "
@@ -13725,7 +13889,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:523
+#: code:addons/base/module/module.py:519
 #, python-format
 msgid "The `base` module cannot be uninstalled"
 msgstr "`Baz` modül kaldırılamaz"
@@ -13839,7 +14003,7 @@ msgid "The name of the country must be unique !"
 msgstr "Ülke adı tekil olmalı !"
 
 #. module: base
-#: code:addons/base/res/res_users.py:127
+#: code:addons/base/res/res_users.py:131
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr "Grup adı \"-\" ile başlayamaz"
@@ -13855,7 +14019,7 @@ msgid "The name of the language must be unique !"
 msgstr "Dil adı tekil olmak zorunda!"
 
 #. module: base
-#: code:addons/base/module/module.py:325
+#: code:addons/base/module/module.py:326
 #, python-format
 msgid "The name of the module must be unique !"
 msgstr "Modülün adı tekil olmak zorunda !"
@@ -13869,6 +14033,15 @@ msgstr "Bir sonraki otomatik sayı bu değer kadarki artışla oluşturulacak."
 #: view:base.language.export:base.wizard_lang_export
 msgid "The next step depends on the file format:"
 msgstr "Sonraki adım dosya biçimine bağlıdır:"
+
+#. module: base
+#: code:addons/model.py:131
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -13936,7 +14109,17 @@ msgid "The record id this is attached to"
 msgstr "Kayıt buna eklenmiştir"
 
 #. module: base
-#: code:addons/fields.py:847
+#: code:addons/models.py:3133 code:addons/models.py:3388
+#: code:addons/models.py:3479
+#, python-format
+msgid ""
+"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
+msgstr ""
+
+#. module: base
+#: code:addons/fields.py:913
 #, python-format
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
@@ -13981,7 +14164,13 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_filters.py:96
+#: code:addons/models.py:6079
+#, python-format
+msgid "The value for the field '%s' already exists."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_filters.py:97
 #, python-format
 msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
@@ -14265,7 +14454,7 @@ msgid "Translation comments"
 msgstr "Çeviri yorumları"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:401
+#: code:addons/base/ir/ir_translation.py:418
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra OpenERP "
@@ -14436,7 +14625,14 @@ msgid "Ukrainian / українська"
 msgstr "Ukraynaca / українська"
 
 #. module: base
-#: code:addons/base/module/module.py:376
+#: code:addons/models.py:3608
+#, python-format
+msgid ""
+"Unable to delete this document because it is used as a default property"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:372
 #, python-format
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: "
@@ -14444,7 +14640,7 @@ msgid ""
 msgstr "Modül \"%s\" kurulamıyor. Sağlanamayan bağımlılık : %s"
 
 #. module: base
-#: code:addons/base/module/module.py:380
+#: code:addons/base/module/module.py:376
 #, python-format
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: "
@@ -14452,7 +14648,7 @@ msgid ""
 msgstr "Modül \"%s\" işlenemiyor. Dış bağımlılık karşılanamıyor: %s"
 
 #. module: base
-#: code:addons/base/module/module.py:378
+#: code:addons/base/module/module.py:374
 #, python-format
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: "
@@ -14475,7 +14671,7 @@ msgid "Unicode/UTF-8"
 msgstr "Unicode/UTF-8"
 
 #. module: base
-#: code:addons/base/module/module.py:526
+#: code:addons/base/module/module.py:522
 #: view:ir.module.module:base.module_form
 #, python-format
 msgid "Uninstall"
@@ -14502,19 +14698,31 @@ msgid "United States - Chart of accounts"
 msgstr ""
 
 #. module: base
-#: code:addons/report_sxw.py:391
+#: code:addons/models.py:1230
+#, python-format
+msgid "Unknown database identifier '%s'"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:1083
+#, python-format
+msgid "Unknown error during import:"
+msgstr ""
+
+#. module: base
+#: code:addons/report_sxw.py:392
 #, python-format
 msgid "Unknown report type: %s"
 msgstr "Bilinmeyen Rapor türü: %s"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:324
+#: code:addons/base/ir/ir_fields.py:350
 #, python-format
 msgid "Unknown sub-field '%s'"
 msgstr "Bilinmeyen alt-alan '%s'"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:152
+#: code:addons/base/ir/ir_fields.py:166
 #, python-format
 msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgstr "Bilinmeyen değeri '%s' boolean alan için '%%(alan)lar', varsayarak '%s'"
@@ -14524,6 +14732,13 @@ msgstr "Bilinmeyen değeri '%s' boolean alan için '%%(alan)lar', varsayarak '%s
 #, python-format
 msgid "Unmet Dependency!"
 msgstr "Karşılanmamış Bağımlılık!"
+
+#. module: base
+#: code:addons/translate.py:521
+#, python-format
+msgid ""
+"Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
+msgstr ""
 
 #. module: base
 #: view:ir.translation:base.view_translation_search
@@ -14599,11 +14814,6 @@ msgid "Upgrade"
 msgstr "Yükseltme"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Urdu / اردو"
-msgstr "Urdu / اردو"
-
-#. module: base
 #: field:ir.attachment,url:0
 msgid "Url"
 msgstr "Url"
@@ -14625,7 +14835,7 @@ msgid "Usability"
 msgstr "Kullanılabilir"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:154
+#: code:addons/base/ir/ir_fields.py:168
 #, python-format
 msgid "Use '1' for yes and '0' for no"
 msgstr "Use '1' for yes and '0' for no"
@@ -14656,7 +14866,7 @@ msgid "Use the base model of the action"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:189 code:addons/base/ir/ir_fields.py:220
+#: code:addons/base/ir/ir_fields.py:209 code:addons/base/ir/ir_fields.py:242
 #, python-format
 msgid "Use the format '%s'"
 msgstr "Biçimini kullanın '%s'"
@@ -14682,8 +14892,7 @@ msgstr "Satış ve Satınalma belgeleri bağlamında doğru adresi kendiliğinde
 #: field:change.password.user,user_id:0 view:ir.cron:base.ir_cron_view_search
 #: field:ir.cron,user_id:0 view:ir.filters:base.ir_filters_view_search
 #: field:ir.filters,user_id:0 field:ir.ui.view.custom,user_id:0
-#: field:ir.values,user_id:0 model:res.groups,name:base.group_document_user
-#: model:res.groups,name:base.group_tool_user
+#: field:ir.values,user_id:0 model:res.groups,name:base.group_sale_salesman
 #: view:res.users:base.view_users_search field:workflow.instance,uid:0
 msgid "User"
 msgstr "Kullanıcı"
@@ -14716,6 +14925,12 @@ msgstr "Kullanıcı-tanımlı Öntanımlamalar"
 #: model:ir.ui.menu,name:base.menu_ir_filters
 msgid "User-defined Filters"
 msgstr "Kulanıcı-tanımlı Filtreler"
+
+#. module: base
+#: code:addons/models.py:3995
+#, python-format
+msgid "UserError"
+msgstr ""
 
 #. module: base
 #: field:ir.mail_server,smtp_user:0
@@ -14769,7 +14984,7 @@ msgid "Value"
 msgstr "Değer"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:255
+#: code:addons/base/ir/ir_fields.py:278
 #, python-format
 msgid "Value '%s' not found in selection field '%%(field)s'"
 msgstr ""
@@ -14948,12 +15163,12 @@ msgid "Warehouse Management: Waves"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:841
-#: code:addons/base/ir/ir_mail_server.py:481
-#: code:addons/base/ir/ir_sequence.py:260
-#: code:addons/base/res/res_partner.py:378
-#: code:addons/base/res/res_partner.py:558
-#: code:addons/base/res/res_partner.py:638
+#: code:addons/base/ir/ir_actions.py:827
+#: code:addons/base/ir/ir_mail_server.py:510
+#: code:addons/base/ir/ir_sequence.py:259
+#: code:addons/base/res/res_partner.py:382
+#: code:addons/base/res/res_partner.py:562
+#: code:addons/base/res/res_partner.py:642
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
@@ -14964,10 +15179,10 @@ msgid "Warning Messages and Alerts"
 msgstr "Uyarı mesajları ve Alarmlar"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:134
-#: code:addons/base/ir/ir_sequence.py:160
+#: code:addons/base/ir/ir_sequence.py:136
+#: code:addons/base/ir/ir_sequence.py:162
 #: code:addons/base/res/res_config.py:471
-#: code:addons/base/res/res_users.py:512
+#: code:addons/base/res/res_users.py:536
 #, python-format
 msgid "Warning!"
 msgstr "Uyarı!"
@@ -15270,6 +15485,11 @@ msgid "Workitems"
 msgstr "İş Unsurları"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_sips
+msgid "Worldline SIPS Payment Acquiring  for online payments"
+msgstr ""
+
+#. module: base
 #: view:ir.model.access:base.ir_access_view_search
 #: field:ir.model.access,perm_write:0
 msgid "Write Access"
@@ -15333,7 +15553,7 @@ msgid ""
 msgstr "Yeni bir kullanıcı oluşturma. Kaydettikten sonra kullanıcı parolasını ayarlamak için bir bağlantı içeren bir davet e-posta alacaksınız."
 
 #. module: base
-#: code:addons/base/res/res_partner.py:558
+#: code:addons/base/res/res_partner.py:562
 #, python-format
 msgid ""
 "You can not change the company as the partner/user has multiple user linked "
@@ -15351,7 +15571,7 @@ msgid "You can not register two fonts with the same name"
 msgstr "Aynı ada sahip iki yazı tipi kayıt olamıyorum"
 
 #. module: base
-#: code:addons/base/res/res_users.py:347
+#: code:addons/base/res/res_users.py:374
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -15401,7 +15621,7 @@ msgid ""
 msgstr "Aynı modülde aynı dış Kimliğe sahip birden çok kayıt olamaz!"
 
 #. module: base
-#: code:addons/base/module/module.py:396
+#: code:addons/base/module/module.py:392
 #, python-format
 msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
@@ -15409,13 +15629,13 @@ msgid ""
 msgstr "'%s' modülünü kurmaya çalıştınız ama bağımlı olduğu '%s' \nmodülü sisteminizde yok."
 
 #. module: base
-#: code:addons/base/module/module.py:339
+#: code:addons/base/module/module.py:340
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr "Kurulu veya kurulacak bir modülü kaldırmaya çalışıyorsunuz."
 
 #. module: base
-#: code:addons/base/module/module.py:563
+#: code:addons/base/module/module.py:559
 #, python-format
 msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
@@ -15439,7 +15659,7 @@ msgid ""
 msgstr "Açık sunucu SMTP üzerinden SSL desteklemez. STARTTLS yerine kullanabilirsiniz. Python 2.6 sürümüne yükseltmeyi sunucu tarafında SSL kullanılmıyorsa, işimizi görür."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:482
+#: code:addons/base/ir/ir_mail_server.py:511
 #, python-format
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
@@ -15528,7 +15748,13 @@ msgid "cr: database cursor"
 msgstr "CR: veritabanı imleç"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:293
+#: code:addons/models.py:4299
+#, python-format
+msgid "created."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_fields.py:315
 #, python-format
 msgid "database id"
 msgstr "veritabanı id"
@@ -15543,22 +15769,6 @@ msgstr "belgeleme"
 #: selection:base.module.update,state:0
 msgid "done"
 msgstr "biten"
-
-#. module: base
-#: view:res.users:base.view_users_simple_form
-msgid "e.g. +32.479.19.28.37"
-msgstr "örn. +32.479.19.28.37"
-
-#. module: base
-#: view:res.partner:base.view_partner_form
-#: view:res.users:base.view_users_simple_form
-msgid "e.g. +32.81.81.37.00"
-msgstr "örn. +90.212.345.37.00"
-
-#. module: base
-#: view:res.users:base.view_users_simple_form
-msgid "e.g. +32.81.81.37.10"
-msgstr "örn. +32.81.81.37.10"
 
 #. module: base
 #: view:base.language.import:base.view_base_import_language
@@ -15618,13 +15828,13 @@ msgid "email@yourcompany.com"
 msgstr "eposta@firmaniz.com"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:305
+#: code:addons/base/ir/ir_fields.py:329
 #, python-format
 msgid "external id"
 msgstr "dış id"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:132
+#: code:addons/base/ir/ir_fields.py:145
 #, python-format
 msgid "false"
 msgstr "yanlış"
@@ -15683,22 +15893,34 @@ msgid "ltd"
 msgstr "LTD.ŞTİ"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:353
+#: code:addons/loading.py:292
+#, python-format
+msgid "module base cannot be loaded! (hint: verify addons-path)"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_ui_view.py:346
 #, python-format
 msgid "n/a"
 msgstr "yok"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:315
+#: code:addons/base/ir/ir_fields.py:339
 #, python-format
 msgid "name"
 msgstr "adı"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:132
+#: code:addons/base/ir/ir_fields.py:145
 #, python-format
 msgid "no"
 msgstr "hayır"
+
+#. module: base
+#: code:addons/amount_to_text_en.py:116
+#, python-format
+msgid "no translation function found for lang: '%s'"
+msgstr ""
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -15750,6 +15972,12 @@ msgid "pool: ORM model pool (i.e. self.pool)"
 msgstr ""
 
 #. module: base
+#: code:addons/mail.py:285
+#, python-format
+msgid "read more"
+msgstr ""
+
+#. module: base
 #: view:res.config:base.res_config_view_base
 msgid "res_config_contents"
 msgstr "res_config_contents"
@@ -15785,6 +16013,11 @@ msgid "test-inherit"
 msgstr "test devral"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_inherits
+msgid "test-inherits"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
 msgstr "test-sınırlar"
@@ -15805,44 +16038,6 @@ msgid "test_convert"
 msgstr "test_dönüştür"
 
 #. module: base
-#: model:res.groups,comment:base.group_hr_user
-msgid "the user will be able to approve document created by employees."
-msgstr "Kullanıcı çalışanlar tarafından oluşturulan belgeyi onaylaması."
-
-#. module: base
-#: model:res.groups,comment:base.group_user
-msgid ""
-"the user will be able to manage his own human resources stuff (leave "
-"request, timesheets, ...), if he is linked to an employee in the system."
-msgstr ""
-
-#. module: base
-#: model:res.groups,comment:base.group_sale_salesman_all_leads
-msgid ""
-"the user will have access to all records of everyone in the sales "
-"application."
-msgstr "Kullanıcı, satış uygulamasındaki herkesin kayıtlarına erişim yapabilecektir."
-
-#. module: base
-#: model:res.groups,comment:base.group_sale_salesman
-msgid "the user will have access to his own data in the sales application."
-msgstr "kullanıcı satış uygulamasında kendi verilerine erişebilir."
-
-#. module: base
-#: model:res.groups,comment:base.group_hr_manager
-msgid ""
-"the user will have an access to the human resources configuration as well as"
-" statistic reports."
-msgstr "kullanıcı hem insan kaynakları yapılandırmasına hem de istatistik raporlarına erişecektir."
-
-#. module: base
-#: model:res.groups,comment:base.group_sale_manager
-msgid ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
-msgstr "kullanıcı hem satış yapılandırmasına hem de istatistik raporlarına erişim yapabilecektir."
-
-#. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "time: Python time module"
 msgstr "zaman: Python zaman modülü"
@@ -15853,7 +16048,7 @@ msgid "title"
 msgstr "başlık"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:132
+#: code:addons/base/ir/ir_fields.py:145
 #, python-format
 msgid "true"
 msgstr "doğru"
@@ -15864,7 +16059,7 @@ msgid "uid: current user id"
 msgstr "uid: geçerli kullanıcı kimliği"
 
 #. module: base
-#: code:addons/fields.py:196
+#: code:addons/fields.py:242
 #, python-format
 msgid "undefined get method !"
 msgstr "Tanımlanmamış get yöntemi !"
@@ -15882,7 +16077,7 @@ msgid "workflow: Workflow engine"
 msgstr "işakışı: İşakışı motoru"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:132
+#: code:addons/base/ir/ir_fields.py:145
 #, python-format
 msgid "yes"
 msgstr "evet"
