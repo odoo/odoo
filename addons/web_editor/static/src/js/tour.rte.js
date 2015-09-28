@@ -373,7 +373,7 @@ Tour.register({
             }
         },
         {
-            waitFor:   '#wrapwrap img:first[style*="border-bottom-left-radius:50%"][style*="border-top-width"][style*="padding-top"]',
+            waitFor:   '#wrapwrap img:first[width][height][style*="-radius"][style*="1px"][style*="padding"]',
             title:     "check the image style",
         },
         {
