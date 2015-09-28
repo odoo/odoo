@@ -2618,7 +2618,7 @@ class BaseModel(object):
 
                     # The field doesn't exist in database. Create it if necessary.
                     else:
-                        if not isinstance(f, fields.function) or f.store:
+                        if f._classic_write:
                             # add the missing field
                             cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
                             cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, k), (f.string,))
