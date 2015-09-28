@@ -306,8 +306,8 @@ class product_pricelist(osv.osv):
                         if (not partner) or (seller_id.name.id != partner):
                             continue
                         seller = seller_id
-                    if not seller and product.seller_ids:
-                        seller = product.seller_ids[0]
+                    if not seller:
+                        continue
                     if seller:
                         qty_in_seller_uom = qty
                         seller_uom = seller.product_uom.id

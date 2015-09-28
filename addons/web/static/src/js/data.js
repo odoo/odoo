@@ -753,7 +753,7 @@ instance.web.DataSetStatic =  instance.web.DataSet.extend({
         var offset = options.offset || 0,
             limit = options.limit || false;
         var end_pos = limit && limit !== -1 ? offset + limit : this.ids.length;
-        return this.read_ids(this.ids.slice(offset, end_pos), fields);
+        return this.read_ids(this.ids.slice(offset, end_pos), fields, options);
     },
     set_ids: function (ids) {
         this.ids = ids;
