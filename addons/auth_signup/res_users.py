@@ -271,11 +271,12 @@ class res_users(osv.Model):
             else:
                 return True
 
-    def create(self, cr, uid, values, context=None):
-        # overridden to automatically invite user to sign up
-        user_id = super(res_users, self).create(cr, uid, values, context=context)
-        user = self.browse(cr, uid, user_id, context=context)
-        if context and context.get('reset_password') and user.email:
-            ctx = dict(context, create_user=True)
-            self.action_reset_password(cr, uid, [user.id], context=ctx)
-        return user_id
+    def write(self, cr, uid, ids, values, context=None):
+        res = super(res_users, self).write(cr, uid, ids, values, context=context)
+        if res:
+            for user in self.browse(cr, uid, ids, context=context):
+                if context and context.get('reset_password') and \
+                        user.email and not '__copy_data_seen' in context:
+                    ctx = dict(context, create_user=True)
+                    self.action_reset_password(cr, uid, [user.id], context=ctx)
+        return res
