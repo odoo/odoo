@@ -274,11 +274,11 @@
                             <h1>
                                 <field name="name" placeholder="e.g. Consumer Newsletter"/>
                             </h1>
-                            <group>
+                            <group groups="mass_mailing.group_website_popup_on_exit">
                                 <field name="popup_redirect_url"/>
                             </group>
                         </div>
-                        <notebook>
+                        <notebook groups="mass_mailing.group_website_popup_on_exit">
                             <page string="Popup Content">
                                 <field name="popup_content" widget="html_frame" options="{'editor_url': '/website_mass_mailing/field/popup_content'}"/>
                             </page>
@@ -466,7 +466,10 @@
                                         placeholder="Select mailing lists..." class="oe_inline"
                                         on_change="on_change_model_and_list(mailing_model, contact_list_ids)"/>
                                 </div>
-                                <field name="attachment_ids"  widget="many2many_binary" string="Attach a file"/>
+                            </div>
+                            <label for="attachment_ids"/>
+                            <div>
+                                <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"/>
                             </div>
                         </group>
                         <notebook>

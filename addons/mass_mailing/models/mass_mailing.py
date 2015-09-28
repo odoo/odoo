@@ -65,6 +65,7 @@ class MassMailingList(osv.Model):
     _defaults = {
         'active': True,
         'popup_content': _get_default_popup_content,
+        'popup_redirect_url': '/',
     }
 
 
