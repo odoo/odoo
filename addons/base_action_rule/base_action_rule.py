@@ -21,6 +21,8 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import datetime as DT
+import dateutil
 import time
 import logging
 
@@ -130,7 +132,10 @@ class base_action_rule(osv.osv):
         """ Prepare the context used when evaluating python code
         :returns: dict -- evaluation context given to (safe_)eval """
         return {
+            'datetime': DT,
+            'dateutil': dateutil,
             'time': time,
+            'uid': uid,
             'user': self.pool['res.users'].browse(cr, uid, uid, context=context),
         }
 
