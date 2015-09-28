@@ -165,7 +165,6 @@ class Report(osv.Model):
             paperformat = report.paperformat_id
 
         # Preparing the minimal html pages
-        css = ''  # Will contain local css
         headerhtml = []
         contenthtml = []
         footerhtml = []
@@ -182,17 +181,14 @@ class Report(osv.Model):
             root = lxml.html.fromstring(html)
             match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
-            for node in root.xpath("//html/head/style"):
-                css += node.text
-
             for node in root.xpath(match_klass.format('header')):
                 body = lxml.html.tostring(node)
-                header = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
+                header = render_minimal(dict(subst=True, body=body, base_url=base_url))
                 headerhtml.append(header)
 
             for node in root.xpath(match_klass.format('footer')):
                 body = lxml.html.tostring(node)
-                footer = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
+                footer = render_minimal(dict(subst=True, body=body, base_url=base_url))
                 footerhtml.append(footer)
 
             for node in root.xpath(match_klass.format('page')):
@@ -213,7 +209,7 @@ class Report(osv.Model):
 
                 # Extract the body
                 body = lxml.html.tostring(node)
-                reportcontent = render_minimal(dict(css=css, subst=False, body=body, base_url=base_url))
+                reportcontent = render_minimal(dict(subst=False, body=body, base_url=base_url))
 
                 contenthtml.append(tuple([reportid, reportcontent]))
 
