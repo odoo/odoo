@@ -281,6 +281,13 @@ class AccountJournal(models.Model):
         if not self.default_debit_account_id:
             self.default_debit_account_id = self.default_credit_account_id
 
+    @api.multi
+    def unlink(self):
+        bank_accounts = self.mapped('bank_account_id')
+        ret = super(AccountJournal, self).unlink()
+        bank_accounts.unlink()
+        return ret
+
     @api.one
     def copy(self, default=None):
         default = dict(default or {})
