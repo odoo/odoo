@@ -206,10 +206,10 @@
                                     </div>
                                     <h4>
                                         <a name="%(act_event_registration_from_event)d" type="action">
-                                            <t t-esc="record.seats_expected.raw_value"> Attendees expected</t>
+                                            <t t-esc="record.seats_expected.raw_value"> Expected attendees </t>
                                         </a>
                                         <t t-if="(record.seats_reserved.raw_value + record.seats_used.raw_value) > 0 "><br/>
-                                             <t t-esc="record.seats_reserved.raw_value + record.seats_used.raw_value"/> Attendees confirmed
+                                             <t t-esc="record.seats_reserved.raw_value + record.seats_used.raw_value"/> Confirmed attendees
                                         <a name="action_event_registration_report" type="object" >&#40;stats&#41;</a>
                                         </t>
                                     </h4>
