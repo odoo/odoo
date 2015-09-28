@@ -381,7 +381,7 @@ Tour.register({
             title:     "check the font image src",
         },
         {
-            waitFor:   '#wrapwrap img:eq(1)[style*="height:2em"]',
+            waitFor:   '#wrapwrap img:eq(1)[height]:not([class*="fa"])',
             title:     "check the font class to css",
         },
         {

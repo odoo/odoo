@@ -95,10 +95,11 @@ var getMatchedCSSRules = function (a) {
 var font_to_img = function ($editable) {
     $(".fa", $editable).each(function () {
         var $font = $(this);
-        var content;
+        var icon, content;
         _.find(widget.fontIcons, function (font) {
             return _.find(widget.getCssSelectors(font.parser), function (css) {
                 if ($font.is(css[0].replace(/::?before$/, ''))) {
+                    icon = css[2].split("-").shift();
                     content = css[1].match(/content:\s*['"]?(.)['"]?/)[1];
                     return true;
                 }
@@ -109,6 +110,7 @@ var font_to_img = function ($editable) {
             var src = _.str.sprintf('/web_editor/font_to_img/%s/%s/'+$font.height(), window.encodeURI(content), window.encodeURI(color));
             var $img = $("<img/>").attr("src", src)
                 .attr("data-class", $font.attr("class"))
+                .attr("class", $font.attr("class").replace(new RegExp("(^|\\s+)" + icon + "(-[^\\s]+)?", "gi"), '')) // remove inline font-awsome style
                 .attr("style", $font.attr("style"))
                 .attr("height", $font.height())
                 .css("height", "")
