@@ -288,7 +288,16 @@ var CalendarView = View.extend({
                 var title = self.title + ' (' + ((mode === "week")? _t("Week ") : "") + view.title + ")"; 
                 self.set({'title': title});
 
-                self.$calendar.fullCalendar('option', 'height', parseInt(self.$('.o_calendar_view').height()));
+                self.$calendar.fullCalendar('option', 'height', Math.max(290, parseInt(self.$('.o_calendar_view').height())));
+
+                setTimeout(function() {
+                    var $fc_view = self.$calendar.find('.fc-view');
+                    var width = $fc_view.find('> table').width();
+                    $fc_view.find('> div').css('width', (width > $fc_view.width())? width : '100%'); // 100% = fullCalendar default
+                }, 0);
+            },
+            windowResize: function() {
+                self.$calendar.fullCalendar('render');
             },
             eventDrop: function (event, _day_delta, _minute_delta, _all_day, _revertFunc) {
                 var data = self.get_event_data(event);
@@ -416,7 +425,11 @@ var CalendarView = View.extend({
                     });
                     self.$calendar.fullCalendar('updateEvent', event_obj);
                 } else { // New event object to create
+                    var $fc_view = self.$calendar.find('.fc-view');
+                    var scrollPosition = $fc_view.scrollLeft();
+                    $fc_view.scrollLeft(0);
                     self.$calendar.fullCalendar('renderEvent', new_event);
+                    $fc_view.scrollLeft(scrollPosition);
                     // By forcing attribution of this event to this source, we
                     // make sure that the event will be removed when the source
                     // will be removed (which occurs at each do_search)
