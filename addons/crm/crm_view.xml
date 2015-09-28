@@ -23,6 +23,17 @@
             parent="base.menu_sale_config" sequence="0" groups="base.group_sale_manager"/>
 
         <!-- CRM.LOST.REASON VIEWS -->
+        <record id="crm_lost_reason_view_search" model="ir.ui.view">
+            <field name="name">crm.lost.reason.view.search</field>
+            <field name="model">crm.lost.reason</field>
+            <field name="arch" type="xml">
+                <search string="Search Opportunities">
+                    <filter string="Include archived" name="archived"
+                            domain="['|', ('active', '=', True), ('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
         <record id="crm_lost_reason_view_form" model="ir.ui.view">
             <field name="name">crm.lost.reason.form</field>
             <field name="model">crm.lost.reason</field>
@@ -30,6 +41,7 @@
                 <form string="Channel">
                     <group>
                         <field name="name"/>
+                        <field name="active"/>
                     </group>
                 </form>
             </field>

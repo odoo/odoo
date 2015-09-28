@@ -1222,12 +1222,18 @@ class crm_lead_tag(osv.Model):
             ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
 
+
 class crm_lost_reason(osv.Model):
     _name = "crm.lost.reason"
     _description = 'Reason for loosing leads'
 
     _columns = {
         'name': fields.char('Name', required=True),
+        'active': fields.boolean('Active'),
+    }
+
+    _defaults = {
+        'active': True,
     }
 
 
