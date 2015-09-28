@@ -5782,16 +5782,17 @@ class BaseModel(object):
                 if 'domain' in method_res:
                     result.setdefault('domain', {}).update(method_res['domain'])
                 if 'warning' in method_res:
-                    if 'warning' in result:
-                        # Concatenate multiple warnings
-                        warning = result['warning']
-                        warning['message'] = '\n\n'.join(filter(None, [
-                            warning.get('title'),
-                            warning.get('message'),
-                            method_res['warning'].get('title'),
-                            method_res['warning'].get('message')
-                        ]))
-                        warning['title'] = _('Warnings')
+                    if result.get('warning'):
+                        if method_res['warning']:
+                            # Concatenate multiple warnings
+                            warning = result['warning']
+                            warning['message'] = '\n\n'.join(filter(None, [
+                                warning.get('title'),
+                                warning.get('message'),
+                                method_res['warning'].get('title'),
+                                method_res['warning'].get('message')
+                            ]))
+                            warning['title'] = _('Warnings')
                     else:
                         result['warning'] = method_res['warning']
             return
@@ -5834,16 +5835,17 @@ class BaseModel(object):
             if 'domain' in method_res:
                 result.setdefault('domain', {}).update(method_res['domain'])
             if 'warning' in method_res:
-                if 'warning' in result:
-                    # Concatenate multiple warnings
-                    warning = result['warning']
-                    warning['message'] = '\n\n'.join(filter(None, [
-                        warning.get('title'),
-                        warning.get('message'),
-                        method_res['warning'].get('title'),
-                        method_res['warning'].get('message')
-                    ]))
-                    warning['title'] = _('Warnings')
+                if result.get('warning'):
+                    if method_res['warning']:
+                        # Concatenate multiple warnings
+                        warning = result['warning']
+                        warning['message'] = '\n\n'.join(filter(None, [
+                            warning.get('title'),
+                            warning.get('message'),
+                            method_res['warning'].get('title'),
+                            method_res['warning'].get('message')
+                        ]))
+                        warning['title'] = _('Warnings')
                 else:
                     result['warning'] = method_res['warning']
     @api.multi
