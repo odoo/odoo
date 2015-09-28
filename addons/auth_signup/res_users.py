@@ -271,14 +271,27 @@ class res_users(osv.Model):
             else:
                 return True
 
+    def _send_invitation(self, cr, uid, ids, context=None):
+        for user in self.browse(cr, uid, ids, context=context):
+            if context and context.get('reset_password') \
+                    and user.email \
+                    and not '__copy_data_seen' in context \
+                    and user.state == 'new' \
+                    and not user.partner_id.signup_token:
+                ctx = dict(context, create_user=True)
+                self.action_reset_password(cr, uid, [user.id], context=ctx)
+
+    def create(self, cr, uid, values, context=None):
+        # overridden to automatically invite user to sign up
+        user_id = super(res_users, self).create(cr, uid, values, context=context)
+        self._send_invitation(cr, uid, [user_id], context=context)
+        return user_id
+
     def write(self, cr, uid, ids, values, context=None):
+        # overridden to automatically invite user to sign up
         res = super(res_users, self).write(cr, uid, ids, values, context=context)
-        if res:
-            for user in self.browse(cr, uid, ids, context=context):
-                if context and context.get('reset_password') and \
-                        user.email and not '__copy_data_seen' in context:
-                    ctx = dict(context, create_user=True)
-                    self.action_reset_password(cr, uid, [user.id], context=ctx)
+        if res and values.get('email'):
+            self._send_invitation(cr, uid, ids, context=context)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
