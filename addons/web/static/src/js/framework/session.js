@@ -364,9 +364,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
                     });
                 }
             } else {
-                fct = ajax.jsonpRpc;
-                url = self.url(url, null);
-                options.session_id = self.session_id || '';
+                throw new Error("JSONP support has been removed");
             }
             var p = fct(url, "call", params, options);
             p = p.then(function (result) {

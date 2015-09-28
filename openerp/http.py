@@ -474,33 +474,8 @@ class JsonRequest(WebRequest):
     def __init__(self, *args):
         super(JsonRequest, self).__init__(*args)
 
-        self.jsonp_handler = None
-
-        args = self.httprequest.args
-        jsonp = args.get('jsonp')
-        self.jsonp = jsonp
-        request = None
-        request_id = args.get('id')
-        
-        if jsonp and self.httprequest.method == 'POST':
-            # jsonp 2 steps step1 POST: save call
-            def handler():
-                self.session['jsonp_request_%s' % (request_id,)] = self.httprequest.form['r']
-                self.session.modified = True
-                headers=[('Content-Type', 'text/plain; charset=utf-8')]
-                r = werkzeug.wrappers.Response(request_id, headers=headers)
-                return r
-            self.jsonp_handler = handler
-            return
-        elif jsonp and args.get('r'):
-            # jsonp method GET
-            request = args.get('r')
-        elif jsonp and request_id:
-            # jsonp 2 steps step2 GET: run and return result
-            request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
-        else:
-            # regular jsonrpc2
-            request = self.httprequest.stream.read()
+        # regular jsonrpc2
+        request = self.httprequest.stream.read()
 
         # Read POST content or POST Form Data named "request"
         try:
@@ -517,22 +492,14 @@ class JsonRequest(WebRequest):
         response = {
             'jsonrpc': '2.0',
             'id': self.jsonrequest.get('id')
-            }
+        }
         if error is not None:
             response['error'] = error
         if result is not None:
             response['result'] = result
 
-        if self.jsonp:
-            # If we use jsonp, that's mean we are called from another host
-            # Some browser (IE and Safari) do no allow third party cookies
-            # We need then to manage http sessions manually.
-            response['session_id'] = self.session_id
-            mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, simplejson.dumps(response),)
-        else:
-            mime = 'application/json'
-            body = simplejson.dumps(response)
+        mime = 'application/json'
+        body = simplejson.dumps(response)
 
         return Response(
                     body, headers=[('Content-Type', mime),
@@ -561,8 +528,6 @@ class JsonRequest(WebRequest):
             return self._json_response(error=error)
 
     def dispatch(self):
-        if self.jsonp_handler:
-            return self.jsonp_handler()
         try:
             rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
             rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
@@ -1423,8 +1388,6 @@ class Root(object):
 
     def get_request(self, httprequest):
         # deduce type of request
-        if httprequest.args.get('jsonp'):
-            return JsonRequest(httprequest)
         if httprequest.mimetype in ("application/json", "application/json-rpc"):
             return JsonRequest(httprequest)
         else:
