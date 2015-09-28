@@ -240,3 +240,18 @@ class StockMove(models.Model):
         for line in todo:
             line.qty_delivered = line._get_delivered_qty()
         return result
+
+
+class StockPicking(models.Model):
+    _inherit = 'stock.picking'
+
+    @api.depends('group_id')
+    def _compute_sale_id(self):
+        SaleOrder = self.env['sale.order']
+        for picking in self:
+            sale_order = False
+            if picking.group_id:
+                sale_order = SaleOrder.search([('procurement_group_id', '=', picking.group_id.id)], limit=1)
+            self.sale_id = sale_order.id if sale_order else False
+
+    sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order", compute='_compute_sale_id')
