@@ -245,13 +245,14 @@ class StockMove(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    @api.depends('group_id')
+    @api.depends('move_lines')
     def _compute_sale_id(self):
-        SaleOrder = self.env['sale.order']
         for picking in self:
             sale_order = False
-            if picking.group_id:
-                sale_order = SaleOrder.search([('procurement_group_id', '=', picking.group_id.id)], limit=1)
+            for move in picking.move_lines:
+                if move.procurement_id.sale_line_id:
+                    sale_order = move.procurement_id.sale_line_id.order_id
+                    break
             self.sale_id = sale_order.id if sale_order else False
 
     sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order", compute='_compute_sale_id')
