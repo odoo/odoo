@@ -280,3 +280,14 @@ class res_users(osv.Model):
                     ctx = dict(context, create_user=True)
                     self.action_reset_password(cr, uid, [user.id], context=ctx)
         return res
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        new_id = super(res_users, self).copy(cr, uid, id, default=default, context=context)
+        if new_id:
+            user = self.browse(cr, uid, new_id, context=context)
+            self.pool['res.partner'].write(cr, uid, user.partner_id.id, dict(
+                signup_token = False,
+                signup_type = False,
+                signup_expiration = False,
+            ), context=context)
+        return new_id
