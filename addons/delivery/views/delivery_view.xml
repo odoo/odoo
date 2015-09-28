@@ -230,7 +230,7 @@
                       <label for="carrier_id"/>
                       <div name='carrier_selection'>
                           <div>
-                            <field name="carrier_id" context="{'order_id': id}" class="oe_inline" options="{'no_create': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/>
+                            <field name="carrier_id" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/>
                           </div>
                           <div>
                             <field name='delivery_price' widget='monetary' class="oe_inline" options="{'currency_field': 'currency_id'}" nolabel="1" attrs="{'invisible': [('carrier_id','=', False)]}"/>
