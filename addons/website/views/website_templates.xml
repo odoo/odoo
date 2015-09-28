@@ -769,11 +769,9 @@
     <html>
         <head>
             <title t-esc="status_message">Internal Server Error</title>
-            <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-            <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
-            <link rel='stylesheet' href='/website/static/src/css/website.css'/>
-            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
-            <t t-call-assets="web.bootstrap"/>
+            <t t-set="debug" t-value="True"/>
+            <t t-call-assets="web.assets_common"/>
+            <t t-call-assets="website.assets_frontend"/>
             <script>
                 $(document).ready(function() {
                     var button = $('#reset_templates_button');
