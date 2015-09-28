@@ -1,13 +1,10 @@
-from openerp.osv import orm, fields
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import fields, models
 
 
-class delivery_carrier(orm.Model):
+class DeliveryCarrier(models.Model):
     _name = 'delivery.carrier'
     _inherit = ['delivery.carrier', 'website.published.mixin']
 
-    _columns = {
-        'website_description': fields.related('product_id', 'description_sale', type="text", string='Description for Online Quotations'),
-    }
-    _defaults = {
-        'website_published': False
-    }
+    website_description = fields.Text(related='product_id.description_sale', string='Description for Online Quotations')
