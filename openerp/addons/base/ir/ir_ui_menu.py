@@ -175,16 +175,6 @@ class ir_ui_menu(osv.osv):
                 icon_file.close()
         return icon_image
 
-    def _get_needaction_enabled(self, cr, uid, ids, field_names, args, context=None):
-        """ needaction_enabled: tell whether the menu has a related action
-            that uses the needaction mechanism. """
-        res = dict.fromkeys(ids, False)
-        for menu in self.browse(cr, uid, ids, context=context):
-            if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.res_model:
-                if menu.action.res_model in self.pool and self.pool[menu.action.res_model]._needaction:
-                    res[menu.id] = True
-        return res
-
     def get_needaction_data(self, cr, uid, ids, context=None):
         """ Return for each menu entry of ids :
             - if it uses the needaction mechanism (needaction_enabled)
@@ -324,11 +314,6 @@ class ir_ui_menu(osv.osv):
                 "If this field is empty, Odoo will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, string='Full Path', type='char'),
         'web_icon': fields.char('Web Icon File'),
-        'needaction_enabled': fields.function(_get_needaction_enabled,
-            type='boolean',
-            store=True,
-            string='Target model uses the need action mechanism',
-            help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.'),
         'action': fields.reference('Action', selection=[
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
