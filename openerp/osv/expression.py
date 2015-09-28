@@ -1029,6 +1029,23 @@ class expression(object):
                         push_result(leaf)
 
             # -------------------------------------------------
+            # BINARY FIELDS STORED IN ATTACHMENT
+            # -> check for null only
+            # -------------------------------------------------
+
+            elif column._type == 'binary' and column.attachment:
+                if operator in ('=', '!=') and not right:
+                    inselect_operator = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
+                    subselect = "SELECT res_id FROM ir_attachment WHERE res_model=%s AND res_field=%s"
+                    params = (model._name, left)
+                    push(create_substitution_leaf(leaf, ('id', inselect_operator, (subselect, params)), model, internal=True))
+                else:
+                    _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
+                                  column.string, left, operator, right)
+                    leaf.leaf = TRUE_LEAF
+                    push(leaf)
+
+            # -------------------------------------------------
             # OTHER FIELDS
             # -> datetime fields: manage time part of the datetime
             #    column when it is not there
