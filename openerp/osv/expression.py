@@ -855,7 +855,7 @@ class expression(object):
                 leaf.leaf = ('id', 'in', table_ids)
                 push(leaf)
 
-            elif not column or field and field.search:
+            elif not column or field and not field.store and field.search:
                 # Non-stored field should provide an implementation of search.
                 if not field.search:
                     # field does not support search!
