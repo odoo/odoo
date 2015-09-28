@@ -8,7 +8,7 @@
     <t t-name="gamification.ChallengeSummary">
         <div class="oe_goal">
             <div>
-                <a class="oe_update_challenge oe_e" rol="button" t-attf-id="{challenge.id}">e</a>
+                <a class="oe_update_challenge oe_e" rol="button" t-att-id="challenge.id">e</a>
                 <h4><t t-esc="challenge.name" /></h4>
             </div>
 
@@ -67,7 +67,7 @@
                                 <div class="oe_goal_progress_background"></div>
                                 <div class="oe_goal_progress" t-attf-style="#{line.display_mode == 'progress' ? 'width: '+goal.completeness+'%;' : 'width:0;'}"></div>
                             </t>
-                            
+
                                 <div class="oe_cell col0"><t t-esc="goal.rank" /></div>
                                 <div class="oe_cell col1"><img class="oe_user_avatar" t-attf-alt="#{goal.name}" t-attf-data-id="#{goal.user_id}"/></div>
                                 <div class="oe_cell col2">
@@ -105,7 +105,7 @@
             <h4>Invited Challenges</h4>
             <ul t-foreach="challenges" t-as="challenge" class="oe_goals_list">
                 <li>
-                    <strong><a class="oe_challenge_reply" t-attf-title="#{challenge.description.value ? challenge.description.value : ''}" t-attf-id="{challenge.id}" title="more details..."><t t-esc="challenge.name"/></a></strong>
+                    <strong><a class="oe_challenge_reply" t-attf-title="#{challenge.description.value ? challenge.description.value : ''}" t-att-id="challenge.id" title="more details..."><t t-esc="challenge.name"/></a></strong>
                 </li>
             </ul>
         </div>
