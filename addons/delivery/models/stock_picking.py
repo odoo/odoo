@@ -75,6 +75,8 @@ class StockPicking(models.Model):
 
         if self.carrier_id and self.carrier_id.delivery_type not in ['fixed', 'base_on_rule'] and self.carrier_id.shipping_enabled:
             self.send_to_shipper()
+            self._add_delivery_cost_to_so()
+
         return res
 
     @api.multi
@@ -85,6 +87,13 @@ class StockPicking(models.Model):
         self.carrier_tracking_ref = res['tracking_number']
         msg = _("Shipment sent to carrier %s for expedition with tracking number %s") % (self.carrier_id.name, self.carrier_tracking_ref)
         self.message_post(body=msg)
+
+    @api.multi
+    def _add_delivery_cost_to_so(self):
+        self.ensure_one()
+        sale_order = self.sale_id
+        if sale_order.invoice_shipping_on_delivery:
+            sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
 
     @api.multi
     def open_website_url(self):
