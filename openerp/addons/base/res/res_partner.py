@@ -259,11 +259,11 @@ class res_partner(osv.Model, format_address):
             selection=[('person', 'Individual'),
                        ('company', 'Company')],
             string='Company Type',
-            help='Technical field, used only to display a boolean using a radio'
-                 'button. As for Odoo v9 RadioButton cannot be used on boolean'
-                 'fields, this one serves as interface. Due to the old API'
-                 'limitations with interface function field, we implement it'
-                 'by hand instead of a true function field. When migrating to'
+            help='Technical field, used only to display a boolean using a radio '
+                 'button. As for Odoo v9 RadioButton cannot be used on boolean '
+                 'fields, this one serves as interface. Due to the old API '
+                 'limitations with interface function field, we implement it '
+                 'by hand instead of a true function field. When migrating to '
                  'the new API the code should be simplified.'),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         # image: all image fields are base64 encoded and PIL-supported
