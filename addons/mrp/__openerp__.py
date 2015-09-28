@@ -11,7 +11,7 @@
     'summary': 'Manufacturing Orders, Bill of Materials, Routings',
     'depends': ['product', 'procurement', 'stock_account', 'resource', 'report'],
     'description': """
-Manage the Manufacturing process in OpenERP
+Manage the Manufacturing process in Odoo
 ===========================================
 
 The manufacturing module allows you to cover planning, ordering, stocks and the manufacturing or assembly of products from raw materials and components. It handles the consumption and production of products according to a bill of materials and the necessary operations on machinery, tools or human resources according to routings.
