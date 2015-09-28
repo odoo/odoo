@@ -13,25 +13,25 @@
                         Once you're done, you'll benefit from:
                     </p>
                     <ul>
-                        <li><strong>Reduced data entry:</strong> no need to manually create invoices, register bank statements, follow-up payments,</li>
-                        <li><strong>Clean customer invoices:</strong> easy to create, beautiful and full featured invoices,</li>
-                        <li><strong>Automated documents sending:</strong> automatically send your invoices by email or regular mail,</li>
-                        <li><strong>On-the-fly payment reconciliation:</strong> automatic suggestion of outstanding payments when creating an invoice,</li>
-                        <li><strong>Bank interface:</strong> with bank feeds synchronization or bank statement import.</li>
+                        <li><strong>Reduced data entry:</strong> no need to manually create invoices, register bank statements, and send payment follow-ups.</li>
+                        <li><strong>Clean customer invoices:</strong> easy to create, beautiful and full featured invoices.</li>
+                        <li><strong>Automated documents sending:</strong> automatically send your invoices by email or snail mail.</li>
+                        <li><strong>On-the-fly payment reconciliation:</strong> automatic suggestions of outstanding payments when creating invoices.</li>
+                        <li><strong>Banking interface:</strong> with live bank feed synchronization and bank statement importation.</li>
                     </ul>
-                    <p>For the setup, you will need to get access to the following information:</p>
+                    <p>5) For setup, you will need the following information:</p>
                     <ul>
-                        <li>Your company: legal name, Tax ID, address, logo.</li>
-                        <li>Your bank accounts: one statement per bank account</li>
-                        <li>Your usual payment terms</li>
-                        <li>Your usual tax rates</li>
-                        <li>Current account balances</li>
-                        <li>Outstanding invoices, payments and undeposited funds</li>
+                        <li>Your company's legal name, tax ID, address, and logo.</li>
+                        <li>One bank statement for each bank account you hold.</li>
+                        <li>A list of your customer and suppler payment terms.</li>
+                        <li>A list of common taxes and their rates.</li>
+                        <li>Your Trial Balance (list of accounts and their balances).</li>
+                        <li>Your outstanding invoices, payments, and undeposited funds.</li>
                     </ul>
                     <p>
-                        If you'd like some help on any subject dont hesitate to
-                        contact our Accounting experts by using the <span class="fa fa-question-circle"/>
-                        icon on the top bar.
+                        If you'd like some assistance on any of the above, please do not hesitate 
+                        to contact our accounting experts by using the 
+                        <span class="fa fa-question-circle"/> icon on the top bar.
                     </p>
                     <p>Enjoy your Odoo experience,</p>
                     <div class="mt32">
@@ -49,8 +49,7 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Your Company</t>
                     <p class="text-muted">
-                        The first step if to setup your company information. These are mostly used
-                        to print invoices.
+                        The first step is to set up your company information. This is mostly used for invoicing.
                     </p>
                     <table class="table">
                     <tr>
@@ -127,19 +126,19 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Your Bank Accounts</t>
                     <p>
-                        Once your company information are correct, your should 
+                        Once your company information is correct, you should 
                         <strong><a t-att-href="prepare_backend_url('account.action_account_bank_journal_form')">
                             setup your bank accounts.
                         </a></strong>
                     </p><p>
-                        Once your bank accounts are registered, you will be able to
-                        get your bank statements from the Accounting dashboard.
-                        The available methods to sync your bank accounts are:
+                        Once your bank accounts are registered, you will be able 
+                        to access your statements from the Accounting Dashboard. 
+                        The available methods for synchronization are as follows.
                     </p>
                     <ul>
-                        <li>By connecting to your Bank</li>
-                        <li>By importing a statement file (QIF, OFX, CODA or CSV format)</li>
-                        <li>Manually, using our <a t-att-href="prepare_backend_url('account.action_bank_statement_tree')">fast recording interface</a></li>
+                        <li>Direct connection to your bank</li>
+                        <li>Importing your statements in via a supported file format (QIF, OFX, CODA or CSV format)</li>
+                        <li>Manually enter your transactions using our <a t-att-href="prepare_backend_url('account.action_bank_statement_tree')">fast recording interface</a></li>
                     </ul>
                 </t>
 
@@ -154,8 +153,7 @@
                             A <span t-esc="company_id.country_id.name or ''"/> Chart of Accounts has been
                             installed. You should review it and create any additionnal accounts.
                         </p><p>
-                            It's recommended to not delete any accounts even if
-                            you don't need them for now on.
+                            It's recommended that you do not delete any accounts, even if they are not relevant. Simply make them inactive.
                         </p><p>
                             <a class="fa fa-arrow-right" t-att-href="prepare_backend_url('account.action_account_form')">Review the Chart of Accounts</a>
 
@@ -189,10 +187,9 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Multi Currency</t>
                     <p>
-                        The multi-currency option allows you to send or receive
-                        invoice in different currencies, to set up bank
-                        accounts in other currencies and run reports on your
-                        foreign currency activities.
+                        The multi-currency option allows you to send or receive invoices 
+                        in difference currencies, set up foreign bank accounts 
+                        and run reports on your foreign financial activities.
                     </p>
                     <p>To use the <strong>multi-currency option:</strong>
                         <ol>
@@ -228,7 +225,7 @@
                                 <div class="panel-body">
                                     <p>
                                         If you have less than 200 contacts, we recommend you
-                                        to create them manually.
+                                        create them manually.
                                     </p>
                                     <ul>
                                         <li>
@@ -260,7 +257,7 @@
                                     </p>
                                     <ul>
                                         <li>Download the <a href="/base_import/static/csv/customers.xls">Excel template</a></li>
-                                        <li>Import using the top left button in <a t-att-href="prepare_backend_url('base.action_partner_form','list')">the list of customers</a></li>
+                                        <li>Import using the "Import" button on the top left corner of <a t-att-href="prepare_backend_url('base.action_partner_form','list')">the customer list</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -269,9 +266,10 @@
                 </t>
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Your Products</t>
-                    <p>A product in Odoo is something you sell or buy. It could
-                    be a goods, consumable or services. Choose how you want to
-                    create your products:
+                    <p>
+                        A product in Odoo is something you sell or buy 
+                        whether or not it is goods, consumables, or services.
+                        Choose how you want to create your products:
                     </p>
 
                     <div class="row">
@@ -311,7 +309,7 @@
                                     </p>
                                     <ul>
                                         <li>Download the <a href="/base_import/static/csv/products.xls">Excel template</a></li>
-                                        <li>Import using the top left button in <a t-att-href="prepare_backend_url('product.product_template_action','list')">the list of products</a></li>
+                                        <li>Import using the "Import" button on the top left corner of <a t-att-href="prepare_backend_url('product.product_template_action','list')">the customer list</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -320,25 +318,24 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title">Accounts Balance</t>
+                    <t t-set="page_title">Account Balances</t>
                     <p>
-                        Once your chart of account is created, you need to update the
-                        balances of every account in Odoo.
+                        Once you have created your chart of accounts, you will need to update your account balances.
                     </p>
                     <p>
                         <ul>
                             <li>In your old accounting software, print a trial balance</li>
-                            <li>In Odoo, <a t-att-href="prepare_backend_url('account.action_move_journal_line')">create a journal entry</a> to set the balance of every accounts</li>
+                            <li>In Odoo, <a t-att-href="prepare_backend_url('account.action_move_journal_line')">create a journal entry</a> to set the balance of all of your accounts.</li>
                         </ul>
                     </p>
                     <div class="alert alert-info info_icon" role="alert">
                         <span class="fa fa-lightbulb-o fa-lg"/>
                         <p>
-                            A common practice is to change your accounting software
-                            at the end of a fiscal year. This allows to have less data
-                            to import and balances to set. If you plan to do so, we
-                            recommend you to start using Odoo for invoicing and payments
-                            now and move all other accounting transactions afterwards.
+                            It's common practice to change your accounting software 
+                            at the end of a fiscal year. This allows you to have less 
+                            data to import and balances to set. If you plan to do so, 
+                            we recommend you start using Odoo for invoicing and payments 
+                            now, and then move all other accounting transactions at a later time.
                         </p>
                     </div>
                 </t>
@@ -346,11 +343,13 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Outstanding Transactions</t>
                     <p class="text-muted">
-                        If you want to be able to send customers statements from Odoo,
-                        you need to record all outstanding transactions in the payable and
-                        receivable accounts, like invoices that are not paid or payments not reconciled.
+                        If you want to be able to send your customers their statements 
+                        from Odoo, you first need to record all outstanding transactions 
+                        in the payable and receivable accounts. These would be invoices 
+                        that have not been paid or payments that have not been reconciled.
                     </p><p>
-                        Registering outstanding invoices and payments can be a huge work. But you can start using Odoo without it, by:
+                        Registering outstanding invoices and payments can be a huge undertaking, 
+                        but you can start using Odoo without it by:
                     </p>
                     <ul>
                         <li>Sending customer statements (outstanding invoices) manually during the transition period</li>
@@ -405,7 +404,7 @@
                         <div class="text-center col-md-4">
                             <span class="fa fa-building-o fa-4x"></span>
                             <h3><strong>Assets Management</strong></h3>
-                            <p>Manage your properties like buildings, machinery, materials, cars etc. and calculate their depreciations over time.</p>
+                            <p>Manage your various fixed assets, such as buildings, machinery, materials, cars, etc..., and calculate their associated depreciation over time.</p>
                             <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_asset')" class="btn odoo_purple">
                                 <span class="fa fa-arrow-circle-o-down"/> Install Now
                             </a>
@@ -413,7 +412,7 @@
                         <div class="text-center col-md-4">
                             <span class="fa fa-tasks fa-4x"></span>
                             <h3><strong>Revenue Recognition</strong></h3>
-                            <p>Use in combination with Contracts to calculate monthly revenues for multi-months Contracts.</p>
+                            <p>Use in conjunction with contracts to calculate your monthly revenue for multi-month contracts.</p>
                             <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_asset')"
                                 class="btn odoo_purple">
                                 <span class="fa fa-arrow-circle-o-down"/> Install Now
@@ -433,7 +432,7 @@
                         <div class="text-center col-md-4">
                             <span class="fa fa-money fa-4x"></span>
                             <h3><strong>Expenses</strong></h3>
-                            <p>Manage your employees expenses, from encoding to payment and reporting.</p>
+                            <p>Manage your employee expenses, from encoding, to payments and reporting.</p>
                             <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_expense')"
                                 class="btn odoo_purple">
                                 <span class="fa fa-arrow-circle-o-down"/> Install Now
@@ -465,8 +464,11 @@
                 <t t-set="menu_categoryclasses" t-value="'fa-hand-o-up'"/>
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Invite Users</t>
-                    <p>When inviting users, you need to define which access and rights they are allowed.<br/>This is done by attributing a role to each users.</p>
-                    <p><strong>There are 3 different roles in Odoo:</strong></p>
+                    <p>
+                        When inviting users, you will need to define which access rights they are allowed to have. 
+                        This is done by assigning a role to each user.
+                    </p>
+                    <p><strong>There are three different levels of access rights in Odoo:</strong></p>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="panel panel-success">
@@ -476,7 +478,7 @@
                                     </span>
                                  </div>
                                  <div class="panel-body">
-                                    <p>Use this role to manage only billing.</p>
+                                    <p>These users handle billing specifically.</p>
                                 </div>
                             </div>
                         </div>
@@ -488,7 +490,10 @@
                                     </span>
                                  </div>
                                  <div class="panel-body">
-                                    <p>The manager has full access to the application plus miscellaneous operations like salary, assets...</p>
+                                    <p>
+                                        The Advisors have full access to the Accounting application, 
+                                        plus access to miscellaneous operations such as salary and asset management.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -501,11 +506,11 @@
                                  </div>
                                  <div class="panel-body">
                                     <p>
-                                        This role is suited for the day-to-day work of an accountant:
+                                        This role is best suited for managing the day to day accounting operations:
                                         <ul>
-                                            <li>record invoices</li>
-                                            <li>manage bank feeds</li>
-                                            <li>reconcile entries</li>
+                                            <li>Recording invoices</li>
+                                            <li>Managing bank fees</li>
+                                            <li>Reconciling journal entries</li>
                                         </ul>
                                     </p>
                                 </div>
@@ -525,7 +530,7 @@
 
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Customer Flow</t>
-                    <p><strong>Test these 3 customer flows to get familiar with Odoo:</strong></p>
+                    <p><strong>Test the following three scenarios in order to assist you in familiarizing yourself with Odoo:</strong></p>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="panel panel-success">
@@ -540,7 +545,7 @@
                                     </p>
                                     <p>
                                         <strong>Record Bank Statement (or import file)</strong><br/>
-                                        Depending on your volume of transactions, you should do this from once a week to several times a day.
+                                        Depending on the volume of your transactions, you should be recording your bank statement every week to several times a day.
                                     </p>
                                     <p><strong>Reconcile Bank Statement</strong></p>
                                 </div>
@@ -560,7 +565,7 @@
                                         Simply click on the 'Pay' button.
                                     </p>
                                     <p><strong>Create a Deposit Ticket</strong><br/>
-                                        This allows you to record the different payments that constitute your bank deposit. (You may need to <a t-att-href="prepare_backend_url('account.action_account_config')">activate the feature</a> first)
+                                        This allows you to record the different payments that constitute your bank deposit. (You may need to <a t-att-href="prepare_backend_url('account.action_account_config')">activate this feature</a> first)
                                     </p>
                                     <p><strong>Record Bank Statement</strong></p>
                                     <p>
@@ -578,7 +583,7 @@
                                     </span>
                                 </div>
                                 <div class="panel-body">
-                                    <p><strong>Reconcile Bank Statements</strong></p>
+                                    <p><strong>Reconcile your Bank Statements</strong></p>
                                     <p><strong>Check unpaid invoices</strong><br/>
                                          Run an <i>Aged Receivable report</i> and check which customers still owe you money.
                                     </p>
@@ -595,7 +600,7 @@
 
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Vendor Flow</t>
-                    <p><strong>Test these 3 vendor flows to get used to Odoo:</strong></p>
+                    <p><strong>Test the following three scenarios in order to assist you in familiarizing yourself with Odoo:</strong></p>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="panel panel-success">
