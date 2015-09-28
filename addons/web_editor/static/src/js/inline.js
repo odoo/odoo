@@ -45,6 +45,9 @@ snippet_editor.Class.include({
             var $editable = $("#editable_area");
             transcoder.img_to_font($editable);
             transcoder.style_to_class($editable);
+
+            // fix outlook image rendering bug
+            $editable.find('img[style*="width"], img[style*="height"]').removeAttr('height width');
         });
     },
     clean_for_save: function () {
@@ -52,6 +55,15 @@ snippet_editor.Class.include({
         var $editable = $("#editable_area");
         transcoder.class_to_style($editable);
         transcoder.font_to_img($editable);
+
+        // fix outlook image rendering bug
+        _.each(['width', 'height'], function(attribute) {
+            $editable.find('img[style*="width"], img[style*="height"]').attr(attribute, function(){
+                return $(this)[attribute]();
+            }).css(attribute, function(){
+                return $(this).get(0).style[attribute] || 'auto';
+            });
+        });
     },
 
 });
@@ -69,6 +81,9 @@ window.top.odoo[callback+"_updown"] = function (value, fields_values) {
 
         transcoder.img_to_font($editable);
         transcoder.style_to_class($editable);
+
+        // fix outlook image rendering bug
+        $editable.find('img[style*="width"], img[style*="height"]').removeAttr('height width');
     } else {
         $editable.trigger("content_changed");
     }

@@ -105,12 +105,14 @@ var font_to_img = function ($editable) {
             });
         });
         if (content) {
-            var size = parseInt(parseFloat($font.css("font-size"))/parseFloat($font.parent().css("font-size")),10);
             var color = $font.css("color").replace(/\s/g, '');
             var src = _.str.sprintf('/web_editor/font_to_img/%s/%s/'+$font.height(), window.encodeURI(content), window.encodeURI(color));
-            var style = $font.attr("style");
-            style = (style ? style.replace(/\s/g, '').replace(/(^|;)height:[^;]*/, '$1').replace(/(^|;)font-size:[^;]*/, '$1') : "") + "height:"+size+"em;";
-            var $img = $("<img/>").attr("src", src).attr("data-class", $font.attr("class")).attr("style", style);
+            var $img = $("<img/>").attr("src", src)
+                .attr("data-class", $font.attr("class"))
+                .attr("style", $font.attr("style"))
+                .attr("height", $font.height())
+                .css("height", "")
+                .css("font-size", "");
             $font.replaceWith($img);
         } else {
             $font.remove();
@@ -121,7 +123,10 @@ var font_to_img = function ($editable) {
 var img_to_font = function ($editable) {
     $("img[src*='/web_editor/font_to_img/']", $editable).each(function () {
         var $img = $(this);
-        var $font = $("<span/>").attr("class", $img.data("class")).attr("style", $img.attr("style")).css("height", "");
+        var $font = $("<span/>")
+            .attr("class", $img.data("class"))
+            .attr("style", $img.attr("style"))
+            .css("height", "");
         $img.replaceWith($font);
     });
 };
