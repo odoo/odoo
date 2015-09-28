@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <record id="action_client_l10n_sa_menu" model="ir.actions.client">
+            <field name="name">Open Account Dashboard Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_board_journal_1')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_l10n_sa_menu"/>
+            <field name="state">open</field>
+        </record>
+    </data>
+
     <data>
+        <record id="transfer_account" model="account.account.template">
+            <field name="name">Transfer Account</field>
+            <field name="code">18</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="True"/>
+        </record>
 
         <record id="account_arabic_coa_general" model="account.chart.template">
-            <field name="name">Arabic General CoA</field>
+            <field name="name">Saudi Arabia - Chart of Accounts</field>
+            <field name="bank_account_code_prefix">1</field>
+            <field name="cash_account_code_prefix">1</field>
+            <field name="code_digits">6</field>
+            <field name="currency_id" ref="base.EGP"/>
+            <field name="transfer_account_id" ref="transfer_account"/>
             <field name="spoken_languages" eval="'en_US;ar_EG;ar_SY'"/>
-            <field name="account_root_id" ref="coa_basic"/>
-            <field name="complete_tax_set" eval="False" />
-            <field name="tax_code_root_id" ref="account.tax_code_chart_root"/>  
-            <field name="bank_account_view_id" ref="cash_expenditure"/>   
-            <field name="property_account_receivable" ref="account_receivable"/>
-            <field name="property_account_payable" ref="account_payable"/>
-            <field name="property_account_expense_categ" ref="cost_of_goods_sold"/>
-            <field name="property_account_income_categ" ref="income"/>
-            <field name="property_account_expense" ref="52900_general_product_cost"/>
-            <field name="property_account_income" ref="47910_general_product_sales"/>
-            <field name="property_account_income_opening" ref="account.conf_o_income"/>
-            <field name="property_account_expense_opening" ref="account.conf_o_expense"/>
-            <field name="currency_id" ref="base.EGP"/>            
         </record>
- 
+
+        <record id="transfer_account" model="account.account.template">
+            <field name="chart_template_id" ref="account_arabic_coa_general"/>
+        </record>
     </data>
 </openerp>
