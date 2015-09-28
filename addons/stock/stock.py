@@ -3625,7 +3625,7 @@ class stock_warehouse(osv.osv):
 
         #choose the next available color for the picking types of this warehouse
         color = 0
-        available_colors = [c%9 for c in range(3, 12)]  # put flashy colors first
+        available_colors = [0, 3, 4, 5, 6, 7, 8, 1, 2]  # put white color first
         all_used_colors = self.pool.get('stock.picking.type').search_read(cr, uid, [('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')
         #don't use sets to preserve the list order
         for x in all_used_colors:
@@ -3637,6 +3637,8 @@ class stock_warehouse(osv.osv):
         #order the picking types with a sequence allowing to have the following suit for each warehouse: reception, internal, pick, pack, ship. 
         max_sequence = self.pool.get('stock.picking.type').search_read(cr, uid, [], ['sequence'], order='sequence desc')
         max_sequence = max_sequence and max_sequence[0]['sequence'] or 0
+        internal_active_false = (warehouse.reception_steps == 'one_step') and (warehouse.delivery_steps == 'ship_only')
+        internal_active_false = internal_active_false and not self.user_has_groups(cr, uid, 'stock.group_locations')
 
         in_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Receipts'),
@@ -3671,7 +3673,7 @@ class stock_warehouse(osv.osv):
             'sequence_id': int_seq_id,
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_stock_loc.id,
-            'active': True,
+            'active': not internal_active_false,
             'sequence': max_sequence + 2,
             'color': color}, context=context)
         pack_type_id = picking_type_obj.create(cr, uid, vals={

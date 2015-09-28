@@ -1639,26 +1639,7 @@
             </field>
         </record>
 
-        <record id="stock_picking_type_action_single_location" model="ir.actions.act_window">
-            <field name="name">Inventory</field>
-            <field name="res_model">stock.picking.type</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,form</field>
-            <field name="domain">[('code', '!=', 'internal')]</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new picking type.
-              </p><p>
-                The picking type system allows you to assign each stock
-                operation a specific type which will alter its views accordingly.
-                On the picking type you could e.g. specify if packing is needed by default,
-                if it should show the customer.
-              </p>
-            </field>
-        </record>
-
-        <record id="stock_picking_type_action_multi_locations" model="ir.actions.act_window">
+        <record id="stock_picking_type_action" model="ir.actions.act_window">
             <field name="name">Inventory</field>
             <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
@@ -1713,17 +1694,10 @@
         <menuitem id="stock_picking_type_config" action="action_picking_type_list" name="Picking Types" parent="stock.menu_routes_config" sequence="2" groups="base.group_no_one"/>
 
         <menuitem
-            action="stock_picking_type_action_single_location"
-            id="stock_picking_type_menu_single_location"
+            action="stock_picking_type_action"
+            id="stock_picking_type_menu"
             parent="menu_stock_root" sequence="0"
-            name="Dashboard"
-            groups="stock.group_single_location"/>
-        <menuitem
-            action="stock_picking_type_action_multi_locations"
-            id="stock_picking_type_menu_multi_locations"
-            parent="menu_stock_root" sequence="1"
-            name="Dashboard"
-            groups="stock.group_locations"/>
+            name="Dashboard"/>
 
         <menuitem
             id="menu_pickingtype"

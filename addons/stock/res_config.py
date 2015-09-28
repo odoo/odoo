@@ -44,30 +44,25 @@ class stock_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     def set_group_locations(self, cr, uid, ids, context=None):
-        """ This method is automatically called by res_config as it begins
-            with set. It is used to implement the 'one group or another'
-            behavior. We have to perform some group manipulation by hand
-            because in res_config.execute(), set_* methods are called
-            after group_*; therefore writing on an hidden res_config file
-            could not work.
-            If group_stock_multiple_locations is checked: remove group_stock_single_location
-            from group_user, remove the users. Otherwise, just add
-            group_stock_single_location in group_user.
-            The inverse logic about group_stock_multiple_locations is managed by the
-            normal behavior of 'group_stock_multiple_locations' field.
         """
-        def ref(xml_id):
-            mod, xml = xml_id.split('.', 1)
-            return self.pool['ir.model.data'].get_object(cr, uid, mod, xml, context)
-
+            If we are not in multiple locations,
+            we can deactivate the internal picking types of the warehouses.
+            That way, they won't appear in the dashboard.
+        """
         for obj in self.browse(cr, uid, ids, context=context):
-            config_group = ref('stock.group_single_location')
-            base_group = ref('base.group_user')
+            wh_obj = self.pool['stock.warehouse']
+            whs = wh_obj.search(cr, uid, [], context=context)
+            warehouses = wh_obj.browse(cr, uid, whs, context=context)
             if obj.group_stock_multiple_locations:
-                base_group.write({'implied_ids': [(3, config_group.id)]})
-                config_group.write({'users': [(3, u.id) for u in base_group.users]})
+                # Check inactive picking types and of warehouses make them active (by warehouse)
+                inttypes = [x.int_type_id.id for x in warehouses if not x.int_type_id.active]
+                if inttypes:
+                    self.pool['stock.picking.type'].write(cr, uid, inttypes, {'active': True}, context=context)
             else:
-                base_group.write({'implied_ids': [(4, config_group.id)]})
+                # Check active internal picking types of warehouses and make them inactive
+                inttypes = [x.int_type_id.id for x in warehouses if x.int_type_id.active and x.reception_steps == 'one_step' and x.delivery_steps == 'ship_only']
+                if inttypes:
+                    self.pool['stock.picking.type'].write(cr, uid, inttypes, {'active': False}, context=context)
         return True
 
     _columns = {
@@ -79,8 +74,8 @@ class stock_config_settings(osv.osv_memory):
             implied_group='product.group_product_variant'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'module_procurement_jit': fields.selection([
-            (1, 'Reserve Sale Orders Immediately On Confirmation'),
-            (0, 'Reserve Sale Orders Manually or by Running the Schedulers')
+            (1, 'Reserve sale orders immediately on confirmation'),
+            (0, 'Reserve sale orders manually or by running the schedulers')
             ], "Procurements",
             help="""Allows you to automatically reserve the available
             products when confirming a sale order.
@@ -138,9 +133,6 @@ class stock_config_settings(osv.osv_memory):
             ], "Multi Locations",
             implied_group='stock.group_locations',
             help="""This will show you the locations and allows you to define multiple picking types and warehouses."""),
-        'group_stock_single_location': fields.boolean("Manage only one location per warehouse",
-            implied_group='stock.group_single_location',
-            help="""This implies that you manage one location per warehouse, i.e. no internal transfer is possible."""),
         'group_stock_adv_location': fields.selection([
             (0, 'No automatic routing of products'),
             (1, 'Advanced routing of products using rules')
