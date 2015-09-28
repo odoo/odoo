@@ -53,8 +53,8 @@ snippet_editor.Class.include({
     clean_for_save: function () {
         this._super();
         var $editable = $("#editable_area");
-        transcoder.class_to_style($editable);
         transcoder.font_to_img($editable);
+        transcoder.class_to_style($editable);
 
         // fix outlook image rendering bug
         _.each(['width', 'height'], function(attribute) {
