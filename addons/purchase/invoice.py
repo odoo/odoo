@@ -61,19 +61,13 @@ class AccountInvoice(models.Model):
         self.invoice_line_ids = result
         return {}
 
-
-class AccountInvoiceLine(models.Model):
-    """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
-    _inherit = 'account.invoice.line'
-    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', select=True, readonly=True)
-
     @api.model
-    def move_line_get(self, invoice_id):
-        res = super(AccountInvoiceLine, self).move_line_get(invoice_id)
-        invoice = self.browse(invoice_id)
+    def invoice_line_move_line_get(self):
+        res = super(AccountInvoice, self).invoice_line_move_line_get()
+
         if self.env.user.company_id.anglo_saxon_accounting:
-            if invoice.type in ['in_invoice', 'in_refund']:
-                for i_line in invoice.invoice_line_ids:
+            if self.type in ['in_invoice', 'in_refund']:
+                for i_line in self.invoice_line_ids:
                     res.extend(self._anglo_saxon_purchase_move_lines(i_line, res))
         return res
 
@@ -87,7 +81,7 @@ class AccountInvoiceLine(models.Model):
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id
         if i_line.product_id and i_line.product_id.valuation == 'real_time':
-            if i_line.product_id.type != 'service':
+            if i_line.product_id.type in ('product', 'consu'):
                 # get the price difference account at the product
                 acc = i_line.product_id.property_account_creditor_price_difference and i_line.product_id.property_account_creditor_price_difference.id
                 if not acc:
@@ -102,7 +96,7 @@ class AccountInvoiceLine(models.Model):
                     oa = i_line.product_id.categ_id.property_stock_account_input_categ_id and i_line.product_id.categ_id.property_stock_account_input_categ_id.id
                 if oa:
                     # get the fiscal position
-                    fpos = i_line.invoice_id.fiscal_position_id or False
+                    fpos = i_line.invoice_id.fiscal_position_id
                     a = fpos.map_account(oa)
                 diff_res = []
                 account_prec = inv.company_id.currency_id.decimal_places
@@ -140,3 +134,10 @@ class AccountInvoiceLine(models.Model):
                                 })
                 return diff_res
         return []
+
+
+class AccountInvoiceLine(models.Model):
+    """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
+    _inherit = 'account.invoice.line'
+    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', select=True, readonly=True)
+
