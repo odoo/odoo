@@ -77,7 +77,7 @@ class procurement_order(osv.osv):
             'product_id': procurement.product_id.id,
             'product_qty': procurement.product_qty,
             'product_uom': procurement.product_uom.id,
-            'location_src_id': procurement.location_id.id,
+            'location_src_id': procurement.rule_id.location_src_id.id or procurement.location_id.id,
             'location_dest_id': procurement.location_id.id,
             'bom_id': bom_id,
             'routing_id': routing_id,
