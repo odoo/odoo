@@ -781,7 +781,7 @@ ListView.include(/** @lends instance.web.ListView# */{
             .last()
             .value();
         // tabbed from last field in form
-        if (last_field && last_field.$el.has(e.target).length) {
+        if (last_field && $(e.target).closest(last_field.el).length) {
             e.preventDefault();
             return this._next();
         }
