@@ -249,10 +249,12 @@ class AccountInvoiceLine(models.Model):
         price_unit = super(AccountInvoiceLine,self)._get_price_unit()
         # in case of anglo saxon with a product configured as invoiced based on delivery, with perpetual
         # valuation and real price costing method, we must find the real price for the cost of good sold
+        uom_obj = self.env['product.uom']
         if self.product_id.invoice_policy == "delivery":
             for s_line in self.sale_line_ids:
                 # qtys already invoiced
-                qty_done = s_line.qty_invoiced - self.quantity
+                qty_done = sum([uom_obj._compute_qty_obj(x.product_uom, x.product_uom_qty, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
+                quantity = uom_obj._compute_qty_obj(self.uom_id, self.quantity, self.product_id.uom_id)
                 # Put moves in fixed order by date executed
                 moves = self.env['stock.move']
                 for procurement in s_line.procurement_ids:
@@ -271,9 +273,9 @@ class AccountInvoiceLine(models.Model):
                     if invoiced_qty < qty_done:
                         continue
                     qty_to_consider = move.product_qty
-                    if move.product_qty > qty_done:
-                        qty_to_consider = move.product_qty - qty_done
-                    qty_to_consider = min(qty_to_consider, self.quantity - qty_delivered)
+                    if invoiced_qty - move.product_qty < qty_done:
+                        qty_to_consider = invoiced_qty - qty_done
+                    qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
                     qty_delivered += qty_to_consider
                     average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move.price_unit * qty_to_consider) / qty_delivered
                     if qty_delivered == self.quantity:
