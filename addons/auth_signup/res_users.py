@@ -277,7 +277,7 @@ class res_users(osv.Model):
         for user in self.browse(cr, uid, ids, context=context):
             if context and context.get('reset_password') \
                     and user.email \
-                    and not '__copy_data_seen' in context \
+                    and '__copy_data_seen' not in context \
                     and user.state == 'new' \
                     and not user.partner_id.signup_token:
                 ctx = dict(context, create_user=True)
