@@ -93,7 +93,6 @@ class SaleOrderLine(models.Model):
     product_packaging = fields.Many2one('product.packaging', string='Packaging', default=False)
     route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)])
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', string='Product Template')
-    procurement_ids = fields.One2many('procurement.order', 'so_line_id', string='Procurements')
 
     @api.multi
     @api.depends('product_id')
@@ -167,7 +166,7 @@ class SaleOrderLine(models.Model):
             'route_ids': self.route_id and [(4, self.route_id.id)] or [],
             'warehouse_id': self.order_id.warehouse_id and self.order_id.warehouse_id.id or False,
             'partner_dest_id': self.order_id.partner_shipping_id.id,
-            'so_line_id': self.id,
+            'sale_line_id': self.id,
         })
         return vals
 
@@ -215,8 +214,6 @@ class AccountInvoice(models.Model):
 class ProcurementOrder(models.Model):
     _inherit = "procurement.order"
 
-    so_line_id = fields.Many2one('sale.order.line', string='Sale Order Line')
-
     @api.model
     def _run_move_create(self, procurement):
         vals = super(ProcurementOrder, self)._run_move_create(procurement)
@@ -235,8 +232,8 @@ class StockMove(models.Model):
         # Update delivered quantities on sale order lines
         todo = self.env['sale.order.line']
         for move in self:
-            if (move.procurement_id.so_line_id) and (move.product_id.invoice_policy in ('order', 'delivery')):
-                todo |= move.procurement_id.so_line_id
+            if (move.procurement_id.sale_line_id) and (move.product_id.invoice_policy in ('order', 'delivery')):
+                todo |= move.procurement_id.sale_line_id
         for line in todo:
             line.qty_delivered = line._get_delivered_qty()
         return result
