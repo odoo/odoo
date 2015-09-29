@@ -127,7 +127,6 @@ class res_users(osv.osv):
         used to store the data related to the partner: lang, name, address,
         avatar, ... The user model is now dedicated to technical data.
     """
-    __admin_ids = {}
     __uid_cache = {}
     _inherits = {
         'res.partner': 'partner_id',
