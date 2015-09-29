@@ -157,6 +157,196 @@
 
         </template>
 
+        <template id="assets_ace_xml" name="Ace Assets XML">
+            <link rel="stylesheet" type="text/css" href="/web/static/lib/ace/css/editor.css"/>
+            <link rel="stylesheet" type="text/css" href="/web/static/lib/ace/theme/monokai.css"/>
+
+            <script type="text/javascript" src="/web/static/src/js/load_ace.js" />
+            <script>odoo.ace_next_define = 'ace/commands/command_manager'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/commands/command_manager.js" />
+            <script>odoo.ace_next_define = 'ace/commands/default_commands'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/commands/default_commands.js" />
+            <script>odoo.ace_next_define = 'ace/commands/multi_select_commands'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/commands/multi_select_commands.js" />
+
+            <script>odoo.ace_next_define = 'ace/edit_session/fold_line'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/edit_session/fold_line.js" />
+            <script>odoo.ace_next_define = 'ace/edit_session/fold'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/edit_session/fold.js" />
+            <script>odoo.ace_next_define = 'ace/edit_session/folding'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/edit_session/folding.js" />
+            <script>odoo.ace_next_define = 'ace/edit_session/bracket_match'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/edit_session/bracket_match.js" />
+
+            <script>odoo.ace_next_define = 'ace/ext/error_marker'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/ext/error_marker.js" />
+
+            <script>odoo.ace_next_define = 'ace/keyboard/textinput'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/keyboard/textinput.js" />
+            <script>odoo.ace_next_define = 'ace/keyboard/keybinding'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/keyboard/keybinding.js" />
+            <script>odoo.ace_next_define = 'ace/keyboard/hash_handler'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/keyboard/hash_handler.js" />
+
+            <script>odoo.ace_next_define = 'ace/layer/gutter'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/layer/gutter.js" />
+            <script>odoo.ace_next_define = 'ace/layer/marker'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/layer/marker.js" />
+            <script>odoo.ace_next_define = 'ace/layer/text'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/layer/text.js" />
+            <script>odoo.ace_next_define = 'ace/layer/cursor'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/layer/cursor.js" />
+            <script>odoo.ace_next_define = 'ace/layer/font_metrics'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/layer/font_metrics.js" />
+
+            <script>odoo.ace_next_define = 'ace/lib/es5-shim'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/es5-shim.js" />
+            <script>odoo.ace_next_define = 'ace/lib/regexp'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/regexp.js" />
+            <script>odoo.ace_next_define = 'ace/lib/fixoldbrowsers'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/fixoldbrowsers.js" />
+            <script>odoo.ace_next_define = 'ace/lib/dom'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/dom.js" />
+            <script>odoo.ace_next_define = 'ace/lib/oop'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/oop.js" />
+            <script>odoo.ace_next_define = 'ace/lib/keys'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/keys.js" />
+            <script>odoo.ace_next_define = 'ace/lib/useragent'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/useragent.js" />
+            <script>odoo.ace_next_define = 'ace/lib/event'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/event.js" />
+            <script>odoo.ace_next_define = 'ace/lib/net'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/net.js" />
+            <script>odoo.ace_next_define = 'ace/lib/event_emitter'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/event_emitter.js" />
+            <script>odoo.ace_next_define = 'ace/lib/lang'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/lang.js" />
+            <script>odoo.ace_next_define = 'ace/lib/app_config'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/lib/app_config.js" />
+
+            <script>odoo.ace_next_define = 'ace/mode/text'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/text.js" />
+            <script>odoo.ace_next_define = 'ace/mode/text_highlight_rules'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/text_highlight_rules.js" />
+            <script>odoo.ace_next_define = 'ace/mode/behaviour'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/behaviour.js" />
+            <script>odoo.ace_next_define = 'ace/mode/folding/fold_mode'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/folding/fold_mode.js" />
+
+            <!-- Xml mode related scripts -->
+            <script>odoo.ace_next_define = 'ace/worker/mirror'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/worker/mirror.js" />
+            <script>odoo.ace_next_define = 'ace/mode/xml/sax'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/xml/sax.js" />
+            <script>odoo.ace_next_define = 'ace/mode/xml/dom'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/xml/dom.js" />
+            <script>odoo.ace_next_define = 'ace/mode/xml/dom-parser'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/xml/dom-parser.js" />
+            <script>odoo.ace_next_define = 'ace/mode/xml_worker'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/xml_worker.js" />
+            <script>odoo.ace_next_define = 'ace/mode/xml_highlight_rules'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/xml_highlight_rules.js" />
+            <script>odoo.ace_next_define = 'ace/mode/behaviour/xml'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/behaviour/xml.js" />
+            <script>odoo.ace_next_define = 'ace/mode/folding/xml'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/folding/xml.js" />
+            <script>odoo.ace_next_define = 'ace/mode/xml'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mode/xml.js" />
+
+            <script>odoo.ace_next_define = 'ace/mouse/default_handlers'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mouse/default_handlers.js" />
+            <script>odoo.ace_next_define = 'ace/mouse/default_gutter_handler'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mouse/default_gutter_handler.js" />
+            <script>odoo.ace_next_define = 'ace/mouse/mouse_event'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mouse/mouse_event.js" />
+            <script>odoo.ace_next_define = 'ace/mouse/dragdrop_handler'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mouse/dragdrop_handler.js" />
+            <script>odoo.ace_next_define = 'ace/mouse/mouse_handler'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mouse/mouse_handler.js" />
+            <script>odoo.ace_next_define = 'ace/mouse/fold_handler'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mouse/fold_handler.js" />
+            <script>odoo.ace_next_define = 'ace/mouse/multi_select_handler'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/mouse/multi_select_handler.js" />
+
+            <script>odoo.ace_next_define = 'ace/theme/textmate'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/theme/textmate.js" />
+            <script>odoo.ace_next_define = 'ace/theme/monokai'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/theme/monokai.js" />
+
+            <script>odoo.ace_next_define = 'ace/worker/worker'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/worker/worker.js" />
+            <script>odoo.ace_next_define = 'ace/worker/worker_client'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/worker/worker_client.js" />
+
+            <script>odoo.ace_next_define = 'ace/ace'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/ace.js" />
+            <script>odoo.ace_next_define = 'ace/anchor'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/anchor.js" />
+            <script>odoo.ace_next_define = 'ace/apply_delta'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/apply_delta.js" />
+            <script>odoo.ace_next_define = 'ace/background_tokenizer'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/background_tokenizer.js" />
+            <script>odoo.ace_next_define = 'ace/config'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/config.js" />
+            <script>odoo.ace_next_define = 'ace/document'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/document.js" />
+            <script>odoo.ace_next_define = 'ace/edit_session'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/edit_session.js" />
+            <script>odoo.ace_next_define = 'ace/editor'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/editor.js" />
+            <script>odoo.ace_next_define = 'ace/line_widgets'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/line_widgets.js" />
+            <script>odoo.ace_next_define = 'ace/multi_select'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/multi_select.js" />
+            <script>odoo.ace_next_define = 'ace/placeholder'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/placeholder.js" />
+            <script>odoo.ace_next_define = 'ace/range'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/range.js" />
+            <script>odoo.ace_next_define = 'ace/range_list'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/range_list.js" />
+            <script>odoo.ace_next_define = 'ace/renderloop'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/renderloop.js" />
+            <script>odoo.ace_next_define = 'ace/scrollbar'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/scrollbar.js" />
+            <script>odoo.ace_next_define = 'ace/search'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/search.js" />
+            <script>odoo.ace_next_define = 'ace/search_highlight'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/search_highlight.js" />
+            <script>odoo.ace_next_define = 'ace/selection'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/selection.js" />
+            <script>odoo.ace_next_define = 'ace/token_iterator'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/token_iterator.js" />
+            <script>odoo.ace_next_define = 'ace/tokenizer'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/tokenizer.js" />
+            <script>odoo.ace_next_define = 'ace/tooltip'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/tooltip.js" />
+            <script>odoo.ace_next_define = 'ace/undomanager'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/undomanager.js" />
+            <script>odoo.ace_next_define = 'ace/unicode'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/unicode.js" />
+            <script>odoo.ace_next_define = 'ace/virtual_renderer'</script>
+            <script type="text/javascript" src="/web/static/lib/ace/virtual_renderer.js" />
+
+            <script type="text/javascript">
+                window.define = odoo.__define__;
+                delete odoo.__define__;
+                delete odoo.ace_next_define;
+            </script>
+
+        </template>
+
+        <template id="assets_ace_xml_python" inherit_id="assets_ace_xml" name="Ace Assets XML and Python">
+            <xpath expr="//script[@src='/web/static/lib/ace/mode/folding/fold_mode.js']" position="after">
+                  <!-- Python mode related scripts -->
+                  <script>odoo.ace_next_define = 'ace/mode/python_highlight_rules'</script>
+                  <script type="text/javascript" src="/web/static/lib/ace/mode/python_highlight_rules.js" />
+                  <script>odoo.ace_next_define = 'ace/mode/folding/pythonic'</script>
+                  <script type="text/javascript" src="/web/static/lib/ace/mode/folding/pythonic.js" />
+                  <script>odoo.ace_next_define = 'ace/mode/python'</script>
+                  <script type="text/javascript" src="/web/static/lib/ace/mode/python.js" />
+            </xpath>
+        </template>
+
         <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
             <html style="height: 100%">
                 <head>

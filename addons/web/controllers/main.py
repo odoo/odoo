@@ -585,6 +585,14 @@ class WebClient(http.Controller):
     def jslist(self, mods=None):
         return manifest_list('js', mods=mods)
 
+    @http.route('/web/webclient/ace_lib', type='json', auth='none')
+    def ace_lib(self, xmlid, **kwargs):
+        asset = AssetsBundle(xmlid)
+        js_status, js_headers, js_content = binary_content(id=getattr(asset, 'js')().id, unique=asset.checksum)
+        css_status, css_headers, css_content = binary_content(id=getattr(asset, 'css')().id, unique=asset.checksum)
+        html = asset.to_html(css=css_content, js=js_content)
+        return html
+
     @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
     def load_locale(self, lang):
         magic_file_finding = [lang.replace("_",'-').lower(), lang.split('_')[0]]
