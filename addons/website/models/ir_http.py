@@ -162,7 +162,7 @@ class ir_http(orm.AbstractModel):
                     return self.reroute('/'.join(path) or '/')
 
             if not request.context.get('tz'):
-                request.context['tz'] = request.session['geoip'].get('time_zone')
+                request.context['tz'] = request.session.get('geoip', {}).get('time_zone')
             # bind modified context
             request.website = request.website.with_context(request.context)
 
