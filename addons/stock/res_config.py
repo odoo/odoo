@@ -87,9 +87,9 @@ class stock_config_settings(osv.osv_memory):
             help='Adds a Claim link to the delivery order.\n'
                  '-This installs the module claim_from_delivery.'),
         'module_product_expiry': fields.selection([
-            (0, 'Do not use expiry date'),
-            (1, 'Define expiry date on serial numbers')
-            ], "Expiry Dates",
+            (0, 'Do not use Expiration Date'),
+            (1, 'Define Expiration Date on serial numbers')
+            ], "Expiration Dates",
             help="""Track different dates on products and serial numbers.
                     The following dates can be tracked:
                     - end of life

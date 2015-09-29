@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name' : 'Products Expiry Date',
+    'name' : 'Products Expiration Date',
     'version' : '1.0',
     'category' : 'Specific Industry Applications',
     'depends' : ['stock'],
