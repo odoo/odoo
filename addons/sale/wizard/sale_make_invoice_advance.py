@@ -24,7 +24,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         return 'delivered'
 
     advance_payment_method = fields.Selection([
-        ('all', 'Invoiceable lines (deduce deposits)'),
+        ('all', 'Invoiceable lines (less deposits)'),
         ('delivered', 'Invoiceable lines'),
         ('percentage', 'Deposit (percentage)'),
         ('fixed', 'Deposit (fixed amount)')
