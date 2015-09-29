@@ -1,0 +1,111 @@
+[[
+   "start",
+  ["comment.shebang","#!/usr/bin/env rdmd"]
+],[
+   "start",
+  ["comment","// Computes average line length for standard input."]
+],[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["variable.module","std.stdio"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.type","void"],
+  ["text"," "],
+  ["identifier","main"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.type","ulong"],
+  ["text"," "],
+  ["identifier","lines"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.type","double"],
+  ["text"," "],
+  ["identifier","sumLength"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control","foreach"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","line"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","stdin"],
+  ["punctuation.operator","."],
+  ["identifier","byLine"],
+  ["paren.lparen","("],
+  ["paren.rparen","))"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.operator","++"],
+  ["identifier","lines"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","sumLength"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["identifier","line"],
+  ["punctuation.operator","."],
+  ["identifier","length"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","writeln"],
+  ["paren.lparen","("],
+  ["string","\"Average line length: \""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","lines"],
+  ["text"," "],
+  ["keyword.operator","?"],
+  ["text"," "],
+  ["identifier","sumLength"],
+  ["text"," "],
+  ["keyword.operator","/"],
+  ["text"," "],
+  ["identifier","lines"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+]]

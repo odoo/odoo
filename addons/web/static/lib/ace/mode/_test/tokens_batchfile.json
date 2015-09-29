@@ -1,0 +1,70 @@
+[[
+   "start",
+  ["comment.line.colons.dosbatch",":: batch file highlighting in Ace!"]
+],[
+   "start",
+  ["text","@"],
+  ["keyword.command.dosbatch","echo"],
+  ["text"," off"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.statement.dosbatch","CALL"],
+  ["text"," "],
+  ["keyword.command.dosbatch","set"],
+  ["text"," var1="],
+  ["constant.numeric","%cd%"]
+],[
+   "start",
+  ["keyword.command.dosbatch","echo"],
+  ["text"," unhide everything in "],
+  ["constant.numeric","%var1%"],
+  ["text","!"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.colons.dosbatch",":: FOR loop in bat is super strange!"]
+],[
+   "start",
+  ["keyword.control.repeat.dosbatch","FOR"],
+  ["text"," /f "],
+  ["punctuation.definition.string.begin.shell","\""],
+  ["string.quoted.double.dosbatch","tokens=*"],
+  ["punctuation.definition.string.end.shell","\""],
+  ["text"," "],
+  ["constant.numeric","%%G"],
+  ["text"," IN ('"],
+  ["keyword.command.dosbatch","dir"],
+  ["text"," /A:D /b') DO ("]
+],[
+   "start",
+  ["keyword.command.dosbatch","echo"],
+  ["text"," "],
+  ["constant.numeric","%var1%%%G"]
+],[
+   "start",
+  ["keyword.command.dosbatch","attrib"],
+  ["text"," -r -a -h -s "],
+  ["punctuation.definition.string.begin.shell","\""],
+  ["constant.numeric","%var1%%%G"],
+  ["punctuation.definition.string.end.shell","\""],
+  ["text"," /D /S"]
+],[
+   "start",
+  ["text",")"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.command.dosbatch","pause"]
+],[
+   "start"
+],[
+   "start",
+  ["doc.comment","REM"],
+  ["comment"," that's all"]
+],[
+   "start"
+]]

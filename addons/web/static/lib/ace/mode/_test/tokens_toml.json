@@ -1,0 +1,131 @@
+[[
+   "start",
+  ["comment.toml","# This is a TOML document. Boom."]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","title"],
+  ["text"," = "],
+  ["string","\"TOML Example\""]
+],[
+   "start"
+],[
+   "start",
+  ["variable.keygroup.toml","[owner]"]
+],[
+   "start",
+  ["identifier","name"],
+  ["text"," = "],
+  ["string","\"Tom Preston-Werner\""]
+],[
+   "start",
+  ["identifier","organization"],
+  ["text"," = "],
+  ["string","\"GitHub\""]
+],[
+   "start",
+  ["identifier","bio"],
+  ["text"," = "],
+  ["string","\"GitHub Cofounder & CEO"],
+  ["constant.language.escape","\\n"],
+  ["string","Likes tater tots and beer.\""]
+],[
+   "start",
+  ["identifier","dob"],
+  ["text"," = "],
+  ["support.date.toml","1979-05-27T07:32:00Z"],
+  ["text"," "],
+  ["comment.toml","# First class dates? Why not?"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.keygroup.toml","[database]"]
+],[
+   "start",
+  ["identifier","server"],
+  ["text"," = "],
+  ["string","\"192.168.1.1\""]
+],[
+   "start",
+  ["identifier","ports"],
+  ["text"," = [ "],
+  ["constant.numeric.toml","8001"],
+  ["text",", "],
+  ["constant.numeric.toml","8001"],
+  ["text",", "],
+  ["constant.numeric.toml","8002"],
+  ["text"," ]"]
+],[
+   "start",
+  ["identifier","connection_max"],
+  ["text"," = "],
+  ["constant.numeric.toml","5000"]
+],[
+   "start",
+  ["identifier","enabled"],
+  ["text"," = "],
+  ["constant.language.boolean","true"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.keygroup.toml","[servers]"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["comment.toml","# You can indent as you please. Tabs or spaces. TOML don't care."]
+],[
+   "start",
+  ["variable.keygroup.toml","  [servers.alpha]"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","ip"],
+  ["text"," = "],
+  ["string","\"10.0.0.1\""]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","dc"],
+  ["text"," = "],
+  ["string","\"eqdc10\""]
+],[
+   "start"
+],[
+   "start",
+  ["variable.keygroup.toml","  [servers.beta]"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","ip"],
+  ["text"," = "],
+  ["string","\"10.0.0.2\""]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","dc"],
+  ["text"," = "],
+  ["string","\"eqdc10\""]
+],[
+   "start"
+],[
+   "start",
+  ["variable.keygroup.toml","[clients]"]
+],[
+   "start",
+  ["identifier","data"],
+  ["text"," = [ ["],
+  ["string","\"gamma\""],
+  ["text",", "],
+  ["string","\"delta\""],
+  ["text","], ["],
+  ["constant.numeric.toml","1"],
+  ["text",", "],
+  ["constant.numeric.toml","2"],
+  ["text","] ] "],
+  ["comment.toml","# just an update to make sure parsers support it"]
+]]

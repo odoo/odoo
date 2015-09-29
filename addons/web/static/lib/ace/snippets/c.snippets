@@ -1,0 +1,235 @@
+## Main
+# main
+snippet main
+	int main(int argc, const char *argv[])
+	{
+		${1}
+		return 0;
+	}
+# main(void)
+snippet mainn
+	int main(void)
+	{
+		${1}
+		return 0;
+	}
+##
+## Preprocessor 
+# #include <...>
+snippet inc
+	#include <${1:stdio}.h>${2}
+# #include "..."
+snippet Inc
+	#include "${1:`Filename("$1.h")`}"${2}
+# ifndef...define...endif
+snippet ndef
+	#ifndef $1
+	#define ${1:SYMBOL} ${2:value}
+	#endif${3}
+# define
+snippet def
+	#define
+# ifdef...endif
+snippet ifdef
+	#ifdef ${1:FOO}
+		${2:#define }
+	#endif${3}
+# if
+snippet #if
+	#if ${1:FOO}
+		${2}
+	#endif
+# header include guard
+snippet once
+	#ifndef ${1:`toupper(Filename('$1_H', 'UNTITLED_H'))`}
+
+	#define $1
+
+	${2}
+
+	#endif /* end of include guard: $1 */
+##
+## Control Statements
+# if
+snippet if
+	if (${1:/* condition */}) {
+		${2:/* code */}
+	}${3}
+# else
+snippet el
+	else {
+		${1}
+	}${3}
+# else if
+snippet elif
+	else if (${1:/* condition */}) {
+		${2:/* code */}
+	}${3}
+# ternary
+snippet t
+	${1:/* condition */} ? ${2:a} : ${3:b}
+# switch
+snippet switch
+	switch (${1:/* variable */}) {
+		case ${2:/* variable case */}:
+			${3}
+			${4:break;}${5}
+		default:
+			${6}
+	}${7}
+# switch without default
+snippet switchndef
+	switch (${1:/* variable */}) {
+		case ${2:/* variable case */}:
+			${3}
+			${4:break;}${5}
+	}${6}
+# case
+snippet case
+	case ${1:/* variable case */}:
+		${2}
+		${3:break;}${4}
+##
+## Loops
+# for
+snippet for
+	for (${2:i} = 0; $2 < ${1:count}; $2${3:++}) {
+		${4:/* code */}
+	}${5}
+# for (custom)
+snippet forr
+	for (${1:i} = ${2:0}; ${3:$1 < 10}; $1${4:++}) {
+		${5:/* code */}
+	}${6}
+# while
+snippet wh
+	while (${1:/* condition */}) {
+		${2:/* code */}
+	}${3}
+# do... while
+snippet do
+	do {
+		${2:/* code */}
+	} while (${1:/* condition */});${3}
+##
+## Functions
+# function definition
+snippet fun
+	${1:void} ${2:function_name}(${3})
+	{
+		${4:/* code */}
+	}${5}
+# function declaration
+snippet fund
+	${1:void} ${2:function_name}(${3});${4}
+##
+## Types
+# typedef
+snippet td
+	typedef ${1:int} ${2:MyCustomType};${3}
+# struct
+snippet st
+	struct ${1:`Filename('$1_t', 'name')`} {
+		${2:/* data */}
+	}${3: /* optional variable list */};${4}
+# typedef struct
+snippet tds
+	typedef struct ${2:_$1 }{
+		${3:/* data */}
+	} ${1:`Filename('$1_t', 'name')`};${4}
+# typedef enum
+snippet tde
+	typedef enum {
+		${1:/* data */}
+	} ${2:foo};${3}
+##
+## Input/Output
+# printf
+snippet pr
+	printf("${1:%s}\n"${2});${3}
+# fprintf (again, this isn't as nice as TextMate's version, but it works)
+snippet fpr
+	fprintf(${1:stderr}, "${2:%s}\n"${3});${4}
+# getopt
+snippet getopt
+	int choice;
+	while (1)
+	{
+		static struct option long_options[] =
+		{
+			/* Use flags like so:
+			{"verbose",	no_argument,	&verbose_flag, 'V'}*/
+			/* Argument styles: no_argument, required_argument, optional_argument */
+			{"version", no_argument,	0,	'v'},
+			{"help",	no_argument,	0,	'h'},
+			${1}
+			{0,0,0,0}
+		};
+
+		int option_index = 0;
+
+		/* Argument parameters:
+			no_argument: " "
+			required_argument: ":"
+			optional_argument: "::" */
+
+		choice = getopt_long( argc, argv, "vh",
+					long_options, &option_index);
+
+		if (choice == -1)
+			break;
+
+		switch( choice )
+		{
+			case 'v':
+				${2}
+				break;
+
+			case 'h':
+				${3}
+				break;
+
+			case '?':
+				/* getopt_long will have already printed an error */
+				break;
+
+			default:
+				/* Not sure how to get here... */
+				return EXIT_FAILURE;
+		}
+	}
+
+	/* Deal with non-option arguments here */
+	if ( optind < argc )
+	{
+		while ( optind < argc )
+		{
+			${4}
+		}
+	}
+##
+## Miscellaneous
+# This is kind of convenient
+snippet .
+	[${1}]${2}
+# GPL
+snippet gpl
+	/*
+	 * This program is free software; you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation; either version 2 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * This program is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with this program; if not, write to the Free Software
+	 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+	 *
+	 * Copyright (C) ${1:Author}, `strftime("%Y")`
+	 */
+	
+	${2}

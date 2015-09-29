@@ -1,0 +1,97 @@
+snippet apply-templates with-param
+	<xsl:apply-templates select="${1:*}">
+		<xsl:with-param name="${2:param}">${3}</xsl:with-param>${4}
+	</xsl:apply-templates>${5}
+
+snippet apply-templates sort-by
+	<xsl:apply-templates select="${1:*}">
+		<xsl:sort select="${2:node}" order="${3:ascending}" data-type="${4:text}">${5}
+	</xsl:apply-templates>${6}
+
+snippet apply-templates plain
+	<xsl:apply-templates select="${1:*}" />${2}
+
+snippet attribute blank
+	<xsl:attribute name="${1:name}">${2}</xsl:attribute>${3}
+
+snippet attribute value-of
+	<xsl:attribute name="${1:name}">
+		<xsl:value-of select="${2:*}" />
+	</xsl:attribute>${3}
+
+snippet call-template
+	<xsl:call-template name="${1:template}" />
+
+snippet call-template with-param
+	<xsl:call-template name="${1:template}">
+		<xsl:with-param name="${2:param}">${3}</xsl:with-param>${4}
+	</xsl:call-template>${5}
+
+snippet choose
+	<xsl:choose>
+		<xsl:when test="${1:value}">
+			${2}
+		</xsl:when>${3}
+	</xsl:choose>
+
+snippet copy-of
+	<xsl:copy-of select="${1:*}" />${2}
+
+snippet for-each
+	<xsl:for-each select="${1:*}">${2}
+	</xsl:for-each>${3}
+
+snippet if
+	<xsl:if test="${1:test}">${2}
+	</xsl:if>${3}
+
+snippet import
+	<xsl:import href="${1:stylesheet}" />${2}
+
+snippet include
+	<xsl:include href="${1:stylesheet}" />${2}
+	
+snippet otherwise
+	<xsl:otherwise>${1}
+	</xsl:otherwise>
+
+snippet param
+	<xsl:param name="${1:name}">${2}
+	</xsl:param>${3}
+
+snippet stylesheet
+	<xsl:stylesheet version="1.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">${1}
+	</xsl:stylesheet>
+
+snippet template 
+	<xsl:template match="${1:*}">${3}
+	</xsl:template>
+
+snippet template named
+	<xsl:template name="${1:name}">${2}
+	</xsl:template>
+
+snippet text
+	<xsl:text>${1}</xsl:text>
+
+snippet value-of
+	<xsl:value-of select="${1:*}" />${2}
+
+snippet variable blank
+	<xsl:variable name="${1:name}">${2}
+	</xsl:variable>
+
+snippet variable select
+	<xsl:variable select="${1:*}" />${2}
+
+snippet when
+	<xsl:when test="${1:test}">${2}
+	</xsl:when>
+
+snippet with-param
+	<xsl:with-param name="${1:name}">${2}</xsl:with-param>
+	
+snippet with-param select
+	<xsl:with-param name="${1:name}" select="${2:*}" />
+	

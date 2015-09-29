@@ -1,0 +1,114 @@
+[[
+   "start",
+  ["text.xml","test: header 1 "]
+],[
+   "start",
+  ["markup.heading.1","#"],
+  ["heading","f"]
+],[
+   "start",
+  ["text.xml","test: header 2"]
+],[
+   "start",
+  ["markup.heading.2","##"],
+  ["heading"," foo"]
+],[
+   "start",
+  ["text.xml","test: header ends with ' #'"]
+],[
+   "start",
+  ["markup.heading.1","#"],
+  ["heading"," # # "]
+],[
+   "start",
+  ["text.xml","test: header ends with '#'"]
+],[
+   "start",
+  ["markup.heading.1","#"],
+  ["heading","foo# "]
+],[
+   "start",
+  ["text.xml","test: 6+ #s is not a valid header"]
+],[
+   "start",
+  ["text.xml","####### foo"]
+],[
+   "start",
+  ["text.xml","test: # followed be only space is not a valid header"]
+],[
+   "start",
+  ["text.xml","# "]
+],[
+   "start",
+  ["text.xml","test: only space between #s is not a valid header"]
+],[
+   "start",
+  ["text.xml","#  #"]
+],[
+   "allowBlock"
+],[
+   "start",
+  ["markup.heading.1","#"],
+  ["heading"," test links  "],
+  ["text","["],
+  ["string","Cloud9 IDE"],
+  ["text","]("],
+  ["markup.underline","http://www.c9.io/"],
+  ["text",")"],
+  ["heading"," #"]
+],[
+   "listblock",
+  ["markup.list","* "],
+  ["text","["],
+  ["string","demo"],
+  ["text","]("],
+  ["markup.underline","http://ajaxorg.github.com/ace/"],
+  ["text",")"],
+  ["list"," "],
+  ["text","["],
+  ["string","+"],
+  ["text","]("],
+  ["markup.underline","escape(\\) "],
+  ["text",")"],
+  ["list"," "],
+  ["text","["],
+  ["string","+"],
+  ["text","]("],
+  ["markup.underline","a"],
+  ["string"," \"title\""],
+  ["text",")"],
+  ["list"," "],
+  ["text","["],
+  ["string","+"],
+  ["text","]("],
+  ["markup.underline","a"],
+  ["string"," \"space\" "],
+  ["text",")"]
+],[
+   "listblock",
+  ["markup.list","* "],
+  ["list","usually "],
+  ["string.emphasis","*work*"],
+  ["list"," fine ("],
+  ["string.emphasis","_em_"],
+  ["list",")"]
+],[
+   "listblock",
+  ["list","in lists"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","in plain text "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","b"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","http://ace.ajaxorg.com"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","b"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "allowBlock"
+],[
+   "allowBlock"
+]]

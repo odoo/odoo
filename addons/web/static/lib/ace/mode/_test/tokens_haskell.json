@@ -1,0 +1,156 @@
+[[
+   "start",
+  ["punctuation.definition.comment.haskell","-- Type annotation (optional)"]
+],[
+   "start",
+  ["entity.name.function.haskell","fib"],
+  ["meta.function.type-declaration.haskell"," "],
+  ["keyword.other.double-colon.haskell","::"],
+  ["meta.function.type-declaration.haskell"," "],
+  ["support.type.prelude.haskell","Int"],
+  ["meta.function.type-declaration.haskell"," "],
+  ["keyword.other.arrow.haskell","->"],
+  ["meta.function.type-declaration.haskell"," "],
+  ["support.type.prelude.haskell","Integer"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["punctuation.definition.comment.haskell","-- With self-referencing data"]
+],[
+   "start",
+  ["text","fib n "],
+  ["keyword.operator.haskell","="],
+  ["text"," fibs "],
+  ["keyword.operator.haskell","!!"],
+  ["text"," n"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.other.haskell","where"],
+  ["text"," fibs "],
+  ["keyword.operator.haskell","="],
+  ["text"," "],
+  ["constant.numeric.haskell","0"],
+  ["text"," "],
+  ["keyword.operator.haskell",":"],
+  ["text"," "],
+  ["support.function.prelude.haskell","scanl"],
+  ["text"," "],
+  ["entity.name.function.infix.haskell","(+)"],
+  ["text"," "],
+  ["constant.numeric.haskell","1"],
+  ["text"," fibs"]
+],[
+   "start",
+  ["text","        "],
+  ["punctuation.definition.comment.haskell","-- 0,1,1,2,3,5,..."]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["punctuation.definition.comment.haskell","-- Same, coded directly"]
+],[
+   "start",
+  ["text","fib n "],
+  ["keyword.operator.haskell","="],
+  ["text"," fibs "],
+  ["keyword.operator.haskell","!!"],
+  ["text"," n"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.other.haskell","where"],
+  ["text"," fibs "],
+  ["keyword.operator.haskell","="],
+  ["text"," "],
+  ["constant.numeric.haskell","0"],
+  ["text"," "],
+  ["keyword.operator.haskell",":"],
+  ["text"," "],
+  ["constant.numeric.haskell","1"],
+  ["text"," "],
+  ["keyword.operator.haskell",":"],
+  ["text"," next fibs"]
+],[
+   "start",
+  ["text","              next (a "],
+  ["keyword.operator.haskell",":"],
+  ["text"," t@(b"],
+  ["keyword.operator.haskell",":"],
+  ["text","_)) "],
+  ["keyword.operator.haskell","="],
+  ["text"," (a"],
+  ["keyword.operator.haskell","+"],
+  ["text","b) "],
+  ["keyword.operator.haskell",":"],
+  ["text"," next t"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["punctuation.definition.comment.haskell","-- Similar idea, using zipWith"]
+],[
+   "start",
+  ["text","fib n "],
+  ["keyword.operator.haskell","="],
+  ["text"," fibs "],
+  ["keyword.operator.haskell","!!"],
+  ["text"," n"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.other.haskell","where"],
+  ["text"," fibs "],
+  ["keyword.operator.haskell","="],
+  ["text"," "],
+  ["constant.numeric.haskell","0"],
+  ["text"," "],
+  ["keyword.operator.haskell",":"],
+  ["text"," "],
+  ["constant.numeric.haskell","1"],
+  ["text"," "],
+  ["keyword.operator.haskell",":"],
+  ["text"," "],
+  ["support.function.prelude.haskell","zipWith"],
+  ["text"," "],
+  ["entity.name.function.infix.haskell","(+)"],
+  ["text"," fibs ("],
+  ["support.function.prelude.haskell","tail"],
+  ["text"," fibs)"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["punctuation.definition.comment.haskell","-- Using a generator function"]
+],[
+   "start",
+  ["text","fib n "],
+  ["keyword.operator.haskell","="],
+  ["text"," fibs ("],
+  ["constant.numeric.haskell","0"],
+  ["punctuation.separator.comma.haskell",","],
+  ["constant.numeric.haskell","1"],
+  ["text",") "],
+  ["keyword.operator.haskell","!!"],
+  ["text"," n"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.other.haskell","where"],
+  ["text"," fibs (a"],
+  ["punctuation.separator.comma.haskell",","],
+  ["text","b) "],
+  ["keyword.operator.haskell","="],
+  ["text"," a "],
+  ["keyword.operator.haskell",":"],
+  ["text"," fibs (b"],
+  ["punctuation.separator.comma.haskell",","],
+  ["text","a"],
+  ["keyword.operator.haskell","+"],
+  ["text","b)"]
+]]

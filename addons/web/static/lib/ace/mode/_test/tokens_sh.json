@@ -1,0 +1,334 @@
+[[
+   "start",
+  ["comment","#!/bin/sh"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# Script to open a browser to current branch"]
+],[
+   "start",
+  ["comment","# Repo formats:"]
+],[
+   "start",
+  ["comment","# ssh   git@github.com:richo/gh_pr.git"]
+],[
+   "start",
+  ["comment","# http  https://richoH@github.com/richo/gh_pr.git"]
+],[
+   "start",
+  ["comment","# git   git://github.com/richo/gh_pr.git"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","username="],
+  ["text","`"],
+  ["identifier","git"],
+  ["text"," "],
+  ["identifier","config"],
+  ["text"," "],
+  ["keyword.operator","--"],
+  ["identifier","get"],
+  ["text"," "],
+  ["identifier","github"],
+  ["text","."],
+  ["identifier","user"],
+  ["text","`"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","get_repo()"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","git"],
+  ["text"," "],
+  ["identifier","remote"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","v"],
+  ["text"," | "],
+  ["identifier","grep"],
+  ["text"," $"],
+  ["paren.lparen","{"],
+  ["text","@:"],
+  ["keyword.operator","-"],
+  ["variable","$username"],
+  ["paren.rparen","}"],
+  ["text"," | "],
+  ["keyword","while"],
+  ["text"," "],
+  ["keyword","read"],
+  ["text"," "],
+  ["identifier","remote"],
+  ["text","; "],
+  ["keyword","do"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","repo="],
+  ["text","`"],
+  ["support.function.builtin","echo"],
+  ["text"," "],
+  ["variable","$remote"],
+  ["text"," | "],
+  ["identifier","grep"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","E"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","o"],
+  ["text"," "],
+  ["string","\"git@github.com:[^ ]*\""],
+  ["text","`; "],
+  ["keyword","then"]
+],[
+   "start",
+  ["text","          "],
+  ["support.function.builtin","echo"],
+  ["text"," "],
+  ["variable","$repo"],
+  ["text"," | "],
+  ["identifier","sed"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","e"],
+  ["text"," "],
+  ["string","\"s/^git@github\\.com://\""],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","e"],
+  ["text"," "],
+  ["string","\"s/\\.git$//\""]
+],[
+   "start",
+  ["text","          "],
+  ["support.function.builtin","exit"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","fi"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","repo="],
+  ["text","`"],
+  ["support.function.builtin","echo"],
+  ["text"," "],
+  ["variable","$remote"],
+  ["text"," | "],
+  ["identifier","grep"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","E"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","o"],
+  ["text"," "],
+  ["string","\"https?://([^@]*@)?github.com/[^ ]*\\.git\""],
+  ["text","`; "],
+  ["keyword","then"]
+],[
+   "start",
+  ["text","          "],
+  ["support.function.builtin","echo"],
+  ["text"," "],
+  ["variable","$repo"],
+  ["text"," | "],
+  ["identifier","sed"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","e"],
+  ["text"," "],
+  ["string","\"s|^https?://||\""],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","e"],
+  ["text"," "],
+  ["string","\"s/^.*github\\.com\\///\""],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","e"],
+  ["text"," "],
+  ["string","\"s/\\.git$//\""]
+],[
+   "start",
+  ["text","          "],
+  ["support.function.builtin","exit"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","fi"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","repo="],
+  ["text","`"],
+  ["support.function.builtin","echo"],
+  ["text"," "],
+  ["variable","$remote"],
+  ["text"," | "],
+  ["identifier","grep"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","E"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","o"],
+  ["text"," "],
+  ["string","\"git://github.com/[^ ]*\\.git\""],
+  ["text","`; "],
+  ["keyword","then"]
+],[
+   "start",
+  ["text","          "],
+  ["support.function.builtin","echo"],
+  ["text"," "],
+  ["variable","$repo"],
+  ["text"," | "],
+  ["identifier","sed"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","e"],
+  ["text"," "],
+  ["string","\"s|^git://github.com/||\""],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","e"],
+  ["text"," "],
+  ["string","\"s/\\.git$//\""]
+],[
+   "start",
+  ["text","          "],
+  ["support.function.builtin","exit"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","fi"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","done"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["text"," "],
+  ["variable.language","$?"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","eq"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["paren.rparen","]"],
+  ["text","; "],
+  ["keyword","then"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function.builtin","echo"],
+  ["text"," "],
+  ["string","\"Couldn't find a valid remote\""],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["support.function","&2"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function.builtin","exit"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","fi"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function.builtin","echo"],
+  ["text"," $"],
+  ["paren.lparen","{"],
+  ["text","#"],
+  ["identifier","x"],
+  ["paren.lparen","["],
+  ["text","@"],
+  ["paren.rparen","]}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","if"],
+  ["text"," "],
+  ["variable","repo="],
+  ["text","`"],
+  ["identifier","get_repo"],
+  ["text"," $@`; "],
+  ["keyword","then"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","branch="],
+  ["text","`"],
+  ["identifier","git"],
+  ["text"," "],
+  ["identifier","symbolic"],
+  ["keyword.operator","-"],
+  ["identifier","ref"],
+  ["text"," "],
+  ["identifier","HEAD"],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["keyword.operator",">/"],
+  ["identifier","dev"],
+  ["keyword.operator","/"],
+  ["identifier","null"],
+  ["text","`"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.builtin","echo"],
+  ["text"," "],
+  ["string","\"http://github.com/"],
+  ["constant","$repo"],
+  ["string","/pull/new/${branch##refs/heads/}\""]
+],[
+   "start",
+  ["keyword","else"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.builtin","exit"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["keyword","fi"]
+],[
+   "start"
+]]

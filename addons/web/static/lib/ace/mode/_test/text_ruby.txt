@@ -1,0 +1,34 @@
+ #test: symbol tokenizer
+  [:@thing, :$thing, :_thing, :thing, :Thing, :thing1, :thing_a,
+              :THING, :thing!, :thing=, :thing?, :t?,
+              :, :@, :$, :1, :1thing, :th?ing, :thi=ng, :1thing,
+            :th!ing, :thing#
+    ]
+
+ #test: namespaces aren't symbols" : function() {
+   Namespaced::Class
+ #test: hex tokenizer 
+    0x9a, 0XA1, 0x9_a, 0x, 0x_9a, 0x9a_,
+ #test: float tokenizer
+    [1, +1, -1, 12_345, 0.000_1,
+    _, 3_1, 1_2, 1_.0, 0._1];
+ 
+{:id => ?", :key => "value", anotherKey: [x, y?]}
+
+=begin
+=end
+
+=begin x
+=end-
+=end   x
+
+    herDocs = [<<'FOO', <<BAR, <<-BAZ, <<-`EXEC`] #comment
+  FOO #{literal}
+FOO
+  BAR #{fact(10)}
+BAR
+  BAZ indented
+    BAZ
+        echo hi
+    EXEC
+puts herDocs

@@ -1,0 +1,86 @@
+//test: tokenize 'standard' functions
+string.charCodeAt(23); document.getElementById('test'); console.log('Here it is');";
+test: /**tokenize doc*/ comment
+/**tokenize doc comment with @tag {}*/
+//test: tokenize parens
+    var line = "[{( )}]";
+//test tokenize arithmetic expression which looks like a regexp
+a/b/c
+a/=b/c
+//test tokenize reg exps
+a=/b/g
+a+/b/g
+a = 1 + /2 + 1/gimyxk
+a=/a/ / /a/
+case /a/.test(c)
+//test tokenize multi-line comment containing a single line comment
+noRegex
+/* foo // bar */
+canBeRegex;
+/* foo // bar */
+// test tokenize identifier with umlauts
+fu?e
+// test // is not a regexp
+{ // 123
+//test skipping escaped chars
+'Meh\\nNeh'
+console.log('\\u1232Feh'
+"test multiline\
+ strings"
+a='
+b="\
+still a string
+ 
+ 
+function foo(items, nada) {
+    for (var i=0; i<items.length; i++) {
+        alert(items[i] + "juhu\n");
+    }	// Real Tab.
+}
+
+regexp = /p|p/ // ends here
+
+r = /d{1,2}?f{e}++r*?\d+?[]r[^r-o\f\f[\f]?r{7}+r\{7}+rr--rr$^(?:d|s)(?=a|)(?!y)[]|$?|^*/ o
+a=/a/ jk = / / / / /
+ /************************************/
+/** total mess, tricky to highlight**/
+
+function () {
+	/**
+	 * docComment
+	 **/
+	r = /u\t*/
+	g = 1.00E^1, y = 1.2 + .2 + 052 + 0x25
+	t = ['d', '']
+}
+function () {
+	/* eee */
+}
+
+"s\
+s\u7824sss\u1"
+
+'\
+string'
+
+'
+string'
+
+"trailing space\   
+"         "    /not a regexp/g
+
+/**
+ *doc
+ */
+
+a = {
+	'a': b,
+	'g': function(t)
+	gta:function(a,b)
+}
+
+
+foo.protoype.d = function(a, b,
+                          c, d)
+foo.d =function(a,     b)
+foo.d =function(a,  /*****/ d"string"   

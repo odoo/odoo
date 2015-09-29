@@ -1,0 +1,374 @@
+# cs.snippets
+# ===========
+# 
+# Standard C-Sharp snippets for snipmate.
+#
+# Largely ported over from Visual Studio 2010 snippets plus
+# a few snippets from Resharper plus a few widely known snippets.
+#
+# Most snippets on elements (i.e. classes, properties) 
+# follow suffix conventions. The order of suffixes to a snippet
+# is fixed.
+#
+# Snippet Suffix Order
+# --------------------
+# 1. Access Modifiers
+# 2. Class Modifiers
+#
+# Access Modifier Suffix Table
+# ----------------------------
+# + = public
+# & = internal
+# | = protected
+# - = private
+#
+# Example: `cls&` expands to `internal class $1`.
+# Access modifiers might be doubled to indicate
+# different modifiers for get/set on properties.
+# Example: `pb+-` expands to `public bool $1 { get; private set; }`
+#
+# Class Modifier Table
+# --------------------
+# ^ = static
+# % = abstract
+#
+# Example: `cls|%` expands to `protected abstract class $1`
+#
+# On method and property snippets, you can directly set
+# one of the common types int, string and bool, if desired,
+# just by appending the type modifier.
+#
+# Type Modifier Table
+# -------------------
+# i = integer
+# s = string
+# b = bool
+#
+# Example: `pi+&` expands to `public int $1 { get; internal set; }`
+#
+# I'll most propably add more stuff in here like
+# * List/Array constructio
+# * Mostly used generics
+# * Linq
+# * Funcs, Actions, Predicates
+# * Lambda
+# * Events
+#
+# Feedback is welcome!
+# 
+# entry point
+snippet sim
+	public static int Main(string[] args) {
+		${1}
+		return 0;
+	} 
+snippet simc
+	public class Application {
+		public static int Main(string[] args) {
+			${1}
+			return 0;
+		}
+	}
+# if condition
+snippet if
+	if (${1}) {
+		${2}
+	} 
+snippet el
+	else {
+		${1}
+	} 
+snippet ifs
+	if (${1}) 
+		${2}
+# ternary conditional
+snippet t
+	${1} ? ${2} : ${3}
+snippet ?
+	${1} ? ${2} : ${3}
+# do while loop
+snippet do
+	do {
+		${2}
+	} while (${1});
+# while loop
+snippet wh
+	while (${1}) {
+		${2}
+	}
+# for loop
+snippet for
+	for (int ${1:i} = 0; $1 < ${2:count}; $1${3:++}) {
+		${4}
+	}
+# foreach
+snippet fore
+	foreach (var ${1:entry} in ${2}) {
+		${3}
+	}
+snippet foreach
+	foreach (var ${1:entry} in ${2}) {
+		${3}
+	}
+snippet each
+	foreach (var ${1:entry} in ${2}) {
+		${3}
+	}
+# interfaces
+snippet interface
+	public interface ${1:`Filename()`} {
+		${2}
+	}
+snippet if+
+	public interface ${1:`Filename()`} {
+		${2}
+	}
+# class bodies
+snippet class
+	public class ${1:`Filename()`} {
+		${2}
+	}
+snippet cls
+	${2:public} class ${1:`Filename()`} {
+		${3}
+	}
+snippet cls+
+	public class ${1:`Filename()`} {
+		${2}
+	}
+snippet cls+^
+	public static class ${1:`Filename()`} {
+		${2}
+	}
+snippet cls&
+	internal class ${1:`Filename()`} {
+		${2}
+	}
+snippet cls&^
+	internal static class ${1:`Filename()`} {
+		${2}
+	}
+snippet cls|
+	protected class ${1:`Filename()`} {
+		${2}
+	}
+snippet cls|%
+	protected abstract class ${1:`Filename()`} {
+		${2}
+	}
+# constructor
+snippet ctor
+	public ${1:`Filename()`}() {
+		${2}
+	}
+# properties - auto properties by default.
+# default type is int with layout get / set.
+snippet prop
+	${1:public} ${2:int} ${3:} { get; set; }${4}
+snippet p
+	${1:public} ${2:int} ${3:} { get; set; }${4}
+snippet p+
+	public ${1:int} ${2:} { get; set; }${3}
+snippet p+&
+	public ${1:int} ${2:} { get; internal set; }${3}
+snippet p+|
+	public ${1:int} ${2:} { get; protected set; }${3}
+snippet p+-
+	public ${1:int} ${2:} { get; private set; }${3}
+snippet p&
+	internal ${1:int} ${2:} { get; set; }${3}
+snippet p&|
+	internal ${1:int} ${2:} { get; protected set; }${3}
+snippet p&-
+	internal ${1:int} ${2:} { get; private set; }${3}
+snippet p|
+	protected ${1:int} ${2:} { get; set; }${3}
+snippet p|-
+	protected ${1:int} ${2:} { get; private set; }${3}
+snippet p-
+	private ${1:int} ${2:} { get; set; }${3}
+# property - bool
+snippet pi
+	${1:public} int ${2:} { get; set; }${3}
+snippet pi+
+	public int ${1} { get; set; }${2}
+snippet pi+&
+	public int ${1} { get; internal set; }${2}
+snippet pi+|
+	public int ${1} { get; protected set; }${2}
+snippet pi+-
+	public int ${1} { get; private set; }${2}
+snippet pi&
+	internal int ${1} { get; set; }${2}
+snippet pi&|
+	internal int ${1} { get; protected set; }${2}
+snippet pi&-
+	internal int ${1} { get; private set; }${2}
+snippet pi|
+	protected int ${1} { get; set; }${2}
+snippet pi|-
+	protected int ${1} { get; private set; }${2}
+snippet pi-
+	private int ${1} { get; set; }${2}
+# property - bool
+snippet pb
+	${1:public} bool ${2:} { get; set; }${3}
+snippet pb+
+	public bool ${1} { get; set; }${2}
+snippet pb+&
+	public bool ${1} { get; internal set; }${2}
+snippet pb+|
+	public bool ${1} { get; protected set; }${2}
+snippet pb+-
+	public bool ${1} { get; private set; }${2}
+snippet pb&
+	internal bool ${1} { get; set; }${2}
+snippet pb&|
+	internal bool ${1} { get; protected set; }${2}
+snippet pb&-
+	internal bool ${1} { get; private set; }${2}
+snippet pb|
+	protected bool ${1} { get; set; }${2}
+snippet pb|-
+	protected bool ${1} { get; private set; }${2}
+snippet pb-
+	private bool ${1} { get; set; }${2}
+# property - string
+snippet ps
+	${1:public} string ${2:} { get; set; }${3}
+snippet ps+
+	public string ${1} { get; set; }${2}
+snippet ps+&
+	public string ${1} { get; internal set; }${2}
+snippet ps+|
+	public string ${1} { get; protected set; }${2}
+snippet ps+-
+	public string ${1} { get; private set; }${2}
+snippet ps&
+	internal string ${1} { get; set; }${2}
+snippet ps&|
+	internal string ${1} { get; protected set; }${2}
+snippet ps&-
+	internal string ${1} { get; private set; }${2}
+snippet ps|
+	protected string ${1} { get; set; }${2}
+snippet ps|-
+	protected string ${1} { get; private set; }${2}
+snippet ps-
+	private string ${1} { get; set; }${2}
+# members - void
+snippet m
+	${1:public} ${2:void} ${3:}(${4:}) {
+		${5:}
+	}
+snippet m+
+	public ${1:void} ${2:}(${3:}) {
+		${4:}
+	}
+snippet m&
+	internal ${1:void} ${2:}(${3:}) {
+		${4:}
+	}
+snippet m|
+	protected ${1:void} ${2:}(${3:}) {
+		${4:}
+	}
+snippet m-
+	private ${1:void} ${2:}(${3:}) {
+		${4:}
+	}
+# members - int
+snippet mi
+	${1:public} int ${2:}(${3:}) {
+		${4:return 0;}
+	}
+snippet mi+
+	public int ${1:}(${2:}) {
+		${3:return 0;}
+	}
+snippet mi&
+	internal int ${1:}(${2:}) {
+		${3:return 0;}
+	}
+snippet mi|
+	protected int ${1:}(${2:}) {
+		${3:return 0;}
+	}
+snippet mi-
+	private int ${1:}(${2:}) {
+		${3:return 0;}
+	}
+# members - bool
+snippet mb
+	${1:public} bool ${2:}(${3:}) {
+		${4:return false;}
+	}
+snippet mb+
+	public bool ${1:}(${2:}) {
+		${3:return false;}
+	}
+snippet mb&
+	internal bool ${1:}(${2:}) {
+		${3:return false;}
+	}
+snippet mb|
+	protected bool ${1:}(${2:}) {
+		${3:return false;}
+	}
+snippet mb-
+	private bool ${1:}(${2:}) {
+		${3:return false;}
+	}
+# members - string
+snippet ms
+	${1:public} string ${2:}(${3:}) {
+		${4:return "";}
+	}
+snippet ms+
+	public string ${1:}(${2:}) {
+		${3:return "";}
+	}
+snippet ms&
+	internal string ${1:}(${2:}) {
+		${3:return "";}
+	}
+snippet ms|
+	protected string ${1:}(${2:}) {
+		${3:return "";}
+	}
+snippet ms-
+	private string ${1:}(${2:}) {
+		${3:return "";}
+	}
+# structure
+snippet struct
+	public struct ${1:`Filename()`} {
+		${2}
+	}
+# enumeration
+snippet enum
+	public enum ${1} {
+		${2}
+	}
+# preprocessor directives
+snippet #if
+	#if
+		${1}
+	#endif
+# inline xml documentation
+snippet ///
+	/// <summary>
+	/// ${1}
+	/// </summary>
+snippet <p
+	<param name="${1}">${2:$1}</param>${3}
+snippet <ex
+	<exception cref="${1:System.Exception}">${2}</exception>${3}
+snippet <r
+	<returns>${1}</returns>{${2}
+snippet <s
+	<see cref="${1}"/>${2}
+snippet <rem
+	<remarks>${1}</remarks>${2}
+snippet <c
+	<code>${1}</code>${2}

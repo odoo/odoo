@@ -1,0 +1,551 @@
+[[
+   "start",
+  ["text.xml","The following examples can be found in full at http://liquidmarkup.org/"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","Liquid is an extraction from the e-commerce system Shopify."]
+],[
+   "start",
+  ["text.xml","Shopify powers many thousands of e-commerce stores which all call for unique designs."]
+],[
+   "start",
+  ["text.xml","For this we developed Liquid which allows our customers complete design freedom while"]
+],[
+   "start",
+  ["text.xml","maintaining the integrity of our servers."]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","Liquid has been in production use since June 2006 and is now used by many other"]
+],[
+   "start",
+  ["text.xml","hosted web applications."]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","It was developed for usage in Ruby on Rails web applications and integrates seamlessly"]
+],[
+   "start",
+  ["text.xml","as a plugin but it also works excellently as a stand alone library."]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","Here's what it looks like:"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","id"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"products\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","for"],
+  ["text"," "],
+  ["identifier","product"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["identifier","products"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["text.xml","      "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","product"],
+  ["text","."],
+  ["identifier","title"],
+  ["text"," "],
+  ["variable","}}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        Only "],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","product"],
+  ["text","."],
+  ["identifier","price"],
+  ["text"," | "],
+  ["identifier","format_as_money"],
+  ["text"," "],
+  ["variable","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","product"],
+  ["text","."],
+  ["identifier","description"],
+  ["text"," | "],
+  ["identifier","prettyprint"],
+  ["text"," | "],
+  ["support.function","truncate"],
+  ["text",": "],
+  ["constant.numeric","200"],
+  ["text","  "],
+  ["variable","}}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","      "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","endfor"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","Some more features include:"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Filters"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml"," The word \"tobi\" in uppercase: "],
+  ["variable","{{"],
+  ["text"," "],
+  ["string","'tobi'"],
+  ["text"," | "],
+  ["support.function","upcase"],
+  ["text"," "],
+  ["variable","}}"],
+  ["text.xml"," "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","The word \"tobi\" has "],
+  ["variable","{{"],
+  ["text"," "],
+  ["string","'tobi'"],
+  ["text"," | "],
+  ["support.function","size"],
+  ["text"," "],
+  ["variable","}}"],
+  ["text.xml"," letters! "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Change \"Hello world\" to \"Hi world\": "],
+  ["variable","{{"],
+  ["text"," "],
+  ["string","'Hello world'"],
+  ["text"," | "],
+  ["support.function","replace"],
+  ["text",": "],
+  ["string","'Hello'"],
+  ["text",", "],
+  ["string","'Hi'"],
+  ["text"," "],
+  ["variable","}}"],
+  ["text.xml"," "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","The date today is "],
+  ["variable","{{"],
+  ["text"," "],
+  ["string","'now'"],
+  ["text"," | "],
+  ["support.function","date"],
+  ["text",": "],
+  ["string","\"%Y %b %d\""],
+  ["text"," "],
+  ["variable","}}"],
+  ["text.xml"," "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","If"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","if"],
+  ["text"," "],
+  ["identifier","user"],
+  ["text","."],
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string","'tobi'"],
+  ["text"," "],
+  ["identifier","or"],
+  ["text"," "],
+  ["identifier","user"],
+  ["text","."],
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string","'marc'"],
+  ["text"," "],
+  ["variable","%}"],
+  ["text.xml"," "]
+],[
+   "start",
+  ["text.xml","    hi marc or tobi"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","endif"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Case"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","case"],
+  ["text"," "],
+  ["identifier","template"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","when"],
+  ["text"," "],
+  ["string","'index'"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["text.xml","       Welcome"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","when"],
+  ["text"," "],
+  ["string","'product'"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["text.xml","       "],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","product"],
+  ["text","."],
+  ["identifier","vendor"],
+  ["text"," | "],
+  ["identifier","link_to_vendor"],
+  ["text"," "],
+  ["variable","}}"],
+  ["text.xml"," / "],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","product"],
+  ["text","."],
+  ["identifier","title"],
+  ["text"," "],
+  ["variable","}}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","else"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["text.xml","       "],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","page_title"],
+  ["text"," "],
+  ["variable","}}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","endcase"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","For Loops"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","for"],
+  ["text"," "],
+  ["identifier","item"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["identifier","array"],
+  ["text"," "],
+  ["variable","%}"],
+  ["text.xml"," "]
+],[
+   "start",
+  ["text.xml","    "],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","item"],
+  ["text"," "],
+  ["variable","}}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","endfor"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Tables"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","tablerow"],
+  ["text"," "],
+  ["identifier","item"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["identifier","items"],
+  ["text"," "],
+  ["identifier","cols"],
+  ["text",": "],
+  ["constant.numeric","3"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable.language","tablerowloop"],
+  ["text","."],
+  ["identifier","col_first"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["text.xml","      First column: "],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","item"],
+  ["text","."],
+  ["identifier","variable"],
+  ["text"," "],
+  ["variable","}}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","else"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["text.xml","      Different column: "],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","item"],
+  ["text","."],
+  ["identifier","variable"],
+  ["text"," "],
+  ["variable","}}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","endif"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["variable","{%"],
+  ["text"," "],
+  ["keyword","endtablerow"],
+  ["text"," "],
+  ["variable","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+]]

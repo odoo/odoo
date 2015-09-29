@@ -1,0 +1,16 @@
+test: recognises AND as keyword
+test: recognises OR as keyword
+test: recognises NOT as keyword
+test: recognises "hello this is dog" as string
+test: recognises -"hello this is dog" as negation with string
+test: recognises ~100 as text with proximity
+test: recognises "hello this is dog"~100 as string with proximity
+test: recognises raw:"hello this is dog" as keyword
+test: recognises raw:foo as"keyword'
+test: recognises "(" as opening parenthesis
+test: recognises ")" as closing parenthesis
+test: recognises foo* as text with asterisk
+test: recognises foo? as text with interro
+test: recognises single word as text
+ foo
+ 

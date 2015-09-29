@@ -1,0 +1,56 @@
+[[
+   "start",
+  ["text.xml","tokenize Curly template"],
+  ["variable","{{"],
+  ["text","test"],
+  ["variable","}}"]
+],[
+   "start",
+  ["text.xml","tokenize embedded script"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","a"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","'a'"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["storage.type","var"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","'123'"]
+],[
+   "start",
+  ["text.xml","tokenize multiline attribute value with double quotes"]
+],[
+   ["string.attribute-value.xml0","tag_stuff"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","href"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"abc{{xyz}}"]
+],[
+   "start",
+  ["string.attribute-value.xml","def\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","tokenize multiline attribute value with single quotes"]
+],[
+   ["string.attribute-value.xml","tag_stuff"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","href"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","'abc"]
+],[
+   "start",
+  ["string.attribute-value.xml","def\\\"'"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+]]

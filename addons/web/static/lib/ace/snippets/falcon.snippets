@@ -1,0 +1,71 @@
+snippet #!
+	#!/usr/bin/env falcon
+
+# Import	
+snippet imp
+	import ${1:module}
+
+# Function
+snippet fun
+	function ${2:function_name}(${3})	
+		${4:/* code */}
+	end	
+
+# Class
+snippet class
+	class ${1:class_name}(${2:class_params})
+		${3:/* members/methods */}
+	end
+
+# If 
+snippet if
+	if ${1:condition}
+		${2:/* code */}		
+	end
+
+# If else
+snippet ife
+	if ${1:condition}
+		${2:/* code */}		
+	else
+	    ${1}	
+	end
+
+# If else if	
+snippet elif
+	elif ${1:condition}
+		${2:/* code */}	        
+
+# Switch case
+snippet switch
+	switch ${1:expression}
+		case ${2:item}
+		case ${3:item}
+		default 
+	end
+
+# Select
+snippet select 
+	select ${1:variable}
+		case ${2:TypeSpec}
+		case ${3:TypeSpec}
+		default
+	end
+
+# For/in Loop
+snippet forin
+	for ${1:element} in ${2:container}
+		${3:/* code */}
+	end
+
+# For/to Loop
+snippet forto
+	for ${1:lowerbound} to ${2:upperbound}
+		${3:/* code */}
+	end
+
+# While Loop
+snippet while 
+	while ${1:conidition}
+		${2:/* code */}	
+	end

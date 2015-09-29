@@ -1,0 +1,368 @@
+[[
+   "start",
+  ["identifier","main"],
+  ["text","() {"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","print"],
+  ["text","("],
+  ["string","'Hello World!'"],
+  ["text",");"]
+],[
+   "start",
+  ["text","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.primitive.dart","int"],
+  ["text"," "],
+  ["identifier","fib"],
+  ["text","("],
+  ["storage.type.primitive.dart","int"],
+  ["text"," "],
+  ["identifier","n"],
+  ["text",") "],
+  ["keyword.operator.assignment.dart","="],
+  ["keyword.operator.comparison.dart",">"],
+  ["text"," ("],
+  ["identifier","n"],
+  ["text"," "],
+  ["keyword.operator.comparison.dart",">"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text",") "],
+  ["keyword.control.ternary.dart","?"],
+  ["text"," ("],
+  ["identifier","fib"],
+  ["text","("],
+  ["identifier","n"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.dart","-"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text",") "],
+  ["keyword.operator.arithmetic.dart","+"],
+  ["text"," "],
+  ["identifier","fib"],
+  ["text","("],
+  ["identifier","n"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.dart","-"],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text",")) "],
+  ["keyword.control.ternary.dart",":"],
+  ["text"," "],
+  ["identifier","n"],
+  ["text",";"]
+],[
+   "start",
+  ["identifier","main"],
+  ["text","() {"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","print"],
+  ["text","("],
+  ["string","'fib(20) = ${fib(20)}'"],
+  ["text",");"]
+],[
+   "start",
+  ["text","}"]
+],[
+   "comment",
+  ["comment","/*asd"]
+],[
+   "comment",
+  ["comment","asdad"]
+],[
+   "start",
+  ["comment","*/"]
+],[
+   "start",
+  ["constant.numeric","0.67"]
+],[
+   "start",
+  ["constant.numeric","77"]
+],[
+   "start",
+  ["text","."],
+  ["constant.numeric","86"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.other.import.dart","import"],
+  ["text","("],
+  ["string","\"http://dartwatch.com/myOtherLibrary.dart\""],
+  ["text",");"]
+],[
+   "start",
+  ["keyword.other.import.dart","import"],
+  ["text","("],
+  ["string","\"myOtherLibrary.dart\""],
+  ["text",", "],
+  ["keyword.other.import.dart","prefix"],
+  ["text",":"],
+  ["string","\"lib1\""],
+  ["text",");"]
+],[
+   "start"
+],[
+   "qqdoc",
+  ["string","\"\"\"asdasdads"]
+],[
+   "qqdoc",
+  ["string","asdadsadsasd"]
+],[
+   "start",
+  ["string","asdasdasdad\"\"\""]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["string","'23424'"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.numeric","0x234"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","foo"],
+  ["text"," "],
+  ["keyword.operator.dart","is"],
+  ["text"," "],
+  ["identifier","bar"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.primitive.dart","int"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator.assignment.dart","="],
+  ["text"," "],
+  ["constant.numeric","4"],
+  ["text"," "],
+  ["keyword.operator.bitwise.dart","<<"],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["text"," "]
+],[
+   "start",
+  ["comment","// Create a class for Point."]
+],[
+   "start",
+  ["keyword.declaration.dart","class"],
+  ["text"," "],
+  ["identifier","Point"],
+  ["text"," {"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","  "],
+  ["comment","// Final variables cannot be changed once they are assigned."]
+],[
+   "start",
+  ["text","  "],
+  ["comment","// Create two instance variables."]
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier.dart","final"],
+  ["text"," "],
+  ["storage.type.primitive.dart","num"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text",", "],
+  ["identifier","y"],
+  ["text",";"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","  "],
+  ["comment","// A constructor, with syntactic sugar for setting instance variables."]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","Point"],
+  ["text","("],
+  ["variable.language.dart","this"],
+  ["text","."],
+  ["identifier","x"],
+  ["text",", "],
+  ["variable.language.dart","this"],
+  ["text","."],
+  ["identifier","y"],
+  ["text",");"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","  "],
+  ["comment","// A named constructor with an initializer list."]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","Point"],
+  ["text","."],
+  ["identifier","origin"],
+  ["text","() "],
+  ["keyword.control.ternary.dart",":"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator.assignment.dart","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text",", "],
+  ["identifier","y"],
+  ["text"," "],
+  ["keyword.operator.assignment.dart","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text",";"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","  "],
+  ["comment","// A method."]
+],[
+   "start",
+  ["text","  "],
+  ["storage.type.primitive.dart","num"],
+  ["text"," "],
+  ["identifier","distanceTo"],
+  ["text","("],
+  ["identifier","Point"],
+  ["text"," "],
+  ["identifier","other"],
+  ["text",") {"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.primitive.dart","var"],
+  ["text"," "],
+  ["identifier","dx"],
+  ["text"," "],
+  ["keyword.operator.assignment.dart","="],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.dart","-"],
+  ["text"," "],
+  ["identifier","other"],
+  ["text","."],
+  ["identifier","x"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.primitive.dart","var"],
+  ["text"," "],
+  ["identifier","dy"],
+  ["text"," "],
+  ["keyword.operator.assignment.dart","="],
+  ["text"," "],
+  ["identifier","y"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.dart","-"],
+  ["text"," "],
+  ["identifier","other"],
+  ["text","."],
+  ["identifier","y"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.dart","return"],
+  ["text"," "],
+  ["identifier","sqrt"],
+  ["text","("],
+  ["identifier","dx"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.dart","*"],
+  ["text"," "],
+  ["identifier","dx"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.dart","+"],
+  ["text"," "],
+  ["identifier","dy"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.dart","*"],
+  ["text"," "],
+  ["identifier","dy"],
+  ["text",");"]
+],[
+   "start",
+  ["text","  }"]
+],[
+   "start",
+  ["text","}"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text"," "],
+  ["comment","// Check for null."]
+],[
+   "start",
+  ["storage.type.primitive.dart","var"],
+  ["text"," "],
+  ["identifier","unicorn"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword.control.dart","assert"],
+  ["text","("],
+  ["identifier","unicorn"],
+  ["text"," "],
+  ["keyword.operator.comparison.dart","=="],
+  ["text"," "],
+  ["constant.language.dart","null"],
+  ["text",");"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","// Check for NaN."]
+],[
+   "start",
+  ["storage.type.primitive.dart","var"],
+  ["text"," "],
+  ["identifier","iMeantToDoThis"],
+  ["text"," "],
+  ["keyword.operator.assignment.dart","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["keyword.operator.arithmetic.dart","/"],
+  ["constant.numeric","0"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword.control.dart","assert"],
+  ["text","("],
+  ["identifier","iMeantToDoThis"],
+  ["text","."],
+  ["identifier","isNaN"],
+  ["text","());"]
+],[
+   "start"
+]]

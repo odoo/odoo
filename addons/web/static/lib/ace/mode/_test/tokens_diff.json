@@ -1,0 +1,262 @@
+[[
+   "start",
+  ["variable","diff"],
+  ["variable"," --git"],
+  ["keyword"," a/lib/ace/edit_session.js"],
+  ["variable"," b/lib/ace/edit_session.js"]
+],[
+   "start",
+  ["variable","index 23fc3fc..ed3b273 100644"]
+],[
+   "start",
+  ["constant.numeric","---"],
+  ["meta.tag"," a/lib/ace/edit_session.js"]
+],[
+   "start",
+  ["constant.numeric","+++"],
+  ["meta.tag"," b/lib/ace/edit_session.js"]
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -51,6 +51,7 "],
+  ["constant","@@"],
+  ["comment.doc.tag"," var TextMode = require(\"./mode/text\").Mode;"]
+],[
+   "start",
+  ["invisible"," var Range = require(\"./range\").Range;"]
+],[
+   "start",
+  ["invisible"," var Document = require(\"./document\").Document;"]
+],[
+   "start",
+  ["invisible"," var BackgroundTokenizer = require(\"./background_tokenizer\").BackgroundTokenizer;"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","var SearchHighlight = require(\"./search_highlight\").SearchHighlight;"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["invisible"," /**"]
+],[
+   "start",
+  ["invisible","  * class EditSession"]
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -307,6 +308,13 "],
+  ["constant","@@"],
+  ["comment.doc.tag"," var EditSession = function(text, mode) {"]
+],[
+   "start",
+  ["invisible","         return token;"]
+],[
+   "start",
+  ["invisible","     };"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","    this.highlight = function(re) {"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","        if (!this.$searchHighlight) {"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","            var highlight = new SearchHighlight(null, \"ace_selected-word\", \"text\");"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","            this.$searchHighlight = this.addDynamicMarker(highlight);"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","        }"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","        this.$searchHighlight.setRegexp(re);"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","    }"]
+],[
+   "start",
+  ["invisible","     /**"]
+],[
+   "start",
+  ["invisible","     * EditSession.setUndoManager(undoManager)"]
+],[
+   "start",
+  ["invisible","     * - undoManager (UndoManager): The new undo manager"]
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -556,7 +564,8 "],
+  ["constant","@@"],
+  ["comment.doc.tag"," var EditSession = function(text, mode) {"]
+],[
+   "start",
+  ["invisible","             type : type || \"line\","]
+],[
+   "start",
+  ["invisible","             renderer: typeof type == \"function\" ? type : null,"]
+],[
+   "start",
+  ["invisible","             clazz : clazz,"]
+],[
+   "start",
+  ["support.function","-"],
+  ["string","            inFront: !!inFront"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","            inFront: !!inFront,"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","            id: id"]
+],[
+   "start",
+  ["invisible","         }"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["invisible","         if (inFront) {"]
+],[
+   "start",
+  ["variable","diff"],
+  ["variable"," --git"],
+  ["keyword"," a/lib/ace/editor.js"],
+  ["variable"," b/lib/ace/editor.js"]
+],[
+   "start",
+  ["variable","index 834e603..b27ec73 100644"]
+],[
+   "start",
+  ["constant.numeric","---"],
+  ["meta.tag"," a/lib/ace/editor.js"]
+],[
+   "start",
+  ["constant.numeric","+++"],
+  ["meta.tag"," b/lib/ace/editor.js"]
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -494,7 +494,7 "],
+  ["constant","@@"],
+  ["comment.doc.tag"," var Editor = function(renderer, session) {"]
+],[
+   "start",
+  ["invisible","      * Emitted when a selection has changed."]
+],[
+   "start",
+  ["invisible","      **/"]
+],[
+   "start",
+  ["invisible","     this.onSelectionChange = function(e) {"]
+],[
+   "start",
+  ["support.function","-"],
+  ["string","        var session = this.getSession();"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","        var session = this.session;"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["invisible","         if (session.$selectionMarker) {"]
+],[
+   "start",
+  ["invisible","             session.removeMarker(session.$selectionMarker);"]
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -509,12 +509,40 "],
+  ["constant","@@"],
+  ["comment.doc.tag"," var Editor = function(renderer, session) {"]
+],[
+   "start",
+  ["invisible","             this.$updateHighlightActiveLine();"]
+],[
+   "start",
+  ["invisible","         }"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["support.function","-"],
+  ["string","        var self = this;"]
+],[
+   "start",
+  ["support.function","-"],
+  ["string","        if (this.$highlightSelectedWord && !this.$wordHighlightTimer)"]
+],[
+   "start",
+  ["support.function","-"],
+  ["string","            this.$wordHighlightTimer = setTimeout(function() {"]
+],[
+   "start",
+  ["support.function","-"],
+  ["string","                self.session.$mode.highlightSelection(self);"]
+],[
+   "start",
+  ["support.function","-"],
+  ["string","                self.$wordHighlightTimer = null;"]
+],[
+   "start",
+  ["support.function","-"],
+  ["string","            }, 30, this);"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","        var re = this.$highlightSelectedWord && this.$getSelectionHighLightRegexp()"]
+],[
+   "start",
+  ["invisible","     };"]
+],[
+   "start",
+  ["variable","diff"],
+  ["variable"," --git"],
+  ["keyword"," a/lib/ace/search_highlight.js"],
+  ["variable"," b/lib/ace/search_highlight.js"]
+],[
+   "start",
+  ["invisible","new file mode 100644"]
+],[
+   "start",
+  ["variable","index 0000000..b2df779"]
+],[
+   "start",
+  ["constant.numeric","---"],
+  ["meta.tag"," /dev/null"]
+],[
+   "start",
+  ["constant.numeric","+++"],
+  ["meta.tag"," b/lib/ace/search_highlight.js"]
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -0,0 +1,3 "],
+  ["constant","@@"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","new"]
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","empty file"]
+]]

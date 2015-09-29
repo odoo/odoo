@@ -1,0 +1,227 @@
+[[
+   "start",
+  ["comment","#!/usr/bin/perl"]
+],[
+   "block_comment",
+  ["comment.doc","=begin"]
+],[
+   "block_comment",
+  ["comment.doc"," perl example code for Ace"]
+],[
+   "start",
+  ["comment.doc","=cut"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","use"],
+  ["text"," "],
+  ["identifier","strict"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","use"],
+  ["text"," "],
+  ["identifier","warnings"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","my"],
+  ["text"," "],
+  ["identifier","$num_primes"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","my"],
+  ["text"," @"],
+  ["identifier","primes"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# Put 2 as the first prime so we won't have an empty array"]
+],[
+   "start",
+  ["identifier","$primes"],
+  ["lparen","["],
+  ["identifier","$num_primes"],
+  ["rparen","]"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text",";"]
+],[
+   "start",
+  ["identifier","$num_primes"],
+  ["keyword.operator","++"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","MAIN_LOOP"],
+  ["text",":"]
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," "],
+  ["keyword","my"],
+  ["text"," "],
+  ["identifier","$number_to_check"],
+  ["text"," "],
+  ["lparen","("],
+  ["constant.numeric","3"],
+  ["text"," "],
+  ["keyword.operator",".."],
+  ["text"," "],
+  ["constant.numeric","200"],
+  ["rparen",")"]
+],[
+   "start",
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","for"],
+  ["text"," "],
+  ["keyword","my"],
+  ["text"," "],
+  ["identifier","$p"],
+  ["text"," "],
+  ["lparen","("],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["keyword.operator",".."],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","$num_primes"],
+  ["constant.numeric","-1"],
+  ["rparen","))"]
+],[
+   "start",
+  ["text","    "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","if"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","$number_to_check"],
+  ["text"," "],
+  ["keyword.operator","%"],
+  ["text"," "],
+  ["identifier","$primes"],
+  ["lparen","["],
+  ["identifier","$p"],
+  ["rparen","]"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword","next"],
+  ["text"," "],
+  ["identifier","MAIN_LOOP"],
+  ["text",";"]
+],[
+   "start",
+  ["text","        "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["comment","# If we reached this point it means $number_to_check is not"]
+],[
+   "start",
+  ["text","    "],
+  ["comment","# divisable by any prime number that came before it."]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","$primes"],
+  ["lparen","["],
+  ["identifier","$num_primes"],
+  ["rparen","]"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","$number_to_check"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","$num_primes"],
+  ["keyword.operator","++"],
+  ["text",";"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," "],
+  ["keyword","my"],
+  ["text"," "],
+  ["identifier","$p"],
+  ["text"," "],
+  ["lparen","("],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["keyword.operator",".."],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","$num_primes"],
+  ["constant.numeric","-1"],
+  ["rparen","))"]
+],[
+   "start",
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function","print"],
+  ["text"," "],
+  ["identifier","$primes"],
+  ["lparen","["],
+  ["identifier","$p"],
+  ["rparen","]"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["string","\", \""],
+  ["text",";"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start",
+  ["support.function","print"],
+  ["text"," "],
+  ["string","\"\\n\""],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start"
+]]

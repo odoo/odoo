@@ -1,0 +1,213 @@
+[[
+   "start",
+  ["keyword.source.rust","use"],
+  ["text"," "],
+  ["support.constant","core::rand::"],
+  ["text","RngUtil"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.source.rust","fn"],
+  ["text"," "],
+  ["entity.name.function.source.rust","main"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","for"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["string.quoted.double.source.rust","\"Alice\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.quoted.double.source.rust","\"Bob\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.quoted.double.source.rust","\"Carol\""],
+  ["paren.rparen","]"],
+  ["punctuation.operator","."],
+  ["text","each "],
+  ["keyword.operator","|&"],
+  ["text","name"],
+  ["keyword.operator","|"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.source.rust","do"],
+  ["text"," spawn "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword.source.rust","let"],
+  ["text"," v "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.constant","rand::"],
+  ["text","Rng"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["punctuation.operator","."],
+  ["text","shuffle"],
+  ["paren.lparen","(["],
+  ["constant.numeric.integer.source.rust","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric.integer.source.rust","2"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric.integer.source.rust","3"],
+  ["paren.rparen","])"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword.source.rust","for"],
+  ["text"," v"],
+  ["punctuation.operator","."],
+  ["text","each "],
+  ["keyword.operator","|&"],
+  ["text","num"],
+  ["keyword.operator","|"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","                print"],
+  ["paren.lparen","("],
+  ["text","fmt"],
+  ["keyword.operator","!"],
+  ["paren.lparen","("],
+  ["string.quoted.double.source.rust","\"%s says: '%d'"],
+  ["constant.character.escape.source.rust","\\n"],
+  ["string.quoted.double.source.rust","\""],
+  ["punctuation.operator",","],
+  ["text"," name"],
+  ["punctuation.operator",","],
+  ["text"," num "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric.integer.source.rust","1"],
+  ["paren.rparen","))"]
+],[
+   "start",
+  ["text","            "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","        "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.source.rust","fn"],
+  ["text"," "],
+  ["entity.name.function.source.rust","map"],
+  ["keyword.operator","<"],
+  ["text","T"],
+  ["punctuation.operator",","],
+  ["text"," U"],
+  ["keyword.operator",">"],
+  ["paren.lparen","("],
+  ["text","vector"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["paren.lparen","["],
+  ["text","T"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",","],
+  ["text"," function"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["text","fn"],
+  ["paren.lparen","("],
+  ["text","v"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["text","T"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","->"],
+  ["text"," U"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","->"],
+  ["text"," ~"],
+  ["paren.lparen","["],
+  ["text","U"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","let"],
+  ["text"," "],
+  ["keyword.source.rust","mut"],
+  ["text"," accumulator "],
+  ["keyword.operator","="],
+  ["text"," ~"],
+  ["paren.lparen","["],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","for"],
+  ["text"," "],
+  ["support.constant","vec::"],
+  ["text","each"],
+  ["paren.lparen","("],
+  ["text","vector"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","|"],
+  ["text","element"],
+  ["keyword.operator","|"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        accumulator"],
+  ["punctuation.operator","."],
+  ["text","push"],
+  ["paren.lparen","("],
+  ["text","function"],
+  ["paren.lparen","("],
+  ["text","element"],
+  ["paren.rparen","))"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","return"],
+  ["text"," accumulator"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+]]

@@ -1,0 +1,204 @@
+[[
+   "start",
+  ["comment","/* styles.less */"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","@base"],
+  ["text",": "],
+  ["constant.numeric","#f938ab"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.language",".box-shadow"],
+  ["paren.lparen","("],
+  ["variable","@style"],
+  ["text",", "],
+  ["variable","@c"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","when"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["support.function","iscolor"],
+  ["paren.lparen","("],
+  ["variable","@c"],
+  ["paren.rparen","))"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    box-shadow:         "],
+  ["variable","@style"],
+  ["text"," "],
+  ["variable","@c"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    -webkit-box-shadow: "],
+  ["variable","@style"],
+  ["text"," "],
+  ["variable","@c"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    -moz-box-shadow:    "],
+  ["variable","@style"],
+  ["text"," "],
+  ["variable","@c"],
+  ["text",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["variable.language",".box-shadow"],
+  ["paren.lparen","("],
+  ["variable","@style"],
+  ["text",", "],
+  ["variable","@alpha"],
+  ["text",": "],
+  ["constant.numeric","50%"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","when"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["support.function","isnumber"],
+  ["paren.lparen","("],
+  ["variable","@alpha"],
+  ["paren.rparen","))"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.language",".box-shadow"],
+  ["paren.lparen","("],
+  ["variable","@style"],
+  ["text",", "],
+  ["support.function","rgba"],
+  ["paren.lparen","("],
+  ["constant.numeric","0"],
+  ["text",", "],
+  ["constant.numeric","0"],
+  ["text",", "],
+  ["constant.numeric","0"],
+  ["text",", "],
+  ["variable","@alpha"],
+  ["paren.rparen","))"],
+  ["text",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","// Box styles"]
+],[
+   "start",
+  ["variable.language",".box"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "]
+],[
+   "start",
+  ["text","    "],
+  ["support.type","color"],
+  ["text",": "],
+  ["support.function","saturate"],
+  ["paren.lparen","("],
+  ["variable","@base"],
+  ["text",", "],
+  ["constant.numeric","5%"],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["support.type","border-color"],
+  ["text",": "],
+  ["support.function","lighten"],
+  ["paren.lparen","("],
+  ["variable","@base"],
+  ["text",", "],
+  ["constant.numeric","30%"],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "]
+],[
+   "start",
+  ["text","    "],
+  ["variable.language","div"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["variable.language",".box-shadow"],
+  ["paren.lparen","("],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","5px"],
+  ["text",", "],
+  ["constant.numeric","30%"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "]
+],[
+   "start",
+  ["text","    "],
+  ["variable.language","a"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["support.type","color"],
+  ["text",": "],
+  ["variable","@base"],
+  ["text",";"]
+],[
+   "start",
+  ["text","        "]
+],[
+   "start",
+  ["text","        &"],
+  ["variable.language",":hover"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","            "],
+  ["support.type","color"],
+  ["text",": "],
+  ["support.function","lighten"],
+  ["paren.lparen","("],
+  ["variable","@base"],
+  ["text",", "],
+  ["constant.numeric","50%"],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["text","        "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+]]

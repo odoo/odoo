@@ -1,0 +1,286 @@
+[[
+   "punctuation.definition.comment.begin.soy1",
+  ["punctuation.definition.comment.begin.soy","/**"]
+],[
+   "punctuation.definition.comment.begin.soy1",
+  ["comment.block.documentation.soy"," * Greets a person using \"Hello\" by default."]
+],[
+   "punctuation.definition.comment.begin.soy1",
+  ["comment.block.documentation.soy"," * "],
+  ["support.type.soy","@param"],
+  ["text"," "],
+  ["variable.parameter.soy","name"],
+  ["comment.block.documentation.soy"," The name of the person."]
+],[
+   "punctuation.definition.comment.begin.soy1",
+  ["comment.block.documentation.soy"," * "],
+  ["support.type.soy","@param?"],
+  ["text"," "],
+  ["variable.parameter.soy","greetingWord"],
+  ["comment.block.documentation.soy"," Optional greeting word to use instead of \"Hello\"."]
+],[
+   "start",
+  ["comment.block.documentation.soy"," "],
+  ["punctuation.definition.comment.end.soy","*/"]
+],[
+   "start",
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","template"],
+  ["text"," "],
+  ["entity.name.function.soy",".helloName"],
+  ["meta.tag.template.soy"," #eee"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","if"],
+  ["meta.tag.if.soy"," "],
+  ["keyword.operator.soy","not"],
+  ["meta.tag.if.soy"," "],
+  ["variable.other.soy","$greetingWord"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","    Hello "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["variable.other.soy","$name"],
+  ["punctuation.definition.tag.end.soy","}"],
+  ["text.xml","!"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["text","else"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["variable.other.soy","$greetingWord"],
+  ["punctuation.definition.tag.end.soy","}"],
+  ["text.xml"," "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["variable.other.soy","$name"],
+  ["punctuation.definition.tag.end.soy","}"],
+  ["text.xml","!"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["punctuation.definition.tag.begin.soy","{/"],
+  ["entity.name.tag.soy","if"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["punctuation.definition.tag.begin.soy","{/"],
+  ["meta.tag.template.soy","template"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start"
+],[
+   "punctuation.definition.comment.begin.soy1",
+  ["punctuation.definition.comment.begin.soy","/**"]
+],[
+   "punctuation.definition.comment.begin.soy1",
+  ["comment.block.documentation.soy"," * Greets a person and optionally a list of other people."]
+],[
+   "punctuation.definition.comment.begin.soy1",
+  ["comment.block.documentation.soy"," * "],
+  ["support.type.soy","@param"],
+  ["text"," "],
+  ["variable.parameter.soy","name"],
+  ["comment.block.documentation.soy"," The name of the person."]
+],[
+   "punctuation.definition.comment.begin.soy1",
+  ["comment.block.documentation.soy"," * "],
+  ["support.type.soy","@param"],
+  ["text"," "],
+  ["variable.parameter.soy","additionalNames"],
+  ["comment.block.documentation.soy"," The additional names to greet. May be an empty list."]
+],[
+   "start",
+  ["comment.block.documentation.soy"," "],
+  ["punctuation.definition.comment.end.soy","*/"]
+],[
+   "start",
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","template"],
+  ["text"," "],
+  ["entity.name.function.soy",".helloNames"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["comment.line.double-slash.soy","//"],
+  ["comment.line.double-slash.soy"," Greet the person."]
+],[
+   "start",
+  ["text.xml","  "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","call"],
+  ["variable.parameter.soy"," .helloName"],
+  ["meta.tag.call.soy"," "],
+  ["entity.other.attribute-name.soy","data"],
+  ["keyword.operator.soy","="],
+  ["string.quoted.double","\"all\""],
+  ["meta.tag.call.soy"," /"],
+  ["punctuation.definition.tag.end.soy","}"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","br"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["comment.line.double-slash.soy","//"],
+  ["comment.line.double-slash.soy"," Greet the additional people."]
+],[
+   "start",
+  ["text.xml","  "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","foreach"],
+  ["meta.tag.foreach.soy"," "],
+  ["variable.other.soy","$additionalName"],
+  ["meta.tag.foreach.soy"," "],
+  ["keyword.operator.soy","in"],
+  ["meta.tag.foreach.soy"," "],
+  ["variable.other.soy","$additionalNames"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","call"],
+  ["variable.parameter.soy"," .helloName"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","      "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","param"],
+  ["meta.tag.param.soy"," "],
+  ["entity.other.attribute-name.soy","name"],
+  ["keyword.operator.soy",":"],
+  ["meta.tag.param.soy"," "],
+  ["variable.other.soy","$additionalName"],
+  ["meta.tag.param.soy"," /"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["punctuation.definition.tag.begin.soy","{/"],
+  ["meta.tag.call.soy","call"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","if"],
+  ["meta.tag.if.soy"," "],
+  ["keyword.operator.soy","not"],
+  ["meta.tag.if.soy"," "],
+  ["support.function.soy","isLast"],
+  ["meta.tag.if.soy","("],
+  ["variable.other.soy","$additionalName"],
+  ["meta.tag.if.soy",")"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","      "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","br"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","  "],
+  ["comment.line.double-slash.soy","//"],
+  ["comment.line.double-slash.soy"," break after every line except the last"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["punctuation.definition.tag.begin.soy","{/"],
+  ["entity.name.tag.soy","if"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["text","ifempty"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","    No additional people to greet."]
+],[
+   "start",
+  ["text.xml","  "],
+  ["punctuation.definition.tag.begin.soy","{/"],
+  ["entity.name.tag.soy","foreach"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["punctuation.definition.tag.begin.soy","{/"],
+  ["meta.tag.template.soy","template"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.tag.begin.soy","{/"],
+  ["entity.name.tag.soy","foreach"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","if"],
+  ["meta.tag.if.soy"," "],
+  ["support.function.soy","length"],
+  ["meta.tag.if.soy","("],
+  ["variable.other.soy","$items"],
+  ["meta.tag.if.soy",") > 5"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","msg"],
+  ["meta.tag.msg.soy"," "],
+  ["entity.other.attribute-name.soy","desc"],
+  ["keyword.operator.soy","="],
+  ["string.quoted.double","\"Says hello to the user.\""],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","namespace"],
+  ["text"," "],
+  ["variable.parameter.soy","ns"],
+  ["text"," autoescape=\"contextual\""],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.comment.begin.soy","/**"],
+  ["comment.block.documentation.soy"," Example. "],
+  ["punctuation.definition.comment.end.soy","*/"]
+],[
+   "start",
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["entity.name.tag.soy","template"],
+  ["text"," "],
+  ["entity.name.function.soy",".example"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["text.xml","  foo is "],
+  ["punctuation.definition.tag.begin.soy","{"],
+  ["variable.other.soy","$ij.foo"],
+  ["punctuation.definition.tag.end.soy","}"]
+],[
+   "start",
+  ["punctuation.definition.tag.begin.soy","{/"],
+  ["meta.tag.template.soy","template"],
+  ["punctuation.definition.tag.end.soy","}"]
+]]

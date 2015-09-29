@@ -1,0 +1,166 @@
+[[
+   "start",
+  ["text","  "],
+  ["punctuation.definition.comment.erlang","%% A process whose only job is to keep a counter."]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.definition.comment.erlang","%% First version"]
+],[
+   "start",
+  ["meta.directive.module.erlang","  "],
+  ["punctuation.section.directive.begin.erlang","-"],
+  ["keyword.control.directive.module.erlang","module"],
+  ["punctuation.definition.parameters.begin.erlang","("],
+  ["entity.name.type.class.module.definition.erlang","counter"],
+  ["punctuation.definition.parameters.end.erlang",")"],
+  ["punctuation.section.directive.end.erlang","."]
+],[
+   "start",
+  ["meta.directive.export.erlang","  "],
+  ["punctuation.section.directive.begin.erlang","-"],
+  ["keyword.control.directive.export.erlang","export"],
+  ["punctuation.definition.parameters.begin.erlang","("],
+  ["punctuation.definition.list.begin.erlang","["],
+  ["entity.name.function.erlang","start"],
+  ["punctuation.separator.function-arity.erlang","/"],
+  ["constant.numeric.integer.decimal.erlang","0"],
+  ["punctuation.separator.list.erlang",","],
+  ["meta.structure.list.function.erlang"," "],
+  ["entity.name.function.erlang","codeswitch"],
+  ["punctuation.separator.function-arity.erlang","/"],
+  ["constant.numeric.integer.decimal.erlang","1"],
+  ["punctuation.definition.list.end.erlang","]"],
+  ["punctuation.definition.parameters.end.erlang",")"],
+  ["punctuation.section.directive.end.erlang","."]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["meta.function.erlang","  "],
+  ["entity.name.function.definition.erlang","start"],
+  ["punctuation.section.expression.begin.erlang","("],
+  ["punctuation.section.expression.end.erlang",")"],
+  ["text"," "],
+  ["keyword.operator.symbolic.erlang","->"],
+  ["text"," "],
+  ["entity.name.function.erlang","loop"],
+  ["punctuation.definition.parameters.begin.erlang","("],
+  ["constant.numeric.integer.decimal.erlang","0"],
+  ["punctuation.definition.parameters.end.erlang",")"],
+  ["punctuation.terminator.function.erlang","."]
+],[
+   "start",
+  ["text"," "]
+],[
+   ["text6","meta.function.erlang"],
+  ["meta.function.erlang","  "],
+  ["entity.name.function.definition.erlang","loop"],
+  ["punctuation.section.expression.begin.erlang","("],
+  ["variable.other.erlang","Sum"],
+  ["punctuation.section.expression.end.erlang",")"],
+  ["text"," "],
+  ["keyword.operator.symbolic.erlang","->"]
+],[
+   ["keyword.control.receive.erlang","text6","text6","meta.function.erlang"],
+  ["text","    "],
+  ["keyword.control.receive.erlang","receive"]
+],[
+   ["keyword.control.receive.erlang","text6","text6","meta.function.erlang"],
+  ["meta.expression.receive.erlang","       "],
+  ["punctuation.definition.tuple.begin.erlang","{"],
+  ["constant.other.symbol.unquoted.erlang","increment"],
+  ["punctuation.separator.tuple.erlang",","],
+  ["meta.structure.tuple.erlang"," "],
+  ["variable.other.erlang","Count"],
+  ["punctuation.definition.tuple.end.erlang","}"],
+  ["meta.expression.receive.erlang"," "],
+  ["punctuation.separator.clause-head-body.erlang","->"]
+],[
+   ["keyword.control.receive.erlang","text6","text6","meta.function.erlang"],
+  ["meta.expression.receive.erlang","          "],
+  ["entity.name.function.erlang","loop"],
+  ["punctuation.definition.parameters.begin.erlang","("],
+  ["variable.other.erlang","Sum"],
+  ["keyword.operator.symbolic.erlang","+"],
+  ["variable.other.erlang","Count"],
+  ["punctuation.definition.parameters.end.erlang",")"],
+  ["punctuation.separator.clauses.erlang",";"]
+],[
+   ["keyword.control.receive.erlang","text6","text6","meta.function.erlang"],
+  ["meta.expression.receive.erlang","       "],
+  ["punctuation.definition.tuple.begin.erlang","{"],
+  ["constant.other.symbol.unquoted.erlang","counter"],
+  ["punctuation.separator.tuple.erlang",","],
+  ["meta.structure.tuple.erlang"," "],
+  ["variable.other.erlang","Pid"],
+  ["punctuation.definition.tuple.end.erlang","}"],
+  ["meta.expression.receive.erlang"," "],
+  ["punctuation.separator.clause-head-body.erlang","->"]
+],[
+   ["keyword.control.receive.erlang","text6","text6","meta.function.erlang"],
+  ["meta.expression.receive.erlang","          "],
+  ["variable.other.erlang","Pid"],
+  ["meta.expression.receive.erlang"," "],
+  ["keyword.operator.symbolic.erlang","!"],
+  ["meta.expression.receive.erlang"," "],
+  ["punctuation.definition.tuple.begin.erlang","{"],
+  ["constant.other.symbol.unquoted.erlang","counter"],
+  ["punctuation.separator.tuple.erlang",","],
+  ["meta.structure.tuple.erlang"," "],
+  ["variable.other.erlang","Sum"],
+  ["punctuation.definition.tuple.end.erlang","}"],
+  ["punctuation.separator.expressions.erlang",","]
+],[
+   ["keyword.control.receive.erlang","text6","text6","meta.function.erlang"],
+  ["meta.expression.receive.erlang","          "],
+  ["entity.name.function.erlang","loop"],
+  ["punctuation.definition.parameters.begin.erlang","("],
+  ["variable.other.erlang","Sum"],
+  ["punctuation.definition.parameters.end.erlang",")"],
+  ["punctuation.separator.clauses.erlang",";"]
+],[
+   ["keyword.control.receive.erlang","text6","text6","meta.function.erlang"],
+  ["meta.expression.receive.erlang","       "],
+  ["constant.other.symbol.unquoted.erlang","code_switch"],
+  ["meta.expression.receive.erlang"," "],
+  ["punctuation.separator.clause-head-body.erlang","->"]
+],[
+   ["keyword.control.receive.erlang","text6","text6","meta.function.erlang"],
+  ["meta.expression.receive.erlang","          "],
+  ["keyword.operator.macro.erlang","?"],
+  ["entity.name.function.macro.erlang","MODULE"],
+  ["meta.expression.receive.erlang",":"],
+  ["entity.name.function.erlang","codeswitch"],
+  ["punctuation.definition.parameters.begin.erlang","("],
+  ["variable.other.erlang","Sum"],
+  ["punctuation.definition.parameters.end.erlang",")"]
+],[
+   ["keyword.control.receive.erlang","text6","text6","meta.function.erlang"],
+  ["meta.expression.receive.erlang","          "],
+  ["punctuation.definition.comment.erlang","% Force the use of 'codeswitch/1' from the latest MODULE version"]
+],[
+   "start",
+  ["meta.expression.receive.erlang","    "],
+  ["keyword.control.end.erlang","end"],
+  ["punctuation.terminator.function.erlang","."]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["meta.function.erlang","  "],
+  ["entity.name.function.definition.erlang","codeswitch"],
+  ["punctuation.section.expression.begin.erlang","("],
+  ["variable.other.erlang","Sum"],
+  ["punctuation.section.expression.end.erlang",")"],
+  ["text"," "],
+  ["keyword.operator.symbolic.erlang","->"],
+  ["text"," "],
+  ["entity.name.function.erlang","loop"],
+  ["punctuation.definition.parameters.begin.erlang","("],
+  ["variable.other.erlang","Sum"],
+  ["punctuation.definition.parameters.end.erlang",")"],
+  ["punctuation.terminator.function.erlang","."]
+]]

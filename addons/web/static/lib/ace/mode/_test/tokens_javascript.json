@@ -1,0 +1,593 @@
+[[
+   "start",
+  ["comment","//test: tokenize 'standard' functions"]
+],[
+   "no_regex",
+  ["identifier","string"],
+  ["punctuation.operator","."],
+  ["support.function","charCodeAt"],
+  ["paren.lparen","("],
+  ["constant.numeric","23"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["variable.language","document"],
+  ["punctuation.operator","."],
+  ["support.function.dom","getElementById"],
+  ["paren.lparen","("],
+  ["string","'test'"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["storage.type","console"],
+  ["punctuation.operator","."],
+  ["support.function.firebug","log"],
+  ["paren.lparen","("],
+  ["string","'Here it is'"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"],
+  ["string","\";"]
+],[
+   "no_regex",
+  ["identifier","test"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["comment.doc","/**tokenize doc*/"],
+  ["text"," "],
+  ["identifier","comment"]
+],[
+   "no_regex",
+  ["comment.doc","/**tokenize doc comment with "],
+  ["comment.doc.tag","@tag"],
+  ["comment.doc"," {}*/"]
+],[
+   "no_regex",
+  ["comment","//test: tokenize parens"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","line"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"[{( )}]\""],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["comment","//test tokenize arithmetic expression which looks like a regexp"]
+],[
+   "no_regex",
+  ["identifier","a"],
+  ["keyword.operator","/"],
+  ["identifier","b"],
+  ["keyword.operator","/"],
+  ["identifier","c"]
+],[
+   "no_regex",
+  ["identifier","a"],
+  ["keyword.operator","/="],
+  ["identifier","b"],
+  ["keyword.operator","/"],
+  ["identifier","c"]
+],[
+   "no_regex",
+  ["comment","//test tokenize reg exps"]
+],[
+   "no_regex",
+  ["identifier","a"],
+  ["keyword.operator","="],
+  ["string.regexp","/b/g"]
+],[
+   "no_regex",
+  ["identifier","a"],
+  ["keyword.operator","+"],
+  ["string.regexp","/b/g"]
+],[
+   "no_regex",
+  ["identifier","a"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string.regexp","/2 "],
+  ["constant.language.escape","+"],
+  ["string.regexp"," 1/gimyx"],
+  ["identifier","k"]
+],[
+   "no_regex",
+  ["identifier","a"],
+  ["keyword.operator","="],
+  ["string.regexp","/a/"],
+  ["text"," "],
+  ["keyword.operator","/"],
+  ["text"," "],
+  ["string.regexp","/a/"]
+],[
+   "no_regex",
+  ["keyword","case"],
+  ["text"," "],
+  ["string.regexp","/a/"],
+  ["punctuation.operator","."],
+  ["support.function","test"],
+  ["paren.lparen","("],
+  ["identifier","c"],
+  ["paren.rparen",")"]
+],[
+   "no_regex",
+  ["comment","//test tokenize multi-line comment containing a single line comment"]
+],[
+   "no_regex",
+  ["identifier","noRegex"]
+],[
+   "no_regex",
+  ["comment","/* foo // bar */"]
+],[
+   "start",
+  ["identifier","canBeRegex"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["comment","/* foo // bar */"]
+],[
+   "start",
+  ["comment","// test tokenize identifier with umlauts"]
+],[
+   "no_regex",
+  ["identifier","fu"],
+  ["punctuation.operator","?"],
+  ["identifier","e"]
+],[
+   "no_regex",
+  ["comment","// test // is not a regexp"]
+],[
+   "start",
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["comment","// 123"]
+],[
+   "start",
+  ["comment","//test skipping escaped chars"]
+],[
+   "no_regex",
+  ["string","'Meh"],
+  ["constant.language.escape","\\\\"],
+  ["string","nNeh'"]
+],[
+   "no_regex",
+  ["storage.type","console"],
+  ["punctuation.operator","."],
+  ["support.function.firebug","log"],
+  ["paren.lparen","("],
+  ["string","'"],
+  ["constant.language.escape","\\\\"],
+  ["string","u1232Feh'"]
+],[
+   "qqstring",
+  ["string","\"test multiline\\"]
+],[
+   "no_regex",
+  ["string"," strings\""]
+],[
+   "no_regex",
+  ["identifier","a"],
+  ["keyword.operator","="],
+  ["text","'"]
+],[
+   "qqstring",
+  ["identifier","b"],
+  ["keyword.operator","="],
+  ["string","\"\\"]
+],[
+   "no_regex",
+  ["string","still a string"]
+],[
+   "no_regex",
+  ["text"," "]
+],[
+   "no_regex",
+  ["text"," "]
+],[
+   "start",
+  ["storage.type","function"],
+  ["text"," "],
+  ["entity.name.function","foo"],
+  ["paren.lparen","("],
+  ["variable.parameter","items"],
+  ["punctuation.operator",", "],
+  ["variable.parameter","nada"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","for"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","i"],
+  ["keyword.operator","="],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","i"],
+  ["keyword.operator","<"],
+  ["identifier","items"],
+  ["punctuation.operator","."],
+  ["support.constant","length"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","i"],
+  ["keyword.operator","++"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function","alert"],
+  ["paren.lparen","("],
+  ["identifier","items"],
+  ["paren.lparen","["],
+  ["identifier","i"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\"juhu"],
+  ["constant.language.escape","\\n"],
+  ["string","\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","    "],
+  ["paren.rparen","}"],
+  ["text","\t"],
+  ["comment","// Real Tab."]
+],[
+   "no_regex",
+  ["paren.rparen","}"]
+],[
+   "no_regex"
+],[
+   "no_regex",
+  ["identifier","regexp"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.regexp","/p"],
+  ["constant.language.delimiter","|"],
+  ["string.regexp","p/"],
+  ["text"," "],
+  ["comment","// ends here"]
+],[
+   "no_regex"
+],[
+   "no_regex",
+  ["identifier","r"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.regexp","/d"],
+  ["constant.language.escape","{1,2}?"],
+  ["string.regexp","f{e}"],
+  ["invalid","++"],
+  ["string.regexp","r"],
+  ["constant.language.escape","*?"],
+  ["regexp.keyword.operator","\\d"],
+  ["constant.language.escape","+?[]"],
+  ["string.regexp","r"],
+  ["constant.language.escape","[^"],
+  ["string.regexp.charachterclass","r"],
+  ["constant.language.escape","-"],
+  ["string.regexp.charachterclass","o"],
+  ["regexp.charclass.keyword.operator","\\f\\f"],
+  ["string.regexp.charachterclass","["],
+  ["regexp.charclass.keyword.operator","\\f"],
+  ["constant.language.escape","]?"],
+  ["string.regexp","r"],
+  ["invalid","{7}+"],
+  ["string.regexp","r"],
+  ["regexp.keyword.operator","\\{"],
+  ["string.regexp","7}"],
+  ["constant.language.escape","+"],
+  ["string.regexp","rr--rr"],
+  ["constant.language.escape","$^(?:"],
+  ["string.regexp","d"],
+  ["constant.language.delimiter","|"],
+  ["string.regexp","s"],
+  ["constant.language.escape",")(?="],
+  ["string.regexp","a"],
+  ["constant.language.delimiter","|"],
+  ["constant.language.escape",")(?!"],
+  ["string.regexp","y"],
+  ["constant.language.escape",")[]"],
+  ["constant.language.delimiter","|"],
+  ["invalid","$?"],
+  ["constant.language.delimiter","|"],
+  ["invalid","^*"],
+  ["string.regexp","/"],
+  ["text"," "],
+  ["identifier","o"]
+],[
+   "no_regex",
+  ["identifier","a"],
+  ["keyword.operator","="],
+  ["string.regexp","/a/"],
+  ["text"," "],
+  ["identifier","jk"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.regexp","/ /"],
+  ["text"," "],
+  ["keyword.operator","/"],
+  ["text"," "],
+  ["string.regexp","/ /"]
+],[
+   "no_regex",
+  ["text"," "],
+  ["comment.doc","/************************************/"]
+],[
+   "no_regex",
+  ["comment.doc","/** total mess, tricky to highlight**/"]
+],[
+   "no_regex"
+],[
+   "start",
+  ["storage.type","function"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "doc-start",
+  ["text","\t"],
+  ["comment.doc","/**"]
+],[
+   "doc-start",
+  ["comment.doc","\t * docComment"]
+],[
+   "no_regex",
+  ["comment.doc","\t **/"]
+],[
+   "no_regex",
+  ["text","\t"],
+  ["identifier","r"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.regexp","/u"],
+  ["regexp.keyword.operator","\\t"],
+  ["constant.language.escape","*"],
+  ["string.regexp","/"]
+],[
+   "no_regex",
+  ["text","\t"],
+  ["identifier","g"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1."],
+  ["text","00"],
+  ["identifier","E"],
+  ["keyword.operator","^"],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","y"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1.2"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["punctuation.operator","."],
+  ["constant.numeric","2"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","052"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","0x25"]
+],[
+   "no_regex",
+  ["text","\t"],
+  ["identifier","t"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["string","'d'"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string","''"],
+  ["paren.rparen","]"]
+],[
+   "no_regex",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["storage.type","function"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","/* eee */"]
+],[
+   "no_regex",
+  ["paren.rparen","}"]
+],[
+   "no_regex"
+],[
+   "qqstring",
+  ["string","\"s\\"]
+],[
+   "no_regex",
+  ["string","s"],
+  ["constant.language.escape","\\u7824"],
+  ["string","sss"],
+  ["constant.language.escape","\\u"],
+  ["string","1\""]
+],[
+   "no_regex"
+],[
+   "qstring",
+  ["string","'\\"]
+],[
+   "no_regex",
+  ["string","string'"]
+],[
+   "no_regex"
+],[
+   "no_regex",
+  ["text","'"]
+],[
+   "no_regex",
+  ["identifier","string"],
+  ["text","'"]
+],[
+   "no_regex"
+],[
+   "no_regex",
+  ["string","\"trailing space"],
+  ["constant.language.escape","\\ "],
+  ["string","  "]
+],[
+   "no_regex",
+  ["string","\"         \""],
+  ["text","    "],
+  ["keyword.operator","/"],
+  ["identifier","not"],
+  ["text"," "],
+  ["identifier","a"],
+  ["text"," "],
+  ["identifier","regexp"],
+  ["keyword.operator","/"],
+  ["identifier","g"]
+],[
+   "no_regex"
+],[
+   "doc-start",
+  ["comment.doc","/**"]
+],[
+   "doc-start",
+  ["comment.doc"," *doc"]
+],[
+   "no_regex",
+  ["comment.doc"," */"]
+],[
+   "no_regex"
+],[
+   "start",
+  ["identifier","a"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["string","'a'"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["identifier","b"],
+  ["punctuation.operator",","]
+],[
+   "no_regex",
+  ["text","\t"],
+  ["string","'g'"],
+  ["text",":"],
+  ["text"," "],
+  ["storage.type","function"],
+  ["paren.lparen","("],
+  ["variable.parameter","t"],
+  ["paren.rparen",")"]
+],[
+   "no_regex",
+  ["text","\t"],
+  ["entity.name.function","gta"],
+  ["punctuation.operator",":"],
+  ["storage.type","function"],
+  ["paren.lparen","("],
+  ["variable.parameter","a"],
+  ["punctuation.operator",","],
+  ["variable.parameter","b"],
+  ["paren.rparen",")"]
+],[
+   "no_regex",
+  ["paren.rparen","}"]
+],[
+   "no_regex"
+],[
+   "no_regex"
+],[
+   "function_arguments",
+  ["identifier","foo"],
+  ["punctuation.operator","."],
+  ["storage.type","protoype"],
+  ["punctuation.operator","."],
+  ["entity.name.function","d"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["storage.type","function"],
+  ["paren.lparen","("],
+  ["variable.parameter","a"],
+  ["punctuation.operator",", "],
+  ["variable.parameter","b"],
+  ["punctuation.operator",","]
+],[
+   "no_regex",
+  ["punctuation.operator","                          "],
+  ["variable.parameter","c"],
+  ["punctuation.operator",", "],
+  ["variable.parameter","d"],
+  ["paren.rparen",")"]
+],[
+   "no_regex",
+  ["storage.type","foo"],
+  ["punctuation.operator","."],
+  ["entity.name.function","d"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["storage.type","function"],
+  ["paren.lparen","("],
+  ["variable.parameter","a"],
+  ["punctuation.operator",",     "],
+  ["variable.parameter","b"],
+  ["paren.rparen",")"]
+],[
+   "no_regex",
+  ["storage.type","foo"],
+  ["punctuation.operator","."],
+  ["entity.name.function","d"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["storage.type","function"],
+  ["paren.lparen","("],
+  ["variable.parameter","a"],
+  ["punctuation.operator",",  "],
+  ["comment.doc","/*****/"],
+  ["text"," "],
+  ["identifier","d"],
+  ["string","\"string\""],
+  ["text","   "]
+],[
+   "no_regex"
+]]

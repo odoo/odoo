@@ -1,0 +1,57 @@
+#test: tokenize keyword
+    for (i 1..2)
+#test: tokenize regexp
+/"[a]/
+#test: tokenize functions
+foo = ({args}) ->
+    foo = ({a1, a2}) ->
+    foo = ({@a1, a2}) ->
+    foo : ({args}) ->
+    foo = ({args}) ->
+    foo = ({0abc}) ->
+    foo = ({/abc}) =>
+    foo = ({abc/}) ->
+    foo = ({#abc}) ->
+    foo = ({abc#}) ->
+    foo = ({)abc}) ->
+    foo = ({abc)}) ->
+    foo = ({a{bc}) ->
+    foo = ({}) ->
+    foo = ({ }) ->
+    foo : ({}) ->
+    foo = (args) ->
+    foo = (arg1, arg2) ->
+    foo = (arg1 = 1, arg2 = 'name') ->
+    foo = (@arg1 = /abc/, arg2 = 'name') ->
+    #test: tokenize function: invalid case:
+    foo=(/args) ->
+    foo = () ->
+    foo = ( ) ->
+    foo : ( ) ->
+    window.foo = (args) ->
+    foo = ->
+    foo = ->
+    foo : ->
+    #test: tokenize callback function
+    foo bar: 1, (args) ->
+    foo = (1, 2 (x) ->
+#test: tokenize class
+class Foo
+class Foo extends Bar
+#test: tokenize illegal name property
+foo.static.function
+#!test tokenize string with interpolation
+a = "#{ 22 / 7 + {x: "#{a + b}"} + 2}"
+" #{ "" + {} } )"  
+"""heredoc
+   """
+do ->
+    ###
+    herecomment
+    ###
+    re = /regex/imgy.test ///
+        heregex  # comment
+    ///imgy
+    this isnt: `just 
+       JavaScript`
+    undefined

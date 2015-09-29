@@ -1,0 +1,441 @@
+[[
+   "start",
+  ["keyword","\\name"],
+  ["paren.keyword.operator","{"],
+  ["nospell.text","picker"],
+  ["paren.keyword.operator","}"]
+],[
+   "start",
+  ["keyword","\\alias"],
+  ["paren.keyword.operator","{"],
+  ["nospell.text","picker"],
+  ["paren.keyword.operator","}"]
+],[
+   "start",
+  ["keyword","\\title"],
+  ["paren.keyword.operator","{"],
+  ["text","Create a picker control"],
+  ["paren.keyword.operator","}"]
+],[
+   "start",
+  ["keyword","\\description"],
+  ["paren.keyword.operator","{"]
+],[
+   "start",
+  ["text","  Create a picker control to enable manipulation of plot variables based on a set of fixed choices."]
+],[
+   "start",
+  ["paren.keyword.operator","}"]
+],[
+   "start"
+],[
+   "nospell",
+  ["keyword","\\usage"],
+  ["paren.keyword.operator","{"]
+],[
+   "nospell",
+  ["nospell.text","picker"],
+  ["paren.keyword.operator","("],
+  ["text","...,"],
+  ["nospell.text"," initial "],
+  ["text","="],
+  ["nospell.text"," NULL"],
+  ["text",","],
+  ["nospell.text"," label "],
+  ["text","="],
+  ["nospell.text"," NULL"],
+  ["paren.keyword.operator",")"]
+],[
+   "start",
+  ["paren.keyword.operator","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["keyword","\\arguments"],
+  ["paren.keyword.operator","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","\\item"],
+  ["paren.keyword.operator","{"],
+  ["keyword","\\dots"],
+  ["paren.keyword.operator","}{"]
+],[
+   "start",
+  ["text","    Arguments containing objects to be presented as choices for the picker "],
+  ["paren.keyword.operator","("],
+  ["text","or a list containing the choices"],
+  ["paren.keyword.operator",")"],
+  ["text",". If an element is named then the name is used to display it within the picker. If an element is not named then it is displayed within the picker using "],
+  ["keyword","\\code"],
+  ["paren.keyword.operator","{"],
+  ["keyword","\\link"],
+  ["paren.keyword.operator","{"],
+  ["nospell.text","as"],
+  ["text","."],
+  ["nospell.text","character"],
+  ["paren.keyword.operator","}}"],
+  ["text",". "]
+],[
+   "start",
+  ["paren.keyword.operator","}"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","\\item"],
+  ["paren.keyword.operator","{"],
+  ["nospell.text","initial"],
+  ["paren.keyword.operator","}{"]
+],[
+   "start",
+  ["text","    Initial value for picker. Value must be present in the list of choices specified. If not specified defaults to the first choice."]
+],[
+   "start",
+  ["paren.keyword.operator","}"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","\\item"],
+  ["paren.keyword.operator","{"],
+  ["nospell.text","label"],
+  ["paren.keyword.operator","}{"]
+],[
+   "start",
+  ["text","    Display label for picker. Defaults to the variable name if not specified."]
+],[
+   "start",
+  ["paren.keyword.operator","}"]
+],[
+   "start",
+  ["paren.keyword.operator","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","\\value"],
+  ["paren.keyword.operator","{"]
+],[
+   "start",
+  ["text","  An object of class \"manipulator.picker\" which can be passed to the "],
+  ["keyword","\\code"],
+  ["paren.keyword.operator","{"],
+  ["keyword","\\link"],
+  ["paren.keyword.operator","{"],
+  ["nospell.text","manipulate"],
+  ["paren.keyword.operator","}}"],
+  ["text"," function."]
+],[
+   "start",
+  ["paren.keyword.operator","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","\\seealso"],
+  ["paren.keyword.operator","{"]
+],[
+   "start",
+  ["keyword","\\code"],
+  ["paren.keyword.operator","{"],
+  ["keyword","\\link"],
+  ["paren.keyword.operator","{"],
+  ["nospell.text","manipulate"],
+  ["paren.keyword.operator","}}"],
+  ["text",", "],
+  ["keyword","\\code"],
+  ["paren.keyword.operator","{"],
+  ["keyword","\\link"],
+  ["paren.keyword.operator","{"],
+  ["nospell.text","slider"],
+  ["paren.keyword.operator","}}"],
+  ["text",", "],
+  ["keyword","\\code"],
+  ["paren.keyword.operator","{"],
+  ["keyword","\\link"],
+  ["paren.keyword.operator","{"],
+  ["nospell.text","checkbox"],
+  ["paren.keyword.operator","}}"],
+  ["text",", "],
+  ["keyword","\\code"],
+  ["paren.keyword.operator","{"],
+  ["keyword","\\link"],
+  ["paren.keyword.operator","{"],
+  ["nospell.text","button"],
+  ["paren.keyword.operator","}}"]
+],[
+   "start",
+  ["paren.keyword.operator","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "nospell",
+  ["keyword","\\examples"],
+  ["paren.keyword.operator","{"]
+],[
+   "nospell",
+  ["keyword","\\dontrun"],
+  ["paren.keyword.operator","{"]
+],[
+   "nospell"
+],[
+   "nospell",
+  ["text","##"],
+  ["nospell.text"," Filtering data with a picker"]
+],[
+   "nospell",
+  ["nospell.text","manipulate"],
+  ["paren.keyword.operator","("]
+],[
+   "nospell",
+  ["nospell.text","  barplot"],
+  ["paren.keyword.operator","("],
+  ["nospell.text","as"],
+  ["text","."],
+  ["nospell.text","matrix"],
+  ["paren.keyword.operator","("],
+  ["nospell.text","longley"],
+  ["paren.keyword.operator","["],
+  ["text",","],
+  ["nospell.text","factor"],
+  ["paren.keyword.operator","])"],
+  ["text",","],
+  ["nospell.text"," "]
+],[
+   "nospell",
+  ["nospell.text","          beside "],
+  ["text","="],
+  ["nospell.text"," TRUE"],
+  ["text",","],
+  ["nospell.text"," main "],
+  ["text","="],
+  ["nospell.text"," factor"],
+  ["paren.keyword.operator",")"],
+  ["text",","]
+],[
+   "nospell",
+  ["nospell.text","  factor "],
+  ["text","="],
+  ["nospell.text"," picker"],
+  ["paren.keyword.operator","("],
+  ["text","\""],
+  ["nospell.text","GNP"],
+  ["text","\","],
+  ["nospell.text"," "],
+  ["text","\""],
+  ["nospell.text","Unemployed"],
+  ["text","\","],
+  ["nospell.text"," "],
+  ["text","\""],
+  ["nospell.text","Employed"],
+  ["text","\""],
+  ["paren.keyword.operator","))"]
+],[
+   "nospell"
+],[
+   "nospell",
+  ["text","##"],
+  ["nospell.text"," Create a picker with labels"]
+],[
+   "nospell",
+  ["nospell.text","manipulate"],
+  ["paren.keyword.operator","("]
+],[
+   "nospell",
+  ["nospell.text","  plot"],
+  ["paren.keyword.operator","("],
+  ["nospell.text","pressure"],
+  ["text",","],
+  ["nospell.text"," type "],
+  ["text","="],
+  ["nospell.text"," type"],
+  ["paren.keyword.operator",")"],
+  ["text",","],
+  ["nospell.text"," "]
+],[
+   "nospell",
+  ["nospell.text","  type "],
+  ["text","="],
+  ["nospell.text"," picker"],
+  ["paren.keyword.operator","("],
+  ["text","\""],
+  ["nospell.text","points"],
+  ["text","\""],
+  ["nospell.text"," "],
+  ["text","="],
+  ["nospell.text"," "],
+  ["text","\""],
+  ["nospell.text","p"],
+  ["text","\","],
+  ["nospell.text"," "],
+  ["text","\""],
+  ["nospell.text","line"],
+  ["text","\""],
+  ["nospell.text"," "],
+  ["text","="],
+  ["nospell.text"," "],
+  ["text","\""],
+  ["nospell.text","l"],
+  ["text","\","],
+  ["nospell.text"," "],
+  ["text","\""],
+  ["nospell.text","step"],
+  ["text","\""],
+  ["nospell.text"," "],
+  ["text","="],
+  ["nospell.text"," "],
+  ["text","\""],
+  ["nospell.text","s"],
+  ["text","\""],
+  ["paren.keyword.operator","))"]
+],[
+   "nospell",
+  ["nospell.text","  "]
+],[
+   "nospell",
+  ["text","##"],
+  ["nospell.text"," Picker with groups"]
+],[
+   "nospell",
+  ["nospell.text","manipulate"],
+  ["paren.keyword.operator","("]
+],[
+   "nospell",
+  ["nospell.text","  barplot"],
+  ["paren.keyword.operator","("],
+  ["nospell.text","as"],
+  ["text","."],
+  ["nospell.text","matrix"],
+  ["paren.keyword.operator","("],
+  ["nospell.text","mtcars"],
+  ["paren.keyword.operator","["],
+  ["nospell.text","group"],
+  ["text",",\""],
+  ["nospell.text","mpg"],
+  ["text","\""],
+  ["paren.keyword.operator","])"],
+  ["text",","],
+  ["nospell.text"," beside"],
+  ["text","="],
+  ["nospell.text","TRUE"],
+  ["paren.keyword.operator",")"],
+  ["text",","]
+],[
+   "nospell",
+  ["nospell.text","  group "],
+  ["text","="],
+  ["nospell.text"," picker"],
+  ["paren.keyword.operator","("],
+  ["text","\""],
+  ["nospell.text","Group 1"],
+  ["text","\""],
+  ["nospell.text"," "],
+  ["text","="],
+  ["nospell.text"," 1"],
+  ["text",":"],
+  ["nospell.text","11"],
+  ["text",","],
+  ["nospell.text"," "]
+],[
+   "nospell",
+  ["nospell.text","                 "],
+  ["text","\""],
+  ["nospell.text","Group 2"],
+  ["text","\""],
+  ["nospell.text"," "],
+  ["text","="],
+  ["nospell.text"," 12"],
+  ["text",":"],
+  ["nospell.text","22"],
+  ["text",","],
+  ["nospell.text"," "]
+],[
+   "nospell",
+  ["nospell.text","                 "],
+  ["text","\""],
+  ["nospell.text","Group 3"],
+  ["text","\""],
+  ["nospell.text"," "],
+  ["text","="],
+  ["nospell.text"," 23"],
+  ["text",":"],
+  ["nospell.text","32"],
+  ["paren.keyword.operator","))"]
+],[
+   "nospell"
+],[
+   "nospell",
+  ["text","##"],
+  ["nospell.text"," Histogram w"],
+  ["text","/"],
+  ["nospell.text"," picker to select type"]
+],[
+   "nospell",
+  ["nospell.text","require"],
+  ["paren.keyword.operator","("],
+  ["nospell.text","lattice"],
+  ["paren.keyword.operator",")"]
+],[
+   "nospell",
+  ["nospell.text","require"],
+  ["paren.keyword.operator","("],
+  ["nospell.text","stats"],
+  ["paren.keyword.operator",")"]
+],[
+   "nospell",
+  ["nospell.text","manipulate"],
+  ["paren.keyword.operator","("]
+],[
+   "nospell",
+  ["nospell.text","  histogram"],
+  ["paren.keyword.operator","("],
+  ["text","~"],
+  ["nospell.text"," height "],
+  ["text","|"],
+  ["nospell.text"," voice"],
+  ["text","."],
+  ["nospell.text","part"],
+  ["text",","],
+  ["nospell.text"," "]
+],[
+   "nospell",
+  ["nospell.text","            data "],
+  ["text","="],
+  ["nospell.text"," singer"],
+  ["text",","],
+  ["nospell.text"," type "],
+  ["text","="],
+  ["nospell.text"," type"],
+  ["paren.keyword.operator",")"],
+  ["text",","]
+],[
+   "nospell",
+  ["nospell.text","  type "],
+  ["text","="],
+  ["nospell.text"," picker"],
+  ["paren.keyword.operator","("],
+  ["text","\""],
+  ["nospell.text","percent"],
+  ["text","\","],
+  ["nospell.text"," "],
+  ["text","\""],
+  ["nospell.text","count"],
+  ["text","\","],
+  ["nospell.text"," "],
+  ["text","\""],
+  ["nospell.text","density"],
+  ["text","\""],
+  ["paren.keyword.operator","))"]
+],[
+   "nospell"
+],[
+   "start",
+  ["paren.keyword.operator","}"]
+],[
+   "start",
+  ["paren.keyword.operator","}"]
+]]

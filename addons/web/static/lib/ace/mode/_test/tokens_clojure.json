@@ -1,0 +1,162 @@
+[[
+   "start",
+  ["keyword","("],
+  ["support.function","defn"],
+  ["text"," "],
+  ["identifier","parting"]
+],[
+   "start",
+  ["text","  "],
+  ["string","\"returns a String parting in a given language\""]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","([]"],
+  ["text"," "],
+  ["keyword","("],
+  ["identifier","parting"],
+  ["text"," "],
+  ["string","\"World\""],
+  ["keyword","))"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","(["],
+  ["support.function","name"],
+  ["keyword","]"],
+  ["text"," "],
+  ["keyword","("],
+  ["identifier","parting"],
+  ["text"," "],
+  ["support.function","name"],
+  ["text"," "],
+  ["string","\"en\""],
+  ["keyword","))"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","(["],
+  ["support.function","name"],
+  ["text"," "],
+  ["identifier","language"],
+  ["keyword","]"]
+],[
+   "start",
+  ["text","    "],
+  ["comment","; condp is similar to a case statement in other languages."]
+],[
+   "start",
+  ["text","    "],
+  ["comment","; It is described in more detail later."]
+],[
+   "start",
+  ["text","    "],
+  ["comment","; It is used here to take different actions based on whether the"]
+],[
+   "start",
+  ["text","    "],
+  ["comment","; parameter \"language\" is set to \"en\", \"es\" or something else."]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","("],
+  ["support.function","condp"],
+  ["text"," "],
+  ["constant.language","="],
+  ["text"," "],
+  ["identifier","language"]
+],[
+   "start",
+  ["text","      "],
+  ["string","\"en\""],
+  ["text"," "],
+  ["keyword","("],
+  ["support.function","str"],
+  ["text"," "],
+  ["string","\"Goodbye, \""],
+  ["text"," "],
+  ["support.function","name"],
+  ["keyword",")"]
+],[
+   "start",
+  ["text","      "],
+  ["string","\"es\""],
+  ["text"," "],
+  ["keyword","("],
+  ["support.function","str"],
+  ["text"," "],
+  ["string","\"Adios, \""],
+  ["text"," "],
+  ["support.function","name"],
+  ["keyword",")"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","(throw"],
+  ["text"," "],
+  ["keyword","("],
+  ["identifier","IllegalArgumentException"],
+  ["text","."]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","("],
+  ["support.function","str"],
+  ["text"," "],
+  ["string","\"unsupported language \""],
+  ["text"," "],
+  ["identifier","language"],
+  ["keyword","))))))"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","("],
+  ["support.function","println"],
+  ["text"," "],
+  ["keyword","("],
+  ["identifier","parting"],
+  ["keyword","))"],
+  ["text"," "],
+  ["comment","; -> Goodbye, World"]
+],[
+   "start",
+  ["keyword","("],
+  ["support.function","println"],
+  ["text"," "],
+  ["keyword","("],
+  ["identifier","parting"],
+  ["text"," "],
+  ["string","\"Mark\""],
+  ["keyword","))"],
+  ["text"," "],
+  ["comment","; -> Goodbye, Mark"]
+],[
+   "start",
+  ["keyword","("],
+  ["support.function","println"],
+  ["text"," "],
+  ["keyword","("],
+  ["identifier","parting"],
+  ["text"," "],
+  ["string","\"Mark\""],
+  ["text"," "],
+  ["string","\"es\""],
+  ["keyword","))"],
+  ["text"," "],
+  ["comment","; -> Adios, Mark"]
+],[
+   "start",
+  ["keyword","("],
+  ["support.function","println"],
+  ["text"," "],
+  ["keyword","("],
+  ["identifier","parting"],
+  ["text"," "],
+  ["string","\"Mark\""],
+  ["text",", "],
+  ["string","\"xy\""],
+  ["keyword","))"],
+  ["text"," "],
+  ["comment","; -> java.lang.IllegalArgumentException: unsupported language xy"]
+]]
