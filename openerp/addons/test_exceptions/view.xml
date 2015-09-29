@@ -43,6 +43,19 @@
                           <button name="generate_undefined" string="Undefined" type="object" icon="gtk-ok" colspan="1"/>
                           <label string="Server error-traceback"/>
                       </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_user_error" string="UserError" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_missing_error" string="MissingError" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Missing Error-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_validation_error" string="ValidationError" type="object" icon="gtk-ok" 
+                            colspan="1"/>
+                          <label string="Validation Error-description"/>
+                      </group>
                     </group>
                     <group colspan="4" col="8">
                       <group colspan="8" col="8">
@@ -77,6 +90,19 @@
                           <button name="generate_undefined_safe_eval" string="Undefined*" type="object" icon="gtk-ok" colspan="1"/>
                           <label string="Server error-traceback"/>
                       </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_user_error_safe_eval" string="UserError*" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_missing_error_safe_eval" string="MissingError*" type="object" icon="gtk-ok" 
+                            colspan="1"/>
+                          <label string="Missing Error-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_validation_error_safe_eval" string="ValidationError*" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Validation Error-description"/>
+                      </group>
                     </group>
                     </group>
                 </form>
@@ -92,7 +118,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem icon="STOCK_PREFERENCES" id="base.menu_tests" name="Tests" sequence="1000000"/>
+        <menuitem id="base.menu_tests" name="Tests" sequence="1000000" web_icon="test_exceptions,static/description/icon.png"/>
 
         <menuitem id="menu_test_exceptions" parent="base.menu_tests" name="Test exceptions"/>
 

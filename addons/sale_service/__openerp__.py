@@ -1,27 +1,9 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 {
-    'name': 'Create Tasks on SO',
+    'name': 'Create Tasks from SO',
     'version': '1.0',
     'category': 'Project Management',
     'description': """
@@ -33,10 +15,9 @@ This module will automatically create a new task for each procurement order line
 characteristics:
 
     * Product Type = Service
-    * Procurement Method (Order fulfillment) = MTO (Make to Order)
-    * Supply/Procurement Method = Manufacture
+    * Create Task Automatically = True
 
-If on top of that a projet is specified on the product form (in the Procurement
+If on top of that a project is specified on the product form (in the Procurement
 tab), then the new task will be created in that specific project. Otherwise, the
 new task will not belong to any project, and may be added to a project manually
 later.
@@ -46,13 +27,10 @@ is updated accordingly. For example, if this procurement corresponds to a sale
 order line, the sale order line will be considered delivered when the task is
 completed.
 """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
-    'depends': ['project', 'procurement', 'sale', 'procurement_jit'],
+    'depends': ['project', 'sale', 'project_timesheet', 'sale_timesheet'],
     'data': ['views/sale_service_view.xml'],
     'demo': ['demo/sale_service_demo.xml'],
-    'test': ['test/project_task_procurement.yml'],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

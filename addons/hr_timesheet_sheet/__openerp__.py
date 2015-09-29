@@ -1,30 +1,12 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 {
     'name': 'Timesheets',
     'version': '1.0',
     'category': 'Human Resources',
-    'sequence': 24,
+    'sequence': 80,
     'summary': 'Timesheets, Attendances, Activities',
     'description': """
 Record and validate timesheets and attendances easily
@@ -43,9 +25,8 @@ The validation can be configured in the company:
 * Period size (Day, Week, Month)
 * Maximal difference between timesheet and attendances
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
-    'depends': ['hr_timesheet', 'hr_timesheet_invoice'],
+    'depends': ['hr_timesheet'],
     'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_sheet_security.xml',
@@ -56,12 +37,11 @@ The validation can be configured in the company:
         'hr_timesheet_sheet_data.xml',
         'res_config_view.xml',
         'views/hr_timesheet_sheet.xml',
+        'hr_dashboard.xml',
     ],
-    'demo': ['hr_timesheet_sheet_demo.xml'],
-    'test':['test/test_hr_timesheet_sheet.yml'],
+    'test':['../account/test/account_minimal_test.xml', 'test/test_hr_timesheet_sheet.yml'],
     'installable': True,
     'auto_install': False,
     'application': True,
     'qweb': ['static/src/xml/timesheet.xml',],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

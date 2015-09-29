@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
-<openerp>
-    <data>
+<odoo>
         <record model="ir.module.category" id="module_lunch_category">
             <field name="name">Lunch</field>
             <field name="description">Helps you handle your lunch needs, if you are a manager you will be able to create new products, cashmoves and to confirm or cancel orders.</field>
@@ -29,6 +28,4 @@
             <field name="groups" eval="[(4, ref('group_lunch_manager'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
-
-    </data>
-</openerp>
+</odoo>

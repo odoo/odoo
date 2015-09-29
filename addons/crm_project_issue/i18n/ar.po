@@ -3,16 +3,14 @@
 # * crm_project_issue
 # 
 # Translators:
-# hoxhe aits <hoxhe0@gmail.com>, 2015
-# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-07 21:46+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
-"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-12 22:29+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,24 +18,26 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: crm_project_issue
-#: view:crm.lead2projectissue.wizard:crm_project_issue.view_crm_lead2projectissue_wizard
+#: model:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
+msgid ""
+"<span class=\"o_stat_text\">Convert To</span>\n"
+"                            <span class=\"o_stat_text\">Issue</span>"
+msgstr ""
+
+#. module: crm_project_issue
+#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
 msgid "Cancel"
 msgstr "إلغاء"
 
 #. module: crm_project_issue
-#: view:crm.lead:crm_project_issue.crm_case_form_view_leads_project_issue
-msgid "Convert To"
-msgstr "تحويل الى"
-
-#. module: crm_project_issue
-#: view:crm.lead:crm_project_issue.crm_case_form_view_leads_project_issue
-#: view:crm.lead2projectissue.wizard:crm_project_issue.view_crm_lead2projectissue_wizard
 #: model:ir.actions.act_window,name:crm_project_issue.convert_lead2projectissue_wizard_action
+#: model:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
+#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
 msgid "Convert to Issue"
 msgstr "تحويل إلى بلاغ"
 
 #. module: crm_project_issue
-#: view:crm.lead2projectissue.wizard:crm_project_issue.view_crm_lead2projectissue_wizard
+#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
 msgid "Create Issue"
 msgstr "إنشاء بلاغ"
 
@@ -47,19 +47,24 @@ msgid "Create a new customer"
 msgstr "إنشاء عميل جديد"
 
 #. module: crm_project_issue
-#: field:crm.lead2projectissue.wizard,create_uid:0
+#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_uid
 msgid "Created by"
 msgstr "أنشئ بواسطة"
 
 #. module: crm_project_issue
-#: field:crm.lead2projectissue.wizard,create_date:0
+#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_date
 msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: crm_project_issue
-#: field:crm.lead2projectissue.wizard,partner_id:0
+#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_partner_id
 msgid "Customer"
 msgstr "العميل"
+
+#. module: crm_project_issue
+#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: crm_project_issue
 #: selection:crm.lead2projectissue.wizard,action:0
@@ -72,27 +77,27 @@ msgid "Handle partner binding or generation in CRM wizards."
 msgstr "تعامل مع الربط بالشركاء أو إنشائهم في معالجات العلاقات العامة."
 
 #. module: crm_project_issue
-#: field:crm.lead2projectissue.wizard,id:0
+#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_id
 msgid "ID"
 msgstr "المعرف"
 
 #. module: crm_project_issue
-#: view:crm.lead:crm_project_issue.crm_case_form_view_leads_project_issue
-msgid "Issue"
-msgstr "البلاغ"
+#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard___last_update
+msgid "Last Modified on"
+msgstr "آخر تعديل في"
 
 #. module: crm_project_issue
-#: field:crm.lead2projectissue.wizard,write_uid:0
+#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_uid
 msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
 
 #. module: crm_project_issue
-#: field:crm.lead2projectissue.wizard,write_date:0
+#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_date
 msgid "Last Updated on"
 msgstr "آخر تحديث في"
 
 #. module: crm_project_issue
-#: field:crm.lead2projectissue.wizard,lead_id:0
+#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_lead_id
 msgid "Lead"
 msgstr "الترشيح"
 
@@ -102,16 +107,11 @@ msgid "Link to an existing customer"
 msgstr "ربط بعميل مسجل"
 
 #. module: crm_project_issue
-#: field:crm.lead2projectissue.wizard,project_id:0
+#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_project_id
 msgid "Project"
 msgstr "المشروع"
 
 #. module: crm_project_issue
-#: field:crm.lead2projectissue.wizard,action:0
+#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_action
 msgid "Related Customer"
 msgstr "العميل المقترن"
-
-#. module: crm_project_issue
-#: view:crm.lead2projectissue.wizard:crm_project_issue.view_crm_lead2projectissue_wizard
-msgid "or"
-msgstr "أو"

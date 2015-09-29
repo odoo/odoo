@@ -8,7 +8,6 @@ Our Team Page
 =============
 
         """,
-    'author': 'OpenERP SA',
     'depends': ['website', 'hr'],
     'demo': [
         'data/website_hr_demo.xml',
@@ -16,6 +15,7 @@ Our Team Page
     'data': [
         'data/website_hr_data.xml',
         'views/website_hr.xml',
+        'views/website_hr_view.xml',
         'security/ir.model.access.csv',
         'security/website_hr.xml',
     ],

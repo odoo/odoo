@@ -142,28 +142,24 @@ root can have the following attributes:
 
         <tree default_order="sequence,name desc">
 ``colors``
-    allows changing the color of a row's text based on the corresponding
+    .. deprecated:: 9.0
+        replaced by ``decoration-{$name}``
+``fonts``
+    .. deprecated:: 9.0
+        replaced by ``decoration-{$name}``
+``decoration-{$name}``
+    allow changing the style of a row's text based on the corresponding
     record's attributes.
 
-    Defined as a mapping of colors to Python expressions. Values are of the
-    form: :samp:`{color}:{expr}[;...]`. For each record, pairs are tested
-    in order, the expression is evaluated for the record and if ``true`` the
-    corresponding color is applied to the row. If no color matches, uses the
-    default text color (black).
+    Values are Python expressions. For each record, the expression is evaluated
+    with the record's attributes as context values and if ``true``, the
+    corresponding style is applied to the row. Other context values are
+    ``uid`` (the id of the current user) and ``current_date`` (the current date
+    as a string of the form ``yyyy-MM-dd``).
 
-    * ``color`` can be any valid `CSS color unit`_.
-    * ``expr`` should be a Python expression evaluated with the current
-      record's attributes as context values. Other context values are ``uid``
-      (the id of the current user) and ``current_date`` (the current date as
-      a string of the form ``yyyy-MM-dd``)
-``fonts``
-    allows changing a row's font style based on the corresponding record's
-    attributes.
-
-    The format is the same as for ``color``, but the ``color`` of each pair
-    is replaced by ``bold``, ``italic`` or ``underline``, the expression
-    evaluating to ``true`` will apply the corresponding style to the row's
-    text. Contrary to ``colors``, multiple pairs can match each record
+    ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
+    (``font-style: italic``), or any bootstrap contextual color (``danger``,
+    ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``create``, ``edit``, ``delete``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
@@ -574,18 +570,18 @@ Button Box
 Many relevant actions or links can be displayed in the form. For example, in
 Opportunity form, the actions "Schedule a Call" and "Schedule a Meeting" have
 an important place in the use of the CRM. Instead of placing them in the
-"More" menu, put them directly in the sheet as buttons (on the top right) to
-make them more visible and more easily accessible.
+"More" menu, put them directly in the sheet as buttons (on the top) to make
+them more visible and more easily accessible.
 
 .. image:: forms/header3.png
    :class: img-responsive
 
 Technically, the buttons are placed inside a ``<div>`` to group them as a
-block on the right-hand side of the sheet.
+block on the top of the sheet.
 
 ::
 
-    <div class="oe_button_box oe_right">
+    <div class="oe_button_box" name="button_box">
         <button string="Schedule/Log Call" name="..." type="action"/>
         <button string="Schedule Meeting" name="action_makeMeeting" type="object"/>
     </div>
@@ -751,9 +747,7 @@ record groups. Its root element is ``<graph>`` which can take the following
 attributes:
 
 ``type``
-  one of ``bar`` (default), ``pie``, ``line`` and ``pivot``, the type of graph
-  to use (``pivot`` technically isn't a graph type, it displays the
-  aggregation as a `pivot table`_)
+  one of ``bar`` (default), ``pie`` and ``line``, the type of graph to use
 ``stacked``
   only used for ``bar`` charts. If present and set to ``True``, stacks bars
   within a group
@@ -771,7 +765,7 @@ following attributes:
 
   ``row`` (default)
     groups by the specified field. All graph types support at least one level
-    of grouping, some may support more. For pivot tables, each group gets its
+    of grouping, some may support more. For pivot views, each group gets its
     own row.
   ``col``
     only used by pivot tables, creates column-wise groups
@@ -787,6 +781,19 @@ following attributes:
 
    graph view aggregations are performed on database content, non-stored
    function fields can not be used in graph views
+
+Pivots
+------
+
+The pivot view is used to visualize aggregations as a `pivot table`_. Its root 
+element is ``<pivot>`` which can take the following attributes:
+
+``disable_linking``
+  Set to ``True`` to remove table cell's links to list view.
+``display_quantity``
+  Set to ``true`` to display the Quantity column by default.
+
+The elements allowed within a pivot view are the same as for the graph view.
 
 .. _reference/views/kanban:
 
@@ -1155,10 +1162,6 @@ Possible children elements of the search view are:
         tooltip
     ``groups``
         makes a filter only available to specific users
-    ``icon``
-        an icon to display next to the label, if there's sufficient space
-
-        .. deprecated:: 7.0
 
     .. tip::
 

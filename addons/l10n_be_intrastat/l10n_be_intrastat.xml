@@ -11,7 +11,6 @@
                     <field name="incoterm_id" groups="l10n_be_intrastat.intrastat_extended"/>
                 </xpath>
                 <xpath expr="//field[@name='move_id']" position="after">
-                    <field name="intrastat_transaction_id"/>
                     <field name="transport_mode_id" groups="l10n_be_intrastat.intrastat_extended"/>
                     <field name="intrastat_country_id"/>
                 </xpath>
@@ -77,8 +76,8 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='parent']" position="inside">
-                    <group string="Intrastat" colspan="2">
+                <xpath expr="//group[@name='first']" position="after">
+                    <group string="Intrastat">
                         <field name="intrastat_id"/>
                     </group>
                 </xpath>
@@ -112,22 +111,35 @@
 
         </record>
 
-        <!-- Supplier Invoice Form -->
+        <!-- Vendor Bill Form -->
         <record id="l10n_be_intrastat_xml_decl_supp_invoice_view" model="ir.ui.view">
             <field name="name">l10n_be_intrastat_xml.suppinvoice_form</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='payment_term']" position="after">
+                <xpath expr="//field[@name='payment_term_id']" position="after">
                     <field name="incoterm_id" groups="l10n_be_intrastat.intrastat_extended"/>
                 </xpath>
-                <xpath expr="//field[@name='period_id']" position="after">
-                    <field name="intrastat_transaction_id" />
+                <xpath expr="//field[@name='date_due']" position="after">
                     <field name="transport_mode_id" groups="l10n_be_intrastat.intrastat_extended"/>
                     <field name="intrastat_country_id" />
                 </xpath>
             </field>
 
         </record>
+
+        <!-- Invoice Line Form -->
+        <record id="l10n_be_intrastat_xml_decl_invoice_line_view" model="ir.ui.view">
+            <field name="name">l10n_be_intrastat_xml.invoiceline_form</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='discount']" position="after">
+                    <field name="intrastat_transaction_id" />
+                </xpath>
+            </field>
+
+        </record>
+
     </data>
 </openerp>

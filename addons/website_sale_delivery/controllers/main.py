@@ -27,6 +27,10 @@ class website_sale(openerp.addons.website_sale.controllers.main.website_sale):
         order_lines_not_delivery = [line for line in order_lines if not line.is_delivery]
         return super(website_sale, self).order_lines_2_google_api(order_lines_not_delivery)
 
+    def checkout_values(self, data=None):
+        values = super(website_sale, self).checkout_values(data)
+        return request.env['sale.order']._get_shipping_country(values)
+
     def order_2_return_dict(self, order):
         """ Returns the tracking_cart dict of the order for Google analytics """
         ret = super(website_sale, self).order_2_return_dict(order)

@@ -17,7 +17,7 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" class="oe_inline"/>
+                                <field name="name" placeholder="Landed Cost Name"/>
                             </h1>
                         </div>
                         <group>
@@ -60,7 +60,7 @@
                             </group>
                         </group>
                         <group class="oe_subtotal_footer oe_right">
-                            <field name="amount_total"/>
+                            <field name="amount_total" widget="monetary"/>
                         </group>
                         <group>
                             <group>
@@ -91,7 +91,7 @@
                                         <field name="weight" readonly="1"/>
                                         <field name="volume" readonly="1"/>
                                         <field name="quantity" readonly="1"/>
-                                        <field name="former_cost_per_unit" readonly="1"/>
+                                        <field name="former_cost_per_unit" readonly="1" widget="monetary"/>
                                         <field name="former_cost" readonly="1"/>
                                         <field name="additional_landed_cost"/>
                                     </tree>
@@ -154,8 +154,7 @@
         </record>
 
         <!-- Stock Landed Cost Menu -->
-        <menuitem name="Landed Costs" parent="stock.menu_stock_root" id="menu_stock_landed_cost_main" sequence="1"/>
-        <menuitem action="action_stock_landed_cost" name="Landed Costs" parent="menu_stock_landed_cost_main" id="menu_stock_landed_cost" sequence="1"/>
+        <menuitem action="action_stock_landed_cost" name="Landed Costs" parent="stock.menu_stock_inventory_control" id="menu_stock_landed_cost" sequence="99"/>
 
         <!-- Stock Landed Cost Type View -->
         <record id="view_stock_landed_cost_type_form" model="ir.ui.view">
@@ -165,13 +164,13 @@
             <field name="arch" type="xml">
                 <form string="Landed Costs">
                     <sheet>
-                        <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
+                        <field name="image_medium" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" name='label_name' string="Product Name"/>
                             </div>
                             <h1>
-                                <field name="name" class="oe_inline"/>
+                                <field name="name"/>
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2>
@@ -190,10 +189,10 @@
                                     <group>
                                         <field name="split_method"/>
                                         <field name="standard_price"/>
-                                        <field name="property_account_expense"/>
+                                        <field name="property_account_expense_id"/>
                                     </group>
                                     <group>
-                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                         <field name="type"/>
                                     </group>
                                 </group>
@@ -251,7 +250,7 @@
            <field name="act_window_id" ref="stock_landed_cost_type_action"/>
         </record>
 
-    <menuitem action="stock_landed_cost_type_action" name="Landed Cost Type" parent="stock.menu_stock_configuration" id="menu_stock_landed_cost_type" sequence="1"/>
+	<menuitem action="stock_landed_cost_type_action" name="Landed Cost Type" parent="stock.menu_warehouse_config" id="menu_stock_landed_cost_type" sequence="3"/>
 
     </data>
 </openerp>

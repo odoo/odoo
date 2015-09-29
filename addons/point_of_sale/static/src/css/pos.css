@@ -24,12 +24,27 @@
 .ui-dialog .ui-icon-closethick{
     float: right;
 }
+div.modal.in {
+    position: absolute;
+    background: white;
+    padding: 20px;
+    box-shadow: 0px 10px 20px black;
+    border-radius: 3px;
+    max-width: 600px;
+    max-height: 400px;
+    margin-top: -200px;
+    margin-left: -300px;
+    top: 50%;
+    left: 50%;
+}
+
 /* --- Generic Restyling and Resets --- */
 
 html {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     font-family: sans-serif;
 }
+
 table {
     border-spacing: 0px;
     border-collapse: collapse;
@@ -40,6 +55,9 @@ td {
 
 .oe_hidden{
     display: none !important;
+}
+.oe_invisible{
+    visibility: hidden !important;
 }
 .clearfix:after {
     content:" ";
@@ -66,6 +84,20 @@ td {
 .pos button:hover{
     background: default;
 }
+.pos textarea {
+    font-family: "Lato";
+    font-size: 20px;
+    color: #444;
+    padding: 10px;
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgb(220,220,220) inset;
+}
+.pos textarea:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px #6EC89B;
+}
+
 
 .pos .oe_hidden{
     display: none !important;
@@ -294,6 +326,7 @@ td {
     margin-right:32px;
     line-height: 48px;
     font-style:italic;
+    cursor: pointer;
 }
 
 /*  b) The right part of the top-bar */
@@ -304,6 +337,11 @@ td {
     right:0;
     top:0;
     height:100%;
+    display: -webkit-flex;
+    display: flex;
+}
+.pos .pos-rightheader > * {
+    border-right: 1px solid #292929;
 }
 
 .pos .order-button{
@@ -327,6 +365,11 @@ td {
     cursor: pointer;
     min-width: 45px;
 }
+
+.pos .order-button:first-child {
+    margin-left: 0px;
+}
+
 .pos .order-button.selected{
     font-weight: 900;
     background: #EEEEEE;
@@ -334,6 +377,8 @@ td {
     height: 45px;
     border-bottom: solid 1px rgb(196, 196, 196);
     box-shadow: none;
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
 }
 
 .pos .order-button .order-sequence{
@@ -370,17 +415,19 @@ td {
 }
 
 .pos .order-selector {
-    display: inline-block;
-    max-width: 640px;
-    max-height: 48px;
-    white-space: nowrap;
-    overflow: hidden;
-    overflow-x: auto;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex: 1;
+    flex: 1;
 }
 .pos .orders {
-    display: inline-block;
+    display: -webkit-flex;
+    display: flex;
     vertical-align: top;
-    margin-left: 8px;
+    margin-left: 0px;
+    overflow: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /*  c) The session buttons */
@@ -460,7 +507,7 @@ td {
 
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
-.pos .pos-leftpane {
+.pos .leftpane {
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
         -ms-box-sizing: border-box;
@@ -471,42 +518,79 @@ td {
     top:0px;
     bottom:0;
     border-right: solid 1px #CECBCB;
+    border-right: solid 3px #787878;
+    background: #e2e2e2;
 }
-.pos .pos-leftpane .pads {
-    background: #F0EEEE;
-    white-space: nowrap;
+
+.pos .leftpane .pads {
+    border-top: solid 3px rgb(110, 200, 155);
 }
+
 /*  ********* The control buttons ********* */
 
 .pos .control-buttons {
-    padding-top: 8px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    padding: 8px 16px 0px 11px;
+    margin-bottom: -6px;
 }
 .pos .control-button {
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
     background: #e2e2e2;
-    border: solid 1px #BEBEBE;
+    border: solid 1px #bfbfbf;
     display: inline-block;
     line-height: 38px;
-    min-width: 38px;
+    min-width: 80px;
     text-align: center;
     border-radius: 3px;
     padding: 0px 10px;
     font-size: 18px;
     margin-left: 6px;
+    margin-bottom: 6px;
     cursor: pointer;
+    overflow: hidden;
+    transition: all linear 150ms;
+}
+.pos .control-button:hover {
+    background: #efefef;
+}
+.pos .control-button:active {
+    background: black;
+    color: white;
+    border-color: black;
 }
 .pos .control-button .fa{
     margin-right: 4px;
 }
-
-.pos .control-button.highlight{
-    background: #6EC89B;
-    border: solid 1px #6EC89B;
-    color: white;
+.pos .control-button .control-button-number {
+    color: rgb(226, 226, 226);
+    background: rgb(85, 85, 85);
+    display: inline-block;
+    height: 28px;
+    vertical-align: middle;
+    font-weight: bold;
+    line-height: 28px;
+    width: 28px;
+    border-radius: 50%;
+    text-align: center;
+    margin-left: -16px;
+    margin-right: 4px;
 }
-.pos .control-button:active {
-    background: #7F82AC;
-    border: solid 1px #7F82AC;
-    color: white;
+
+.pos .control-button.highlight,
+.pos .button.highlight {
+    background: #6EC89B !important;
+    border: solid 1px #64AF8A !important; 
+    color: white !important;
+}
+.pos .control-button.altlight,
+.pos .button.altlight {
+    background: #7F82AC !important;
+    border: solid 1px #756A99 !important;
+    color: white !important;
 }
 .pos .control-button.disabled,
 .pos .control-button.disabled:active{
@@ -517,51 +601,139 @@ td {
     color: inherit;
 }
 
-/*  ********* The paypad contains the payment buttons ********* */
+/*  ********* The actionpad (payment, set customer) ********* */
 
-.pos .paypad {
-    padding: 8px 4px 8px 8px;
+.pos .actionpad {
     display: inline-block;
+    float: left;
+    padding: 0;
+    margin: 16px;
+    margin-top: 8px;
+    margin-right: 0;
     text-align: center;
     vertical-align: top;
-    width: 205px;
-    max-height: 350px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    width: 188px;
+    border: none;
+    border-radius: 0;
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-color: #bfbfbf;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 }
-.pos .paypad button {
-    height: 39px;
+.pos .actionpad .button {
+    position: relative;
     display: block;
+    height: 54px;
     width: 100%;
-    margin: 0px -6px 4px -2px;
     font-weight: bold;
     vertical-align: middle;
     color: #555555;
     font-size: 14px;
-}
-.pos .paypad button:active, 
-.pos .numpad button:active, 
-.pos .numpad .selected-mode, 
-.pos .popup  button:active{
+    border-radius: 0;
     border: none;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #bfbfbf;
+    transition: all 150ms linear;
+}
+.pos .actionpad .button:hover {
+    background: #efefef;
+}
+.pos .actionpad .button:active {
+    background: black;
+    border-color: black;
     color: white;
-    background: #7f82ac;
+}
+.pos .actionpad .button:first-child {
+    border-top-left-radius: 4px;
+}
+.pos .actionpad .button:last-child {
+    border-bottom-left-radius: 4px;
+}
+.pos .actionpad .button.pay {
+    height: 162px;
+}
+.pos .actionpad .button.pay .pay-circle {
+    display: block;
+    font-size: 32px;
+    line-height: 54px;
+    padding-top: 6px;
+    background: rgb(86, 86, 86);
+    color: white;
+    width: 60px;
+    margin: auto;
+    border-radius: 30px;
+    margin-bottom: 10px;
+}
+.pos .actionpad .button.pay .pay-circle .fa {
+    position: relative;
+    top: -1px;
+    left: 3px;
+}
+
+.pos .actionpad .button.set-customer{
+    padding-left: 40px;
+    padding-right: 40px;
+}
+.pos .actionpad .button.set-customer.decentered {
+    padding-left: 40px;
+    padding-right: 5px;
+}
+.pos .actionpad .button .fa-user {
+    position: absolute;
+    left: 13px;
+    top: 13px;
+    margin-right: 8px;
+    font-size: 18px;
+    background: rgba(255, 255, 255, 0.5);
+    line-height: 30px;
+    width: 30px;
+    border-radius: 100%;
 }
 
 /*  ********* The Numpad ********* */
 
 .pos .numpad {
-    padding: 8px 8px 8px 4px;
     display: inline-block;
+    float: right;
     text-align: center;
+    margin: 16px;
+    margin-top: 8px;
+    margin-left: 0px;
+    border: none;
+    border-radius: 0;
+    border-top: 1px solid;
+    border-color: #bfbfbf;
+    border-top-right-radius: 4px;
 }
 .pos .numpad button {
-    height: 50px;
-    width: 50px;
-    margin: 0px 0px 4px 0px;
+    float: left;
+    height: 54px;
+    width: 54px;
     font-weight: bold;
     vertical-align: middle;
     color: #555555;
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #bfbfbf;
+    transition: all 150ms linear;
+}
+.pos .numpad button:hover {
+    background: #efefef;
+}
+.pos .numpad button:active {
+    background: black;
+    color: white;
+    border-color: transparent;
+}
+.pos .numpad button:nth-child(4) {
+    border-top-right-radius: 4px;
+}
+.pos .numpad button:last-child {
+    border-bottom-right-radius: 4px;
 }
 .pos .input-button {
     font-size: 24px;
@@ -569,13 +741,22 @@ td {
 .pos .mode-button {
     font-size: 14px;
 }
+.pos .mode-button.selected-mode {
+    color: white;
+    background: #6EC89B;
+    border-color: transparent;
+}
+.pos .mode-button.selected-mode:hover {
+    background: #6EC89B;
+    color: white;
+    border-color: transparent;
+}
 
 /*  ********* The right pane contains the screens and headers ********* */
 
 .pos .rightpane {
     position: absolute;
     top: 0;
-    /*bottom: 105px;*/
     bottom:0;
     left: 440px;
     right: 0;
@@ -646,6 +827,14 @@ td {
     font-size: 14px;
     cursor: pointer;
 }
+.pos .breadcrumb-button.breadcrumb-home {
+    line-height: 50px;
+    padding: 0;
+    width: 50px;
+    font-size: 25px;
+    text-align: center;
+}
+
 .pos .breadcrumb-arrow{
     width: 28px;
 }
@@ -669,7 +858,7 @@ td {
     background: url("../img/search.png") no-repeat 15px;
     background-color: white;
     border-radius: 20px;
-    font-family: Lato;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
     font-size: 13px;
 }
 .pos .searchbox input:focus {
@@ -690,6 +879,7 @@ td {
 
 .pos .categories {
     position: relative;
+    border-bottom: solid 3px rgb(110, 200, 155);
 }
 .pos .categories h4 {
     display: inline-block;
@@ -720,7 +910,7 @@ td {
     vertical-align: top;
     display: inline-block;
     font-size: 11px;
-    margin: 5px !important;
+    margin: 8px !important;
     width: 120px;
     height:120px;
     background:#fff;
@@ -745,7 +935,7 @@ td {
 }
 .pos .category-simple-button:active{
     color: white;
-    background: #7f82ac;
+    background: black;
 
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
@@ -795,9 +985,9 @@ td {
     display: inline-block;
     line-height: 100px;
     font-size: 11px;
-    margin: 5px !important;
-    width: 120px;
-    height:120px;
+    margin: 8px !important;
+    width: 122px;
+    height:115px;
     background:#fff;
     border: 1px solid #e2e2e2;
     border-radius: 3px;
@@ -897,6 +1087,14 @@ td {
     overflow: hidden;
     position: relative;
 }
+
+@media screen and (min-width: 1024px) {
+    .screen .screen-content{
+        border-left:  dashed 1px rgb(215,215,215);
+        border-right: dashed 1px rgb(215,215,215);
+    }
+}
+
 .screen .top-content{
     position: absolute;
     left: 0px; top: 0px; right: 0px;
@@ -915,11 +1113,23 @@ td {
     border-radius: 3px;
     border: solid 1px rgb(209, 209, 209);
     cursor: pointer;
+    transition: all 150ms linear;
 }
-.screen .top-content .button.highlight{
+.screen .top-content .button:hover {
+    background: #efefef;
+}
+.screen .top-content .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+.screen .top-content .button.highlight {
     background: rgb(110,200,155);
     color: white;
     border: solid 1px rgb(110,200,155);
+}
+.screen .top-content .button.highlight:hover {
+    background: rgb(120,210,165);
 }
 .screen .top-content .button.back {
     left: 0px;
@@ -937,12 +1147,18 @@ td {
     overflow-y: auto;
     border-right: dashed 1px rgb(215,215,215);
 }
+.screen .left-content.pc40{
+    right: 66%;
+}
 .screen .right-content{
     position: absolute;
     right:0px; top: 64px; bottom: 0px;
     left:50%;
     overflow-x: hidden;
     overflow-y: auto;
+}
+.screen .right-content.pc60{
+    left:34%;
 }
 .screen .centered-content{
     position: absolute;
@@ -990,101 +1206,193 @@ td {
     position:relative;
 }
 
+
 /* b) The payment screen */
 
-
-.pos .pos-payment-container {
+.pos .payment-numpad {
     display: inline-block;
-    font-size: 16px;
-    text-align: left;
-    width: 360px;
-}
-.pos .payment-due-total {
+    width: 50%;
+    box-sizing: border-box;
+    padding: 16px;
     text-align: center;
-    font-weight: bold;
-    font-size: 48px;
-    margin: 27px;
-    text-shadow: 0px 2px rgb(202, 202, 202);
+    float: left;
+}
+.pos .payment-numpad .numpad {
+    float: none;
+    border-radius: 4px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-color: #cacaca;
+    width: 296px;
+    overflow: hidden;
+    margin: 0;
+}
+.pos .payment-numpad .numpad button {
+    width: 74px;
+    height: 74px;
+}
+.pos .payment-numpad .numpad button:first-child {
+    border-top-left-radius: 4px;
+}
+.pos .payment-numpad .numpad button:nth-child(16) {
+    border-bottom-left-radius: 4px;
+}
+
+.pos .paymentlines-container {
+    padding: 16px;
+    padding-top: 0;
+    border-bottom: dashed 1px gainsboro;
+    min-height: 154px;
+}
+
+.pos .paymentlines {
+    width: 100%;
+}
+.pos .paymentlines .controls {
+    width: 40px;
+}
+.pos .paymentlines .label > * {
+    font-size: 16px;
+    padding: 8px;
+}
+.pos .paymentlines tbody{
+    background: white;
+    border-radius: 3px;
 }
 .pos .paymentline{
-    position: relative;
-    padding: 8px;
-    border-box: 3px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    border-radius: 3px;
+    font-size: 22px;
 }
-.pos .paymentline-name{
-    margin-bottom: 8px;
+.pos .paymentline.selected {
+    font-size: 22px;
+    background: #6EC89B;
+    color: white;
 }
-.pos .paymentline-input{
-    font-size: 20px;
-    font-family: Lato;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    outline: none;
-    border: none;
-    padding: 6px 8px;
+.pos .paymentline.selected .edit {
     background: white;
-    color: #484848;
-    text-align: right;
+    color: #6EC89B;
+    outline: 3px blue;
+    box-shadow: 0px 0px 0px 3px #6EC89B;
+    position: relative;
     border-radius: 3px;
-    box-shadow: 0px 2px rgba(143, 143, 143, 0.3) inset;
 }
-
-.pos .paymentline-input:focus{
-    color: rgb(130, 124, 255);
-    box-shadow: 0px 2px rgba(219, 219, 219, 0.3) inset;
-    -webkit-animation: all 250ms linear;
+.pos .paymentline > *{
+    padding: 8px 12px;
 }
-
-.paymentline-delete {
-    width: 32px;
-    height: 32px;
-    padding: 5px;
-    text-align: center;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    position: absolute;
-    bottom: 10px;
-    left: 8px;
+.pos .paymentline .col-due,
+.pos .paymentline .col-tendered,
+.pos .paymentline .col-change {
+    min-width: 90px;
+}
+.pos .paymentline.extra .col-due {
+    border-radius: 0 0 6px 6px;
+    border-top: solid 1px rgb(230, 230, 230);
+    font-weight: bold;
+}
+.pos .paymentline .col-change.highlight {
+    background: rgb(184, 152, 204);
+}
+.pos .paymentline .col-name {
+    font-size: 16px;
+}
+.pos .paymentline .delete-button{
     cursor: pointer;
+    text-align: center;
+}
+.pos .payment-buttons {
+    display: inline-block;
+    width: 50%;
+    box-sizing: border-box;
+    padding: 16px;
+    padding-left: 0;
+    float: right;
+}
+.payment-screen .payment-buttons .button {
+    background: #e2e2e2;
+    line-height: 73px;
+    font-size: 16px;
+    padding: 0px 8px;
+    border: solid 1px rgb(200,200,200);
+    border-top-width: 0;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+    transition: background-color, border-color, color 150ms linear;
+}
+.payment-screen .payment-buttons .button:hover {
+    background-color: #efefef;
+}
+.payment-screen .payment-buttons .button:first-child {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-top-width: 1px;
+}
+.payment-screen .payment-buttons .button:last-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.payment-screen .payment-buttons .button.highlight:not(:first-child) {
+    margin-top: -1px;
+    border-top: solid 1px;
+}
+.payment-screen .payment-buttons .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+.payment-screen .payment-buttons .button.highlight .fa {
+    border-color: rgba(0, 0, 0, 0.109804);
+    background: rgba(0, 0, 0, 0.0980392);
+}
+.payment-screen .payment-buttons .button .fa {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    margin-top: -25px;
+    vertical-align: middle;
+    border-radius: 26px;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    background: rgba(255,255,255,0.4);
+    font-size: 20px;
+    transition: all 150ms linear;
+}
+.payment-screen .paymentlines-empty .total {
+    text-align: center;
+    padding: 24px 0px 18px;
+    font-size: 64px;
+    color: #43996E;
+    text-shadow: 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.27);
+}
+.payment-screen .paymentlines-empty .message {
+    text-align: center;
 }
 
-.pos .pos-payment-container .left-block{
-    display: inline-block;
-    width:49%;
-    margin:0;
-    padding:0;
-    text-align:left;
-}
-.pos .pos-payment-container .infoline{
-    margin-top:5px;
-    margin-bottom:5px;
-    padding: 0px 8px;
-    opacity: 0.5;
-}
-.pos .pos-payment-container .infoline.bigger{
-    opacity: 1;
-    font-size: 20px;
-}
-.pos .pos-payment-container .right-block{
-    display: inline-block;
-    width:49%;
-    margin:0;
-    padding:0;
-    text-align:right;
-}
-.pos .paymentline.selected{
-    background: rgb(220,220,220);
-}
 
 /* c) The receipt screen */
 
+.pos .receipt-screen .centered-content .button {
+    line-height: 40px;
+    padding: 3px 13px;
+    font-size: 20px;
+    text-align: center;
+    background: rgb(230, 230, 230);
+    margin: 16px;
+    margin-bottom: 0px;
+    border-radius: 3px;
+    border: solid 1px rgb(209, 209, 209);
+    cursor: pointer;
+}
+
 .pos .pos-receipt-container {
     font-size: 0.75em;
+    text-align: center;
 }
 
 .pos .pos-sale-ticket {
@@ -1126,10 +1434,17 @@ td {
     * {
         color: black !important;
     }
+    body {
+        margin: 0;
+        color: white !important;
+    }
     .oe_leftbar,
     .pos .pos-topheader, 
     .pos .pos-leftpane, 
-    .pos .keyboard_frame {
+    .pos .keyboard_frame,
+    .pos .receipt-screen header,
+    .pos .receipt-screen .top-content,
+    .pos .receipt-screen .centered-content .button {
         display: none !important;
     }
     .pos,
@@ -1150,10 +1465,14 @@ td {
         left: 0px !important;
         background-color: white;
     }
-    .pos .receipt-screen header {
-        display: none !important;
-    }
     .pos .receipt-screen {
+        text-align: left;
+    }
+    .pos .receipt-screen .centered-content{
+        position: static;
+        border: none;
+    }
+    .pos .pos-receipt-container {
         text-align: left;
     }
     .pos-actionbar {
@@ -1381,7 +1700,7 @@ td {
     top: 0px;
     width:100%;
     height: 100%;
-    background: #F0EEEE;
+    background: white;
 }
 
 .pos .order-scroller{
@@ -1400,26 +1719,24 @@ td {
 
 .pos .order{
     background: white;
-    padding-bottom:15px;
-    padding-top:15px;
-    margin-left:16px;
-    margin-right:16px;
-    margin-top:16px;
-    margin-bottom:16px;
-    font-size:16px;
-    border-radius: 3px;
-    border: solid 1px rgb(220,220,220);
+    padding-bottom: 8px;
+    padding-top: 8px;
+    font-size: 16px;
     text-align: left;
     max-width: 500px;
     -webkit-transform: translate3d(0,0,0);
 }
 
-.pos .order .empty{
-    text-align:center;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    color:#999;
-    font-weight: normal;
+.pos .order .order-empty {
+    text-align: center;
+    margin: 48px;
+    color: #DDD;
+}
+.pos .order .order-empty .fa {
+    font-size: 64px;
+}
+.pos .order .order-empty h1 {
+    font-size: 20px;
 }
 
 .pos .order .summary{
@@ -1437,8 +1754,11 @@ td {
     border-top: solid 2px;
     border-color:#777;
 }
+.pos .order .summary .total {
+    font-size: 22px;
+}
 .pos .order .summary .line .subentry{
-    font-size: 14px;
+    font-size: 16px;
     font-weight: normal;
     text-align: center;
 }
@@ -1537,6 +1857,21 @@ td {
     text-shadow: 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.27);
     border-bottom: dashed 1px rgb(215,215,215);
 }
+.pos .splitbill-screen .order {
+    background: white;
+    padding-bottom:15px;
+    padding-top:15px;
+    margin-left:16px;
+    margin-right:16px;
+    margin-top:16px;
+    margin-bottom:16px;
+    font-size:16px;
+    border-radius: 3px;
+    border: solid 1px rgb(220,220,220);
+    text-align: left;
+    max-width: 500px;
+    -webkit-transform: translate3d(0,0,0);
+}
 .splitbill-screen .order .orderline.selected{
     background: rgb(110,200,155);
     color: white;
@@ -1556,19 +1891,39 @@ td {
     font-size: 24px;
     vertical-align: top;
 }
-.splitbill-screen .paymentmethods {
+.paymentmethods {
     margin: 16px;
 }
-.splitbill-screen .paymentmethod {
-    background: rgb(221, 221, 221);
-    line-height: 40px;
-    margin-bottom: 4px;
-    border-radius: 3px;
+.paymentmethods .button {
+    background: #e2e2e2;
+    line-height: 74px;
     font-size: 16px;
     border: solid 1px rgb(202, 202, 202);
+    border-top-width: 0px;
     cursor: pointer;
     text-align: center;
 }
+.paymentmethods .button:first-child {
+    border-top-width: 1px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.paymentmethods .button:last-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.paymentmethods .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+.paymentmethod .button.active {
+    background: #6EC89B;
+    color: white;
+    border-color: #6EC89B;
+}
+
+
 
 /*  ********* The ActionBarWidget  ********* */
 
@@ -1731,14 +2086,10 @@ td {
 }
 .pos .modal-dialog .popup{
     position: absolute;
-    left:50%;
-    top:50%;
+    top: 0; left: 0; right: 0; bottom: 0;
+    margin: auto;
     width:500px;
     height:400px;
-    margin-left: -250px;
-    margin-top: -200px;
-    padding:10px;
-    padding-top:20px;
     text-align:center;
     font-size:20px;
     font-weight:bold;
@@ -1746,18 +2097,28 @@ td {
     border-radius: 3px;
     box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
     z-index:1200;
+    font-family: 'Lato';
+    font-family: Lato;
 }
-.pos .popup .comment{
+.pos .popup .title {
+    background: rgba(255,255,255,0.5);
+    margin: 0;
+    padding: 20px;
+    border-radius: 3px 3px 0px 0px;
+    border-bottom: solid 1px rgba(60,60,60,0.1);
+}
+.pos .popup .body {
     font-weight: normal;
     font-size: 18px;
-    margin: 0px 16px;
+    margin: 16px;
+    margin-top: 20px;
 }
-.pos .popup .comment.traceback {
-    height: 264px;
+.pos .popup .body.traceback {
+    height: 238px;
     overflow: auto;
-    font-size: 12px;
-    text-align: left;
+    font-size: 14px;
     white-space: pre-wrap;
+    text-align: left;
     font-family: 'Inconsolata';
     -webkit-user-select: text;
        -moz-user-select: text;
@@ -1769,7 +2130,7 @@ td {
     left:0;
     width:100%;
     height:60px;
-    border-top: 1px solid #E0DDDD;
+    border-top: solid 1px rgba(60,60,60,0.1);
 }
 .pos .popup .button{
     float:right;
@@ -1777,7 +2138,7 @@ td {
     height: 40px;
     line-height:40px;
     text-align:center;
-    margin:3px;
+    border-radius: 2px;
     margin-top:10px;
     margin-right:10px;
 
@@ -1786,19 +2147,24 @@ td {
 
     cursor: pointer;
 
-    border: 1px solid #cacaca;
+    border: solid 1px rgba(60,60,60,0.1);
 
-    background: #e2e2e2;
+    background: rgba(0,0,0,0.05);
+}
+.pos .popup .button.icon {
+    width: 40px;
+    font-size: 20px;
 }
 .pos .popup .button:active{
     color: white;
-    background: #7f82ac;
-    border: 1px solid #7f82ac;
+    background: black;
+    border: 1px solid black;
 
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
     -webkit-transition-timing-function: ease-out;
 }
+
 
 .pos .popup .button.big-left{
     position:absolute;
@@ -1817,12 +2183,139 @@ td {
     height: 180px;
     line-height:180px;
 }
+.pos .popup input,
+.pos .popup-input {
+    text-align: left;
+    display: inline-block;
+    overflow: hidden;
+    background: white;
+    min-height: 44px;
+    font-family: "Lato";
+    font-size: 20px;
+    color: #444;
+    padding: 10px;
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgb(220,220,220) inset;
+    box-sizing: border-box;
+    width: 80%;
+}
+.pos .popup-number .popup-input {
+    text-align: center;
+}
+.pos .popup input:focus,
+.pos .popup-input.active {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px #6EC89B;
+}
+.pos .popup.popup-error {
+    background-color: #F3BBBB;
+    color: rgb(168, 89, 89);
+    box-shadow: 0px 10px 20px rgba(92,51,51,0.4);
+}
+.pos .popup.popup-error .title {
+    color: white;
+    background: rgba(255, 76, 76, 0.5);
+}
+.pos .popup.popup-selection .selection {
+    overflow-y: auto;
+    max-height: 273px;
+    font-size: 16px;
+    width: auto;
+    line-height: 50px;
+    margin-top: -1px;
+    border-top: solid 3px #6EC89B;
+    
+}
+.pos .popup.popup-selection .selection-item {
+    width: auto;
+    background: rgb(230,230,230);
+    cursor: pointer;
+    text-align: left;
+    padding: 0px 16px;
+}
+.pos .popup.popup-selection .selection-item:nth-child(even) {
+    background: rgb(247,247,247);
+}
+.pos .popup.popup-number {
+    width: 300px;
+    height: 450px;
+}
+.pos .footer.centered {
+    text-align: center;
+}
+.pos .footer.centered .button {
+    float: none;
+    display: inline-block;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.pos .popup-numpad {
+    margin: 12px auto;
+    text-align: center;
+    width: 254px;
+}
+.pos .popup-number .title,
+.pos .popup-textinput .title
+{
+    margin-bottom: 20px;
+}
+.pos .popup-numpad .input-button,
+.pos .popup-numpad .mode-button {
+    background: none;
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border-radius: 25px;
+    margin: 4px;
+    vertical-align: top;
+    color: #444;
+}
+.pos .popup-numpad .input-button:active,
+.pos .popup-numpad .mode-button:active {
+    background: #444;
+    color: white;
+    border-color: #444;
+}
+
+.pos .popup.popup-password {
+    width: 254px;
+}
+.pos .popup-password .mode-button.add,
+.pos .popup-password .input-button.dot {
+    display: none;
+}
+.pos .popup-password .popup-numpad {
+    width: 190px;
+    text-align: left;
+}
+.pos .popup-password .popup-input {
+    width: 70%;
+    -webkit-text-security: disc;
+ }
+
+.pos .popup .body ul,
+.pos .popup ul.body {
+    text-align: left;
+    margin-left: 1em;
+}
+.pos .popup .body li {
+    text-indent: 1em;
+}
+.pos .popup .body li:before {
+    content: '—';
+    position: relative;
+    font-size: 0.6em;
+    left: -1em;
+    bottom: 0.2em;
+}
+
 
 /*  ********* The Webkit Scrollbar  ********* */
 
 .pos *::-webkit-scrollbar{
-    width:  10px;
-    height: 10px;
+    width:  4px;
+    height: 4px;
 }
 .pos *::-webkit-scrollbar-track{
     background: rgb(224,224,224);
@@ -1830,6 +2323,7 @@ td {
 }
 .pos *::-webkit-scrollbar-thumb{
     background: rgb(168,168,168);
+    background: #393939;
     min-height: 30px;
 }
 

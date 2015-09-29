@@ -1,33 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <record id="action_client_l10n_pa_menu" model="ir.actions.client">
+            <field name="name">Open Account Dashboard Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_board_journal_1')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_l10n_pa_menu"/>
+            <field name="state">open</field>
+        </record>
+    </data>
   <data>
 
+    <record id="tax_tag_sale_07" model="account.account.tag">
+        <field name="name">ITBMS 7% Venta</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_purchase_07" model="account.account.tag">
+        <field name="name">ITBMS 7% Compra</field>
+        <field name="applicability">taxes</field>
+    </record>
+
     <record id="ITAX_19" model="account.tax.template">
-      <field name="chart_template_id" ref="l10npa_chart_template"/>
-      <field name="name">ITBMS 7% Venta</field>
-      <field name="amount">0.070000</field>
-      <field name="type">percent</field>
-      <field name="type_tax_use">sale</field>
-      <field name="account_collected_id" ref="231"/>
-      <field name="account_paid_id" ref="231"/>
-      <field name="base_code_id" ref="vat_code_base_sale"/>
-      <field name="tax_code_id" ref="vat_code_ITBMS_receive"/>
-      <field name="ref_base_code_id" ref="vat_code_base_sale"/>
-      <field name="ref_tax_code_id" ref="vat_code_ITBMS_receive"/>
+        <field name="chart_template_id" ref="l10npa_chart_template"/>
+        <field name="name">ITBMS 7% Venta</field>
+        <field name="description">ITBMS 7% Venta</field>
+        <field name="amount">7</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="refund_account_id" ref="231"/>
+        <field name="account_id" ref="231"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_07')])]"/>
     </record>
 
     <record id="OTAX_19" model="account.tax.template">
-      <field name="chart_template_id" ref="l10npa_chart_template"/>
-      <field name="name">ITBMS 7% Compra</field>
-      <field name="amount">0.070000</field>
-      <field name="type">percent</field>
-      <field name="type_tax_use">purchase</field>
-      <field name="account_collected_id" ref="231"/>
-      <field name="account_paid_id" ref="231"/>
-      <field name="base_code_id" ref="vat_code_base_purchase"/>
-      <field name="tax_code_id" ref="vat_code_ITBMS_pay"/>
-      <field name="ref_base_code_id" ref="vat_code_base_purchase"/>
-      <field name="ref_tax_code_id" ref="vat_code_ITBMS_pay"/>
+        <field name="chart_template_id" ref="l10npa_chart_template"/>
+        <field name="name">ITBMS 7% Compra</field>
+        <field name="description">ITBMS 7% Compra</field>
+        <field name="amount">7</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="refund_account_id" ref="231"/>
+        <field name="account_id" ref="231"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_07')])]"/>
     </record>
 
   </data>

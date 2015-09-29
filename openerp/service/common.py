@@ -17,14 +17,6 @@ RPC_VERSION_1 = {
         'protocol_version': 1,
 }
 
-def dispatch(method, params):
-    if method not in ['login', 'about', 'timezone_get',
-                      'version', 'authenticate', 'set_loglevel']:
-        raise Exception("Method not found: %s" % method)
-
-    fn = globals()['exp_' + method]
-    return fn(*params)
-
 def exp_login(db, login, password):
     # TODO: legacy indirection through 'security', should use directly
     # the res.users model
@@ -53,12 +45,15 @@ def exp_about(extended=False):
         return info, openerp.release.version
     return info
 
-def exp_timezone_get(db, login, password):
-    return openerp.tools.misc.get_server_timezone()
-
 def exp_set_loglevel(loglevel, logger=None):
     # TODO Previously, the level was set on the now deprecated
     # `openerp.netsvc.Logger` class.
     return True
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+def dispatch(method, params):
+    g = globals()
+    exp_method_name = 'exp_' + method
+    if exp_method_name in g:
+        return g[exp_method_name](*params)
+    else:
+        raise Exception("Method not found: %s" % method)

@@ -1,15 +1,23 @@
-.box
-  padding-left: 8px
-  padding-right: 8px
-  margin-left: 4px
-  margin-right: 4px
-  border-radius: 4px
-  min-width: 80px
-  span
-    font-size: 200%
+.vote
+  min-width: 38px
+  margin-right: 12px
+  .vote_count
+    font-size: 160%
     font-weight: bold
-  div.subtitle
-    margin-top: -4px
+    line-height: 12px
+  .vote_up,.vote_down
+    font-size: 130%
+
+.author-box
+  min-width: 200px
+  padding: 4px
+  background-color: #f5f5f5
+
+.question-block
+  margin-left: 50px
+
+.question
+  clear: left
 
 .question
   .question-name
@@ -28,10 +36,13 @@
     max-width: 600px
     height: auto !important
 
-img.img-avatar
-  max-width: 50px
+img.o_forum_avatar
+  max-height: 40px
   margin-right: 10px
 
+img.o_forum_avatar_big
+  max-width: 75px
+  margin-right: 10px
 
 .oe_grey
   background-color: #eeeeee
@@ -47,18 +58,21 @@ img.img-avatar
 
 .oe_answer_true
   color: #3c763d
+  &:hover {
+    color: #4D964E;
+  }
 
 .oe_answer_false
   color: #bbbbbb
+  &:hover {
+    color: #9E9C9C;
+  }
 
 .favourite_question
   color: #bbbbbb !important
 
 .forum_favourite_question
   color: #ffcc00 !important
-
-.load_tags
-  width: 845px !important
 
 a.no-decoration
   cursor: pointer
@@ -102,3 +116,28 @@ a.no-decoration
 
 button.btn-link.text-muted
   color: #999
+
+.o_forum_user_bio_expand
+  position: absolute
+  z-index: 200
+  display: none
+
+.o_forum_tooltip_heading
+  padding: 0px
+  margin: 0px
+  font-size: 18px
+
+.o_forum_user_bio
+  color: black
+  width: 318px
+  min-height: 100px
+  cursor: auto
+  border: 1px solid darkgray
+  background-color: whitesmoke
+  line-height: 13px
+  font-size: 11px
+  word-wrap: break-word
+  .o_forum_tooltip_line
+    min-height: 13px
+  .o_forum_tooltip_header
+    min-height: 75px

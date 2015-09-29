@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import functools
-import unittest2
+import unittest
 
 from openerp.tools.func import compose
 
-class TestCompose(unittest2.TestCase):
+class TestCompose(unittest.TestCase):
     def test_basic(self):
         str_add = compose(str, lambda a, b: a + b)
         self.assertEqual(
@@ -19,4 +19,3 @@ class TestCompose(unittest2.TestCase):
             return a * b
 
         self.assertEqual(mul(5, 42), u"210")
-

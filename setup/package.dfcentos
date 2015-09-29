@@ -9,6 +9,8 @@ RUN yum install -d 0 -e 0 epel-release -y && \
 	yum install -d 0 -e 0 \
 		babel \
 		libxslt-python \
+		nodejs-less \
+		nodejs-clean-css \
 		pychart \
 		pyparsing \
 		python-dateutil \
@@ -27,8 +29,6 @@ RUN yum install -d 0 -e 0 epel-release -y && \
 		python-psycopg2 \
 		python-reportlab \
 		python-requests \
-		python-simplejson \
-		python-unittest2 \
 		python-vobject \
 		python-werkzeug \
 		python-yaml \
@@ -40,7 +40,7 @@ RUN yum install -d 0 -e 0 epel-release -y && \
 		postgresql-devel -y && \
 	yum clean all
 
-RUN easy_install pyPdf vatnumber pydot psycogreen
+RUN easy_install pyPdf vatnumber pydot psycogreen suds ofxparse
 
 # Postgres configuration
 RUN mkdir -p /var/lib/postgres/data

@@ -51,7 +51,8 @@
                 <search string="Hr Attendance Search">
                     <field name="name" string="Attendance"/>
                     <field name="action"/>
-                    <filter string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
+                    <field name="department_id"/>
+                    <filter string="Today" name="today" domain="[('name','&gt;=',datetime.datetime.now().replace(hour=0, minute=0, second=0)),('name','&lt;=',datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
                     <filter string="Current Month" domain="[('name','&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
                     <separator/>
                     <filter string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
@@ -65,13 +66,25 @@
             </field>
         </record>
 
+        <record id="view_hr_attendance_pivot" model="ir.ui.view">
+            <field name="name">hr.attendance.pivot</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <pivot string="Attendance">
+                    <field name="employee_id" type="row"/>
+                    <field name="name" type="col"/>
+                    <field name="worked_hours" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
         <record id="view_hr_attendance_graph" model="ir.ui.view">
             <field name="name">hr.attendance.graph</field>
             <field name="model">hr.attendance</field>
             <field name="arch" type="xml">
-                <graph string="Attendance" type="pivot">
-                    <field name="employee_id" type="row"/>
-                    <field name="name" type="col"/>
+                <graph string="Attendance">
+                    <field name="employee_id"/>
+                    <field name="name"/>
                     <field name="worked_hours" type="measure"/>
                 </graph>
             </field>
@@ -91,22 +104,31 @@
             <field name="name">Attendance Analysis</field>
             <field name="res_model">hr.attendance</field>
             <field name="view_type">form</field>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_hr_attendance_graph"/>
+            <field name="view_mode">pivot,graph</field>
+            <field name="view_id"></field>  <!-- force empty -->
         </record>
 
-        <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="5" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
+        <record id="action_hr_attendance_graph_filtered" model="ir.actions.act_window">
+            <field name="name">Attendance Analysis</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="context">{
+                'search_default_department_id': [active_id],
+                'default_department_id': active_id}
+            </field>
+            <field name="view_id"></field>  <!-- force empty -->
+        </record>
 
-        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="10" groups="base.group_hr_attendance"/>
+        <menuitem id="timesheet_menu_root" name="Timesheets" sequence="55" groups="base.group_user,base.group_hr_user,base.group_hr_manager" web_icon="hr_attendance,static/description/icon_timesheet.png"/>
+        <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="timesheet_menu_root" sequence="5" />
 
-        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" sequence="20" groups="base.group_hr_attendance"/>
+        <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="90" groups="base.group_hr_attendance" web_icon="hr_attendance,static/description/icon.png"/>
 
-        <menuitem
-            action="action_hr_attendance_graph"
-            id="menu_hr_attendance_graph"
-            parent="hr.menu_hr_reporting"
-            sequence="3"
-        />
+        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance_root" sequence="20" groups="base.group_hr_attendance"/>
+
+        <menuitem name="Reports" parent="menu_hr_attendance_root" sequence="99"
+            id="menu_hr_attendance_report" action="action_hr_attendance_graph"/>
 
         <record id="edit_attendance_reason" model="ir.ui.view">
             <field name="name">hr.action.reason.form</field>
@@ -141,25 +163,7 @@
             <field name="view_id" ref="view_attendance_reason"/>
         </record>
 
-        <menuitem
-            sequence="35" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" groups="base.group_hr_attendance" name="Attendance"/>
-        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config" groups="base.group_hr_attendance"/>
-
-        <record id="hr_attendance_employee" model="ir.ui.view">
-            <field name="name">hr.employee.form1</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-                <field name="active" position="before">
-                    <label for="state" groups="base.group_hr_attendance"/>
-                    <div groups="base.group_hr_attendance">
-                        <field name="state" class="oe_inline"/> -
-                        <button class="oe_link" name="attendance_action_change" states="present" string="Sign Out" type="object" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
-                        <button class="oe_link" name="attendance_action_change" states="absent" string="Sign In" type="object" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
-                    </div>
-                </field>
-            </field>
-        </record>
+        <menuitem name="Configuration" parent="menu_hr_attendance_root" id="menu_hr_attendance_config" sequence="100" groups="base.group_configuration,base.group_hr_attendance" action="open_view_attendance_reason"/>
 
     </data>
 </openerp>

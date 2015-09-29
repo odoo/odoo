@@ -2,16 +2,6 @@
 <openerp>
     <data>
 
-        <record id="event_tag1" model="event.track.tag">
-            <field name="name">Webinar</field>
-        </record>
-        <record id="event_tag2" model="event.track.tag">
-            <field name="name">Exhibition</field>
-        </record>
-        <record id="event_tag3" model="event.track.tag">
-            <field name="name">Conference</field>
-        </record>
-
         <record id="event_track_tag1" model="event.track.tag">
             <field name="name">Technical</field>
         </record>
@@ -58,13 +48,13 @@
         <record id="event_sponsor_2" model="event.sponsor">
             <field name="event_id" ref="event.event_0"/>
             <field name="sponsor_type_id" ref="event_sponsor_type2"/>
-            <field name="partner_id" ref="base.res_partner_15"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
         </record>
 
         <record id="event_sponsor_3" model="event.sponsor">
             <field name="event_id" ref="event.event_0"/>
             <field name="sponsor_type_id" ref="event_sponsor_type3"/>
-            <field name="partner_id" ref="base.res_partner_14"/>
+            <field name="partner_id" ref="base.res_partner_4"/>
             <field name="url">http://openerp.com</field>
         </record>
 

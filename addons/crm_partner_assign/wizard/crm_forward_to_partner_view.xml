@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Send Mail">
                     <group>
-                        <field name="forward_type" widget="radio" invisible="context.get('hide_forward_type',False)"/>
+                        <field name="forward_type" invisible="context.get('hide_forward_type',False)"/>
                     </group>
                     <group>
                         <group>
@@ -26,13 +26,12 @@
                     </field>
                     <notebook colspan="4" groups="base.group_no_one">
                         <page string="Email Template">
-                            <field name="body" readonly="1"/>
+                            <field name="body" readonly="1" options="{'style-inline': true}"/>
                         </page>
                     </notebook>
                     <footer>
-                        <button name="action_forward" string="Send" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" special="cancel" class="oe_link"/>
+                        <button name="action_forward" string="Send" type="object" class="btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn-default"/>
                     </footer>
                 </form>
             </field>

@@ -1,19 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
+    <menuitem id="account_reports_do_statements_menu" name="Dominican Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
 
-        <record id="default_chart_a" model="account.chart.template">
-            <field name="name">Catálogo de Cuentas Empresas Privadas</field>
-            <field name="account_root_id" ref="default_chart_a_account_1"/>
-            <field name="bank_account_view_id" ref="default_chart_a_account_9"/>
-            <field name="tax_code_root_id" ref="default_chart_a_tax_code_21"/>
-            <field name="property_account_receivable" ref="default_chart_a_account_13"/>
-            <field name="property_account_payable" ref="default_chart_a_account_61"/>
-            <field name="property_account_expense_categ" ref="default_chart_a_account_101"/>
-            <field name="property_account_income_categ" ref="default_chart_a_account_87"/>
-            <field name="property_account_income_opening" ref="default_chart_a_account_87"/>
-            <field name="property_account_expense_opening" ref="default_chart_a_account_101"/>
-            <field name="currency_id" ref="base.DOP"/>
+    <data noupdate="1">
+        <record id="action_client_l10n_do_menu" model="ir.actions.client">
+            <field name="name">Open Account Dashboard Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_board_journal_1')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_l10n_do_menu"/>
+            <field name="state">open</field>
         </record>
     </data>
-</openerp>
+
+ 	<record model="account.account.template" id="default_chart_a_account_152">
+        <field name="name">Efectivo en transito</field>
+        <field name="code">112050</field>
+        <field name="reconcile" eval="True"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+    </record>
+    
+
+    <record id="default_chart_a" model="account.chart.template">
+        <field name="name">Catálogo de Cuentas Empresas Privadas</field>
+        <field name="currency_id" ref="base.DOP"/>
+        <field name="code_digits" eval="8"/>
+        <field name="transfer_account_id" ref="default_chart_a_account_152"/>
+        <field name="bank_account_code_prefix">112</field>
+        <field name="cash_account_code_prefix">111</field>
+    </record>
+
+ 	<record model="account.account.template" id="default_chart_a_account_152">
+ 		<field name="chart_template_id" ref="default_chart_a"/>
+    </record>
+
+</odoo>

@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- vim:fdn=3:
--->
 <openerp>
     <data>
 
@@ -24,19 +22,29 @@
         <link rel="apple-touch-icon" sizes="120x120" href="/point_of_sale/static/src/img/touch-icon-iphone-retina.png"/>
         <link rel="apple-touch-icon" sizes="152x152" href="/point_of_sale/static/src/img/touch-icon-ipad-retina.png"/>
 
+        <style> body { background: #222; } </style> 
+
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/point_of_sale/static/src/fonts/lato/stylesheet.css" /> 
-        <link rel="stylesheet" href="/point_of_sale/static/src/fonts/font-awesome-4.0.3/css/font-awesome.min.css" /> 
-        <link rel="stylesheet" href="/point_of_sale/static/src/css/pos.css" id="pos-stylesheet"/>
-        <link rel="stylesheet" href="/point_of_sale/static/src/css/keyboard.css" />
 
         <t t-call-assets="web.assets_common" t-css="false" />
         <t t-call-assets="web.assets_backend" t-css="false" />
+        <t t-call-assets="point_of_sale.assets"/>
 
-        <script type="text/javascript" id="loading-script">
-            $(function() {
-            var s = new openerp.init(<t t-raw='modules' />);
-                <t t-raw='init' />
+        <script type="text/javascript" id="loading-script" t-raw="init">
+            odoo.define('web.web_client', function (require) {
+                var WebClient = require('web.WebClient');
+                var web_client = new WebClient();
+
+                web_client._title_changed = function() {};
+                web_client.show_application = function() {
+                    web_client.action_manager.do_action("pos.ui");
+                };
+
+                $(function () {
+                    web_client.setElement($(document.body));
+                    web_client.start();
+                });
+                return web_client;
             });
         </script>
 

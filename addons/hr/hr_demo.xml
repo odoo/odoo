@@ -18,14 +18,6 @@
           <field name="name">Professional Services</field>
       </record>
 
-      <record id="dep_administration" model="hr.department">
-          <field name="name">Administration</field>
-      </record>
-
-      <record id="dep_sales" model="hr.department">
-          <field name="name">Sales</field>
-      </record>
-
     <!--Jobs-->
 
       <record id="job_ceo" model="hr.job">
@@ -123,28 +115,20 @@ If you have development competencies, we can propose you specific traineeships</
 
     <!-- Employee categories -->
 
-      <record id="employee_category_1" model="hr.employee.category">
-          <field name="name">CEO</field>
-      </record>
-
       <record id="employee_category_2" model="hr.employee.category">
           <field name="name">Sales</field>
-          <field name="parent_id" ref="employee_category_1"/>
       </record>
 
       <record id="employee_category_3" model="hr.employee.category">
           <field name="name">Trainer</field>
-          <field name="parent_id" ref="employee_category_1"/>
       </record>
 
       <record id="employee_category_4" model="hr.employee.category">
           <field name="name">Employee</field>
-          <field name="parent_id" ref="employee_category_1"/>
       </record>
 
       <record id="employee_category_5" model="hr.employee.category">
           <field name="name">Consultant</field>
-          <field name="parent_id" ref="employee_category_1"/>
       </record>
 
     <!--Employees-->
@@ -155,7 +139,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="department_id" ref="dep_management"/>
           <field name="job_id" ref="hr.job_ceo"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_2')])]"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">pieter@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_fp-image.jpg"/>
@@ -166,7 +150,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_cto"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_3')])]"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">antoine@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_al-image.jpg"/>
@@ -178,7 +162,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="parent_id" ref="employee_al"/>
           <field name="job_id" ref="hr.job_developer"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="mobile_phone">+32486571630</field>
           <field name="work_email">john@openerp.com</field>
@@ -191,7 +175,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="parent_id" ref="employee_al"/>
           <field name="job_id" ref="hr.job_developer"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">michael@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_niv-image.jpg"/>
@@ -203,7 +187,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="parent_id" ref="employee_al"/>
           <field name="job_id" ref="hr.job_developer"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">liam@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_stw-image.jpg"/>
@@ -215,7 +199,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="parent_id" ref="employee_al"/>
           <field name="job_id" ref="hr.job_developer"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">david@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_chs-image.jpg"/>
@@ -228,7 +212,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="parent_id" ref="employee_al"/>
           <field name="job_id" ref="hr.job_developer"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">gilles@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_qdp-image.png"/>
@@ -240,7 +224,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="parent_id" ref="employee_al"/>
           <field name="job_id" ref="hr.job_developer"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">jack@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_fme-image.jpg"/>
@@ -252,7 +236,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="parent_id" ref="employee_fp"/>
           <field name="job_id" ref="hr.job_consultant"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">martin@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_fpi-image.jpg"/>
@@ -264,7 +248,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="parent_id" ref="employee_fp"/>
           <field name="job_id" ref="hr.job_consultant"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">jimmy@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_jth-image.png"/>
@@ -276,7 +260,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="parent_id" ref="employee_fp"/>
           <field name="job_id" ref="hr.job_marketing"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
-          <field name="work_location">Auderghem</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">famke@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_ngh-image.jpg"/>
@@ -288,7 +272,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="parent_id" ref="employee_fp"/>
           <field name="job_id" ref="hr.job_hrm"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">ashley@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_vad-image.jpg"/>
@@ -298,7 +282,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="name">Hans Anders</field>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_developer"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3282823500</field>
           <field name="image" type="base64" file="hr/static/img/employee_han-image.png"/>
       </record>
@@ -307,7 +291,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="name">Jan Van Eyck</field>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_developer"/>
-          <field name="work_location">Auderghem</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3282823500</field>
           <field name="work_email">jve@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_jve-image.jpg"/>
@@ -317,7 +301,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="name">Jean-Pierre Carnaud</field>
           <field name="department_id" ref="dep_ps"/>
           <field name="job_id" ref="hr.job_consultant"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3282823500</field>
           <field name="work_email">jep@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_jep-image.jpg"/>
@@ -327,7 +311,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="name">John Doe</field>
           <field name="department_id" ref="dep_sales"/>
           <field name="job_id" ref="hr.job_marketing"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3282823500</field>
           <field name="work_email">jod@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_jod-image.png"/>
@@ -337,7 +321,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="name">João Gomer</field>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_developer"/>
-          <field name="work_location">Auderghem</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3282823500</field>
           <field name="work_email">jog@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_jog-image.jpg"/>
@@ -347,7 +331,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="name">Juan Gomez</field>
           <field name="department_id" ref="dep_ps"/>
           <field name="job_id" ref="hr.job_consultant"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3282823500</field>
           <field name="image" type="base64" file="hr/static/img/employee_jgo-image.jpg"/>
       </record>
@@ -356,7 +340,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="name">Luigi Rondi</field>
           <field name="department_id" ref="dep_sales"/>
           <field name="job_id" ref="hr.job_marketing"/>
-          <field name="work_location">Auderghem</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3282823500</field>
           <field name="work_email">lur@openerp.com</field>
           <field name="image" type="base64" file="hr/static/img/employee_lur-image.png"/>
@@ -366,7 +350,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="name">Николай Петра</field>
           <field name="department_id" ref="dep_ps"/>
           <field name="job_id" ref="hr.job_consultant"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3282823500</field>
           <field name="image" type="base64" file="hr/static/img/employee_hne-image.png"/>
       </record>
@@ -375,7 +359,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="name">佐藤さくら (demo_ja_JP)</field>
           <field name="department_id" ref="dep_ps"/>
           <field name="job_id" ref="hr.job_consultant"/>
-          <field name="work_location">Grand-Rosière</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3282823500</field>
           <field name="image" type="base64" file="hr/static/img/employee_djj-image.png"/>
       </record>
@@ -384,7 +368,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="name">趙生 (demo_zh_CN)</field>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_developer"/>
-          <field name="work_location">Auderghem</field>
+          <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3282823500</field>
           <field name="image" type="base64" file="hr/static/img/employee_dzc-image.jpg"/>
       </record>

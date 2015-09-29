@@ -1,65 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<template>
+<templates>
 
-    <!--
-        followers main template
-        Template used to display the followers, the actions and the subtypes in a record.
-        -->
-    <div t-name="mail.followers" class="oe_followers">
-        <div class="oe_actions">
-            <div t-attf-class="btn-group oe_subtype_list">
-                <button class="btn oe_follower oe_notfollow">
-                    <span class="oe_follow">Follow</span>
-                    <span class="oe_unfollow">Unfollow</span>
-                    <span class="oe_following">Following</span>
+<!--
+    Mail Follower (root template)
+    Template used to display the followers, the actions and the subtypes in a record.
+-->
+<t t-name="mail.Followers">
+    <div class="o_mail_followers">
+        <div t-attf-class="o_followers_title_box">
+            <button t-attf-class="btn btn-sm btn-default dropdown-toggle"
+                    data-toggle="dropdown" aria-expanded="false">
+                <span class="o_followers_count"/>
+                <span class="caret"/>
+            </button>
+            <ul class="dropdown-menu o_followers_list" role="menu"></ul>
+        </div>
+        <div class="o_followers_actions">
+            <div t-attf-class="btn-group btn-group-sm o_subtypes_list">
+                <button class="btn btn-primary o_followers_follow_button o_followers_notfollow">
+                    <span class="o_follow">Follow</span>
+                    <span class="fa fa-times o_followers_unfollow" aria-hidden="true"> Unfollow</span>
+                    <span class="fa fa-check o_followers_following" aria-hidden="true"> Following</span>
+                </button><button t-attf-class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"/>
                 </button>
-                <button type="button" t-attf-class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu"></ul>
+                <ul class="dropdown-menu" role="menu"/>
             </div>
-
-            <t t-if="widget.comment">
-                <h5 class="oe_comment"><t t-raw="widget.comment"/></h5>
-            </t>
         </div>
-        <div class='oe_follower_title_box'>
-            <h4 class='oe_follower_title'>Followers</h4>
-            <a t-if="widget.view_is_editable" href='#' class="oe_invite">Add others</a>
-        </div>
-        <div class="oe_follower_list"></div>
     </div>
+</t>
 
-    <!--
-        followers.partner template
-        Template used to display a partner following the record
-        -->
-    <div t-name="mail.followers.partner" class='oe_partner'>
-        <img class="oe_mail_thumbnail oe_mail_frame" t-att-src="record.avatar_url"/>
-        <a t-attf-href="#model=res.partner&amp;id=#{record.id}" t-att-title="record.name" t-att-data-partner="record.id"><t t-esc="record.name"/></a>
-        <span t-if="record.is_editable and (widget.records_length &gt; 1)" class="oe_edit_subtype oe_e oe_hidden" title="Edit subscription" t-att-data-id="record.id">&amp;</span>
-        <span t-if="widget.view_is_editable" class="oe_remove_follower oe_e" title="Remove this follower" t-att-data-id="record.id">X</span>
-    </div>
-    
-    <!--
-        followers.subtype template
-        Template used to display message subtypes of a follower subscription
-    -->
-    <t t-name="mail.followers.subtype">
-        <table class='oe_subtype'>
-            <tr>
-                <td width="10%">
-                    <input type="checkbox" t-att-checked="record.followed" t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')" t-att-data-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_check"/>
-                </td>
-                <td>
-                    <label t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')"><t t-raw="record.name"/></label>
-                </td>
-            </tr>
-        </table>
-    </t>
+<!--
+    Mail Followers Partner template
+    Template used to display a partner following the record
+-->
+<t t-name="mail.Followers.partner">
+    <li class='o_partner'>
+        <img t-att-src="record.avatar_url"/>
+        <a t-attf-href="#model=res.partner&amp;id=#{record.res_id}"
+           t-att-title="record.name"
+           t-att-data-res-model="record.res_model"
+           t-att-data-res-id="record.res_id"
+           t-att-data-id="record.id"><t t-esc="record.name"/></a>
+        <i t-if="record.is_editable and (widget.records_length &gt; 1)"
+           class="fa fa-pencil o_edit_subtype hide" title="Edit subscription"
+           t-att-data-id="record.id"
+           t-att-data-res-model="record.res_model"
+           t-att-data-res-id="record.res_id"/>
+        <i t-if="widget.view_is_editable" class="fa fa-remove o_remove_follower"
+           title="Remove this follower"/>
+    </li>
+</t>
 
-    <t t-name="mail.followers.show_more">
-        <div class="oe_partner oe_show_more">And <t t-esc="number"/> more.</div>
-    </t>
+<t t-name="mail.Followers.add_more">
+    <li t-if="widget.view_is_editable" class="o_add_follower">
+        <a href="#"> Add followers </a>
+    </li>
+    <li t-if="widget.view_is_editable" class="o_add_follower_channel">
+        <a href="#"> Add Channels </a>
+    </li>
+    <li t-if="widget.view_is_editable and (widget.followers.length > 0)" class="divider"/>
+</t>
 
-</template>
+<!--
+    Mail Followers Subtype template
+    Template used to display message subtypes of a follower subscription
+-->
+<t t-name="mail.Followers.subtype">
+    <li class="o_subtype">
+        <input type="checkbox" t-att-checked="record.followed"
+               t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')"
+               t-att-data-id="record.id" t-att-name="record.name" class="o_subtype_checkbox"/>
+        <span t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')">
+            <t t-raw="record.name"/>
+        </span>
+    </li>
+</t>
+
+</templates>

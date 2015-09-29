@@ -39,7 +39,7 @@
             <div class="col-md-3 mb32" id="partner_left">
 
                 <ul id="reseller_grades" class="nav nav-pills nav-stacked mt16">
-                    <li class="nav-header"><h3>Filter by Grade</h3></li>
+                    <li class="nav-header"><h3>Filter by Level</h3></li>
                     <t t-foreach="grades" t-as="grade">
                         <li t-att-class="grade['active'] and 'active' or ''">
                             <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') }">
@@ -81,6 +81,10 @@
                         <t t-if="last_grade != partner.grade_id.id">
                             <h3 class="text-center">
                                 <span t-field="partner.grade_id"/> Partners
+                                <t t-call="website.publish_management">
+                                    <t t-set="object" t-value="partner.grade_id"/>
+                                    <t t-set="publish_edit" t-value="True"/>
+                                </t>
                             </h3>
                             <t t-set="last_grade" t-value="partner.grade_id.id"/>
                         </t>
@@ -141,7 +145,7 @@
     <t t-call="website_crm_partner_assign.layout">
         <t t-set="ref_content">
             <div class="col-md-5">
-                <ol class="breadcrumb">
+                <ol t-if="not edit_page" class="breadcrumb">
                     <li><a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}">Our Partners</a></li>
                     <li class="active"><span t-field="partner.display_name"/></li>
                 </ol>

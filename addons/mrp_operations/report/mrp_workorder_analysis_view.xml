@@ -4,16 +4,28 @@
         <!--
         Work Order Report
         -->
-        <record id="view_report_mrp_workorder_graph" model="ir.ui.view">
-            <field name="name">mrp.workorder.graph</field>
+        <record id="view_report_mrp_workorder_pivot" model="ir.ui.view">
+            <field name="name">mrp.workorder.pivot</field>
             <field name="model">mrp.workorder</field>
             <field name="arch" type="xml">
-                <graph string="Work Orders" type="pivot">
+                <pivot string="Work Orders" disable_linking="True">
                     <field name="workcenter_id" type="row"/>
                     <field name="date" interval="month" type="col"/>
                     <field name="product_qty" type="measure"/>
                     <field name="total_hours" type="measure"/>
                     <field name="total_cycles" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_report_mrp_workorder_graph" model="ir.ui.view">
+            <field name="name">mrp.workorder.graph</field>
+            <field name="model">mrp.workorder</field>
+            <field name="arch" type="xml">
+                <graph string="Work Orders">
+                    <field name="date" interval="month"/>
+                    <field name="workcenter_id"/>
+                    <field name="product_qty" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -57,7 +69,7 @@
                         <filter string="Status" context="{'group_by':'state'}"/>
                         <filter string="Product" name="Product" context="{'group_by':'product_id'}" />
                         <separator/>
-                        <filter string="Month Planned" name="terp-go-month" context="{'group_by':'date:month'}" help="Planned Month"/>
+                        <filter string="Planned Month" name="terp-go-month" context="{'group_by':'date:month'}" help="Planned Month"/>
                     </group>
                 </search>
             </field>
@@ -66,20 +78,13 @@
             <field name="name">Work Order</field>
             <field name="res_model">mrp.workorder</field>
             <field name="view_type">form</field>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_report_mrp_workorder_graph"/>
+            <field name="view_mode">pivot,graph</field>
             <field name="search_view_id" ref="view_report_mrp_workorder_filter"/>
-            <field name="context">{'search_default_Workcenter': 1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="view_id"></field>  <!-- force empty -->
+            <field name="context">{'search_default_Workcenter': 1}</field>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_report_mrp_workorder_graph">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_report_mrp_workorder_graph"/>
-            <field name="act_window_id" ref="action_report_mrp_workorder"/>
-        </record>
-
-        <menuitem name="Work Order Analysis" action="action_report_mrp_workorder" id="menu_report_mrp_workorders_tree" parent="mrp.next_id_77"/>
+        <menuitem name="Reports" sequence="99" action="action_report_mrp_workorder" id="menu_report_mrp_workorders_tree" parent="base.menu_mrp_root"/>
 
   </data>
 </openerp>

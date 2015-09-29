@@ -1,46 +1,102 @@
 @import "common"
 
-/* ---- CKEditor Minimal Reset ---- {{{ */
+/* ---- SummerNote Minimal Reset ---- {{{ */
 
-.navbar.navbar-inverse .cke_chrome
-    border: none
+.note-popover
+    .popover
+        position: fixed !important
+        top: -9px !important
+        right: auto !important
+        left: 300px !important
+        border: 0
+        background: transparent
+        box-shadow: none
+        -webkit-box-shadow: none
+        z-index: 1040
+    .popover-content
+        padding: 0 !important
+        margin: 0 0 0 6px !important
+        > div
+            padding-top: 0 !important
+            margin-top: 0 !important
+        > a
+            border-radius: 3px
+            background-color: #fff
+            border-color: #ccc
+            padding: 4px 10px
+            font-size: 14px
+            line-height: 1.5
+        .note-para .dropdown-menu
+            min-width: 148px !important
+            padding: 5px 0 5px 5px !important
+        .note-ul .dropdown-menu
+            min-width: 150px !important
+            padding: 5px 0 5px 5px !important
+            .note-li
+                margin-right: 5px
+        > span
+            display: inline-block
+            max-width: 200px
+            overflow: hidden
+            text-overflow: ellipsis
+            white-space: nowrap
+            vertical-align: middle
+            border-radius: 3px
+            background-color: white
+            border-color: #cccccc
+            padding: 4px 10px
+            font-size: 14px
+            line-height: 1.5
 
-.navbar.navbar-inverse .cke_inner
-    background: transparent
+        .colorpicker
+            margin: 0
+            td > *
+                width: 20px
+                height: 20px
+                padding: 0
+                margin: 0
+                border: 1px solid #fff
 
-.navbar.navbar-inverse
-    .cke_toolbar
-        position: relative
-        top: 1px
-    .cke_combo_button
-        padding-top: 3px
-        padding-bottom: 3px
-    .cke_button
-        padding-top: 7px
-        padding-bottom: 7px
+    .popover .popover-content .dropdown-menu a
+        display: block
+    .arrow
+        display: none
 
-.navbar.navbar-inverse .cke_top
-    background: transparent
-    border: none
-    +box-shadow(none)
-    -ms-filter: "alpha(opacity=50)"
-
-#cke_1_top
-    padding: 0
-
-#cke_wrapwrap
-    -moz-box-shadow: none
-    -webkit-box-shadow: none
-    box-shadow: none
-    .cke_button
-        padding-top: 5px
-        padding-bottom: 5px
-    .cke_combo_button
-        padding-top: 1px
-        padding-bottom: 1px
+.o_editable
+    &:not(:empty),&[data-oe-type]
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover
+            /* to do change into primary color in less */
+            -moz-box-shadow: #3071a9 0 0 5px 2px inset
+            -webkit-box-shadow: #3071a9 0 0 5px 2px inset
+            box-shadow: #3071a9 0 0 5px 2px inset
+    &:focus,&[data-oe-type]
+        min-height: 0.8em
+        min-width: 8px
+    &.o_is_inline_editable
+        display: inline-block
+.editor_enable [data-oe-readonly]:hover
+    cursor: default
 
 // }}}
- 
+/* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
+.o_editable[placeholder]:empty:not(:focus):before
+    content: attr(placeholder)
+    opacity: 0.3
+
+/* Prevent the text contents of draggable elements from being selectable. */
+[draggable]
+    -moz-user-select: none
+    -khtml-user-select: none
+    -webkit-user-select: none
+    user-select: none
+
+/* Prevent firefox handler. */
+.o_editable .btn
+    -webkit-user-select: auto
+    -moz-user-select: auto
+    -ms-user-select: auto
+    user-select: auto
+
 /* ---- OpenERP Style ---- {{{ */
 
 .oe_website_editorbar
@@ -88,17 +144,41 @@
 .css_editable_hidden
     display: none !important
 
-.cke_editable .css_editable_mode_hidden
+.editor_enable .css_editable_mode_hidden
     display: none
 
-.cke_editable .css_editable_mode_display
+.editor_enable .css_non_editable_mode_hidden
     display: block !important
 
+.o_editable .media_iframe_video .css_editable_mode_display
+    display: block !important
+ 
 .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
     background-image: url('/website/static/src/img/edit_here.png') !important
+    &:before
+        content: 'Press The Top-Left Edit Button' !important
 
-.oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before
-    content: 'Press The Top-Left Edit Button' !important
+.o_editable
+    &.oe_structure.oe_empty > p:empty:only-child, &[data-oe-type=html] > p:empty:only-child
+        color: #aaa
+    &.oe_structure.oe_empty:empty, &[data-oe-type=html]:empty, &.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, &[data-oe-type=html] > .oe_drop_zone.oe_insert:only-child, &.oe_structure.oe_empty > p:empty:only-child, &[data-oe-type=html] > p:empty:only-child
+        background-image: none !important
+        &:before
+            content: 'Write your text here' !important
+        &:focus:before
+            display: none
+
+#oe_snippets ~ #wrapwrap
+    .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
+        background-image: url('/website/static/src/img/drag_here.png') !important
+        &:before
+            content: 'Drag Building Blocks Here' !important
+
+.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
+    background-image: none
+    background-repeat: no-repeat
+    background-position: center
+    height: 220px !important
 
 [data-oe-type=html].oe_no_empty:empty:before
     content: '' !important
@@ -146,27 +226,6 @@ table.editorbar-panel
             margin: 0 5px
     .col-sm-2 > *
         line-height: 2em
-
-// }}}
-
-/* ---- TRANSLATIONS ---- {{{ */
-
-.oe_translate_or
-    color: white
-    padding: 0 0 0 1em
-.oe_translate_examples li
-    margin: 10px
-    padding: 4px
-.oe_translatable_text
-    outline: 1px solid black
-.oe_translatable_field
-    outline: 1px dashed black
-.oe_translatable_text.oe_dirty, .oe_translatable_field.oe_dirty
-    outline-color: red
-.oe_translatable_text.oe_dirty:empty
-    padding: 0 10px
-.oe_translatable_todo
-    background: rgb(255, 255, 182)
 
 // }}}
 
@@ -254,62 +313,8 @@ ul.oe_menu_editor
     #icon-search
         padding-left: 2.5em
 
-    #fa-preview
-        text-align: center
-
-        span
-            cursor: pointer
-            padding: 0 15px
-        .font-icons-selected
-            background-color: #ddd
-
-$attachment-border-color: #848490
-.existing-attachments
-    .pager .disabled
-        display: none
-
-    .existing-attachment-cell
-        position: relative
-        .img
-            border: 1px solid $attachment-border-color
-        .existing-attachment-remove
-            position: absolute
-            top: 0
-            left: 15px // padding-left on col-*
-
-            cursor: pointer
-            background: white
-            padding: 2px
-            border: 1px solid $attachment-border-color
-            border-top: none
-            border-left: none
-            +border-bottom-right-radius(8px)
-        &.media_selected
-            > i, > img 
-                border-width: 5px
-                border-color: rgb(0, 248, 248)
-
-// wrapper positioned relatively for drag&drop widget which is disabled below.
-// Breaks completely horribly crazy products listing page, so take it out.
-.cke_widget_wrapper
-    position: static !important
-
-.cke_widget_inline
-    display: inline !important
-
-// prevent inline widgets from entirely disappearing when their (textual)
-// content is removed
-.cke_widget_editable
-    // basic config
-    &:empty:after
-        opacity: 0.3
-        white-space: pre-wrap
-    // no @placeholder -> just add some padding
-    &:not([placeholder]):empty::after
-        content: " "
-    // with placeholder and when not (yet) focused -> display placeholder
-    &[placeholder]:not(:focus):empty::after
-        content: attr(placeholder)
+    .font-icons-selected
+        background-color: #ddd
 
 .oe_carlos_danger
     outline: 1px solid red !important
@@ -333,11 +338,14 @@ $attachment-border-color: #848490
         display: inline-block
 
 // fontawesome
-.cke_editable .fa
+.note-editable .fa
     cursor: pointer
 
 .img-responsive
     text-align: center
+
+.col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12
+    min-height: 24px
 
 // }}}
 
@@ -488,8 +496,80 @@ $infobar_height: 20px
         +opacity(0.97)
     &.oe_ace_closed
         z-index: -1000
-        +opacity(0)
+        display: none
+
+.oe_include_bundles
+    font-weight: normal
+    padding: 0 8px
 
 // }}}
 
-// vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
+/* ---- CUSTOMIZE THEME ---- {{{ */
+#theme_error
+    background: #ffc
+#theme_customize_modal
+    overflow: visible
+    z-index: 1020
+    background: transparent
+    display: block
+    .modal-dialog
+        top: 75px
+        width: auto
+        margin: 0
+        position: absolute
+        right: 10px
+        font-family: 'Lato-Regular'
+        font-weight: normal
+        text-transform: capitalize
+        letter-spacing: normal
+    .modal-h5
+        color: #ffffff
+        font-family: 'Lato-Regular'
+        font-weight: normal
+        text-transform: uppercase
+        letter-spacing: normal
+        font-size: 14px
+        color: white
+        padding: 4px 0 4px 4px
+        background-color: #bdc3c7
+    table
+        width: 100%
+        margin-bottom: 8px
+    label
+        display: block
+        text-align: center
+        > div, > img
+            border: 1px solid #fff
+            line-height: 30px
+            font-size: 0.9em
+            margin: 2px 4px
+        &.checked
+            > div, > img
+                box-shadow: 2px 2px 3px #888
+                border: 1px solid #666
+        img
+            width: 60px
+            height: 35px
+            margin: 2px
+            border: 1px solid rgba(136, 136, 136, 0.5)
+        input
+            display: none
+    .loading_backdrop
+        display: none
+    &.loading
+        .loading_backdrop
+            display: block
+            width: 100%
+            height: 100%
+            background: #000
+            opacity: 0.3
+            position: absolute
+            z-index: 1
+
+/* ---- force the browse to re-compute the stylesheets ---- */
+body.theme_customize_css_loading
+    magin-top: 1px
+    #wrapwrap
+        magin-top: -1px
+
+// }}}

@@ -7,12 +7,6 @@
   !record {model: res.company, id: base.main_company}:
     timesheet_max_difference: 1.00
 -
-  I assign this product(Service on Timesheet) and journal(Timesheet Journal) to employee "Gilles Gravie"
--
-  !record {model: hr.employee, id: hr.employee_qdp, view: False}:
-    product_id: product.product_product_consultant
-    journal_id: hr_timesheet.analytic_journal
--
   I create a timesheet for employee "Gilles Gravie".
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
@@ -45,15 +39,14 @@
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
-      - account_id: account.analytic_agrolait
+      - account_id: analytic.analytic_agrolait
         date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
         user_id: base.user_demo
         unit_amount: 6.00
         amount: -90.00
-        product_id: product.product_product_consultant
-        general_account_id: account.a_expense
-        journal_id: hr_timesheet.analytic_journal
+        product_id: product.product_product_1
+        general_account_id: a_expense
 -
   I confirm my Timesheet at end of period by click on "Confirm" button,
   if the difference between Timesheet hour and attendance hour is more than 1 hour it will give message.
@@ -74,15 +67,14 @@
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
-      - account_id: account.analytic_agrolait
+      - account_id: analytic.analytic_agrolait
         date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
         unit_amount: 2.00
         user_id: base.user_demo
         amount: -90.00
-        product_id: product.product_product_consultant
-        general_account_id: account.a_expense
-        journal_id: hr_timesheet.analytic_journal
+        product_id: product.product_product_1
+        general_account_id: a_expense
 -
   I set an allowed difference of 1 hour
 -

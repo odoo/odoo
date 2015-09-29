@@ -5,6 +5,7 @@
 <template id="event_script" inherit_id="website.assets_frontend" name="Country Events Snippet Script">
     <xpath expr="/t" position="inside">
         <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
+        <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
     </xpath>
 </template>
 
@@ -66,14 +67,14 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'> </span>
+                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin_located" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end_located" t-field-options='{"hide_seconds":"True"}'> </span> (<span t-field="event.date_tz"/>)
                                 </div>
                                 <div itemprop="location" t-field="event.address_id" t-field-options='{
                                     "widget": "contact",
                                     "fields": ["city"]
                                     }'/>
-                                <div class="text-muted" t-if="event.type">
-                                    <i class="fa fa-tag"></i> <span t-field="event.type"/>
+                                <div class="text-muted" t-if="event.event_type_id">
+                                    <i class="fa fa-tag"></i> <span t-field="event.event_type_id"/>
                                 </div>
                             </div>
                         </li>
@@ -164,10 +165,10 @@
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types" t-as="type">
-                <li t-if="type['type']"
-                    t-att-class="searches.get('type') == str(type['type'] and type['type'][0]) and 'active' or ''">
-                    <a t-attf-href="/event?{{ keep_query('country', 'date', type=type['type'][0]) }}"><t t-esc="type['type'][1]"/>
-                        <span class="badge pull-right"><t t-esc="type['type_count']"/></span>
+                <li t-if="type['event_type_id']"
+                    t-att-class="searches.get('type') == str(type['event_type_id'] and type['event_type_id'][0]) and 'active' or ''">
+                    <a t-attf-href="/event?{{ keep_query('country', 'date', type=type['event_type_id'][0]) }}"><t t-esc="type['event_type_id'][1]"/>
+                        <span class="badge pull-right"><t t-esc="type['event_type_id_count']"/></span>
                     </a>
                 </li>
             </t>
@@ -203,8 +204,8 @@
                 <div class="col-sm-7" id="event_menu">
                     <ol class="breadcrumb mb0" t-if="not event.menu_id">
                         <li><a href="/event">All Events</a></li>
-                        <li t-if="event.type">
-                            <a t-attf-href="/event?type=#{event.type.id}" t-esc="event.type.name"/>
+                        <li t-if="event.event_type_id">
+                            <a t-attf-href="/event?type=#{event.event_type_id.id}" t-esc="event.event_type_id.name"/>
                         </li>
                         <li t-if="event.country_id">
                             <a t-attf-href="/event?country=#{event.country_id.id}" t-esc="event.country_id.name"/>
@@ -213,7 +214,7 @@
                             <span t-field="event.name"/>
                         </li>
                     </ol>
-                    <ol class="breadcrumb mb0" id="event_menu" t-if="event.menu_id">
+                    <ol name="Event Menu" class="breadcrumb mb0" id="event_menu" t-if="event.menu_id" t-att-data-content_menu_id="editable and event.menu_id.id">
                         <t t-foreach="event.menu_id.child_id" t-as="submenu">
                             <t t-call="website.submenu"/>
                         </t>
@@ -236,16 +237,20 @@
 
 <template id="template_location">
     <t t-call="website_event.layout">
-        <section class="container" data-snippet-id="title">
+        <section class="container">
             <h1 class="text-center">Event Location</h1>
         </section>
-        <div class="oe_structure oe_empty"/>
+        <h4 class="text-center text-muted"
+            t-field="event.address_id" t-field-options='{
+                "widget": "contact",
+                "fields": ["address", "phone", "mobile", "fax"]
+            }'/>
     </t>
 </template>
 
 <template id="template_intro">
     <t t-call="website_event.layout">
-        <section class="container" data-snippet-id="title">
+        <section class="container">
             <h1 class="text-center">Event Introduction</h1>
         </section>
         <div class="oe_structure oe_empty"/>
@@ -257,8 +262,9 @@
         <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">
             <h1 itemprop="name" class="text-center" t-field="event.name"></h1>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'/> to
-                <span itemprop="endDate" t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'/>
+                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin_located" t-field-options='{"hide_seconds":"True"}'/> to
+                <span itemprop="endDate" t-field="event.date_end_located" t-field-options='{"hide_seconds":"True"}'/>
+                <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
             </h4>
             <h4 class="text-center text-muted"
                 t-field="event.address_id" t-field-options='{
@@ -289,6 +295,9 @@
 <template id="event_description_full">
     <t t-call="website_event.event_details">
         <div class="col-md-8">
+            <t t-call="website_event.registration_template"/>
+            <div class="clearfix"/>
+            <hr/>
             <div itemprop="description" t-field="event.description"></div>
             <div class="clearfix"/>
             <ul class="media-list" id="comment">
@@ -367,8 +376,157 @@
     </t>
 </template>
 
+<!-- Registration Templates -->
+<template id="registration_template">
+    <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post">
+        <table itemprop="offers" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ticket Type</th>
+                    <th style="min-width: 100px">End of Subscription</th>
+                    <th style="min-width: 100px">Price</th>
+                    <th></th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-if="event.state == 'confirm'">
+                    <td>Event Subscription</td>
+                    <td>
+                        <t t-if="event.date_begin">
+                            <span t-field="event.date_begin"/>
+                        </t>
+                        <t t-if="not event.date_begin">
+                            <span>Unlimited</span>
+                        </t>
+                    </td>
+                    <td>Free</td>
+                    <td></td>
+                    <td>
+                        <select t-if="event.seats_available or event.seats_availability == 'unlimited'" name="nb_register-0" class="form-control">
+                            <t t-foreach="range(0, (event.seats_availability == 'unlimited' or event.seats_available > 9) and 10 or event.seats_available+1)" t-as="nb">
+                                <option t-esc="nb"/>
+                            </t>
+                        </select>
+                        <span t-if="event.seats_availability == 'limited' and not event.seats_available">Sold Out</span>
+                    </td>
+                 </tr>
+            </tbody>
+        </table>
+        <button type="submit" t-if="event.state == 'confirm' and (event.seats_availability == 'unlimited' or event.seats_available)"
+            class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Register Now</button>
+        <div t-if="not event.state == 'confirm'" class="alert alert-info">
+            Event registration not yet started. 
+            <t t-if="uid">
+                <i class="fa fa-plus-circle"><a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event"> <em>Configure and Launch Event Registration</em></a></i>
+            </t>
+        </div>
+    </form>
+</template>
+
+<template id="registration_attendee_details" name="Registration Attendee Details">
+    <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="myModalLabel"><strong>Attendees</strong></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <t t-set="counter_type" t-value="1"/>
+                            <t t-set="counter" t-value="0"/>
+                            <t t-foreach="tickets" t-as="ticket">
+                                <h4 class="page-header mt16">
+                                    <strong>
+                                        Ticket Type #<t t-raw="counter_type"/>: <t t-esc="ticket['name']"/> (
+                                        <t t-if="ticket['price'] > 0">
+                                            <t t-esc="ticket['price']"/>
+                                            <t t-esc="website.pricelist_id.currency_id.symbol"/>
+                                        </t>
+                                        <t t-if="ticket['price'] == 0">Free</t>)
+                                    </strong>
+                                </h4>
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Name</strong></div>
+                                    <div class="col-md-5"><strong>Email</strong></div>
+                                    <div class="col-md-3"><strong>Phone</strong> <span class="text-muted">(Optional)</span></div>
+                                </div>
+                                <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
+                                    <t t-set="counter" t-value="counter + 1"/>
+                                    <div class="row mb4">
+                                        <div class="col-md-4"><input class='form-control' type='text' t-attf-name="#{counter}-name" required="This field is required" t-att-placeholder="'Attendee #%s' %counter"/></div>
+                                        <div class="col-md-5"><input class='form-control' type='email' t-attf-name="#{counter}-email" required="This field is required"/></div>
+                                        <div class="col-md-3"><input class='form-control' type='tel' t-attf-name="#{counter}-phone"/></div>
+                                        <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id" t-attf-value="#{ticket['id']}"/>
+                                    </div>
+                                </t>
+                                <t t-set="counter_type" t-value="counter_type + 1"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="pull-left">
+                            <button type="submit" class="btn btn-primary">Continue</button> or
+                            <a class="js_goto_event" style="cursor: pointer;"> Cancel Registration</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template id="registration_complete" name="Registration Completed">
+    <t t-call="website.layout">
+        <div class="container">
+            <h3>We are glad to confirm your subscription to our event</h3>
+            <div class="row">
+                <div class="col-md-3 mt16">
+                    <h4>Event Details</h4>
+                </div>
+                <div class="col-md-9 mt16">
+                    <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
+                    <i class="fa fa-clock-o"/> <span itemprop="startDate" t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'> </span>
+                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
+                            "widget": "contact",
+                            "fields": ["address", "phone", "mobile", "fax", "email"]
+                            }'/>
+                </div>
+                <div class="col-md-3 mt16">
+                    <h4>Your subscription</h4>
+                </div>
+                <div class="col-md-9 mt16">
+                    <table class='table table-bordered table-striped'>
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Name</th>
+                                <th>E-mail</th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="attendees" t-as="attendee">
+                                <tr>
+                                    <td><t t-esc="attendee.id"/></td>
+                                    <td><i class="fa fa-user"></i> <t t-if='attendee.name'><t t-esc="attendee.name"/></t><t t-if='not attendee.name'>N/A</t></td>
+                                    <td><i class="fa fa-envelope"></i> <t t-if='attendee.email'><t t-esc="attendee.email"/></t><t t-if='not attendee.email'>N/A</t></td>
+                                    <td><i class="fa fa-phone"></i> <t t-if='attendee.phone'><t t-esc="attendee.phone"/></t><t t-if='not attendee.phone'>N/A</t></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- Snippets -->
 <template id="country_events" name="Country Events" inherit_id="website.snippets">
-    <xpath expr="//div[@id='snippet_content']" position="inside">
+    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
         <div>
             <div class="oe_snippet_thumbnail">
                 <div style="background: white;box-shadow:none;-webkit-box-shadow:none;" class="oe_snippet_thumbnail_img" >
@@ -389,15 +547,16 @@
         </div>
     </xpath>
     <xpath expr="//div[@id='snippet_options']" position="inside">
-        <div data-snippet-option-id='country_events'
+        <div data-js='country_events'
             data-selector=".oe_country_events"
-            data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
-            data-selector-children=".content"
+            data-drop-near="p, h1, h2, h3, blockquote, .well, .panel"
+            data-drop-in=".content"
            >
         </div>
     </xpath>
 </template>
 
+<!-- Misc templates -->
 <template id="country_events_list" name="Country">
     <t t-ignore="true">
         <t t-if="events">

@@ -1,7 +1,7 @@
 import functools
 import logging
 
-import simplejson
+import json
 import urlparse
 import werkzeug.utils
 from werkzeug.exceptions import BadRequest
@@ -50,8 +50,7 @@ class OAuthLogin(Home):
     def list_providers(self):
         try:
             provider_obj = request.registry.get('auth.oauth.provider')
-            providers = provider_obj.search_read(request.cr, SUPERUSER_ID, [('enabled', '=', True), ('auth_endpoint', '!=', False), ('validation_endpoint', '!=', False)])
-            # TODO in forwardport: remove conditions on 'auth_endpoint' and 'validation_endpoint' when these fields will be 'required' in model
+            providers = provider_obj.search_read(request.cr, SUPERUSER_ID, [('enabled', '=', True)])
         except Exception:
             providers = []
         for provider in providers:
@@ -63,7 +62,7 @@ class OAuthLogin(Home):
                 client_id=provider['client_id'],
                 redirect_uri=return_url,
                 scope=provider['scope'],
-                state=simplejson.dumps(state),
+                state=json.dumps(state),
             )
             provider['auth_link'] = provider['auth_endpoint'] + '?' + werkzeug.url_encode(params)
 
@@ -133,7 +132,7 @@ class OAuthController(http.Controller):
     @http.route('/auth_oauth/signin', type='http', auth='none')
     @fragment_to_query_string
     def signin(self, **kw):
-        state = simplejson.loads(kw['state'])
+        state = json.loads(kw['state'])
         dbname = state['d']
         provider = state['p']
         context = state.get('c', {})
@@ -196,7 +195,5 @@ class OAuthController(http.Controller):
             'c': {'no_user_creation': True},
         }
 
-        kw['state'] = simplejson.dumps(state)
+        kw['state'] = json.dumps(state)
         return self.signin(**kw)
-
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

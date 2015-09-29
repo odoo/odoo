@@ -5,12 +5,12 @@
 # Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-05-21 21:25+0000\n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-09 12:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Basque (http://www.transifex.com/odoo/odoo-8/language/eu/)\n"
+"Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal_sale
-#: model:email.template,body_html:portal_sale.email_template_edi_invoice
+#: model:mail.template,body_html:portal_sale.email_template_edi_invoice
 msgid ""
 "\n"
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
@@ -53,7 +53,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -98,7 +98,7 @@ msgid ""
 msgstr ""
 
 #. module: portal_sale
-#: model:email.template,body_html:portal_sale.email_template_edi_sale
+#: model:mail.template,body_html:portal_sale.email_template_edi_sale
 msgid ""
 "\n"
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
@@ -111,7 +111,10 @@ msgid ""
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       &nbsp;&nbsp;Order date:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />\n"
+"       % if object.validity_date and object.state in ('draft', 'sent'):\n"
+"       &nbsp;&nbsp;Expiration date: ${object.validity_date}<br />\n"
+"       % endif\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
 "       % endif\n"
@@ -124,7 +127,7 @@ msgid ""
 "    </p>\n"
 "\n"
 "    <% set signup_url = object.get_signup_url() %>\n"
-"    % if signup_url:\n"
+"    % if signup_url and object.amount_total > 0 :\n"
 "    <p>\n"
 "    You can access this document and pay online via our Customer Portal:\n"
 "    </p>\n"
@@ -132,11 +135,11 @@ msgid ""
 "           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "    % endif\n"
 "\n"
-"    % if object.paypal_url:\n"
+"    % if object.paypal_url and object.amount_total > 0 :\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -181,28 +184,23 @@ msgid ""
 msgstr ""
 
 #. module: portal_sale
-#: model:email.template,report_name:portal_sale.email_template_edi_sale
+#: model:mail.template,report_name:portal_sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr ""
 
 #. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_sale
+#: model:mail.template,subject:portal_sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 
 #. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_invoice
+#: model:mail.template,subject:portal_sale.email_template_edi_invoice
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
-msgstr ""
-
-#. module: portal_sale
-#: view:account.config.settings:portal_sale.portal_sale_payment_option_config
-msgid "Configure payment acquiring methods"
 msgstr ""
 
 #. module: portal_sale
@@ -211,7 +209,7 @@ msgid "Invoice"
 msgstr ""
 
 #. module: portal_sale
-#: model:email.template,report_name:portal_sale.email_template_edi_invoice
+#: model:mail.template,report_name:portal_sale.email_template_edi_invoice
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
@@ -237,12 +235,6 @@ msgid "Outgoing Mails"
 msgstr ""
 
 #. module: portal_sale
-#: field:account.invoice,portal_payment_options:0
-#: field:sale.order,portal_payment_options:0
-msgid "Portal Payment Options"
-msgstr ""
-
-#. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
 #: model:ir.ui.menu,name:portal_sale.portal_quotations
 msgid "Quotations"
@@ -264,14 +256,14 @@ msgid "Sales Orders"
 msgstr "Salmenta eskariak"
 
 #. module: portal_sale
-#: help:account.config.settings,group_payment_options:0
+#: model:ir.model.fields,help:portal_sale.field_account_config_settings_group_payment_options
 msgid ""
 "Show online payment options on Sale Orders and Customer Invoices to "
 "employees. If not checked, these options are only visible to portal users."
 msgstr ""
 
 #. module: portal_sale
-#: field:account.config.settings,group_payment_options:0
+#: model:ir.model.fields,field_description:portal_sale.field_account_config_settings_group_payment_options
 msgid "Show payment buttons to employees too"
 msgstr ""
 
@@ -296,6 +288,6 @@ msgid "We haven't sent you any sales order."
 msgstr ""
 
 #. module: portal_sale
-#: view:account.invoice:portal_sale.view_account_invoice_filter_share
-msgid "[('share','=', False)]"
+#: model:ir.model,name:portal_sale.model_account_config_settings
+msgid "account.config.settings"
 msgstr ""

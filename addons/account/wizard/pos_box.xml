@@ -9,12 +9,11 @@
                     <separator string="Fill in this form if you put money in the cash register:" colspan="4" />
                     <group>
                         <field name="name" class="oe_inline"/>
-                        <field name="amount"  class="oe_inline"/>
+                        <field name="amount" class="oe_inline"/>
                     </group>
                     <footer>
-                        <button name="run" string="Put Money In" type="object" class="oe_highlight"/>
-                         or 
-                        <button special="cancel" string="Cancel" class="oe_link"/>
+                        <button name="run" string="Put Money In" type="object" class="btn-primary"/>
+                        <button special="cancel" string="Cancel" class="btn-default"/>
                     </footer>
                 </form>
             </field>
@@ -41,9 +40,8 @@
                     </group>
 
                     <footer>
-                        <button name="run" string="Take Money Out" type="object" class="oe_highlight"/>
-                        or 
-                        <button class="oe_link" special="cancel" string="Cancel" />
+                        <button name="run" string="Take Money Out" type="object" class="btn-primary"/>
+                        <button class="btn-default" special="cancel" string="Cancel" />
                     </footer>
                 </form>
             </field>

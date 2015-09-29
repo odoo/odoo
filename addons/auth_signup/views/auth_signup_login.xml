@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- vim:fdn=3:
--->
 <openerp>
     <data>
         <template id="auth_signup.login" inherit_id="web.login" name="Sign up - Reset Password">
@@ -11,7 +9,6 @@
         </template>
 
         <template id="auth_signup.fields" name="Auth Signup/ResetPassword form fields">
-            <t t-call="web.database_select"/>
 
             <div class="form-group field-login">
                 <label for="login" class="control-label">Your Email</label>
@@ -92,7 +89,7 @@
                     <input type="hidden" name="token" t-att-value="token"/>
                     <div class="clearfix oe_login_buttons">
                         <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link pull-right">Back to Login</a>
-                        <button type="submit" class="btn btn-primary pull-left">Reset password</button>
+                        <button type="submit" class="btn btn-primary pull-left">Confirm</button>
                     </div>
 
                 </form>

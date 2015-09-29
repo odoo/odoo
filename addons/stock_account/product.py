@@ -1,104 +1,107 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.fields import Many2one
-
+from openerp import api
+from openerp.exceptions import UserError
 
 
 class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
 
+    def _get_cost_method(self, cr, uid, ids, field, args, context=None):
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            if product.property_cost_method:
+                res[product.id] = product.property_cost_method
+            else:
+                res[product.id] = product.categ_id.property_cost_method
+        return res
+
+    def _get_valuation_type(self, cr, uid, ids, field, args, context=None):
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            if product.property_valuation:
+                res[product.id] = product.property_valuation
+            else:
+                res[product.id] = product.categ_id.property_valuation
+        return res
+
+    def _set_cost_method(self, cr, uid, ids, name, value, arg, context=None):
+        return self.write(cr, uid, ids, {'property_cost_method': value}, context=context)
+
+    def _set_valuation_type(self, cr, uid, ids, name, value, arg, context=None):
+        return self.write(cr, uid, ids, {'property_valuation': value}, context=context)
+
     _columns = {
-        'valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodical (manual)'),
-                                        ('real_time', 'Real Time (automated)')], string='Inventory Valuation',
-                                        help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
+        'property_valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodic (manual)'),
+                                        ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
+                                        help="If perpetual valuation is enabled for a product, the system will automatically create journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
-                                        , required=True, copy=True),
-        'cost_method': fields.property(type='selection', selection=[('standard', 'Standard Price'), ('average', 'Average Price'), ('real', 'Real Price')],
-            help="""Standard Price: The cost price is manually updated at the end of a specific period (usually every year).
+                                        , copy=True),
+        'valuation': fields.function(_get_valuation_type, fnct_inv=_set_valuation_type, type='char'),  # TDE FIXME: store it ?
+        'property_cost_method': fields.property(type='selection', selection=[('standard', 'Standard Price'), ('average', 'Average Price'), ('real', 'Real Price')],
+            help="""Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).
                     Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
                     Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).""",
-            string="Costing Method", required=True, copy=True),
+            string="Costing Method", copy=True),
+        'cost_method': fields.function(_get_cost_method, fnct_inv=_set_cost_method, type='char'),  # TDE FIXME: store it ?
         'property_stock_account_input': fields.property(
             type='many2one',
             relation='account.account',
-            string='Stock Input Account', 
+            string='Stock Input Account',
+            domain=[('deprecated', '=', False)],
             help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used."),
         'property_stock_account_output': fields.property(
             type='many2one',
             relation='account.account',
-            string='Stock Output Account', 
+            string='Stock Output Account',
+            domain=[('deprecated', '=', False)],
             help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
     }
 
     _defaults = {
-        'valuation': 'manual_periodic',
+        'property_valuation': 'manual_periodic',
     }
 
-    def onchange_type(self, cr, uid, ids, type):
-        res = super(product_template, self).onchange_type(cr, uid, ids, type)
-        if type in ('consu', 'service'):
-            res = {'value': {'valuation': 'manual_periodic'}}
-        return res
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('cost_method'):
+            vals['property_cost_method'] = vals.pop('cost_method')
+        if vals.get('valuation'):
+            vals['property_valuation'] = vals.pop('valuation')
+        return super(product_template, self).create(cr, uid, vals, context=context)
 
-    def get_product_accounts(self, cr, uid, product_id, context=None):
-        """ To get the stock input account, stock output account and stock journal related to product.
-        @param product_id: product id
-        @return: dictionary which contains information regarding stock input account, stock output account and stock journal
+    @api.onchange('type')
+    def onchange_type_valuation(self):
+        if self.type != 'product':
+            self.valuation = 'manual_periodic'
+        return {}
+
+    @api.multi
+    def _get_product_accounts(self):
+        """ Add the stock accounts related to product to the result of super()
+        @return: dictionary which contains information regarding stock accounts and super (income+expense accounts)
         """
-        if context is None:
-            context = {}
-        product_obj = self.browse(cr, uid, product_id, context=context)
+        accounts = super(product_template, self)._get_product_accounts()
+        accounts.update({
+            'stock_input': self.property_stock_account_input or self.categ_id.property_stock_account_input_categ_id,
+            'stock_output': self.property_stock_account_output or self.categ_id.property_stock_account_output_categ_id,
+            'stock_valuation': self.categ_id.property_stock_valuation_account_id or False,
+        })
+        return accounts
 
-        stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False
-        if not stock_input_acc:
-            stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
-
-        stock_output_acc = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id or False
-        if not stock_output_acc:
-            stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
-
-        journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
-        account_valuation = product_obj.categ_id.property_stock_valuation_account_id and product_obj.categ_id.property_stock_valuation_account_id.id or False
-
-        if not all([stock_input_acc, stock_output_acc, account_valuation, journal_id]):
-            raise osv.except_osv(_('Error!'), _('''One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:
-    Product: %s
-    Stock Input Account: %s
-    Stock Output Account: %s
-    Stock Valuation Account: %s
-    Stock Journal: %s
-    ''') % (product_obj.name, stock_input_acc, stock_output_acc, account_valuation, journal_id))
-        return {
-            'stock_account_input': stock_input_acc,
-            'stock_account_output': stock_output_acc,
-            'stock_journal': journal_id,
-            'property_stock_valuation_account_id': account_valuation
-        }
-
+    @api.multi
+    def get_product_accounts(self, fiscal_pos=None):
+        """ Add the stock journal related to product to the result of super()
+        @return: dictionary which contains all needed information regarding stock accounts and journal and super (income+expense accounts)
+        """
+        accounts = super(product_template, self).get_product_accounts(fiscal_pos=fiscal_pos)
+        accounts.update({'stock_journal': self.categ_id.property_stock_journal or False})
+        return accounts
 
     def do_change_standard_price(self, cr, uid, ids, new_price, context=None):
         """ Changes the Standard Price of Product and creates an account move accordingly."""
@@ -118,7 +121,7 @@ class product_template(osv.osv):
 
                 diff = product.standard_price - new_price
                 if not diff:
-                    raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
+                    raise UserError(_("No difference between standard price and new price!"))
                 for prod_variant in product.product_variant_ids:
                     qty = prod_variant.qty_available
                     if qty:
@@ -152,6 +155,7 @@ class product_template(osv.osv):
                                         'credit': amount_diff,
                                         'move_id': move_id
                                         }, context=context)
+                        move_obj.post(cr, uid, [move_id], context=context)
             self.write(cr, uid, rec_id, {'standard_price': new_price})
         return True
 
@@ -159,32 +163,59 @@ class product_template(osv.osv):
 class product_product(osv.osv):
     _inherit = 'product.product'
 
-    def onchange_type(self, cr, uid, ids, type):
-        res = super(product_product, self).onchange_type(cr, uid, ids, type)
-        if type in ('consu', 'service'):
-            res = {'value': {'valuation': 'manual_periodic'}}
-        return res
-
+    @api.onchange('type')
+    def onchange_type_valuation(self):
+        if self.type != 'product':
+            self.valuation = 'manual_periodic'
+        return {}
 
 class product_category(osv.osv):
     _inherit = 'product.category'
     _columns = {
+        'property_valuation': fields.property(
+            type='selection',
+            selection=[('manual_periodic', 'Periodic (manual)'),
+                       ('real_time', 'Perpetual (automated)')],
+            string='Inventory Valuation',
+            required=True, copy=True,
+            help="If perpetual valuation is enabled for a product, the system "
+                 "will automatically create journal entries corresponding to "
+                 "stock moves, with product price as specified by the 'Costing "
+                 "Method'. The inventory variation account set on the product "
+                 "category will represent the current inventory value, and the "
+                 "stock input and stock output account will hold the counterpart "
+                 "moves for incoming and outgoing products."),
+        'property_cost_method': fields.property(
+            type='selection',
+            selection=[('standard', 'Standard Price'),
+                       ('average', 'Average Price'),
+                       ('real', 'Real Price')],
+            string="Costing Method",
+            required=True, copy=True,
+            help="Standard Price: The cost price is manually updated at the end "
+                 "of a specific period (usually once a year).\nAverage Price: "
+                 "The cost price is recomputed at each incoming shipment and "
+                 "used for the product valuation.\nReal Price: The cost price "
+                 "displayed is the price of the last outgoing product (will be "
+                 "used in case of inventory loss for example)."""),
         'property_stock_journal': fields.property(
             relation='account.journal',
             type='many2one',
             string='Stock Journal',
             help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."),
-        'property_stock_account_input_categ': fields.property(
+        'property_stock_account_input_categ_id': fields.property(
             type='many2one',
             relation='account.account',
             string='Stock Input Account',
+            domain=[('deprecated', '=', False)], oldname="property_stock_account_input_categ",
             help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
                  "can also directly be set on each product"),
-        'property_stock_account_output_categ': fields.property(
+        'property_stock_account_output_categ_id': fields.property(
             type='many2one',
             relation='account.account',
-            string='Stock Output Account',
+            domain=[('deprecated', '=', False)],
+            string='Stock Output Account', oldname="property_stock_account_output_categ",
             help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
                  "can also directly be set on each product"),
@@ -192,6 +223,6 @@ class product_category(osv.osv):
             type='many2one',
             relation='account.account',
             string="Stock Valuation Account",
+            domain=[('deprecated', '=', False)],
             help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
     }
-

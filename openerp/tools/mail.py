@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (C) 2012-TODAY OpenERP S.A. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
 import cgi
@@ -43,14 +25,14 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 
 tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
-tags_to_remove = ['html', 'body', 'font']
+tags_to_remove = ['html', 'body']
 
 # allow new semantic HTML5 tags
 allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split() + [etree.Comment])
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
-     'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translate', 'data-oe-nodeid',
-     'data-snippet-id', 'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
+     'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-id', 'data-oe-nodeid',
+     'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
      ])
 
 
@@ -60,7 +42,7 @@ class _Cleaner(clean.Cleaner):
             return True
         return super(_Cleaner, self).allow_element(el)
 
-def html_sanitize(src, silent=True, strict=False, strip_style=False):
+def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_classes=False):
     if not src:
         return src
     src = ustr(src, errors='replace')
@@ -95,9 +77,13 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False):
     if strict:
         if etree.LXML_VERSION >= (3, 1, 0):
             # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
+            if strip_classes:
+                current_safe_attrs = safe_attrs - frozenset(['class'])
+            else:
+                current_safe_attrs = safe_attrs
             kwargs.update({
                 'safe_attrs_only': True,
-                'safe_attrs': safe_attrs,
+                'safe_attrs': current_safe_attrs,
             })
     else:
         kwargs['safe_attrs_only'] = False    # keep oe-data attributes + style
@@ -321,13 +307,13 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
 
     # html: ClEditor seems to love using <div><br /><div> -> replace with <br />
     br_div_tags = re.compile(r'(<div>\s*<br\s*\/>\s*<\/div>)', re.IGNORECASE)
-    html = _replace_matching_regex(br_div_tags, html, '<br />')
+    inner_html = _replace_matching_regex(br_div_tags, html, '<br />')
 
     # form a tree
-    root = lxml.html.fromstring(html)
+    root = lxml.html.fromstring(inner_html)
     if not len(root) and root.text is None and root.tail is None:
-        html = '<div>%s</div>' % html
-        root = lxml.html.fromstring(html)
+        inner_html = '<div>%s</div>' % inner_html
+        root = lxml.html.fromstring(inner_html)
 
     quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
     signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)')
@@ -347,6 +333,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
 
     # tree: tag nodes
     # signature_begin = False  # try dynamic signature recognition
+    quoted = False
     quote_begin = False
     overlength = False
     overlength_section_id = None
@@ -395,9 +382,11 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
         if node.tag == 'blockquote' or node.get('text_quote') or node.get('text_signature'):
             # here no quote_begin because we want to be able to remove some quoted
             # text without removing all the remaining context
+            quoted = True
             node.set('in_quote', '1')
         if node.getparent() is not None and node.getparent().get('in_quote'):
             # inside a block of removed text but not in quote_begin (see above)
+            quoted = True
             node.set('in_quote', '1')
 
         # shorten:
@@ -459,12 +448,14 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
                 node_class = node.get('class', '') + ' oe_mail_cleaned'
                 node.set('class', node_class)
 
+    if not overlength and not quote_begin and not quoted:
+        return html
+
     # html: \n that were tail of elements have been encapsulated into <span> -> back to \n
-    html = etree.tostring(root, pretty_print=False)
+    html = etree.tostring(root, pretty_print=False, encoding='UTF-8')
     linebreaks = re.compile(r'<span[^>]*>([\s]*[\r\n]+[\s]*)<\/span>', re.IGNORECASE | re.DOTALL)
     html = _replace_matching_regex(linebreaks, html, '\n')
-
-    return html
+    return ustr(html)
 
 
 #----------------------------------------------------------
@@ -481,6 +472,10 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     ## download here: http://www.peterbe.com/plog/html2plaintext
 
     html = ustr(html)
+
+    if not html:
+        return ''
+
     tree = etree.fromstring(html, parser=etree.HTMLParser())
 
     if body_id is not None:
@@ -529,6 +524,24 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
         html += ustr('[%s] %s\n') % (i + 1, url)
 
     return html
+
+def html_escape_keep_url(self, message):
+    """ Escape the message and transform the url into clickable link
+        :param string message: the message to escape url and transform them into clickable link
+        :returns the escaped message
+        :rtype : string
+    """
+    safe_message = ""
+    first = 0
+    last = 0
+    for m in re.finditer('(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?', message):
+        last = m.start()
+        safe_message += cgi.escape(message[first:last])
+        safe_message += '<a href="%s" target="_blank">%s</a>' % (cgi.escape(m.group(0)), m.group(0))
+        first = m.end()
+        last = m.end()
+    safe_message += cgi.escape(message[last:])
+    return safe_message
 
 def plaintext2html(text, container_tag=False):
     """ Convert plaintext into html. Content of the text is escaped to manage
@@ -603,7 +616,7 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
 #----------------------------------------------------------
 
 # matches any email in a body of text
-email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE) 
+email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE)
 
 # matches a string containing only one email
 single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$""", re.VERBOSE)

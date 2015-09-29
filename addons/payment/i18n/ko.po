@@ -5,12 +5,12 @@
 # Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-18 08:38+0000\n"
-"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-08 06:27+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,54 +18,113 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment
-#: help:account.config.settings,module_payment_adyen:0
+#: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
+msgid ""
+"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"                self.env['my.model'].payment_validated(self)"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
 msgid "-It installs the module payment_adyen."
 msgstr "- payment_adyen 모듈을 설치합니다."
 
 #. module: payment
-#: help:account.config.settings,module_payment_buckaroo:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
+msgid "-It installs the module payment_authorize."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
 msgid "-It installs the module payment_buckaroo."
 msgstr "- payment_buckaroo 모듈을 설치합니다."
 
 #. module: payment
-#: help:account.config.settings,module_payment_ogone:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
 msgid "-It installs the module payment_ogone."
 msgstr "- payment_ogone 모듈을 설치합니다."
 
 #. module: payment
-#: help:account.config.settings,module_payment_paypal:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
 msgid "-It installs the module payment_paypal."
 msgstr "- payment_paypal 모듈을 설치합니다."
 
 #. module: payment
-#: field:payment.transaction,acquirer_id:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
+msgid "-It installs the module payment_transfer."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
+msgid "3D Secure HTML"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
 msgstr "매입사"
 
 #. module: payment
-#: field:payment.transaction,acquirer_reference:0
-msgid "Acquirer Order Reference"
-msgstr "매입사 주문 참조"
+#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_id
+msgid "Acquirer Account"
+msgstr ""
 
 #. module: payment
-#: field:payment.transaction,partner_address:0
+#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_ref
+msgid "Acquirer Ref."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
+msgid "Acquirer Reference"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method_active
+msgid "Active"
+msgstr "활성"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
+msgid "Add Extra Fees"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Address"
 msgstr "주소"
 
 #. module: payment
-#: field:payment.transaction,amount:0
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_adyen
+msgid "Adyen"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
+#: model:ir.model.fields,help:payment.field_payment_transaction_amount
 msgid "Amount"
 msgstr "금액"
 
 #. module: payment
-#: help:payment.transaction,amount:0
-msgid "Amount in cents"
-msgstr "잔돈"
+#: selection:payment.acquirer,auto_confirm:0
+msgid "At payment no acquirer confirmation needed"
+msgstr ""
 
 #. module: payment
-#: selection:payment.acquirer,validation:0
-msgid "Automatic"
-msgstr "자동"
+#: selection:payment.acquirer,auto_confirm:0
+msgid "At payment with acquirer confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
+msgid "Buckaroo"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
+msgid "Cancel Message"
+msgstr ""
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -73,50 +132,86 @@ msgid "Canceled"
 msgstr "취소됨"
 
 #. module: payment
-#: field:payment.transaction,partner_city:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "City"
-msgstr "시구군"
+msgstr "시군구"
 
 #. module: payment
-#: field:payment.acquirer,company_id:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
 msgstr "회사"
 
 #. module: payment
-#: field:payment.acquirer,fees_active:0
-msgid "Compute fees"
-msgstr "수수료 계산"
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "Configuration"
+msgstr "환경 설정"
 
 #. module: payment
-#: field:payment.transaction,partner_country_id:0
+#: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
+msgid "Configure payment acquiring methods"
+msgstr "지불 획득 방법 구성"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_count
+msgid "Count Payment Method"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Country"
 msgstr "국가"
 
 #. module: payment
-#: field:payment.acquirer,create_uid:0 field:payment.transaction,create_uid:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_method_create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_uid
 msgid "Created by"
 msgstr "작성자"
 
 #. module: payment
-#: field:payment.acquirer,create_date:0
-#: field:payment.transaction,create_date:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_date
+#: model:ir.model.fields,field_description:payment.field_payment_method_create_date
 msgid "Created on"
 msgstr "작성일"
 
 #. module: payment
-#: field:payment.transaction,date_create:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_date
 msgid "Creation Date"
-msgstr "작성일"
+msgstr "작성 날짜"
 
 #. module: payment
-#: field:payment.transaction,currency_id:0
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "Credentials"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
+msgid "Credit card(s)"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
 msgid "Currency"
-msgstr "통화"
+msgstr "유통"
 
 #. module: payment
-#: help:payment.transaction,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "레코드에 게시된 최근 메시지의 날짜."
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Customer Details"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
+msgid "Determine the display order"
+msgstr "표시 순서 결정"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_method_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -124,17 +219,27 @@ msgid "Done"
 msgstr "완료"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
+msgid "Done Message"
+msgstr ""
+
+#. module: payment
 #: selection:payment.transaction,state:0
 msgid "Draft"
 msgstr "기안"
 
 #. module: payment
-#: field:payment.transaction,partner_email:0
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "E-mail"
+msgstr "이메일"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
 msgid "Email"
 msgstr "이메일"
 
 #. module: payment
-#: field:payment.acquirer,environment:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
 msgid "Environment"
 msgstr "환경"
 
@@ -144,34 +249,34 @@ msgid "Error"
 msgstr "오류"
 
 #. module: payment
-#: field:payment.transaction,fees:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_error_msg
+msgid "Error Message"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
 msgid "Fees"
 msgstr "수수료"
 
 #. module: payment
-#: help:payment.transaction,fees:0
+#: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
 msgstr "수수료 : 매입사에 의존하기 때문에 시스템에 의해 설정됩니다"
 
 #. module: payment
-#: help:payment.transaction,state_message:0
+#: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
 msgstr "정보에 대한 오류 및 유효성 메시지 저장에 사용된 필드"
 
 #. module: payment
-#: field:payment.acquirer,fees_dom_fixed:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
 msgid "Fixed domestic fees"
 msgstr "고정 국내 수수료"
 
 #. module: payment
-#: field:payment.acquirer,fees_int_fixed:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
 msgid "Fixed international fees"
 msgstr "고정 국외 수수료"
-
-#. module: payment
-#: field:payment.transaction,message_follower_ids:0
-msgid "Followers"
-msgstr "팔로워"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -179,188 +284,241 @@ msgid "Form"
 msgstr "양식"
 
 #. module: payment
-#: field:payment.acquirer,view_template_id:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
 msgid "Form Button Template"
 msgstr "양식 단추 서식"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_search
+#: selection:payment.transaction,type:0
+msgid "Form with credentials storage"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Group By"
 msgstr "그룹화"
 
 #. module: payment
-#: help:payment.transaction,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "대화 요약(메시지 개수, ...)을 포함합니다. 이 요약은 칸반 화면에 바로 삽입할 수 있는 html 형식입니다."
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
+msgid "Help Message"
+msgstr ""
 
 #. module: payment
-#: field:payment.acquirer,id:0 field:payment.transaction,id:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
+#: model:ir.model.fields,field_description:payment.field_payment_method_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_id
 msgid "ID"
 msgstr "ID"
 
 #. module: payment
-#: help:payment.transaction,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "선택하면 새로운 메시지에 주목할 필요가 있습니다."
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
+msgid "Image"
+msgstr "이미지"
 
 #. module: payment
-#: field:payment.transaction,message_is_follower:0
-msgid "Is a Follower"
-msgstr "은(는) 팔로워임"
+#: model:ir.model.fields,help:payment.field_payment_transaction_reference
+msgid "Internal reference of the TX"
+msgstr ""
 
 #. module: payment
-#: field:payment.transaction,partner_lang:0
-msgid "Lang"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
+msgid "Language"
 msgstr "언어"
 
 #. module: payment
-#: field:payment.transaction,message_last_post:0
-msgid "Last Message Date"
-msgstr "최근 메시지 날짜"
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_method___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
+msgid "Last Modified on"
+msgstr ""
 
 #. module: payment
-#: field:payment.acquirer,write_uid:0 field:payment.transaction,write_uid:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_method_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
 msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
 
 #. module: payment
-#: field:payment.acquirer,write_date:0 field:payment.transaction,write_date:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_method_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
 msgid "Last Updated on"
 msgstr "최근 갱신 날짜"
 
 #. module: payment
-#: help:payment.acquirer,website_published:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
 msgstr "결제 매입사 사용 (고객 송장 등)"
 
 #. module: payment
-#: field:account.config.settings,module_payment_adyen:0
-msgid "Manage Payments Using Adyen"
-msgstr "Adyen을 사용하여 결제 관리"
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
+msgid "Medium-sized image"
+msgstr "중간 크기 이미지"
 
 #. module: payment
-#: field:account.config.settings,module_payment_buckaroo:0
-msgid "Manage Payments Using Buckaroo"
-msgstr "Buckaroo를 사용하여 결제 관리"
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image_medium
+msgid ""
+"Medium-sized image of this provider. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved. Use this field in form views "
+"or some kanban views."
+msgstr ""
 
 #. module: payment
-#: field:account.config.settings,module_payment_ogone:0
-msgid "Manage Payments Using Ogone"
-msgstr "Ogone을 사용하여 결제 관리"
-
-#. module: payment
-#: field:account.config.settings,module_payment_paypal:0
-msgid "Manage Payments Using Paypal"
-msgstr "페이팔을 사용하여 결제 관리"
-
-#. module: payment
-#: selection:payment.acquirer,validation:0
-msgid "Manual"
-msgstr "수동"
-
-#. module: payment
-#: field:payment.acquirer,pre_msg:0 field:payment.transaction,state_message:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Message"
 msgstr "메시지"
 
 #. module: payment
-#: help:payment.acquirer,post_msg:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
 msgid "Message displayed after having done the payment process."
 msgstr "결제 과정을 완료한 후에 표시할 메시지입니다."
 
 #. module: payment
-#: help:payment.acquirer,pre_msg:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
 msgid "Message displayed to explain and help the payment process."
 msgstr "결제 과정에 대한 설명 및 도움말로 표시할 메시지."
 
 #. module: payment
-#: field:payment.transaction,message_ids:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
+msgid "Message displayed, if error is occur during the payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
+msgid "Message displayed, if order is cancel during the payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
+msgid ""
+"Message displayed, if order is done successfully after having done the "
+"payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
+msgid ""
+"Message displayed, if order is in pending state after having done the "
+"payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Messages"
 msgstr "메시지"
 
 #. module: payment
-#: help:payment.transaction,message_ids:0
-msgid "Messages and communication history"
-msgstr "메시지 및 대화 이력"
-
-#. module: payment
-#: field:payment.acquirer,name:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
+#: model:ir.model.fields,field_description:payment.field_payment_method_name
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Name"
-msgstr "명칭"
+msgstr "이름"
 
 #. module: payment
-#: field:payment.transaction,reference:0
-msgid "Order Reference"
-msgstr "주문 참조"
+#: model:ir.model.fields,help:payment.field_payment_method_name
+msgid "Name of the payment method"
+msgstr ""
 
 #. module: payment
-#: field:payment.transaction,partner_id:0
+#: selection:payment.acquirer,auto_confirm:0
+msgid "No automatic confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_ogone
+msgid "Ogone"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
+msgid "Order Confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model,name:payment.model_res_partner
+#: model:ir.model.fields,field_description:payment.field_payment_method_partner_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
 msgid "Partner"
 msgstr "파트너"
 
 #. module: payment
-#: field:payment.transaction,partner_name:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_name
 msgid "Partner Name"
 msgstr "파트너 이름"
 
 #. module: payment
-#: field:payment.transaction,partner_reference:0
-msgid "Partner Reference"
-msgstr "파트너 참조"
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:274
-#, python-format
-msgid "Pay safely online"
-msgstr "안전 결제"
-
-#. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "결제 매입사"
+msgstr "결제 완료자"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
-#: view:payment.acquirer:payment.acquirer_list
+#: model:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
 msgstr "결제 매입사"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_method_id
+msgid "Payment Method"
+msgstr "지불 방법"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_ids
+#: model:ir.ui.view,arch_db:payment.payment_method_form_view
+#: model:ir.ui.view,arch_db:payment.payment_method_tree_view
+#: model:ir.ui.view,arch_db:payment.payment_method_view_search
+msgid "Payment Methods"
+msgstr "결제 방법"
+
+#. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "결제 거래"
+msgstr "결제 처리"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
+#: model:ir.actions.act_window,name:payment.action_payment_tx_ids
+#: model:ir.actions.act_window,name:payment.payment_transaction_action_child
+#: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
+#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
-#: view:payment.transaction:payment.transaction_form
-#: view:payment.transaction:payment.transaction_list
+#: model:ir.ui.view,arch_db:payment.transaction_form
+#: model:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
 msgstr "결제 거래"
 
 #. module: payment
+#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.payment_method_form_view
 msgid "Payments"
-msgstr "결제"
+msgstr "지불"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_paypal
+msgid "Paypal"
+msgstr ""
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr "보류 중"
+msgstr "보류"
 
 #. module: payment
-#: field:payment.transaction,partner_phone:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
+msgid "Pending Message"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
 msgid "Phone"
 msgstr "전화"
-
-#. module: payment
-#: field:payment.acquirer,validation:0
-msgid "Process Method"
-msgstr "처리 방법"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -368,20 +526,20 @@ msgid "Production"
 msgstr "생산"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_search
-#: field:payment.acquirer,provider:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
+#: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Provider"
 msgstr "공급자"
 
 #. module: payment
-#: help:payment.transaction,acquirer_reference:0
-msgid "Reference of the TX as stored in the acquirer database"
-msgstr "매입사 데이타베이스에 저장된 TX의 참조"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
+msgid "Reference"
+msgstr "참조"
 
 #. module: payment
-#: help:payment.transaction,partner_reference:0
-msgid "Reference of the customer in the acquirer database"
-msgstr "매입사 데이타베이스에 고객의 참조"
+#: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
+msgid "Reference of the TX as stored in the acquirer database"
+msgstr "매입사 데이타베이스에 저장된 TX의 참조"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -389,9 +547,26 @@ msgid "Required fields not filled"
 msgstr "필수 필드를 채우지 않았습니다"
 
 #. module: payment
-#: view:payment.transaction:payment.transaction_form
-msgid "Send a message to the group"
-msgstr "그룹에게 메시지 보내기"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_eval
+msgid "S2S Callback"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
+msgid "S2S Form Template"
+msgstr ""
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.payment_method_action
+#: model:ir.ui.menu,name:payment.finance_pay_method_menu
+#: model:ir.ui.menu,name:payment.payment_method_menu
+msgid "Saved Payment Data"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
+msgid "Sequence"
+msgstr "순서"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -399,135 +574,159 @@ msgid "Server To Server"
 msgstr "서버 상호간"
 
 #. module: payment
-#: help:payment.acquirer,validation:0
-msgid "Static payments are payments like transfer, that require manual steps."
-msgstr "정적 결제는 수동 단계가 필요한 전송 같은 결제입니다."
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
+msgid "Small-sized image"
+msgstr "작은 크기의 사진"
 
 #. module: payment
-#: field:payment.transaction,state:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
+msgid ""
+"Small-sized image of this provider. It is automatically resized as a 64x64px"
+" image, with aspect ratio preserved. Use this field anywhere a small image "
+"is required."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_state
 msgid "Status"
 msgstr "상태"
 
 #. module: payment
-#: field:payment.transaction,message_summary:0
-msgid "Summary"
-msgstr "요약"
+#: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
+msgid "Template for method registration"
+msgstr ""
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Test"
-msgstr "테스트"
+msgstr "시험"
 
 #. module: payment
-#: field:payment.acquirer,post_msg:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_post_msg
 msgid "Thanks Message"
 msgstr "감사 메시지"
 
 #. module: payment
-#: sql_constraint:payment.transaction:0
+#: constraint:payment.transaction:0
 msgid "The payment transaction reference must be unique!"
 msgstr "결제 거래 참조는 고유해야 합니다!"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid ""
-"This template renders the acquirer button with all necessary values.\n"
-"                                    It is be rendered with qWeb with the following evaluation context:"
-msgstr "이 서식은 필요한 모든 값과 함께 매입사 단추를 생성합니다.\n                                  다음 문맥 평가와 함께 qWeb 엔진으로 생성합니다 :"
+"This field holds the image used for this provider, limited to 1024x1024px"
+msgstr ""
 
 #. module: payment
-#: field:payment.transaction,type:0
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"This template renders the acquirer button with all necessary values.\n"
+"                                            It is be rendered with qWeb with the following evaluation context:"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_type
 msgid "Type"
 msgstr "유형"
 
 #. module: payment
-#: field:payment.transaction,message_unread:0
-msgid "Unread Messages"
-msgstr "읽지않은 메시지"
-
-#. module: payment
-#: field:payment.transaction,date_validate:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate
 msgid "Validation Date"
-msgstr "유효성 검사 날짜"
+msgstr "검토 날짜"
 
 #. module: payment
-#: field:payment.acquirer,fees_dom_var:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
 msgid "Variable domestic fees (in percents)"
 msgstr "가변 국내 수수료 (퍼센트)"
 
 #. module: payment
-#: field:payment.acquirer,fees_int_var:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
 msgid "Variable international fees (in percents)"
 msgstr "가변 국외 수수료 (퍼센트)"
 
 #. module: payment
-#: field:payment.acquirer,website_published:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
 msgid "Visible in Portal / Website"
 msgstr "포탈/웹사이트 보여주기"
 
 #. module: payment
-#: field:payment.transaction,website_message_ids:0
-msgid "Website Messages"
-msgstr "웹 사이트 메시지"
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_transfer
+msgid "Wire Transfer"
+msgstr ""
 
 #. module: payment
-#: help:payment.transaction,website_message_ids:0
-msgid "Website communication history"
-msgstr "웹 사이트 대화 이력"
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "ZIP"
+msgstr "우편번호"
 
 #. module: payment
-#: field:payment.transaction,partner_zip:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
 msgid "Zip"
 msgstr "우편번호"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model,name:payment.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
 msgstr "acquirer : 결제 매입사 레코드 검색"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
 msgstr "amount : 거래 금액."
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "context: the current context dictionary"
 msgstr "context : 현재 문맥 사전"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
 msgstr "currency : 거래 통화 레코드 검색"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
 msgstr "partner : 바이어 파트너 레코드 검색. 반드시 설정하지 않아도 됨"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
 msgstr "partner_values : 바이어에 대한 특정 값. 예를 들면 운송 형태"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model,name:payment.model_payment_method
+msgid "payment.method"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
 msgstr "reference: 거래 참조 번호"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
 msgstr "tx_url: 양식에 게시된 거래 URL"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
 msgstr "tx_values: 거래 값"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+msgid "unknown"
+msgstr "알 수 없음"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "user: 현재 사용자 레코드 검색"

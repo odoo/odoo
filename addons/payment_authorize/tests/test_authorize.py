@@ -78,7 +78,7 @@ class AuthorizeForm(AuthorizeCommon):
         cr, uid, context = self.env.cr, self.env.uid, {}
         res = self.payment_acquirer.render(
             cr, uid, self.authorize_id, 'SO004', 320.0, self.currency_usd.id,
-            partner_id=None, partner_values=self.buyer_values, context=context)
+            values=self.buyer_values, context=context)
         # check form result
         tree = objectify.fromstring(res)
         self.assertEqual(tree.get('action'), 'https://test.authorize.net/gateway/transact.dll', 'Authorize: wrong form POST url')
@@ -161,10 +161,10 @@ class AuthorizeForm(AuthorizeCommon):
         self.payment_transaction.form_feedback(cr, uid, authorize_post_data, 'authorize', context=context)
         # check state
         self.assertEqual(tx.state, 'done', 'Authorize: validation did not put tx into done state')
-        self.assertEqual(tx.authorize_txnid, authorize_post_data.get('x_trans_id'), 'Authorize: validation did not update tx payid')
+        self.assertEqual(tx.acquirer_reference, authorize_post_data.get('x_trans_id'), 'Authorize: validation did not update tx payid')
 
         # reset tx
-        tx.write({'state': 'draft', 'date_validate': False, 'authorize_txnid': False})
+        tx.write({'state': 'draft', 'date_validate': False, 'acquirer_reference': False})
 
         # simulate an error
         authorize_post_data['x_response_code'] = u'3'

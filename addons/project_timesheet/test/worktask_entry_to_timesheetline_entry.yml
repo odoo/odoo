@@ -11,8 +11,7 @@
   Create a product with type service used to specify employees designation
 -
   !record {model: product.product, id: product_product_hrmanger0}:
-    categ_id: product.product_category_6
-    mes_type: fixed
+    categ_id: product.product_category_5
     name: HR Manager
     standard_price: 1.0
     type: service
@@ -21,32 +20,19 @@
     volume: 0.0
     warranty: 0.0
     weight: 0.0
-    weight_net: 0.0
 -
-  Create an analytic journal for employees timesheet
+  Create a financial account
 -
-  !record {model: account.analytic.journal, id: account_analytic_journal_hrtimesheet0}:
-    company_id: base.main_company
-    name: HR Timesheet
-    type: general
+  !record {model: account.account, id: financial_account0}:
+    name: expenses
+    code: 9999999
+    user_type_id: account.data_account_type_expenses
 -
   Create an employee 'HR Manager' for user 'HR Manager'
 -
   !record {model: hr.employee, id: hr_employee_hrmanager0}:
     name: HR Manager
     user_id: res_users_hrmanager0
-    product_id: product_product_hrmanger0
-    journal_id: account_analytic_journal_hrtimesheet0
--
-  Create a timesheet sheet for HR manager
--
-  !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0}:
-    date_from: !eval "'%s-05-01' %(datetime.now().year)"
-    date_to: !eval "'%s-05-31' %(datetime.now().year)"
-    name: Sheet for hr manager
-    state: new
-    user_id: res_users_hrmanager0
-    employee_id : 'hr_employee_hrmanager0'
 -
   Create a project 'Timesheet Management'
 -
@@ -67,13 +53,11 @@
   Make a work task entry 'Get work calendar of all employees' of 10 hours done by HR manager
 -
   !record {model: project.task, id: project_task_getalltimesheetrecords0}:
-    work_ids:
+    timesheet_ids:
       - date: !eval time.strftime('%Y-05-%d %H:%M:%S')
-        hours: 10.0
+        unit_amount: 10.0
         name: Get work calendar of all employees
         user_id: res_users_hrmanager0
--
-  Check for timesheet_ids in HR manager's timesheet
--
-  !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0, string: After hr manager's work task, length of timesheet line of current timesheet must be greater then 1}:
-    - len(timesheet_ids) > 0
+        account_id: analytic.analytic_administratif
+        general_account_id: financial_account0
+        product_id: product_product_hrmanger0

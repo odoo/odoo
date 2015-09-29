@@ -1,12 +1,12 @@
 -
-    Create a supplier
+    Create a vendor
 -
   !record {model: res.partner, id: supplier_dropship}:
-    name: Supplier of Dropshipping test
+    name: Vendor of Dropshipping test
 - 
     Create new product without any routes
 - 
-    !record {model: product.product, id: drop_shop_product}:
+    !record {model: product.product, id: drop_shop_product, view: False}:
         name: Pen drive
         type: product
         categ_id: product.product_category_1
@@ -26,7 +26,7 @@
     !record {model: sale.order, id: sale_order_drp_shpng}:
           partner_id: base.res_partner_2
           note: Create sale order for drop shipping
-          payment_term: account.account_payment_term
+          payment_term_id: account.account_payment_term
           order_line: 
             - product_id: drop_shop_product
               product_uom_qty: 200
@@ -35,36 +35,32 @@
 - 
     Confirm sales order
 - 
-    !workflow {model: sale.order, action: order_confirm, ref: sale_order_drp_shpng}
+    !python {model: sale.order}: |
+        self.action_confirm(cr, uid, ref("sale_order_drp_shpng"), context=context)
 - 
     Check the sales order created a procurement group which has a procurement of 200 pieces
 - 
     !python {model: procurement.group}: |
         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
-        assert self.browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0].product_qty == 200 
--
-  I run scheduler.
--
-  !python {model: procurement.order}: |
-    self.run_scheduler(cr, uid)
+        assert self.browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0].product_qty == 200
 - 
-    Check a quotation was created to a certain supplier and confirm so it becomes a confirmed purchase order
+    Check a quotation was created to a certain vendor and confirm so it becomes a confirmed purchase order
 -
     !python {model: purchase.order}: |
-        from openerp import netsvc, workflow
+        from openerp import netsvc
         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
         procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
         purchase_id = procurement_order.purchase_line_id.order_id.id
         
-        workflow.trg_validate(uid, 'purchase.order', purchase_id, 'purchase_confirm', cr)
+        self.button_confirm(cr, uid, purchase_id)
         po_id = self.pool.get('purchase.order').search(cr, uid, [('partner_id', '=', ref('supplier_dropship'))])
-        assert self.browse(cr, uid, purchase_id).state == 'approved', 'Purchase order should be in the approved state'
+        assert self.browse(cr, uid, purchase_id).state == 'purchase', 'Purchase order should be in the approved state'
 - 
     Use 'Receive Products' button to immediately view this picking, it should have created a picking with 200 pieces
 -
     !python {model: purchase.order}: |
          po_id = self.search(cr, uid, [('partner_id', '=', ref('supplier_dropship'))])
-         self.view_picking(cr, uid, po_id)
+         assert len(po_id) == 1, 'There should be one picking'
 -
     Send the 200 pieces.
 - 
@@ -77,7 +73,7 @@
   Check one quant was created in Customers location with 200 pieces and one move in the history_ids
 - 
     !python {model: stock.quant}: |
-        quant_ids = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')),('qty', '=', 200), ('product_id', '=', ref("drop_shop_product"))])
+        quant_ids = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')), ('product_id', '=', ref("drop_shop_product"))])
         assert quant_ids, 'No Quant found'
-        assert len(quant_ids) == 1
-        assert len(self.browse(cr, uid, quant_ids)[0].history_ids) == 1
+        assert len(quant_ids) == 1, 'There should be exactly one quant'
+        assert len(self.browse(cr, uid, quant_ids)[0].history_ids) == 1, 'The quant should have exactly 1 move in its history'

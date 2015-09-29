@@ -1,3 +1,9 @@
+-
+  Set the company currency as EURO for the sake of repeatibility
+-
+   !python {model: res.company}: |
+    self.write(cr, uid, [ref('base.main_company')], {'currency_id':ref('base.EUR')}, context=context)
+
 - 
   Set product category removal strategy as LIFO 
 - 
@@ -18,44 +24,43 @@
     uom_po_id: product.product_uom_kgm
     valuation: real_time
     cost_method: real
-    property_stock_account_input: account.o_expense
-    property_stock_account_output: account.o_income
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
     description: LIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 - 
   I create a draft Purchase Order for first in move for 10 pieces at 60 euro
 - 
   !record {model: purchase.order, id: purchase_order_lifo1}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_stock
-    pricelist_id: purchase.list0
     order_line:
       - product_id: product_lifo_icecream
         product_qty: 10.0
         product_uom: product.product_uom_kgm
         price_unit: 60.0
         name: 'LIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I create a draft Purchase Order for second shipment for 30 pieces at 80 euro
 - 
   !record {model: purchase.order, id: purchase_order_lifo2}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_stock
-    pricelist_id: purchase.list0
     order_line:
       - product_id: product_lifo_icecream
         product_qty: 30.0
         product_uom: product.product_uom_kgm
         price_unit: 80.0
         name: 'LIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
 - 
   I confirm the first purchase order
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_lifo1}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_lifo1")])
 -
   I check the "Approved" status of purchase order 1
 -
   !assert {model: purchase.order, id: purchase_order_lifo1}:
-    - state == 'approved'
+    - state == 'purchase'
 - 
   Process the receipt of purchase order 1
 -
@@ -70,7 +75,8 @@
 - 
   I confirm the second purchase order
 - 
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_lifo2}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_lifo2")])
 -
   Process the receipt of purchase order 2
 - 
@@ -99,7 +105,7 @@
     product_uom_qty: 20.0
     picking_type_id: stock.picking_type_out
 - 
-  I assign this outgoing shipment 
+  I assign this outgoing shipment
 - 
   !python {model: stock.picking}: |
     self.action_assign(cr, uid, [ref("outgoing_lifo_shipment")])

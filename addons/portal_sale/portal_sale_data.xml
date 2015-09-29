@@ -4,7 +4,7 @@
     <data noupdate="1">
 
         <!--Email template -->
-        <record id="email_template_edi_sale" model="email.template">
+        <record id="email_template_edi_sale" model="mail.template">
             <field name="name">Sales Order - Send by Email (Portal)</field>
             <field name="email_from">${(object.user_id.email or '')|safe}</field>
             <field name="subject">${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>
@@ -27,6 +27,9 @@
        &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />
        &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />
        &nbsp;&nbsp;Order date:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />
+       % if object.validity_date and object.state in ('draft', 'sent'):
+       &nbsp;&nbsp;Expiration date: ${object.validity_date}<br />
+       % endif
        % if object.origin:
        &nbsp;&nbsp;Order reference: ${object.origin}<br />
        % endif
@@ -39,7 +42,7 @@
     </p>
 
     <% set signup_url = object.get_signup_url() %>
-    % if signup_url:
+    % if signup_url and object.amount_total > 0 :
     <p>
     You can access this document and pay online via our Customer Portal:
     </p>
@@ -47,7 +50,7 @@
            href="${signup_url}">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>
     % endif
 
-    % if object.paypal_url:
+    % if object.paypal_url and object.amount_total > 0 :
     <br/>
     <p>It is also possible to directly pay with Paypal:</p>
         <a style="margin-left: 120px;" href="${object.paypal_url}">
@@ -95,7 +98,7 @@
             ]]></field>
         </record>
 
-        <record id="email_template_edi_invoice" model="email.template">
+        <record id="email_template_edi_invoice" model="mail.template">
             <field name="name">Invoice - Send by Email (Portal)</field>
             <field name="email_from">${(object.user_id.email or object.company_id.email or 'noreply@localhost')|safe}</field>
             <field name="subject">${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })</field>

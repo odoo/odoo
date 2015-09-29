@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- vim:fdl=1:
--->
 <templates id="template" xml:space="preserve">
 
-    <t t-name="PosWidget">
+    <t t-name="Chrome">
         <div class="pos">
             <div class="pos-topheader">
                 <div class="pos-branding">
@@ -11,67 +9,28 @@
                     <span class="placeholder-UsernameWidget"></span>
                 </div>
                 <div class="pos-rightheader">
-                    <div class="order-selector">
-                        <span class="orders"></span>
-                        <span class="order-button square neworder-button"><i class='fa fa-plus' /></span>
-                        <span class="order-button square deleteorder-button"><i class='fa fa-minus' /></span>
-                    </div>
+                    <span class="placeholder-OrderSelectorWidget"></span>
                     <!-- here goes header buttons -->
                 </div>
             </div>
 
             <div class="pos-content">
 
-                <div class="pos-leftpane">
-                    <div class='window'>
-                        <div class='subwindow'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix'>
-                                    <div class="placeholder-OrderWidget"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class='subwindow collapsed'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix pads'>
-                                    <div class="control-buttons oe_hidden"></div>
-                                    <div class="placeholder-PaypadWidget"></div>
-                                    <div class="placeholder-NumpadWidget"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class='subwindow collapsed'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix'>
-                                    <div class='placeholder-LeftActionBar'></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="rightpane">
-                    <div class='window'>
-                        <div class='subwindow'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix screens'>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class='subwindow collapsed'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix'>
-                                    <div class='placeholder-RightActionBar'></div>
-                                </div>
+                <div class='window'>
+                    <div class='subwindow'>
+                        <div class='subwindow-container'>
+                            <div class='subwindow-container-fix screens'>
+                                <!-- here go the screens -->
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="placeholder-OnscreenKeyboardWidget"></div>
+            </div>
+
+            <div class='popups'>
+                <!-- here go the popups -->
             </div>
 
             <div class="loader">
@@ -86,18 +45,6 @@
                 </div>
             </div>
 
-            &lt;!--[if IE]&gt;
-            <div class='not-supported-browser'>
-                <div class='message'>
-                    <img src='/point_of_sale/static/src/img/pos_screenshot.jpg' />
-                    <p>
-                        The Point of Sale is not supported by Microsoft Internet Explorer. Please use
-                        a modern browser like <a href="http://www.mozilla.org/firefox/" target="_blank">Mozilla Firefox</a> 
-                        or <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>. 
-                    </p>
-                </div>
-            </div>
-            &lt;![endif]--&gt;
         </div>
     </t>
 
@@ -105,13 +52,16 @@
         <div class="oe_status js_synch">
             <span class='js_msg oe_hidden'>0</span>
             <div class="js_connected oe_icon oe_green">
-                <i class='fa fa-fw fa-rss'></i>
+                <i class='fa fa-fw fa-wifi'></i>
             </div>
             <div class="js_connecting oe_icon oe_hidden">
                 <i class='fa fa-fw fa-spin fa-spinner'></i>
             </div>
             <div class="js_disconnected oe_icon oe_red oe_hidden">
-                <i class='fa fa-fw fa-rss'></i>
+                <i class='fa fa-fw fa-wifi'></i>
+            </div>
+            <div class="js_error oe_icon oe_red oe_hidden">
+                <i class='fa fa-fw fa-warning'></i>
             </div>
         </div>
     </t>
@@ -144,8 +94,35 @@
         <div>There are pending operations that could not be saved into the database, are you sure you want to exit?</div>
     </t>
 
-    <t t-name="PaypadWidget">
-        <div class="paypad touch-scrollable">
+    <t t-name="ActionButtonWidget">
+        <div class='control-button'>
+            <t t-esc='widget.label' />
+        </div>
+    </t>
+
+    <t t-name="SetFiscalPositionButton">
+        <div class='control-button'>
+            <i class='fa fa-book' /> Fiscal position
+        </div>
+    </t>
+
+    <t t-name="ActionpadWidget">
+        <div class="actionpad">
+            <button t-attf-class='button set-customer #{ ( widget.pos.get_client() and widget.pos.get_client().name.length > 10) ? "decentered" : "" }' >
+                <i class='fa fa-user' /> 
+                <t t-if="widget.pos.get_client()">
+                    <t t-esc="widget.pos.get_client().name" />
+                </t>
+                <t t-if="!widget.pos.get_client()">
+                    Customer
+                </t>
+            </button>
+            <button class='button pay'>
+                <div class='pay-circle'>
+                    <i class='fa fa-chevron-right' /> 
+                </div>
+                Payment
+            </button>
         </div>
     </t>
 
@@ -170,9 +147,8 @@
             <button class="input-button number-char">0</button>
             <button class="input-button number-char">.</button>
             <button class="input-button numpad-backspace">
-                <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+                <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
             </button>
-            <br />
         </div>
     </t>
 
@@ -198,8 +174,8 @@
         <header class='rightpane-header'>
             <div class="breadcrumbs">
                 <span class="breadcrumb">
-                    <span class=" breadcrumb-button js-category-switch">
-                        <img src="/point_of_sale/static/src/img/home.png" class="breadcrumb-homeimg" />
+                    <span class=" breadcrumb-button breadcrumb-home js-category-switch">
+                        <i class='fa fa-home'></i>
                     </span>
                 </span>
                 <t t-foreach="widget.breadcrumb" t-as="category">
@@ -237,23 +213,47 @@
 
     <t t-name="ProductScreenWidget">
         <div class="product-screen screen">
-            <table class="layout-table">
-
-                <tr class="header-row">
-                    <td class="header-cell">
-                        <span class="placeholder-ProductCategoriesWidget" />
-                    </td>
-                </tr>
-
-                <tr class="content-row">
-                    <td class="content-cell">
-                        <div class="content-container">
-                            <span class="placeholder-ProductListWidget" />
+            <div class="leftpane">
+                <div class='window'>
+                    <div class='subwindow'>
+                        <div class='subwindow-container'>
+                            <div class='subwindow-container-fix'>
+                                <div class="placeholder-OrderWidget"></div>
+                            </div>
                         </div>
-                    </td>
-                </tr>
+                    </div>
 
-            </table>
+                    <div class='subwindow collapsed'>
+                        <div class='subwindow-container'>
+                            <div class='subwindow-container-fix pads'>
+                                <div class="control-buttons oe_hidden"></div>
+                                <div class="placeholder-ActionpadWidget"></div>
+                                <div class="placeholder-NumpadWidget"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="rightpane">
+                <table class="layout-table">
+
+                    <tr class="header-row">
+                        <td class="header-cell">
+                            <span class="placeholder-ProductCategoriesWidget" />
+                        </td>
+                    </tr>
+
+                    <tr class="content-row">
+                        <td class="content-cell">
+                            <div class="content-container">
+                                <span class="placeholder-ProductListWidget" />
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
         </div>
     </t>
 
@@ -329,7 +329,7 @@
                         <select class='detail client-address-country' name='country_id'>
                             <option value=''>None</option>
                             <t t-foreach='widget.pos.countries' t-as='country'>
-                                <option t-att-value='country.id' t-att-selected="partner.country_id ? ((country.id === partner.country_id[0]) ? true : undefined) : undefined">
+                                <option t-att-value='country.id' t-att-selected="partner.country_id ? ((country.id === partner.country_id[0]) ? true : undefined) : undefined"> 
                                     <t t-esc='country.name'/>
                                 </option>
                             </t>
@@ -347,7 +347,7 @@
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Barcode</span>
-                        <input class='detail barcode'       name='ean13'    t-att-value='partner.ean13 || ""'></input>
+                        <input class='detail barcode'       name='barcode'    t-att-value='partner.barcode || ""'></input>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Tax ID</span>
@@ -389,10 +389,10 @@
                 <div class='client-details-right'>
                     <div class='client-detail'>
                         <span class='label'>Barcode</span>
-                        <t t-if='partner.ean13'>
-                            <span class='detail client-id'><t t-esc='partner.ean13'/></span>
+                        <t t-if='partner.barcode'>
+                            <span class='detail client-id'><t t-esc='partner.barcode'/></span>
                         </t>
-                        <t t-if='!partner.ean13'>
+                        <t t-if='!partner.barcode'>
                             <span class='detail client-id empty'>N/A</span>
                         </t>
                     </div>
@@ -463,41 +463,199 @@
         </div>
     </t>
 
-        
-
-    <t t-name="PaymentScreenWidget">
-        <div class="payment-screen screen touch-scrollable">
-            <div class="pos-payment-container">
-                <div class='payment-due-total'></div>
-                <div class='payment-lines'></div>
-                <div class='payment-info'>
-                    <div class="infoline">
-                        <span class='left-block'>
-                            Paid:
-                        </span>
-                        <span class="right-block payment-paid-total"></span>
-                    </div>
-                    <div class="infoline">
-                        <span class='left-block'>
-                            Remaining:
-                        </span>
-                        <span class="right-block payment-remaining"></span>
-                    </div>
-                    <div class="infoline bigger" >
-                        <span class='left-block'>
-                            Change:
-                        </span>
-                        <span class="right-block payment-change"></span>
-                    </div>
+    <t t-name="PaymentScreen-Paymentlines">
+        <t t-if="!paymentlines.length">
+            <div class='paymentlines-empty'>
+                <div class='total'>
+                    <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
+                </div>
+                <div class='message'>
+                    Please select a payment method. 
                 </div>
             </div>
+        </t>
+
+        <t t-if="paymentlines.length">
+            <table class='paymentlines'>
+                <colgroup>
+                    <col class='due' />
+                    <col class='tendered' />
+                    <col class='change' />
+                    <col class='method' />
+                    <col class='controls' />
+                </colgroup>
+                <thead>
+                    <tr class='label'>
+                        <th>Due</th>
+                        <th>Tendered</th>
+                        <th>Change</th>
+                        <th>Method</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach='paymentlines' t-as='line'>
+                        <t t-if='line.selected'>
+                            <tr class='paymentline selected'>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
+                                <td class='col-tendered edit'> 
+                                    <t t-esc='widget.inputbuffer' />
+                                    <!-- <t t-esc='line.get_amount()' /> -->
+                                </td>
+                                <t t-if='order.get_change(line)'>
+                                    <td class='col-change highlight' > 
+                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
+                                    </td>
+                                </t>
+                                <t t-if='!order.get_change(line)'>
+                                    <td class='col-change' ></td>
+                                </t>
+                                    
+                                <td class='col-name' > <t t-esc='line.name' /> </td>
+                                <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
+                            </tr>
+                        </t>
+                        <t t-if='!line.selected'>
+                            <tr class='paymentline' t-att-data-cid='line.cid'>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
+                                <td class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
+                                <td class='col-change'> 
+                                    <t t-if='order.get_change(line)'>
+                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
+                                     </t>
+                                </td>
+                                <td class='col-name'> <t t-esc='line.name' /> </td>
+                                <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
+                            </tr>
+                        </t>
+                    </t>
+                    <t t-if='extradue'>
+                        <tr class='paymentline extra' t-att-data-cid='0'>
+                            <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(extradue)' /> </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+
+    </t>
+
+    <t t-name="PaymentScreen-Numpad">
+        <div class="numpad">
+            <button class="input-button number-char" data-action='1'>1</button>
+            <button class="input-button number-char" data-action='2'>2</button>
+            <button class="input-button number-char" data-action='3'>3</button>
+            <button class="mode-button" data-action='+10'>+10</button>
+            <br />
+            <button class="input-button number-char" data-action='4'>4</button>
+            <button class="input-button number-char" data-action='5'>5</button>
+            <button class="input-button number-char" data-action='6'>6</button>
+            <button class="mode-button" data-action='+20'>+20</button>
+            <br />
+            <button class="input-button number-char" data-action='7'>7</button>
+            <button class="input-button number-char" data-action='8'>8</button>
+            <button class="input-button number-char" data-action='9'>9</button>
+            <button class="mode-button" data-action='+50'>+50</button>
+            <br />
+            <button class="input-button numpad-char" data-action='CLEAR' >C</button>
+            <button class="input-button number-char" data-action='0'>0</button>
+            <button class="input-button number-char" data-action='.'>.</button>
+            <button class="input-button numpad-backspace" data-action='BACKSPACE' >
+                <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+            </button>
         </div>
     </t>
 
+    <t t-name="PaymentScreen-Paymentmethods">
+        <div class='paymentmethods'>
+            <t t-foreach="widget.pos.cashregisters" t-as="cashregister">
+                <div class="button paymentmethod" t-att-data-id="cashregister.journal_id[0]">
+                    <t t-esc="cashregister.journal_id[1]" />
+                </div>
+            </t>
+        </div>
+
+    </t>
+
+    <t t-name="PaymentScreenWidget">
+        <div class='payment-screen screen'>
+            <div class='screen-content'>
+                <div class='top-content'>
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                    <h1>Payment</h1>
+                    <span class='button next'>
+                        Validate
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </div>
+                <div class='left-content pc40 touch-scrollable scrollable-y'>
+
+                    <div class='paymentmethods-container'>
+                    </div>
+
+                </div>
+                <div class='right-content pc60 touch-scrollable scrollable-y'>
+
+                    <section class='paymentlines-container'>
+                    </section>
+
+                    <section class='payment-numpad'>
+                    </section>
+
+                    <div class='payment-buttons'>
+                        <div class='button js_set_customer'>
+                            <i class='fa fa-user' /> 
+                            <span class='js_customer_name'> 
+                                <t t-if="widget.pos.get_client()">
+                                    <t t-esc="widget.pos.get_client().name" />
+                                </t>
+                                <t t-if="!widget.pos.get_client()">
+                                    Customer
+                                </t>
+                            </span>
+                        </div>
+                        <t t-if='widget.pos.config.iface_invoicing'>
+                            <t t-if='widget.pos.get_order()'>
+                                <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
+                                    <i class='fa fa-file-text-o' /> Invoice
+                                </div>
+                            </t>
+                        </t>
+                        <t t-if='widget.pos.config.tip_product_id'>
+                            <div class='button js_tip'>
+                                <i class='fa fa-heart' /> Tip 
+                            </div>
+                        </t>
+                        <t t-if='widget.pos.config.iface_cashdrawer'>
+                            <div class='button js_cashdrawer'>
+                                <i class='fa fa-archive' /> Open Cashbox
+                            </div>
+                        </t>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </t>
+        
     <t t-name="ReceiptScreenWidget">
-        <div class="receipt-screen screen touch-scrollable" >
-            <div class="pos-step-container">
-                <div class="pos-receipt-container">
+        <div class='receipt-screen screen'>
+            <div class='screen-content'>
+                <div class='top-content'>
+                    <h1>Change: <span class='change-value'>0.00</span></h1>
+                    <span class='button next'>
+                        Next Order
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </div>
+                <div class="centered-content">
+                    <div class="button print">
+                        <i class='fa fa-print'></i> Print Receipt
+                    </div>
+                    <div class="pos-receipt-container">
+                    </div>
                 </div>
             </div>
         </div>
@@ -532,19 +690,27 @@
                 <t t-if='receipt.company.website'>
                     <div><t t-esc='receipt.company.website' /></div>
                 </t>
-                <t t-if='receipt.header'>
+                <t t-if='receipt.header_xml'>
+                    <t t-raw='receipt.header_xml' />
+                </t>
+                <t t-if='!receipt.header_xml and receipt.header'>
                     <div><t t-esc='receipt.header' /></div>
                 </t>
                 <t t-if='receipt.cashier'>
-                    <div>--------------------------------</div>
-                    <div>Served by <t t-esc='receipt.cashier' /></div>
+                    <div class='cashier'>
+                        <div>--------------------------------</div>
+                        <div>Served by <t t-esc='receipt.cashier' /></div>
+                    </div>
+                </t>
+                <t t-if='!receipt.customer_count'>
+                    <div>Guests: <t t-esc='receipt.customer_count' /></div>
                 </t>
             </div>
             <br /><br />
 
             <!-- Orderlines -->
 
-            <div line-ratio='0.6'>
+            <div class='orderlines' line-ratio='0.6'>
                 <t t-foreach='receipt.orderlines' t-as='line'>
                     <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
                     <t t-if='simple'>
@@ -596,7 +762,7 @@
             <!-- Total -->
 
             <line><right>--------</right></line>
-            <line size='double-height'>
+            <line class='total' size='double-height'>
                 <left><pre>        TOTAL</pre></left>
                 <right><value><t t-esc='receipt.total_with_tax' /></value></right>
             </line>
@@ -604,10 +770,10 @@
 
             <!-- Payment Lines -->
 
-            <t t-foreach='receipt.paymentlines' t-as='line'>
+            <t t-foreach='paymentlines' t-as='line'>
                 <line>
-                    <left><t t-esc='line.journal' /></left>
-                    <right><value><t t-esc='line.amount'/></value></right>
+                    <left><t t-esc='line.name' /></left>
+                    <right><value><t t-esc='line.get_amount()'/></value></right>
                 </line>
             </t>
             <br/> 
@@ -633,15 +799,27 @@
                         <right><value><t t-esc='tax.amount' /></value></right>
                     </line>
                 </t>
+                <line>
+                    <left>Total Taxes</left>
+                    <right><value><t t-esc='receipt.total_tax'/></value></right>
+                </line>
             </t>
 
+            <div class='before-footer' />
+
             <!-- Footer -->
-            <t t-if='receipt.footer'>
+            <t t-if='receipt.footer_xml'>
+                <t t-raw='receipt.footer_xml' />
+            </t>
+
+            <t t-if='!receipt.footer_xml and receipt.footer'>
                 <br/>
-                <pre><t t-esc='receipt.footer' /></pre>
+                <t t-esc='receipt.footer' />
                 <br/>
                 <br/>
             </t>
+
+            <div class='after-footer' />
 
             <br/>
             <div font='b'>
@@ -652,13 +830,27 @@
         </receipt>
     </t>
 
+    <t t-name="PopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-alert">
+                <p class="title"><t t-esc=" widget.options.title || 'Alert' " /></p>
+                <p class="body"><t t-esc=" widget.options.body || '' "/></p>
+                <div class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-error">
-                <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
-                <p class="comment"><t t-esc=" widget.comment || '' "/></p>
+                <p class="title"><t t-esc=" widget.options.title || 'Error' " /></p>
+                <p class="body"><t t-esc=" widget.options.body || '' "/></p>
                 <div class="footer">
-                    <div class="button">
+                    <div class="button cancel">
                         Ok
                     </div>
                 </div>
@@ -669,11 +861,17 @@
     <t t-name="ErrorTracebackPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-error">
-                <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
-                <p class="comment traceback"><t t-esc=" widget.comment || '' "/></p>
+                <p class="title"><t t-esc=" widget.options.title || 'Error' " /></p>
+                <p class="body traceback"><t t-esc=" widget.options.body || '' "/></p>
                 <div class="footer">
-                    <div class="button">
+                    <div class="button cancel">
                         Ok
+                    </div>
+                    <div class="button icon download">
+                        <i class="fa fa-download"></i>
+                    </div>
+                    <div class="button icon email">
+                        <i class="fa fa-paper-plane"></i>
                     </div>
                 </div>
             </div>
@@ -683,16 +881,16 @@
     <t t-name="ErrorBarcodePopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-barcode">
-                <p class="message">Unknown Barcode
+                <p class="title">Unknown Barcode
                     <br />
-                    <span class='barcode'><t t-esc="widget.barcode" /></span>
+                    <span class='barcode'><t t-esc="widget.options.barcode" /></span>
                 </p>
-                <p class="comment">
+                <p class="body">
                     The Point of Sale could not find any product, client, employee
                     or action associated with the scanned barcode.
                 </p>
                 <div class="footer">
-                    <div class="button">
+                    <div class="button cancel">
                         Ok
                     </div>
                 </div>
@@ -703,8 +901,8 @@
     <t t-name="ConfirmPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-confirm">
-                <p class="message"><t t-esc=" widget.message || 'Confirm ?' " /></p>
-                <p class="comment"><t t-esc=" widget.comment || '' "/></p>
+                <p class="title"><t t-esc=" widget.options.title || 'Confirm ?' " /></p>
+                <p class="body"><t t-esc="  widget.options.body || '' "/></p>
                 <div class="footer">
                     <div class="button confirm">
                         Confirm 
@@ -717,22 +915,144 @@
         </div>
     </t>
 
-    <t t-name="UnsentOrdersPopupWidget">
+    <t t-name="TextInputPopupWidget">
         <div class="modal-dialog">
-            <div class="popup popup-unsent-orders">
-                <p class="message">Unsent Orders</p>
-                <t t-if='widget.pos.db.get_orders().length === 0'>
-                    <p class='comment'>
-                        There are no unsent orders
-                    </p>
-                </t>
-                <t t-if='widget.pos.db.get_orders().length > 0'>
-                    <p class='comment traceback'>
-                        <t t-esc='JSON.stringify(widget.pos.db.get_orders(),null,2)' />
-                    </p>
-                </t>
+            <div class="popup popup-textinput">
+                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <input type='text' t-att-value="widget.options.value || ''"></input>
                 <div class="footer">
                     <div class="button confirm">
+                        Ok 
+                    </div>
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="TextAreaPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-textinput">
+                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <textarea rows="10" cols="40"><t t-esc="widget.options.value" /></textarea>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok 
+                    </div>
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="SelectionPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-selection">
+                <p class="title"><t t-esc=" widget.options.title || 'Select' " /></p>
+                <div class='selection scrollable-y touch-scrollable'>
+                    <t t-foreach="widget.list || []" t-as="item">
+                        <div class='selection-item' t-att-data-item-index='item_index'>
+                            <t t-esc='item.label'/>
+                        </div>
+                    </t>
+                </div>
+                <div class="footer">
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="NumberPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-number">
+                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <div class='popup-input value active'>
+                    <t t-esc='widget.inputbuffer' />
+                </div>
+                <div class='popup-numpad'>
+                    <button class="input-button number-char" data-action='1'>1</button>
+                    <button class="input-button number-char" data-action='2'>2</button>
+                    <button class="input-button number-char" data-action='3'>3</button>
+                    <t t-if="widget.options.cheap">
+                        <button class="mode-button add" data-action='+1'>+1</button>
+                    </t><t t-if="!widget.options.cheap">
+                        <button class="mode-button add" data-action='+10'>+10</button>
+                    </t>
+                    <br />
+                    <button class="input-button number-char" data-action='4'>4</button>
+                    <button class="input-button number-char" data-action='5'>5</button>
+                    <button class="input-button number-char" data-action='6'>6</button>
+                    <t t-if="widget.options.cheap">
+                        <button class="mode-button add" data-action='+2'>+2</button>
+                    </t><t t-if="!widget.options.cheap">
+                        <button class="mode-button add" data-action='+20'>+20</button>
+                    </t>
+                    <br />
+                    <button class="input-button number-char" data-action='7'>7</button>
+                    <button class="input-button number-char" data-action='8'>8</button>
+                    <button class="input-button number-char" data-action='9'>9</button>
+                    <t t-if="widget.options.cheap">
+                        <button class="mode-button add" data-action='+5'>+5</button>
+                    </t><t t-if="!widget.options.cheap">
+                        <button class="mode-button add" data-action='+50'>+50</button>
+                    </t>
+                    <br />
+                    <button class="input-button numpad-char" data-action='CLEAR' >C</button>
+                    <button class="input-button number-char" data-action='0'>0</button>
+                    <button class="input-button number-char dot" data-action='.'>.</button>
+                    <button class="input-button numpad-backspace" data-action='BACKSPACE' >
+                        <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+                    </button>
+                    <br />
+                </div>
+                <div class="footer centered">
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="OrderImportPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-import">
+                <p class="title">Finished Importing Orders</p>
+                <t t-if="widget.options and widget.options.report">
+                    <t t-set="report" t-value="widget.options.report" />
+                    <t t-set="unpaid_skipped" t-value="(report.unpaid_skipped_existing || 0) + (report.unpaid_skipped_session || 0)" />
+                    <ul class='body'>
+                        <li>Successfully imported <b><t t-esc='report.paid || 0'/></b> paid orders</li>
+                        <li>Successfully  imported <b><t t-esc='report.unpaid || 0'/></b> unpaid orders</li>
+                        <t t-if="unpaid_skipped">
+                            <li><b><t t-esc="unpaid_skipped"/></b> unpaid orders could not be imported
+                                <ul>
+                                    <li><b><t t-esc="report.unpaid_skipped_existing || 0" /></b> were duplicates of existing orders</li>
+                                    <li><b><t t-esc="report.unpaid_skipped_session || 0" /></b> belong to another session:
+                                        <t t-if="report.unpaid_skipped_sessions">
+                                            <ul>
+                                                <li>Session ids: <b><t t-esc="JSON.stringify(report.unpaid_skipped_sessions)" /></b></li> 
+                                            </ul>
+                                        </t>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+                        </t>
+                    </ul>
+                </t>
+                <div class="footer">
+                    <div class="button cancel">
                         Ok
                     </div>
                 </div>
@@ -777,7 +1097,7 @@
                         </em>
                         <t t-esc="line.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(line.get_unit_price(),'Product Price')" />
+                        <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
                         /
                         <t t-esc="line.get_unit().name" />
                     </li>
@@ -799,21 +1119,23 @@
         <div class="order-container">
             <div class="order-scroller touch-scrollable">
                 <div class="order">
-                    <ul class="orderlines">
-                        <t t-if="orderlines.length === 0">
-                            <li class="orderline empty">
-                                Your shopping cart is empty
-                            </li>
-                        </t>
-                    </ul>
-                    <div class="summary clearfix">
-                        <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
-                            <div class='entry total'>
-                                <span class="label">Total: </span> <span class="value">0.00 €</span>
-                                <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                    <t t-if="orderlines.length === 0" >
+                        <div class='order-empty'>
+                            <i class='fa fa-shopping-cart' />
+                            <h1>Your shopping cart is empty</h1>
+                        </div>
+                    </t>
+                    <t t-if="orderlines.length > 0">
+                        <ul class="orderlines"></ul>
+                        <div class="summary clearfix">
+                            <div class="line">
+                                <div class='entry total'>
+                                    <span class="label">Total: </span> <span class="value">0.00 €</span>
+                                    <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </t>
                 </div>
             </div>
         </div>
@@ -822,9 +1144,9 @@
 
 
     <t t-name="DebugWidget">
-        <div class="debug-widget">
+        <div class="debug-widget oe_hidden">
             <h1>Debug Window</h1>
-            <div class="toggle">▾</div>
+            <div class="toggle"><i class='fa fa-times' /></div>
             <div class="content">
                 <p class="category">Electronic Scale</p>
                 <ul>
@@ -836,21 +1158,21 @@
                 <p class="category">Barcode Scanner</p>
                 <ul>
                     <li><input type="text" class="ean"></input></li>
-                    <li class="button custom_ean">Custom Ean13</li>
-                    <li class="button admin_badge">Admin Badge</li>
-                    <li class="button client_badge">Client Badge</li>
-                    <li class="button soda_33cl">Soda 33cl</li>
-                    <li class="button oranges_kg">3.141Kg Oranges</li>
-                    <li class="button lemon_price">1.54€ Lemon</li>
-                    <li class="button unknown_product">Unknown Product</li>
-                    <li class="button invalid_ean">Invalid Ean</li>
-                    <li class="button reference">Reference</li>
+                    <li class="button barcode">Scan</li>
+                    <li class="button custom_ean">Scan EAN-13</li>
                 </ul>
 
-                <p class="category">Unsent Orders</p>
+                <p class="category">Orders</p>
+
                 <ul>
-                    <li class="button show_orders">Show All Unsent Orders</li>
-                    <li class="button delete_orders">Delete All Unsent Orders</li>
+                    <li class="button delete_orders">Delete Paid Orders</li>
+                    <li class="button delete_unpaid_orders">Delete Unpaid Orders</li>
+                    <li class="button export_paid_orders">Export Paid Orders</li>
+                    <li class="button export_unpaid_orders">Export Unpaid Orders</li>
+                    <li class="button import_orders" style="position:relative">
+                        Import Orders
+                        <input type="file" style="opacity:0;position:absolute;top:0;left:0;right:0;bottom:0;margin:0;cursor:pointer"/>
+                    </li>
                 </ul>
 
                 <p class="category">Hardware Status</p>
@@ -895,31 +1217,35 @@
         </tr>
     </t>
 
-    <t t-name="PaypadButtonWidget">
-        <button class="paypad-button" t-att-cash-register-id="widget.cashregister.id">
-            <t t-esc="widget.cashregister.journal.name"/>
-        </button>
-    </t>
+    <t t-name="OrderSelectorWidget">
+        <div class="order-selector">
+            <span class="orders touch-scrollable">
 
-    <t t-name="OrderButtonWidget">
-        <span class="order-button select-order">
-            <t t-if='widget.selected'>
-                <span class='order-sequence'>
-                    <t t-esc='widget.order.sequence_number' />
-                </span>
-                <t t-if="widget.order.get_client()">
-                    <i class='fa fa-user'/>
-                    <t t-esc="widget.order.get_client_name()"/>
+                <t t-foreach="widget.pos.get_order_list()" t-as="order">
+                    <t t-if='order === widget.pos.get_order()'>
+                        <span class="order-button select-order selected" t-att-data-uid="order.uid">
+                            <span class='order-sequence'>
+                                <t t-esc='order.sequence_number' />
+                            </span>
+                            <t t-esc="moment(order.creation_date).format('hh:mm')"/>
+                        </span>
+                    </t>
+                    <t t-if='order !== widget.pos.get_order()'>
+                        <span class="order-button select-order" t-att-data-uid="order.uid">
+                            <span class='order-sequence'>
+                                <t t-esc='order.sequence_number' />
+                            </span>
+                        </span>
+                    </t>
                 </t>
-                <t t-if="!widget.order.get_client()">Unknown Customer</t>:
-                <t t-esc="widget.order.get('creationDate').toString('t')"/>
-            </t>
-            <t t-if='!widget.selected'>
-                <span class='order-sequence'>
-                    <t t-esc='widget.order.sequence_number' />
-                </span>
-            </t>
-        </span>
+            </span>
+            <span class="order-button square neworder-button">
+                <i class='fa fa-plus' />
+            </span>
+            <span class="order-button square deleteorder-button">
+                <i class='fa fa-minus' />
+            </span>
+        </div>
     </t>
 
     <t t-name="UsernameWidget">
@@ -931,21 +1257,20 @@
     <t t-name="PosTicket">
         <div class="pos-sale-ticket">
             
-            <div class="pos-center-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
-                Date.CultureInfo.formatPatterns.longTime)"/> <t t-esc="order.get('name')"/></div>
+            <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.name"/></div>
             <br />
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
             User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
             Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
-            <t t-if="widget.pos.config.receipt_header">
+            <t t-if="receipt.header">
                 <div style='text-align:center'>
-                    <t t-esc="widget.pos.config.receipt_header" />
+                    <t t-esc="receipt.header" />
                 </div>
                 <br />
             </t>
-            <table>
+            <table class='receipt-orderlines'>
                 <colgroup>
                     <col width='50%' />
                     <col width='25%' />
@@ -969,14 +1294,14 @@
                 </tr>
             </table>
             <br />
-            <table>
+            <table class='receipt-total'>
                 <tr>
                     <td>Subtotal:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getSubtotal())"/>
+                        <t t-esc="widget.format_currency(order.get_subtotal())"/>
                     </td>
                 </tr>
-                <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
+                <t t-foreach="order.get_tax_details()" t-as="taxdetail">
                     <tr>
                         <td><t t-esc="taxdetail.name" /></td>
                         <td class="pos-right-align">
@@ -987,64 +1312,42 @@
                 <tr>
                     <td>Discount:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getDiscountTotal())"/>
+                        <t t-esc="widget.format_currency(order.get_total_discount())"/>
                     </td>
                 </tr>
                 <tr class="emph">
                     <td>Total:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
+                        <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
                     </td>
                 </tr>
             </table>
             <br />
-            <table>
-                <tr t-foreach="paymentlines" t-as="line">
-                    <td>
-                        <t t-esc="line.name"/>
-                    </td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(line.get_amount())"/>
-                    </td>
-                </tr>
+            <table class='receipt-paymentlines'>
+                <t t-foreach="paymentlines" t-as="line">
+                  <tr>
+                      <td>
+                          <t t-esc="line.name"/>
+                      </td>
+                      <td class="pos-right-align">
+                          <t t-esc="widget.format_currency(line.get_amount())"/>
+                      </td>
+                  </tr>
+                </t>
             </table>
             <br />
-            <table>
+            <table class='receipt-change'>
                 <tr><td>Change:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(order.getChange())"/>
+                    <t t-esc="widget.format_currency(order.get_change())"/>
                     </td></tr>
             </table>
-            <t t-if="widget.pos.config.receipt_footer">
+            <t t-if="receipt.footer">
                 <br />
                 <div style='text-align:center'>
-                    <t t-esc="widget.pos.config.receipt_footer" />
+                    <t t-esc="receipt.footer" />
                 </div>
             </t>
         </div>
-    </t>
-
-    <t t-name="ActionBarWidget">
-        <div class="pos-actionbar">
-            <ul class="pos-actionbar-button-list">
-            </ul>
-        </div>
-    </t>
-
-    <t t-name="ActionButtonWidget">
-        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '') + (widget.disabled ? 'disabled ' : '')">
-            <div class='label'>
-                <t t-esc="widget.label" />
-            </div>
-        </li>
-    </t>
-
-    <t t-name="ActionButtonWidgetWithIcon">
-        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '') + (widget.disabled ? 'disabled ' : '')">
-            <div class='icon'>
-                <img t-att-src="widget.icon" />
-                <div class='iconlabel'><t t-esc="widget.label" /></div>
-            </div>
-        </li>
     </t>
 
     <!-- Onscreen Keyboard : 

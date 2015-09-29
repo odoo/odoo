@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
@@ -28,6 +10,7 @@ from openerp.tools.translate import _
 from datetime import date, datetime, timedelta
 import calendar
 import logging
+from openerp.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 # display top 3 in ranking, could be db variable
@@ -181,10 +164,10 @@ class gamification_challenge(osv.Model):
                 ('yearly', 'Yearly')
             ],
             string="Report Frequency", required=True),
-        'report_message_group_id': fields.many2one('mail.group',
+        'report_message_group_id': fields.many2one('mail.channel',
             string='Send a copy to',
             help='Group that will receive a copy of the report in addition to the user'),
-        'report_template_id': fields.many2one('email.template', string="Report Template", required=True),
+        'report_template_id': fields.many2one('mail.template', string="Report Template", required=True),
         'remind_update_delay': fields.integer('Non-updated manual goals will be reminded after',
             help="Never reminded if no value or zero is specified."),
         'last_report_date': fields.date('Last Report Date'),
@@ -249,7 +232,7 @@ class gamification_challenge(osv.Model):
         elif vals.get('state') == 'draft':
             # resetting progress
             if self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', 'in', ids), ('state', '=', 'inprogress')], context=context):
-                raise osv.except_osv("Error", "You can not reset a challenge with unfinished goals.")
+                raise UserError(_("You can not reset a challenge with unfinished goals."))
 
         return write_res
 
@@ -562,7 +545,7 @@ class gamification_challenge(osv.Model):
 
             if challenge.visibility_mode == 'personal':
                 if not user_id:
-                    raise osv.except_osv(_('Error!'),_("Retrieving progress for personal challenge without user information"))
+                    raise UserError(_("Retrieving progress for personal challenge without user information"))
                 domain.append(('user_id', '=', user_id))
                 sorting = goal_obj._order
                 limit = 1
@@ -631,7 +614,7 @@ class gamification_challenge(osv.Model):
         if context is None:
             context = {}
 
-        temp_obj = self.pool.get('email.template')
+        temp_obj = self.pool.get('mail.template')
         ctx = context.copy()
         if challenge.visibility_mode == 'ranking':
             lines_boards = self._get_serialized_challenge_lines(cr, uid, challenge, user_id=False, restrict_goal_ids=subset_goal_ids, restrict_top=False, context=context)
@@ -646,7 +629,7 @@ class gamification_challenge(osv.Model):
                 context=context,
                 subtype='mail.mt_comment')
             if challenge.report_message_group_id:
-                self.pool.get('mail.group').message_post(cr, uid, challenge.report_message_group_id.id,
+                self.pool.get('mail.channel').message_post(cr, uid, challenge.report_message_group_id.id,
                     body=body_html,
                     context=context,
                     subtype='mail.mt_comment')
@@ -668,7 +651,7 @@ class gamification_challenge(osv.Model):
                                   context=context,
                                   subtype='mail.mt_comment')
                 if challenge.report_message_group_id:
-                    self.pool.get('mail.group').message_post(cr, uid, challenge.report_message_group_id.id,
+                    self.pool.get('mail.channel').message_post(cr, uid, challenge.report_message_group_id.id,
                                                              body=body_html,
                                                              context=context,
                                                              subtype='mail.mt_comment')
@@ -757,7 +740,7 @@ class gamification_challenge(osv.Model):
                     user_names = self.pool['res.users'].name_get(cr, uid, rewarded_users, context=context)
                     message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s." % (challenge.reward_id.name, ", ".join([name for (user_id, name) in user_names])))
                 else:
-                    message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewared for this challenge.")
+                    message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
 
                 # reward bests
                 if challenge.reward_first_id:

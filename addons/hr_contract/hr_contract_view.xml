@@ -13,14 +13,13 @@
             <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id}</field>
         </record>
         
-        <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_configuration" sequence="30" groups="base.group_no_one"/>
         <record id="hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//div[@name='button_box']" position="inside">
+                    <div name="button_box" position="inside">
                         <button name="%(act_hr_employee_2_hr_contract)d" 
                             class="oe_stat_button" 
                             icon="fa-book" 
@@ -28,12 +27,12 @@
                             groups="base.group_hr_manager">
                             <field name="contracts_count" widget="statinfo" string="Contracts"/>
                         </button>
-                    </xpath>
+                    </div>
                     <xpath expr="//field[@name='coach_id']" position="after">
-                        <field name="manager"/>
+                        <field name="manager" groups="base.group_no_one"/>
                     </xpath>
-                    <xpath expr="//group[@name='active_group']" position="before">
-                        <group string="Contract">
+                    <xpath expr="//group[@name='active_group']" position="after">
+                        <group string="Current Contract">
                             <field name="medic_exam" string="Medical Exam"/>
                             <field name="vehicle"/>
                             <field name="vehicle_distance"/>
@@ -57,18 +56,24 @@
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
                 <search string="Search Contract">
-                   <field name="name" string="Contracts"/>
-                   <field name="date_start"/>
-                   <field name="date_end"/>
-                   <field name="working_hours"/>
-                   <field name="employee_id"/>
-                   <group expand="0" string="Group By">
-                       <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                       <filter string="Working Schedule" icon="terp-go-week" domain="[]" context="{'group_by':'working_hours'}"/>
-                       <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
-                       <filter string="Contract Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
-                   </group>
-               </search>
+                    <field name="name" string="Contracts"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="working_hours"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="state"/>
+                    <filter string="To Renew" name="to_renew" domain="[('state', '=', 'pending')]"/>
+                    <separator />
+                    <filter string="Current Employee" name="current_employee" domain="[('employee_id.active','=',True)]"/>
+                    <separator/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Contract Type" domain="[]" context="{'group_by':'type_id'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -76,7 +81,10 @@
             <field name="name">hr.contract.view.form</field>
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
-                <form string="Contract">
+                <form string="Current Contract">
+                    <header>
+                        <field name="state" widget="statusbar" clickable="1"/>
+                    </header>
                     <sheet>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -90,6 +98,7 @@
                             <field name="job_id"/>
                         </group>
                         <group>
+                            <field name="department_id"/>
                             <field name="type_id"/>
                         </group>
                     </group>
@@ -124,6 +133,10 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -132,7 +145,7 @@
             <field name="name">hr.contract.view.tree</field>
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contracts">
+                <tree string="Contracts" decoration-bf="message_needaction == True">
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="type_id"/>
@@ -141,6 +154,7 @@
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="wage" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -183,6 +197,7 @@
             <field name="arch" type="xml">
                 <search string="Search Contract Type">
                     <field name="name" string="Contract Type"/>
+                    <field name="sequence" widget="handle" string="Sequence"/>
                </search>
             </field>
         </record>
@@ -195,8 +210,8 @@
             <field name="search_view_id" ref="hr_contract_type_view_search"/>
         </record>
 
-        <menuitem action="action_hr_contract_type" id="hr_menu_contract_type" parent="next_id_56" sequence="6" groups="base.group_no_one"/>
-        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4" groups="base.group_hr_manager"/>
+        <menuitem action="action_hr_contract_type" id="hr_menu_contract_type" parent="hr.menu_human_resources_configuration" sequence="3" groups="base.group_no_one"/>
+        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_root" name="Contracts" sequence="4" groups="base.group_hr_manager"/>
 
     </data>
 </openerp>

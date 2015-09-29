@@ -1,0 +1,77 @@
+-
+  !python {model: ir.model.data} : |
+      journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')])
+      account_recv_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_receivable'))])
+      account_sale_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_revenue')), ('tag_ids', 'in', [ref('account.account_tag_operating')])])
+      if not account_sale_id:
+          account_sale_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_revenue'))]
+      if journal_id and account_recv_id:
+          vals = {
+              'currency': ref('base.EUR'),
+              'company_id': ref('base.main_company'),
+              'partner_id': ref('base.res_partner_1'),
+              'journal_id': journal_id[0],
+              'team_id': ref('sales_team.team_sales_department'),
+              'state': 'draft',
+              'type': 'out_invoice',
+              'account_id': account_recv_id[0],
+              'name': 'Test invoice 1',
+          }
+          self._update(cr, uid, 'account.invoice', 'sale', vals, 'test_crm_sale_invoice_1')
+          vals = {
+              'currency': ref('base.EUR'),
+              'company_id': ref('base.main_company'),
+              'partner_id': ref('base.res_partner_1'),
+              'journal_id': journal_id[0],
+              'team_id': ref('sales_team.crm_team_1'),
+              'state': 'draft',
+              'type': 'out_invoice',
+              'account_id': account_recv_id[0],
+              'name': 'Test invoice 2',
+          }
+          self._update(cr, uid, 'account.invoice', 'sale', vals, 'test_crm_sale_invoice_2')
+          if account_sale_id:
+              vals = {
+                  'name': 'Basic computer with Dvorak keyboard and left-handed mouse',
+                  'product_id': ref('product.product_product_57'),
+                  'invoice_id': ref('test_crm_sale_invoice_1'),
+                  'price_unit': 250,
+                  'quantity': 1,
+                  'account_id': account_sale_id[0],
+              }
+              self._update(cr, uid, 'account.invoice.line', 'sale', vals, 'test_crm_sale_invoice_1_line_1')
+              vals = {
+                  'name': 'Little server with raid 1 and 512ECC ram',
+                  'product_id': ref('product.product_product_58'),
+                  'invoice_id': ref('test_crm_sale_invoice_1'),
+                  'price_unit': 800,
+                  'quantity': 2,
+                  'account_id': account_sale_id[0],
+              }
+              self._update(cr, uid, 'account.invoice.line', 'sale', vals, 'test_crm_sale_invoice_1_line_2')
+              vals = {
+                  'name': 'Server with raid 10 and 2048ECC ram',
+                  'product_id': ref('product.product_product_59'),
+                  'invoice_id': ref('test_crm_sale_invoice_1'),
+                  'price_unit': 4800,
+                  'quantity': 4,
+                  'account_id': account_sale_id[0],
+              }
+              self._update(cr, uid, 'account.invoice.line', 'sale', vals, 'test_crm_sale_invoice_1_line_3')
+              vals = {
+                  'name': 'Basic formation with Dvorak',
+                  'product_id': ref('product.product_product_53'),
+                  'invoice_id': ref('test_crm_sale_invoice_2'),
+                  'price_unit': 500,
+                  'quantity': 1,
+                  'account_id': account_sale_id[0],
+              }
+              self._update(cr, uid, 'account.invoice.line', 'sale', vals, 'test_crm_sale_invoice_2_line_1')
+              self.pool.get('account.invoice').signal_workflow(cr, uid, [ref('test_crm_sale_invoice_1')], 'invoice_open')
+              self.pool.get('account.invoice').signal_workflow(cr, uid, [ref('test_crm_sale_invoice_2')], 'invoice_open')
+              bank_journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'bank')])
+              if bank_journal_id:
+                  bank_journal_id = bank_journal_id[0]
+                  self.pool.get('account.invoice').pay_and_reconcile(cr, uid, [ref('test_crm_sale_invoice_1')], bank_journal_id[0], 1850)
+                  self.pool.get('account.invoice').pay_and_reconcile(cr, uid, [ref('test_crm_sale_invoice_2')], bank_journal_id[0], 500)
+-

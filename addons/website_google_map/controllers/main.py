@@ -49,6 +49,7 @@ class google_map(http.Controller):
         }
         request.context.update({'show_address': True})
         for partner in partner_obj.browse(cr, SUPERUSER_ID, partners_ids, context=context):
+            # TODO in master, do not use `escape` but `t-esc` in the qweb template.
             partner_data["partners"].append({
                 'id': partner.id,
                 'name': escape(partner.name),

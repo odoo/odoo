@@ -1,28 +1,10 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
+from openerp.exceptions import UserError
 
 
 class crm_lead_forward_to_partner(osv.TransientModel):
@@ -41,7 +23,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
     def action_confirm(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
         if wizard.interested and not wizard.contacted:
-            raise osv.except_osv(_('Error!'), _("You must contact the lead before saying that you are interested"))
+            raise UserError(_("You must contact the lead before saying that you are interested"))
         lead_obj = self.pool.get('crm.lead')
         lead_obj.check_access_rights(cr, uid, 'write')
         if wizard.interested:
@@ -50,7 +32,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         else:
             stage = 'stage_portal_lead_recycle'
             if wizard.contacted:
-                message = _('<p>I am not interested by this lead. I %scontacted the lead.</p>') % ''
+                message = _('<p>I am not interested by this lead. I contacted the lead.</p>')
             else:
                 message = _('<p>I am not interested by this lead. I have not contacted the lead.</p>')
             values = {'partner_assigned_id': False}

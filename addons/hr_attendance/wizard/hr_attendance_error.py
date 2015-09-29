@@ -1,27 +1,10 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 class hr_attendance_error(osv.osv_memory):
@@ -31,7 +14,8 @@ class hr_attendance_error(osv.osv_memory):
     _columns = {
         'init_date': fields.date('Starting Date', required=True),
         'end_date': fields.date('Ending Date', required=True),
-        'max_delay': fields.integer('Max. Delay (Min)', required=True)
+        'max_delay': fields.integer('Maximum Tolerance (in minutes)', required=True,
+            help="Allowed difference in minutes between the signin/signout and the timesheet computation for one sheet. Set this to 0 for no tolerance.")
     }
     _defaults = {
          'init_date': lambda *a: time.strftime('%Y-%m-%d'),
@@ -47,7 +31,7 @@ class hr_attendance_error(osv.osv_memory):
         cr.execute("SELECT id FROM hr_attendance WHERE employee_id IN %s AND to_char(name,'YYYY-mm-dd')<=%s AND to_char(name,'YYYY-mm-dd')>=%s AND action IN %s ORDER BY name" ,(tuple(context['active_ids']), date_to, date_from, tuple(['sign_in','sign_out'])))
         attendance_ids = [x[0] for x in cr.fetchall()]
         if not attendance_ids:
-            raise osv.except_osv(_('No Data Available!'), _('No records are found for your selection!'))
+            raise UserError(_('No records are found for your selection!'))
         attendance_records = self.pool.get('hr.attendance').browse(cr, uid, attendance_ids, context=context)
 
         for rec in attendance_records:
@@ -62,5 +46,3 @@ class hr_attendance_error(osv.osv_memory):
         return self.pool['report'].get_action(
             cr, uid, [], 'hr_attendance.report_attendanceerrors', data=datas, context=context
         )
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

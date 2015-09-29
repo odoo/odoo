@@ -1,0 +1,49 @@
+<odoo>
+    <!--Hr Department Inherit Kanban view-->
+    <record id="hr_department_view_kanban" model="ir.ui.view">
+        <field name="name">hr.department.kanban.inherit</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//templates" position="before">
+                    <field name="expense_to_approve_count"/>
+                </xpath>
+
+                <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
+                    <div t-if="record.expense_to_approve_count.raw_value > 0" class="row">
+                        <div class="col-xs-9">
+                            <a name="%(hr_expense_action_from_department)d" type="action">
+                                Expenses
+                            </a>
+                        </div>
+                        <div class="col-xs-3">
+                            <t t-esc="record.expense_to_approve_count.raw_value"/>
+                        </div>
+                    </div>
+                </xpath>
+
+                <xpath expr="//div[contains(@class, 'o_kanban_manage_to_approve')]" position="inside">
+                    <div class="row">
+                        <div class="col-xs-12 text-left">
+                            <a name="%(hr_expense_action_from_department)d" type="action">
+                                <t t-esc="record.expense_to_approve_count.raw_value or 0"/> Expenses
+                            </a>
+                        </div>
+                    </div>
+                </xpath>
+
+                <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+                    <div class="row">
+                        <div class="col-xs-12 text-left">
+                            <a name="%(action_hr_expense_report_filtered)d" type="action">
+                                Expenses
+                            </a>
+                        </div>
+                    </div>
+                </xpath>
+
+            </data>
+        </field>
+    </record>
+</odoo>

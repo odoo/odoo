@@ -6,14 +6,14 @@
   !record {model: res.partner.bank, id: res_partner_bank_0}:
     acc_number: '001-9876543-21'
     partner_id: base.res_partner_12
-    state: bank
-    bank: base.res_bank_1
+    acc_type: bank
+    bank_id: base.res_bank_1
 -
   I create a new employee "John".
 -
   !record {model: hr.employee, id: hr_employee_john}:
     address_home_id: base.res_partner_address_2
-    address_id: base.res_partner_address_9
+    address_id: base.res_partner_address_12
     birthday: '1984-05-01'
     children: 0.0
     country_id: base.in
@@ -50,13 +50,13 @@
     employee_id: hr_employee_john
     struct_id: hr_payroll_structure_softwaredeveloper
     working_hours: resource.timesheet_group1
-    journal_id: account.expenses_journal
+    journal_id: expenses_journal
 -
   I create a Payslip.
 -
   !record {model: hr.payslip, id: hr_payslip_0}:
     employee_id: hr_employee_john
-    journal_id: account.expenses_journal
+    journal_id: expenses_journal
 
 -
   The selection of an employee fills the contract, structure, worked days and input data fields.

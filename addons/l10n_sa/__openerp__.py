@@ -3,7 +3,6 @@
 {
     'name': 'Saudi Arabia - Accounting',
     'version': '1.1',
-    'sequence': 1,
     'author': 'DVIT.ME',
     'category': 'Localization/Account Charts',
     'description': """
@@ -23,6 +22,6 @@ In future this module will include some payroll rules for ME .
     ],
     'demo': [],
     'test': [],
-    'installable': True,
+    'installable': False,   # need to be adaped
     'auto_install': False,
 }

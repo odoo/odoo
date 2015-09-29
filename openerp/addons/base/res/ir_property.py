@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from operator import itemgetter
 import time
@@ -25,6 +7,7 @@ import time
 from openerp import models, api
 from openerp.osv import osv, orm, fields
 from openerp.tools.misc import attrgetter
+from openerp.exceptions import UserError
 
 # -------------------------------------------------------------------------
 # Properties
@@ -96,7 +79,7 @@ class ir_property(osv.osv):
 
         field = TYPE2FIELD.get(type_)
         if not field:
-            raise osv.except_osv('Error', 'Invalid type')
+            raise UserError(_('Invalid type'))
 
         if field == 'value_reference':
             if isinstance(value, orm.BaseModel):
@@ -226,7 +209,7 @@ class ir_property(osv.osv):
         # retrieve the properties corresponding to the given record ids
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (name, model))
         field_id = self._cr.fetchone()[0]
-        company_id = self.env.context.get('force_company') or self.env['res.company']._company_default_get(model, field_id)
+        company_id = self.env.context.get('force_company') or self.env['res.company']._company_default_get(model, field_id).id
         refs = {('%s,%s' % (model, id)): id for id in values}
         props = self.search([
             ('fields_id', '=', field_id),
@@ -332,5 +315,3 @@ class ir_property(osv.osv):
             return [('id', 'not in', bad_ids)]
         else:
             return [('id', 'in', good_ids)]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

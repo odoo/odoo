@@ -2,15 +2,19 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="analytic_journal_sale" model="account.analytic.journal">
-            <field name="code">SAL</field>
-            <field name="name">Sales</field>
-            <field name="type">sale</field>
+        <!-- TAGS FOR CASH FLOW STATEMENT -->
+
+        <record id="account_tag_operating" model="account.account.tag">
+            <field name="name">Operating Activities</field>
+            <field name="applicability">accounts</field>
         </record>
-        <record id="exp" model="account.analytic.journal">
-            <field name="code">PUR</field>
-            <field name="name">Purchases</field>
-            <field name="type">purchase</field>
+        <record id="account_tag_financing" model="account.account.tag">
+            <field name="name">Financing Activities</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="account_tag_investing" model="account.account.tag">
+            <field name="name">Investing &amp; Extraordinary Activities</field>
+            <field name="applicability">accounts</field>
         </record>
 
         <!--
@@ -18,27 +22,13 @@
         -->
         <record id="account_payment_term_immediate" model="account.payment.term">
             <field name="name">Immediate Payment</field>
-            <field name="note">Immediate Payment</field>
+            <field name="note">Payment term: Immediate Payment</field>
         </record>
-
-        <record id="account_payment_term_line_immediate" model="account.payment.term.line">
-            <field name="value">balance</field>
-            <field eval="0" name="days"/>
-            <field eval="0" name="days2"/>
-            <field eval="account_payment_term_immediate" name="payment_id"/>
-        </record>
-
 
         <record id="account_payment_term_15days" model="account.payment.term">
             <field name="name">15 Days</field>
-            <field name="note">15 Days</field>
-        </record>
-
-        <record id="account_payment_term_line_15days" model="account.payment.term.line">
-            <field name="value">balance</field>
-            <field eval="15" name="days"/>
-            <field eval="0" name="days2"/>
-            <field eval="account_payment_term_15days" name="payment_id"/>
+            <field name="note">Payment term: 15 Days</field>
+            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
         <record forcecreate="True" id="decimal_payment" model="decimal.precision">
@@ -48,101 +38,17 @@
 
         <record id="account_payment_term_net" model="account.payment.term">
             <field name="name">30 Net Days</field>
-            <field name="note">30 Net Days</field>
-        </record>
-
-        <record id="account_payment_term_line_net" model="account.payment.term.line">
-            <field name="value">balance</field>
-            <field eval="30" name="days"/>
-            <field eval="0" name="days2"/>
-            <field eval="account_payment_term_net" name="payment_id"/>
-        </record>
-
-        <!--
-        Account Journal Sequences
-        -->
-
-        <record id="sequence_sale_journal" model="ir.sequence">
-            <field name="name">Account Default Sales Journal</field>
-            <field eval="3" name="padding"/>
-            <field name="prefix">SAJ/%(year)s/</field>
-        </record>
-        <record id="sequence_refund_sales_journal" model="ir.sequence">
-            <field name="name">Account Default Sales Credit Note Journal</field>
-            <field eval="3" name="padding"/>
-            <field name="prefix">SCNJ/%(year)s/</field>
-        </record>
-        <record id="sequence_purchase_journal" model="ir.sequence">
-            <field name="name">Account Default Expenses Journal</field>
-            <field eval="3" name="padding"/>
-            <field name="prefix">EXJ/%(year)s/</field>
-        </record>
-        <record id="sequence_refund_purchase_journal" model="ir.sequence">
-            <field name="name">Account Default Expenses Credit Notes Journal</field>
-            <field eval="3" name="padding"/>
-            <field name="prefix">ECNJ/%(year)s/</field>
-        </record>
-        <record id="sequence_bank_journal" model="ir.sequence">
-            <field name="name">Account Default Bank Journal</field>
-            <field eval="3" name="padding"/>
-            <field name="prefix">BNK/%(year)s/</field>
-        </record>
-        <record id="sequence_check_journal" model="ir.sequence">
-            <field name="name">Account Default Checks Journal</field>
-            <field eval="3" name="padding"/>
-            <field name="prefix">CHK/%(year)s/</field>
-        </record>
-        <record id="sequence_cash_journal" model="ir.sequence">
-            <field name="name">Account Default Cash Journal</field>
-            <field eval="3" name="padding"/>
-            <field name="prefix">CSH/%(year)s/</field>
-        </record>
-        <record id="sequence_opening_journal" model="ir.sequence">
-            <field name="name">Account Default Opening Entries Journal</field>
-            <field eval="3" name="padding"/>
-            <field name="prefix">OPEJ/%(year)s/</field>
-        </record>
-        <record id="sequence_miscellaneous_journal" model="ir.sequence">
-            <field name="name">Account Default Miscellaneous Journal</field>
-            <field eval="3" name="padding"/>
-            <field name="prefix">MISJ/%(year)s/</field>
+            <field name="note">Payment term: 30 Net Days</field>
+            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
         <!--
         Account Statement Sequences
         -->
-        <record id="sequence_reconcile" model="ir.sequence.type">
-            <field name="name">Account Reconcile</field>
-            <field name="code">account.reconcile</field>
-        </record>
         <record id="sequence_reconcile_seq" model="ir.sequence">
             <field name="name">Account reconcile sequence</field>
             <field name="code">account.reconcile</field>
             <field name="prefix">A</field>
-            <field eval="1" name="number_next"/>
-            <field eval="1" name="number_increment"/>
-        </record>
-
-        <record id="sequence_statement_type" model="ir.sequence.type">
-            <field name="name">Account Bank Statement</field>
-            <field name="code">account.bank.statement</field>
-        </record>
-        <record id="sequence_statement" model="ir.sequence">
-            <field name="name">Account Bank Statement</field>
-            <field name="code">account.bank.statement</field>
-            <field name="prefix">St. %(month)s/%(day)s/</field>
-            <field eval="1" name="number_next"/>
-            <field eval="1" name="number_increment"/>
-        </record>
-
-        <record id="cash_sequence_statement_type" model="ir.sequence.type">
-            <field name="name">Account Cash Statement</field>
-            <field name="code">account.cash.statement</field>
-        </record>
-        <record id="cash_sequence_statement" model="ir.sequence">
-            <field name="name">Account Cash Statement</field>
-            <field name="code">account.cash.statement</field>
-            <field name="prefix">Cr. %(month)s/%(day)s/</field>
             <field eval="1" name="number_next"/>
             <field eval="1" name="number_increment"/>
         </record>
@@ -167,5 +73,78 @@
             <field name="default" eval="False"/>
             <field name="description">Invoice paid</field>
         </record>
+        <record id="mt_invoice_created" model="mail.message.subtype">
+            <field name="name">Invoice Created</field>
+            <field name="res_model">account.invoice</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">Invoice Created</field>
+        </record>
+
+        <!-- Payment methods -->
+        <record id="account_payment_method_manual_in" model="account.payment.method">
+            <field name="name">Manual</field>
+            <field name="code">manual</field>
+            <field name="payment_type">inbound</field>
+        </record>
+        <record id="account_payment_method_manual_out" model="account.payment.method">
+            <field name="name">Manual</field>
+            <field name="code">manual</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <!-- Payment sequences -->
+        <record id="sequence_payment_customer_invoice" model="ir.sequence">
+            <field name="name">Payments customer invoices sequence</field>
+            <field name="code">account.payment.customer.invoice</field>
+            <field name="prefix">CUST.IN/%(year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_payment_customer_refund" model="ir.sequence">
+            <field name="name">Payments customer refunds sequence</field>
+            <field name="code">account.payment.customer.refund</field>
+            <field name="prefix">CUST.OUT/%(year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_payment_supplier_invoice" model="ir.sequence">
+            <field name="name">Payments supplier invoices sequence</field>
+            <field name="code">account.payment.supplier.invoice</field>
+            <field name="prefix">SUPP.OUT/%(year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_payment_supplier_refund" model="ir.sequence">
+            <field name="name">Payments supplier refunds sequence</field>
+            <field name="code">account.payment.supplier.refund</field>
+            <field name="prefix">SUPP.IN/%(year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_payment_transfer" model="ir.sequence">
+            <field name="name">Payments transfer sequence</field>
+            <field name="code">account.payment.transfer</field>
+            <field name="prefix">TRANS/%(year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field name="padding">4</field>
+        </record>
+
+        <!-- Account Tax Group -->
+        <record id="tax_group_taxes" model="account.tax.group">
+            <field name="name">Taxes</field>
+            <field name="sequence">0</field>
+        </record>
+
     </data>
 </openerp>

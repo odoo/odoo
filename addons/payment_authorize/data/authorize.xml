@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="payment_acquirer_authorize" model="payment.acquirer">
             <field name="name">Authorize.Net</field>
+            <field name="image" type="base64" file="payment_authorize/static/description/icon.png"/>
             <field name="provider">authorize</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="view_template_id" ref="authorize_acquirer_button"/>
@@ -15,4 +16,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

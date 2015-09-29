@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import cStringIO
 import csv
@@ -26,41 +8,30 @@ import os.path
 import pickle
 import re
 import sys
-
-# for eval context:
 import time
+
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
+import pytz
+from lxml import etree, builder
 
 import openerp
 import openerp.release
 import openerp.workflow
-from yaml_import import convert_yaml_import
 
 import assertion_report
-
-_logger = logging.getLogger(__name__)
-
-try:
-    import pytz
-except:
-    _logger.warning('could not find pytz library, please install it')
-    class pytzclass(object):
-        all_timezones=[]
-    pytz=pytzclass()
-
-
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-from lxml import etree, builder
 import misc
-from config import config
-from translate import _
 
+from config import config
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from misc import SKIPPED_ELEMENT_TYPES
-
 from misc import unquote
-
 from openerp import SUPERUSER_ID
+from translate import _
+from yaml_import import convert_yaml_import
+
+_logger = logging.getLogger(__name__)
 
 # Import of XML records requires the unsafe eval as well,
 # almost everywhere, which is ok because it supposedly comes
@@ -232,11 +203,8 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
     elif node.tag == "test":
         return node.text
 
-escape_re = re.compile(r'(?<!\\)/')
-def escape(x):
-    return x.replace('\\/', '/')
-
 class xml_import(object):
+
     @staticmethod
     def nodeattr2bool(node, attr, default=False):
         if not node.get(attr):
@@ -356,6 +324,10 @@ form: module.record_id""" % (xml_id,)
                     group_id = self.id_get(cr, group)
                     groups_value.append((4, group_id))
             res['groups_id'] = groups_value
+        if rec.get('paperformat'):
+            pf_name = rec.get('paperformat')
+            pf_id = self.id_get(cr,pf_name)
+            res['paperformat_id'] = pf_id
 
         id = self.pool['ir.model.data']._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
@@ -363,12 +335,13 @@ form: module.record_id""" % (xml_id,)
         if not rec.get('menu') or eval(rec.get('menu','False')):
             keyword = str(rec.get('keyword', 'client_print_multi'))
             value = 'ir.actions.report.xml,'+str(id)
-            replace = rec.get('replace', True)
-            self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True, xml_id=xml_id)
+            ir_values_id = self.pool['ir.values'].set_action(cr, self.uid, res['name'], keyword, res['model'], value)
+            self.pool['ir.actions.report.xml'].write(cr, self.uid, id, {'ir_values_id': ir_values_id})
         elif self.mode=='update' and eval(rec.get('menu','False'))==False:
             # Special check for report having attribute menu=False on update
             value = 'ir.actions.report.xml,'+str(id)
             self._remove_ir_values(cr, res['name'], value, res['model'])
+            self.pool['ir.actions.report.xml'].write(cr, self.uid, id, {'ir_values_id': False})
         return id
 
     def _tag_function(self, cr, rec, data_node=None, mode=None):
@@ -378,18 +351,6 @@ form: module.record_id""" % (xml_id,)
         uid = self.get_uid(cr, self.uid, data_node, rec)
         _eval_xml(self,rec, self.pool, cr, uid, self.idref, context=context)
         return
-
-    def _tag_url(self, cr, rec, data_node=None, mode=None):
-        url = rec.get("url",'').encode('utf8')
-        target = rec.get("target",'').encode('utf8')
-        name = rec.get("name",'').encode('utf8')
-        xml_id = rec.get('id','').encode('utf8')
-        self._test_xml_id(xml_id)
-
-        res = {'name': name, 'url': url, 'target':target}
-
-        id = self.pool['ir.model.data']._update(cr, self.uid, "ir.actions.act_url", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
-        self.idref[xml_id] = int(id)
 
     def _tag_act_window(self, cr, rec, data_node=None, mode=None):
         name = rec.get('name','').encode('utf-8')
@@ -500,6 +461,11 @@ form: module.record_id""" % (xml_id,)
         # TODO add remove ir.model.data
 
     def _tag_ir_set(self, cr, rec, data_node=None, mode=None):
+        """
+            .. deprecated:: 9.0
+
+            Use the <record> notation with ``ir.values`` as model instead.
+        """
         if self.mode != 'init':
             return
         res = {}
@@ -528,55 +494,25 @@ form: module.record_id""" % (xml_id,)
         openerp.workflow.trg_validate(
             uid, model, id, rec.get('action').encode('ascii'), cr)
 
-    #
-    # Support two types of notation:
-    #   name="Inventory Control/Sending Goods"
-    # or
-    #   action="action_id"
-    #   parent="parent_id"
-    #
     def _tag_menuitem(self, cr, rec, data_node=None, mode=None):
         rec_id = rec.get("id",'').encode('ascii')
         self._test_xml_id(rec_id)
-        m_l = map(escape, escape_re.split(rec.get("name",'').encode('utf8')))
 
-        values = {'parent_id': False}
-        if rec.get('parent', False) is False and len(m_l) > 1:
-            # No parent attribute specified and the menu name has several menu components,
-            # try to determine the ID of the parent according to menu path
-            pid = False
-            res = None
-            values['name'] = m_l[-1]
-            m_l = m_l[:-1] # last part is our name, not a parent
-            for idx, menu_elem in enumerate(m_l):
-                if pid:
-                    cr.execute('select id from ir_ui_menu where parent_id=%s and name=%s', (pid, menu_elem))
-                else:
-                    cr.execute('select id from ir_ui_menu where parent_id is null and name=%s', (menu_elem,))
-                res = cr.fetchone()
-                if res:
-                    pid = res[0]
-                else:
-                    # the menuitem does't exist but we are in branch (not a leaf)
-                    _logger.warning('Warning no ID for submenu %s of menu %s !', menu_elem, str(m_l))
-                    pid = self.pool['ir.ui.menu'].create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
-            values['parent_id'] = pid
+        # The parent attribute was specified, if non-empty determine its ID, otherwise
+        # explicitly make a top-level menu
+        if rec.get('parent'):
+            menu_parent_id = self.id_get(cr, rec.get('parent',''))
         else:
-            # The parent attribute was specified, if non-empty determine its ID, otherwise
-            # explicitly make a top-level menu
-            if rec.get('parent'):
-                menu_parent_id = self.id_get(cr, rec.get('parent',''))
-            else:
-                # we get here with <menuitem parent="">, explicit clear of parent, or
-                # if no parent attribute at all but menu name is not a menu path
-                menu_parent_id = False
-            values = {'parent_id': menu_parent_id}
-            if rec.get('name'):
-                values['name'] = rec.get('name')
-            try:
-                res = [ self.id_get(cr, rec.get('id','')) ]
-            except:
-                res = None
+            # we get here with <menuitem parent="">, explicit clear of parent, or
+            # if no parent attribute at all but menu name is not a menu path
+            menu_parent_id = False
+        values = {'parent_id': menu_parent_id}
+        if rec.get('name'):
+            values['name'] = rec.get('name')
+        try:
+            res = [ self.id_get(cr, rec.get('id','')) ]
+        except:
+            res = None
 
         if rec.get('action'):
             a_action = rec.get('action','').encode('utf8')
@@ -584,6 +520,7 @@ form: module.record_id""" % (xml_id,)
             # determine the type of action
             action_type, action_id = self.model_id_get(cr, a_action)
             action_type = action_type.split('.')[-1] # keep only type part
+            values['action'] = "ir.actions.%s,%d" % (action_type, action_id)
 
             if not values.get('name') and action_type in ('act_window', 'wizard', 'url', 'client', 'server'):
                 a_table = 'ir_act_%s' % action_type.replace('act_', '')
@@ -611,14 +548,15 @@ form: module.record_id""" % (xml_id,)
                     groups_value.append((4, group_id))
             values['groups_id'] = groups_value
 
+        if not values.get('parent_id'):
+            if rec.get('web_icon'):
+                values['web_icon'] = rec.get('web_icon')
+
         pid = self.pool['ir.model.data']._update(cr, self.uid, 'ir.ui.menu', self.module, values, rec_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
 
         if rec_id and pid:
             self.idref[rec_id] = int(pid)
 
-        if rec.get('action') and pid:
-            action = "ir.actions.%s,%d" % (action_type, action_id)
-            self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
         return 'ir.ui.menu', pid
 
     def _assert_equals(self, f1, f2, prec=4):
@@ -692,9 +630,17 @@ form: module.record_id""" % (xml_id,)
         rec_model = rec.get("model").encode('ascii')
         model = self.pool[rec_model]
         rec_id = rec.get("id",'').encode('ascii')
-        rec_context = rec.get("context", None)
+        rec_context = rec.get("context", {})
         if rec_context:
             rec_context = unsafe_eval(rec_context)
+
+        if self.xml_filename and rec_id:
+            rec_context['install_mode_data'] = dict(
+                xml_file=self.xml_filename,
+                xml_id=rec_id,
+                model=rec_model,
+            )
+
         self._test_xml_id(rec_id)
         # in update mode, the record won't be updated if the data node explicitely
         # opt-out using @noupdate="1". A second check will be performed in
@@ -794,10 +740,15 @@ form: module.record_id""" % (xml_id,)
 
         record = etree.Element('record', attrib=record_attrs)
         record.append(Field(name, name='name'))
+        record.append(Field(full_tpl_id, name='key'))
         record.append(Field("qweb", name='type'))
         record.append(Field(el.get('priority', "16"), name='priority'))
         if 'inherit_id' in el.attrib:
             record.append(Field(name='inherit_id', ref=el.get('inherit_id')))
+        if 'website_id' in el.attrib:
+            record.append(Field(name='website_id', ref=el.get('website_id')))
+        if 'key' in el.attrib:
+            record.append(Field(el.get('key'), name='key'))
         if el.get('active') in ("True", "False"):
             view_id = self.id_get(cr, tpl_id, raise_if_not_found=False)
             if mode != "update" or not view_id:
@@ -843,21 +794,22 @@ form: module.record_id""" % (xml_id,)
             raise_if_not_found=raise_if_not_found)
 
     def parse(self, de, mode=None):
-        if de.tag != 'openerp':
-            raise Exception("Mismatch xml format: root tag must be `openerp`.")
-
-        for n in de.findall('./data'):
-            for rec in n:
-                if rec.tag in self._tags:
-                    try:
-                        self._tags[rec.tag](self.cr, rec, n, mode=mode)
-                    except Exception, e:
-                        self.cr.rollback()
-                        exc_info = sys.exc_info()
-                        raise ParseError, (misc.ustr(e), etree.tostring(rec).rstrip(), rec.getroottree().docinfo.URL, rec.sourceline), exc_info[2]
+        roots = ['openerp','data','odoo']
+        if de.tag not in roots:
+            raise Exception("Root xml tag must be <openerp>, <odoo> or <data>.")
+        for rec in de:
+            if rec.tag in roots:
+                self.parse(rec, mode)
+            elif rec.tag in self._tags:
+                try:
+                    self._tags[rec.tag](self.cr, rec, de, mode=mode)
+                except Exception, e:
+                    self.cr.rollback()
+                    exc_info = sys.exc_info()
+                    raise ParseError, (misc.ustr(e), etree.tostring(rec).rstrip(), rec.getroottree().docinfo.URL, rec.sourceline), exc_info[2]
         return True
 
-    def __init__(self, cr, module, idref, mode, report=None, noupdate=False):
+    def __init__(self, cr, module, idref, mode, report=None, noupdate=False, xml_filename=None):
 
         self.mode = mode
         self.module = module
@@ -869,6 +821,7 @@ form: module.record_id""" % (xml_id,)
             report = assertion_report.assertion_report()
         self.assertion_report = report
         self.noupdate = noupdate
+        self.xml_filename = xml_filename
         self._tags = {
             'record': self._tag_record,
             'delete': self._tag_delete,
@@ -877,10 +830,8 @@ form: module.record_id""" % (xml_id,)
             'template': self._tag_template,
             'workflow': self._tag_workflow,
             'report': self._tag_report,
-
-            'ir_set': self._tag_ir_set,
+            'ir_set': self._tag_ir_set, # deprecated:: 9.0
             'act_window': self._tag_act_window,
-            'url': self._tag_url,
             'assert': self._tag_assert,
         }
 
@@ -902,7 +853,7 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
         elif ext == '.js':
             pass # .js files are valid but ignored here.
         else:
-            _logger.warning("Can't load unknown file type %s.", filename)
+            raise ValueError("Can't load unknown file type %s.", filename)
     finally:
         fp.close()
 
@@ -967,9 +918,6 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         pickle.dump(data, file(config.get('import_partial'),'wb'))
         cr.commit()
 
-#
-# xml import/export
-#
 def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
     doc = etree.parse(xmlfile)
     relaxng = etree.RelaxNG(
@@ -977,15 +925,16 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     try:
         relaxng.assert_(doc)
     except Exception:
-        _logger.error('The XML file does not fit the required schema !')
-        _logger.error(misc.ustr(relaxng.error_log.last_error))
+        _logger.info('The XML file does not fit the required schema !', exc_info=True)
+        _logger.info(misc.ustr(relaxng.error_log.last_error))
         raise
 
     if idref is None:
         idref={}
-    obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate)
+    if isinstance(xmlfile, file):
+        xml_filename = xmlfile.name
+    else:
+        xml_filename = xmlfile
+    obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate, xml_filename=xml_filename)
     obj.parse(doc.getroot(), mode=mode)
     return True
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

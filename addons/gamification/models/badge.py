@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
@@ -26,6 +8,7 @@ from openerp.tools.translate import _
 
 from datetime import date
 import logging
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -58,11 +41,12 @@ class gamification_badge_user(osv.Model):
         :param ids: list(int) of badge users that will receive the badge
         """
         res = True
-        temp_obj = self.pool.get('email.template')
+        temp_obj = self.pool.get('mail.template')
         user_obj = self.pool.get('res.users')
-        template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_badge_received', context)
+        template_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'gamification', 'email_template_badge_received')[1]
         for badge_user in self.browse(cr, uid, ids, context=context):
-            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=context)
+            template = temp_obj.get_email_template(cr, uid, template_id, badge_user.id, context=context)
+            body_html = temp_obj.render_template(cr, uid, template.body_html, 'gamification.badge.user', badge_user.id, context=template._context)
             res = user_obj.message_post(
                 cr, uid, badge_user.user_id.id,
                 body=body_html,
@@ -149,7 +133,8 @@ class gamification_badge(osv.Model):
     _columns = {
         'name': fields.char('Badge', required=True, translate=True),
         'description': fields.text('Description'),
-        'image': fields.binary("Image", help="This field holds the image used for the badge, limited to 256x256"),
+        'image': fields.binary("Image", attachment=True,
+            help="This field holds the image used for the badge, limited to 256x256"),
         'rule_auth': fields.selection([
                 ('everyone', 'Everyone'),
                 ('users', 'A selected list of users'),
@@ -235,13 +220,13 @@ class gamification_badge(osv.Model):
         if status_code == self.CAN_GRANT:
             return True
         elif status_code == self.NOBODY_CAN_GRANT:
-            raise osv.except_osv(_('Warning!'), _('This badge can not be sent by users.'))
+            raise UserError(_('This badge can not be sent by users.'))
         elif status_code == self.USER_NOT_VIP:
-            raise osv.except_osv(_('Warning!'), _('You are not in the user allowed list.'))
+            raise UserError(_('You are not in the user allowed list.'))
         elif status_code == self.BADGE_REQUIRED:
-            raise osv.except_osv(_('Warning!'), _('You do not have the required badges.'))
+            raise UserError(_('You do not have the required badges.'))
         elif status_code == self.TOO_MANY:
-            raise osv.except_osv(_('Warning!'), _('You have already sent this badge too many time this month.'))
+            raise UserError(_('You have already sent this badge too many time this month.'))
         else:
             _logger.exception("Unknown badge status code: %d" % int(status_code))
         return False

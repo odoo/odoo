@@ -3,18 +3,14 @@
 # * project_issue
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
-# Kari Lindgren <karisatu@gmail.com>, 2015
-# Kimmo Lehtonen <leban@netzionale.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-09-04 18:51+0000\n"
-"Last-Translator: Kimmo Lehtonen <leban@netzionale.com>\n"
-"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
+"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"PO-Revision-Date: 2015-09-19 08:24+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,63 +18,43 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_issue
-#: field:project.issue.report,email:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_email
 msgid "# Emails"
 msgstr "Sähköpostien määrä"
 
 #. module: project_issue
-#: field:res.partner,issue_count:0
+#: model:ir.model.fields,field_description:project_issue.field_res_partner_issue_count
 msgid "# Issues"
 msgstr "Tapausten määrä"
 
 #. module: project_issue
-#: field:project.issue.report,nbr:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr
 msgid "# of Issues"
 msgstr "Tapausten lukumäärä"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:299
+#: code:addons/project_issue/project_issue.py:209
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopio)"
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_version_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new version.\n"
-"              </p><p>\n"
-"                Define here the different versions of your products on which\n"
-"                you can work on issues.\n"
-"              </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa lisätäksesi uuden version.\n</p><p>\nMääritä tässä ne tuotteet/tuoteversiot joille voit tehdä tapauksia.\n</p>"
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+msgid "<b>Category:</b>"
+msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
-#: model:ir.actions.act_window,help:project_issue.action_view_issues
-msgid ""
-"<p>\n"
-"                    The Odoo issues tacker allows you to efficiantly manage things\n"
-"                    like internal requests, software development bugs, customer\n"
-"                    complaints, project troubles, material breakdowns, etc.\n"
-"                </p>\n"
-"            "
-msgstr "<p>\nOdoo tapaustenhallinta mahdollistaa tehokkaan tavan seurata mm. \nsisäisiä vaatimuksia, ohjelmistokehitysvirheitä, asiakasvalituksia, \nprojektiongelmia, materiaalipuutteita jne.\n</p>"
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+msgid "<b>Project:</b>"
+msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
-msgid ""
-"<p>\n"
-"                The Odoo issues tacker allows you to efficiantly manage things\n"
-"                like internal requests, software development bugs, customer\n"
-"                complaints, project troubles, material breakdowns, etc.\n"
-"            </p>\n"
-"        "
-msgstr "<p>\nOdoo tapaustenhallinta mahdollistaa tehokkaan tavan seurata mm. \nsisäisiä vaatimuksia, ohjelmistokehitysvirheitä, asiakasvalituksia, \nprojektiongelmia, materiaalipuutteita jne.\n</p>"
+#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
+msgstr ""
 
 #. module: project_issue
-#: help:project.issue,kanban_state:0
+#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
 msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
@@ -87,21 +63,19 @@ msgid ""
 msgstr "Tapauksen Kanban tila kuvaa erityistilanteita jotka vaikuttavat tapaukseen:\n* Normal: oletustilanne\n* Blocked: jokin asia estää tapauksen käsittelyä eteenpäin\n* Ready for next stage: tapaus voidaan siirtää seuraavaan vaiheeseen"
 
 #. module: project_issue
-#: field:project.issue,active:0 field:project.issue.version,active:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_active
 msgid "Active"
 msgstr "Aktiivinen"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Add an internal note..."
 msgstr "Lisää sisäinen ilmoitus..."
-
-#. module: project_issue
-#: help:project.config.settings,fetchmail_issue:0
-msgid ""
-"Allows you to configure your incoming mail server, and create issues from "
-"incoming emails."
-msgstr "Voit määrittää tulevan sähköpostipalvelimen asetukset ja luoda tapauksia tulevista sähköposteista."
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -109,35 +83,40 @@ msgid "Analytic Account"
 msgstr "Analyyttinen tili"
 
 #. module: project_issue
-#: field:project.issue,date_open:0
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Archived"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
 msgid "Assigned"
 msgstr "Annettu tehtäväksi"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,user_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-#: field:project.issue.report,user_id:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_user_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_user_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Assigned to"
 msgstr "Annettu tehtäväksi"
 
 #. module: project_issue
-#: field:project.issue.report,delay_close:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_close
 msgid "Avg. Delay to Close"
 msgstr "Keskimääräinen viive sulkemiseen"
 
 #. module: project_issue
-#: field:project.issue.report,delay_open:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_open
 msgid "Avg. Delay to Open"
 msgstr "Keskimääräinen viive avaamiseen"
 
 #. module: project_issue
-#: field:project.issue.report,working_hours_close:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_close
 msgid "Avg. Working Hours to Close"
 msgstr "Keskimääräiset työtunnit sulkemiseen"
 
 #. module: project_issue
-#: field:project.issue.report,working_hours_open:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_open
 msgid "Avg. Working Hours to Open"
 msgstr "Avaukseen käytetyt tunnit keskimäärin"
 
@@ -149,229 +128,223 @@ msgstr "Estetty"
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
-msgstr "Vastuuhenkilön toimesta"
+msgstr "Vastuuhenkilöittäin"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_kanban_view
-msgid "Category:"
-msgstr "Ryhmä:"
-
-#. module: project_issue
-#: field:project.issue,channel:0 field:project.issue.report,channel:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_channel
 msgid "Channel"
 msgstr "Kanava"
 
 #. module: project_issue
-#: help:account.analytic.account,use_issues:0
-msgid "Check this field if this project manages issues"
-msgstr "Valitse tämä kenttä jos projektissa hallitaan myös tapauksia"
+#: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
+#: model:ir.model.fields,help:project_issue.field_project_project_use_issues
+msgid "Check this box to manage customer activities through this project"
+msgstr ""
 
 #. module: project_issue
-#: field:project.issue,date_closed:0
+#: model:ir.actions.act_window,help:project_issue.open_view_issue
+msgid "Click to create an issue."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
 msgid "Closed"
 msgstr "Suljettu"
 
 #. module: project_issue
-#: field:project.issue,color:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_color
 msgid "Color Index"
 msgstr "Väri-indeksi"
 
 #. module: project_issue
-#: help:project.issue.report,channel:0
+#: model:ir.model.fields,help:project_issue.field_project_issue_report_channel
 msgid "Communication Channel."
 msgstr "Viestintätapa/kanava."
 
 #. module: project_issue
-#: help:project.issue,channel:0
+#: model:ir.model.fields,help:project_issue.field_project_issue_channel
 msgid "Communication channel."
 msgstr "Kommunikaatiokanava"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,company_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-#: field:project.issue.report,company_id:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_company_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_company_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Company"
 msgstr "Yritys"
 
 #. module: project_issue
-#: help:project.issue,progress:0
-msgid "Computed as: Time Spent / Total Time."
-msgstr "Laskettu kaavalla: käytetty aika / kokonaisaika"
-
-#. module: project_issue
-#: view:project.config.settings:project_issue.view_config_settings
-msgid "Configure"
-msgstr "Konfiguroi"
-
-#. module: project_issue
-#: field:project.issue,partner_id:0 field:project.issue.report,partner_id:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_partner_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_partner_id
 msgid "Contact"
-msgstr "Yhteystieto"
+msgstr "Yhteyshenkilö"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-#: field:project.issue.report,create_date:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_create_date
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Create Date"
 msgstr "Luontipäivä"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Create Day"
 msgstr "Luontipäivä"
 
 #. module: project_issue
-#: field:project.config.settings,fetchmail_issue:0
-msgid "Create issues from an incoming email account "
-msgstr "Luo tapauksia tulevista sähköpostiviesteistä"
-
-#. module: project_issue
-#: field:project.issue,create_uid:0 field:project.issue.version,create_uid:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_create_uid
 msgid "Created by"
 msgstr "Luonut"
 
 #. module: project_issue
-#: field:project.issue.version,create_date:0
-msgid "Created on"
-msgstr "Luotu"
-
-#. module: project_issue
-#: field:project.issue,create_date:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
 msgid "Creation Date"
 msgstr "Luontipäivämäärä"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:424
+#: code:addons/project_issue/project_issue.py:364
 #, python-format
 msgid "Customer"
 msgstr "Asiakas"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:426
+#: code:addons/project_issue/project_issue.py:366
 #, python-format
 msgid "Customer Email"
 msgstr "Asiakkaan sähköposti"
 
 #. module: project_issue
-#: field:project.issue,date:0
+#: model:ir.model.fields,help:project_issue.field_project_project_label_issues
+msgid "Customize the issues label, for example to call them cases."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date
 msgid "Date"
 msgstr "Päivämäärä"
 
 #. module: project_issue
-#: field:project.issue.report,date_closed:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_closed
 msgid "Date of Closing"
 msgstr "Sulkemispäivä"
 
 #. module: project_issue
-#: field:project.issue.report,opening_date:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
 msgid "Date of Opening"
 msgstr "Avauspäivä"
 
 #. module: project_issue
-#: help:project.issue,message_last_post:0
+#: model:ir.model.fields,help:project_issue.field_project_issue_message_last_post
 msgid "Date of the last message posted on the record."
 msgstr "Viimeisen viestin päivämäärä"
 
 #. module: project_issue
-#: field:project.issue,days_since_creation:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
 msgid "Days since creation date"
 msgstr "Päiviä luontipäivästä"
 
 #. module: project_issue
-#: field:project.issue,inactivity_days:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_inactivity_days
 msgid "Days since last action"
 msgstr "Päiviä edellisestä toiminnasta"
 
 #. module: project_issue
-#: field:project.issue,day_open:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_day_open
 msgid "Days to Assign"
 msgstr "Päivää toimeksiantoon"
 
 #. module: project_issue
-#: field:project.issue,day_close:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_day_close
 msgid "Days to Close"
 msgstr "Päivää sulkemiseen"
 
 #. module: project_issue
-#: field:project.issue,date_deadline:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_deadline
 msgid "Deadline"
 msgstr "Määräaika"
 
 #. module: project_issue
-#: model:project.category,name:project_issue.project_issue_category_03
-msgid "Deadly bug"
-msgstr "Kriittinen virhe (stopperi!)"
-
-#. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_delay
 msgid "Delay"
-msgstr "Myöhästyminen"
+msgstr "Viive"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_kanban_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Delete"
 msgstr "Poista"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Description"
 msgstr "Kuvaus"
 
 #. module: project_issue
-#: help:project.issue,days_since_creation:0
+#: model:ir.model.fields,help:project_issue.field_project_issue_days_since_creation
 msgid "Difference in days between creation date and current date"
 msgstr "Ero päivissä luontipäivän ja nykyisen päivän välissä"
 
 #. module: project_issue
-#: help:project.issue,inactivity_days:0
+#: model:ir.model.fields,help:project_issue.field_project_issue_inactivity_days
 msgid "Difference in days between last action and current date"
 msgstr "Ero päivinä edellisen toiminnon ja nykyisen päiväyksen välissä"
 
 #. module: project_issue
-#: field:project.issue,duration:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
 msgid "Duration"
 msgstr "Kesto"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_kanban_view
-msgid "Edit..."
-msgstr "Muokkaa..."
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+msgid "Edit Issue"
+msgstr ""
 
 #. module: project_issue
-#: field:project.issue,email_from:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
 msgid "Email"
 msgstr "Sähköposti"
 
 #. module: project_issue
-#: constraint:project.project:0
-msgid "Error! You cannot assign escalation to the same project!"
-msgstr "Virhe! Et voi asettaa eskalointia samalle projektille!"
-
-#. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Extra Info"
 msgstr "Lisätiedot"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_feature_tree_view
+#: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
 msgid "Feature Tracker Tree"
 msgstr "Ominaisuusseurannan puu"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_feature_tree_view
+#: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
 msgid "Feature description"
 msgstr "Ominaisuuden kuvaus"
 
 #. module: project_issue
-#: field:project.issue,message_follower_ids:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_follower_ids
 msgid "Followers"
 msgstr "Seuraajat"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
 msgstr "Ryhmittele"
 
@@ -382,47 +355,44 @@ msgid "High"
 msgstr "Korkea"
 
 #. module: project_issue
-#: help:project.issue,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
+#: code:addons/project_issue/project_issue.py:342
+#, python-format
+msgid "I take it"
+msgstr ""
 
 #. module: project_issue
-#: field:project.issue,id:0 field:project.issue.report,id:0
-#: field:project.issue.version,id:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_id
 msgid "ID"
-msgstr "Tunniste (ID)"
+msgstr "ID"
 
 #. module: project_issue
-#: help:project.project,project_escalation_id:0
-msgid ""
-"If any issue is escalated from the current Project, it will be listed under "
-"the project selected here."
-msgstr "Jos mikä tahansa tapaus eskaloidaan nykyisestä projetista, se listataan tässä valitun projketin alla."
-
-#. module: project_issue
-#: help:project.issue,message_unread:0
+#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: project_issue
-#: field:project.issue,message_is_follower:0
-msgid "Is a Follower"
-msgstr "on seuraaja"
+#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,name:0
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Important Messages"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_name
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Issue"
-msgstr "Tapaus"
-
-#. module: project_issue
-#: model:mail.message.subtype,name:project_issue.mt_issue_assigned
-#: model:mail.message.subtype,name:project_issue.mt_project_issue_assigned
-msgid "Issue Assigned"
-msgstr "Tapaus annettu tehtäväksi"
+msgstr "Huolenaihe"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
@@ -433,14 +403,14 @@ msgstr "Tapaus estetty"
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
-msgid "Issue Created"
-msgstr "Tapaus luotu"
+msgid "Issue Opened"
+msgstr ""
 
 #. module: project_issue
-#: model:mail.message.subtype,description:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
-msgid "Issue Ready for Next Stage"
-msgstr "Tapaus valmis seuraavaan vaiheeseen"
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
+msgid "Issue Ready"
+msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -448,25 +418,19 @@ msgid "Issue Stage Changed"
 msgstr "Tapauksen tila/vaihe muuttunut"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+msgid "Issue Summary..."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Issue Tracker Search"
 msgstr "Tapausseurannan haku"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_tree_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
 msgid "Issue Tracker Tree"
 msgstr "Tapausseurannan puu"
-
-#. module: project_issue
-#: view:project.issue.version:project_issue.project_issue_version_form_view
-#: view:project.issue.version:project_issue.project_issue_version_search_view
-msgid "Issue Version"
-msgstr "Tapauksen versio"
-
-#. module: project_issue
-#: model:mail.message.subtype,description:project_issue.mt_issue_assigned
-msgid "Issue assigned"
-msgstr "Tapaus annettu tehtäväksi"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
@@ -475,111 +439,116 @@ msgstr "Tapaus estetty"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
-msgid "Issue created"
-msgstr "Tapaus luotu"
+msgid "Issue opened"
+msgstr ""
 
 #. module: project_issue
-#: field:account.analytic.account,use_issues:0
+#: model:mail.message.subtype,description:project_issue.mt_issue_ready
+msgid "Issue ready for next sStage"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.action_view_issues
+#: model:ir.actions.act_window,name:project_issue.open_view_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
-#: model:ir.ui.menu,name:project_issue.menu_project_confi
+#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
+#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
-#: view:project.issue:project_issue.project_issue_calendar_view
-#: view:project.project:project_issue.view_project_form_inherited
-#: view:project.project:project_issue.view_project_kanban_inherited
-#: field:project.project,issue_count:0
-#: view:res.partner:project_issue.res_partner_issues_button_view
+#: model:ir.ui.menu,name:project_issue.portal_services_issues
+#: model:ir.ui.view,arch_db:project_issue.project_issue_calendar_view
+#: model:ir.ui.view,arch_db:project_issue.res_partner_issues_button_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+#: model:ir.ui.view,arch_db:project_issue.view_project_kanban_inherited
 msgid "Issues"
 msgstr "Tapaukset"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report_filtered
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 msgid "Issues Analysis"
 msgstr "Tapausten analyysit"
 
 #. module: project_issue
-#: field:project.issue,kanban_state:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
 msgid "Kanban State"
 msgstr "Kanban tila"
 
 #. module: project_issue
-#: field:project.issue,date_action_last:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
 msgid "Last Action"
 msgstr "Viimeisin tapahtuma"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Last Message"
 msgstr "Viimeinen viesti"
 
 #. module: project_issue
-#: field:project.issue,message_last_post:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_last_post
 msgid "Last Message Date"
 msgstr "Viimeinen viestipvm"
 
 #. module: project_issue
-#: field:project.issue,date_last_stage_update:0
-#: field:project.issue.report,date_last_stage_update:0
-msgid "Last Stage Update"
-msgstr "Viimeisin vaiheen päivitys"
+#: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report___last_update
+msgid "Last Modified on"
+msgstr ""
 
 #. module: project_issue
-#: field:project.issue,write_uid:0 field:project.issue.version,write_uid:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_last_stage_update
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_last_stage_update
+msgid "Last Stage Update"
+msgstr "Vaihe päivittynyt viimeksi"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_uid
 msgid "Last Updated by"
 msgstr "Viimeksi päivittänyt"
-
-#. module: project_issue
-#: field:project.issue.version,write_date:0
-msgid "Last Updated on"
-msgstr "Viimeksi päivitetty"
-
-#. module: project_issue
-#: model:project.category,name:project_issue.project_issue_category_01
-msgid "Little problem"
-msgstr "Pieni ongelma"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Low"
-msgstr "Alin"
+msgstr "Matala"
 
 #. module: project_issue
-#: field:project.issue,message_ids:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_ids
 msgid "Messages"
 msgstr "Viestit"
 
 #. module: project_issue
-#: help:project.issue,message_ids:0
+#: model:ir.model.fields,help:project_issue.field_project_issue_message_ids
 msgid "Messages and communication history"
 msgstr "Viesti- ja kommunikointihistoria"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "My Issues"
 msgstr "Omat tapahtumat"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "New"
 msgstr "Uusi"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-msgid "New Mail"
-msgstr "Uusi viesti"
+#: code:addons/project_issue/project_issue.py:344
+#, python-format
+msgid "New Issue"
+msgstr ""
 
 #. module: project_issue
-#: field:project.issue,date_action_next:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
 msgid "Next Action"
-msgstr "Seuraava Toimenpide"
+msgstr "Seuraava toimenpide"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:440
+#: code:addons/project_issue/project_issue.py:387
 #, python-format
 msgid "No Subject"
 msgstr "Ei aihetta"
@@ -591,19 +560,29 @@ msgid "Normal"
 msgstr "Normaali"
 
 #. module: project_issue
-#: help:project.issue.report,delay_close:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
 msgid "Number of Days to close the project issue"
 msgstr "Päivien määrä projektitapahtuman sulkemiseen"
 
 #. module: project_issue
-#: help:project.issue.report,delay_open:0
+#: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
 msgid "Number of Days to open the project issue."
 msgstr "Päivien määrä projektin tapauksen avaamiseen"
 
 #. module: project_issue
-#: model:project.category,name:project_issue.project_issue_category_02
-msgid "PBCK"
-msgstr "(Problem Between Chair and Keyboard) Käyttäjävirhe ;)"
+#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
@@ -611,54 +590,49 @@ msgid "Partner"
 msgstr "Kumppani"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_feature_tree_view
-#: view:project.issue:project_issue.project_issue_tree_view
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,priority:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-#: field:project.issue.report,priority:0
+#: code:addons/project_issue/project_issue.py:477
+#, python-format
+msgid ""
+"Please remove existing issues in the project linked to the accounts you want"
+" to delete."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_priority
+#: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Priority"
 msgstr "Prioriteetti"
 
 #. module: project_issue
-#: field:project.issue,description:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_description
 msgid "Private Note"
 msgstr "Yksityinen muistiinpano"
 
 #. module: project_issue
-#: field:project.issue,progress:0
-msgid "Progress (%)"
-msgstr "Edistyminen (%)"
-
-#. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,project_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-#: field:project.issue.report,project_id:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_project_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_project_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Project"
 msgstr "Projekti"
 
 #. module: project_issue
-#: field:project.project,project_escalation_id:0
-msgid "Project Escalation"
-msgstr "Projektin eskalointi"
-
-#. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue
-#: view:project.issue.report:project_issue.view_project_issue_report_graph
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
-msgstr "Projekti tapahtuma"
+msgstr "Projektin huolenaihe"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_graph_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_graph_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_pivot_view
 msgid "Project Issues"
 msgstr "Projektin tapaukset"
-
-#. module: project_issue
-#: view:project.issue:project_issue.project_issue_kanban_view
-msgid "Project:"
-msgstr "Projekti:"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
@@ -666,37 +640,32 @@ msgid "Ready for next stage"
 msgstr "Valmis seuraavaan vaiheeseen"
 
 #. module: project_issue
-#: field:project.issue.report,reviewer_id:0
-msgid "Reviewer"
-msgstr "Tarkastaja"
-
-#. module: project_issue
-#: field:project.issue.report,section_id:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_team_id
 msgid "Sale Team"
 msgstr "Myyntitiimi"
 
 #. module: project_issue
-#: field:project.issue,section_id:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_team_id
 msgid "Sales Team"
 msgstr "Myyntitiimi"
 
 #. module: project_issue
-#: help:project.issue,section_id:0
+#: model:ir.model.fields,help:project_issue.field_project_issue_team_id
 msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
 msgstr "Myyntitiimi jolle tapaus kuuluu. Määrittele vastuuhenkilö ja sähköpostitili sähköpostin välityspalvelimelle."
 
 #. module: project_issue
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Search"
-msgstr "Etsi"
+msgstr "Haku"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,stage_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-#: field:project.issue.report,stage_id:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_stage_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_stage_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Stage"
 msgstr "Vaihe"
 
@@ -712,35 +681,36 @@ msgid "Stage changed"
 msgstr "Vaihe muutettu"
 
 #. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
-msgid "Statistics"
-msgstr "Tilastot"
-
-#. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
-msgid "Status"
-msgstr "Tila"
-
-#. module: project_issue
-#: field:project.issue,message_summary:0
-msgid "Summary"
-msgstr "Yhteenveto"
-
-#. module: project_issue
-#: field:project.issue,categ_ids:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_tag_ids
 msgid "Tags"
 msgstr "Tunnisteet"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: field:project.issue,task_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-#: field:project.issue.report,task_id:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_task_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_task_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Task"
 msgstr "Tehtävä"
 
 #. module: project_issue
-#: help:project.issue,email_cc:0
+#: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
+#: model:ir.actions.act_window,help:project_issue.action_view_issues
+msgid ""
+"The Odoo issues tacker allows you to efficiently manage things\n"
+"                    like internal requests, software development bugs, customer\n"
+"                    complaints, project troubles, material breakdowns, etc."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
+msgid ""
+"The Odoo issues tacker allows you to efficiently manage things\n"
+"                like internal requests, software development bugs, customer\n"
+"                complaints, project troubles, material breakdowns, etc."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
 msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
@@ -748,12 +718,13 @@ msgid ""
 msgstr "Nämä sähköpostiosoitteet lisätään cc (kopio viestistä) kenttään tähän tietueeseen liittyvien sähköpostien osalta. Erota useammat osoitteet pilkulla."
 
 #. module: project_issue
-#: help:project.issue,email_from:0
+#: model:ir.model.fields,help:project_issue.field_project_issue_email_from
 msgid "These people will receive email."
 msgstr "Nämä henkilöt vastaanottavat sähköpostin."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report_filtered
 msgid ""
 "This report on the project issues allows you to analyse the quality of your "
 "support or after-sales services. You can track the issues per age. You can "
@@ -762,93 +733,87 @@ msgid ""
 msgstr "Tämän tapauksiin liittyvän raportin avulla voit analysoida tukipalvelun tai jälkimarkkinoinnin  laatua. Voit mm. seurata tapauksia niiden iän mukaan (vanhin-uusin) tai tapausten käsittelyaikaa (aika tapauksen avaamisesta sen sulkemiseen), keskimääräistä käsittelyaikaa ja paljonko tapaukseen on liittynyt/tarvittu sähköpostinvaihtoa yms."
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Unassigned"
-msgstr "Ei ole annettu tehtäväksi"
+msgstr "Kohdistamaton"
 
 #. module: project_issue
-#: field:project.issue,message_unread:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread
 msgid "Unread Messages"
 msgstr "Lukemattomia viestejä"
 
 #. module: project_issue
-#: field:project.issue,write_date:0
-msgid "Update Date"
-msgstr "Päivityksen päiväys"
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
 
 #. module: project_issue
-#: field:project.issue,user_email:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
+msgid "Update Date"
+msgstr "Päivityksen ajankohta"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+msgid "Use Issues"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
+msgid "Use Issues as"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
 msgid "User Email"
 msgstr "Käyttäjän sähköposti"
 
 #. module: project_issue
-#: field:project.issue,version_id:0 field:project.issue.report,version_id:0
-msgid "Version"
-msgstr "Versio"
-
-#. module: project_issue
-#: field:project.issue.version,name:0
-msgid "Version Number"
-msgstr "Versionumero"
-
-#. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.project_issue_version_action
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_version_act
-msgid "Versions"
-msgstr "Versiot"
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:397
-#, python-format
-msgid "Warning!"
-msgstr "Varoitus!"
-
-#. module: project_issue
-#: field:project.issue,email_cc:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_email_cc
 msgid "Watchers Emails"
 msgstr "Seuraajien Sähköpostit"
 
 #. module: project_issue
-#: field:project.issue,working_hours_open:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_website_message_ids
+msgid "Website Messages"
+msgstr "Verkkosivun ilmoitukset"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_website_message_ids
+msgid "Website communication history"
+msgstr "Verkkosivun viestihistoria"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
 msgid "Working Hours to assign the Issue"
 msgstr "Työtuntia tapauksen avaamiseen"
 
 #. module: project_issue
-#: field:project.issue,working_hours_close:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_close
 msgid "Working Hours to close the Issue"
 msgstr "Työtuntia tapauksen sulkemiseen"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:397
-#, python-format
+#: model:ir.model.fields,help:project_issue.field_project_issue_task_id
 msgid ""
-"You cannot escalate this issue.\n"
-"The relevant Project has not configured the Escalation Project!"
-msgstr "Et voi eskaloida tapausta.\nLiittyvään projektiin ei ole konfiguroitu eskalointiprojektia!"
+"You can link this issue to an existing task or directly create a new one "
+"from here"
+msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:348
+#: model:ir.actions.act_window,help:project_issue.open_view_issue
+msgid ""
+"You can track your issues from this menu and the action we     \n"
+"                will take."
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:257
 #, python-format
 msgid "issues"
 msgstr "tapaukset"
 
 #. module: project_issue
-#: field:project.project,issue_ids:0
-msgid "unknown"
-msgstr "tuntematon"
-
-#. module: project_issue
-#: view:project.project:project_issue.view_project_form_inherited
-msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-
-#. module: project_issue
-#: view:project.project:project_issue.view_project_form_inherited
-msgid "{'on_change': 'on_change_use_tasks_or_issues(use_tasks, use_issues)'}"
-msgstr "{'on_change': 'on_change_use_tasks_or_issues(use_tasks, use_issues)'}"
-
-#. module: project_issue
-#: view:project.issue:project_issue.project_issue_form_view
-msgid "⇒ Escalate"
-msgstr "⇒ Eskaloi tapaus toiseen projektiin"
+#: model:ir.model,name:project_issue.model_project_issue_report
+msgid "project.issue.report"
+msgstr ""

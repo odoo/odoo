@@ -1,24 +1,5 @@
 #-*- coding:utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    d$
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from datetime import date
@@ -32,6 +13,7 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.exceptions import UserError
 
 class hr_payroll_structure(osv.osv):
     """
@@ -336,7 +318,6 @@ class hr_payslip(osv.osv):
             'view_type': 'form',
             'res_model': 'hr.payslip',
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'current',
             'domain': "[('id', 'in', %s)]" % [id_copy],
             'views': [(tree_res, 'tree'), (form_res, 'form')],
@@ -349,7 +330,7 @@ class hr_payslip(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for payslip in self.browse(cr, uid, ids, context=context):
             if payslip.state not in  ['draft','cancel']:
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a payslip which is not draft or cancelled!'))
+                raise UserError(_('You cannot delete a payslip which is not draft or cancelled!'))
         return super(hr_payslip, self).unlink(cr, uid, ids, context)
 
     #TODO move this function into hr_contract module, on hr.employee object
@@ -376,7 +357,7 @@ class hr_payslip(osv.osv):
         slip_line_pool = self.pool.get('hr.payslip.line')
         sequence_obj = self.pool.get('ir.sequence')
         for payslip in self.browse(cr, uid, ids, context=context):
-            number = payslip.number or sequence_obj.get(cr, uid, 'salary.slip')
+            number = payslip.number or sequence_obj.next_by_code(cr, uid, 'salary.slip')
             #delete old payslip lines
             old_slipline_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', payslip.id)], context=context)
 #            old_slipline_ids
@@ -753,7 +734,7 @@ class hr_salary_rule(osv.osv):
         'name':fields.char('Name', required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, help="The code of salary rules can be used as reference in computation of other rules. In that case, it is case sensitive."),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence', select=True),
-        'quantity': fields.char('Quantity', help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."),
+        'quantity': fields.char('Quantity', help=u"It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."),
         'category_id':fields.many2one('hr.salary.rule.category', 'Category', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used to display the salary rule on payslip."),
@@ -847,20 +828,20 @@ result = rules.NET > categories.NET * 0.10''',
             try:
                 return rule.amount_fix, float(eval(rule.quantity, localdict)), 100.0
             except:
-                raise osv.except_osv(_('Error!'), _('Wrong quantity defined for salary rule %s (%s).')% (rule.name, rule.code))
+                raise UserError(_('Wrong quantity defined for salary rule %s (%s).') % (rule.name, rule.code))
         elif rule.amount_select == 'percentage':
             try:
                 return (float(eval(rule.amount_percentage_base, localdict)),
                         float(eval(rule.quantity, localdict)),
                         rule.amount_percentage)
             except:
-                raise osv.except_osv(_('Error!'), _('Wrong percentage base or quantity defined for salary rule %s (%s).')% (rule.name, rule.code))
+                raise UserError(_('Wrong percentage base or quantity defined for salary rule %s (%s).') % (rule.name, rule.code))
         else:
             try:
                 eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
                 return float(localdict['result']), 'result_qty' in localdict and localdict['result_qty'] or 1.0, 'result_rate' in localdict and localdict['result_rate'] or 100.0
             except:
-                raise osv.except_osv(_('Error!'), _('Wrong python code defined for salary rule %s (%s).')% (rule.name, rule.code))
+                raise UserError(_('Wrong python code defined for salary rule %s (%s).') % (rule.name, rule.code))
 
     def satisfy_condition(self, cr, uid, rule_id, localdict, context=None):
         """
@@ -877,13 +858,13 @@ result = rules.NET > categories.NET * 0.10''',
                 result = eval(rule.condition_range, localdict)
                 return rule.condition_range_min <=  result and result <= rule.condition_range_max or False
             except:
-                raise osv.except_osv(_('Error!'), _('Wrong range condition defined for salary rule %s (%s).')% (rule.name, rule.code))
+                raise UserError(_('Wrong range condition defined for salary rule %s (%s).') % (rule.name, rule.code))
         else: #python code
             try:
                 eval(rule.condition_python, localdict, mode='exec', nocopy=True)
                 return 'result' in localdict and localdict['result'] or False
             except:
-                raise osv.except_osv(_('Error!'), _('Wrong python condition defined for salary rule %s (%s).')% (rule.name, rule.code))
+                raise UserError(_('Wrong python condition defined for salary rule %s (%s).') % (rule.name, rule.code))
 
 
 class hr_rule_input(osv.osv):
@@ -971,8 +952,5 @@ class hr_employee(osv.osv):
     _columns = {
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Payroll'), help="Sum of all current contract's wage of employee."),
-        'payslip_count': fields.function(_payslip_count, type='integer', string='Payslips'),
+        'payslip_count': fields.function(_payslip_count, type='integer', string='Payslips', groups="base.group_hr_user"),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

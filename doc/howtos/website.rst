@@ -50,7 +50,7 @@ Although it does absolutely nothing we can install it:
 
 * go to http://localhost:8069
 * create a new database including demonstration data
-* to go :menuselection:`Settings --> Modules --> Local Modules`
+* to go :menuselection:`Settings --> Modules --> Modules`
 * in the top-right corner remove the *Installed* filter and search for
   *academy*
 * click the :guilabel:`Install` button for the *Academy* module
@@ -96,7 +96,7 @@ The templates iterates (``t-foreach``) on all the teachers (passed through the
 *template context*), and prints each teacher in its own paragraph.
 
 Finally restart Odoo and update the module's data (to install the template)
-by going to :menuselection:`Settings --> Modules --> Local Modules -->
+by going to :menuselection:`Settings --> Modules --> Modules -->
 Academy` and clicking :guilabel:`Upgrade`.
 
 .. tip::

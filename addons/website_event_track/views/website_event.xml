@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-<template id="assets_frontend" inherit_id="website.assets_frontend" name="Event track front end">
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Event Track Assets">
     <xpath expr="." position="inside">
         <link rel="stylesheet" href="/website_event_track/static/src/css/website_event_track.css"/>
         <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
@@ -12,11 +12,11 @@
 <template name="Sponsors" id="event_sponsor" customize_show="True" inherit_id="website_event.layout">
     <xpath expr="//div[@id='wrap']" position="inside">
         <div class="container mt32 mb16 hidden-print" t-if="event.sponsor_ids">
-            <section data-snippet-id="title">
+            <section>
                 <h2 class="text-center mb32">Our Sponsors</h2>
             </section>
             <div class="row">
-                <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center mb16" t-foreach="event.sponsor_ids" t-as="sponsor">
+                <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center mb16 oe_sponsor" t-foreach="event.sponsor_ids" t-as="sponsor">
                     <t t-if="sponsor.url">
                         <a t-att-href="sponsor.url" style="position: relative; display: inline-block;">
                             <span t-field="sponsor.image_medium"
@@ -133,7 +133,7 @@
                         <li t-if="track.speaker_ids" class="text-muted fa fa-user">
                             <t t-esc="', '.join([speaker.name for speaker in track.speaker_ids])"></t>
                         </li>
-                        <li class="text-muted fa fa-calendar"> <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/></li>
+                        <li t-if="track.date" class="text-muted fa fa-calendar"> <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/></li>
                         <li class="text-muted fa fa-map-marker" t-if="track.location_id">
                             <span t-field="track.location_id"/>
                         </li>
@@ -145,7 +145,7 @@
                             </a>
                         </li>
                     </ul>
-                    <p class="mt8"><t t-esc="html2text(track.description or '')[0:500]"/>...</p>
+                    <p class="mt8"><t t-esc="html2text(track.description or '')[0:500]"/><t t-if="track.description">...</t></p>
                 </div>
             </div>
         </div>
@@ -178,7 +178,7 @@
             <div class="container">
                 <div class="row mt8">
                     <div class="col-sm-7" id="event_menu">
-                        <ol class="breadcrumb mb0" id="event_menu" t-if="event.menu_id">
+                        <ol name="Event Menu" class="breadcrumb mb0" id="event_menu" t-if="event.menu_id" t-att-data-content_menu_id="editable and event.menu_id.id">
                             <t t-foreach="event.menu_id.child_id" t-as="submenu">
                                 <t t-call="website.submenu"/>
                             </t>
@@ -187,6 +187,7 @@
                     <t t-call="website.publish_management">
                         <t t-set="object" t-value="track"/>
                         <t t-set="publish_edit" t-value="True"/>
+                        <t t-set="action" t-value="'website_event_track.action_event_track'"/>
                     </t>
                 </div>
             </div>
@@ -207,7 +208,23 @@
 
             <section class="row mt32">
                 <div class="col-md-8">
-                    <div t-field="track.description"/>
+                    <section>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <h2 t-field="track.name"/>
+                                    <small>Proposed by <span t-field="track.partner_name"/></small>
+                                </div>
+                                <div class="col-md-12">
+                                    <p t-field="track.description"/>
+                                </div>
+                                <div class="col-md-12">
+                                    <h3>About The Author</h3>
+                                    <p t-field="track.partner_biography"/>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     <div t-foreach="track.speaker_ids" t-as="speaker" class="well mt32">
                         <div class="row">
                             <div class="col-sm-2">
@@ -281,7 +298,7 @@
     <t t-call="website_event.layout">
         <div class="oe_structure"/>
         <div class="container">
-            <section data-snippet-id="title">
+            <section>
                 <h1 class="text-center mb0">Call for Proposals</h1>
                 <h2 class="text-center text-muted mb32" t-esc="event.name"></h2>
             </section>
@@ -294,7 +311,7 @@
             <section class="row">
                 <div class="col-md-8">
                     <div class="oe_structure">
-                        <section data-snippet-id="text">
+                        <section>
                             <h3 class="page-header mt16">
                                 Introduction
                             </h3>
@@ -308,7 +325,7 @@
                                 inclusion in the programme.
                             </p>
                         </section>
-                        <section data-snippet-id="text">
+                        <section>
                             <h3 class="page-header">Application</h3>
                             <p>
                                 Fill this form to propose your talk.
@@ -317,7 +334,7 @@
                         </section>
                     </div>
                     <section id="forms" t-if="event.show_track_proposal">
-                        <form class="form-horizontal mt32" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
+                        <form class="form-horizontal mt32 js_website_submit_form" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label class="col-md-3 col-sm-4 control-label" for="partner_name">Your Name</label>
                                 <div class="col-md-7 col-sm-8">

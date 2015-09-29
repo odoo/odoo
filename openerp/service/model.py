@@ -8,9 +8,9 @@ import threading
 import time
 
 import openerp
+from openerp.exceptions import UserError, ValidationError, QWebException
 from openerp.tools.translate import translate
-from openerp.osv.orm import except_orm
-from contextlib import contextmanager
+from openerp.tools.translate import _
 
 import security
 
@@ -111,12 +111,18 @@ def check(f):
                 if openerp.registry(dbname)._init and not openerp.tools.config['test_enable']:
                     raise openerp.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
                 return f(dbname, *args, **kwargs)
-            except OperationalError, e:
+            except (OperationalError, QWebException) as e:
+                if isinstance(e, QWebException):
+                    cause = e.qweb.get('cause')
+                    if isinstance(cause, OperationalError):
+                        e = cause
+                    else:
+                        raise
                 # Automatically retry the typical transaction serialization errors
                 if e.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
                     raise
                 if tries >= MAX_TRIES_ON_CONCURRENCY_FAILURE:
-                    _logger.warning("%s, maximum number of tries reached" % errorcodes.lookup(e.pgcode))
+                    _logger.info("%s, maximum number of tries reached" % errorcodes.lookup(e.pgcode))
                     raise
                 wait_time = random.uniform(0.0, 2 ** tries)
                 tries += 1
@@ -126,7 +132,7 @@ def check(f):
                 registry = openerp.registry(dbname)
                 for key in registry._sql_error.keys():
                     if key in inst[0]:
-                        raise openerp.osv.orm.except_orm(_('Constraint Error'), tr(registry._sql_error[key], 'sql_constraint') or inst[0])
+                        raise ValidationError(tr(registry._sql_error[key], 'sql_constraint') or inst[0])
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                     _logger.debug("IntegrityError", exc_info=True)
@@ -146,16 +152,16 @@ def check(f):
                         msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
                     except Exception:
                         pass
-                    raise openerp.osv.orm.except_orm(_('Integrity Error'), msg)
+                    raise ValidationError(msg)
                 else:
-                    raise openerp.osv.orm.except_orm(_('Integrity Error'), inst[0])
+                    raise ValidationError(inst[0])
 
     return wrapper
 
 def execute_cr(cr, uid, obj, method, *args, **kw):
     object = openerp.registry(cr.dbname).get(obj)
     if object is None:
-        raise except_orm('Object Error', "Object %s doesn't exist" % obj)
+        raise UserError(_("Object %s doesn't exist") % obj)
     return getattr(object, method)(cr, uid, *args, **kw)
 
 def execute_kw(db, uid, obj, method, args, kw=None):
@@ -166,10 +172,10 @@ def execute(db, uid, obj, method, *args, **kw):
     threading.currentThread().dbname = db
     with openerp.registry(db).cursor() as cr:
         if method.startswith('_'):
-            raise except_orm('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
+            raise UserError(_('Private methods (such as %s) cannot be called remotely.') % (method,))
         res = execute_cr(cr, uid, obj, method, *args, **kw)
         if res is None:
-            _logger.warning('The method %s of the object %s can not return `None` !', method, obj)
+            _logger.info('The method %s of the object %s can not return `None` !', method, obj)
         return res
 
 def exec_workflow_cr(cr, uid, obj, signal, *args):
@@ -181,5 +187,3 @@ def exec_workflow_cr(cr, uid, obj, signal, *args):
 def exec_workflow(db, uid, obj, signal, *args):
     with openerp.registry(db).cursor() as cr:
         return exec_workflow_cr(cr, uid, obj, signal, *args)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

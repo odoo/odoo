@@ -1,30 +1,12 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2013-TODAY OpenERP S.A. <http://www.openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp.addons.hr_holidays.tests.common import TestHrHolidaysBase
 from openerp.exceptions import AccessError
-from openerp.osv.orm import except_orm
+from openerp.exceptions import ValidationError
 from openerp.tools import mute_logger
 
 class TestHolidaysFlow(TestHrHolidaysBase):
@@ -72,7 +54,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # --------------------------------------------------
 
         # Employee creates a leave request for another employee -> should crash
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValidationError):
             self.hr_holidays.create(cr, self.user_employee_id, {
                 'name': 'Hol10',
                 'employee_id': self.employee_hruser_id,
@@ -111,7 +93,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # --------------------------------------------------
 
         # Employee creates a new leave request at the same time -> crash, avoid interlapping
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValidationError):
             self.hr_holidays.create(cr, self.user_employee_id, {
                 'name': 'Hol21',
                 'employee_id': self.employee_emp_id,
@@ -122,7 +104,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             })
 
         # Employee creates a leave request in a limited category -> crash, not enough days left
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValidationError):
             self.hr_holidays.create(cr, self.user_employee_id, {
                 'name': 'Hol22',
                 'employee_id': self.employee_emp_id,
@@ -205,5 +187,5 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'date_to': (datetime.today() + relativedelta(days=7)),
             'number_of_days_temp': 4,
         })
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValidationError):
             self.hr_holidays.signal_workflow(cr, self.user_hrmanager_id, [hol2_id], 'confirm')

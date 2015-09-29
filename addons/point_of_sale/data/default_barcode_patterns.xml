@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="barcode_rule_cashier" model="barcode.rule">
+            <field name="name">Cashier Barcodes</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
+            <field name="sequence">50</field>
+            <field name="type">cashier</field>
+            <field name="encoding">any</field>
+            <field name="pattern">041</field>
+        </record>
+
+        <record id="barcode_rule_client" model="barcode.rule">
+            <field name="name">Customer Barcodes</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
+            <field name="sequence">40</field>
+            <field name="type">client</field>
+            <field name="encoding">any</field>
+            <field name="pattern">042</field>
+        </record>
+
+        <record id="barcode_rule_discount" model="barcode.rule">
+            <field name="name">Discount Barcodes</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
+            <field name="sequence">20</field>
+            <field name="type">discount</field>
+            <field name="encoding">any</field>
+            <field name="pattern">22{NN}</field>
+        </record>
+
+        <record id="barcode_rule_price_two_dec" model="barcode.rule">
+            <field name="name">Price Barcodes 2 Decimals</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
+            <field name="sequence">14</field>
+            <field name="type">price</field>
+            <field name="encoding">ean13</field>
+            <field name="pattern">23.....{NNNDD}</field>
+        </record>
+    </data>
+</openerp>

@@ -1,24 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 """
@@ -220,10 +201,10 @@ class Cursor(object):
     @check
     def execute(self, query, params=None, log_exceptions=None):
         if '%d' in query or '%f' in query:
-            _logger.warning(query)
-            _logger.warning("SQL queries cannot contain %d or %f anymore. Use only %s")
+            _logger.info("SQL queries cannot contain %%d or %%f anymore. Use only %%s:\n%s" % query, 
+                exc_info=_logger.isEnabledFor(logging.DEBUG))
         if params and not isinstance(params, (tuple, list, dict)):
-            _logger.error("SQL query parameters should be a tuple, list or dict; got %r", params)
+            _logger.info("SQL query parameters should be a tuple, list or dict; got %r", params)
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
@@ -234,11 +215,11 @@ class Cursor(object):
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.error("Programming error: %s, in query %s", pe, query)
+                _logger.info("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.exception("bad query: %s", self._obj.query or query)
+                _logger.info("bad query: %s", self._obj.query or query)
             raise
 
         # simple query count is always computed
@@ -491,7 +472,7 @@ class ConnectionPool(object):
                 delattr(cnx, 'leaked')
                 self._connections.pop(i)
                 self._connections.append((cnx, False))
-                _logger.warning('%r: Free leaked connection to %r', self, cnx.dsn)
+                _logger.info('%r: Free leaked connection to %r', self, cnx.dsn)
 
         for i, (cnx, used) in enumerate(self._connections):
             if not used and cnx._original_dsn == dsn:
@@ -525,7 +506,7 @@ class ConnectionPool(object):
         try:
             result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
         except psycopg2.Error:
-            _logger.exception('Connection to the database failed')
+            _logger.info('Connection to the database failed')
             raise
         result._original_dsn = dsn
         self._connections.append((result, True))
@@ -585,7 +566,7 @@ class Connection(object):
     def __nonzero__(self):
         """Check if connection is possible"""
         try:
-            _logger.warning("__nonzero__() is deprecated. (It is too expensive to test a connection.)")
+            _logger.info("__nonzero__() is deprecated. (It is too expensive to test a connection.)")
             cr = self.cursor()
             cr.close()
             return True
@@ -635,5 +616,3 @@ def close_all():
     global _Pool
     if _Pool:
         _Pool.close_all()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

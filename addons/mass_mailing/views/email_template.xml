@@ -5,11 +5,17 @@
         <!-- Email Templates -->
         <record model="ir.ui.view" id="email_template_form_minimal">
             <field name="name">email.template.form.minimal</field>
-            <field name="model">email.template</field>
+            <field name="model">mail.template</field>
             <field name="priority">32</field>
             <field name="arch" type="xml">
                 <form string="Templates">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(mail.wizard_email_template_preview)d" string="Preview"
+                                type="action" target="new"
+                                context="{'template_id':active_id}"/>
+                            <br />
+                        </div>
                         <group>
                             <group>
                                 <field name="name" required="True"/>
@@ -19,19 +25,10 @@
                                 <field name="model" invisible="True"/>
                                 <field name="use_default_to" invisible="1"/>
                             </group>
-                            <group>
-                                <div class="oe_right oe_button_box" name="buttons">
-                                    <button string="Edit Template" name="action_edit_html" type="object"/>
-                                    <button name="%(email_template.wizard_email_template_preview)d" string="Preview"
-                                        type="action" target="new"
-                                        context="{'template_id':active_id}"/>
-                                    <br />
-                                </div>
-                            </group>
                         </group>
                         <notebook>
                             <page string="Body">
-                                <field name="body_html" nolabel="1"/>
+                                <field name="body_html" nolabel="1" widget="html_frame" options="{'editor_url': '/mass_mailing/field/email_template'}"/>
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </page>
                         </notebook>
@@ -42,20 +39,23 @@
 
         <record model="ir.ui.view" id="view_email_template_kanban">
             <field name="name">email.template.kanban</field>
-            <field name="model">email.template</field>
+            <field name="model">mail.template</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="body_html"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_email_template">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                    <span class="oe_e">i</span>
-                                    <ul class="oe_dropdown_menu" t-if="widget.view.is_action_enabled('edit') or widget.view.is_action_enabled('delete')">
-                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                <div t-if="widget.editable or widget.deletable" class="o_dropdown_kanban dropdown">
+
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                        <span class="fa fa-bars fa-lg"/>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <t t-if="widget.editable">
                                             <li><a type="edit">Edit</a></li>
                                         </t>
-                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                        <t t-if="widget.deletable">
                                             <li><a type="delete">Delete</a></li>
                                         </t>
                                     </ul>
@@ -78,7 +78,7 @@
 
         <record model="ir.actions.act_window" id="action_email_template_marketing">
             <field name="name">Templates</field>
-            <field name="res_model">email.template</field>
+            <field name="res_model">mail.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{
@@ -89,7 +89,7 @@
 
         <!-- Add Templates in Marketing / Mass mailing menu -->
         <menuitem name="Mail Templates" id="menu_email_template"
-            parent="mass_mailing_campaign" sequence="3"
+            parent="menu_mass_mailing_configuration" sequence="3"
             action="action_email_template_marketing"/>
 
     </data>

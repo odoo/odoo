@@ -1,29 +1,12 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import cStringIO
 
 from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class base_update_translations(osv.osv_memory):
     def _get_languages(self, cr, uid, context):
@@ -36,7 +19,7 @@ class base_update_translations(osv.osv_memory):
         lang_obj = self.pool.get('res.lang')
         ids = lang_obj.search(cr, uid, [('code', '=', lang_code)])
         if not ids:
-            raise osv.except_osv(_('Error!'), _('No language with code "%s" exists') % lang_code)
+            raise UserError(_('No language with code "%s" exists') % lang_code)
         lang = lang_obj.browse(cr, uid, ids[0])
         return lang.name
 
@@ -67,5 +50,3 @@ class base_update_translations(osv.osv_memory):
     _columns = {
         'lang': fields.selection(_get_languages, 'Language', required=True),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

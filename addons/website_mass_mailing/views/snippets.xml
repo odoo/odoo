@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="mailing_list_subscribe" inherit_id="website.snippets" name="Subscribe to Newsletter">
+
+    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
+        <div>
+            <div class="oe_snippet_thumbnail">
+                <img class="oe_snippet_thumbnail_img" src="/mass_mailing/static/src/img/blocks/button_newsletter.png"/>
+                <span class="oe_snippet_thumbnail_title">Newsletter</span>
+            </div>
+
+            <div class="oe_snippet_body input-group js_subscribe"
+                      data-list-id="0">
+                <input
+                      type="email"
+                      name="email"
+                      class="js_subscribe_email form-control"
+                      placeholder="your email..."/>
+                <span class="input-group-btn">
+                    <a href="#" class="btn btn-primary js_subscribe_btn">Subscribe</a>
+                    <a href="#" class="btn btn-success js_subscribed_btn hidden" disabled="disabled">Thanks</a>
+                </span>
+                <div class="alert alert-success hidden">Thanks for your subscription!</div>
+            </div>
+
+        </div>
+    </xpath>
+
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-js='mailing_list_subscribe'
+            data-selector=".js_subscribe"
+            data-drop-near="p, h1, h2, h3, blockquote, .well, .panel">
+            <li data-select_mailing_list=""><a>Change Newsletter</a></li>
+        </div>
+    </xpath>
+
+</template>
+
+<template id="website_popup_snippet" name="popup snippet" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_feature']/div[@class='o_panel_body']" position="inside">
+        <div groups="mass_mailing.group_website_popup_on_exit">
+            <div class="oe_snippet_thumbnail">
+                <img class="oe_snippet_thumbnail_img" src="/mass_mailing/static/src/img/blocks/bounce.png" />
+                <span class="oe_snippet_thumbnail_title">Newsletter Popup</span>
+            </div>
+
+            <div class="o_newsletter_popup" data-list-id="0">
+                <div class="alert alert-warning alert-dismissible fade in css_non_editable_mode_hidden o_not_editable" role="alert">
+                    <strong>Newsletter Popup!</strong> The newsletter popup snippet effect is active on this page. Click <a id="edit_dialog" href="#">Here To Edit Dialog Content</a>
+                </div>
+                <div class="modal modal-dialog modal-md fade fade-custom" id="o_newsletter_popup" tabindex="-1" role="dialog">
+                    <div class="modal-content o_popup_modal_content">
+                        <a href="#" class="o_popup_btn_close o_not_editable" data-dismiss="modal">&amp;times;</a>
+
+                        <div class="o_popup_modal_body text-center">
+                            <div class="o_popup_content_dev" data-oe-placeholder="Type Here ..."/>
+                            <div class="input-group o_not_editable o_popup_animated o_popup_bounce_del500ms o_popup_bounce_small" >
+                                <input type="email" name="email" class="popup_subscribe_email form-control" placeholder="your email..." autofocus="autofocus"/>
+                                <span class="input-group-btn">
+                                    <a href="#" class="btn btn-success popup_subscribe_btn">Subscribe</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="website_popup_options" name="Popup Options" inherit_id="website.snippet_options">
+    <xpath expr="//div" position="after">
+        <div data-js='newsletter_popup'
+            data-selector=".o_newsletter_popup"
+            data-drop-in=".oe_structure, [data-oe-type=html]">
+            <li data-select_mailing_list=""><a>Change Newsletter</a></li>
+        </div>
+    </xpath>
+</template>
+
+</data>
+</openerp>

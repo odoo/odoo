@@ -1,27 +1,9 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 class crm_lead_forward_to_partner(osv.TransientModel):
@@ -51,7 +33,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         if context is None:
             context = {}
         lead_obj = self.pool.get('crm.lead')
-        email_template_obj = self.pool.get('email.template')
+        email_template_obj = self.pool.get('mail.template')
         try:
             template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'email_template_lead_forward_mail')[1]
         except ValueError:
@@ -61,7 +43,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         default_composition_mode = context.get('default_composition_mode')
         res['assignation_lines'] = []
         if template_id:
-            res['body'] = email_template_obj.get_email_template(cr, uid, template_id).body_html
+            res['body'] = email_template_obj.get_email_template(cr, uid, template_id, 0).body_html
         if active_ids:
             lead_ids = lead_obj.browse(cr, uid, active_ids, context=context)
             if default_composition_mode == 'mass_mail':
@@ -74,23 +56,21 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 partner = False
                 if partner_id:
                     partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-                res['assignation_lines'].append(self._convert_to_assignation_line(cr, uid, lead, partner))
+                res['assignation_lines'].append((0, 0, self._convert_to_assignation_line(cr, uid, lead, partner)))
         return res
 
     def action_forward(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         record = self.browse(cr, uid, ids[0], context=context)
-        email_template_obj = self.pool.get('email.template')
+        email_template_obj = self.pool.get('mail.template')
         try:
             template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'email_template_lead_forward_mail')[1]
         except ValueError:
-            raise osv.except_osv(_('Email Template Error'),
-                                 _('The Forward Email Template is not in the database'))
+            raise UserError(_('The Forward Email Template is not in the database'))
         try:
             portal_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_portal')[1]
         except ValueError:
-            raise osv.except_osv(_('Portal Group Error'),
-                                 _('The Portal group cannot be found'))
+            raise UserError(_('The Portal group cannot be found'))
 
         local_context = context.copy()
         if not (record.forward_type == 'single'):
@@ -99,11 +79,9 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 if lead.partner_assigned_id and not lead.partner_assigned_id.email:
                     no_email.add(lead.partner_assigned_id.name)
             if no_email:
-                raise osv.except_osv(_('Email Error'),
-                                    ('Set an email address for the partner(s): %s' % ", ".join(no_email)))
+                raise UserError(_('Set an email address for the partner(s): %s') % ", ".join(no_email))
         if record.forward_type == 'single' and not record.partner_id.email:
-            raise osv.except_osv(_('Email Error'),
-                                ('Set an email address for the partner %s' % record.partner_id.name))
+            raise UserError(_('Set an email address for the partner %s') % record.partner_id.name)
 
         partners_leads = {}
         for lead in record.assignation_lines:
@@ -139,8 +117,6 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             values = {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id}
             if stage_id:
                 values['stage_id'] = stage_id
-            if partner_leads['partner'].user_id:
-                values['section_id'] = partner_leads['partner'].user_id.default_section_id.id
             lead_obj.write(cr, uid, lead_ids, values)
             self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner_id], context=context)
         return True
@@ -206,5 +182,3 @@ class crm_lead_assignation (osv.TransientModel):
         if partner.city:
             partner_location.append(partner.city)
         return {'value': {'partner_location': ", ".join(partner_location)}}
-
-# # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

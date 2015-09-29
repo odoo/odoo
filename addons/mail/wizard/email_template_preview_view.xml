@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Email Template Preview -->
+        <record model="ir.ui.view" id="email_template_preview_form">
+            <field name="name">email_template.preview.form</field>
+            <field name="model">email_template.preview</field>
+            <field name="arch" type="xml">
+                <form string="Email Preview">
+                    <field name="model_id" invisible="1"/>
+                    <h3>Preview of <field name="name" readonly="1" nolabel="1" class="oe_inline"/></h3>
+                    Choose an example <field name="model_id" class="oe_inline" readonly="1"/> record:
+                    <field name="res_id" class="oe_inline" style="margin-left: 8px;"/>
+                    <group>
+                        <field name="subject" readonly="1"/>
+                        <field name="email_from" readonly="1"
+                                attrs="{'invisible':[('email_from','=',False)]}"/>
+                        <field name="partner_ids" widget="many2many_tags" readonly="1"/>
+                        <field name="email_to" readonly="1"
+                                attrs="{'invisible':[('email_to','=',False)]}"/>
+                        <field name="email_cc" readonly="1"
+                                attrs="{'invisible':[('email_cc','=',False)]}"/>
+                        <field name="reply_to" readonly="1"
+                                attrs="{'invisible':[('reply_to','=',False)]}"/>
+                    </group>
+                    <field name="body_html" widget="html" readonly="1"
+                            nolabel="1" options='{"safe": True}'/>
+                    <field name="attachment_ids" widget="many2many_binary" readonly="1"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="wizard_email_template_preview" model="ir.actions.act_window">
+            <field name="name">Template Preview</field>
+            <field name="res_model">email_template.preview</field>
+            <field name="src_model">mail.template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="email_template_preview_form"/>
+            <field name="auto_refresh" eval="1" />
+            <field name="target">new</field>
+            <field name="context">{'template_id':active_id}</field>
+        </record>
+
+    </data>
+</openerp>

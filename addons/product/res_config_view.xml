@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="inherit_view_general_configuration" model="ir.ui.view">
+            <field name="name">General Settings</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='company_share_ressources']" position="inside">
+                    <field name="company_share_product" class="oe_inline"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

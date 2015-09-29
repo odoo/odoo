@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- This file must be loaded  _after_  account_demo.xml ! -->
+        <record id="test_invoice_1" model="account.invoice">
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="journal_id" search="[('type', '=', 'purchase')]"/>
+            <field name="state">draft</field>
+            <field name="type">in_invoice</field>
+            <field name="account_id" ref="account.a_pay"/>
+            <field name="name">Test invoice 1</field>
+        </record>
+        <record id="test_tax_line" model="account.invoice.tax">
+            <field name="name">Test Tax</field>
+            <field name="amount">100.00</field>
+            <field name="account_id" ref="account.ova"/>
+            <field name="invoice_id" ref="test_invoice_1"/>
+        </record>
+        <record id="test_invoice_1_line_1" model="account.invoice.line">
+            <field name="name">Basic computer with Dvorak keyboard and left-handed mouse</field>
+            <field name="product_id" ref="product.product_product_57"/>
+            <field name="invoice_id" ref="test_invoice_1"/>
+            <field name="price_unit">250</field>
+            <field name="quantity">1</field>
+            <field name="account_id" ref="account.a_expense"/>
+        </record>
+        <record id="test_invoice_1_line_2" model="account.invoice.line">
+            <field name="name">Little server with raid 1 and 512ECC ram</field>
+            <field name="product_id" ref="product.product_product_58"/>
+            <field name="invoice_id" ref="test_invoice_1"/>
+            <field name="price_unit">800</field>
+            <field name="quantity">2</field>
+            <field name="account_id" ref="account.a_expense"/>
+        </record>
+
+        <assert id="test_invoice_1" model="account.invoice" string="The currency unit of Test invoice 1 is EUR">
+            <test expr="currency_id.symbol">€</test>
+        </assert>
+
+        <assert id="test_invoice_1" model="account.invoice" severity="error" string="The amount of Test invoice 1 is correct">
+            <test expr="sum([l.price_subtotal for l in invoice_line_ids]) == 1850"/>
+            <test expr="sum([l.price_subtotal for l in invoice_line_ids]) == amount_untaxed"/>
+        </assert>
+
+        <workflow action="invoice_open" model="account.invoice" ref="test_invoice_1"/>
+
+        <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now open">
+            <test expr="state">open</test>
+        </assert>
+        <function model="account.invoice" name="pay_and_reconcile">
+            <!-- ids = -->                   <value eval="[ref('test_invoice_1')]"/>
+            <!-- pay_journal_id = -->        <value eval="ref('bank_journal')"/>
+            <!-- pay_amount = -->            <value eval="1950"/>
+        </function>
+
+        <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now paid">
+            <test expr="state">paid</test>
+        </assert>
+    </data>
+</openerp>

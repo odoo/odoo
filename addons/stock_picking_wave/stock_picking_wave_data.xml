@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Picking Wave related subtypes for messaging / Chatter -->
+    <record id="mt_wave_state" model="mail.message.subtype">
+        <field name="name">Stage Changed</field>
+        <field name="res_model">stock.picking.wave</field>
+        <field name="default" eval="False"/>
+        <field name="description">Stage Changed</field>
+    </record>
+</odoo>

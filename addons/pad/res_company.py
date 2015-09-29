@@ -7,6 +7,3 @@ class company_pad(osv.osv):
         'pad_server': fields.char('Pad Server', help="Etherpad lite server. Example: beta.primarypad.com"),
         'pad_key': fields.char('Pad Api Key', help="Etherpad lite api key.", groups="base.group_system"),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

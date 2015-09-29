@@ -23,7 +23,7 @@
             <field name="name">Goal List</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
-                <tree string="Goal List" colors="red:state == 'failed';green:state == 'reached';grey:state == 'canceled'" create="false">
+                <tree string="Goal List" decoration-danger="state == 'failed'" decoration-success="state == 'reached'" decoration-muted="state == 'canceled'" create="false">
                     <field name="definition_id" invisible="1" />
                     <field name="user_id" invisible="1" />
                     <field name="start_date"/>
@@ -36,8 +36,8 @@
                 </tree>
             </field>
         </record>
-		
-		<record id="goal_form_view" model="ir.ui.view">
+
+        <record id="goal_form_view" model="ir.ui.view">
             <field name="name">Goal Form</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
@@ -153,16 +153,16 @@
                             <div t-attf-class="oe_kanban_card oe_gamification_goal oe_kanban_goal #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
                                 <div class="oe_kanban_content">
                                     <p><strong><h4 class="oe_goal_name text-center" tooltip="kanban-tooltip"><field name="definition_id" /></h4></strong></p>
-                                    <div class="oe_kanban_left">
+                                    <div class="pull-left">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
                                     </div>
                                     <field name="user_id" />
                                     <div class="oe_goal_state_block">
                                         <t t-if="record.definition_display.raw_value == 'boolean'">
-                                            <div class="oe_goal_state oe_e">
-                                                <t t-if="record.state.raw_value=='reached'"><span class="oe_green" title="Goal Reached">W</span></t>
-                                                <t t-if="record.state.raw_value=='inprogress'"><span title="Goal in Progress">N</span></t>
-                                                <t t-if="record.state.raw_value=='failed'"><span class="oe_red" title="Goal Failed">X</span></t>
+                                            <div class="oe_goal_state">
+                                                <t t-if="record.state.raw_value=='reached'"><i class="oe_green fa fa-check" title="Goal Reached"/></t>
+                                                <t t-if="record.state.raw_value=='inprogress'"><i class="fa fa-clock-o" title="Goal in Progress"/></t>
+                                                <t t-if="record.state.raw_value=='failed'"><i class="oe_red fa fa-times" title="Goal Failed"/></t>
                                             </div>
                                         </t>
                                         <t t-if="record.definition_display.raw_value == 'progress'">
@@ -178,7 +178,7 @@
                                         </t>
                                         
                                     </div>
-                                    <p>
+                                    <p class="text-center">
                                         <t t-if="record.start_date.value">
                                             From <t t-esc="record.start_date.value" />
                                         </t>
@@ -232,7 +232,7 @@
                     <sheet>
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" class="oe_inline"/>
+                                <field name="name"/>
                             </h1>
                             <label for="description" class="oe_edit_only"/>
                             <div>
@@ -259,7 +259,7 @@
                                             ('model_id', '=', model_id),
                                             ('model_id', 'in', model_inherited_model_ids and model_inherited_model_ids[0] and model_inherited_model_ids[0][2])]" />
                                 <field name="domain" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
-                                <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}" placeholder="e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)"/>
+                                <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}" placeholder="e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)"/>
                                 <field name="condition" widget="radio"/>
                             </group>
                             <group string="Optimisation" attrs="{'invisible': [('computation_mode', '!=', 'count')]}">

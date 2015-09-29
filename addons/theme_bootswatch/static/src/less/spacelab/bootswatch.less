@@ -1,0 +1,139 @@
+// Spacelab 3.2.0
+// Bootswatch
+// -----------------------------------------------------
+
+@import url("//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700");
+
+.btn-shadow(@color) {
+  #gradient > .vertical-three-colors(lighten(@color, 15%), @color, 50%, darken(@color, 4%));
+  filter: none;
+  border: 1px solid darken(@color, 10%);
+}
+
+// Navbar =====================================================================
+
+.navbar {
+
+  .btn-shadow(@navbar-default-bg);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+
+  &-inverse {
+    .btn-shadow(@navbar-inverse-bg);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+
+    .badge {
+      background-color: #fff;
+      color: @navbar-inverse-bg;
+    }
+  }
+
+  .badge {
+    text-shadow: none;
+  }
+
+  &-nav > li > a,
+  &-nav > li > a:hover {
+    padding-top: @navbar-padding-vertical + 2px;
+    padding-bottom: @navbar-padding-vertical - 2px;
+    .transition(color ease-in-out .2s);
+  }
+  
+  &-brand,
+  &-brand:hover {
+    .transition(color ease-in-out .2s);
+  }
+
+  .caret,
+  .caret:hover {
+    .transition(border-color ease-in-out .2s);
+  }
+
+  .dropdown-menu {
+    text-shadow: none;
+  }
+}
+
+// Buttons ====================================================================
+
+.btn {
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+
+  &-default {
+    .btn-shadow(@btn-default-bg);
+
+    &:hover {
+      .btn-shadow(darken(@btn-default-bg, 4%));
+    }
+  }
+
+  &-primary {
+    .btn-shadow(@btn-primary-bg);
+
+    &:hover {
+      .btn-shadow(darken(@btn-primary-bg, 4%));
+    }
+  }
+
+  &-success {
+    .btn-shadow(@btn-success-bg);
+
+    &:hover {
+      .btn-shadow(darken(@btn-success-bg, 4%));
+    }
+  }
+
+  &-info {
+    .btn-shadow(@btn-info-bg);
+
+    &:hover {
+      .btn-shadow(darken(@btn-info-bg, 4%));
+    }
+  }
+
+  &-warning {
+    .btn-shadow(@btn-warning-bg);
+
+    &:hover {
+      .btn-shadow(darken(@btn-warning-bg, 4%));
+    }
+  }
+
+  &-danger {
+    .btn-shadow(@btn-danger-bg);
+
+    &:hover {
+      .btn-shadow(darken(@btn-danger-bg, 4%));
+    }
+  }
+
+  &:active,
+  &.active {
+    background-image: none;
+    .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+  }
+}
+
+
+
+// Typography =================================================================
+
+// Tables =====================================================================
+
+// Forms ======================================================================
+
+// Navs =======================================================================
+
+// Indicators =================================================================
+
+// Progress bars ==============================================================
+
+// Containers =================================================================
+
+.panel {
+
+  &-primary {
+    .panel-title {
+      color: #fff;
+    }
+  }
+}

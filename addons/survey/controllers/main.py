@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
 import logging
@@ -39,14 +21,14 @@ class WebsiteSurvey(http.Controller):
 
     ## HELPER METHODS ##
 
-    def _check_bad_cases(self, cr, uid, request, survey_obj, survey, user_input_obj, context=None):
+    def _check_bad_cases(self, cr, uid, request, survey_obj, survey, user_input_obj, token=None, context=None):
         # In case of bad survey, redirect to surveys list
         if survey_obj.exists(cr, SUPERUSER_ID, survey.id, context=context) == []:
             return werkzeug.utils.redirect("/survey/")
 
         # In case of auth required, block public user
         if survey.auth_required and uid == request.website.user_id.id:
-            return request.website.render("survey.auth_required", {'survey': survey})
+            return request.website.render("survey.auth_required", {'survey': survey, 'token': token})
 
         # In case of non open surveys
         if survey.stage_id.closed:
@@ -92,7 +74,7 @@ class WebsiteSurvey(http.Controller):
         # END Test mode
 
         # Controls if the survey can be displayed
-        errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, context=context)
+        errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, token=token, context=context)
         if errpage:
             return errpage
 

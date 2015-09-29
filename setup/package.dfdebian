@@ -1,6 +1,6 @@
 # Please note that this Dockerfile is used for testing nightly builds and should
 # not be used to deploy Odoo
-FROM debian:stable
+FROM debian:jessie
 MAINTAINER Odoo S.A. <info@odoo.com>
 
 RUN apt-get update && \
@@ -17,6 +17,8 @@ RUN apt-get update -qq &&  \
 	apt-get upgrade -qq -y && \
 	apt-get install \
 		adduser \
+		node-less \
+		node-clean-css \
 		postgresql \
 		postgresql-client \
 		python \
@@ -31,6 +33,7 @@ RUN apt-get update -qq &&  \
 		python-lxml \
 		python-mako \
 		python-mock \
+		python-ofxparse \
 		python-openid \
 		python-passlib \
 		python-psutil \
@@ -42,9 +45,8 @@ RUN apt-get update -qq &&  \
 		python-pypdf \
 		python-reportlab \
 		python-requests \
-		python-simplejson \
+		python-suds \
 		python-tz \
-		python-unittest2 \
 		python-vatnumber \
 		python-vobject \
 		python-werkzeug \

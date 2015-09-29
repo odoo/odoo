@@ -1,24 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import openerp
 from openerp import tools
 from openerp.osv import osv, fields
 
@@ -32,13 +15,14 @@ class product_style(osv.Model):
 class product_pricelist(osv.Model):
     _inherit = "product.pricelist"
     _columns = {
-        'code': fields.char('Promotional Code'),
+        'code': fields.char('E-commerce Promotional Code'),
     }
 
 
 class product_public_category(osv.osv):
     _name = "product.public.category"
-    _description = "Public Category"
+    _inherit = ["website.seo.metadata"]
+    _description = "Website Product Category"
     _order = "sequence, name"
 
     _constraints = [
@@ -60,54 +44,54 @@ class product_public_category(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
-
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('product.public.category','Parent Category', select=True),
         'child_id': fields.one2many('product.public.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
-
-        # NOTE: there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
-        # for at least one category, then we display a default image on the other, so that the buttons have consistent styling.
-        # In this case, the default image is set by the js code.
-        # NOTE2: image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Image",
-            help="This field holds the image used as image for the category, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image",
-            store={
-                'product.public.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized image of the category. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized image", type="binary", multi="_get_image",
-            store={
-                'product.public.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized image of the category. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
     }
 
+    # NOTE: there is no 'default image', because by default we don't show
+    # thumbnails for categories. However if we have a thumbnail for at least one
+    # category, then we display a default image on the other, so that the
+    # buttons have consistent styling.
+    # In this case, the default image is set by the js code.
+    image = openerp.fields.Binary("Image", attachment=True,
+        help="This field holds the image used as image for the category, limited to 1024x1024px.")
+    image_medium = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+        help="Medium-sized image of the category. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved. "\
+             "Use this field in form views or some kanban views.")
+    image_small = openerp.fields.Binary("Small-sized image",
+        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+        help="Small-sized image of the category. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
+
+    @openerp.api.depends('image')
+    def _compute_images(self):
+        for rec in self:
+            rec.image_medium = tools.image_resize_image_medium(rec.image)
+            rec.image_small = tools.image_resize_image_small(rec.image)
+
+    def _inverse_image_medium(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_medium)
+
+    def _inverse_image_small(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_small)
+
 class product_template(osv.Model):
-    _inherit = ["product.template", "website.seo.metadata"]
+    _inherit = ["product.template", "website.seo.metadata", 'website.published.mixin', 'rating.mixin']
     _order = 'website_published desc, website_sequence desc, name'
     _name = 'product.template'
     _mail_post_access = 'read'
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, '')
+        res = super(product_template, self)._website_url(cr, uid, ids, field_name, arg, context=context)
         for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = "/shop/product/%s" % (product.id,)
         return res
@@ -117,32 +101,29 @@ class product_template(osv.Model):
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
-                '&', ('model', '=', self._name), ('type', '=', 'comment')
+                '&', ('model', '=', self._name), ('message_type', '=', 'comment')
             ],
             string='Website Comments',
         ),
-        'website_published': fields.boolean('Available in the website', copy=False),
         'website_description': fields.html('Description for the website', translate=True),
-        'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Alternative Products', help='Appear on the product page'),
+        'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Suggested Products', help='Appear on the product page'),
         'accessory_product_ids': fields.many2many('product.product','product_accessory_rel','src_id','dest_id', string='Accessory Products', help='Appear on the shopping cart'),
         'website_size_x': fields.integer('Size X'),
         'website_size_y': fields.integer('Size Y'),
         'website_style_ids': fields.many2many('product.style', string='Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
-        'website_url': fields.function(_website_url, string="Website url", type="char"),
-        'public_categ_ids': fields.many2many('product.public.category', string='Public Category', help="Those categories are used to group similar products for e-commerce."),
+        'public_categ_ids': fields.many2many('product.public.category', string='Website Product Category', help="Those categories are used to group similar products for e-commerce."),
     }
 
     def _defaults_website_sequence(self, cr, uid, *l, **kwargs):
-        cr.execute('SELECT MAX(website_sequence)+1 FROM product_template')
-        next_sequence = cr.fetchone()[0] or 0
+        cr.execute('SELECT MIN(website_sequence)-1 FROM product_template')
+        next_sequence = cr.fetchone()[0] or 10
         return next_sequence
 
     _defaults = {
         'website_size_x': 1,
         'website_size_y': 1,
         'website_sequence': _defaults_website_sequence,
-        'website_published': False,
     }
 
     def set_sequence_top(self, cr, uid, ids, context=None):
@@ -177,18 +158,22 @@ class product_template(osv.Model):
         else:
             return self.set_sequence_bottom(cr, uid, ids, context=context)
 
+
 class product_product(osv.Model):
     _inherit = "product.product"
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = "/shop/product/%s" % (product.product_tmpl_id.id,)
-        return res
+    # Wrappers for call_kw with inherits
+    def open_website_url(self, cr, uid, ids, context=None):
+        template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
+        return self.pool['product.template'].open_website_url(cr, uid, [template_id], context=context)
 
-    _columns = {
-        'website_url': fields.function(_website_url, string="Website url", type="char"),
-    }
+    def website_publish_button(self, cr, uid, ids, context=None):
+        template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
+        return self.pool['product.template'].website_publish_button(cr, uid, [template_id], context=context)
+
+    def website_publish_button(self, cr, uid, ids, context=None):
+        template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
+        return self.pool['product.template'].website_publish_button(cr, uid, [template_id], context=context)
 
 class product_attribute(osv.Model):
     _inherit = "product.attribute"
@@ -198,6 +183,7 @@ class product_attribute(osv.Model):
     _defaults = {
         'type': lambda *a: 'radio',
     }
+
 
 class product_attribute_value(osv.Model):
     _inherit = "product.attribute.value"

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import threading
 import time
@@ -33,6 +15,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.modules import load_information_from_description_file
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -98,6 +81,14 @@ class ir_cron(osv.osv):
     _constraints = [
         (_check_args, 'Invalid arguments', ['args']),
     ]
+
+    def method_direct_trigger(self, cr, uid, ids, context=None):
+        if context is None:
+            context={}
+        cron_obj = self.browse(cr, uid, ids, context=context)
+        for cron in cron_obj:
+            self._callback(cr, uid, cron_obj.model, cron_obj.function, cron_obj.args, cron_obj.id)
+        return True
 
     def _handle_callback_exception(self, cr, uid, model_name, method_name, args, job_id, job_exception):
         """ Method called when an exception is raised by a job.
@@ -277,9 +268,9 @@ class ir_cron(osv.osv):
                        (tuple(ids),), log_exceptions=False)
         except psycopg2.OperationalError:
             cr.rollback() # early rollback to allow translations to work for the user feedback
-            raise osv.except_osv(_("Record cannot be modified right now"),
-                                 _("This cron task is currently being executed and may not be modified, "
-                                  "please try again in a few minutes"))
+            raise UserError(_("Record cannot be modified right now: "
+                                "This cron task is currently being executed and may not be modified "
+                                "Please try again in a few minutes"))
 
     def create(self, cr, uid, vals, context=None):
         res = super(ir_cron, self).create(cr, uid, vals, context=context)
@@ -310,5 +301,3 @@ class ir_cron(osv.osv):
         active = bool(self.pool[model].search_count(cr, uid, domain, context=context))
 
         return self.try_write(cr, uid, ids, {'active': active}, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

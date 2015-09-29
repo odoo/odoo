@@ -11,13 +11,13 @@
 </template>
 
 <template id="optional_products" inherit_id="website_sale.cart" name="Optional products">
-  <xpath expr="//table[@id='cart_products']/tbody//td[last()]/div" position="attributes">
+  <xpath expr="//table[@id='cart_products']/tbody//td[@id='td-qty']/div" position="attributes">
     <attribute name="t-if">not line.linked_line_id</attribute>
   </xpath>
   <xpath expr="//table[@id='cart_products']/tbody//tr" position="attributes">
     <attribute name="t-att-class">'optional_product info' if line.linked_line_id else ''</attribute>
   </xpath>
-  <xpath expr="//table[@id='cart_products']/tbody//td[last()]" position="inside">
+  <xpath expr="//table[@id='cart_products']/tbody//td[@id='td-qty']" position="inside">
     <t t-if="line.linked_line_id">
       <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-esc="int(line.product_uom_qty)"/>
     </t>
@@ -73,17 +73,13 @@
                 </td>
                 <td>
                   <div class="input-group oe_website_spinner">
-                      <span class="input-group-addon">
-                          <a t-attf-href="#" class="mb8 js_add_cart_json">
-                              <i class="fa fa-minus"></i>
-                          </a>
-                      </span>
+                      <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
+                          <i class="fa fa-minus"></i>
+                      </a>
                       <input type="text" class="js_quantity form-control" data-min="1" name="add_qty" value="1"/>
-                      <span class="input-group-addon">
-                          <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
-                              <i class="fa fa-plus"></i>
-                          </a>
-                      </span>
+                      <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json">
+                          <i class="fa fa-plus"></i>
+                      </a>
                   </div>
                 </td>
               </tr>

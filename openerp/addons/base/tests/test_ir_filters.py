@@ -34,10 +34,10 @@ class TestGetFilters(FiltersCase):
             self.cr, self.USER_ID, 'ir.filters')
 
         self.assertItemsEqual(map(noid, filters), [
-            dict(name='a', is_default=False, user_id=self.USER, domain='[]', context='{}'),
-            dict(name='b', is_default=False, user_id=self.USER, domain='[]', context='{}'),
-            dict(name='c', is_default=False, user_id=self.USER, domain='[]', context='{}'),
-            dict(name='d', is_default=False, user_id=self.USER, domain='[]', context='{}'),
+            dict(name='a', is_default=False, user_id=self.USER, domain='[]', context='{}', sort='[]'),
+            dict(name='b', is_default=False, user_id=self.USER, domain='[]', context='{}', sort='[]'),
+            dict(name='c', is_default=False, user_id=self.USER, domain='[]', context='{}', sort='[]'),
+            dict(name='d', is_default=False, user_id=self.USER, domain='[]', context='{}', sort='[]'),
         ])
 
     def test_global_filters(self):
@@ -53,10 +53,10 @@ class TestGetFilters(FiltersCase):
             self.cr, self.USER_ID, 'ir.filters')
 
         self.assertItemsEqual(map(noid, filters), [
-            dict(name='a', is_default=False, user_id=False, domain='[]', context='{}'),
-            dict(name='b', is_default=False, user_id=False, domain='[]', context='{}'),
-            dict(name='c', is_default=False, user_id=False, domain='[]', context='{}'),
-            dict(name='d', is_default=False, user_id=False, domain='[]', context='{}'),
+            dict(name='a', is_default=False, user_id=False, domain='[]', context='{}', sort='[]'),
+            dict(name='b', is_default=False, user_id=False, domain='[]', context='{}', sort='[]'),
+            dict(name='c', is_default=False, user_id=False, domain='[]', context='{}', sort='[]'),
+            dict(name='d', is_default=False, user_id=False, domain='[]', context='{}', sort='[]'),
         ])
 
     def test_no_third_party_filters(self):
@@ -71,8 +71,8 @@ class TestGetFilters(FiltersCase):
             self.cr, self.USER_ID, 'ir.filters')
 
         self.assertItemsEqual(map(noid, filters), [
-            dict(name='a', is_default=False, user_id=False, domain='[]', context='{}'),
-            dict(name='c', is_default=False, user_id=self.USER, domain='[]', context='{}'),
+            dict(name='a', is_default=False, user_id=False, domain='[]', context='{}', sort='[]'),
+            dict(name='c', is_default=False, user_id=self.USER, domain='[]', context='{}', sort='[]'),
         ])
 
 class TestOwnDefaults(FiltersCase):
@@ -97,7 +97,7 @@ class TestOwnDefaults(FiltersCase):
 
         self.assertItemsEqual(map(noid, filters), [
             dict(name='a', user_id=self.USER, is_default=True,
-                 domain='[]', context='{}')
+                 domain='[]', context='{}', sort='[]')
         ])
 
     def test_new_filter_not_default(self):
@@ -121,9 +121,9 @@ class TestOwnDefaults(FiltersCase):
         filters = Filters.get_filters(self.cr, self.USER_ID, 'ir.filters')
 
         self.assertItemsEqual(map(noid, filters), [
-            dict(name='a', user_id=self.USER, is_default=False, domain='[]', context='{}'),
-            dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}'),
-            dict(name='c', user_id=self.USER, is_default=True, domain='[]', context='{}'),
+            dict(name='a', user_id=self.USER, is_default=False, domain='[]', context='{}', sort='[]'),
+            dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}', sort='[]'),
+            dict(name='c', user_id=self.USER, is_default=True, domain='[]', context='{}', sort='[]'),
         ])
 
     def test_new_filter_existing_default(self):
@@ -147,9 +147,9 @@ class TestOwnDefaults(FiltersCase):
         filters = Filters.get_filters(self.cr, self.USER_ID, 'ir.filters')
 
         self.assertItemsEqual(map(noid, filters), [
-            dict(name='a', user_id=self.USER, is_default=False, domain='[]', context='{}'),
-            dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}'),
-            dict(name='c', user_id=self.USER, is_default=True, domain='[]', context='{}'),
+            dict(name='a', user_id=self.USER, is_default=False, domain='[]', context='{}', sort='[]'),
+            dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}', sort='[]'),
+            dict(name='c', user_id=self.USER, is_default=True, domain='[]', context='{}', sort='[]'),
         ])
 
     def test_update_filter_set_default(self):
@@ -173,8 +173,8 @@ class TestOwnDefaults(FiltersCase):
         filters = Filters.get_filters(self.cr, self.USER_ID, 'ir.filters')
 
         self.assertItemsEqual(map(noid, filters), [
-            dict(name='a', user_id=self.USER, is_default=True, domain='[]', context='{}'),
-            dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}'),
+            dict(name='a', user_id=self.USER, is_default=True, domain='[]', context='{}', sort='[]'),
+            dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}', sort='[]'),
         ])
 
 class TestGlobalDefaults(FiltersCase):
@@ -204,9 +204,9 @@ class TestGlobalDefaults(FiltersCase):
         filters = Filters.get_filters(self.cr, self.USER_ID, 'ir.filters')
 
         self.assertItemsEqual(map(noid, filters), [
-            dict(name='a', user_id=False, is_default=False, domain='[]', context='{}'),
-            dict(name='b', user_id=False, is_default=False, domain='[]', context='{}'),
-            dict(name='c', user_id=False, is_default=True, domain='[]', context='{}'),
+            dict(name='a', user_id=False, is_default=False, domain='[]', context='{}', sort='[]'),
+            dict(name='b', user_id=False, is_default=False, domain='[]', context='{}', sort='[]'),
+            dict(name='c', user_id=False, is_default=True, domain='[]', context='{}', sort='[]'),
         ])
 
     def test_new_filter_existing_default(self):
@@ -272,6 +272,6 @@ class TestGlobalDefaults(FiltersCase):
         filters = Filters.get_filters(self.cr, self.USER_ID, 'ir.filters')
 
         self.assertItemsEqual(map(noid, filters), [
-            dict(name='a', user_id=False, is_default=False, domain='[]', context='{}'),
-            dict(name='b', user_id=False, is_default=True, domain='[]', context=context_value),
+            dict(name='a', user_id=False, is_default=False, domain='[]', context='{}', sort='[]'),
+            dict(name='b', user_id=False, is_default=True, domain='[]', context=context_value, sort='[]'),
         ])

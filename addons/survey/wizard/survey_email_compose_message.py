@@ -1,28 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-Today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import osv
 from openerp.osv import fields
 from openerp.tools.translate import _
 from datetime import datetime
+from openerp.exceptions import UserError
 
 import re
 import uuid
@@ -92,7 +75,7 @@ class survey_mail_compose_message(osv.TransientModel):
                 else:
                     emails_checked.append(email)
         if error_message:
-            raise osv.except_osv(_('Warning!'), _("One email at least is incorrect: %s" % error_message))
+            raise UserError(_("One email at least is incorrect: %s" % error_message))
 
         emails_checked.sort()
         values = {'multi_email': '\n'.join(emails_checked)}
@@ -120,7 +103,7 @@ class survey_mail_compose_message(osv.TransientModel):
     # Wizard validation and send
     #------------------------------------------------------
 
-    def send_mail(self, cr, uid, ids, context=None):
+    def send_mail(self, cr, uid, ids, auto_commit=False, context=None):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed """
         if context is None:
@@ -153,7 +136,6 @@ class survey_mail_compose_message(osv.TransientModel):
                 'body_html': wizard.body.replace("__URL__", url),
                 'parent_id': None,
                 'partner_ids': partner_id and [(4, partner_id)] or None,
-                'notified_partner_ids': partner_id and [(4, partner_id)] or None,
                 'attachment_ids': wizard.attachment_ids or None,
                 'email_from': wizard.email_from or None,
                 'email_to': email,
@@ -179,13 +161,14 @@ class survey_mail_compose_message(osv.TransientModel):
                     'state': 'new',
                     'token': token,
                     'partner_id': partner_id,
-                    'email': email})
+                    'email': email},
+                    context=context)
                 return token
 
         for wizard in self.browse(cr, uid, ids, context=context):
             # check if __URL__ is in the text
             if wizard.body.find("__URL__") < 0:
-                raise osv.except_osv(_('Warning!'), _("The content of the text don't contain '__URL__'. \
+                raise UserError(_("The content of the text don't contain '__URL__'. \
                     __URL__ is automaticaly converted into the special url of the survey."))
 
             if not wizard.multi_email and not wizard.partner_ids and (context.get('default_partner_ids') or context.get('default_multi_email')):
@@ -210,7 +193,7 @@ class survey_mail_compose_message(osv.TransientModel):
             if not len(emails_list) and not len(partner_list):
                 if wizard.model == 'res.partner' and wizard.res_id:
                     return False
-                raise osv.except_osv(_('Warning!'), _("Please enter at least one valid recipient."))
+                raise UserError(_("Please enter at least one valid recipient."))
 
             for email in emails_list:
                 partner_id = partner_obj.search(cr, uid, [('email', '=', email)], context=context)

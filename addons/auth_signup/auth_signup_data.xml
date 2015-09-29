@@ -19,7 +19,7 @@
         </record>
 
         <!-- Email template for reset password -->
-        <record id="reset_password_email" model="email.template">
+        <record id="reset_password_email" model="mail.template">
             <field name="name">Reset Password</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="email_from"><![CDATA[${object.company_id.name} <${(object.company_id.email or user.email)|safe}>]]></field>
@@ -28,13 +28,13 @@
             <field name="body_html"><![CDATA[
 <p>A password reset was requested for the Odoo account linked to this email.</p>
 
-<p>You may change your password by following <a href="${object.signup_url}">this link</a>.</p>
+<p>You may change your password by following <a href="${object.signup_url}">this link</a>, which will remain valid during 24 hours.</p>
 
 <p>Note: If you do not expect this, you can safely ignore this email.</p>]]></field>
         </record>
 
         <!-- Email template for new users -->
-        <record id="set_password_email" model="email.template">
+        <record id="set_password_email" model="mail.template">
             <field name="name">Odoo Enterprise Connection</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="email_from"><![CDATA[${object.company_id.name} <${(object.company_id.email or user.email)|safe}>]]></field>

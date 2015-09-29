@@ -1,45 +1,24 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from difflib import get_close_matches
 import logging
 
-from openerp import tools
+from openerp import api, tools
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import AccessError, UserError
 
 _logger = logging.getLogger(__name__)
 
 TRANSLATION_TYPE = [
-    ('field', 'Field'),
+    ('field', 'Field'),                         # deprecated
     ('model', 'Object'),
-    ('rml', 'RML  (deprecated - use Report)'), # Pending deprecation - to be replaced by report!
     ('report', 'Report/Template'),
     ('selection', 'Selection'),
-    ('view', 'View'),
-    ('wizard_button', 'Wizard Button'),
-    ('wizard_field', 'Wizard Field'),
-    ('wizard_view', 'Wizard View'),
-    ('xsl', 'XSL'),
-    ('help', 'Help'),
+    ('view', 'View'),                           # deprecated
+    ('help', 'Help'),                           # deprecated
     ('code', 'Code'),
     ('constraint', 'Constraint'),
     ('sql_constraint', 'SQL Constraint')
@@ -77,15 +56,41 @@ class ir_translation_import_cursor(object):
     def push(self, trans_dict):
         """Feed a translation, as a dictionary, into the cursor
         """
-        params = dict(trans_dict, state="translated" if trans_dict['value'] else "to_translate")
+        if not trans_dict['value']:
+            return
+
+        params = dict(trans_dict, state="translated")
 
         if params['type'] == 'view':
             # ugly hack for QWeb views - pending refactoring of translations in master
             if params['imd_model'] == 'website':
                 params['imd_model'] = "ir.ui.view"
-            # non-QWeb views do not need a matching res_id -> force to 0 to avoid dropping them
-            elif params['res_id'] is None:
+            # non-QWeb views do not need a matching res_id in case they do not
+            # have an xml id -> force to 0 to avoid dropping them
+            elif params['res_id'] is None and not params['imd_name']:
+                # maybe we should insert this translation for all views of the
+                # given model?
                 params['res_id'] = 0
+
+        # backward compatibility: convert 'field', 'help', 'view' into 'model'
+        if params['type'] == 'field':
+            model, field = params['name'].split(',')
+            params['type'] = 'model'
+            params['name'] = 'ir.model.fields,field_description'
+            params['imd_model'] = 'ir.model.fields'
+            params['imd_name'] = 'field_%s_%s' % (model.replace('.', '_'), field)
+
+        elif params['type'] == 'help':
+            model, field = params['name'].split(',')
+            params['type'] = 'model'
+            params['name'] = 'ir.model.fields,help'
+            params['imd_model'] = 'ir.model.fields'
+            params['imd_name'] = 'field_%s_%s' % (model.replace('.', '_'), field)
+
+        elif params['type'] == 'view':
+            params['type'] = 'model'
+            params['name'] = 'ir.ui.view,arch_db'
+            params['imd_model'] = "ir.ui.view"
 
         self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)
                             VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s,
@@ -179,16 +184,18 @@ class ir_translation(osv.osv):
             context = {}
         res = dict.fromkeys(ids, False)
         for record in self.browse(cr, uid, ids, context=context):
-            if record.type != 'model':
-                res[record.id] = record.src
-            else:
-                model_name, field = record.name.split(',')
+            res[record.id] = record.src
+            if record.type == 'model':
+                model_name, field_name = record.name.split(',')
                 model = self.pool.get(model_name)
-                if model is not None:
+                if model is None:
+                    continue
+                field = model._fields[field_name]
+                if not callable(field.translate):
                     # Pass context without lang, need to read real stored field, not translation
                     context_no_lang = dict(context, lang=None)
-                    result = model.read(cr, uid, [record.res_id], [field], context=context_no_lang)
-                    res[record.id] = result[0][field] if result else False
+                    result = model.read(cr, uid, [record.res_id], [field_name], context=context_no_lang)
+                    res[record.id] = result[0][field_name] if result else False
         return res
 
     def _set_src(self, cr, uid, id, name, value, args, context=None):
@@ -198,15 +205,18 @@ class ir_translation(osv.osv):
         if context is None:
             context = {}
         record = self.browse(cr, uid, id, context=context)
-        if  record.type == 'model':
-            model_name, field = record.name.split(',')
+        if record.type == 'model':
+            model_name, field_name = record.name.split(',')
             model = self.pool.get(model_name)
-            #We need to take the context without the language information, because we want to write on the
-            #value store in db and not on the one associate with current language.
-            #Also not removing lang from context trigger an error when lang is different
-            context_wo_lang = context.copy()
-            context_wo_lang.pop('lang', None)
-            model.write(cr, uid, [record.res_id], {field: value}, context=context_wo_lang)
+            field = model._fields[field_name]
+            if not callable(field.translate):
+                # Make a context without language information, because we want
+                # to write on the value stored in db and not on the one
+                # associated with the current language. Also not removing lang
+                # from context trigger an error when lang is different.
+                context_wo_lang = context.copy()
+                context_wo_lang.pop('lang', None)
+                model.write(cr, uid, [record.res_id], {field_name: value}, context=context_wo_lang)
         return self.write(cr, uid, id, {'src': value}, context=context)
 
     _columns = {
@@ -241,25 +251,25 @@ class ir_translation(osv.osv):
     def _auto_init(self, cr, context=None):
         super(ir_translation, self)._auto_init(cr, context)
 
-        # FIXME: there is a size limit on btree indexed values so we can't index src column with normal btree.
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltns',))
-        if cr.fetchone():
-            #temporarily removed: cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
-            cr.execute('DROP INDEX ir_translation_ltns')
-            cr.commit()
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_lts',))
-        if cr.fetchone():
-            #temporarily removed: cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
-            cr.execute('DROP INDEX ir_translation_lts')
+        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname LIKE 'ir_translation_%'")
+        indexes = [row[0] for row in cr.fetchall()]
+
+        # Removed because there is a size limit on btree indexed values (problem with column src):
+        # cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
+        # cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
+        #
+        # Removed because hash indexes are not compatible with postgres streaming replication:
+        # cr.execute('CREATE INDEX ir_translation_src_hash_idx ON ir_translation USING hash (src)')
+        if set(indexes) & set(['ir_translation_ltns', 'ir_translation_lts', 'ir_translation_src_hash_idx']):
+            cr.execute('DROP INDEX IF EXISTS ir_translation_ltns, ir_translation_lts, ir_translation_src_hash_idx')
             cr.commit()
 
-        # add separate hash index on src (no size limit on values), as postgres 8.1+ is able to combine separate indexes
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_src_hash_idx',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_translation_src_hash_idx ON ir_translation using hash (src)')
+        # Add separate md5 index on src (no size limit on values, and good performance).
+        if 'ir_translation_src_md5' not in indexes:
+            cr.execute('CREATE INDEX ir_translation_src_md5 ON ir_translation (md5(src))')
+            cr.commit()
 
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltn',))
-        if not cr.fetchone():
+        if 'ir_translation_ltn' not in indexes:
             cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
 
@@ -268,7 +278,6 @@ class ir_translation(osv.osv):
             return
         return super(ir_translation, self)._check_selection_field_value(cr, uid, field, value, context=context)
 
-    @tools.ormcache_multi(skiparg=3, multi=6)
     def _get_ids(self, cr, uid, name, tt, lang, ids):
         translations = dict.fromkeys(ids, False)
         if ids:
@@ -284,8 +293,7 @@ class ir_translation(osv.osv):
         return translations
 
     def _set_ids(self, cr, uid, name, tt, lang, ids, value, src=None):
-        self._get_ids.clear_cache(self)
-        self.__get_source.clear_cache(self)
+        self.clear_caches()
         cr.execute('update ir_translation '
                   'set value=%s '
                   '  , src=%s '
@@ -313,12 +321,15 @@ class ir_translation(osv.osv):
 
     def _get_source_query(self, cr, uid, name, types, lang, source, res_id):
         if source:
+            # Note: the extra test on md5(src) is a hint for postgres to use the
+            # index ir_translation_src_md5
             query = """SELECT value
                        FROM ir_translation
                        WHERE lang=%s
                         AND type in %s
-                        AND src=%s"""
-            params = (lang or '', types, tools.ustr(source))
+                        AND src=%s AND md5(src)=md5(%s)"""
+            source = tools.ustr(source)
+            params = (lang or '', types, source, source)
             if res_id:
                 query += " AND res_id in %s"
                 params += (res_id,)
@@ -336,7 +347,7 @@ class ir_translation(osv.osv):
         
         return (query, params)
 
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('name', 'types', 'lang', 'source', 'res_id')
     def __get_source(self, cr, uid, name, types, lang, source, res_id):
         # res_id is a tuple or None, otherwise ormcache cannot cache it!
         query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)
@@ -375,28 +386,130 @@ class ir_translation(osv.osv):
                 res_id = tuple(res_id)
         return self.__get_source(cr, uid, name, types, lang, source, res_id)
 
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        ids = super(ir_translation, self).create(cr, uid, vals, context=context)
-        self.__get_source.clear_cache(self)
-        self._get_ids.clear_cache(self)
-        self.pool['ir.ui.view'].clear_cache()
-        return ids
+    @api.model
+    def _get_terms_query(self, field, records):
+        """ Utility function that makes the query for field terms. """
+        query = """ SELECT * FROM ir_translation
+                    WHERE lang=%s AND type=%s AND name=%s AND res_id IN %s """
+        name = "%s,%s" % (field.model_name, field.name)
+        params = (records.env.lang, 'model', name, tuple(records.ids))
+        return query, params
 
-    def write(self, cursor, user, ids, vals, context=None):
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if vals.get('src') or ('value' in vals and not(vals.get('value'))):
-            vals.update({'state':'to_translate'})
+    @api.model
+    def _get_terms_mapping(self, field, records):
+        """ Return a function mapping a ir_translation row (dict) to a value.
+        This method is called before querying the database for translations.
+        """
+        return lambda data: data['value']
+
+    @api.model
+    def _get_terms_translations(self, field, records):
+        """ Return the terms and translations of a given `field` on `records`.
+
+        :return: {record_id: {source: value}}
+        """
+        result = {rid: {} for rid in records.ids}
+        if records:
+            map_trans = self._get_terms_mapping(field, records)
+            query, params = self._get_terms_query(field, records)
+            self._cr.execute(query, params)
+            for data in self._cr.dictfetchall():
+                result[data['res_id']][data['src']] = map_trans(data)
+        return result
+
+    @api.model
+    def _sync_terms_translations(self, field, records):
+        """ Synchronize the translations to the terms to translate, after the
+        English value of a field is modified. The algorithm tries to match
+        existing translations to the terms to translate, provided the distance
+        between modified strings is not too large. It allows to not retranslate
+        data where a typo has been fixed in the English value.
+        """
+        if not callable(getattr(field, 'translate', None)):
+            return
+
+        trans = self.env['ir.translation']
+        outdated = trans
+        discarded = trans
+
+        for record in records:
+            # get field value and terms to translate
+            value = record[field.name]
+            terms = set(field.get_trans_terms(value))
+            record_trans = trans.search([
+                ('type', '=', 'model'),
+                ('name', '=', "%s,%s" % (field.model_name, field.name)),
+                ('res_id', '=', record.id),
+            ])
+
+            if not terms:
+                # discard all translations for that field
+                discarded += record_trans
+                continue
+
+            # remap existing translations on terms when possible
+            for trans in record_trans:
+                if trans.src not in terms:
+                    matches = get_close_matches(trans.src, terms, 1, 0.9)
+                    if matches:
+                        trans.write({'src': matches[0], 'state': trans.state})
+                    else:
+                        outdated += trans
+
+        # process outdated and discarded translations
+        outdated.write({'state': 'to_translate'})
+        discarded.unlink()
+
+    @api.model
+    @tools.ormcache_context('model_name', keys=('lang',))
+    def get_field_string(self, model_name):
+        """ Return the translation of fields strings in the context's language.
+        Note that the result contains the available translations only.
+
+        :param model_name: the name of a model
+        :return: the model's fields' strings as a dictionary `{field_name: field_string}`
+        """
+        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        return {field.name: field.field_description for field in fields}
+
+    @api.model
+    @tools.ormcache_context('model_name', keys=('lang',))
+    def get_field_help(self, model_name):
+        """ Return the translation of fields help in the context's language.
+        Note that the result contains the available translations only.
+
+        :param model_name: the name of a model
+        :return: the model's fields' help as a dictionary `{field_name: field_help}`
+        """
+        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        return {field.name: field.help for field in fields}
+
+    @api.model
+    def create(self, vals):
+        if vals.get('type') == 'model' and vals.get('value'):
+            # check and sanitize value
+            mname, fname = vals['name'].split(',')
+            field = self.env[mname]._fields[fname]
+            vals['value'] = field.check_trans_value(vals['value'])
+        record = super(ir_translation, self).create(vals)
+        self.clear_caches()
+        return record
+
+    @api.multi
+    def write(self, vals):
         if vals.get('value'):
-            vals.update({'state':'translated'})
-        result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
-        self.__get_source.clear_cache(self)
-        self._get_ids.clear_cache(self)
-        self.pool['ir.ui.view'].clear_cache()
+            vals.setdefault('state', 'translated')
+            ttype = vals.get('type') or self[:1].type
+            if ttype == 'model':
+                # check and sanitize value
+                name = vals.get('name') or self[:1].name
+                mname, fname = name.split(',')
+                field = self.env[mname]._fields[fname]
+                vals['value'] = field.check_trans_value(vals['value'])
+        elif vals.get('src') or not vals.get('value', True):
+            vals.setdefault('state', 'to_translate')
+        result = super(ir_translation, self).write(vals)
+        self.clear_caches()
         return result
 
     def unlink(self, cursor, user, ids, context=None):
@@ -405,43 +518,85 @@ class ir_translation(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        self.__get_source.clear_cache(self)
-        self._get_ids.clear_cache(self)
+        self.clear_caches()
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 
-    def translate_fields(self, cr, uid, model, id, field=None, context=None):
-        trans_model = self.pool[model]
-        domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
-        langs_ids = self.pool.get('res.lang').search(cr, uid, [('code', '!=', 'en_US')], context=context)
-        if not langs_ids:
-            raise osv.except_osv(_('Error'), _("Translation features are unavailable until you install an extra OpenERP translation."))
-        langs = [lg.code for lg in self.pool.get('res.lang').browse(cr, uid, langs_ids, context=context)]
+    @api.model
+    def insert_missing(self, field, records):
+        """ Insert missing translations for `field` on `records`. """
+        records = records.with_context(lang=None)
+        if callable(field.translate):
+            # insert missing translations for each term in src
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+                        FROM res_lang l
+                        WHERE l.code != 'en_US' AND NOT EXISTS (
+                            SELECT 1 FROM ir_translation
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
+                        );
+                    """
+            for record in records:
+                src = record[field.name] or None
+                for term in set(field.get_trans_terms(src)):
+                    self._cr.execute(query, {
+                        'name': "%s,%s" % (field.model_name, field.name),
+                        'res_id': record.id,
+                        'src': term,
+                    })
+        else:
+            # insert missing translations for src
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+                        FROM res_lang l
+                        WHERE l.code != 'en_US' AND NOT EXISTS (
+                            SELECT 1 FROM ir_translation
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
+                        );
+                        UPDATE ir_translation SET src=%(src)s
+                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
+                    """
+            for record in records:
+                self._cr.execute(query, {
+                    'name': "%s,%s" % (field.model_name, field.name),
+                    'res_id': record.id,
+                    'src': record[field.name] or None,
+                })
+        self.clear_caches()
+
+    @api.model
+    def translate_fields(self, model, id, field=None):
+        """ Open a view for translating the field(s) of the record (model, id). """
         main_lang = 'en_US'
-        translatable_fields = []
-        for k, f in trans_model._fields.items():
-            if getattr(f, 'translate', False):
-                if f.inherited:
-                    parent_id = trans_model.read(cr, uid, [id], [f.related[0]], context=context)[0][f.related[0]][0]
-                    translatable_fields.append({'name': k, 'id': parent_id, 'model': f.base_field.model_name})
-                    domain.insert(0, '|')
-                    domain.extend(['&', ('res_id', '=', parent_id), ('name', '=', "%s,%s" % (f.base_field.model_name, k))])
-                else:
-                    translatable_fields.append({'name': k, 'id': id, 'model': model })
-        if len(langs):
-            fields = [f.get('name') for f in translatable_fields]
-            record = trans_model.read(cr, uid, [id], fields, context={ 'lang': main_lang })[0]
-            for lg in langs:
-                for f in translatable_fields:
-                    # Check if record exists, else create it (at once)
-                    sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value)
-                        SELECT %s, %s, %s, 'model', %s, %s WHERE NOT EXISTS
-                        (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s AND type='model');
-                        UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s AND type='model';
-                        """
-                    src = record[f['name']] or None
-                    name = "%s,%s" % (f['model'], f['name'])
-                    cr.execute(sql, (lg, src , name, f['id'], src, lg, name, f['id'], src, lg, name, id))
+        if not self.env['res.lang'].search_count([('code', '!=', main_lang)]):
+            raise UserError(_("Translation features are unavailable until you install an extra translation."))
+
+        # determine domain for selecting translations
+        record = self.env[model].with_context(lang=main_lang).browse(id)
+        domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
+
+        def make_domain(fld, rec):
+            name = "%s,%s" % (fld.model_name, fld.name)
+            return ['&', ('res_id', '=', rec.id), ('name', '=', name)]
+
+        # insert missing translations, and extend domain for related fields
+        for name, fld in record._fields.items():
+            if not getattr(fld, 'translate', False):
+                continue
+
+            rec = record
+            if fld.related:
+                try:
+                    # traverse related fields up to their data source
+                    while fld.related:
+                        rec, fld = fld.traverse_related(rec)
+                    if rec:
+                        domain = ['|'] + domain + make_domain(fld, rec)
+                except AccessError:
+                    continue
+
+            assert fld.translate and rec._name == fld.model_name
+            self.insert_missing(fld, rec)
 
         action = {
             'name': 'Translate',
@@ -452,10 +607,11 @@ class ir_translation(osv.osv):
             'domain': domain,
         }
         if field:
-            f = trans_model._fields[field]
-            action['context'] = {
-                'search_default_name': "%s,%s" % (f.base_field.model_name, field)
-            }
+            fld = record._fields[field]
+            if not fld.related:
+                action['context'] = {
+                    'search_default_name': "%s,%s" % (fld.model_name, fld.name),
+                }
         return action
 
     def _get_import_cursor(self, cr, uid, context=None):
@@ -496,13 +652,10 @@ class ir_translation(osv.osv):
                     _logger.info('module %s: loading translation file (%s) for language %s', module_name, lang_code, lang)
                     tools.trans_load(cr, trans_file, lang, verbose=False, module_name=module_name, context=context)
                 elif lang_code != 'en_US':
-                    _logger.warning('module %s: no translation for language %s', module_name, lang_code)
+                    _logger.info('module %s: no translation for language %s', module_name, lang_code)
 
                 trans_extra_file = openerp.modules.get_module_resource(module_name, 'i18n_extra', lang_code + '.po')
                 if trans_extra_file:
                     _logger.info('module %s: loading extra translation file (%s) for language %s', module_name, lang_code, lang)
                     tools.trans_load(cr, trans_extra_file, lang, verbose=False, module_name=module_name, context=context)
         return True
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

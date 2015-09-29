@@ -1,19 +1,26 @@
 .oe_module_vignette {
     padding: 4px;
+    display: flex;
 }
-.oe_module_icon, .oe_module_desc {
-    display: inline-block;
-    vertical-align: top;
-}
+
 .oe_module_icon {
     width: 80px;
     height: 80px;
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 .oe_module_desc {
-    width: 210px;
     font-size: 13px;
     padding: 0px 5px;
+    flex-grow: 1;
+    position: relative;
+}
+
+.oe_module_desc > button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
 
 .oe_module_desc h4 {
@@ -31,9 +38,5 @@
 
 .oe_module_desc p {
     margin: 3px 0 5px;
-}
-
-.oe_module_desc .oe_button {
-    min-width: 70px;
 }
 

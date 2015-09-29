@@ -7,12 +7,10 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
-                <field name="property_account_position" position="after">
+                <field name="property_account_position_id" position="after">
                     <label for="vat"/>
-                    <div name="vat_info">
-                        <field name="vat" on_change="vat_change(vat)" placeholder="e.g. BE0477472701" class="oe_inline"/>
-                        <button colspan="2" name="button_check_vat" string="Check Validity" type="object" icon="gtk-execute" class="oe_inline"/>
-                        <field name="vat_subjected" class="oe_inline"/>
+                    <div name="vat_info" class="o_row">
+                        <field name="vat" placeholder="e.g. BE0477472701"/>
                     </div>
                 </field>
             </field>

@@ -6,7 +6,6 @@
     'summary': 'Payment Acquirer: Paypal Implementation',
     'version': '1.0',
     'description': """Paypal Payment Acquirer""",
-    'author': 'OpenERP SA',
     'depends': ['payment'],
     'data': [
         'views/paypal.xml',

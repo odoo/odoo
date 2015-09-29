@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record model="ir.config_parameter" id="google_app_key">
+            <field name="key">website_slides.google_app_key</field>
+            <field name="value">AIzaSyDOWlmDW-7DbLmOR9ZsT5AOEXf4n6TFwQA</field>
+            <field name="group_ids" eval="[(4, ref('base.group_system'))]" />
+        </record>
+
+        <record id="website_menu_slides" model="website.menu">
+            <field name="name">Presentations</field>
+            <field name="url">/slides</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">50</field>
+        </record>
+
+        <record id="slide_template_published" model="mail.template">
+            <field name="name">Slide Published</field>
+            <field name="subject">New ${object.slide_type} published on ${object.channel_id.name}</field>
+            <field name="model_id" ref="model_slide_slide"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+<div style="padding:0px; margin:0px;">
+<table cellpadding="0" cellspacing="0" style="width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px; background-color:#ffffff">
+    <tbody><tr>
+        <td style="width: 600px; text-align:center" valign="center">
+            <a href="${user.company_id.website}" style="text-decoration:none">
+                <img alt="Odoo" src="${ctx['base_url']}/logo.png" style="display:block; border:none; min-height:60px; margin:0 auto;">
+            </a>
+        </td>
+    </tr></tbody>
+</table>
+</div>
+<div style="padding:0px; margin:0px;">
+<table cellpadding="0" cellspacing="0" style="width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px;">
+    <tbody><tr>
+        <td style="width: 600px; text-align:center; color: #ffffff; background-color:#a24689;" valign="center">
+            <h2 style="margin:0px;">
+                New ${object.slide_type} published on ${object.channel_id.name}
+            </h2>
+        </td>
+    </tr><tr>
+        <td style="width: 600px; vertical-align:top; text-align:center; background-color:#FFFFF; color:#414141">
+            <a href="${object.website_url}" style="color: #a24689;">
+                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image" style="height:auto; width:500px; background-color: #cccccc; margin: 16px;">
+            </a>
+            <p style="font-size:24px; font-weight:bold"><a href="${object.website_url}">${object.name}</a></p>
+            <p style="color: #ccc;">Published on ${object.write_date}</p>
+            <p><a href="${object.website_url}">Click here to open the ${object.slide_type}</a></p>
+        </td>
+    </tr></tbody>
+</table>
+</div>
+<div style="padding:0px; margin:0px;">
+<table cellpadding="0" cellspacing="0" style="margin: 10px 0px 0px 0px; vertical-align: top;padding: 0px; font-family:arial; font-size:12px; color: #ffffff; background-color:#8f8f8f;">
+    <tbody><tr>
+        <td style="width: 600px; font-size:12px; text-align:center; padding-top:10px; color:#a24689; padding-bottom:5px">
+            <a href="${object.website_url}" style="color:#a24689">View in browser</a> |
+            <a href="/page/contactus" style="color:#a24689">Contact</a>
+        </td>
+    </tr></tbody>
+</table>
+</div>]]></field>
+        </record>
+
+        <record id="slide_template_shared" model="mail.template">
+            <field name="name">Slide Shared</field>
+            <field name="subject">${user.name} shared a ${object.slide_type} with you!</field>
+            <field name="model_id" ref="model_slide_slide"/>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${ctx['email']}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+<div style="padding:0px; margin:0px;">
+<table cellpadding="0" cellspacing="0" style="width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px; background-color:#ffffff">
+    <tbody><tr>
+        <td style="width: 600px; text-align:center" valign="center">
+            <a href="${user.company_id.website}" style="text-decoration:none">
+                <img alt="Odoo" src="${ctx['base_url']}/logo.png" style="display:block; border:none; min-height:60px; margin:0 auto;">
+            </a>
+        </td>
+    </tr></tbody>
+</table>
+</div>
+<div style="padding:0px; margin:0px;">
+<table cellpadding="0" cellspacing="0" style="width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px;">
+    <tbody><tr>
+        <td style="width: 600px; text-align:center; color: #ffffff; background-color:#a24689;" valign="center">
+            <h2 style="margin:0px;">
+                ${user.name} shared the ${object.slide_type} ${object.name} with you!
+            </h2>
+        </td>
+    </tr><tr>
+        <td style="width: 600px; vertical-align:top; text-align:center; background-color:#FFFFF; color:#414141">
+            <a href="${object.website_url}" style="color: #a24689;">
+                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image"
+                    style="height:auto; width:500px; background-color: #cccccc; margin: 16px;">
+            </a>
+            <p style="font-size:24px; font-weight:bold"><a href="${object.website_url}">${object.name}</a></p>
+            <p style="color: #ccc;">Published on ${object.write_date}</p>
+            <p><a href="${object.website_url}">Click here to open the ${object.slide_type}</a></p>
+        </td>
+    </tr></tbody>
+</table>
+</div>
+<div style="padding:0px; margin:0px;">
+<table cellpadding="0" cellspacing="0" style="margin: 10px 0px 0px 0px; vertical-align: top;padding: 0px; font-family:arial; font-size:12px; color: #ffffff; background-color:#8f8f8f;">
+    <tbody><tr>
+        <td style="width: 600px; font-size:12px; text-align:center; padding-top:10px; color:#a24689; padding-bottom:5px">
+            <a href="${object.website_url}" style="color:#a24689">View in browser</a> |
+            <a href="/page/contactus" style="color:#a24689">Contact</a>
+        </td>
+    </tr></tbody>
+</table>
+</div>]]></field>
+        </record>
+
+        <record model="slide.channel" id="channel_public">
+            <field name="name">Public Channel</field>
+            <field name="promote_strategy">most_viewed</field>
+            <field name="website_published" eval="True"/>
+            <field name="visibility">public</field>
+            <field name="description">Default channel for slides, all public users can access content of this channel.</field>
+        </record>
+        <record model="slide.channel" id="channel_partial">
+            <field name="name">Partner Channel</field>
+            <field name="website_published" eval="True"/>
+            <field name="group_ids" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+            <field name="upload_group_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="visibility">partial</field>
+            <field name="description">Used to publish slides in partner network privately.</field>
+        </record>
+        <record model="slide.channel" id="channel_private">
+            <field name="name">Employee Channel</field>
+            <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="visibility">private</field>
+            <field name="description">Used to publish internal slides of company.</field>
+        </record>
+
+        <!-- Channel subtypes -->
+        <record id="mt_channel_slide_published" model="mail.message.subtype">
+            <field name="name">Presentation Published</field>
+            <field name="res_model">slide.channel</field>
+            <field name="default" eval="True"/>
+            <field name="description">Presentation Published</field>
+        </record>
+
+        <!-- jump to Channel on installation complete -->
+        <record id="action_open_channels" model="ir.actions.act_url">
+            <field name="name">Channels</field>
+            <field name="target">self</field>
+            <field name="url" eval="'/slides'"/>
+        </record>
+        <record id="base.open_menu_channels" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_channels"/>
+            <field name="type">automatic</field>
+            <field name="state">open</field>
+        </record>
+    </data>
+</openerp>

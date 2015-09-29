@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="bank_journal" model="account.journal">
+            <field eval="True" name="journal_user"/>
+        </record>
+        <record model="pos.config" id="pos_config_main">
+            <field name="journal_ids" eval="[(6, 0, [ref('bank_journal')])]" />
+        </record>
+
+    </data>
+</openerp>

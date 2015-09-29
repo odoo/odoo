@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Helper functions for reports testing.
 
@@ -293,7 +275,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         loop += 1
         # This part tries to emulate the loop of the Gtk client
         if loop > 100:
-            _logger.error("Passed %d loops, giving up", loop)
+            _logger.info("Passed %d loops, giving up", loop)
             raise Exception("Too many loops at action")
         log_test("it is an %s action at loop #%d", action.get('type', 'unknown'), loop)
         result = _exec_action(action, datas, context)
@@ -305,5 +287,3 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         action = result
 
     return True
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

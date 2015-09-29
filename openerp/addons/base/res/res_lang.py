@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import locale
 from locale import localeconv
@@ -28,6 +10,7 @@ from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -175,12 +158,16 @@ class lang(osv.osv):
         (_check_grouping, "The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case.", ['grouping'])
     ]
 
-    @tools.ormcache(skiparg=3)
+    @tools.ormcache('lang')
+    def _lang_get(self, cr, uid, lang):
+        lang_ids = self.search(cr, uid, [('code', '=', lang)]) or \
+                   self.search(cr, uid, [('code', '=', 'en_US')])
+        return lang_ids[0]
+
+    @tools.ormcache('lang', 'monetary')
     def _lang_data_get(self, cr, uid, lang, monetary=False):
         if type(lang) in (str, unicode):
-            lang = self.search(cr, uid, [('code', '=', lang)]) or \
-                self.search(cr, uid, [('code', '=', 'en_US')])
-            lang = lang[0]
+            lang = self._lang_get(cr, uid, lang)
         conv = localeconv()
         lang_obj = self.browse(cr, uid, lang)
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
@@ -189,8 +176,21 @@ class lang(osv.osv):
         return grouping, thousands_sep, decimal_point
 
     def write(self, cr, uid, ids, vals, context=None):
-        for lang_id in ids :
-            self._lang_data_get.clear_cache(self)
+        if isinstance(ids, (int, long)):
+             ids = [ids]
+
+        if vals.get('active') == False:
+            users = self.pool.get('res.users')
+            if self.search_count(cr, uid, [('id', 'in', ids), ('code', '=', 'en_US')], context=context):
+                raise UserError(_("Base Language 'en_US' can not be deactivated!"))
+
+            for current_id in ids:
+                current_language = self.browse(cr, uid, current_id, context=context)
+                if users.search(cr, uid, [('lang', '=', current_language.code)], context=context):
+                    raise UserError(_("Cannot unactivate a language that is currently used by users."))
+
+        self._lang_get.clear_cache(self)
+        self._lang_data_get.clear_cache(self)
         return super(lang, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -200,14 +200,16 @@ class lang(osv.osv):
         for language in languages:
             ctx_lang = context.get('lang')
             if language['code']=='en_US':
-                raise osv.except_osv(_('User Error'), _("Base Language 'en_US' can not be deleted!"))
+                raise UserError(_("Base Language 'en_US' can not be deleted!"))
             if ctx_lang and (language['code']==ctx_lang):
-                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is User's Preferred Language!"))
+                raise UserError(_("You cannot delete the language which is User's Preferred Language!"))
             if language['active']:
-                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is Active!\nPlease de-activate the language first."))
+                raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
             trans_obj = self.pool.get('ir.translation')
             trans_ids = trans_obj.search(cr, uid, [('lang','=',language['code'])], context=context)
             trans_obj.unlink(cr, uid, trans_ids, context=context)
+        self._lang_get.clear_cache(self)
+        self._lang_data_get.clear_cache(self)
         return super(lang, self).unlink(cr, uid, ids, context=context)
 
     #
@@ -292,5 +294,3 @@ def intersperse(string, counts, separator=''):
     splits = split(reverse(rest), counts)
     res = separator.join(map(reverse, reverse(splits)))
     return left + res + right, len(splits) > 0 and len(splits) -1 or 0
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

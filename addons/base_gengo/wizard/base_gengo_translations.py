@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
 import logging
@@ -27,6 +9,7 @@ import time
 from openerp.osv import osv, fields
 from openerp import tools, SUPERUSER_ID
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -46,7 +29,7 @@ class base_gengo_translations(osv.osv_memory):
     _columns = {
         'sync_type': fields.selection([('send', 'Send New Terms'),
                                        ('receive', 'Receive Translation'),
-                                       ('both', 'Both')], "Sync Type"),
+                                       ('both', 'Both')], "Sync Type", required=True),
         'lang_id': fields.many2one('res.lang', 'Language', required=True),
         'sync_limit': fields.integer("No. of terms to sync"),
     }
@@ -99,17 +82,17 @@ class base_gengo_translations(osv.osv_memory):
 
         flag, gengo = self.gengo_authentication(cr, uid, context=context)
         if not flag:
-            raise osv.except_osv(_('Gengo Authentication Error'), gengo)
+            raise UserError(gengo)
         for wizard in self.browse(cr, uid, ids, context=context):
             supported_langs = self.pool.get('ir.translation')._get_all_supported_languages(cr, uid, context=context)
             language = self.pool.get('ir.translation')._get_gengo_corresponding_language(wizard.lang_id.code)
             if language not in supported_langs:
-                raise osv.except_osv(_("Warning"), _('This language is not supported by the Gengo translation services.'))
+                raise UserError(_('This language is not supported by the Gengo translation services.'))
 
             ctx = context.copy()
             ctx['gengo_language'] = wizard.lang_id.id
             if wizard.sync_limit > 200 or wizard.sync_limit < 1:
-                raise osv.except_osv(_("Warning"), _('Sync limit should between 1 to 200 for Gengo translation services.'))
+                raise UserError(_('The number of terms to sync should be between 1 to 200 to work with Gengo translation services.'))
             if wizard.sync_type in ['send', 'both']:
                 self._sync_request(cr, uid, wizard.sync_limit, context=ctx)
             if wizard.sync_type in ['receive', 'both']:
@@ -271,5 +254,3 @@ class base_gengo_translations(osv.osv_memory):
                     break
         except Exception, e:
             _logger.error("%s", e)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,35 +1,16 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Warehouse Management',
+    'name': 'Inventory Management',
     'version': '1.1',
-    'author': 'OpenERP SA',
-    'summary': 'Inventory, Logistic, Storage',
+    'summary': 'Inventory, Logistics, Warehousing',
     'description': """
 Manage multi-warehouses, multi- and structured stock locations
 ==============================================================
 
 The warehouse and inventory management is based on a hierarchical location structure, from warehouses to storage bins.
-The double entry inventory system allows you to manage customers, suppliers as well as manufacturing inventories.
+The double entry inventory system allows you to manage customers, vendors as well as manufacturing inventories.
 
 OpenERP has the capacity to manage lots and serial numbers ensuring compliance with the traceability requirements imposed by the majority of industries.
 
@@ -41,7 +22,7 @@ Key Features
 * Rapid detection of mistakes through double entry system
 * Traceability (Serial Numbers, Packages, ...)
 
-Dashboard / Reports for Warehouse Management will include:
+Dashboard / Reports for Inventory Management will include:
 ----------------------------------------------------------
 * Incoming Products (Graph)
 * Outgoing Products (Graph)
@@ -51,9 +32,9 @@ Dashboard / Reports for Warehouse Management will include:
 * Moves Analysis
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['product', 'procurement', 'board', 'web_kanban_gauge', 'web_kanban_sparkline'],
-    'category': 'Warehouse Management',
-    'sequence': 16,
+    'depends': ['product', 'procurement', 'barcodes', 'web_planner'],
+    'category': 'Inventory Management',
+    'sequence': 13,
     'demo': [
         'stock_demo_pre.yml',
         'stock_demo.xml',
@@ -65,6 +46,7 @@ Dashboard / Reports for Warehouse Management will include:
         'stock_location_demo_cpu3.yml',
     ],
     'data': [
+        'data/default_barcode_patterns.xml',
         'security/stock_security.xml',
         'security/ir.model.access.csv',
         'stock_data.xml',
@@ -74,7 +56,7 @@ Dashboard / Reports for Warehouse Management will include:
         'wizard/stock_return_picking_view.xml',
         'wizard/make_procurement_view.xml',
         'wizard/orderpoint_procurement_view.xml',
-        'wizard/stock_transfer_details.xml',
+        'report/report_stock_forecast.xml',
         'stock_incoterms.xml',
         'stock_report.xml',
         'stock_view.xml',
@@ -86,16 +68,19 @@ Dashboard / Reports for Warehouse Management will include:
         'views/report_package_barcode.xml',
         'views/report_lot_barcode.xml',
         'views/report_location_barcode.xml',
-        'views/report_stockpicking.xml',
+        'views/report_stockpicking_operations.xml',
+        'views/report_deliveryslip.xml',
         'views/report_stockinventory.xml',
-        'views/stock.xml',
+        'stock_dashboard.xml',
+        'wizard/stock_immediate_transfer.xml',
+        'wizard/stock_backorder_confirmation.xml',
+        'data/web_planner_data.xml',
     ],
     'test': [
         'test/inventory.yml',
         'test/move.yml',
         'test/procrule.yml',
         'test/stock_users.yml',
-        'stock_demo.yml',
         'test/shipment.yml',
         'test/packing.yml',
         'test/packingneg.yml',
@@ -104,7 +89,4 @@ Dashboard / Reports for Warehouse Management will include:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'qweb': ['static/src/xml/picking.xml'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

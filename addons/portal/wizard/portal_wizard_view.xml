@@ -24,29 +24,20 @@
                         The email address of each selected contact must be valid and unique.
                         If necessary, you can fix any contact's email address directly in the list.
                     </div>
-                    <field name="user_ids"/>
+                    <field name="user_ids">
+                        <tree string="Contacts" editable="bottom" create="false" delete="false">
+                            <field name="partner_id"/>
+                            <field name="email"/>
+                            <field name="in_portal"/>
+                        </tree>
+                    </field>
                     <field name="welcome_message"
                         placeholder="This text is included in the email sent to new portal users."/>
                     <footer>
-                        <button string="Apply" name="action_apply" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />    
+                        <button string="Apply" name="action_apply" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
-            </field>
-        </record>
-
-        <!-- wizard user list view -->
-        <record id="wizard_user_tree_view" model="ir.ui.view">
-            <field name="name">Portal Users</field>
-            <field name="model">portal.wizard.user</field>
-            <field name="arch" type="xml">
-                <!-- the contact list is editable, but one cannot add or delete rows -->
-                <tree string="Contacts" editable="bottom" create="false" delete="false">
-                    <field name="partner_id"/>
-                    <field name="email"/>
-                    <field name="in_portal"/>
-                </tree>
             </field>
         </record>
     </data>

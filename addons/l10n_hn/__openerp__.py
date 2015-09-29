@@ -1,23 +1,8 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
-#
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 # Copyright (c) 2009-2010 Salvatore Josué Trimarchi Pinto <salvatore@trigluu.com>
 # (http://trigluu.com)
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 #
 # This module provides a minimal Honduran chart of accounts that can be use
@@ -45,14 +30,12 @@ moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes
 and the Lempira currency.""",
     'author': 'Salvatore Josue Trimarchi Pinto',
     'website': 'http://trigluu.com',
-    'depends': ['base', 'account', 'account_chart'],
+    'depends': ['base', 'account'],
     'data': [
-        'account_types.xml',
         'account_chart.xml',
-        'account_tax.xml',
         'l10n_hn_base.xml',
+        'account_chart_template.yml',
     ],
     'demo': [],
     'installable': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

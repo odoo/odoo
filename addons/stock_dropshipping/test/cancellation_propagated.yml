@@ -9,7 +9,7 @@
 -
   Next I create a new product in this warehouse
 -
-  !record {model: product.product, id: product_mto}:
+  !record {model: product.product, id: product_mto, view: False}:
     name: "My Product"
     type: product
     uom_id: product.product_uom_unit
@@ -33,13 +33,17 @@
     partner_id: base.res_partner_3
     note: Create Sales order
     warehouse_id: wh_pps
+    pricelist_id: product.list0
     order_line:
       - product_id: product_mto
+        name: "product_mto"
         product_uom_qty: 5.00
+        product_uom: product.product_uom_unit
 - 
   Confirm the sale order
 - 
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_product_mto}
+  !python {model: sale.order}: |
+    self.action_confirm(cr, uid, ref("sale_order_product_mto"), context=context)
 -
   Create another sales order with 2 Dozen of the same product
 -
@@ -49,12 +53,14 @@
     warehouse_id: wh_pps
     order_line:
       - product_id: product_mto
+        name: "product_mto"
         product_uom_qty: 2.00
         product_uom: product.product_uom_dozen
 -
   Confirm the sale order
 -
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_product_mto2}
+  !python {model: sale.order}: |
+    self.action_confirm(cr, uid, ref("sale_order_product_mto2"), context=context)
 -
   I run scheduler.
 -
@@ -81,15 +87,19 @@
     purchase_ids = [proc.purchase_line_id.order_id for proc in self.browse(cr, uid, procu_ids) if proc.purchase_line_id]
     assert len(purchase_ids) == 1, 'No purchase order found !'
 
-    # Check the total quantity on the purchase order which should be in Unit(s)
+    # Check the two purchase order lines
+
     purchase_line = purchase_ids[0].order_line[0]
-    assert purchase_line.product_qty == 29.0, 'As we ordered 2 Dozen(s) and 5 Unit(s), total should be 29 Unit(s) and not %s' % (purchase_line.product_qty,)
+    assert purchase_line.product_qty == 5.0, 'The product quantity of the first order line should be 5 and not %s' % (purchase_line.product_qty,)
+    assert purchase_line.product_uom.id == ref("product.product_uom_unit"), 'The product UoM ID of the first order line should be %s and not %s' % (ref("product.product_uom_unit"), purchase_line.product_uom.id,)
+    purchase_line = purchase_ids[0].order_line[1]
+    assert purchase_line.product_qty == 2.0, 'The product quantity of the first order line should be 2 and not %s' % (purchase_line.product_qty,)
+    assert purchase_line.product_uom.id == ref("product.product_uom_dozen"), 'The product UoM ID of the second order line should be %s and not %s' % (ref("product.product_uom_dozen"), purchase_line.product_uom.id,)
 
     # Let us cancel the procurement related to the 2nd sales order first and check that the 2 Dozen(s) are subtracted correctly
     so2 = self.pool.get('sale.order').browse(cr, uid, ref('sale_order_product_mto2'))
     self.cancel(cr, uid, [so2.order_line[0].procurement_ids[0].id], context=context)
     assert so2.order_line[0].procurement_ids[0].state == u'cancel', 'Main procurement should be cancelled !'
-    assert purchase_line.product_qty == 5.0, 'As we ordered 2 Dozen(s) and 5 Unit(s) and cancelled the two Dozen, total should be 5 Unit(s) and not %s' % (purchase_line.product_qty,)
 
     # Cancel the main procurement from the sale order in units
     main_procu_id = self.search(cr, uid, [('origin', '=', so.name)])
@@ -100,7 +110,3 @@
     # Check that all procurements related are cancelled    
     for procu in self.browse(cr, uid, procu_ids, context=context):
         assert procu.state == u'cancel', 'Procurement %d should be cancelled but is with a state : %s!' %(procu.id, procu.state)
-
-    # Check that the purchase order is cancelled
-    for po in self.pool.get('purchase.order').browse(cr, uid, [po.id for po in purchase_ids], context=context):
-        assert po.state == u'cancel', 'Purchase order %d should be cancelled but is in state : %s!' %(po.id, po.state)  

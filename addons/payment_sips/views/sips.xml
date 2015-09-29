@@ -4,9 +4,9 @@
 
         <template id="sips_acquirer_button">
             <form t-att-action="tx_url" method="post" target="_self">
-                <input type="hidden" name="Data" t-att-value="tx_values['Data']"/>
-                <input type="hidden" name="InterfaceVersion" t-att-value="tx_values['InterfaceVersion']"/>
-                <input type="hidden" name="Seal" t-att-value="tx_values['Seal']"/>
+                <input type="hidden" name="Data" t-att-value="Data"/>
+                <input type="hidden" name="InterfaceVersion" t-att-value="InterfaceVersion"/>
+                <input type="hidden" name="Seal" t-att-value="Seal"/>
                 <!-- submit -->
                 <button type="submit" width="100px"
                     t-att-class="submit_class">

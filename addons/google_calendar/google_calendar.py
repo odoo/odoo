@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import operator
-import simplejson
+import json
 import urllib2
 
 import openerp
@@ -20,11 +20,8 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-def status_response(status, substr=False):
-    if substr:
-        return int(str(status)[0])
-    else:
-        return status_response(status, substr=True) == 2
+def status_response(status):
+    return int(str(status)[0]) == 2
 
 
 class Meta(type):
@@ -99,7 +96,6 @@ class SyncEvent(object):
                         tmpSrc = 'OE'
                     assert tmpSrc in ['GG', 'OE']
 
-                    #if self.OP.action == None:
                     if self[tmpSrc].isRecurrence:
                         if self[tmpSrc].status:
                             self.OP = Update(tmpSrc, 'Only need to update, because i\'m active')
@@ -271,7 +267,7 @@ class google_calendar(osv.AbstractModel):
 
         url = "/calendar/v3/calendars/%s/events?fields=%s&access_token=%s" % ('primary', urllib2.quote('id,updated'), self.get_token(cr, uid, context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        data_json = simplejson.dumps(data)
+        data_json = json.dumps(data)
 
         return gs_pool._do_request(cr, uid, url, data_json, headers, type='POST', context=context)
 
@@ -297,9 +293,8 @@ class google_calendar(osv.AbstractModel):
 
         try:
             st, content, ask_time = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
-        except Exception, e:
-
-            if (e.code == 401):  # Token invalid / Acces unauthorized
+        except urllib2.HTTPError, e:
+            if e.code == 401:  # Token invalid / Acces unauthorized
                 error_msg = "Your token is invalid or has been revoked !"
 
                 registry = openerp.modules.registry.RegistryManager.get(request.session.db)
@@ -319,7 +314,6 @@ class google_calendar(osv.AbstractModel):
             'fields': 'items,nextPageToken',
             'access_token': token,
             'maxResults': 1000,
-            #'timeMin': self.get_minTime(cr, uid, context=context).strftime("%Y-%m-%dT%H:%M:%S.%fz"),
         }
 
         if lastSync:
@@ -374,7 +368,7 @@ class google_calendar(osv.AbstractModel):
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data = self.generate_data(cr, uid, oe_event, context=context)
         data['sequence'] = google_event.get('sequence', 0)
-        data_json = simplejson.dumps(data)
+        data_json = json.dumps(data)
 
         status, content, ask_time = self.pool['google.service']._do_request(cr, uid, url, data_json, headers, type='PATCH', context=context)
 
@@ -408,7 +402,7 @@ class google_calendar(osv.AbstractModel):
 
         data['sequence'] = self.get_sequence(cr, uid, instance_id, context)
 
-        data_json = simplejson.dumps(data)
+        data_json = json.dumps(data)
         return gs_pool._do_request(cr, uid, url, data_json, headers, type='PUT', context=context)
 
     def update_from_google(self, cr, uid, event, single_event_dict, type, context):
@@ -559,18 +553,6 @@ class google_calendar(osv.AbstractModel):
         if context is None:
             context = {}
 
-        # def isValidSync(syncToken):
-        #     gs_pool = self.pool['google.service']
-        #     params = {
-        #         'maxResults': 1,
-        #         'fields': 'id',
-        #         'access_token': self.get_token(cr, uid, context),
-        #         'syncToken': syncToken,
-        #     }
-        #     url = "/calendar/v3/calendars/primary/events"
-        #     status, response = gs_pool._do_request(cr, uid, url, params, type='GET', context=context)
-        #     return int(status) != 410
-
         user_to_sync = ids and ids[0] or uid
         current_user = self.pool['res.users'].browse(cr, SUPERUSER_ID, user_to_sync, context=context)
 
@@ -644,8 +626,8 @@ class google_calendar(osv.AbstractModel):
                         att_obj.write(cr, uid, [att.id], {'google_internal_event_id': response['id'], 'oe_synchro_date': update_date})
                         cr.commit()
                     else:
-                        _logger.warning("Impossible to create event %s. [%s]" % (att.event_id.id, st))
-                        _logger.warning("Response : %s" % response)
+                        _logger.warning("Impossible to create event %s. [%s] Enable DEBUG for response detail.", att.event_id.id, st)
+                        _logger.debug("Response : %s" % response)
         return new_ids
 
     def get_context_no_virtual(self, context):
@@ -691,7 +673,7 @@ class google_calendar(osv.AbstractModel):
                             cr.commit()
                         else:
                             _logger.warning("Impossible to create event %s. [%s]" % (att.event_id.id, st))
-                            _logger.warning("Response : %s" % response)
+                            _logger.debug("Response : %s" % response)
                     except:
                         pass
         return new_ids
@@ -715,7 +697,7 @@ class google_calendar(osv.AbstractModel):
                     registry = openerp.modules.registry.RegistryManager.get(request.session.db)
                     with registry.cursor() as cur:
                         self.pool['res.users'].write(cur, SUPERUSER_ID, [uid], {'google_calendar_last_sync_date': False}, context=context)
-                error_key = simplejson.loads(str(e))
+                error_key = json.loads(str(e))
                 error_key = error_key.get('error', {}).get('message', 'nc')
                 error_msg = "Google is lost... the next synchro will be a full synchro. \n\n %s" % error_key
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
@@ -876,7 +858,7 @@ class google_calendar(osv.AbstractModel):
                         try:
                             self.delete_an_event(cr, uid, current_event[0], context=context)
                         except Exception, e:
-                            error = simplejson.loads(e.read())
+                            error = json.loads(e.read())
                             error_nr = error.get('error', {}).get('code')
                             # if already deleted from gmail or never created
                             if error_nr in (404, 410,):
@@ -940,7 +922,7 @@ class google_calendar(osv.AbstractModel):
         return current_user.google_calendar_rtoken is False
 
     def get_calendar_scope(self, RO=False):
-        readonly = RO and '.readonly' or ''
+        readonly = '.readonly' if RO else ''
         return 'https://www.googleapis.com/auth/calendar%s' % (readonly)
 
     def authorize_google_uri(self, cr, uid, from_url='http://www.openerp.com', context=None):
@@ -948,7 +930,7 @@ class google_calendar(osv.AbstractModel):
         return url
 
     def can_authorize_google(self, cr, uid, context=None):
-        return self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
+        return self.pool['res.users']._is_admin(cr, uid, [uid])
 
     def set_all_tokens(self, cr, uid, authorization_code, context=None):
         gs_pool = self.pool['google.service']

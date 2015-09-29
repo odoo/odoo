@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    <record id="event_question_0" model="event.question">
+        <field name="title">Kind of partner</field>
+        <field name="event_id" ref="event.event_1"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="event_question_1" model="event.question">
+        <field name="title">Veggie</field>
+        <field name="event_id" ref="event.event_1"/>
+        <field name="sequence">2</field>
+        <field name="is_individual" eval="True"/>
+    </record>
+    <record id="event_question_2" model="event.question">
+        <field name="title">Accommodation</field>
+        <field name="event_id" ref="event.event_1"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="event_suggestion_0_0" model="event.answer">
+        <field name="name">Gold</field>
+        <field name="question_id" ref="event_question_0"/>
+        <field name="sequence">3</field>
+    </record>
+    <record id="event_suggestion_0_1" model="event.answer">
+        <field name="name">Silver</field>
+        <field name="question_id" ref="event_question_0"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="event_suggestion_0_2" model="event.answer">
+        <field name="name">Bronze</field>
+        <field name="question_id" ref="event_question_0"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="event_suggestion_1_0" model="event.answer">
+        <field name="name">Yes</field>
+        <field name="question_id" ref="event_question_1"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="event_suggestion_1_1" model="event.answer">
+        <field name="name">No</field>
+        <field name="question_id" ref="event_question_1"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="event_suggestion_2_0" model="event.answer">
+        <field name="name">Personal</field>
+        <field name="question_id" ref="event_question_2"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="event_suggestion_2_1" model="event.answer">
+        <field name="name">In Charge</field>
+        <field name="question_id" ref="event_question_2"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="event.reg_1_1" model="event.registration">
+        <field name="answer_ids" eval="[(4, ref('event_suggestion_0_0')), (4, ref('event_suggestion_1_1')), (4, ref('event_suggestion_2_0'))]"/>
+    </record>
+    <record id="event.reg_1_2" model="event.registration">
+        <field name="answer_ids" eval="[(4, ref('event_suggestion_0_2')), (4, ref('event_suggestion_1_1')), (4, ref('event_suggestion_2_0'))]"/>
+    </record>
+    <record id="event.reg_1_3" model="event.registration">
+        <field name="answer_ids" eval="[(4, ref('event_suggestion_0_0')), (4, ref('event_suggestion_1_0')), (4, ref('event_suggestion_2_1'))]"/>
+    </record>
+
+    </data>
+</openerp>

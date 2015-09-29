@@ -11,14 +11,18 @@
             <t t-foreach="p['lines']" t-as="l">
                 <tr>
                     <td><span t-field="l.name"/></td>
-                    <td><span t-field="l.quantity"/>
-                        <span t-field="l.uos_id" groups="product.group_uom"/></td>
+                    <td class="text-right">
+                        <span t-field="l.quantity"/>
+                        <span t-field="l.uom_id"  groups="product.group_uom"/>
+                    </td>
                     <td class="text-right">
                         <span t-field="l.price_unit"/>
                     </td>
-                    <td class="text-right" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
-                    <td class="text-right">
-                        <span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_id))"/>
+                    <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                        <span t-field="l.discount"/>
+                    </td>
+                    <td>
+                        <span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_ids))"/>
                     </td>
                     <td class="text-right">
                         <span t-field="l.price_subtotal" 
@@ -45,12 +49,11 @@
                     <thead>
                         <tr>
                             <th>Description</th>
-                            <th>Quantity</th>
-                            <th groups="product.group_uom">Unit of measure</th>
+                            <th class="text-right">Quantity</th>
                             <th class="text-right">Unit Price</th>
-                            <th class="text-right" groups="sale.group_discount_per_so_line">Discount (%)</th>
-                            <th class="text-right">Taxes</th>
-                            <th class="text-right">Amount</th>
+                            <th t-if="display_discount" groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                            <th>Taxes</th>
+                            <th class="text-right">Price</th>
                         </tr>
                     </thead>
                     <![CDATA[

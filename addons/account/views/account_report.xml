@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- QWeb Reports -->
+        <report 
+            id="account_invoices"
+            model="account.invoice"
+            string="Invoices"
+            report_type="qweb-pdf"
+            name="account.report_invoice"
+            file="account.report_invoice"
+            attachment_use="True"
+            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+        />
+
+        <report 
+            id="account_invoice_action_report_duplicate"
+            model="account.invoice"
+            string="Duplicates"
+            report_type="qweb-pdf"
+            name="account.account_invoice_report_duplicate_main"
+            file="account.report_invoice_duplicate"
+            attachment_use="False"
+        />
+
+        <report 
+            id="action_report_print_overdue"
+            model="res.partner"
+            report_type="qweb-pdf"
+            string="Due Payments"
+            name="account.report_overdue"
+            file="account.report_overdue"
+            />
+
+        <report 
+            id="action_report_general_ledger"
+            model="account.report.general.ledger"
+            string="General Ledger"
+            report_type="qweb-pdf"
+            name="account.report_generalledger"
+            file="account.report_generalledger"
+            />
+
+        <report 
+            id="action_report_trial_balance"
+            model="account.balance.report"
+            string="Trial Balance"
+            report_type="qweb-pdf"
+            name="account.report_trialbalance"
+            file="account.report_trialbalance"
+            />
+
+        <report 
+            id="action_report_financial"
+            model="account.financial.report"
+            string="Financial report"
+            report_type="qweb-pdf"
+            name="account.report_financial"
+            file="account.report_financial"
+            />
+
+        <report
+            id="action_report_aged_partner_balance"
+            model="res.partner"
+            string="Aged Partner Balance"
+            menu="False"
+            report_type="qweb-pdf"
+            name="account.report_agedpartnerbalance"
+            file="account.report_agedpartnerbalance"
+        />
+
+    </data>
+</openerp>

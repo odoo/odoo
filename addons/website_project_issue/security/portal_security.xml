@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="portal_issue_rule" model="ir.rule">
+            <field name="name">Project/Issue: portal users: (portal and colleagues following) or (followers and following)</field>
+            <field name="model_id" ref="project_issue.model_project_issue"/>
+            <field name="domain_force">['|',
+                                            '&amp;',
+                                                ('project_id.privacy_visibility', '=', 'portal'),
+                                                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                                            '&amp;',
+                                                ('project_id.privacy_visibility', '=', 'followers'),
+                                                ('message_partner_ids', 'in', [user.partner_id.id]),
+                                        ]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+        <record model="ir.rule" id="project_issue.issue_user_rule">
+            <field name="name">Project/Issue: employees: portal, employee or (followers and following)</field>
+            <field name="domain_force">['|',
+                                            ('project_id.privacy_visibility', 'in', ['portal', 'employees']),
+                                            '&amp;',
+                                                ('project_id.privacy_visibility', '=', 'followers'),
+                                                ('message_partner_ids', 'in', [user.partner_id.id]),
+                                        ]</field>
+        </record>
+    </data>
+</openerp>

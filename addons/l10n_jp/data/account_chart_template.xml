@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_jp_statements_menu" name="Japanese Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
+
+    <data noupdate="1">
+        <record id="action_client_l10n_jp_menu" model="ir.actions.client">
+            <field name="name">Open Account Dashboard Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_board_journal_1')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_l10n_jp_menu"/>
+            <field name="state">open</field>
+        </record>
+    </data>
+    
+    <!-- Chart Template -->
+    <record id="transfer_account_id" model="account.account.template">
+        <field name="code">A11109</field>
+        <field name="name">振替口座</field>
+        <field name="reconcile" eval='True'/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+    </record>
+    <record id="l10n_jp1" model="account.chart.template">
+        <field name="name">日本勘定設定テンプレート</field>
+        <field name="code_digits">7</field>
+        <field name="bank_account_code_prefix">A11102</field>
+        <field name="cash_account_code_prefix">A11105</field>
+        <field name="currency_id" ref="base.JPY"/>
+        <field name="transfer_account_id" ref="transfer_account_id"/>
+    </record>
+    <record id="transfer_account_id" model="account.account.template">
+        <field name="chart_template_id" ref="l10n_jp1"/>
+    </record>
+
+    <!-- Account Tags -->
+    <record id="tax_tag_01" model="account.account.tag">
+        <field name="name">仮受消費税(外)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_02" model="account.account.tag">
+        <field name="name">仮受消費税(内)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_03" model="account.account.tag">
+        <field name="name">仮払消費税(外)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_04" model="account.account.tag">
+        <field name="name">仮払消費税(内)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_05" model="account.account.tag">
+        <field name="name">輸出免税</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_06" model="account.account.tag">
+        <field name="name">非課税販売</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_07" model="account.account.tag">
+        <field name="name">海外仕入</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_08" model="account.account.tag">
+        <field name="name">非課税購買</field>
+        <field name="applicability">taxes</field>
+    </record>
+</odoo>

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-2014 OpenERP (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
 from openerp.exceptions import AccessError
@@ -30,22 +12,22 @@ from openerp.exceptions import AccessError
 from openerp.osv import osv, fields
 
 
-class res_partner(osv.Model):
-    _inherit = 'res.partner'
-
-    #
-    # add related fields to test them
-    #
+class Alpha(osv.Model):
+    _name = 'test_new_api.alpha'
     _columns = {
-        # a regular one
-        'related_company_partner_id': fields.related(
-            'company_id', 'partner_id', type='many2one', obj='res.partner'),
+        'name': fields.char(),
+    }
+
+class Bravo(osv.Model):
+    _name = 'test_new_api.bravo'
+    _columns = {
+        'alpha_id': fields.many2one('test_new_api.alpha'),
+        # a related field with a non-trivial path
+        'alpha_name': fields.related('alpha_id', 'name', type='char'),
         # a related field with a single field
-        'single_related_company_id': fields.related(
-            'company_id', type='many2one', obj='res.company'),
+        'related_alpha_id': fields.related('alpha_id', type='many2one', obj='test_new_api.alpha'),
         # a related field with a single field that is also a related field!
-        'related_related_company_id': fields.related(
-            'single_related_company_id', type='many2one', obj='res.company'),
+        'related_related_alpha_id': fields.related('related_alpha_id', type='many2one', obj='test_new_api.alpha'),
     }
 
 
@@ -98,8 +80,10 @@ class Category(models.Model):
     _name = 'test_new_api.category'
 
     name = fields.Char(required=True)
+    color = fields.Integer('Color Index')
     parent = fields.Many2one('test_new_api.category')
     display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name')
+    dummy = fields.Char(store=False)
     discussions = fields.Many2many('test_new_api.discussion', 'test_new_api_discussion_category',
                                    'category', 'discussion')
 
@@ -127,10 +111,11 @@ class Category(models.Model):
         # assign name of last category, and reassign display_name (to normalize it)
         self.name = names[-1].strip()
 
+    @api.multi
     def read(self, fields=None, load='_classic_read'):
         if self.search_count([('id', 'in', self._ids), ('name', '=', 'NOACCESS')]):
             raise AccessError('Sorry')
-        return super(Category, self).read(fields, load)
+        return super(Category, self).read(fields=fields, load=load)
 
 class Discussion(models.Model):
     _name = 'test_new_api.discussion'
@@ -142,7 +127,7 @@ class Discussion(models.Model):
         'test_new_api_discussion_category', 'discussion', 'category')
     participants = fields.Many2many('res.users')
     messages = fields.One2many('test_new_api.message', 'discussion')
-    message_changes = fields.Integer(string='Message changes')
+    message_concat = fields.Text(string='Message concatenate')
 
     @api.onchange('moderator')
     def _onchange_moderator(self):
@@ -150,7 +135,7 @@ class Discussion(models.Model):
 
     @api.onchange('messages')
     def _onchange_messages(self):
-        self.message_changes = len(self.messages)
+        self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
 class Message(models.Model):

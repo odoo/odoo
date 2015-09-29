@@ -3,15 +3,14 @@
 # * payment
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:44+0000\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-09 17:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
+"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,54 +18,113 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: payment
-#: help:account.config.settings,module_payment_adyen:0
+#: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
+msgid ""
+"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"                self.env['my.model'].payment_validated(self)"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
 msgid "-It installs the module payment_adyen."
 msgstr "-Namesti modul payment_adyen."
 
 #. module: payment
-#: help:account.config.settings,module_payment_buckaroo:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
+msgid "-It installs the module payment_authorize."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
 msgid "-It installs the module payment_buckaroo."
 msgstr "-Namesti modul payment_buckaroo."
 
 #. module: payment
-#: help:account.config.settings,module_payment_ogone:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
 msgid "-It installs the module payment_ogone."
 msgstr "-Namesti modul payment_ogone."
 
 #. module: payment
-#: help:account.config.settings,module_payment_paypal:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
 msgid "-It installs the module payment_paypal."
 msgstr "-Namesti modul payment_paypal."
 
 #. module: payment
-#: field:payment.transaction,acquirer_id:0
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
+msgid "-It installs the module payment_transfer."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
+msgid "3D Secure HTML"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
 msgstr "Prejemnik"
 
 #. module: payment
-#: field:payment.transaction,acquirer_reference:0
-msgid "Acquirer Order Reference"
-msgstr "Prejemnikov sklic naloga"
+#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_id
+msgid "Acquirer Account"
+msgstr ""
 
 #. module: payment
-#: field:payment.transaction,partner_address:0
+#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_ref
+msgid "Acquirer Ref."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
+msgid "Acquirer Reference"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method_active
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
+msgid "Add Extra Fees"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Address"
 msgstr "Naslov"
 
 #. module: payment
-#: field:payment.transaction,amount:0
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_adyen
+msgid "Adyen"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
+#: model:ir.model.fields,help:payment.field_payment_transaction_amount
 msgid "Amount"
 msgstr "Znesek"
 
 #. module: payment
-#: help:payment.transaction,amount:0
-msgid "Amount in cents"
-msgstr "Znesek v centih"
+#: selection:payment.acquirer,auto_confirm:0
+msgid "At payment no acquirer confirmation needed"
+msgstr ""
 
 #. module: payment
-#: selection:payment.acquirer,validation:0
-msgid "Automatic"
-msgstr "Samodejno"
+#: selection:payment.acquirer,auto_confirm:0
+msgid "At payment with acquirer confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
+msgid "Buckaroo"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
+msgid "Cancel Message"
+msgstr ""
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -74,50 +132,86 @@ msgid "Canceled"
 msgstr "Preklicano"
 
 #. module: payment
-#: field:payment.transaction,partner_city:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "City"
-msgstr "Mesto/kraj"
+msgstr "Kraj"
 
 #. module: payment
-#: field:payment.acquirer,company_id:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
 msgstr "Družba"
 
 #. module: payment
-#: field:payment.acquirer,fees_active:0
-msgid "Compute fees"
-msgstr "Izračun pristojbin"
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "Configuration"
+msgstr "Nastavitve"
 
 #. module: payment
-#: field:payment.transaction,partner_country_id:0
+#: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
+msgid "Configure payment acquiring methods"
+msgstr "Nastavitve metod prejema plačila"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_count
+msgid "Count Payment Method"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Country"
 msgstr "Država"
 
 #. module: payment
-#: field:payment.acquirer,create_uid:0 field:payment.transaction,create_uid:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_method_create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_uid
 msgid "Created by"
 msgstr "Ustvaril"
 
 #. module: payment
-#: field:payment.acquirer,create_date:0
-#: field:payment.transaction,create_date:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_date
+#: model:ir.model.fields,field_description:payment.field_payment_method_create_date
 msgid "Created on"
 msgstr "Ustvarjeno"
 
 #. module: payment
-#: field:payment.transaction,date_create:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_date
 msgid "Creation Date"
-msgstr "Datum nastanka"
+msgstr "Datum kreiranja"
 
 #. module: payment
-#: field:payment.transaction,currency_id:0
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "Credentials"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
+msgid "Credit card(s)"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
 msgid "Currency"
 msgstr "Valuta"
 
 #. module: payment
-#: help:payment.transaction,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "Datum zadnjega objavljenega sporočila na zapisu."
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Customer Details"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
+msgid "Determine the display order"
+msgstr "Določi vrstni red prikaza"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_method_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -125,17 +219,27 @@ msgid "Done"
 msgstr "Opravljeno"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
+msgid "Done Message"
+msgstr ""
+
+#. module: payment
 #: selection:payment.transaction,state:0
 msgid "Draft"
 msgstr "Osnutek"
 
 #. module: payment
-#: field:payment.transaction,partner_email:0
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "E-mail"
+msgstr "E-pošta"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
 msgid "Email"
 msgstr "E-pošta"
 
 #. module: payment
-#: field:payment.acquirer,environment:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
 msgid "Environment"
 msgstr "Okolje"
 
@@ -145,34 +249,34 @@ msgid "Error"
 msgstr "Napaka"
 
 #. module: payment
-#: field:payment.transaction,fees:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_error_msg
+msgid "Error Message"
+msgstr "Sporočilo napake"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
 msgid "Fees"
 msgstr "Pristojbine"
 
 #. module: payment
-#: help:payment.transaction,fees:0
+#: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
 msgstr "Znesek pristojbin; določi sistem ker je odvisen od prejemnika"
 
 #. module: payment
-#: help:payment.transaction,state_message:0
+#: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
 msgstr "Polja za shranjevanje napak in/ali sporočil o overjanju v informativne namene"
 
 #. module: payment
-#: field:payment.acquirer,fees_dom_fixed:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
 msgid "Fixed domestic fees"
 msgstr "Fiksne domače pristojbine"
 
 #. module: payment
-#: field:payment.acquirer,fees_int_fixed:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
 msgid "Fixed international fees"
 msgstr "Fiksne tuje pristojbine"
-
-#. module: payment
-#: field:payment.transaction,message_follower_ids:0
-msgid "Followers"
-msgstr "Sledilci"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -180,155 +284,196 @@ msgid "Form"
 msgstr "Obrazec"
 
 #. module: payment
-#: field:payment.acquirer,view_template_id:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
 msgid "Form Button Template"
 msgstr "Predloga gumba za obrazec"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_search
+#: selection:payment.transaction,type:0
+msgid "Form with credentials storage"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Group By"
-msgstr "Združi po"
+msgstr "Združeno po"
 
 #. module: payment
-#: help:payment.transaction,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v html formatu, da se lahko vstavlja v poglede kanban."
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
+msgid "Help Message"
+msgstr ""
 
 #. module: payment
-#: field:payment.acquirer,id:0 field:payment.transaction,id:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
+#: model:ir.model.fields,field_description:payment.field_payment_method_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_id
 msgid "ID"
 msgstr "ID"
 
 #. module: payment
-#: help:payment.transaction,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
+msgid "Image"
+msgstr "Slika"
 
 #. module: payment
-#: field:payment.transaction,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Je sledilec"
+#: model:ir.model.fields,help:payment.field_payment_transaction_reference
+msgid "Internal reference of the TX"
+msgstr ""
 
 #. module: payment
-#: field:payment.transaction,partner_lang:0
-msgid "Lang"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
+msgid "Language"
 msgstr "Jezik"
 
 #. module: payment
-#: field:payment.transaction,message_last_post:0
-msgid "Last Message Date"
-msgstr "Datum zadnjega sporočila"
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_method___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
 
 #. module: payment
-#: field:payment.acquirer,write_uid:0 field:payment.transaction,write_uid:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_method_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
 msgid "Last Updated by"
 msgstr "Zadnjič posodobil"
 
 #. module: payment
-#: field:payment.acquirer,write_date:0 field:payment.transaction,write_date:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_method_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
 msgid "Last Updated on"
 msgstr "Zadnjič posodobljeno"
 
 #. module: payment
-#: help:payment.acquirer,website_published:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
 msgstr "Omogoči razpoložljivost prejemnika plačila (izdani računi, itd.)"
 
 #. module: payment
-#: field:account.config.settings,module_payment_adyen:0
-msgid "Manage Payments Using Adyen"
-msgstr "Upravljanje plačil z Adyen"
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
+msgid "Medium-sized image"
+msgstr "Srednje velika slika"
 
 #. module: payment
-#: field:account.config.settings,module_payment_buckaroo:0
-msgid "Manage Payments Using Buckaroo"
-msgstr "Upravljanje plačil z Buckaroo"
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image_medium
+msgid ""
+"Medium-sized image of this provider. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved. Use this field in form views "
+"or some kanban views."
+msgstr ""
 
 #. module: payment
-#: field:account.config.settings,module_payment_ogone:0
-msgid "Manage Payments Using Ogone"
-msgstr "Upravljanje plačil z Ogone"
-
-#. module: payment
-#: field:account.config.settings,module_payment_paypal:0
-msgid "Manage Payments Using Paypal"
-msgstr "Upravljanje plačil s Paypal"
-
-#. module: payment
-#: selection:payment.acquirer,validation:0
-msgid "Manual"
-msgstr "Ročno"
-
-#. module: payment
-#: field:payment.acquirer,pre_msg:0 field:payment.transaction,state_message:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Message"
 msgstr "Sporočilo"
 
 #. module: payment
-#: help:payment.acquirer,post_msg:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
 msgid "Message displayed after having done the payment process."
 msgstr "Sporočilo, ki se prikaže, ko se opravi postopek plačevanja."
 
 #. module: payment
-#: help:payment.acquirer,pre_msg:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
 msgid "Message displayed to explain and help the payment process."
 msgstr "Sporočilo za razlago in pomoč pri postopku plačevanja."
 
 #. module: payment
-#: field:payment.transaction,message_ids:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
+msgid "Message displayed, if error is occur during the payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
+msgid "Message displayed, if order is cancel during the payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
+msgid ""
+"Message displayed, if order is done successfully after having done the "
+"payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
+msgid ""
+"Message displayed, if order is in pending state after having done the "
+"payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Messages"
 msgstr "Sporočila"
 
 #. module: payment
-#: help:payment.transaction,message_ids:0
-msgid "Messages and communication history"
-msgstr "Komunikacije in kronologija"
-
-#. module: payment
-#: field:payment.acquirer,name:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
+#: model:ir.model.fields,field_description:payment.field_payment_method_name
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Name"
 msgstr "Naziv"
 
 #. module: payment
-#: field:payment.transaction,reference:0
-msgid "Order Reference"
-msgstr "Sklic naloga"
+#: model:ir.model.fields,help:payment.field_payment_method_name
+msgid "Name of the payment method"
+msgstr ""
 
 #. module: payment
-#: field:payment.transaction,partner_id:0
+#: selection:payment.acquirer,auto_confirm:0
+msgid "No automatic confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_ogone
+msgid "Ogone"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
+msgid "Order Confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model,name:payment.model_res_partner
+#: model:ir.model.fields,field_description:payment.field_payment_method_partner_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
 msgid "Partner"
 msgstr "Partner"
 
 #. module: payment
-#: field:payment.transaction,partner_name:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_name
 msgid "Partner Name"
 msgstr "Naziv partnerja"
 
 #. module: payment
-#: field:payment.transaction,partner_reference:0
-msgid "Partner Reference"
-msgstr "Sklic partnerja"
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:274
-#, python-format
-msgid "Pay safely online"
-msgstr "Varno spletno plačevanje"
-
-#. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
 msgstr "Prejemnik plačila"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
-#: view:payment.acquirer:payment.acquirer_list
+#: model:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
 msgstr "Prejemniki plačila"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_method_id
+msgid "Payment Method"
+msgstr "Način plačila"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_ids
+#: model:ir.ui.view,arch_db:payment.payment_method_form_view
+#: model:ir.ui.view,arch_db:payment.payment_method_tree_view
+#: model:ir.ui.view,arch_db:payment.payment_method_view_search
+msgid "Payment Methods"
+msgstr "Načini plačila"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -337,16 +482,28 @@ msgstr "Plačilna transakcija"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
+#: model:ir.actions.act_window,name:payment.action_payment_tx_ids
+#: model:ir.actions.act_window,name:payment.payment_transaction_action_child
+#: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
+#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
-#: view:payment.transaction:payment.transaction_form
-#: view:payment.transaction:payment.transaction_list
+#: model:ir.ui.view,arch_db:payment.transaction_form
+#: model:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
 msgstr "Plačilne transakcije"
 
 #. module: payment
+#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.payment_method_form_view
 msgid "Payments"
 msgstr "Plačila"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_paypal
+msgid "Paypal"
+msgstr ""
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -354,14 +511,14 @@ msgid "Pending"
 msgstr "Na čakanju"
 
 #. module: payment
-#: field:payment.transaction,partner_phone:0
-msgid "Phone"
-msgstr "Telefon"
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
+msgid "Pending Message"
+msgstr ""
 
 #. module: payment
-#: field:payment.acquirer,validation:0
-msgid "Process Method"
-msgstr "Metoda postopka"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
+msgid "Phone"
+msgstr "Telefon"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -369,20 +526,20 @@ msgid "Production"
 msgstr "Proizvodnja"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_search
-#: field:payment.acquirer,provider:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
+#: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Provider"
 msgstr "Ponudnik"
 
 #. module: payment
-#: help:payment.transaction,acquirer_reference:0
-msgid "Reference of the TX as stored in the acquirer database"
-msgstr "Sklic TX shranjenega v bazi prejemnikov"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
+msgid "Reference"
+msgstr "Sklic"
 
 #. module: payment
-#: help:payment.transaction,partner_reference:0
-msgid "Reference of the customer in the acquirer database"
-msgstr "Sklic kupca v bazi prejemnikov"
+#: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
+msgid "Reference of the TX as stored in the acquirer database"
+msgstr "Sklic TX shranjenega v bazi prejemnikov"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -390,9 +547,26 @@ msgid "Required fields not filled"
 msgstr "Zahtevana polja niso izpolnjena"
 
 #. module: payment
-#: view:payment.transaction:payment.transaction_form
-msgid "Send a message to the group"
-msgstr "Pošlji sporočilo skupini"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_eval
+msgid "S2S Callback"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
+msgid "S2S Form Template"
+msgstr ""
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.payment_method_action
+#: model:ir.ui.menu,name:payment.finance_pay_method_menu
+#: model:ir.ui.menu,name:payment.payment_method_menu
+msgid "Saved Payment Data"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
+msgid "Sequence"
+msgstr "Zaporedje"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -400,19 +574,27 @@ msgid "Server To Server"
 msgstr "Strežnik-strežnik"
 
 #. module: payment
-#: help:payment.acquirer,validation:0
-msgid "Static payments are payments like transfer, that require manual steps."
-msgstr "Statična plačila so plačila kot nakazila, ki zahtevajo ročne korake."
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
+msgid "Small-sized image"
+msgstr "Mala slika"
 
 #. module: payment
-#: field:payment.transaction,state:0
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
+msgid ""
+"Small-sized image of this provider. It is automatically resized as a 64x64px"
+" image, with aspect ratio preserved. Use this field anywhere a small image "
+"is required."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_state
 msgid "Status"
 msgstr "Status"
 
 #. module: payment
-#: field:payment.transaction,message_summary:0
-msgid "Summary"
-msgstr "Povzetek"
+#: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
+msgid "Template for method registration"
+msgstr ""
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -420,115 +602,131 @@ msgid "Test"
 msgstr "Test"
 
 #. module: payment
-#: field:payment.acquirer,post_msg:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_post_msg
 msgid "Thanks Message"
 msgstr "Zahvalno sporočilo"
 
 #. module: payment
-#: sql_constraint:payment.transaction:0
+#: constraint:payment.transaction:0
 msgid "The payment transaction reference must be unique!"
 msgstr "Sklic plačilne transakcije mora biti unikaten!"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid ""
-"This template renders the acquirer button with all necessary values.\n"
-"                                    It is be rendered with qWeb with the following evaluation context:"
-msgstr "Ta predloga upodobi gumb prejemnika z vsemi potrebnimi vrednostmi.\n                                    Upodobljena bo s qWeb z naslednjim kontekstom vrednotenja:"
+"This field holds the image used for this provider, limited to 1024x1024px"
+msgstr ""
 
 #. module: payment
-#: field:payment.transaction,type:0
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"This template renders the acquirer button with all necessary values.\n"
+"                                            It is be rendered with qWeb with the following evaluation context:"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_type
 msgid "Type"
 msgstr "Tip"
 
 #. module: payment
-#: field:payment.transaction,message_unread:0
-msgid "Unread Messages"
-msgstr "Neprebrana sporočila"
-
-#. module: payment
-#: field:payment.transaction,date_validate:0
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate
 msgid "Validation Date"
-msgstr "Datum overitve"
+msgstr "Datum Potrditve"
 
 #. module: payment
-#: field:payment.acquirer,fees_dom_var:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
 msgid "Variable domestic fees (in percents)"
 msgstr "Dinamične domače pristojbine (v odstotkih)"
 
 #. module: payment
-#: field:payment.acquirer,fees_int_var:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
 msgid "Variable international fees (in percents)"
 msgstr "Dinamične tuje pristojbine (v odstotkih)"
 
 #. module: payment
-#: field:payment.acquirer,website_published:0
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
 msgid "Visible in Portal / Website"
 msgstr "Vidno na portalu / spletni strani"
 
 #. module: payment
-#: field:payment.transaction,website_message_ids:0
-msgid "Website Messages"
-msgstr "Sporočila iz spletne strani"
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_transfer
+msgid "Wire Transfer"
+msgstr ""
 
 #. module: payment
-#: help:payment.transaction,website_message_ids:0
-msgid "Website communication history"
-msgstr "Kronologija komunikacij spletne strani"
-
-#. module: payment
-#: field:payment.transaction,partner_zip:0
-msgid "Zip"
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "ZIP"
 msgstr "Poštna številka"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
+msgid "Zip"
+msgstr "Poštna št."
+
+#. module: payment
+#: model:ir.model,name:payment.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
 msgstr "prejemnik: prejemnik plačila"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
 msgstr "znesek: znesek transakcije, likvidna sredstva"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "context: the current context dictionary"
 msgstr "kontekst: trenutni kontekstni slovar"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
 msgstr "valuta: valuta transakcije"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
 msgstr "partner: kupec, ni obvezno izpolnjen"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
 msgstr "partner_values: specifične vrednosti glede kupca, npr. iz obrazca dobavnice"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model,name:payment.model_payment_method
+msgid "payment.method"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
 msgstr "sklic: sklic transakcije"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
 msgstr "tx_url: URL transakcije za objavo v obrazcu"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
 msgstr "tx_values: vrednosti transakcije"
 
 #. module: payment
-#: view:payment.acquirer:payment.acquirer_form
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+msgid "unknown"
+msgstr "neznano"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "uporabnik: trenutni uporabnik"

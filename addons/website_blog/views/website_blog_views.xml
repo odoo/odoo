@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem name="Knowledge" id="knowledge.menu_document"/>
-        <menuitem name="Blog Posts" id="menu_wiki" parent="knowledge.menu_document" sequence="20" />
+        <menuitem name="Blog" id="menu_website_blog_root" sequence="20" parent="website.menu_website_configuration"/>
 
         <!-- Blog views -->
         <record model="ir.ui.view" id="view_blog_blog_list">
@@ -22,12 +21,11 @@
                     <sheet>
                         <group>
                             <field name="name"/>
-                            <field name="description"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
                     </div>
                 </form>
             </field>
@@ -54,8 +52,14 @@
             <field name="arch" type="xml">
                 <form string="Blog Post">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="website_publish_button"
+                                type="object" icon="fa-globe">
+                                <field name="website_published" widget="website_button"/>
+                            </button>
+                        </div>
                         <group>
-                            <field name="name" placeholder="Name"/>
+                            <field name="name" placeholder="Blog Post Title"/>
                             <field name="tag_ids" widget="many2many_tags"/>
                             <field name="subtitle" placeholder="Blog Subtitle"/>
                         </group>
@@ -67,13 +71,13 @@
                             <field name="ranking" invisible="1"/>
                         </group>
                         <group string="Technical" groups="base.group_no_one">
-                            <field name="write_uid" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
+                            <field name="write_uid" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_website_designer']}"/>
                             <field name="write_date"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
                     </div>
                 </form>
             </field>
@@ -109,7 +113,7 @@
                 </p>
             </field>
         </record>
-        <menuitem id="menu_page" parent="menu_wiki" name="Blog Posts" action="action_blog_post" sequence="10"/>
+        <menuitem id="menu_page" parent="menu_website_blog_root" name="Blog Posts" action="action_blog_post" sequence="10"/>
 
         <record model="ir.actions.act_window" id="action_blog_blog">
             <field name="name">Blogs</field>
@@ -117,48 +121,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="menu_blog" parent="menu_wiki" name="Blogs" action="action_blog_blog" sequence="20"/>
-
-        <!-- History Tree view -->
-        <record model="ir.ui.view" id="view_blog_history_tree">
-            <field name="name">blog.post.history.tree</field>
-            <field name="model">blog.post.history</field>
-            <field name="arch" type="xml">
-                <tree string="Document History">
-                    <field name="create_date"/>
-                    <field name="create_uid"/>
-                    <field name="post_id"/>
-                </tree>
-            </field>
-        </record>
-        <!-- History Form view  -->
-        <record model="ir.ui.view" id="view_blog_history_form">
-            <field name="name">blog.post.history.form</field>
-            <field name="model">blog.post.history</field>
-            <field name="arch" type="xml">
-                <form string="Blog Post History">
-                    <label for="post_id" class="oe_edit_only"/>
-                    <h1><field name="post_id" select="1" /></h1>
-                    <label for="create_date" class="oe_edit_only"/>
-                    <field name="create_date" readonly="1"/>
-                </form>
-            </field>
-        </record>
-        <!-- History Action  -->
-        <record model="ir.actions.act_window" id="action_history">
-            <field name="name">Page history</field>
-            <field name="res_model">blog.post.history</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem id="menu_page_history" parent="menu_wiki" name="Pages history" action="action_history" sequence="30" groups="base.group_no_one"/>
-        <act_window
-            id="action_related_page_history"
-            context="{'search_default_post_id': [active_id], 'default_post_id': active_id}"
-            domain="[('post_id','=',active_id)]"
-            name="Page History"
-            res_model="blog.post.history"
-            src_model="blog.post"/>
+        <menuitem id="menu_blog" parent="menu_website_blog_root" name="Blogs" action="action_blog_blog" sequence="20"/>
 
         <record model="ir.ui.view" id="blog_tag_tree">
             <field name="name">blog_tag_tree</field>
@@ -191,10 +154,10 @@
             <field name="name">Blog Tags</field>
             <field name="res_model">blog.tag</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="blog_tag_tree"/>
         </record>
 
-        <menuitem id="menu_blog_tag" parent="menu_wiki" name="Blog Tags" action="action_tags" sequence="40" />
+        <menuitem id="menu_blog_tag" parent="menu_website_blog_root" name="Blog Tags" action="action_tags" sequence="40" />
     </data>
 </openerp>

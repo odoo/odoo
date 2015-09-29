@@ -19,8 +19,12 @@
         <record id="action_open_forum" model="ir.actions.act_url">
             <field name="name">Forum</field>
             <field name="target">self</field>
-            <!-- TODO in master : remove the tutorial or create one tutorial forum -->
-            <field name="url" eval="'/forum/'+str(ref('website_forum.forum_help'))+'/#tutorial.forum=true'"/>
+            <field name="url" eval="'/forum/'+str(ref('website_forum.forum_help'))"/>
+        </record>
+
+        <!-- Set Admin karma -->
+        <record id="base.user_root" model="res.users">
+            <field name="karma">2500</field>
         </record>
 
         <!-- Answers subtypes -->
@@ -78,32 +82,60 @@
 
         <!-- Reasons for closing Post -->
         <record id="reason_1" model="forum.post.reason">
-            <field name="name">duplicate question</field>
+            <field name="name">duplicate post</field>
+            <field name="reason_type">basic</field>
         </record>
         <record id="reason_2" model="forum.post.reason">
             <field name="name">off-topic or not relevant</field>
+            <field name="reason_type">basic</field>
         </record>
         <record id="reason_3" model="forum.post.reason">
             <field name="name">too subjective and argumentative</field>
+            <field name="reason_type">basic</field>
         </record>
         <record id="reason_4" model="forum.post.reason">
-            <field name="name">not a real question</field>
+            <field name="name">not a real post</field>
+            <field name="reason_type">basic</field>
         </record>
         <record id="reason_6" model="forum.post.reason">
             <field name="name">not relevant or out dated</field>
+            <field name="reason_type">basic</field>
         </record>
         <record id="reason_7" model="forum.post.reason">
             <field name="name">contains offensive or malicious remarks</field>
+            <field name="reason_type">basic</field>
         </record>
         <record id="reason_8" model="forum.post.reason">
             <field name="name">spam or advertising</field>
+            <field name="reason_type">basic</field>
         </record>
         <record id="reason_9" model="forum.post.reason">
             <field name="name">too localized</field>
+            <field name="reason_type">basic</field>
+        </record>
+        <record id="reason_11" model="forum.post.reason">
+            <field name="name">insulting and offensive language</field>
+            <field name="reason_type">offensive</field>
+        </record>
+        <record id="reason_12" model="forum.post.reason">
+            <field name="name">violent language</field>
+            <field name="reason_type">offensive</field>
+        </record>
+        <record id="reason_13" model="forum.post.reason">
+            <field name="name">inappropriate and unacceptable statements</field>
+            <field name="reason_type">offensive</field>
+        </record>
+        <record id="reason_14" model="forum.post.reason">
+            <field name="name">threatening language</field>
+            <field name="reason_type">offensive</field>
+        </record>
+        <record id="reason_15" model="forum.post.reason">
+            <field name="name">racist and hate speech</field>
+            <field name="reason_type">offensive</field>
         </record>
 
         <!-- Email template for email validation (for karma purpose) -->
-        <record id="validation_email" model="email.template">
+        <record id="validation_email" model="mail.template">
             <field name="name">Email Verification</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="email_from"><![CDATA[${object.company_id.name} <${(object.company_id.email or user.email)|safe}>]]></field>

@@ -3,15 +3,14 @@
 # * auth_signup
 # 
 # Translators:
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-09-04 18:38+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
-"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
+"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"PO-Revision-Date: 2015-09-10 15:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_signup
-#: model:email.template,body_html:auth_signup.set_password_email
+#: model:mail.template,body_html:auth_signup.set_password_email
 msgid ""
 "\n"
 "                \n"
@@ -46,102 +45,108 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr "\n\n<p>\n${object.name},\n</p>\n<p>\nSinut on kutsuttu liittymään yritykseen \"${object.company_id.name}\" saadaksesi pääsyn dokumentteihisi Odoossa.\n</p>\n<p>\nHyväksyäksesi kutsun, klikkaa seuraavaa linkkiä:\n</p>\n<ul>\n<li><a href=\"${object.signup_url}\">Hyväksy kutsu yritykseen \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\nThanks,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
+msgstr ""
 
 #. module: auth_signup
-#: model:email.template,body_html:auth_signup.reset_password_email
+#: model:mail.template,body_html:auth_signup.reset_password_email
 msgid ""
 "\n"
 "<p>A password reset was requested for the Odoo account linked to this email.</p>\n"
 "\n"
-"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
+"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr "\n<p>Tähän sähköpostiin liittyvän Odoo-tunnuksen salasana on pyydetty nollattavaksi.</p>\n\n<p>Voit vaihtaa salasanan seuraamalla <a href=\"${object.signup_url}\">tätä linkkiä</a>.</p>\n\n<p>Huom! Jos et ole pyytänyt tätä viestiä, voit jättää sen huomiotta.</p>"
+msgstr ""
 
 #. module: auth_signup
-#: model:email.template,subject:auth_signup.set_password_email
+#: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr "${object.company_id.name} kutsuu sinut liittymään Odooseen"
+msgstr ""
 
 #. module: auth_signup
-#: view:res.users:auth_signup.res_users_form_view
+#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
-"A password reset has been requested for this user. An email containing the "
-"following link has been sent:"
-msgstr "Tälle käyttäjälle on pyydetty salasanan nollaus. Sähköposti seuraavalla linkillä on lähetetty:"
+"<strong>A password reset has been requested for this user. An email "
+"containing the following link has been sent:</strong>"
+msgstr ""
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Activated"
-msgstr "Aktivoitu"
+#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
+msgid ""
+"<strong>An invitation email containing the following subscription link has "
+"been sent:</strong>"
+msgstr ""
 
 #. module: auth_signup
-#: field:base.config.settings,auth_signup_uninvited:0
+#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
-msgstr "Salli ulkoisten käyttäjien kirjautua"
+msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:60
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr "Salasanan nollaamisen mahdollistava sähköposti on lähetetty"
+msgstr ""
 
 #. module: auth_signup
-#: view:res.users:auth_signup.res_users_form_view
-msgid ""
-"An invitation email containing the following subscription link has been "
-"sent:"
-msgstr "Sähköposti seuraavalla kutsulinkillä on on lähetetty:"
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:108
 #, python-format
-msgid "Authentification Failed."
-msgstr "Todennus epäonnistui."
+msgid "Authentication Failed."
+msgstr ""
 
 #. module: auth_signup
-#: view:website:auth_signup.reset_password view:website:auth_signup.signup
+#: model:ir.ui.view,arch_db:auth_signup.reset_password
+#: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Back to Login"
 msgstr "Paluu kirjautumiseen"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:294
+#: code:addons/auth_signup/res_users.py:277
 #, python-format
-msgid "Cannot send email: user has no email address."
-msgstr "Sähköpostia ei pystytä lähettämään: käyttäjän sähköpostiosoite puuttuu."
+msgid "Cannot send email: user %s has no email address."
+msgstr ""
 
 #. module: auth_signup
-#: view:website:auth_signup.fields
+#: model:ir.ui.view,arch_db:auth_signup.reset_password
+msgid "Confirm"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr "Vahvista salasana"
+msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: selection:res.users,state:0
+msgid "Connected"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:62
 #, python-format
 msgid "Could not reset your password"
-msgstr "Salasanaasi ei pystytty nollaamaan"
+msgstr ""
 
 #. module: auth_signup
-#: field:base.config.settings,auth_signup_reset_password:0
+#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "Enable password reset from Login page"
-msgstr "Salli salasanan nollaus kirjautumissivulta"
+msgstr ""
 
 #. module: auth_signup
-#: help:base.config.settings,auth_signup_uninvited:0
+#: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "If unchecked, only invited users may sign up."
-msgstr "Jos tämä ei ole valittu, vain kutsutut käyttäjät voivat kirjautua."
+msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:109
+#: code:addons/auth_signup/controllers/main.py:91
 #, python-format
 msgid "Invalid signup token"
-msgstr "Rekisteröitymisavain ei kelpaa"
+msgstr ""
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr "Ei kirjautumista"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -149,79 +154,96 @@ msgid "Partner"
 msgstr "Kumppani"
 
 #. module: auth_signup
-#: view:website:auth_signup.fields
+#: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Password"
 msgstr "Salasana"
 
 #. module: auth_signup
-#: model:email.template,subject:auth_signup.reset_password_email
+#: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr "Salasanan nollaus"
+msgstr ""
 
 #. module: auth_signup
-#: view:website:web.login
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
+msgid "Private Profile"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr "Nollaa salasana"
+msgstr ""
 
 #. module: auth_signup
-#: view:website:auth_signup.reset_password
-msgid "Reset password"
-msgstr "Nollaa salasana"
+#: code:addons/auth_signup/res_users.py:250
+#, python-format
+msgid "Reset password: invalid username or email"
+msgstr ""
 
 #. module: auth_signup
-#: view:res.users:auth_signup.res_users_form_view
+#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr "Lähetä ohjeet salasanan nollaamiseen"
+msgstr ""
 
 #. module: auth_signup
-#: view:res.users:auth_signup.res_users_form_view
+#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr "Lähetä kutsu sähköpostilla"
+msgstr ""
 
 #. module: auth_signup
-#: view:website:auth_signup.signup view:website:web.login
+#: model:ir.ui.view,arch_db:auth_signup.login
+#: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr "Rekisteröidy"
+msgstr ""
 
 #. module: auth_signup
-#: field:res.partner,signup_expiration:0
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
 msgid "Signup Expiration"
-msgstr "Rekisteröitymisen vanheneminen"
+msgstr ""
 
 #. module: auth_signup
-#: field:res.partner,signup_token:0
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
 msgid "Signup Token"
-msgstr "Rekisteröitymisavain"
+msgstr ""
 
 #. module: auth_signup
-#: field:res.partner,signup_type:0
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
 msgid "Signup Token Type"
-msgstr "Rekisteröitymisavaimen tyyppi"
+msgstr ""
 
 #. module: auth_signup
-#: field:res.partner,signup_valid:0
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
 msgid "Signup Token is Valid"
-msgstr "Kirjautumisavain kelpaa"
+msgstr ""
 
 #. module: auth_signup
-#: field:res.partner,signup_url:0
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
 msgid "Signup URL"
-msgstr "Rekisteröitymisen osoite"
+msgstr ""
 
 #. module: auth_signup
-#: field:res.users,state:0
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
 msgstr "Tila"
 
 #. module: auth_signup
-#: field:base.config.settings,auth_signup_template_user_id:0
+#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr "Mallikäyttäjä rekisteröitymisen kautta luotaville käyttäjille"
+msgstr ""
 
 #. module: auth_signup
-#: help:base.config.settings,auth_signup_reset_password:0
+#: model:ir.model.fields,help:auth_signup.field_res_users_website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr "Salli käyttäjien käynnistää salasanan nollaus kirjautumissivulta."
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -229,16 +251,62 @@ msgid "Users"
 msgstr "Käyttäjät"
 
 #. module: auth_signup
-#: view:website:auth_signup.fields view:website:auth_signup.reset_password
-msgid "Your Email"
-msgstr "Sähköpostisi"
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
+msgid "Visible in Website"
+msgstr ""
 
 #. module: auth_signup
-#: view:website:auth_signup.fields
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
+msgid "Website Partner Full Description"
+msgstr "Verkkosivukumppanin laaja kuvaus"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
+msgid "Website Partner Short Description"
+msgstr "Verkkosivukumppanin lyhyt kuvaus"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
+msgid "Website URL"
+msgstr "Verkkosivuston osoite"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
+msgid "Website meta description"
+msgstr "Verkkosivuston metakuvaus"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Verkkosivuston meta avainsanat"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
+msgid "Website meta title"
+msgstr "Verkkosivuston metaotsikko"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.fields
+#: model:ir.ui.view,arch_db:auth_signup.reset_password
+msgid "Your Email"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
 msgstr "Nimesi"
 
 #. module: auth_signup
-#: view:website:auth_signup.fields
+#: model:ir.model,name:auth_signup.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr "esim. Matti Meikäläinen"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_self
+msgid "unknown"
+msgstr "tuntematon"

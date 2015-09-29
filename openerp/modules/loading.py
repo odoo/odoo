@@ -1,24 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Modules (also called addons) management.
 
@@ -36,7 +17,6 @@ import openerp.modules.db
 import openerp.modules.graph
 import openerp.modules.migration
 import openerp.modules.registry
-import openerp.osv as osv
 import openerp.tools as tools
 from openerp import SUPERUSER_ID
 
@@ -182,12 +162,16 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             migrations.migrate_module(package, 'post')
 
+            # Update translations for all installed languages
+            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
+
+            registry._init_modules.add(package.name)
+
             if new_install:
                 post_init = package.info.get('post_init_hook')
                 if post_init:
                     getattr(py_module, post_init)(cr, registry)
 
-            registry._init_modules.add(package.name)
             # validate all the views at a whole
             registry['ir.ui.view']._validate_module_views(cr, SUPERUSER_ID, module_name)
 
@@ -208,8 +192,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             ver = adapt_version(package.data['version'])
             # Set new modules and dependencies
             modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
-            # Update translations for all installed languages
-            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
@@ -289,7 +271,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         graph.add_module(cr, 'base', force)
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
-            raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
+            raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
@@ -386,27 +368,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         cr.commit()
 
-        # STEP 5: Cleanup menus 
-        # Remove menu items that are not referenced by any of other
-        # (child) menu item, ir_values, or ir_model_data.
-        # TODO: This code could be a method of ir_ui_menu. Remove menu without actions of children
-        if update_module:
-            while True:
-                cr.execute('''delete from
-                        ir_ui_menu
-                    where
-                        (id not IN (select parent_id from ir_ui_menu where parent_id is not null))
-                    and
-                        (id not IN (select res_id from ir_values where model='ir.ui.menu'))
-                    and
-                        (id not IN (select res_id from ir_model_data where model='ir.ui.menu'))''')
-                cr.commit()
-                if not cr.rowcount:
-                    break
-                else:
-                    _logger.info('removed %d unused menus', cr.rowcount)
-
-        # STEP 6: Uninstall modules to remove
+        # STEP 5: Uninstall modules to remove
         if update_module:
             # Remove records referenced from ir_model_data for modules to be
             # removed (and removed the references from ir_model_data).
@@ -428,7 +390,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 openerp.api.Environment.reset()
                 return openerp.modules.registry.RegistryManager.new(cr.dbname, force_demo, status, update_module)
 
-        # STEP 7: verify custom views on every model
+        # STEP 6: verify custom views on every model
         if update_module:
             Views = registry['ir.ui.view']
             custom_view_test = True
@@ -459,5 +421,3 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
     finally:
         cr.close()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

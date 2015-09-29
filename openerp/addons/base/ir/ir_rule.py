@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
 
 from openerp import SUPERUSER_ID
@@ -103,7 +85,7 @@ class ir_rule(osv.osv):
         (_check_model_name, 'Rules can not be applied on the Record Rules model.', ['model_id']),
     ]
 
-    @tools.ormcache()
+    @tools.ormcache('uid', 'model_name', 'mode')
     def _compute_domain(self, cr, uid, model_name, mode="read"):
         if mode not in self._MODES:
             raise ValueError('Invalid mode: %r' % (mode,))
@@ -144,7 +126,8 @@ class ir_rule(osv.osv):
         return []
 
     def clear_cache(self, cr, uid):
-        self._compute_domain.clear_cache(self)
+        """ Deprecated, use `clear_caches` instead. """
+        self.clear_caches()
 
     def domain_get(self, cr, uid, model_name, mode='read', context=None):
         dom = self._compute_domain(cr, uid, model_name, mode)
@@ -159,17 +142,15 @@ class ir_rule(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_rule, self).unlink(cr, uid, ids, context=context)
-        self.clear_cache(cr, uid)
+        self.clear_caches()
         return res
 
     def create(self, cr, uid, vals, context=None):
         res = super(ir_rule, self).create(cr, uid, vals, context=context)
-        self.clear_cache(cr, uid)
+        self.clear_caches()
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
-        self.clear_cache(cr,uid)
+        self.clear_caches()
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

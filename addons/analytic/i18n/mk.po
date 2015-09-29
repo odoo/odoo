@@ -3,17 +3,14 @@
 # * analytic
 # 
 # Translators:
-# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015
-# Anica Milanova, 2015
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:47+0000\n"
-"Last-Translator: Anica Milanova\n"
-"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-09-19 08:20+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,48 +18,69 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:278
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (копија)"
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "(Keep empty to open the current situation)"
+msgstr "(Оставете празно за да ја отворите тековната состојба)"
 
 #. module: analytic
-#: field:account.analytic.account,child_complete_ids:0
-msgid "Account Hierarchy"
-msgstr "Хиерархија на сметки"
+#: model:ir.model,name:analytic.model_account_analytic_chart
+msgid "Account Analytic Chart"
+msgstr "Аналитички контен план"
 
 #. module: analytic
-#: field:account.analytic.account,manager_id:0
-msgid "Account Manager"
-msgstr "Менаџер на сметка"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
+msgid "Account Currency"
+msgstr "Валута на сметката"
 
 #. module: analytic
-#: field:account.analytic.account,name:0
-msgid "Account/Contract Name"
-msgstr "Име на Сметка/Договор"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
+msgid "Action Needed"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.line,amount:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
 msgstr "Износ"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-#: selection:account.analytic.account,type:0
-#: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_account_id
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
 msgstr "Аналитичка сметка"
 
 #. module: analytic
-#: model:res.groups,name:analytic.group_analytic_accounting
-msgid "Analytic Accounting"
-msgstr "Аналитично сметководство"
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Analytic Account Charts"
+msgstr "Аналитички контен план"
 
 #. module: analytic
-#: field:account.analytic.account,line_ids:0
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr "Аналитичко сметководство"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Analytic Accounts"
+msgstr "Аналитички сметки"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Entries"
 msgstr "Аналитички внесови"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+msgid "Analytic Entry"
+msgstr "Аналитички внес"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -70,40 +88,64 @@ msgid "Analytic Line"
 msgstr "Аналитичка ставка"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
+msgid "Analytic Lines"
+msgstr "Аналитички ставки"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
+msgid "Analytic Tag"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_tag
+msgid "Analytic Tags"
+msgstr ""
+
+#. module: analytic
+#: selection:account.analytic.account,account_type:0
 msgid "Analytic View"
 msgstr "Аналитички приказ"
 
 #. module: analytic
-#: field:account.analytic.account,balance:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Associated Partner"
+msgstr "Поврзан партнер"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
 msgid "Balance"
 msgstr "Салдо"
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price. Always expressed in the company main currency."
-msgstr "Пресметано со множење на количината и цената дадена во цената на чинење на производот. Секогаш се изразува во главната валута на компанијата."
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Cancel"
+msgstr "Откажи"
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Cancelled"
-msgstr "Откажано"
+#: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
+#: model:ir.actions.act_window,name:analytic.action_analytic_account_form
+msgid "Chart of Analytic Accounts"
+msgstr "Аналитички контен план"
 
 #. module: analytic
-#: field:account.analytic.account,child_ids:0
-msgid "Child Accounts"
-msgstr "Сметки (дете)"
+#: model:ir.actions.act_window,help:analytic.action_analytic_account_form
+msgid "Click to add an analytic account."
+msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
+#: model:mail.message.subtype,description:analytic.mt_account_closed
 msgid "Closed"
 msgstr "Затворено"
 
 #. module: analytic
-#: field:account.analytic.account,company_id:0
-#: field:account.analytic.line,company_id:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
+msgid "Color Index"
+msgstr "Индекс на бои"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_company_id
 msgid "Company"
 msgstr "Компанија"
 
@@ -113,34 +155,9 @@ msgid "Contract Finished"
 msgstr "Договорот е завршен"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-msgid "Contract Information"
-msgstr "Информации за договорот"
-
-#. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_opened
 msgid "Contract Opened"
 msgstr "Договорот е отворен"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_closed
-msgid "Contract closed"
-msgstr "Договорот е затворен"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_opened
-msgid "Contract opened"
-msgstr "Договорот е отворен"
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Contract or Project"
-msgstr "Договор или Проект"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_pending
-msgid "Contract pending"
-msgstr "Договор на чекање"
 
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_pending
@@ -148,288 +165,302 @@ msgid "Contract to Renew"
 msgstr "Договор за обновување"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:238
-#, python-format
-msgid "Contract: "
-msgstr "Договор: "
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "Cost/Revenue"
+msgstr "Цена/Приход"
 
 #. module: analytic
-#: field:account.analytic.line,create_date:0
-msgid "Create Date"
-msgstr "Датум на креирање"
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Costs & Revenues"
+msgstr "Трошоци & Приходи"
 
 #. module: analytic
-#: field:account.analytic.account,create_uid:0
-#: field:account.analytic.line,create_uid:0
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid ""
+"Costs will be created automatically when you register supplier\n"
+"                invoices, expenses or timesheets."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
 msgid "Created by"
 msgstr "Креирано од"
 
 #. module: analytic
-#: field:account.analytic.account,create_date:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
 msgid "Created on"
 msgstr "Креирано на"
 
 #. module: analytic
-#: field:account.analytic.account,credit:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
 msgid "Credit"
 msgstr "Побарување"
 
 #. module: analytic
-#: field:account.analytic.account,currency_id:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_currency_id
 msgid "Currency"
 msgstr "Валута"
 
 #. module: analytic
-#: field:account.analytic.account,partner_id:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_partner_id
 msgid "Customer"
 msgstr "Купувач"
 
 #. module: analytic
-#: field:account.analytic.line,date:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_date
 msgid "Date"
 msgstr "Датум"
 
 #. module: analytic
-#: help:account.analytic.account,message_last_post:0
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_last_post
 msgid "Date of the last message posted on the record."
 msgstr "Датум на испраќање на последната порака"
 
 #. module: analytic
-#: field:account.analytic.account,debit:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
 msgid "Debit"
 msgstr "Задолжување"
 
 #. module: analytic
-#: field:account.analytic.account,description:0
-#: field:account.analytic.line,name:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_name
 msgid "Description"
 msgstr "Опис"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-msgid "End Date"
-msgstr "Краен датум"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid "Error!"
-msgstr "Грешка!"
-
-#. module: analytic
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
-msgstr "Грешка! Неможете да креирате рекурзивни аналитички сметки."
-
-#. module: analytic
-#: field:account.analytic.account,date:0
-msgid "Expiration Date"
-msgstr "Датум на истекување"
-
-#. module: analytic
-#: field:account.analytic.account,message_follower_ids:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_follower_ids
 msgid "Followers"
 msgstr "Пратители"
 
 #. module: analytic
-#: field:account.analytic.account,complete_name:0
-msgid "Full Name"
-msgstr "Целосно име"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
 
 #. module: analytic
-#: help:account.analytic.account,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "Го содржи прегледот за комуникацијата (број на пораки и сл.). Овој преглед е во html формат."
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,id:0 field:account.analytic.line,id:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
+msgid "From"
+msgstr "Од"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Group By..."
+msgstr "Групирај по..."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
 msgid "ID"
 msgstr "ID"
 
 #. module: analytic
-#: help:account.analytic.account,message_unread:0
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
+msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
 
 #. module: analytic
-#: help:account.analytic.account,type:0
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
-"If you select the View Type, it means you won't allow to create journal entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
-msgstr "Доколку изберете тип за Преглед, тоа значи дека нема да биде дозволено креирање на внесови во дневникот користејки ја таа сметка.\nТипот 'Аналитичка сметка' значи обични корисници што ќе се користат во сметководството.\nДоколку одберете Договор или Проект, тоа ви ја нуди можноста за управување со валидноста и опциите за фактурирање за оваа сметка.\nСпецијалниот тип 'Шаблон на договор' ви овозможува да дефинирате шаблон со стандардни податоци кои може лесно да ги менувате."
+"In Odoo, sale orders and projects are implemented using\n"
+"                analytic accounts. You can track costs and revenues to analyse\n"
+"                your margins easily."
+msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid ""
-"If you set a company, the currency selected has to be the same as it's currency. \n"
-"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
-msgstr "Ако нагодувате некоја компанија, избраната валута треба да биде иста со валутата на таа компанија.\nМожете да ги отстраните средствата на компанијата и со тоа да ја промените валутата но, само на аналитичките сметки од типот „преглед“. Ова може да биде многу корисно, на пример, од аспект на консолидација на контни планови на различни компании со различни валути."
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_is_follower
+msgid "Is Follower"
+msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "In Progress"
-msgstr "Во тек"
-
-#. module: analytic
-#: field:account.analytic.account,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Пратител"
-
-#. module: analytic
-#: field:account.analytic.account,message_last_post:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_last_post
 msgid "Last Message Date"
 msgstr "Датум на последна порака"
 
 #. module: analytic
-#: field:account.analytic.account,write_uid:0
-#: field:account.analytic.line,write_uid:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
+msgid "Last Modified on"
+msgstr "Последна промена на"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
 msgid "Last Updated by"
 msgstr "Последно ажурирање од"
 
 #. module: analytic
-#: field:account.analytic.account,write_date:0
-#: field:account.analytic.line,write_date:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
 msgid "Last Updated on"
 msgstr "Последно ажурирање на"
 
 #. module: analytic
-#: field:account.analytic.account,message_ids:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_ids
 msgid "Messages"
 msgstr "Пораки"
 
 #. module: analytic
-#: help:account.analytic.account,message_ids:0
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_ids
 msgid "Messages and communication history"
-msgstr "Историја на пораки и комуникација"
+msgstr "Пораки и историја на комуникација"
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "New"
-msgstr "Ново"
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+msgid "No activity yet on this account."
+msgstr ""
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-msgid ""
-"Once the end date of the contract is\n"
-"                                        passed or the maximum number of service\n"
-"                                        units (e.g. support contract) is\n"
-"                                        reached, the account manager is notified \n"
-"                                        by email to renew the contract with the\n"
-"                                        customer."
-msgstr "Кога ќе се помине крајната дата на договорот\n                                        или ќе се постигне максималниот број\n                                        на сервисни единици, менаџерот на сметката \n                                        се известува преку e-mail за да го \n                                        обнови договорот со купувачот."
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid "No activity yet."
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Аналитичка сметка (родител)"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Prepaid Service Units"
-msgstr "Припејд сервисни единици"
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,user_id:0
-msgid "Project Manager"
-msgstr "Проектен менаџер"
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Open Charts"
+msgstr "Отвори графикони"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Opened"
+msgstr "Отворено"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Pending"
+msgstr "Чекам"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_unit_amount
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
 msgstr "Количина"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:272
-#, python-format
-msgid "Quick account creation disallowed."
-msgstr "Оневозможено брзо креирање на сметка."
-
-#. module: analytic
-#: field:account.analytic.account,code:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_code
 msgid "Reference"
 msgstr "Референца"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-msgid "Renewal"
-msgstr "Обновување"
-
-#. module: analytic
-#: help:account.analytic.account,quantity_max:0
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
-"Sets the higher limit of time to work on the contract, based on the "
-"timesheet. (for instance, number of hours in a limited support contract.)"
-msgstr "Подесување на горна граница на време за работа на договорот, базирано на временската таблица. (на пример, број на часови во договор со ограничена поддршка)"
+"Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                on expenses (e.g. reinvoicing of travel costs)."
+msgstr ""
 
 #. module: analytic
-#: help:account.analytic.line,unit_amount:0
-msgid "Specifies the amount of quantity to count."
-msgstr "Го специфицира износот на количината за пребројување."
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Search Analytic Lines"
+msgstr "Барај аналитички ставки"
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Start Date"
-msgstr "Почетен датум"
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Select the Period for Analysis"
+msgstr "Избери период за анализи"
 
 #. module: analytic
-#: field:account.analytic.account,state:0
-msgid "Status"
-msgstr "Статус"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
+msgid "Tags"
+msgstr "Етикети"
 
 #. module: analytic
-#: field:account.analytic.account,message_summary:0
-msgid "Summary"
-msgstr "Резиме"
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Tasks Month"
+msgstr "Задачи месечно"
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Урнек"
+#: model:ir.model.fields,help:analytic.field_account_analytic_line_currency_id
+msgid "The related account currency if not equal to the company one."
+msgstr "Поврзаната валута на сметката не е еднаква со онаа на компанијата."
 
 #. module: analytic
-#: field:account.analytic.account,template_id:0
-#: selection:account.analytic.account,type:0
-msgid "Template of Contract"
-msgstr "Урнек на договор"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
+msgid "To"
+msgstr "До"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-msgid "Terms and Conditions"
-msgstr "Услови и правила"
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+msgid "Total"
+msgstr "Вкупно"
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "To Renew"
-msgstr "За обновување"
-
-#. module: analytic
-#: field:account.analytic.account,type:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
 msgid "Type of Account"
 msgstr "Тип на сметка"
 
 #. module: analytic
-#: field:account.analytic.account,message_unread:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread
 msgid "Unread Messages"
-msgstr "Непрочитани пораки"
+msgstr "Непрочитани Пораки"
 
 #. module: analytic
-#: field:account.analytic.line,user_id:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
 msgid "User"
 msgstr "Корисник"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:272
-#, python-format
-msgid "Warning"
-msgstr "Внимание"
-
-#. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr "Не може да креирате аналитичка ставка на сметка приказ."
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "e.g. Project XYZ"
+msgstr ""

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2014 OpenERP S.A. <http://www.openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from functools import partial
 import logging
@@ -36,9 +18,11 @@ from openerp.osv import fields, osv
 from openerp.osv.orm import browse_record
 import openerp.report.interface
 from openerp.report.report_sxw import report_sxw, report_rml
+from openerp.tools import ormcache
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 import openerp.workflow
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -51,13 +35,26 @@ class actions(osv.osv):
         'name': fields.char('Name', required=True),
         'type': fields.char('Action Type', required=True),
         'usage': fields.char('Action Usage'),
-        'help': fields.text('Action description',
+        'xml_id': fields.function(osv.osv.get_external_id, type='char', string="External ID"),
+        'help': fields.html('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
             translate=True),
     }
     _defaults = {
         'usage': lambda *a: False,
     }
+
+    def create(self, cr, uid, vals, context=None):
+        res = super(actions, self).create(cr, uid, vals, context=context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
+        return res
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(actions, self).write(cr, uid, ids, vals, context=context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         """unlink ir.action.todo which are related to actions which will be deleted.
@@ -69,7 +66,21 @@ class actions(osv.osv):
             ids = [ids]
         todo_ids = todo_obj.search(cr, uid, [('action_id', 'in', ids)], context=context)
         todo_obj.unlink(cr, uid, todo_ids, context=context)
-        return super(actions, self).unlink(cr, uid, ids, context=context)
+        res = super(actions, self).unlink(cr, uid, ids, context=context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
+        return res
+
+    def _get_eval_context(self, cr, uid, action=None, context=None):
+        """ evaluation context to pass to safe_eval """
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return {
+            'uid': uid,
+            'user': user,
+            'time': time,
+            'datetime': datetime,
+            'dateutil': dateutil,
+        }
 
 class ir_actions_report_xml(osv.osv):
 
@@ -137,6 +148,33 @@ class ir_actions_report_xml(osv.osv):
 
         return new_report
 
+    def create_action(self, cr, uid, ids, context=None):
+        """ Create a contextual action for each of the report."""
+        for ir_actions_report_xml in self.browse(cr, uid, ids, context=context):
+            ir_values_id = self.pool['ir.values'].create(cr, SUPERUSER_ID, {
+                'name': ir_actions_report_xml.name,
+                'model': ir_actions_report_xml.model,
+                'key2': 'client_print_multi',
+                'value': "ir.actions.report.xml,%s" % ir_actions_report_xml.id,
+            }, context)
+            ir_actions_report_xml.write({
+                'ir_values_id': ir_values_id,
+            })
+        return True
+
+    def unlink_action(self, cr, uid, ids, context=None):
+        """ Remove the contextual actions created for the reports."""
+        self.check_access_rights(cr , uid, 'write', raise_exception=True)
+        for ir_actions_report_xml in self.browse(cr, uid, ids, context=context):
+            if ir_actions_report_xml.ir_values_id:
+                try:
+                    self.pool['ir.values'].unlink(
+                        cr, SUPERUSER_ID, ir_actions_report_xml.ir_values_id.id, context
+                    )
+                except Exception:
+                    raise UserError(_('Deletion of the action record failed.'))
+        return True
+
     def render_report(self, cr, uid, res_ids, name, data, context=None):
         """
         Look up a report definition and render the report for the provided IDs.
@@ -173,11 +211,14 @@ class ir_actions_report_xml(osv.osv):
                     ], 'Report Type', required=True, help="HTML will open the report directly in your browser, PDF will use wkhtmltopdf to render the HTML into a PDF file and let you download it, Controller allows you to define the url of a custom controller outputting any kind of report."),
         'report_name': fields.char('Template Name', required=True, help="For QWeb reports, name of the template used in the rendering. The method 'render_html' of the model 'report.template_name' will be called (if any) to give the html. For RML reports, this is the LocalService name."),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
+        'ir_values_id': fields.many2one('ir.values', 'More Menu entry', readonly=True,
+                                        help='More menu entry.', copy=False),
 
         # options
         'multi': fields.boolean('On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
         'attachment': fields.char('Save as Attachment Prefix', help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
+
 
         # Deprecated rml stuff
         'usage': fields.char('Action Usage'),
@@ -188,8 +229,8 @@ class ir_actions_report_xml(osv.osv):
         'report_xsl': fields.char('XSL Path'),
         'report_xml': fields.char('XML Path'),
 
-        'report_rml': fields.char('Main Report File Path/controller', help="The path to the main report file/controller (depending on Report Type) or NULL if the content is in another data field"),
-        'report_file': fields.related('report_rml', type="char", required=False, readonly=False, string='Report File', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
+        'report_rml': fields.char('Main Report File Path/controller', help="The path to the main report file/controller (depending on Report Type) or empty if the content is in another data field"),
+        'report_file': fields.related('report_rml', type="char", required=False, readonly=False, string='Report File', help="The path to the main report file (depending on Report Type) or empty if the content is in another field", store=True),
 
         'report_sxw': fields.function(_report_sxw, type='char', string='SXW Path'),
         'report_sxw_content_data': fields.binary('SXW Content'),
@@ -347,10 +388,32 @@ class ir_actions_act_window(osv.osv):
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
         return self.read(cr, uid, [res_id], [], context)[0]
 
+    @openerp.api.model
+    def create(self, vals):
+        self.clear_caches()
+        return super(ir_actions_act_window, self).create(vals)
+
+    @openerp.api.multi
+    def unlink(self):
+        self.clear_caches()
+        return super(ir_actions_act_window, self).unlink()
+
+    @openerp.api.multi
+    def exists(self):
+        ids = self._existing()
+        return self.filtered(lambda rec: rec.id in ids)
+
+    @openerp.api.model
+    @ormcache()
+    def _existing(self):
+        self._cr.execute("SELECT id FROM %s" % self._table)
+        return set(row[0] for row in self._cr.fetchall())
+
 VIEW_TYPES = [
     ('tree', 'Tree'),
     ('form', 'Form'),
     ('graph', 'Graph'),
+    ('pivot', 'Pivot'),
     ('calendar', 'Calendar'),
     ('gantt', 'Gantt'),
     ('kanban', 'Kanban')]
@@ -571,6 +634,7 @@ class ir_actions_server(osv.osv):
 #  - model: Model of the record on which the action is triggered
 #  - object: Record on which the action is triggered if there is one, otherwise None
 #  - workflow: Workflow engine
+#  - log : log(message), function to log debug information in logging table
 #  - Warning: Warning Exception to use with raise
 # To return an action, assign: action = {...}""",
         'use_relational_model': 'base',
@@ -814,22 +878,22 @@ class ir_actions_server(osv.osv):
             action.write({
                 'menu_ir_values_id': ir_values_id,
             })
-
         return True
 
     def unlink_action(self, cr, uid, ids, context=None):
         """ Remove the contextual actions created for the server actions. """
+        self.check_access_rights(cr , uid, 'write', raise_exception=True)
         for action in self.browse(cr, uid, ids, context=context):
             if action.menu_ir_values_id:
                 try:
                     self.pool.get('ir.values').unlink(cr, SUPERUSER_ID, action.menu_ir_values_id.id, context)
                 except Exception:
-                    raise osv.except_osv(_('Warning'), _('Deletion of the action record failed.'))
+                    raise UserError(_('Deletion of the action record failed.'))
         return True
 
     def run_action_client_action(self, cr, uid, action, eval_context=None, context=None):
         if not action.action_id:
-            raise osv.except_osv(_('Error'), _("Please specify an action to launch!"))
+            raise UserError(_("Please specify an action to launch!"))
         return self.pool[action.action_id.type].read(cr, uid, [action.action_id.id], context=context)[0]
 
     def run_action_code_multi(self, cr, uid, action, eval_context=None, context=None):
@@ -926,24 +990,30 @@ class ir_actions_server(osv.osv):
         if action.link_new_record and action.link_field_id:
             self.pool[action.model_id.model].write(cr, uid, [context.get('active_id')], {action.link_field_id.name: res_id})
 
-    def _get_eval_context(self, cr, uid, action, context=None):
+    def _get_eval_context(self, cr, uid, action=None, context=None):
         """ Prepare the context used when evaluating python code, like the
         condition or code server actions.
 
         :param action: the current server action
         :type action: browse record
         :returns: dict -- evaluation context given to (safe_)eval """
+        def log(message, level="info"):
+            val = (uid, 'server', cr.dbname, __name__, level, message, "action", action.id, action.name)
+            cr.execute("""
+                INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
+                VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, val)
+
+        eval_context = super(ir_actions_server, self)._get_eval_context(cr, uid, action=action, context=context)
         obj_pool = self.pool[action.model_id.model]
         env = openerp.api.Environment(cr, uid, context)
         model = env[action.model_id.model]
         obj = None
         if context.get('active_model') == action.model_id.model and context.get('active_id'):
             obj = model.browse(context['active_id'])
-        return {
-            # python libs
-            'time': time,
-            'datetime': datetime,
-            'dateutil': dateutil,
+        if context.get('onchange_self'):
+            obj = context['onchange_self']
+        eval_context.update({
             # orm
             'env': env,
             'model': model,
@@ -959,10 +1029,12 @@ class ir_actions_server(osv.osv):
             'self': obj_pool,
             'pool': self.pool,
             'cr': cr,
-            'uid': uid,
             'context': context,
             'user': env.user,
-        }
+            # helpers
+            'log': log,
+        })
+        return eval_context
 
     def run(self, cr, uid, ids, context=None):
         """ Runs the server action. For each server action, the condition is
@@ -1110,7 +1182,6 @@ Launch Manually Once: after having been launched manually, it sets automatically
         if act_type != 'ir.actions.act_window':
             return res
         res.setdefault('context','{}')
-        res['nodestroy'] = True
 
         # Open a specific record when res_id is provided in the context
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -1210,5 +1281,3 @@ class ir_actions_act_client(osv.osv):
         'context': '{}',
 
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

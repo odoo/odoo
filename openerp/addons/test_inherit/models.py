@@ -78,5 +78,3 @@ class res_partner(models.Model):
 
     # define a one2many field based on the inherited field partner_id
     daughter_ids = fields.One2many('test.inherit.daughter', 'partner_id')
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

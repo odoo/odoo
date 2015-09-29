@@ -1,0 +1,51 @@
+-
+  Setting journal and property field (if needed)
+-
+  !python {model: account.journal} : |
+      #if we already have a coa installed, create journal and set property field
+      company_obj = self.pool['res.company']
+      company_ids = company_obj.search(cr, uid, [('chart_template_id', '!=', False)])
+      for company_id in company_ids:
+          from openerp.tools.translate import _
+
+          #Check if property exists for stock account journal exists
+          PropertyObj = self.pool.get('ir.property')
+          properties = PropertyObj.search(cr, uid, [('name', '=', 'property_stock_journal'), ('company_id', '=', company_id)])
+          AccountJournal = self.pool.get('account.journal')
+
+          #If not, check if you can find a journal that is already there with the same name, otherwise create one
+          if not properties:
+              journal_ids = AccountJournal.search(cr, uid, [('name', '=', _('Stock Journal')), ('company_id', '=', company_id), ('type', '=', 'general')])
+              if journal_ids:
+                journal_id = journal_ids[0]
+              else:
+                journal_id = AccountJournal.create(cr, uid, {'name': _('Stock Journal'), 'type': 'general', 'code': 'STJ', 'company_id': company_id, 'show_on_dashboard': False})
+              vals = {'name': 'property_stock_journal',
+                'fields_id': self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', 'property_stock_journal'), ('model', '=', 'product.category'), ('relation', '=', 'account.journal')], limit=1)[0],
+                'company_id': company_id,
+                'value': 'account.journal,' + str(journal_id)}
+
+              PropertyObj.create(cr, uid, vals)
+
+          todo_list = [ # Property Stock Accounts
+              'property_stock_account_input_categ_id',
+              'property_stock_account_output_categ_id',
+              'property_stock_valuation_account_id',
+          ]
+          company = company_obj.browse(cr, uid, company_id)
+          for record in todo_list:
+              account = getattr(company, record)
+              value = account and 'account.account,' + str(account.id) or False
+              if value:
+                  field_id = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', record), ('model', '=', 'product.category'), ('relation', '=', 'account.account')], limit=1)[0]
+                  vals = {
+                      'name': record,
+                      'company_id': company_id,
+                      'fields_id': field_id,
+                      'value': value,
+                      'res_id': 'product.category,'+str(ref('product.product_category_all')),
+                  }
+                  properties = PropertyObj.search(cr, uid, [('name', '=', record), ('company_id', '=', company.id), ('value_reference', '!=', False)])
+                  if not properties:
+                      #create the property
+                      PropertyObj.create(cr, uid, vals)

@@ -1,23 +1,5 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Odoo, Open Source Business Applications
-#    Copyright (C) 2014-2015 Odoo S.A. <http://www.odoo.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import xml.etree.ElementTree as ET
@@ -37,14 +19,8 @@ class xml_decl(osv.TransientModel):
     _name = "l10n_be_intrastat_xml.xml_decl"
     _description = 'Intrastat XML Declaration'
 
-    def _get_tax_code(self, cr, uid, context=None):
-        obj_tax_code = self.pool.get('account.tax.code')
-        obj_user = self.pool.get('res.users')
-        company_id = obj_user.browse(cr, uid, uid, context=context).company_id.id
-        tax_code_ids = obj_tax_code.search(cr, uid, [('company_id', '=', company_id),
-                                                     ('parent_id', '=', False)],
-                                           context=context)
-        return tax_code_ids and tax_code_ids[0] or False
+    def _get_company_id(self, cr, uid, context=None):
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
 
     def _get_def_monthyear(self, cr, uid, context=None):
         td = datetime.strptime(fields.date.context_today(self, cr, uid, context=context),
@@ -64,8 +40,7 @@ class xml_decl(osv.TransientModel):
                                    ('08','August'), ('09','September'), ('10','October'),
                                    ('11','November'), ('12','December')], 'Month', required=True),
         'year': fields.char('Year', size=4, required=True),
-        'tax_code_id': fields.many2one('account.tax.code', 'Company Tax Chart',
-                                       domain=[('parent_id', '=', False)], required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'arrivals': fields.selection([('be-exempt', 'Exempt'),
                                       ('be-standard', 'Standard'),
                                       ('be-extended', 'Extended')],
@@ -82,26 +57,26 @@ class xml_decl(osv.TransientModel):
         'arrivals': 'be-standard',
         'dispatches': 'be-standard',
         'name': 'intrastat.xml',
-        'tax_code_id': _get_tax_code,
+        'company_id': _get_company_id,
         'month': _get_def_month,
         'year': _get_def_year,
         'state': 'draft',
     }
-    
+
     def _company_warning(self, cr, uid, translated_msg, context=None):
         """ Raise a error with custom message, asking user to configure company settings """
         xmlid_mod = self.pool['ir.model.data']
         action_id = xmlid_mod.xmlid_to_res_id(cr, uid, 'base.action_res_company_form')
         raise exceptions.RedirectWarning(
             translated_msg, action_id, _('Go to company configuration screen'))
-            
+
     def create_xml(self, cr, uid, ids, context=None):
         """Creates xml that is to be exported and sent to estate for partner vat intra.
         :return: Value for next action.
         :rtype: dict
         """
         decl_datas = self.browse(cr, uid, ids[0])
-        company = decl_datas.tax_code_id.company_id
+        company = decl_datas.company_id
         if not (company.partner_id and company.partner_id.country_id and
                 company.partner_id.country_id.id):
             self._company_warning(
@@ -231,8 +206,8 @@ class xml_decl(osv.TransientModel):
         for inv_line in invoicelines:
 
             #Check type of transaction
-            if inv_line.invoice_id.intrastat_transaction_id:
-                extta = inv_line.invoice_id.intrastat_transaction_id.code
+            if inv_line.intrastat_transaction_id:
+                extta = inv_line.intrastat_transaction_id.code
             else:
                 extta = "1"
             #Check country
@@ -328,18 +303,18 @@ class xml_decl(osv.TransientModel):
                 amount = inv_line.price_unit * inv_line.quantity
             else:
                 amount = 0
-            if (not inv_line.uos_id.category_id
+            if (not inv_line.uom_id.category_id
                     or not inv_line.product_id.uom_id.category_id
                     or inv_line.uos_id.category_id.id != inv_line.product_id.uom_id.category_id.id):
-                weight = inv_line.product_id.weight_net * inv_line.quantity
+                weight = inv_line.product_id.weight * inv_line.quantity
             else:
-                weight = (inv_line.product_id.weight_net *
+                weight = (inv_line.product_id.weight *
                           inv_line.quantity * inv_line.uos_id.factor)
             if (not inv_line.uos_id.category_id or not inv_line.product_id.uom_id.category_id
                     or inv_line.uos_id.category_id.id != inv_line.product_id.uom_id.category_id.id):
                 supply_units = inv_line.quantity
             else:
-                supply_units = inv_line.quantity * inv_line.uos_id.factor
+                supply_units = inv_line.quantity * inv_line.uom_id.factor
             amounts = entries.setdefault(linekey, (0, 0, 0))
             amounts = (amounts[0] + amount, amounts[1] + weight, amounts[2] + supply_units)
             entries[linekey] = amounts

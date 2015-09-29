@@ -8,7 +8,7 @@ class auth_oauth_provider(osv.osv):
     _order = 'name'
 
     _columns = {
-        'name' : fields.char('Provider name', required=True),               # Name of the OAuth2 entity, Google, LinkedIn, etc
+        'name' : fields.char('Provider name', required=True),               # Name of the OAuth2 entity, Google, etc
         'client_id' : fields.char('Client ID'),              # Our identifier
         'auth_endpoint' : fields.char('Authentication URL', required=True), # OAuth provider URL to authenticate users
         'scope' : fields.char('Scope'),                                     # OAUth user data desired to access

@@ -1,24 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-<template id="layout" inherit_id="web.layout" primary="True">
-    <!-- Add report attributes -->
-    <xpath expr="//html" position="attributes">
-        <attribute name="t-att-data-report-margin-top">data_report_margin_top if data_report_margin_top else None</attribute>
-        <attribute name="t-att-data-report-header-spacing">data_report_header_spacing if data_report_header_spacing else None</attribute>
-        <attribute name="t-att-data-report-dpi">data_report_dpi if data_report_dpi else None</attribute>
-    </xpath>
-    <!-- Add report style -->
-    <xpath expr="//head" position="inside">
-        <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-        <link href="/website/static/src/css/website.css" rel="stylesheet"/>
-        <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-        <style type="text/css">
-            <t t-call="report.style"/>
-        </style>
-    </xpath>
-    <!-- Remove conflicting style -->
-    <xpath expr="//head/link[@href='/web/static/src/css/full.css']" position="replace"></xpath>
+<template id="report.assets_common">
+    <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+    <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+    <link href="/base/static/src/css/description.css" rel="stylesheet"/>
+    <link href="/report/static/src/css/report.css" rel="stylesheet"/>
+</template>
+
+<template id="report.assets_pdf">
+    <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
+</template>
+
+<template id="report.assets_editor">
+    <link href="/report/static/src/css/report.editor.css" rel="stylesheet"/>
+    <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
+    <script type="text/javascript" src='/report/static/src/js/report.editor.js' />
+</template>
+
+<template id="layout" name="Report layout">&lt;!DOCTYPE html&gt;
+    <html t-att-lang="lang and lang.replace('_', '-')"
+          t-att-data-editable="'1' if editable else None"
+          t-att-data-translatable="'1' if translatable else None"
+          t-att-data-edit_translations="'1' if edit_translations else None"
+          t-att-data-main-object="repr(main_object) if editable else None"
+          t-att-data-report-margin-top="data_report_margin_top"
+          t-att-data-report-header-spacing="data_report_header_spacing"
+          t-att-data-report-dpi="data_report_dpi">
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="initial-scale=1"/>
+            <title><t t-esc="title or 'Odoo Report'"/></title>
+            <t t-call-assets="report.assets_common"/>
+            <t t-if="editable">
+                <t t-call-assets="web_editor.assets_editor"/>
+                <t t-call-assets="report.assets_editor"/>
+            </t>
+        </head>
+        <body class="container" t-att-style="editable and 'margin-top: 40px;'">
+            <div id="wrapwrap">
+                <main>
+                    <t t-raw="0"/>
+                </main>
+            </div>
+        </body>
+    </html>
 </template>
 
 <template id="html_container">
@@ -26,25 +53,6 @@
     <t t-call="report.layout">
         <t t-raw="0"/>
     </t>
-</template>
-
-<template id="style">
-    body {
-        color: #000 !important;
-        word-wrap: break-word;
-    }
-    .border-black td {
-        border-top: 1px solid black !important;
-    }
-    .table-condensed > thead > tr > th {
-        border-bottom: 1px solid black !important;
-    }
-    .table-condensed > tbody > tr {
-        page-break-inside: avoid !important;
-    }
-    .zero_min_height {
-        min-height: 0px !important;
-    }
 </template>
 
 <template id="external_layout">
@@ -75,7 +83,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-3">
+            <div class="col-xs-3" name="company_address">
                 <div t-field="company.partner_id" 
                     t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
                     style="border-bottom: 1px solid black;"/>
@@ -93,11 +101,15 @@
                 <li t-if="company.fax and company.phone">&amp;bull;</li>
                 <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
 
-                <li t-if="company.email">&amp;bull;</li>
+                <li t-if="company.email and company.fax or company.email and company.phone">&amp;bull;</li>
                 <li t-if="company.email">Email: <span t-field="company.email"/></li>
 
-                <li t-if="company.website">&amp;bull;</li>
+                <li t-if="company.website and company.email or company.website and company.fax or company.website and company.phone">&amp;bull;</li>
                 <li t-if="company.website">Website: <span t-field="company.website"/></li>
+            </ul>
+
+            <ul t-if="not company.custom_footer" class="list-inline" name="financial_infos">
+                <li t-if="company.vat">TIN: <span t-field="company.vat"/></li>
             </ul>
 
             <t t-if="company.custom_footer">
@@ -148,11 +160,8 @@
     &lt;!DOCTYPE html&gt;
     <html style="height: 0;">
         <head>
-            <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
-            <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-            <link href="/website/static/src/css/website.css" rel="stylesheet"/>
-            <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-            <style type='text/css'><t t-raw="css"/></style>
+            <t t-call-assets="report.assets_pdf"/>
+            <t t-call-assets="report.assets_common"/>
             <t t-if="subst is True">
                 <script>
                     function subst() {

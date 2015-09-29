@@ -6,6 +6,9 @@
             <field name="model">ir.cron</field>
             <field name="arch" type="xml">
                 <form string="Scheduled Actions">
+                    <header>
+                        <button name="method_direct_trigger" type="object" string="Run Manually" class="oe_highlight"/> 
+                    </header>
                    <sheet>
                     <group col="4">
                         <field name="name"/>
@@ -40,7 +43,7 @@
         <record id="ir_cron_view_tree" model="ir.ui.view">
             <field name="model">ir.cron</field>
             <field name="arch" type="xml">
-                <tree string="Scheduled Actions" colors="grey:(not active)">
+                <tree string="Scheduled Actions" decoration-muted="(not active)">
                     <field name="priority" string="Sequence"/>
                     <field name="name"/>
                     <field name="nextcall"/>
@@ -71,9 +74,8 @@
                     <field name="nextcall"/>
                     <field name="active"/>
                     <group expand="0" string="Group By">
-                        <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Execution" icon="terp-go-month"
-                                domain="[]" context="{'group_by':'nextcall'}" />
+                        <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Execution" domain="[]" context="{'group_by':'nextcall'}" />
                     </group>
                 </search>
             </field>

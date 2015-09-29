@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
+    <t t-name="BillScreenWidget">
+        <div class='receipt-screen screen'>
+            <div class='screen-content'>
+                <div class='top-content'>
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                    <h1>Bill Printing</h1>
+                    <span class='button next'>
+                        Ok 
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </div>
+                <div class="centered-content">
+                    <div class="button print">
+                        <i class='fa fa-print'></i> Print 
+                    </div>
+                    <div class="pos-receipt-container">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="PrintBillButton">
         <span class="control-button order-printbill">
             <i class="fa fa-print"></i>
@@ -41,8 +66,10 @@
                     <div><t t-esc='receipt.header' /></div>
                 </t>
                 <t t-if='receipt.cashier'>
-                    <div>--------------------------------</div>
-                    <div>Served by <t t-esc='receipt.cashier' /></div>
+                    <div class='cashier'>
+                        <div>--------------------------------</div>
+                        <div>Served by <t t-esc='receipt.cashier' /></div>
+                    </div>
                 </t>
             </div>
             <br /><br />
@@ -124,9 +151,13 @@
             </t>
 
             <!-- Footer -->
-            <t t-if='receipt.footer'>
+            <t t-if='receipt.footer_xml'>
+                <t t-raw='receipt.footer_xml' />
+            </t>
+
+            <t t-if='!receipt.footer_xml and receipt.footer'>
                 <br/>
-                <pre><t t-esc='receipt.footer' /></pre>
+                <t t-esc='receipt.footer' />
                 <br/>
                 <br/>
             </t>

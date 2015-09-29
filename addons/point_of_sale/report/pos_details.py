@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from openerp.osv import osv
@@ -155,11 +137,13 @@ class pos_details(report_sxw.rml_parse):
         company_id = self.pool['res.users'].browse(self.cr, self.uid, self.uid).company_id.id
         pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids), ('company_id', '=', company_id)])
         for order in pos_order_obj.browse(self.cr, self.uid, pos_ids):
+            currency = order.session_id.currency_id
             for line in order.lines:
-                line_taxes = account_tax_obj.compute_all(self.cr, self.uid, line.product_id.taxes_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
-                for tax in line_taxes['taxes']:
-                    taxes.setdefault(tax['id'], {'name': tax['name'], 'amount':0.0})
-                    taxes[tax['id']]['amount'] += tax['amount']
+                if line.product_id.taxes_id:
+                    line_taxes = line.product_id.taxes_id.compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+                    for tax in line_taxes['taxes']:
+                        taxes.setdefault(tax['id'], {'name': tax['name'], 'amount':0.0})
+                        taxes[tax['id']]['amount'] += tax['amount']
         return taxes.values()
 
     def _get_user_names(self, user_ids):
@@ -195,5 +179,3 @@ class report_pos_details(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'point_of_sale.report_detailsofsales'
     _wrapped_report_class = pos_details
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

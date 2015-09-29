@@ -3,18 +3,14 @@
 # * hr_timesheet_sheet
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# mrshelly <mrshelly@hotmail.com>, 2015
-# 卓忆科技 <zhanghao@jointd.com>, 2015
-# 卓忆科技 <zhanghao@jointd.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-21 00:22+0000\n"
-"Last-Translator: leangjia <liangjia@qq.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-09-19 08:17+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,state:0
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
 "* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
@@ -30,40 +26,29 @@ msgid ""
 msgstr "* ‘草稿’ 状态用于新创建及未确认的计工单。                 \n* '确认' 状态用于已确认的计工单。                 \n* '完成' 状态用于计工单已被他/她的上级审核。"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,nbr:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
 msgid "# Nbr Timesheet"
 msgstr "# 计工单编号"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,total_attendance:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
 msgid "# Total Attendance"
 msgstr "# 考勤合计"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,total_diff:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
 msgid "# Total Diff"
 msgstr "# 总差异"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,total_timesheet:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
 msgid "# Total Timesheet"
 msgstr "# 所有计工单"
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                New timesheet to approve.\n"
-"              </p><p>\n"
-"                You must record timesheets every day and confirm at the end\n"
-"                of the week. Once the timesheet is confirmed, it should be\n"
-"                validated by a manager.\n"
-"              </p><p>\n"
-"                Timesheets can also be invoiced to customers, depending on the\n"
-"                configuration of each project's related contract.\n"
-"              </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n待审批的新计工单。\n</p><p>\n您需要每天记录计工单并在周末前确认。\n当计工单被确认后，它会被管理者审批。\n</p><p>\n计工单可以开票给客户，取决于每个相关项目的合同设置。\n</p>\n            "
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "<span class=\"o_stat_text\">Timesheet</span>"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -71,80 +56,67 @@ msgid "Absent"
 msgstr "缺勤"
 
 #. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:33
-#, python-format
-msgid "Add"
-msgstr "新增"
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction
+msgid "Action Needed"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:39
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:33
 #, python-format
 msgid "Add a Line"
 msgstr "添加明细"
 
 #. module: hr_timesheet_sheet
-#: field:hr.config.settings,timesheet_max_difference:0
-msgid ""
-"Allow a difference of time between timesheets and attendances of (in hours)"
-msgstr "允许计工单与出勤时间有差异（小时）"
-
-#. module: hr_timesheet_sheet
-#: help:hr.config.settings,timesheet_max_difference:0
-#: help:res.company,timesheet_max_difference:0
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_res_company_timesheet_max_difference
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr "签入/签出和在一个计工单里的容许的差异小时。如果您不想这样控制设为0."
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "辅助核算项"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "辅助核算明细"
+msgstr "分析行"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,account_ids:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_ids
 msgid "Analytic accounts"
 msgstr "辅助核算项"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Approve"
-msgstr "审批"
+msgstr "批准"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
+#: model:mail.message.subtype,name:hr_timesheet_sheet.mt_timesheet_approved
 msgid "Approved"
-msgstr "已审核通过"
+msgstr "已批准"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.day,total_attendance:0
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_total_attendance
 msgid "Attendance"
-msgstr "考勤"
+msgstr "出勤"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
-#: field:hr_timesheet_sheet.sheet,attendance_count:0
-#: field:hr_timesheet_sheet.sheet,attendances_ids:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_attendance_count
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_attendances_ids
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Attendances"
-msgstr "考勤"
+msgstr "出勤"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "Cancel"
 msgstr "取消"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:51
 #, python-format
 msgid "Click to add projects, contracts or analytic accounts."
 msgstr "点击创建一个项目，合同或辅助核算项。"
@@ -155,140 +127,130 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,company_id:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_company_id
 msgid "Company"
 msgstr "公司"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:75
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:91
-#, python-format
-msgid "Configuration Error!"
-msgstr "设置错误!"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
 #: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Confirmed"
 msgstr "已确认"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "已确认的计工单"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.current.open,create_uid:0
-#: field:hr_timesheet_sheet.sheet,create_uid:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_create_uid
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建于"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.current.open,create_date:0
-#: field:hr_timesheet_sheet.sheet,create_date:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_create_date
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_create_date
 msgid "Created on"
-msgstr "创建"
+msgstr "创建于"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,state_attendance:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state_attendance
 msgid "Current Status"
 msgstr "当前状态"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.day,name:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_name
 msgid "Date"
 msgstr "日期"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,date_from:0
-#: field:hr_timesheet_sheet.sheet,date_from:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "日期从"
 
 #. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,message_last_post:0
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr "发布到记录上的最后信息的日期"
+msgstr "发布到记录上的最后消息的日期"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,date_to:0
-#: field:hr_timesheet_sheet.sheet,date_to:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "日期到"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
 #: selection:res.company,timesheet_range:0
 msgid "Day"
-msgstr "天"
+msgstr "日"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
-#: field:hr.timesheet.report,department_id:0
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-#: field:hr_timesheet_sheet.sheet,department_id:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "部门"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Details"
 msgstr "详细信息"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,total_difference:0
-#: field:hr_timesheet_sheet.sheet.day,total_difference:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_total_difference
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_total_difference
 msgid "Difference"
 msgstr "差异"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Differences"
 msgstr "差异"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_display_name
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_display_name
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_display_name
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Done"
 msgstr "完成"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
 #: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Draft"
 msgstr "草稿"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,employee_id:0
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
 msgstr "员工"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-msgid "Employees"
-msgstr "员工"
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Employee's Name"
+msgstr "员工姓名"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Employees"
+msgstr "员工列表"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:77
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr "错误！签入（或签出）动作必须在签出（或签入）动作之后。"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
-#, python-format
-msgid "Error!"
-msgstr "错误！"
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
@@ -296,56 +258,66 @@ msgid "External Timesheet"
 msgstr "外部计工单"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_follower_ids:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_follower_ids
 msgid "Followers"
 msgstr "关注者"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "分组"
 
 #. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "保存聊天摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是HTML格式。"
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+msgid "HR Department"
+msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
-msgstr "小时数"
+msgstr "时数"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.current.open,id:0 field:hr_timesheet_sheet.sheet,id:0
-#: field:hr_timesheet_sheet.sheet.account,id:0
-#: field:hr_timesheet_sheet.sheet.day,id:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_id
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_id
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_id
 msgid "ID"
-msgstr "标识"
+msgstr "ID"
 
 #. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,message_unread:0
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
 msgid "If checked new messages require your attention."
-msgstr "如果勾选此项，需要你关注新消息。"
+msgstr "查看是否有需要留意的新信息。"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Important Messages"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "In Draft"
 msgstr "在草稿"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:75
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:91
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must assign an "
-"analytic journal to the employee, like 'Timesheet Journal'."
-msgstr "要为员工创建计工单，您要为员工指定一个分析分录，如“计工单分录”。"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:54
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
 #, python-format
 msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a"
@@ -353,15 +325,7 @@ msgid ""
 msgstr "要为员工创建计工单，您必须关联他/她到一个用户。"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must link the employee"
-" to a product, like 'Consultant'."
-msgstr "要为员工创建计工单，您必须将员工关联到一个产品上，像 '咨询'。"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:68
 #, python-format
 msgid ""
 "In order to create a timesheet for this employee, you must link the employee"
@@ -374,69 +338,59 @@ msgid "Internal Timesheet"
 msgstr "内部计工单"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
-#, python-format
-msgid "Invalid Action!"
-msgstr "无效的动作！"
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_is_follower
+msgid "Is Follower"
+msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
-msgid "Invoice rate"
-msgstr "发票税率"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_is_follower:0
-msgid "Is a Follower"
-msgstr "是一个关注者"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "It will open your current timesheet"
 msgstr "它将开启您当前计工单"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_last_post:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_last_post
 msgid "Last Message Date"
-msgstr "最后信息日期"
+msgstr "最后消息日期"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.current.open,write_uid:0
-#: field:hr_timesheet_sheet.sheet,write_uid:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet___last_update
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account___last_update
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day___last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_write_uid
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_write_uid
 msgid "Last Updated by"
 msgstr "最后更新"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.current.open,write_date:0
-#: field:hr_timesheet_sheet.sheet,write_date:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_write_date
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_write_date
 msgid "Last Updated on"
-msgstr "最后一次更新"
+msgstr "最后更新"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_ids:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_ids
 msgid "Messages"
 msgstr "消息"
 
 #. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,message_ids:0
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_ids
 msgid "Messages and communication history"
 msgstr "消息和通信历史"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
 #: selection:res.company,timesheet_range:0
 msgid "Month"
 msgstr "月份"
 
 #. module: hr_timesheet_sheet
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
-msgid "My Current Timesheet"
-msgstr "我当前的时间表"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "My Timesheet"
 msgstr "我的计工单"
 
@@ -455,46 +409,64 @@ msgstr "用\"我的计工单\"菜单开启您的计工单所以您能在系统�
 #: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
-msgstr "新的"
+msgstr "新建"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,name:0
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+msgid "New timesheet to approve."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_name
 msgid "Note"
-msgstr "备注"
+msgstr "笔记"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "Open"
-msgstr "开始"
+msgstr "开放"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
+#: model:ir.actions.client,name:hr_timesheet_sheet.action_client_hr_timesheet_sheet_menu
+msgid "Open HR Menu"
+msgstr "打开 人力资源 菜单"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:30
 #, python-format
 msgid "Open Timesheet"
 msgstr "开始的计工单"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
-#: field:hr_timesheet_sheet.sheet,period_ids:0
-#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_period_ids
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_day_tree
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Period"
-msgstr "考勤详情"
+msgstr "会计期间"
 
 #. module: hr_timesheet_sheet
-#: help:hr.config.settings,timesheet_range:0
-#: help:res.company,timesheet_range:0
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_res_company_timesheet_range
 msgid "Periodicity on which you validate your timesheets."
 msgstr "提交计工单的周期"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
-#, python-format
-msgid "Please create an employee and associate it with this user."
-msgstr "请创建员工信息并关联到此用户"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:108
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
@@ -506,66 +478,67 @@ msgid "Present"
 msgstr "出勤"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.account,name:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_name
 msgid "Project / Analytic Account"
-msgstr "项目 / 辅助核算科目"
+msgstr "项目 / 分析账户"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Refuse"
 msgstr "拒绝"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_filter
 msgid "Search Account"
 msgstr "查找辅助核算项"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Search Timesheet"
 msgstr "查找计工单"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Set to Draft"
 msgstr "设为草稿"
 
 #. module: hr_timesheet_sheet
-#: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
-#: field:hr_timesheet_sheet.sheet.account,sheet_id:0
-#: field:hr_timesheet_sheet.sheet.day,sheet_id:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_account_analytic_line_sheet_id
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_attendance_sheet_id
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_sheet_id
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_sheet_id
 msgid "Sheet"
 msgstr "表"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Sign In"
 msgstr "签入"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Sign Out"
 msgstr "签出"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
-#: field:hr.timesheet.report,state:0 field:hr_timesheet_sheet.sheet,state:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "状态"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Submit to Manager"
 msgstr "提交给经理"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
-#: field:hr_timesheet_sheet.sheet,message_summary:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Summary"
-msgstr "总计"
+msgstr "摘要"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:62
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:45
 #, python-format
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
@@ -573,33 +546,32 @@ msgid ""
 msgstr "不包含签入和签出数值的计工单无法被核实。"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
 msgstr "计工单"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
-#: field:hr_timesheet_sheet.sheet,timesheet_activity_count:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet Activities"
 msgstr "时间表活动"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "计工单明细"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet Period"
 msgstr "计工单周期"
 
 #. module: hr_timesheet_sheet
-#: field:res.company,timesheet_max_difference:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_max_difference
 msgid "Timesheet allowed difference(Hours)"
 msgstr "计工单允许的差异（小时）"
+
+#. module: hr_timesheet_sheet
+#: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
+msgid "Timesheet approved"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
@@ -607,8 +579,8 @@ msgid "Timesheet by Account"
 msgstr "辅助核算项的计工单"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_form
-#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_tree
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_tree
 msgid "Timesheet by Accounts"
 msgstr "辅助核算项计工单"
 
@@ -618,24 +590,35 @@ msgid "Timesheet by Day"
 msgstr "时间表按天"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_timesheet_ids
 msgid "Timesheet lines"
 msgstr "计工单明细"
 
 #. module: hr_timesheet_sheet
-#: field:res.company,timesheet_range:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_range
 msgid "Timesheet range"
 msgstr "计工单范围"
 
 #. module: hr_timesheet_sheet
-#: view:hr.employee:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
-#: field:hr.employee,timesheet_count:0
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_department_timesheet_to_approve_count
+msgid "Timesheet to Approve"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
-#: view:res.company:hr_timesheet_sheet.hr_timesheet_sheet_company
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_employee_timesheet_count
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_company
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
 msgid "Timesheets"
-msgstr "计工单"
+msgstr "工时单"
+
+#. module: hr_timesheet_sheet
+#: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_approved
+msgid "Timesheets Approved"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
@@ -644,134 +627,123 @@ msgid "Timesheets by Period"
 msgstr "计工单周期"
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
-msgid "Timesheets to Validate"
-msgstr "等待核实的计工单"
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+msgid ""
+"Timesheets can also be invoiced to customers, depending on the\n"
+"                configuration of each project's related contract."
+msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.hr_timesheet_action_from_department
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
+#: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_confirmed
+msgid "Timesheets to Approve"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "To Approve"
-msgstr "待审批"
+msgstr "待批准"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:15
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:40
-#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_form
-#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_tree
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:14
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:36
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_form
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_tree
 #, python-format
 msgid "Total"
-msgstr "合计"
+msgstr "总计"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,total_attendance:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_total_attendance
 msgid "Total Attendance"
 msgstr "考勤合计"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_day_tree
 msgid "Total Attendances"
 msgstr "工作时长"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_day_tree
 msgid "Total Difference"
 msgstr "差异合计"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.account,total:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_total
 msgid "Total Time"
 msgstr "总时间"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,total_timesheet:0
-#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
-#: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_total_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_total_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_day_tree
 msgid "Total Timesheet"
 msgstr "总计工单"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
-#: field:hr.timesheet.report,to_invoice:0
-msgid "Type of Invoicing"
-msgstr "发票类型"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_unread:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
 msgid "Unread Messages"
 msgstr "未读消息"
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unvalidated Timesheets"
 msgstr "不确认的时间表"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,user_id:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_user_id
 msgid "User"
 msgstr "用户"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
-#, python-format
-msgid "User Error!"
-msgstr "用户错误"
-
-#. module: hr_timesheet_sheet
-#: field:hr.config.settings,timesheet_range:0
-msgid "Validate timesheets every"
-msgstr "核实计工单每"
-
-#. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
+#: model:mail.message.subtype,name:hr_timesheet_sheet.mt_timesheet_confirmed
 msgid "Waiting Approval"
 msgstr "等待审批"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
-#, python-format
-msgid "Warning !"
-msgstr "警告！"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
-#, python-format
-msgid "Warning!"
-msgstr "警告！"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,website_message_ids:0
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_website_message_ids
 msgid "Website Messages"
 msgstr "网站消息"
 
 #. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,website_message_ids:0
+#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_website_message_ids
 msgid "Website communication history"
 msgstr "网站沟通记录"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
 #: selection:res.company,timesheet_range:0
 msgid "Week"
 msgstr "周"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:248
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:221
 #, python-format
 msgid "Week "
 msgstr "周"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
+msgid "Weekly"
+msgstr "每周"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:454
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
 msgstr "您无法录入当前计工单日期外的出勤。"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:452
 #, python-format
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
@@ -779,25 +751,25 @@ msgid ""
 msgstr "在一张已提交的计工单上您无法录入出勤。在添加出勤信息前，联系您的主管将它重置。"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:231
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
 msgstr "您无法删除一张包含出勤信息的计工单。"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:229
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
 msgstr "您无法删除一张已确认的计工单。"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:49
 #, python-format
 msgid "You cannot duplicate a timesheet."
 msgstr "您无法复制计工单。"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:473
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
@@ -811,7 +783,7 @@ msgid ""
 msgstr "您不能有2张重复的计工单！\n请使用菜单’我当前的计工单‘来避免这个问题。"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
 #, python-format
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
@@ -819,37 +791,43 @@ msgid ""
 msgstr "您不能有2张重复的计工单！\n您应当使用菜单’我的计工单‘来避免这个问题。"
 
 #. module: hr_timesheet_sheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
-msgstr "您不能修改一个确认/已完成的计工单！"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:480
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr "您无法修改一个确认的计工单"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:343
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr "你不能修改已确认的时间表条目"
 
 #. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:58
-#, python-format
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 msgid ""
-"You will be able to register your working hours and\n"
-"                        activities."
-msgstr "您可以登记您的工作时间和\n活动。"
+"You must record timesheets every day and confirm at the end\n"
+"                of the week. Once the timesheet is confirmed, it should be\n"
+"                validated by a manager."
+msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
-msgid "or"
-msgstr "or"
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:52
+#, python-format
+msgid "You will be able to register your working hours and activities."
+msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
+msgid "hr.timesheet.current.open"
+msgstr "hr.timesheet.current.open"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "to"
 msgstr "到"
+
+#. module: hr_timesheet_sheet
+#: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_confirmed
+msgid "waiting approval"
+msgstr ""

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Add creditcard to res.partner -->
+        <record id="view_partners_form_payment_defaultcreditcard" model="ir.ui.view">
+                <field name="name">view.res.partner.form.payment.defaultcreditcard</field>
+                <field name="model">res.partner</field>
+                <field name="inherit_id" ref="account.partner_view_buttons"/>
+                <field name="arch" type="xml">
+                    <xpath expr='//group[@name="banks"]' position="inside">
+                        <button type="action" class="btn-link"
+                            name="%(payment.payment_method_action)d"
+                            context="{'search_default_partner_id': active_id}">
+                            <field name="payment_method_count" widget="statinfo" string="Credit card(s)"/>
+                        </button>
+                    </xpath>
+                </field>
+        </record>
+    </data>
+</openerp>

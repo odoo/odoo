@@ -40,20 +40,12 @@
             <field name="name">Discount</field>
             <field name="digits">2</field>
         </record>
-        <record forcecreate="True" id="decimal_account" model="decimal.precision">
-            <field name="name">Account</field>
-            <field name="digits">2</field>
-        </record>
         <record forcecreate="True" id="decimal_stock_weight" model="decimal.precision">
             <field name="name">Stock Weight</field>
             <field name="digits">2</field>
         </record>
         <record forcecreate="True" id="decimal_product_uom" model="decimal.precision">
             <field name="name">Product Unit of Measure</field>
-            <field name="digits" eval="3"/>
-        </record>
-        <record forcecreate="True" id="decimal_product_uos" model="decimal.precision">
-            <field name="name">Product UoS</field>
             <field name="digits" eval="3"/>
         </record>
 
@@ -190,48 +182,20 @@ parameter) will see those record just disappear.
             <field name="object">product.product</field>
         </record>
 
-        <!--
-    Resource: product.price.type
-    -->
-        <record id="list_price" model="product.price.type">
-            <field name="name">Public Price</field>
-            <field name="field">list_price</field>
-        </record>
-        <record id="standard_price" model="product.price.type">
-            <field name="name">Cost Price</field>
-            <field name="field">standard_price</field>
-        </record>
+        <!-- Price list -->
 
-
-
-
-        <!--
-    Price list type
-    -->
-        <record id="pricelist_type_sale" model="product.pricelist.type">
-            <field name="name">Sale Pricelist</field>
-            <field name="key">sale</field>
-        </record>
-
-
-        <!--
-    Price list
-    -->
         <record id="list0" model="product.pricelist">
             <field name="name">Public Pricelist</field>
-            <field name="type">sale</field>
-        </record>
-        <record id="ver0" model="product.pricelist.version">
-            <field name="pricelist_id" ref="list0"/>
-            <field name="name">Default Public Pricelist Version</field>
-        </record>
-        <record id="item0" model="product.pricelist.item">
-            <field name="price_version_id" ref="ver0"/>
-            <field name="base" ref="list_price"/>
-            <field name="sequence">1000</field>
-            <field name="name">Default Public Pricelist Line</field>
         </record>
 
+        <!-- Price list item -->
+
+        <record id="item0" model="product.pricelist.item">
+            <field name="pricelist_id" ref="list0"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="sequence">1000</field>
+        </record>
         <!--
         Property
         -->
@@ -241,19 +205,5 @@ parameter) will see those record just disappear.
             <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
         </record>
 
-
-        <!--
-        Product
-        -->
-        <record id="product_product_consultant" model="product.product">
-            <field name="list_price">75.0</field>
-            <field name="standard_price">30.0</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
-            <field name="name">Service</field>
-            <field name="categ_id" ref="product.product_category_all"/>
-            <field name="type">service</field>
-            <field name="sale_ok" eval="False"/>
-        </record>
     </data>
 </openerp>

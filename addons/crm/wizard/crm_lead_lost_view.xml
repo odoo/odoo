@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="crm_lead_lost_view_form" model="ir.ui.view">
+            <field name="name">crm.lead.lost.form</field>
+            <field name="model">crm.lead.lost</field>
+            <field name="arch" type="xml">
+                <form string="Lost Reason">
+                    <group class="oe_title">
+                        <field name="lead_id" invisible="1"/>
+                        <field name="lost_reason_id"/>
+                    </group>
+                    <footer>
+                        <button name="action_lost_reason_apply" string="Submit" type="object" class="btn btn-sm btn-primary"/>
+                        <button string="Cancel" class="btn btn-sm btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+ 
+        <record id="crm_lead_lost_action" model="ir.actions.act_window">
+            <field name="name">Lost Reason</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.lead.lost</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_lead_lost_view_form"/>
+            <field name="target">new</field>
+        </record>
+</odoo>

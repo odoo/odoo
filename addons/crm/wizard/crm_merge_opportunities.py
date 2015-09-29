@@ -1,22 +1,4 @@
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -35,7 +17,7 @@ class crm_merge_opportunity(osv.osv_memory):
     _columns = {
         'opportunity_ids': fields.many2many('crm.lead', rel='merge_opportunity_rel', id1='merge_id', id2='opportunity_id', string='Leads/Opportunities'),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', select=True),
+        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id', select=True),
     }
 
     def action_merge(self, cr, uid, ids, context=None):
@@ -48,7 +30,7 @@ class crm_merge_opportunity(osv.osv_memory):
         #TODO: why is this passed through the context ?
         context['lead_ids'] = [opportunity2merge_ids[0].id]
 
-        merge_id = lead_obj.merge_opportunity(cr, uid, [x.id for x in opportunity2merge_ids], wizard.user_id.id, wizard.section_id.id, context=context)
+        merge_id = lead_obj.merge_opportunity(cr, uid, [x.id for x in opportunity2merge_ids], wizard.user_id.id, wizard.team_id.id, context=context)
 
         # The newly created lead might be a lead or an opp: redirect toward the right view
         merge_result = lead_obj.browse(cr, uid, merge_id, context=context)
@@ -79,19 +61,17 @@ class crm_merge_opportunity(osv.osv_memory):
 
         return res
 
-    def on_change_user(self, cr, uid, ids, user_id, section_id, context=None):
-        """ When changing the user, also set a section_id or restrict section id
+    def on_change_user(self, cr, uid, ids, user_id, team_id, context=None):
+        """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
         if user_id:
-            if section_id:
-                user_in_section = self.pool.get('crm.case.section').search(cr, uid, [('id', '=', section_id), '|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context, count=True)
+            if team_id:
+                user_in_team = self.pool.get('crm.team').search(cr, uid, [('id', '=', team_id), '|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context, count=True)
             else:
-                user_in_section = False
-            if not user_in_section:
-                section_id = False
-                section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
-                if section_ids:
-                    section_id = section_ids[0]
-        return {'value': {'section_id': section_id}}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+                user_in_team = False
+            if not user_in_team:
+                team_id = False
+                team_ids = self.pool.get('crm.team').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
+                if team_ids:
+                    team_id = team_ids[0]
+        return {'value': {'team_id': team_id}}

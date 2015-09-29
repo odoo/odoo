@@ -92,15 +92,56 @@
             </field>
         </record>
 
-        <!-- Adding a paperformat field inside to the company form view -->
+        <!-- Customize the company form view by adding paperformat field as well as demo reports -->
+        <!-- Demo reports definition -->
+        <template id="preview_internalreport">
+            <t t-call="report.html_container">
+                <t t-call="report.internal_layout">
+                    <div class="page">
+                        <p>This is a sample of an internal report.</p>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <template id="preview_externalreport">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <p>This is a sample of an external report.</p>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report id="action_report_internalpreview"
+            model="res.company"
+            name="report.preview_internalreport"
+            file="report.preview_internalreport"
+            string="Preview Internal Report"
+            report_type="qweb-pdf"/>
+        <report id="action_report_externalpreview"
+            model="res.company"
+            name="report.preview_externalreport"
+            file="report.preview_externalreport"
+            string="Preview External Report"
+            report_type="qweb-pdf"/>
+
         <record id="reporting_settings_form_inherited" model="ir.ui.view">
             <field name="name">view_company_form_inherited</field>
             <field name="inherit_id" ref="base.view_company_form" />
             <field name="model">res.company</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//page[@string='Report Configuration']/group[@string='Configuration']" position="inside">
-                        <field name="paperformat_id" />
+                    <xpath expr="//page[@name='report']/group[1]" position="inside">
+                        <group col="2" colspan="2">
+                            <field name="paperformat_id" />
+                        </group>
+                        <group col="1" colspan="2" groups="base.group_no_one">
+                            <button name="%(action_report_internalpreview)d" string="Preview Internal Report" type="action"/>
+                            <button name="%(action_report_externalpreview)d" string="Preview External Report" type="action"/>
+                            <button name="edit_external_header" string="Edit external header" type="object" class="oe_link"/>
+                            <button name="edit_external_footer" string="Edit external footer" type="object" class="oe_link"/>
+                            <button name="edit_internal_header" string="Edit internal header" type="object" class="oe_link"/>
+                        </group>
                     </xpath>
                 </data>
             </field>

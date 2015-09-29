@@ -7,10 +7,6 @@ class marketing_config_settings(osv.TransientModel):
     _name = 'marketing.config.settings'
     _inherit = 'res.config.settings'
     _columns = {
-        'module_mass_mailing': fields.boolean(
-            'Mass Mailing',
-            help='Provide a way to perform mass mailings.\n'
-                 '-This installs the module mass_mailing.'),
         'module_marketing_campaign': fields.boolean(
             'Marketing campaigns',
             help='Provides leads automation through marketing campaigns. '

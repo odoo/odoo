@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_et_statements_menu" name="Ethiopian Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
+
+    <record model="account.account.template" id="transfer_account_id">
+        <field name="name">Transfer account</field>
+        <field name="code">212</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets" />
+        <field name="reconcile" eval="True" />
+    </record>
+
+    <record id="l10n_et" model="account.chart.template">
+        <field name="name">Ethiopia Tax and Account Chart Template</field>
+        <field name="code_digits">6</field>
+        <field name="currency_id" ref="base.ETB"/>
+        <field name="bank_account_code_prefix">211</field>
+        <field name="cash_account_code_prefix">211</field>
+        <field name="transfer_account_id" ref="transfer_account_id"/>
+    </record>
+
+    <record model="account.account.template" id="transfer_account_id">
+        <field name="chart_template_id" ref="l10n_et"/>
+    </record>
+
+</odoo>

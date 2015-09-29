@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import exceptions
 from openerp.osv import osv, fields
@@ -45,7 +27,7 @@ class ir_filters(osv.osv):
         # only global ones
         return [('action_id', '=', False)]
 
-    def get_filters(self, cr, uid, model, action_id=None):
+    def get_filters(self, cr, uid, model, action_id=None, context=None):
         """Obtain the list of filters available for the user on the given model.
 
         :param action_id: optional ID of action to restrict filters to this action
@@ -63,7 +45,7 @@ class ir_filters(osv.osv):
         filter_ids = self.search(cr, uid, action_domain +
             [('model_id','=',model),('user_id','in',[uid, False])])
         my_filters = self.read(cr, uid, filter_ids,
-            ['name', 'is_default', 'domain', 'context', 'user_id'], context=context)
+            ['name', 'is_default', 'domain', 'context', 'user_id', 'sort'], context=context)
         return my_filters
 
     def _check_global_default(self, cr, uid, vals, matching_filters, context=None):
@@ -157,19 +139,21 @@ class ir_filters(osv.osv):
                                         "and available to all users."),
         'domain': fields.text('Domain', required=True),
         'context': fields.text('Context', required=True),
+        'sort': fields.text('Sort', required=True),
         'model_id': fields.selection(_list_all_models, 'Model', required=True),
         'is_default': fields.boolean('Default filter'),
         'action_id': fields.many2one('ir.actions.actions', 'Action', ondelete='cascade',
                                      help="The menu action this filter applies to. "
                                           "When left empty the filter applies to all menus "
-                                          "for this model.")
+                                          "for this model."),
+        'active': fields.boolean('Active')
     }
     _defaults = {
         'domain': '[]',
         'context':'{}',
+        'sort': '[]',
         'user_id': lambda self,cr,uid,context=None: uid,
-        'is_default': False
+        'is_default': False,
+        'active': True
     }
     _order = 'model_id, name, id desc'
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

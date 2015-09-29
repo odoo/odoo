@@ -32,6 +32,12 @@ class LRU(object):
     def __contains__(self, obj):
         return obj in self.d
 
+    def get(self, obj, val=None):
+        try:
+            return self[obj]
+        except KeyError:
+            return val
+
     @synchronized()
     def __getitem__(self, obj):
         a = self.d[obj].me
@@ -118,13 +124,3 @@ class LRU(object):
         self.d = {}
         self.first = None
         self.last = None
-
-    @synchronized()
-    def clear_prefix(self, prefix):
-        """ Remove from `self` all the items with the given `prefix`. """
-        n = len(prefix)
-        for key in self.keys():
-            if key[:n] == prefix:
-                del self[key]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

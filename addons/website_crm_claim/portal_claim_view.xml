@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="crm_claim_category_claim0" model="ir.actions.act_window">
+            <field name="name">Claims</field>
+            <field name="res_model">crm.claim</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_id" ref="crm_claim.crm_case_claims_tree_view"/>
+            <field name="context">{"stage_type":'claim', "portal":'True'}</field>
+            <field name="search_view_id" ref="crm_claim.view_crm_case_claims_filter"/>
+            <field name="target">current</field>
+            <field name="help"  type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register a new claim. 
+              </p><p>
+                You can track your claims from this menu and the action we
+                will take.
+              </p>
+            </field>
+        </record>
+
+        <menuitem name="Claims" id="portal_after_sales_claims" parent="portal.portal_after_sales" 
+            action="crm_claim_category_claim0" sequence="10"/>
+
+    </data>
+</openerp>

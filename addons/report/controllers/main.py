@@ -1,30 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.addons.web.http import Controller, route, request
-from openerp.addons.web.controllers.main import _serialize_exception
-from openerp.osv import osv
+from openerp.addons.web.controllers.main import _serialize_exception, content_disposition
 from openerp.tools import html_escape
 
-import simplejson
+import json
 from werkzeug import exceptions, url_decode
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
@@ -47,22 +28,21 @@ class ReportController(Controller):
 
         if docids:
             docids = [int(i) for i in docids.split(',')]
-        options_data = None
         if data.get('options'):
-            options_data = simplejson.loads(data['options'])
+            data.update(json.loads(data.pop('options')))
         if data.get('context'):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
-            # the user explicitely wants to change the lang, this mechanism overwrites it. 
-            data_context = simplejson.loads(data['context'])
-            if data_context.get('lang'):
-                del data_context['lang']
-            context.update(data_context)
+            # the user explicitely wants to change the lang, this mechanism overwrites it.
+            data['context'] = json.loads(data['context'])
+            if data['context'].get('lang'):
+                del data['context']['lang']
+            context.update(data['context'])
 
         if converter == 'html':
-            html = report_obj.get_html(cr, uid, docids, reportname, data=options_data, context=context)
+            html = report_obj.get_html(cr, uid, docids, reportname, data=data, context=context)
             return request.make_response(html)
         elif converter == 'pdf':
-            pdf = report_obj.get_pdf(cr, uid, docids, reportname, data=options_data, context=context)
+            pdf = report_obj.get_pdf(cr, uid, docids, reportname, data=data, context=context)
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         else:
@@ -106,7 +86,7 @@ class ReportController(Controller):
         type [1]
         :returns: Response with a filetoken cookie and an attachment header
         """
-        requestcontent = simplejson.loads(data)
+        requestcontent = json.loads(data)
         url, type = requestcontent[0], requestcontent[1]
         try:
             if type == 'qweb-pdf':
@@ -124,7 +104,10 @@ class ReportController(Controller):
                     data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
                     response = self.report_routes(reportname, converter='pdf', **dict(data))
 
-                response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
+                cr, uid = request.cr, request.uid
+                report = request.registry['report']._get_report_from_name(cr, uid, reportname)
+                filename = "%s.%s" % (report.name, "pdf")
+                response.headers.add('Content-Disposition', content_disposition(filename))
                 response.set_cookie('fileToken', token)
                 return response
             elif type =='controller':
@@ -141,7 +124,7 @@ class ReportController(Controller):
                 'message': "Odoo Server Error",
                 'data': se
             }
-            return request.make_response(html_escape(simplejson.dumps(error)))
+            return request.make_response(html_escape(json.dumps(error)))
 
     @route(['/report/check_wkhtmltopdf'], type='json', auth="user")
     def check_wkhtmltopdf(self):

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_stock_level_forecast_pivot" model="ir.ui.view">
+        <field name="name">Stock.forecast.pivot</field>
+        <field name="model">report.stock.forecast</field>
+        <field name="arch" type="xml">
+            <pivot string="Stock Level forecast" disable_linking="True">
+                <field name="product_id" type="row"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_stock_level_forecast_graph" model="ir.ui.view">
+        <field name="name">Stock.forecast.graph</field>
+        <field name="model">report.stock.forecast</field>
+        <field name="arch" type="xml">
+            <graph string="Stock Level forecast" type="line">
+                <field name="product_id" type="col"/>
+                <field name="cumulative_quantity" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_stock_level_forecast_filter" model="ir.ui.view">
+        <field name="name">view.stock.level.forecast.filter</field>
+        <field name="model">report.stock.forecast</field>
+        <field name="arch" type="xml">
+            <search string="Stock Level forecast">
+                <field name="product_id"/>
+                <field name="product_tmpl_id"/>
+                <field name="date"/>
+                <group expand="1" string="Group By">
+                    <filter string="Pivot" name="pivot_by" context="{'pivot_row_groupby': ['product_id'], 'pivot_column_groupby': ['date:week'],'pivot_measures': ['quantity']}"/>
+                    <filter string="Graph" name="graph_by" context="{'graph_groupbys': ['date:week', 'product_id']}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_level_forecast_report_template" model="ir.actions.act_window">
+        <field name="name">Stock Level Forecast</field>
+        <field name="res_model">report.stock.forecast</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="view_stock_level_forecast_filter"/>
+        <field name="context">{'search_default_pivot_by':1, 'search_default_graph_by':1, 'search_default_product_tmpl_id': active_id}</field>
+        <field name="view_id" ref="view_stock_level_forecast_pivot"/>
+    </record>
+
+    <record id="action_stock_level_forecast_report_product" model="ir.actions.act_window">
+        <field name="name">Stock Level Forecast</field>
+        <field name="res_model">report.stock.forecast</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="view_stock_level_forecast_filter"/>
+        <field name="context">{'search_default_pivot_by':1, 'search_default_graph_by':1, 'search_default_product_id': active_id}</field>
+        <field name="view_id" ref="view_stock_level_forecast_pivot"/>
+    </record>
+</odoo>

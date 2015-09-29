@@ -1,85 +1,121 @@
 # -*- coding: utf-8 -*-
 
-import calendar
-from datetime import date
-from dateutil import relativedelta
-import json
-
-from openerp import tools
 from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 
-class crm_case_section(osv.Model):
-    _inherit = 'crm.case.section'
+class crm_team(osv.Model):
+    _inherit = 'crm.team'
     _inherits = {'mail.alias': 'alias_id'}
 
-    def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
-        """ Get opportunities-related data for salesteam kanban view
-            monthly_open_leads: number of open lead during the last months
-            monthly_planned_revenue: planned revenu of opportunities during the last months
-        """
-        obj = self.pool.get('crm.lead')
-        res = dict.fromkeys(ids, False)
-        month_begin = date.today().replace(day=1)
-        date_begin = month_begin - relativedelta.relativedelta(months=self._period_number - 1)
-        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1])
-        lead_pre_domain = [('create_date', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)),
-                ('create_date', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)),
-                              ('type', '=', 'lead')]
-        opp_pre_domain = [('date_deadline', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
-                      ('date_deadline', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
-                      ('type', '=', 'opportunity')]
-        for id in ids:
-            res[id] = dict()
-            lead_domain = lead_pre_domain + [('section_id', '=', id)]
-            opp_domain = opp_pre_domain + [('section_id', '=', id)]
-            res[id]['monthly_open_leads'] = json.dumps(self.__get_bar_values(cr, uid, obj, lead_domain, ['create_date'], 'create_date_count', 'create_date', context=context))
-            res[id]['monthly_planned_revenue'] = json.dumps(self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'date_deadline'], 'planned_revenue', 'date_deadline', context=context))
-        return res
+    def _get_default_stage_ids(self, cr, uid, context=None):
+        return [
+            (0, 0, {
+                'name': _('Incoming'),
+                'sequence': 1,
+                'probability': 10.0,
+                'on_change': True,
+                'fold': False,
+                'type': 'both',
+            }),
+            (0, 0, {
+                'name': _('Qualified'),
+                'sequence': 2,
+                'probability': 30.0,
+                'on_change': True,
+                'fold': False,
+                'type': 'opportunity',
+            }),
+            (0, 0, {
+                'name': _('Proposal'),
+                'sequence': 3,
+                'probability': 70.0,
+                'on_change': True,
+                'fold': False,
+                'type': 'opportunity',
+            }),
+            (0, 0, {
+                'name': _('Negotiation'),
+                'sequence': 4,
+                'probability': 85.0,
+                'on_change': True,
+                'fold': False,
+                'type': 'opportunity',
+            }),
+            (0, 0, {
+                'name': _('Won'),
+                'sequence': 50,
+                'probability': 100.0,
+                'on_change': True,
+                'fold': True,
+                'type': 'both',
+            })]
 
     _columns = {
         'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
-        'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
+        'stage_ids': fields.many2many('crm.stage', 'crm_team_stage_rel', 'team_id', 'stage_id', 'Stages'),
         'use_leads': fields.boolean('Leads',
             help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
         'use_opportunities': fields.boolean('Opportunities', help="Check this box to manage opportunities in this sales team."),
-        'monthly_open_leads': fields.function(_get_opportunities_data,
-            type="char", readonly=True, multi='_get_opportunities_data',
-            string='Open Leads per Month'),
-        'monthly_planned_revenue': fields.function(_get_opportunities_data,
-            type="char", readonly=True, multi='_get_opportunities_data',
-            string='Planned Revenue per Month'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True, help="The email address associated with this team. New emails received will automatically create new leads assigned to the team."),
     }
 
     def _auto_init(self, cr, context=None):
         """Installation hook to create aliases for all lead and avoid constraint errors."""
-        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(crm_case_section, self)._auto_init,
+        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(crm_team, self)._auto_init,
             'crm.lead', self._columns['alias_id'], 'name', alias_prefix='Lead+', alias_defaults={}, context=context)
 
-    def _get_stage_common(self, cr, uid, context):
-        ids = self.pool.get('crm.case.stage').search(cr, uid, [('case_default', '=', 1)], context=context)
-        return ids
-
     _defaults = {
-        'stage_ids': _get_stage_common,
-        'use_leads': True,
+        'stage_ids': _get_default_stage_ids,
         'use_opportunities': True,
     }
+
+    def onchange_use_leads_opportunities(self, cr, uid, ids, use_leads, use_opportunities, context=None):
+        if use_leads or use_opportunities:
+            return {'value': {}}
+        return {'value': {'alias_name': False}}
+
+    def _get_alias_defaults_values(self, cr, uid, ids, context=None):
+        res = dict.fromkeys(ids, False)
+        is_group_use_lead = self.pool['res.users'].has_group(cr, uid, 'crm.group_use_lead')
+        for team in self.browse(cr, uid, ids, context=context):
+            alias_defaults = eval(team.alias_defaults)
+            alias_defaults.update({
+                'type': 'lead' if is_group_use_lead and team.use_leads else 'opportunity',
+                'team_id': team.id,
+            })
+            res[team.id] = {
+                'alias_defaults': alias_defaults,
+                'alias_parent_thread_id': team.id,
+            }
+        return res
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
         create_context = dict(context, alias_model_name='crm.lead', alias_parent_model_name=self._name)
-        section_id = super(crm_case_section, self).create(cr, uid, vals, context=create_context)
-        section = self.browse(cr, uid, section_id, context=context)
-        self.pool.get('mail.alias').write(cr, uid, [section.alias_id.id], {'alias_parent_thread_id': section_id, 'alias_defaults': {'section_id': section_id, 'type': 'lead'}}, context=context)
-        return section_id
+        generate_alias_name = self.pool['ir.values'].get_default(cr, uid, 'sales.config.settings', 'generate_sales_team_alias')
+        if generate_alias_name and not vals.get('alias_name'):
+            vals['alias_name'] = vals.get('name')
+        team_id = super(crm_team, self).create(cr, uid, vals, context=create_context)
+        self.write(cr, uid, [team_id],
+                   self._get_alias_defaults_values(cr, uid, [team_id], context=context)[team_id],
+                   context=context)
+        return team_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(crm_team, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('use_leads') or vals.get('alias_defaults'):
+            alias_res = self._get_alias_defaults_values(cr, uid, ids, context=context)
+            for team_id, values in alias_res.iteritems():
+                super(crm_team, self).write(cr, uid, [team_id], values, context=context)
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the sales team.
         mail_alias = self.pool.get('mail.alias')
         alias_ids = [team.alias_id.id for team in self.browse(cr, uid, ids, context=context) if team.alias_id]
-        res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
+        res = super(crm_team, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res

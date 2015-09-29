@@ -1,9 +1,6 @@
 # -*- coding: utf-'8' "-*-"
 
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 import logging
 from hashlib import sha256
 import urlparse
@@ -78,14 +75,14 @@ class AcquirerSips(models.Model):
         return shasign.hexdigest()
 
     @api.multi
-    def sips_form_generate_values(self, partner_values, tx_values):
+    def sips_form_generate_values(self, values):
         self.ensure_one()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        currency = self.env['res.currency'].sudo().browse(tx_values['currency_id'])
+        currency = self.env['res.currency'].sudo().browse(values['currency_id'])
         currency_code = CURRENCY_CODES.get(currency.name, False)
         if not currency_code:
             raise ValidationError(_('Currency not supported by Wordline'))
-        amount = int(tx_values.get('amount') * 100)
+        amount = int(values['amount'] * 100)
         if self.environment == 'prod':
             # For production environment, key version 2 is required
             merchant_id = getattr(self, 'sips_merchant_id')
@@ -95,15 +92,15 @@ class AcquirerSips(models.Model):
             merchant_id = '002001000000001'
             key_version = '1'
 
-        sips_tx_values = dict(tx_values)
+        sips_tx_values = dict(values)
         sips_tx_values.update({
             'Data': u'amount=%s|' % amount +
                     u'currencyCode=%s|' % currency_code +
                     u'merchantId=%s|' % merchant_id +
                     u'normalReturnUrl=%s|' % urlparse.urljoin(base_url, SipsController._return_url) +
                     u'automaticResponseUrl=%s|' % urlparse.urljoin(base_url, SipsController._return_url) +
-                    u'transactionReference=%s|' % tx_values['reference'] +
-                    u'statementReference=%s|' % tx_values['reference'] +
+                    u'transactionReference=%s|' % values['reference'] +
+                    u'statementReference=%s|' % values['reference'] +
                     u'keyVersion=%s' % key_version,
             'InterfaceVersion': 'HP_2.3',
         })
@@ -116,7 +113,7 @@ class AcquirerSips(models.Model):
 
         shasign = self._sips_generate_shasign(sips_tx_values)
         sips_tx_values['Seal'] = shasign
-        return partner_values, sips_tx_values
+        return sips_tx_values
 
     @api.multi
     def sips_get_form_action_url(self):

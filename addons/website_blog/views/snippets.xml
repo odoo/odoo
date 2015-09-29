@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="website_blog" inherit_id="website.snippets" name="Snippet Blog">
+
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-js='website_blog'
+            data-selector=".js_blog #title"
+            data-no-check="true">
+
+            <li data-change="true"> <a href="#">Change Cover</a> </li>
+            <li class="dropdown-submenu">
+                <a href="#">Size</a>
+                <ul class="dropdown-menu">
+                    <li data-cover_class="cover cover_full"><a>Full Screen</a></li>
+                    <li data-cover_class="cover container cover_narrow"><a>Narrow</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-submenu">
+                <a href="#">Color</a>
+                <ul class="dropdown-menu">
+                    <li data-bgcolor="oe_blue"><a>Blue</a></li>
+                    <li data-bgcolor="oe_yellow"><a>Yellow</a></li>
+                    <li data-bgcolor="oe_red"><a>Red</a></li>
+                    <li data-bgcolor="oe_purple"><a>Purple</a></li>
+                    <li data-bgcolor="oe_green"><a>Green</a></li>
+                    <li data-bgcolor="oe_none"><a>None</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-submenu">
+                <a href="#">Opacity</a>
+                <ul class="dropdown-menu">
+                    <li data-opacity="1.0"><a>None</a></li>
+                    <li data-opacity="0.8"><a>Low</a></li>
+                    <li data-opacity="0.6"><a>Medium</a></li>
+                    <li data-opacity="0.4"><a>High</a></li>
+                </ul>
+            </li>
+            <li data-clear="true"> <a href="#" >No Cover</a></li>
+        </div>
+    </xpath>
+
+</template>
+</data>
+</openerp>

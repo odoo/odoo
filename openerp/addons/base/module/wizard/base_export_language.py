@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2004-2012 OpenERP S.A. <http://openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import contextlib
@@ -45,7 +27,7 @@ class base_language_export(osv.osv_memory):
             'format': fields.selection([('csv','CSV File'),
                                         ('po','PO File'),
                                         ('tgz', 'TGZ Archive')], 'File Format', required=True),
-            'modules': fields.many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id', 'Modules To Export', domain=[('state','=','installed')]),
+            'modules': fields.many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id', 'Apps To Export', domain=[('state','=','installed')]),
             'data': fields.binary('File', readonly=True),
             'state': fields.selection([('choose', 'choose'),   # choose language
                                        ('get', 'get')])        # get the file
@@ -84,6 +66,3 @@ class base_language_export(osv.osv_memory):
             'views': [(False, 'form')],
             'target': 'new',
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

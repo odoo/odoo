@@ -76,6 +76,3 @@ class test_inherits(common.TransactionCase):
         # search the partner from the daughter record
         partners = self.env['res.partner'].search([('daughter_ids', 'in', daughter.ids)])
         self.assertIn(partner_demo, partners)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from datetime import datetime
@@ -25,6 +7,7 @@ from dateutil import relativedelta
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class hr_payslip_employees(osv.osv_memory):
 
@@ -49,7 +32,7 @@ class hr_payslip_employees(osv.osv_memory):
         to_date = run_data.get('date_end', False)
         credit_note = run_data.get('credit_note', False)
         if not data['employee_ids']:
-            raise osv.except_osv(_("Warning!"), _("You must select employee(s) to generate payslip(s)."))
+            raise UserError(_("You must select employee(s) to generate payslip(s)."))
         for emp in emp_pool.browse(cr, uid, data['employee_ids'], context=context):
             slip_data = slip_pool.onchange_employee_id(cr, uid, [], from_date, to_date, emp.id, contract_id=False, context=context)
             res = {
@@ -67,6 +50,3 @@ class hr_payslip_employees(osv.osv_memory):
             slip_ids.append(slip_pool.create(cr, uid, res, context=context))
         slip_pool.compute_sheet(cr, uid, slip_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

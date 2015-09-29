@@ -18,12 +18,12 @@
                     </group>
                     <footer>
                         <div states="init">
-                            <button name="update_module" string="Update" type="object" class="oe_highlight"/> or
-                            <button special="cancel" string="Cancel" class="oe_link"/>
+                            <button name="update_module" string="Update" type="object" class="btn-primary"/>
+                            <button special="cancel" string="Cancel" class="btn-default"/>
                         </div>
                         <div states="done">
-                            <button name="action_module_open" string="Open Modules" type="object" class="oe_highlight"/> or
-                            <button special="cancel" string="Close" class="oe_link"/>
+                            <button name="action_module_open" string="Open Apps" type="object" class="btn-primary"/>
+                            <button special="cancel" string="Close" class="btn-default"/>
                         </div>
                     </footer>
                 </form>
@@ -40,7 +40,7 @@
         </record>
 
         <menuitem
-            name="Update Modules List"
+            name="Update Apps List"
             action="action_view_base_module_update"
             id="menu_view_base_module_update"
             groups="base.group_no_one"

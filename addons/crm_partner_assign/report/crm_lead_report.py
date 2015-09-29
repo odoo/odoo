@@ -1,27 +1,9 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
-from openerp.addons.crm import crm
+from openerp.addons.crm import crm_stage
 
 
 class crm_lead_report_assign(osv.osv):
@@ -34,7 +16,7 @@ class crm_lead_report_assign(osv.osv):
         'grade_id':fields.many2one('res.partner.grade', 'Grade', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
+        'team_id':fields.many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'date_assign': fields.date('Assign Date', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
@@ -45,13 +27,13 @@ class crm_lead_report_assign(osv.osv):
         'probability_max': fields.float('Max Probability',digits=(16,2),readonly=True, group_operator="max"),
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
+        'stage_id': fields.many2one ('crm.stage', 'Stage', domain="[('team_ids', '=', team_id)]"),
         'partner_id': fields.many2one('res.partner', 'Customer' , readonly=True),
         'opening_date': fields.datetime('Opening Date', readonly=True),
         'date_closed': fields.datetime('Close Date', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),  # TDE FIXME master: rename into nbr_cases
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Priority'),
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity')
@@ -78,7 +60,7 @@ class crm_lead_report_assign(osv.osv):
                     c.type,
                     c.company_id,
                     c.priority,
-                    c.section_id,
+                    c.team_id,
                     c.partner_id,
                     c.country_id,
                     c.planned_revenue,
@@ -95,6 +77,3 @@ class crm_lead_report_assign(osv.osv):
                     crm_lead c
                     left join res_partner p on (c.partner_assigned_id=p.id)
             )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

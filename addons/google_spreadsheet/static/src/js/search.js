@@ -1,54 +1,65 @@
-openerp.google_spreadsheet = function(instance) {
-    var _t = instance.web._t;
-    instance.web.FormView.include({
-    	on_processed_onchange: function(result, processed) {
-    		var self = this;
-    		
-    			var fields = self.fields;
-		        _(result.selection).each(function (selection, fieldname) {
-		            var field = fields[fieldname];
-		            if (!field) { return; }
-		            field.field.selection = selection;
-		            field.values = selection;
-		            field.renderElement(); 
-		        });
-    		return this._super(result, processed);
-    	},
-    });
-    instance.board.AddToGoogleSpreadsheet = instance.web.search.Input.extend({
-	    template: 'SearchView.addtogooglespreadsheet',
-	    _in_drawer: true,
-	    start: function () {
-	        var self = this;
-	        this.$el.on('click', 'h4', function(){
-    		 	var view = self.view;
-				var data = view.build_search_data();
-				var model = view.model;
-				var list_view = self.view.getParent().views['list'];
-				var view_id = list_view ? list_view.view_id : false; 
-		        var context = new instance.web.CompoundContext(view.dataset.get_context() || []);
-		        var domain = new instance.web.CompoundDomain(view.dataset.get_domain() || []);
-		        _.each(data.contexts, context.add, context);
-		        _.each(data.domains, domain.add, domain);
-		        domain = JSON.stringify(domain.eval());
-		        var groupbys = instance.web.pyeval.eval('groupbys', data.groupbys).join(" ");
-		        var view_id = view_id;
-                var ds = new instance.web.DataSet(self, 'google.drive.config');
-                ds.call('set_spreadsheet', [model, domain, groupbys, view_id]).done(function (res) {
-        			if (res['url']){
-            			window.open(res['url'], '_blank');
-        			}
-				});
-	        });
-	    },
-	});
-	instance.web.SearchViewDrawer.include({
-	    add_common_inputs: function() {
-	        this._super();
-	        var vm = this.getParent().getParent();
-	        if (vm.inner_action && vm.inner_action.views) {
-	            (new instance.board.AddToGoogleSpreadsheet(this));
-	        }
-	    }
-	});
-};
+odoo.define('google_spreadsheet.google.spreadsheet', function (require) {
+"use strict";
+
+var ActionManager = require('web.ActionManager');
+var core = require('web.core');
+var data = require('web.data');
+var FavoriteMenu = require('web.FavoriteMenu');
+var FormView = require('web.FormView');
+var pyeval = require('web.pyeval');
+var ViewManager = require('web.ViewManager');
+
+var QWeb = core.qweb;
+
+FormView.include({
+    on_processed_onchange: function(result, processed) {
+        var self = this;
+        var fields = self.fields;
+        _(result.selection).each(function (selection, fieldname) {
+            var field = fields[fieldname];
+            if (!field) { return; }
+            field.field.selection = selection;
+            field.values = selection;
+            field.renderElement(); 
+        });
+        return this._super(result, processed);
+    },
+});
+
+FavoriteMenu.include({
+    prepare_dropdown_menu: function (filters) {
+        this._super(filters);
+        var am = this.findAncestor(function(a) {
+            return a instanceof ActionManager;
+        });
+        if (am && am.get_inner_widget() instanceof ViewManager) {
+            this.view_manager = am.get_inner_widget();
+            this.$('.o_favorites_menu').append(QWeb.render('SearchView.addtogooglespreadsheet'));
+            this.$('.add-to-spreadsheet').click(this.add_to_spreadsheet.bind(this));
+        }
+    },
+    add_to_spreadsheet: function () {
+        var sv_data = this.searchview.build_search_data(),
+            model = this.searchview.dataset.model,
+            list_view = this.view_manager.views.list,
+            list_view_id = list_view ? list_view.view_id : false,
+            context = this.searchview.dataset.get_context() || [],
+            compound_context = new data.CompoundContext(context),
+            compound_domain = new data.CompoundDomain(context),
+            groupbys = pyeval.eval('groupbys', sv_data.groupbys).join(" "),
+            ds = new data.DataSet(this, 'google.drive.config');
+
+        _.each(sv_data.contexts, compound_context.add, compound_context);
+        _.each(sv_data.domains, compound_domain.add, compound_domain);
+
+        compound_domain = JSON.stringify(compound_domain.eval());
+        ds.call('set_spreadsheet', [model, compound_domain, groupbys, list_view_id])
+            .done(function (res) {
+                if (res.url){
+                    window.open(res.url, '_blank');
+                }
+            });
+    },
+});
+
+});

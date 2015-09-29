@@ -1,28 +1,9 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'WMS Accounting',
     'version': '1.1',
-    'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Valuation, Accounting',
     'description': """
 WMS Accounting module
@@ -43,20 +24,19 @@ Dashboard / Reports for Warehouse Management includes:
     'category': 'Hidden',
     'sequence': 16,
     'demo': [
-        'stock_account_demo.xml'
+        'stock_account_demo.yml'
     ],
     'data': [
         'security/stock_account_security.xml',
         'security/ir.model.access.csv',
         'stock_account_data.xml',
         'wizard/stock_change_standard_price_view.xml',
-        'wizard/stock_invoice_onshipping_view.xml',
         'wizard/stock_valuation_history_view.xml',
-        'wizard/stock_return_picking_view.xml',
         'product_data.xml',
         'product_view.xml',
         'stock_account_view.xml',
         'res_config_view.xml',
+        'stock_account_post_install.yml',
     ],
     'test': [
 

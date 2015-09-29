@@ -11,7 +11,7 @@
 -
     Create new product without any routes.
 -
-    !record {model: product.product, id: cross_shop_product}:
+    !record {model: product.product, id: cross_shop_product, view: False}:
         name: PCE
         type: product
         categ_id: product.product_category_1
@@ -44,7 +44,8 @@
 -
     Confirm sales order.
 -
-    !workflow {model: sale.order, action: order_confirm, ref: sale_order_crossdock_shpng}
+    !python {model: sale.order}: |
+        self.action_confirm(cr, uid, ref("sale_order_crossdock_shpng"), context=context)
 -
     Run the scheduler.
 -
@@ -55,4 +56,4 @@
 -
     !python {model: purchase.order}: |
         po_id = self.search(cr, uid, [('partner_id', '=', ref('supplier_crossdock')), ('state','=','draft')])
-        self.wkf_confirm_order(cr, uid, po_id)
+        self.button_confirm(cr, uid, po_id)

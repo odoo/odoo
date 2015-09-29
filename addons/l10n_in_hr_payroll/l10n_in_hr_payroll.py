@@ -1,23 +1,5 @@
 #-*- coding:utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP SA (<http://openerp.com>). All Rights Reserved
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from datetime import datetime
@@ -27,6 +9,7 @@ from calendar import isleap
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 DATETIME_FORMAT = "%Y-%m-%d"
 
@@ -103,7 +86,7 @@ class payroll_advice(osv.osv):
             slip_ids = payslip_pool.search(cr, uid, [('date_from', '<=', advice.date), ('date_to', '>=', advice.date), ('state', '=', 'done')], context=context)
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
-                    raise osv.except_osv(_('Error!'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+                    raise UserError(_('Please define bank account for the %s employee') % (slip.employee_id.name,))
                 line_ids = payslip_line_pool.search(cr, uid, [ ('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
                 if line_ids:
                     line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
@@ -129,10 +112,10 @@ class payroll_advice(osv.osv):
         seq_obj = self.pool.get('ir.sequence')
         for advice in self.browse(cr, uid, ids, context=context):
             if not advice.line_ids:
-                raise osv.except_osv(_('Error!'), _('You can not confirm Payment advice without advice lines.'))
+                raise UserError(_('You can not confirm Payment advice without advice lines.'))
             advice_date = datetime.strptime(advice.date, DATETIME_FORMAT)
             advice_year = advice_date.strftime('%m') + '-' + advice_date.strftime('%Y')
-            number = seq_obj.get(cr, uid, 'payment.advice')
+            number = seq_obj.next_by_code(cr, uid, 'payment.advice')
             sequence_num = 'PAY' + '/' + advice_year + '/' + number
             self.write(cr, uid, [advice.id], {'number': sequence_num, 'state': 'confirm'}, context=context)
         return True
@@ -152,7 +135,7 @@ class payroll_advice(osv.osv):
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, [company_id], context=context)[0]
             if company.partner_id.bank_ids:
-                res.update({'bank_id': company.partner_id.bank_ids[0].bank.id})
+                res.update({'bank_id': company.partner_id.bank_ids[0].bank_id.id})
         return {
             'value':res
         }
@@ -180,13 +163,13 @@ class hr_payslip_run(osv.osv):
         users = self.pool.get('res.users').browse(cr, uid, [uid], context=context)
         for run in self.browse(cr, uid, ids, context=context):
             if run.available_advice:
-                raise osv.except_osv(_('Error!'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") %(run.name))
+                raise UserError(_("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") % (run.name,))
             advice_data = {
                         'batch_id': run.id,
                         'company_id': users[0].company_id.id,
                         'name': run.name,
                         'date': run.date_end,
-                        'bank_id': users[0].company_id.bank_ids and users[0].company_id.bank_ids[0].id or False
+                        'bank_id': users[0].company_id.partner_id.bank_ids and users[0].company_id.partner_id.bank_ids[0].id or False
                     }
             advice_id = advice_pool.create(cr, uid, advice_data, context=context)
             slip_ids = []
@@ -198,7 +181,7 @@ class hr_payslip_run(osv.osv):
 
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id or not slip.employee_id.bank_account_id.acc_number:
-                    raise osv.except_osv(_('Error!'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+                    raise UserError(_('Please define bank account for the %s employee') % (slip.employee_id.name))
                 line_ids = payslip_line_pool.search(cr, uid, [('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
                 if line_ids:
                     line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
@@ -261,6 +244,3 @@ class res_company(osv.osv):
     _defaults = {
         'dearness_allowance': True,
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

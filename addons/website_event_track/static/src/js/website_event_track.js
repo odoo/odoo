@@ -1,12 +1,9 @@
+odoo.define('website_event_track.website_event_track', function (require) {
+"use strict";
+
 $(document).ready(function() {
 
-    jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
-        return function( elem ) {
-            return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-        };
-    });
-
-    $("#event_track_search").bind('keyup', function(e){
+    $("#event_track_search").bind('keyup', function(){
         var change_text = $(this).val();
         $('.event_track').removeClass('invisible');
 
@@ -20,5 +17,7 @@ $(document).ready(function() {
 
         event.preventDefault();
     });
+
+});
 
 });

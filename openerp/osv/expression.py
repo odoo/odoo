@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Domain expression processing
 
@@ -855,7 +837,7 @@ class expression(object):
                 raise NotImplementedError('_auto_join attribute not supported on many2many column %s' % left)
 
             elif len(path) > 1 and column._type == 'many2one':
-                right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=context)
+                right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=dict(context, active_test=False))
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
@@ -938,9 +920,10 @@ class expression(object):
 
                 if right is not False:
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in comodel.name_search(cr, uid, right, [], operator, context=context, limit=None)]
+                        op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
+                        ids2 = [x[0] for x in comodel.name_search(cr, uid, right, [], op, context=context, limit=None)]
                         if ids2:
-                            operator = 'in'
+                            operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                     elif isinstance(right, collections.Iterable):
                         ids2 = right
                     else:
@@ -969,7 +952,6 @@ class expression(object):
 
             elif column._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = column._sql_names(model)
-                #FIXME
                 if operator == 'child_of':
                     def _rec_convert(ids):
                         if comodel == model:
@@ -984,9 +966,10 @@ class expression(object):
                     call_null_m2m = True
                     if right is not False:
                         if isinstance(right, basestring):
-                            res_ids = [x[0] for x in comodel.name_search(cr, uid, right, [], operator, context=context)]
+                            op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
+                            res_ids = [x[0] for x in comodel.name_search(cr, uid, right, [], op, context=context)]
                             if res_ids:
-                                operator = 'in'
+                                operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                         else:
                             if not isinstance(right, list):
                                 res_ids = [right]
@@ -1046,6 +1029,23 @@ class expression(object):
                         push_result(leaf)
 
             # -------------------------------------------------
+            # BINARY FIELDS STORED IN ATTACHMENT
+            # -> check for null only
+            # -------------------------------------------------
+
+            elif column._type == 'binary' and column.attachment:
+                if operator in ('=', '!=') and not right:
+                    inselect_operator = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
+                    subselect = "SELECT res_id FROM ir_attachment WHERE res_model=%s AND res_field=%s"
+                    params = (model._name, left)
+                    push(create_substitution_leaf(leaf, ('id', inselect_operator, (subselect, params)), model, internal=True))
+                else:
+                    _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
+                                  column.string, left, operator, right)
+                    leaf.leaf = TRUE_LEAF
+                    push(leaf)
+
+            # -------------------------------------------------
             # OTHER FIELDS
             # -> datetime fields: manage time part of the datetime
             #    column when it is not there
@@ -1060,7 +1060,7 @@ class expression(object):
                         right += ' 00:00:00'
                     push(create_substitution_leaf(leaf, (left, operator, right), model))
 
-                elif column.translate and right:
+                elif column.translate and not callable(column.translate) and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
@@ -1082,15 +1082,15 @@ class expression(object):
 
                     subselect = """WITH temp_irt_current (id, name) as (
                             SELECT ct.id, coalesce(it.value,ct.{quote_left})
-                            FROM {current_table} ct 
-                            LEFT JOIN ir_translation it ON (it.name = %s and 
-                                        it.lang = %s and 
-                                        it.type = %s and 
-                                        it.res_id = ct.id and 
+                            FROM {current_table} ct
+                            LEFT JOIN ir_translation it ON (it.name = %s and
+                                        it.lang = %s and
+                                        it.type = %s and
+                                        it.res_id = ct.id and
                                         it.value != '')
-                            ) 
+                            )
                             SELECT id FROM temp_irt_current WHERE {name} {operator} {right} order by name
-                            """.format(current_table=model._table, quote_left=_quote(left), name=unaccent('name'), 
+                            """.format(current_table=model._table, quote_left=_quote(left), name=unaccent('name'),
                                        operator=sql_operator, right=instr)
 
                     params = (
@@ -1276,5 +1276,3 @@ class expression(object):
             query = '(%s) AND %s' % (joins, query)
 
         return query, tools.flatten(params)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

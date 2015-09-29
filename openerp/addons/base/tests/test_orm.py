@@ -425,5 +425,3 @@ class TestO2MSerialization(common.TransactionCase):
             self.cr, UID, 'child_ids', [DELETE_ALL()], ['name'])
 
         self.assertEqual(results, [])
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

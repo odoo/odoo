@@ -2,33 +2,15 @@
 # -*- coding: utf-8 -*-
 # This test can be run stand-alone with something like:
 # > PYTHONPATH=. python2 openerp/tests/test_misc.py
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import unittest2
+import unittest
 
 from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html, email_split
 import test_mail_examples
 
 
-class TestSanitizer(unittest2.TestCase):
+class TestSanitizer(unittest.TestCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
 
     def test_basic_sanitizer(self):
@@ -129,7 +111,7 @@ class TestSanitizer(unittest2.TestCase):
         self.assertNotIn('</body></html>', html, 'html_sanitize did not remove extra closing tags')
 
 
-class TestCleaner(unittest2.TestCase):
+class TestCleaner(unittest.TestCase):
     """ Test the email cleaner function that filters the content of incoming emails """
 
     def test_00_basic_text(self):
@@ -334,7 +316,7 @@ class TestCleaner(unittest2.TestCase):
         for ext in test_mail_examples.BUG_1_IN:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed valid content')
         for ext in test_mail_examples.BUG_1_OUT:
-            self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed invalid content')
+            self.assertNotIn(ext.decode('utf-8'), new_html, 'html_email_cleaner did not removed invalid content')
 
         new_html = html_email_clean(test_mail_examples.BUG2, remove=True, shorten=True, max_length=250)
         for ext in test_mail_examples.BUG_2_IN:
@@ -358,7 +340,7 @@ class TestCleaner(unittest2.TestCase):
         self.assertNotIn('encoding', new_html, 'html_email_cleaner did not remove correctly encoding attributes')
 
 
-class TestHtmlTools(unittest2.TestCase):
+class TestHtmlTools(unittest.TestCase):
     """ Test some of our generic utility functions about html """
 
     def test_plaintext2html(self):
@@ -385,7 +367,7 @@ class TestHtmlTools(unittest2.TestCase):
             self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag), expected, 'append_content_to_html is broken')
 
 
-class TestEmailTools(unittest2.TestCase):
+class TestEmailTools(unittest.TestCase):
     """ Test some of our generic utility functions for emails """
 
     def test_email_split(self):
@@ -400,4 +382,4 @@ class TestEmailTools(unittest2.TestCase):
             self.assertEqual(email_split(text), expected, 'email_split is broken')
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

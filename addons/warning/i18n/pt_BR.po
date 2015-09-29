@@ -3,15 +3,14 @@
 # * warning
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 08:10+0000\n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 09:17+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,37 +27,37 @@ msgstr "Mensagem de Bloqueio"
 
 #. module: warning
 #: model:ir.model,name:warning.model_account_invoice
-#: field:res.partner,invoice_warn:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_invoice_warn
 msgid "Invoice"
 msgstr "Fatura"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_invoice_warn_msg
 msgid "Message for Invoice"
 msgstr "Mensagem para Fatura"
 
 #. module: warning
-#: field:res.partner,purchase_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_purchase_warn_msg
 msgid "Message for Purchase Order"
 msgstr "Mensagem para Pedido de Compra"
 
 #. module: warning
-#: field:product.template,purchase_line_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_product_template_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
 msgstr "Mensagem para Linha do Pedido de Compra"
 
 #. module: warning
-#: field:res.partner,sale_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_sale_warn_msg
 msgid "Message for Sales Order"
 msgstr "Mensagem para o Pedido de Vendas"
 
 #. module: warning
-#: field:product.template,sale_line_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_product_template_sale_line_warn_msg
 msgid "Message for Sales Order Line"
 msgstr "Mensagem para a Linha do Pedido de Vendas"
 
 #. module: warning
-#: field:res.partner,picking_warn_msg:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_picking_warn_msg
 msgid "Message for Stock Picking"
 msgstr "Mensagem para Separação de Estoque"
 
@@ -76,44 +75,42 @@ msgid "Partner"
 msgstr "Parceiro"
 
 #. module: warning
-#: model:ir.model,name:warning.model_stock_picking
-msgid "Picking List"
-msgstr "Lista de Separação"
-
-#. module: warning
 #: model:ir.model,name:warning.model_product_template
 msgid "Product Template"
 msgstr "Modelo de Produto"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
-#: field:res.partner,purchase_warn:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_purchase_warn
 msgid "Purchase Order"
 msgstr "Pedido de Compra"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
-#: field:product.template,purchase_line_warn:0
+#: model:ir.model.fields,field_description:warning.field_product_template_purchase_line_warn
 msgid "Purchase Order Line"
 msgstr "Linha de Pedido de Compra"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order field:res.partner,sale_warn:0
+#: model:ir.model,name:warning.model_sale_order
+#: model:ir.model.fields,field_description:warning.field_res_partner_sale_warn
 msgid "Sales Order"
 msgstr "Pedido de Venda"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
-#: field:product.template,sale_line_warn:0
+#: model:ir.model.fields,field_description:warning.field_product_template_sale_line_warn
 msgid "Sales Order Line"
 msgstr "Linha de Pedido de Vendas"
 
 #. module: warning
-#: code:addons/warning/warning.py:31
-#: help:product.template,purchase_line_warn:0
-#: help:product.template,sale_line_warn:0 help:res.partner,invoice_warn:0
-#: help:res.partner,picking_warn:0 help:res.partner,purchase_warn:0
-#: help:res.partner,sale_warn:0
+#: code:addons/warning/warning.py:14
+#: model:ir.model.fields,help:warning.field_product_template_purchase_line_warn
+#: model:ir.model.fields,help:warning.field_product_template_sale_line_warn
+#: model:ir.model.fields,help:warning.field_res_partner_invoice_warn
+#: model:ir.model.fields,help:warning.field_res_partner_picking_warn
+#: model:ir.model.fields,help:warning.field_res_partner_purchase_warn
+#: model:ir.model.fields,help:warning.field_res_partner_sale_warn
 #, python-format
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
@@ -122,9 +119,14 @@ msgid ""
 msgstr "Selecionando a opção de \"Aviso\" irá notificar o usuário com a mensagem, marcar \"Mensagem de Bloqueio\" irá lançar uma exceção com a mensagem e bloquear o fluxo. A mensagem tem de ser escrita no campo a seguir."
 
 #. module: warning
-#: field:res.partner,picking_warn:0
+#: model:ir.model.fields,field_description:warning.field_res_partner_picking_warn
 msgid "Stock Picking"
 msgstr "Separação de Estoque"
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Transfer"
+msgstr "Transferir"
 
 #. module: warning
 #: selection:product.template,purchase_line_warn:0
@@ -135,45 +137,44 @@ msgid "Warning"
 msgstr "Aviso"
 
 #. module: warning
-#: code:addons/warning/warning.py:64 code:addons/warning/warning.py:94
-#: code:addons/warning/warning.py:132 code:addons/warning/warning.py:166
-#: code:addons/warning/warning.py:216 code:addons/warning/warning.py:250
+#: code:addons/warning/warning.py:57 code:addons/warning/warning.py:93
+#: code:addons/warning/warning.py:130 code:addons/warning/warning.py:160
+#: code:addons/warning/warning.py:207 code:addons/warning/warning.py:242
 #, python-format
 msgid "Warning for %s"
 msgstr "Aviso para %s"
 
 #. module: warning
-#: view:res.partner:warning.view_partner_warning_form
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
 msgid "Warning on the Invoice"
 msgstr "Aviso na Fatura"
 
 #. module: warning
-#: view:res.partner:warning.view_partner_warning_form
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
 msgid "Warning on the Picking"
 msgstr "Aviso sobre a Separação"
 
 #. module: warning
-#: view:res.partner:warning.view_partner_warning_form
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
 msgid "Warning on the Purchase Order"
 msgstr "Aviso no Pedido de Compra"
 
 #. module: warning
-#: view:res.partner:warning.view_partner_warning_form
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
 msgid "Warning on the Sales Order"
 msgstr "Aviso no Pedido de Vendas"
 
 #. module: warning
-#: view:product.template:warning.product_warning_form_view
+#: model:ir.ui.view,arch_db:warning.product_warning_form_view
 msgid "Warning when Purchasing this Product"
 msgstr "Aviso para quando Comprar este Produto"
 
 #. module: warning
-#: view:product.template:warning.product_warning_form_view
+#: model:ir.ui.view,arch_db:warning.product_warning_form_view
 msgid "Warning when Selling this Product"
 msgstr "Aviso para quando Vender este Produto"
 
 #. module: warning
-#: view:product.template:warning.product_warning_form_view
-#: view:res.partner:warning.view_partner_warning_form
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
 msgid "Warnings"
 msgstr "Avisos"

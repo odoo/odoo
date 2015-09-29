@@ -1,28 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import pickle
 
 from openerp import tools
 from openerp.osv import osv, fields
-from openerp.osv.orm import except_orm
+from openerp.exceptions import AccessError, MissingError
+from openerp.tools.translate import _
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
@@ -191,17 +174,17 @@ class ir_values(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         res = super(ir_values, self).create(cr, uid, vals, context=context)
-        self.get_defaults_dict.clear_cache(self)
+        self.clear_caches()
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(ir_values, self).write(cr, uid, ids, vals, context=context)
-        self.get_defaults_dict.clear_cache(self)
+        self.clear_caches()
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_values, self).unlink(cr, uid, ids, context=context)
-        self.get_defaults_dict.clear_cache(self)
+        self.clear_caches()
         return res
 
     def set_default(self, cr, uid, model, field_name, value, for_all_users=True, company_id=False, condition=False):
@@ -336,7 +319,7 @@ class ir_values(osv.osv):
         return defaults.values()
 
     # use ormcache: this is called a lot by BaseModel.default_get()!
-    @tools.ormcache(skiparg=2)
+    @tools.ormcache('uid', 'model', 'condition')
     def get_defaults_dict(self, cr, uid, model, condition=False):
         """ Returns a dictionary mapping field names with their corresponding
             default value. This method simply improves the returned value of
@@ -386,6 +369,7 @@ class ir_values(osv.osv):
             'value': action,
         })
 
+    @tools.ormcache_context('uid', 'action_slot', 'model', 'res_id', keys=('lang',))
     def get_actions(self, cr, uid, action_slot, model, res_id=False, context=None):
         """Retrieves the list of actions bound to the given model's action slot.
            See the class description for more details about the various action
@@ -415,32 +399,37 @@ class ir_values(osv.osv):
                              OR v.res_id = 0)
                    ORDER BY v.id"""
         cr.execute(query, ('action', action_slot, model, res_id or None))
+
+        # map values to their corresponding action record
+        actions = []
+        for id, name, value in cr.fetchall():
+            if not value:
+                continue                # skip if undefined
+            action_model, action_id = value.split(',')
+            if action_model not in self.pool:
+                continue                # unknown model? skip it!
+            action = self.pool[action_model].browse(cr, uid, int(action_id), context)
+            actions.append((id, name, action))
+
+        # process values and their action
+        user = self.pool['res.users'].browse(cr, uid, uid, context)
         results = {}
-        for action in cr.dictfetchall():
-            if not action['value']:
-                continue    # skip if undefined
-            action_model_name, action_id = action['value'].split(',')
-            if action_model_name not in self.pool:
-                continue    # unknow model? skip it
-            action_model = self.pool[action_model_name]
-            fields = [field for field in action_model._fields if field not in EXCLUDED_FIELDS]
+        for id, name, action in actions:
+            fields = [field for field in action._fields if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
-                action_def = action_model.read(cr, uid, int(action_id), fields, context)
-                if action_def:
-                    if action_model_name in ('ir.actions.report.xml', 'ir.actions.act_window'):
-                        groups = action_def.get('groups_id')
-                        if groups:
-                            cr.execute('SELECT 1 FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',
-                                       (tuple(groups), uid))
-                            if not cr.fetchone():
-                                if action['name'] == 'Menuitem':
-                                    raise osv.except_osv('Error!',
-                                                         'You do not have the permission to perform this operation!!!')
-                                continue
-                # keep only the first action registered for each action name
-                results[action['name']] = (action['id'], action['name'], action_def)
-            except except_orm:
+                action_def = {
+                    field: action._fields[field].convert_to_read(action[field])
+                    for field in fields
+                }
+                if action._name in ('ir.actions.report.xml', 'ir.actions.act_window'):
+                    if action.groups_id and not action.groups_id & user.groups_id:
+                        if name == 'Menuitem':
+                            raise AccessError(_('You do not have the permission to perform this operation!!!'))
+                        continue
+                # keep only the last action registered for each action name
+                results[name] = (id, name, action_def)
+            except (AccessError, MissingError):
                 continue
         return sorted(results.values())
 
@@ -499,5 +488,3 @@ class ir_values(osv.osv):
             def do_get(model,res_id):
                 return self.get_actions(cr, uid, action_slot=key2, model=model, res_id=res_id, context=context)
         return self._map_legacy_model_list(models, do_get, merge_results=True)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

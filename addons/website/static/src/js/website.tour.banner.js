@@ -1,13 +1,18 @@
-(function () {
-    'use strict';
+odoo.define('website.tour.banner', function (require) {
+'use strict';
 
-    var _t = openerp._t;
-    var website = openerp.website;
-    website.ready().done(function() {
-    openerp.Tour.register({
+var core = require('web.core');
+var Tour = require('web.Tour');
+var base = require('web_editor.base');
+
+var _t = core._t;
+
+base.ready().done(function () {
+
+    Tour.register({
         id:   'banner',
         name: _t("Build a page"),
-        path: '/page/website.homepage',
+        path: '/page/homepage',
         steps: [
             {
                 title:     _t("Welcome to your website!"),
@@ -23,13 +28,6 @@
                 popover:   { fixed: true },
             },
             {
-                element:   'button[data-action=snippet]',
-                placement: 'bottom',
-                title:     _t("Insert building blocks"),
-                content:   _t("Click here to insert blocks of content in the page."),
-                popover:   { fixed: true },
-            },
-            {
                 snippet:   '#snippet_structure .oe_snippet:first',
                 placement: 'bottom',
                 title:     _t("Drag & Drop a Banner"),
@@ -38,7 +36,7 @@
             },
             {
                 waitFor:   '.oe_overlay_options .oe_options:visible',
-                element:   '#wrap .carousel:first div.carousel-content',
+                element:   '#wrapwrap .carousel:first div.carousel-content',
                 placement: 'top',
                 title:     _t("Customize banner's text"),
                 content:   _t("Click in the text and start editing it."),
@@ -63,14 +61,7 @@
             },
             {
                 waitNot:   '.popover.tour',
-                element:   'button[data-action=snippet]',
-                placement: 'bottom',
-                title:     _t("Add Another Block"),
-                content:   _t("Let's add another building block to your page."),
-                popover:   { fixed: true },
-            },
-            {
-                snippet:   '#snippet_structure .oe_snippet:eq(6)',
+                snippet:   '#snippet_structure .oe_snippet:eq(7)',
                 placement: 'bottom',
                 title:     _t("Drag & Drop This Block"),
                 content:   _t("Drag the <em>'Features'</em> block and drop it below the banner."),
@@ -85,7 +76,7 @@
                 popover:   { fixed: true },
             },
             {
-                waitFor:   'button[data-action=save]:not(:visible)',
+                waitFor:   'button[data-action=edit]:visible',
                 title:     _t("Good Job!"),
                 content:   _t("Well done, you created your homepage."),
                 popover:   { next: _t("Continue") },
@@ -99,14 +90,14 @@
                 popover:   { fixed: true },
             },
             {
-                element:   '.modal:has(#mobile-viewport) button[data-dismiss=modal]',
+                element:   '.modal-dialog:has(#mobile-viewport) button[data-dismiss=modal]',
                 placement: 'right',
                 title:     _t("Check Mobile Preview"),
                 content:   _t("Scroll to check rendering and then close the mobile preview."),
                 popover:   { next: _t("Continue") },
             },
             {
-                waitNot:   '.modal',
+                waitNot:   '.modal-dialog:has(#mobile-viewport)',
                 element:   '#content-menu-button',
                 placement: 'left',
                 title:     _t("Add new pages and menus"),
@@ -115,6 +106,6 @@
             },
         ]
     });
-    });
+});
 
-}());
+});

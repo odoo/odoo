@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-2014 OpenERP (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ This module provides the elements for managing two different API styles,
     namely the "traditional" and "record" styles.
@@ -383,6 +365,15 @@ def one(method):
             names = recs.method(args)
 
             names = model.method(cr, uid, ids, args, context=context)
+
+        .. deprecated:: 9.0
+
+            :func:`~.one` often makes the code less clear and behaves in ways
+            developers and readers may not expect.
+
+            It is strongly recommended to use :func:`~.multi` and either
+            iterate on the ``self`` recordset or ensure that the recordset
+            is a single record with :meth:`~openerp.models.Model.ensure_one`.
     """
     split = get_context_split(method)
     downgrade = get_downgrade(method)
@@ -670,7 +661,8 @@ class Environment(object):
          - :attr:`uid`, the current user id;
          - :attr:`context`, the current context dictionary.
 
-        It also provides access to the registry, a cache for records, and a data
+        It provides access to the registry by implementing a mapping from model
+        names to new api models. It also holds a cache for records, and a data
         structure to manage recomputations.
     """
     _local = Local()
@@ -721,9 +713,21 @@ class Environment(object):
         envs.add(self)
         return self
 
+    def __contains__(self, model_name):
+        """ Test whether the given model exists. """
+        return model_name in self.registry
+
     def __getitem__(self, model_name):
-        """ return a given model """
+        """ Return an empty recordset from the given model. """
         return self.registry[model_name]._browse(self, ())
+
+    def __iter__(self):
+        """ Return an iterator on model names. """
+        return iter(self.registry)
+
+    def __len__(self):
+        """ Return the size of the model registry. """
+        return len(self.registry)
 
     def __call__(self, cr=None, user=None, context=None):
         """ Return an environment based on ``self`` with modified parameters.
@@ -833,15 +837,13 @@ class Environment(object):
             raise
 
     def field_todo(self, field):
-        """ Check whether ``field`` must be recomputed, and returns a recordset
-            with all records to recompute for ``field``.
-        """
-        if field in self.all.todo:
-            return reduce(operator.or_, self.all.todo[field])
+        """ Return a recordset with all records to recompute for ``field``. """
+        ids = {rid for recs in self.all.todo.get(field, ()) for rid in recs.ids}
+        return self[field.model_name].browse(ids)
 
     def check_todo(self, field, record):
         """ Check whether ``field`` must be recomputed on ``record``, and if so,
-            returns the corresponding recordset to recompute.
+            return the corresponding recordset to recompute.
         """
         for recs in self.all.todo.get(field, []):
             if recs & record:
@@ -850,7 +852,12 @@ class Environment(object):
     def add_todo(self, field, records):
         """ Mark ``field`` to be recomputed on ``records``. """
         recs_list = self.all.todo.setdefault(field, [])
-        recs_list.append(records)
+        for i, recs in enumerate(recs_list):
+            if recs.env == records.env:
+                recs_list[i] |= records
+                break
+        else:
+            recs_list.append(records)
 
     def remove_todo(self, field, records):
         """ Mark ``field`` as recomputed on ``records``. """
@@ -893,7 +900,7 @@ class Environment(object):
                     pass
 
         if invalids:
-            raise Warning('Invalid cache for fields\n' + pformat(invalids))
+            raise UserError('Invalid cache for fields\n' + pformat(invalids))
 
     @property
     def recompute(self):
@@ -936,5 +943,5 @@ class Environments(object):
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
-from openerp.exceptions import Warning, AccessError, MissingError
+from openerp.exceptions import UserError, AccessError, MissingError
 from openerp.modules.registry import RegistryManager

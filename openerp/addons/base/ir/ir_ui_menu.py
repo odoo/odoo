@@ -1,33 +1,15 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP SA (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import operator
 import re
 import threading
 
-import openerp.modules
+import openerp
 from openerp.osv import fields, osv
 from openerp import api, tools
+from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
@@ -38,23 +20,47 @@ class ir_ui_menu(osv.osv):
     _name = 'ir.ui.menu'
 
     def __init__(self, *args, **kwargs):
-        cls = type(self)
-        # by design, self._menu_cache is specific to the database
-        cls._menu_cache_lock = threading.RLock()
-        cls._menu_cache = {}
         super(ir_ui_menu, self).__init__(*args, **kwargs)
-        self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
+        self.pool['ir.model.access'].register_cache_clearing_method(self._name, 'clear_caches')
 
-    def clear_cache(self):
-        with self._menu_cache_lock:
-            # radical but this doesn't frequently happen
-            if self._menu_cache:
-                # Normally this is done by openerp.tools.ormcache
-                # but since we do not use it, set it by ourself.
-                self.pool._any_cache_cleared = True
-            self._menu_cache.clear()
-        self.load_menus_root._orig.clear_cache(self)
-        self.load_menus._orig.clear_cache(self)
+    @api.model
+    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
+    def _visible_menu_ids(self, debug=False):
+        """ Return the ids of the menu items visible to the user. """
+        # retrieve all menus, and determine which ones are visible
+        context = {'ir.ui.menu.full_list': True}
+        menus = self.with_context(context).search([])
+
+        groups = self.env.user.groups_id if debug else self.env.user.groups_id - self.env.ref('base.group_no_one')
+        # first discard all menus with groups the user does not have
+        menus = menus.filtered(
+            lambda menu: not menu.groups_id or menu.groups_id & groups)
+
+        # take apart menus that have an action
+        action_menus = menus.filtered('action')
+        folder_menus = menus - action_menus
+        visible = self.browse()
+
+        # process action menus, check whether their action is allowed
+        access = self.env['ir.model.access']
+        model_fname = {
+            'ir.actions.act_window': 'res_model',
+            'ir.actions.report.xml': 'model',
+            'ir.actions.wizard': 'model',
+            'ir.actions.server': 'model_id',
+        }
+        for menu in action_menus:
+            fname = model_fname.get(menu.action._name)
+            if not fname or not menu.action[fname] or \
+                    access.check(menu.action[fname], 'read', False):
+                # make menu visible, and its folder ancestors, too
+                visible += menu
+                menu = menu.parent_id
+                while menu and menu in folder_menus and menu not in visible:
+                    visible += menu
+                    menu = menu.parent_id
+
+        return set(visible.ids)
 
     @api.multi
     @api.returns('self')
@@ -63,51 +69,8 @@ class ir_ui_menu(osv.osv):
             the menu hierarchy of the current user.
             Uses a cache for speeding up the computation.
         """
-        with self._menu_cache_lock:
-            groups = self.env.user.groups_id
-
-            # visibility is entirely based on the user's groups;
-            # self._menu_cache[key] gives the ids of all visible menus
-            key = frozenset(groups._ids)
-            if key in self._menu_cache:
-                visible = self.browse(self._menu_cache[key])
-
-            else:
-                # retrieve all menus, and determine which ones are visible
-                context = {'ir.ui.menu.full_list': True}
-                menus = self.with_context(context).search([])
-
-                # first discard all menus with groups the user does not have
-                menus = menus.filtered(
-                    lambda menu: not menu.groups_id or menu.groups_id & groups)
-
-                # take apart menus that have an action
-                action_menus = menus.filtered('action')
-                folder_menus = menus - action_menus
-                visible = self.browse()
-
-                # process action menus, check whether their action is allowed
-                access = self.env['ir.model.access']
-                model_fname = {
-                    'ir.actions.act_window': 'res_model',
-                    'ir.actions.report.xml': 'model',
-                    'ir.actions.wizard': 'model',
-                    'ir.actions.server': 'model_id',
-                }
-                for menu in action_menus:
-                    fname = model_fname.get(menu.action._name)
-                    if not fname or not menu.action[fname] or \
-                            access.check(menu.action[fname], 'read', False):
-                        # make menu visible, and its folder ancestors, too
-                        visible += menu
-                        menu = menu.parent_id
-                        while menu and menu in folder_menus and menu not in visible:
-                            visible += menu
-                            menu = menu.parent_id
-
-                self._menu_cache[key] = visible._ids
-
-            return self.filtered(lambda menu: menu in visible)
+        visible_ids = self._visible_menu_ids(request.debug if request else False)
+        return self.filtered(lambda menu: menu.id in visible_ids)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
@@ -161,11 +124,11 @@ class ir_ui_menu(osv.osv):
         return parent_path + elmt.name
 
     def create(self, cr, uid, values, context=None):
-        self.clear_cache()
+        self.clear_caches()
         return super(ir_ui_menu, self).create(cr, uid, values, context=context)
 
     def write(self, cr, uid, ids, values, context=None):
-        self.clear_cache()
+        self.clear_caches()
         return super(ir_ui_menu, self).write(cr, uid, ids, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -182,11 +145,10 @@ class ir_ui_menu(osv.osv):
             self.write(cr, uid, direct_children_ids, {'parent_id': False})
 
         result = super(ir_ui_menu, self).unlink(cr, uid, ids, context=context)
-        self.clear_cache()
+        self.clear_caches()
         return result
 
     def copy(self, cr, uid, id, default=None, context=None):
-        ir_values_obj = self.pool.get('ir.values')
         res = super(ir_ui_menu, self).copy(cr, uid, id, default=default, context=context)
         datas=self.read(cr,uid,[res],['name'])[0]
         rex=re.compile('\([0-9]+\)')
@@ -197,66 +159,7 @@ class ir_ui_menu(osv.osv):
         else:
             datas['name'] += '(1)'
         self.write(cr,uid,[res],{'name':datas['name']})
-        ids = ir_values_obj.search(cr, uid, [
-            ('model', '=', 'ir.ui.menu'),
-            ('res_id', '=', id),
-            ])
-        for iv in ir_values_obj.browse(cr, uid, ids):
-            ir_values_obj.copy(cr, uid, iv.id, default={'res_id': res},
-                               context=context)
         return res
-
-    def _action(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        ir_values_obj = self.pool.get('ir.values')
-        value_ids = ir_values_obj.search(cursor, user, [
-            ('model', '=', self._name), ('key', '=', 'action'),
-            ('key2', '=', 'tree_but_open'), ('res_id', 'in', ids)],
-            context=context)
-        values_action = {}
-        for value in ir_values_obj.browse(cursor, user, value_ids, context=context):
-            values_action[value.res_id] = value.value
-        for menu_id in ids:
-            res[menu_id] = values_action.get(menu_id, False)
-        return res
-
-    def _action_inv(self, cursor, user, menu_id, name, value, arg, context=None):
-        if context is None:
-            context = {}
-        ctx = context.copy()
-        if self.CONCURRENCY_CHECK_FIELD in ctx:
-            del ctx[self.CONCURRENCY_CHECK_FIELD]
-        ir_values_obj = self.pool.get('ir.values')
-        values_ids = ir_values_obj.search(cursor, user, [
-            ('model', '=', self._name), ('key', '=', 'action'),
-            ('key2', '=', 'tree_but_open'), ('res_id', '=', menu_id)],
-            context=context)
-        if value and values_ids:
-            ir_values_obj.write(cursor, user, values_ids, {'value': value}, context=ctx)
-        elif value:
-            # no values_ids, create binding
-            ir_values_obj.create(cursor, user, {
-                'name': 'Menuitem',
-                'model': self._name,
-                'value': value,
-                'key': 'action',
-                'key2': 'tree_but_open',
-                'res_id': menu_id,
-                }, context=ctx)
-        elif values_ids:
-            # value is False, remove existing binding
-            ir_values_obj.unlink(cursor, user, values_ids, context=ctx)
-
-    def _get_icon_pict(self, cr, uid, ids, name, args, context):
-        res = {}
-        for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = ('stock', (m.icon,'ICON_SIZE_MENU'))
-        return res
-
-    def onchange_icon(self, cr, uid, ids, icon):
-        if not icon:
-            return {}
-        return {'type': {'icon_pict': 'picture'}, 'value': {'icon_pict': ('stock', (icon,'ICON_SIZE_MENU'))}}
 
     def read_image(self, path):
         if not path:
@@ -271,26 +174,6 @@ class ir_ui_menu(osv.osv):
             finally:
                 icon_file.close()
         return icon_image
-
-    def _get_image_icon(self, cr, uid, ids, names, args, context=None):
-        res = {}
-        for menu in self.browse(cr, uid, ids, context=context):
-            res[menu.id] = r = {}
-            for fn in names:
-                fn_src = fn[:-5]    # remove _data
-                r[fn] = self.read_image(menu[fn_src])
-
-        return res
-
-    def _get_needaction_enabled(self, cr, uid, ids, field_names, args, context=None):
-        """ needaction_enabled: tell whether the menu has a related action
-            that uses the needaction mechanism. """
-        res = dict.fromkeys(ids, False)
-        for menu in self.browse(cr, uid, ids, context=context):
-            if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.res_model:
-                if menu.action.res_model in self.pool and self.pool[menu.action.res_model]._needaction:
-                    res[menu.id] = True
-        return res
 
     def get_needaction_data(self, cr, uid, ids, context=None):
         """ Return for each menu entry of ids :
@@ -338,7 +221,8 @@ class ir_ui_menu(osv.osv):
                     obj = self.pool[menu.action.res_model]
                     if obj._needaction:
                         if menu.action.type == 'ir.actions.act_window':
-                            dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
+                            eval_context = self.pool['ir.actions.act_window']._get_eval_context(cr, uid, context=context)
+                            dom = menu.action.domain and eval(menu.action.domain, eval_context) or []
                         else:
                             dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
                         res[menu.id]['needaction_enabled'] = obj._needaction
@@ -355,9 +239,9 @@ class ir_ui_menu(osv.osv):
         return self.search(cr, uid, menu_domain, context=context)
 
     @api.cr_uid_context
-    @tools.ormcache_context(accepted_keys=('lang',))
+    @tools.ormcache_context('uid', keys=('lang',))
     def load_menus_root(self, cr, uid, context=None):
-        fields = ['name', 'sequence', 'parent_id', 'action']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
         menu_root_ids = self.get_user_roots(cr, uid, context=context)
         menu_roots = self.read(cr, uid, menu_root_ids, fields, context=context) if menu_root_ids else []
         return {
@@ -368,16 +252,15 @@ class ir_ui_menu(osv.osv):
             'all_menu_ids': menu_root_ids,
         }
 
-
     @api.cr_uid_context
-    @tools.ormcache_context(accepted_keys=('lang',))
-    def load_menus(self, cr, uid, context=None):
+    @tools.ormcache_context('uid', 'debug', keys=('lang',))
+    def load_menus(self, cr, uid, debug, context=None):
         """ Loads all menu items (all applications and their sub-menus).
 
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        fields = ['name', 'sequence', 'parent_id', 'action']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
         menu_root_ids = self.get_user_roots(cr, uid, context=context)
         menu_roots = self.read(cr, uid, menu_root_ids, fields, context=context) if menu_root_ids else []
         menu_root = {
@@ -429,43 +312,31 @@ class ir_ui_menu(osv.osv):
         'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel',
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
                 "If this field is empty, Odoo will compute visibility based on the related object's read access."),
-        'complete_name': fields.function(_get_full_name,
-            string='Full Path', type='char', size=128),
-        'icon': fields.selection(tools.icons, 'Icon', size=64),
-        'icon_pict': fields.function(_get_icon_pict, type='char', size=32),
+        'complete_name': fields.function(_get_full_name, string='Full Path', type='char'),
         'web_icon': fields.char('Web Icon File'),
-        'web_icon_hover': fields.char('Web Icon File (hover)'),
-        'web_icon_data': fields.function(_get_image_icon, string='Web Icon Image', type='binary', readonly=True, store=True, multi='icon'),
-        'web_icon_hover_data': fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
-        'needaction_enabled': fields.function(_get_needaction_enabled,
-            type='boolean',
-            store=True,
-            string='Target model uses the need action mechanism',
-            help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.'),
-        'action': fields.function(_action, fnct_inv=_action_inv,
-            type='reference', string='Action', size=21,
-            selection=[
+        'action': fields.reference('Action', selection=[
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
                 ('ir.actions.wizard', 'ir.actions.wizard'),
                 ('ir.actions.act_url', 'ir.actions.act_url'),
                 ('ir.actions.server', 'ir.actions.server'),
                 ('ir.actions.client', 'ir.actions.client'),
-            ]),
+        ]),
     }
 
-    def _rec_message(self, cr, uid, ids, context=None):
-        return _('Error ! You can not create recursive Menu.')
+    web_icon_data = openerp.fields.Binary('Web Icon Image',
+        compute="_compute_web_icon", store=True, attachment=True)
+
+    @api.depends('web_icon')
+    def _compute_web_icon(self):
+        for menu in self:
+            menu.web_icon_data = self.read_image(menu.web_icon)
 
     _constraints = [
-        (osv.osv._check_recursion, _rec_message, ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You can not create recursive Menu.', ['parent_id'])
     ]
     _defaults = {
-        'icon': 'STOCK_OPEN',
-        'icon_pict': ('stock', ('STOCK_OPEN', 'ICON_SIZE_MENU')),
         'sequence': 10,
     }
     _order = "sequence,id"
     _parent_store = True
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

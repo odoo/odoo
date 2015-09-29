@@ -105,22 +105,6 @@
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     assert order.state == 'done', "Production should be closed after finished all operations."
--
-  I print a Barcode Report of Operation line.
--
-  !python {model: mrp_operations.operation.code}: |
-    from openerp import tools
-    from openerp.report import render_report
-    ids = [
-        ref('mrp_operations.mrp_op_1'),
-        ref('mrp_operations.mrp_op_2'),
-        ref('mrp_operations.mrp_op_3'),
-        ref('mrp_operations.mrp_op_4'),
-        ref('mrp_operations.mrp_op_5')
-    ]
-    data, format = render_report(cr, uid, ids, 'mrp.code.barcode', {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'mrp_operations-barcode_report.'+format), 'wb+').write(data)
 
 -
   I print Workcenter's Barcode Report.
@@ -129,6 +113,8 @@
     from openerp import tools
     from openerp.report import render_report
     ids = [ref('mrp.mrp_workcenter_0'), ref('mrp.mrp_workcenter_1')]
-    data, format = render_report(cr, uid, ids, 'mrp.wc.barcode', {})
+    data, format = render_report(cr, uid, ids, 'mrp_operations.report_wcbarcode', {})
+    assert data
+    assert format
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp_operations-workcenter_barcode_report.'+format), 'wb+').write(data)

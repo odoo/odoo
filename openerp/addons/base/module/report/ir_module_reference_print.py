@@ -1,93 +1,42 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
+from openerp import models, api
 
-from openerp.report import report_sxw
+class IrModelReferenceReport(models.AbstractModel):
+    _name = 'report.base.report_irmodulereference'
 
-class ir_module_reference_print(report_sxw.rml_parse):
-    def __init__(self, cr, uid, name, context):
-        super(ir_module_reference_print, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'time': time,
-            'findobj': self._object_find,
-            'objdoc': self._object_doc,
-            'objdoc2': self._object_doc2,
-            'findflds': self._fields_find,
-        })
-    def _object_doc(self, obj):
-        modobj = self.pool[obj]
-        strdocs= modobj.__doc__
-        if not strdocs:
-            return None
-        else:
-            strdocs=strdocs.strip().splitlines(True)
-        res = ''
-        for stre in strdocs:
-            if not stre or stre.isspace():
-                break
-            res += stre
-        return res
-
-    def _object_doc2(self, obj):
-        modobj = self.pool[obj]
-        strdocs= modobj.__doc__
-        if not strdocs:
-            return None
-        else:
-            strdocs=strdocs.strip().splitlines(True)
-        res = []
-        fou = False
-        for stre in strdocs:
-            if fou:
-                res.append(stre.strip())
-            elif not stre or stre.isspace():
-                fou = True
-        return res
-
+    @api.model
     def _object_find(self, module):
-        ids2 = self.pool['ir.model.data'].search(self.cr, self.uid, [('module','=',module), ('model','=','ir.model')])
-        ids = []
-        for mod in self.pool['ir.model.data'].browse(self.cr, self.uid, ids2):
-            ids.append(mod.res_id)
-        modobj = self.pool['ir.model']
-        return modobj.browse(self.cr, self.uid, ids)
+        model_data_obj = self.env['ir.model.data']
+        models_data = model_data_obj.search([('model','=','ir.model'), ('module','=',module.name)])
+        res_ids = [model_data.res_id for model_data in models_data]
+        return self.env['ir.model'].browse(res_ids)
 
-    def _fields_find(self, obj, module):
+    @api.multi
+    def _fields_find(self, model, module):
         res = []
-        data_obj = self.pool['ir.model.data']
-        modobj = self.pool[obj]
-        fname_wildcard = 'field_' + modobj._name.replace('.', '_') + '_%'
-        module_fields_ids = data_obj.search(self.cr, self.uid, [('model', '=', 'ir.model.fields'), ('module', '=', module), ('name', 'like', fname_wildcard)])
-        if module_fields_ids:
-            module_fields_res_ids = [x['res_id'] for x in data_obj.read(self.cr, self.uid, module_fields_ids, ['res_id'])]
-            module_fields_names = [x['name'] for x in self.pool['ir.model.fields'].read(self.cr, self.uid, module_fields_res_ids, ['name'])]
-            res = modobj.fields_get(self.cr, self.uid, allfields=module_fields_names).items()
+        model_obj = self.env[model]
+        model_fields = self.env['ir.model.fields']
+        fname_wildcard = 'field_' + model_obj._name.replace('.', '_') + '_%'
+        module_fields_ids = self.env['ir.model.data'].search([('model', '=', 'ir.model.fields'), ('module', '=', module.name), ('name', 'like', fname_wildcard)])
+        module_fields_res_ids = [x.res_id for x in module_fields_ids]
+        if module_fields_res_ids:
+            module_fields_names = [x.name for x in model_fields.browse(module_fields_res_ids)]
+            res = model_obj.fields_get(allfields=module_fields_names).items()
             res.sort()
         return res
 
-report_sxw.report_sxw('report.ir.module.reference', 'ir.module.module',
-        'addons/base/module/report/ir_module_reference.rml',
-        parser=ir_module_reference_print, header=False)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+    @api.multi
+    def render_html(self, data=None):
+        report_obj = self.env['report']
+        module_report = report_obj._get_report_from_name('base.report_irmodulereference')
+        selected_modules = self.env['ir.module.module'].browse(self.ids)
+        docargs = {
+            'doc_ids': self.ids,
+            'doc_model': module_report.model,
+            'docs': selected_modules,
+            'findobj': self._object_find,
+            'findfields': self._fields_find,
+        }
+        return report_obj.render('base.report_irmodulereference', docargs)

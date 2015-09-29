@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import collections
+import copy
 import cStringIO
 import datetime
 import hashlib
@@ -21,33 +22,30 @@ import werkzeug
 from lxml import etree, html
 from PIL import Image
 import psycopg2
+from collections import namedtuple
 
 import openerp.http
 import openerp.tools
 from openerp.tools.func import lazy_property
 import openerp.tools.lru
+from openerp.exceptions import QWebException
+from openerp.fields import Datetime
 from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_escape as escape
+from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
+from openerp.modules.module import get_resource_path
 
 _logger = logging.getLogger(__name__)
 
 MAX_CSS_RULES = 4095
+MOCK_ATTACH = namedtuple('mock_attach', ['url', 'last_update'])
 
 #--------------------------------------------------------------------
 # QWeb template engine
 #--------------------------------------------------------------------
-class QWebException(Exception):
-    def __init__(self, message, **kw):
-        Exception.__init__(self, message)
-        self.qweb = dict(kw)
-    def pretty_xml(self):
-        if 'node' not in self.qweb:
-            return ''
-        return etree.tostring(self.qweb['node'], pretty_print=True)
-
 class QWebTemplateNotFound(QWebException):
     pass
 
@@ -70,12 +68,31 @@ def _build_attribute(name, value):
     if isinstance(value, unicode): value = value.encode('utf-8')
     return ' %s="%s"' % (name, value)
 
+class FileSystemLoader(object):
+    def __init__(self, path):
+        # TODO: support multiple files #add_file() + add cache
+        self.path = path
+        self.doc = etree.parse(path).getroot()
+
+    def __iter__(self):
+        for node in self.doc:
+            name = node.get('t-name')
+            if name:
+                yield name
+
+    def __call__(self, name):
+        for node in self.doc:
+            if node.get('t-name') == name:
+                root = etree.Element('templates')
+                root.append(copy.deepcopy(node))
+                arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
+                return arch
+
 class QWebContext(dict):
-    def __init__(self, cr, uid, data, loader=None, templates=None, context=None):
+    def __init__(self, cr, uid, data, loader=None, context=None):
         self.cr = cr
         self.uid = uid
         self.loader = loader
-        self.templates = templates or {}
         self.context = context
         dic = dict(data)
         super(QWebContext, self).__init__(dic)
@@ -94,7 +111,6 @@ class QWebContext(dict):
         """
         return QWebContext(self.cr, self.uid, dict.copy(self),
                            loader=self.loader,
-                           templates=self.templates,
                            context=self.context)
 
     def __copy__(self):
@@ -151,50 +167,24 @@ class QWeb(orm.AbstractModel):
     def register_tag(self, tag, func):
         self._render_tag[tag] = func
 
-    def add_template(self, qwebcontext, name, node):
-        """Add a parsed template in the context. Used to preprocess templates."""
-        qwebcontext.templates[name] = node
+    def get_template(self, name, qwebcontext):
+        origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
+        try:
+            document = qwebcontext.loader(name)
+        except ValueError:
+            raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
 
-    def load_document(self, document, res_id, qwebcontext):
-        """
-        Loads an XML document and installs any contained template in the engine
-
-        :type document: a parsed lxml.etree element, an unparsed XML document
-                        (as a string) or the path of an XML file to load
-        """
-        if not isinstance(document, basestring):
-            # assume lxml.etree.Element
+        if hasattr(document, 'documentElement'):
             dom = document
         elif document.startswith("<?xml"):
             dom = etree.fromstring(document)
         else:
             dom = etree.parse(document).getroot()
 
+        res_id = isinstance(name, (int, long)) and name or None
         for node in dom:
-            if node.get('t-name'):
-                name = str(node.get("t-name"))
-                self.add_template(qwebcontext, name, node)
-            if res_id and node.tag == "t":
-                self.add_template(qwebcontext, res_id, node)
-                res_id = None
-
-    def get_template(self, name, qwebcontext):
-        """ Tries to fetch the template ``name``, either gets it from the
-        context's template cache or loads one with the context's loader (if
-        any).
-
-        :raises QWebTemplateNotFound: if the template can not be found or loaded
-        """
-        origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
-        if qwebcontext.loader and name not in qwebcontext.templates:
-            try:
-                xml_doc = qwebcontext.loader(name)
-            except ValueError:
-                raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
-            self.load_document(xml_doc, isinstance(name, (int, long)) and name or None, qwebcontext=qwebcontext)
-
-        if name in qwebcontext.templates:
-            return qwebcontext.templates[name]
+            if node.get('t-name') or (res_id and node.tag == "t"):
+                return node
 
         raise QWebTemplateNotFound("Template %r not found" % name, template=origin_template)
 
@@ -259,12 +249,22 @@ class QWeb(orm.AbstractModel):
         stack.append(id_or_xml_id)
         qwebcontext['__stack__'] = stack
         qwebcontext['xmlid'] = str(stack[0]) # Temporary fix
-        return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext)
 
-    def render_node(self, element, qwebcontext):
-        generated_attributes = ""
+        element = self.get_template(id_or_xml_id, qwebcontext)
+        element.attrib.pop("name", False)
+        return self.render_node(element, qwebcontext, generated_attributes=qwebcontext.pop('generated_attributes', ''))
+
+    def render_node(self, element, qwebcontext, generated_attributes=''):
         t_render = None
         template_attributes = {}
+
+        debugger = element.get('t-debug')
+        if debugger is not None:
+            if openerp.tools.config['dev_mode']:
+                __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
+            else:
+                _logger.warning("@t-debug in template '%s' is only available in --dev mode" % qwebcontext['__template__'])
+
         for (attribute_name, attribute_value) in element.attrib.iteritems():
             attribute_name = str(attribute_name)
             if attribute_name == "groups":
@@ -292,16 +292,13 @@ class QWeb(orm.AbstractModel):
             else:
                 generated_attributes += self.render_attribute(element, attribute_name, attribute_value, qwebcontext)
 
-        if 'debug' in template_attributes:
-            debugger = template_attributes.get('debug', 'pdb')
-            __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
         if t_render:
             result = self._render_tag[t_render](self, element, template_attributes, generated_attributes, qwebcontext)
         else:
             result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
 
         if element.tail:
-            result += element.tail.encode('utf-8')
+            result += self.render_tail(element.tail, element, qwebcontext)
 
         if isinstance(result, unicode):
             return result.encode('utf-8')
@@ -313,19 +310,20 @@ class QWeb(orm.AbstractModel):
         # generated_attributes: generated attributes
         # qwebcontext: values
         # inner: optional innerXml
+        name = str(element.tag)
         if inner:
             g_inner = inner.encode('utf-8') if isinstance(inner, unicode) else inner
         else:
-            g_inner = [] if element.text is None else [element.text.encode('utf-8')]
+            g_inner = [] if element.text is None else [self.render_text(element.text, element, qwebcontext)]
             for current_node in element.iterchildren(tag=etree.Element):
                 try:
-                    g_inner.append(self.render_node(current_node, qwebcontext))
+                    g_inner.append(self.render_node(current_node, qwebcontext,
+                        generated_attributes= name == "t" and generated_attributes or ''))
                 except QWebException:
                     raise
                 except Exception:
                     template = qwebcontext.get('__template__')
                     raise_qweb_exception(message="Could not render element %r" % element.tag, node=element, template=template)
-        name = str(element.tag)
         inner = "".join(g_inner)
         trim = template_attributes.get("trim", 0)
         if trim == 0:
@@ -348,6 +346,12 @@ class QWeb(orm.AbstractModel):
 
     def render_attribute(self, element, name, value, qwebcontext):
         return _build_attribute(name, value)
+
+    def render_text(self, text, element, qwebcontext):
+        return text.encode('utf-8')
+
+    def render_tail(self, tail, element, qwebcontext):
+        return tail.encode('utf-8')
 
     # Attributes
     def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
@@ -434,6 +438,14 @@ class QWeb(orm.AbstractModel):
 
     def render_tag_call(self, element, template_attributes, generated_attributes, qwebcontext):
         d = qwebcontext.copy()
+
+        if 'lang' in template_attributes:
+            init_lang = d.context.get('lang', 'en_US')
+            lang = template_attributes['lang']
+            d.context['lang'] = self.eval(lang, d) or lang
+            if not self.pool['res.lang'].search(d.cr, d.uid, [('code', '=', lang)], count=True, context=d.context):
+                _logger.info("'%s' is not a valid language code, is an empty field or is not installed, falling back to en_US", lang)
+
         d[0] = self.render_element(element, template_attributes, generated_attributes, d)
         cr = d.get('request') and d['request'].cr or None
         uid = d.get('request') and d['request'].uid or None
@@ -443,7 +455,15 @@ class QWeb(orm.AbstractModel):
             template = int(template)
         except ValueError:
             pass
-        return self.render(cr, uid, template, d)
+
+        d['generated_attributes'] = generated_attributes
+        res = self.render(cr, uid, template, d)
+
+        # we need to reset the lang after the rendering
+        if 'lang' in template_attributes:
+            d.context['lang'] = init_lang
+
+        return res
 
     def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
         """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
@@ -458,7 +478,8 @@ class QWeb(orm.AbstractModel):
         bundle = AssetsBundle(xmlid, cr=cr, uid=uid, context=context, registry=self.pool)
         css = self.get_attr_bool(template_attributes.get('css'), default=True)
         js = self.get_attr_bool(template_attributes.get('js'), default=True)
-        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')))
+        async = self.get_attr_bool(template_attributes.get('async'), default=False)
+        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')), async=async)
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -480,9 +501,10 @@ class QWeb(orm.AbstractModel):
 
         record, field_name = template_attributes["field"].rsplit('.', 1)
         record = self.eval_object(record, qwebcontext)
-
         field = record._fields[field_name]
-        options = json.loads(template_attributes.get('field-options') or '{}')
+        foptions = self.eval_format(template_attributes.get('field-options') or '{}', qwebcontext)
+        options = json.loads(foptions)
+
         field_type = get_field_type(field, options)
 
         converter = self.get_converter_for(field_type)
@@ -553,19 +575,23 @@ class FieldConverter(osv.AbstractModel):
           ``type``, may not be any Field subclass name)
         * ``translate``, a boolean flag (``0`` or ``1``) denoting whether the
           field is translatable
+        * ``readonly``, has this attribute if the field is readonly
         * ``expression``, the original expression
 
         :returns: iterable of (attribute name, attribute value) pairs.
         """
         field = record._fields[field_name]
         field_type = get_field_type(field, options)
-        return [
+        data = [
             ('data-oe-model', record._name),
             ('data-oe-id', record.id),
             ('data-oe-field', field_name),
             ('data-oe-type', field_type),
             ('data-oe-expression', t_att['field']),
         ]
+        if field.readonly:
+            data.append(('data-oe-readonly', 1))
+        return data
 
     def value_to_html(self, cr, uid, value, field, options=None, context=None):
         """ value_to_html(cr, uid, value, field, options=None, context=None)
@@ -616,7 +642,8 @@ class FieldConverter(osv.AbstractModel):
                 _build_attribute(name, value)
                 for name, value in self.attributes(
                     cr, uid, field_name, record, options,
-                    source_element, g_att, t_att, qweb_context, context=context)
+                    source_element, g_att, t_att, qweb_context,
+                    context=context)
             )
 
         return self.render_element(cr, uid, source_element, t_att, g_att,
@@ -648,10 +675,18 @@ class FieldConverter(osv.AbstractModel):
         lang_code = context.get('lang') or 'en_US'
         Lang = self.pool['res.lang']
 
-        lang_ids = Lang.search(cr, uid, [('code', '=', lang_code)], context=context) \
-               or  Lang.search(cr, uid, [('code', '=', 'en_US')], context=context)
+        return Lang.browse(cr, uid, Lang._lang_get(cr, uid, lang_code), context=context)
 
-        return Lang.browse(cr, uid, lang_ids[0], context=context)
+class IntegerConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.integer'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, field, options=None, context=None):
+        if context is None:
+            context = {}
+
+        lang_code = context.get('lang') or 'en_US'
+        return self.pool['res.lang'].format(cr, uid, [lang_code], '%d', value, grouping=True)
 
 class FloatConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.float'
@@ -794,7 +829,9 @@ class ImageConverter(osv.AbstractModel):
 
 class MonetaryConverter(osv.AbstractModel):
     """ ``monetary`` converter, has a mandatory option
-    ``display_currency``.
+    ``display_currency`` only if field is not of type Monetary.
+    Otherwise, if we are in presence of a monetary field, the field definition must
+    have a currency_field attribute set.
 
     The currency is used for formatting *and rounding* of the float value. It
     is assumed that the linked res_currency has a non-empty rounding value and
@@ -818,19 +855,21 @@ class MonetaryConverter(osv.AbstractModel):
         if context is None:
             context = {}
         Currency = self.pool['res.currency']
-        display_currency = self.display_currency(cr, uid, options['display_currency'], options)
+        cur_field = record._fields[field_name]
+        display_currency = False
+        #currency should be specified by monetary field
+        if cur_field.type == 'monetary' and cur_field.currency_field:
+            display_currency = record[cur_field.currency_field]
+        #otherwise fall back to old method
+        if not display_currency:
+            display_currency = self.display_currency(cr, uid, options['display_currency'], options)
 
         # lang.format mandates a sprintf-style format. These formats are non-
         # minimal (they have a default fixed precision instead), and
         # lang.format will not set one by default. currency.round will not
         # provide one either. So we need to generate a precision value
         # (integer > 0) from the currency's rounding (a float generally < 1.0).
-        #
-        # The log10 of the rounding should be the number of digits involved if
-        # negative, if positive clamp to 0 digits and call it a day.
-        # nb: int() ~ floor(), we want nearest rounding instead
-        precision = int(math.floor(math.log10(display_currency.rounding)))
-        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+        fmt = "%.{0}f".format(display_currency.decimal_places)
 
         from_amount = record[field_name]
 
@@ -946,7 +985,7 @@ class Contact(orm.AbstractModel):
 
         val = {
             'name': value.split("\n")[0],
-            'address': escape("\n".join(value.split("\n")[1:])),
+            'address': escape("\n".join(value.split("\n")[1:])).strip(),
             'phone': value_rec.phone,
             'mobile': value_rec.mobile,
             'fax': value_rec.fax,
@@ -1063,17 +1102,8 @@ class AssetNotFound(AssetError):
     pass
 
 class AssetsBundle(object):
-    # Sass installation:
-    #
-    #       sudo gem install sass compass bootstrap-sass
-    #
-    # If the following error is encountered:
-    #       'ERROR: Cannot load compass.'
-    # Use this:
-    #       sudo gem install compass --pre
-    cmd_sass = ['sass', '--stdin', '-t', 'compressed', '--unix-newlines', '--compass', '-r', 'bootstrap-sass']
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
-    rx_sass_import = re.compile("""(@import\s?['"]([^'"]+)['"])""")
+    rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
     def __init__(self, xmlid, debug=False, cr=None, uid=None, context=None, registry=None):
@@ -1106,12 +1136,16 @@ class AssetsBundle(object):
                 media = el.get('media')
                 if el.tag == 'style':
                     if atype == 'text/sass' or src.endswith('.sass'):
-                        self.stylesheets.append(SassAsset(self, inline=el.text, media=media))
+                        self.stylesheets.append(SassStylesheetAsset(self, inline=el.text, media=media))
+                    elif atype == 'text/less' or src.endswith('.less'):
+                        self.stylesheets.append(LessStylesheetAsset(self, inline=el.text, media=media))
                     else:
                         self.stylesheets.append(StylesheetAsset(self, inline=el.text, media=media))
                 elif el.tag == 'link' and el.get('rel') == 'stylesheet' and self.can_aggregate(href):
                     if href.endswith('.sass') or atype == 'text/sass':
-                        self.stylesheets.append(SassAsset(self, url=href, media=media))
+                        self.stylesheets.append(SassStylesheetAsset(self, url=href, media=media))
+                    elif href.endswith('.less') or atype == 'text/less':
+                        self.stylesheets.append(LessStylesheetAsset(self, url=href, media=media))
                     else:
                         self.stylesheets.append(StylesheetAsset(self, url=href, media=media))
                 elif el.tag == 'script' and not src:
@@ -1128,15 +1162,18 @@ class AssetsBundle(object):
                     raise NotImplementedError
 
     def can_aggregate(self, url):
-        return not urlparse(url).netloc and not url.startswith(('/web/css', '/web/js'))
+        return not urlparse(url).netloc and not url.startswith('/web/content')
 
-    def to_html(self, sep=None, css=True, js=True, debug=False):
+    def to_html(self, sep=None, css=True, js=True, debug=False, async=False):
         if sep is None:
             sep = '\n            '
         response = []
         if debug:
             if css and self.stylesheets:
-                self.compile_sass()
+                self.preprocess_css()
+                if self.css_errors:
+                    msg = '\n'.join(self.css_errors)
+                    self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
                 for style in self.stylesheets:
                     response.append(style.to_html())
             if js:
@@ -1145,16 +1182,10 @@ class AssetsBundle(object):
         else:
             url_for = self.context.get('url_for', lambda url: url)
             if css and self.stylesheets:
-                suffix = ''
-                if request:
-                    ua = request.httprequest.user_agent
-                    if ua.browser == "msie" and int((ua.version or '0').split('.')[0]) < 10:
-                        suffix = '.0'
-                href = '/web/css%s/%s/%s' % (suffix, self.xmlid, self.version)
-                response.append('<link href="%s" rel="stylesheet"/>' % url_for(href))
-            if js:
-                src = '/web/js/%s/%s' % (self.xmlid, self.version)
-                response.append('<script type="text/javascript" src="%s"></script>' % url_for(src))
+                for attachment in self.css():
+                    response.append('<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+            if js and self.javascripts:
+                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(self.js().url)))
         response.extend(self.remains)
         return sep + sep.join(response)
 
@@ -1179,53 +1210,85 @@ class AssetsBundle(object):
         check = self.html + str(self.last_modified)
         return hashlib.sha1(check).hexdigest()
 
+    def clean_attachments(self, type):
+        ira = self.registry['ir.attachment']
+        domain = ['&', '!', ('url', '=like', '/web/content/%%-%s/%%' % self.version), ('url', '=like', '/web/content/%%-%%/%s%%.%s' % (self.xmlid, type))]
+        attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
+        return ira.unlink(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context)
+
+    def _mock_attachments(self, attachments):
+        """ As the assets are generated during the same transaction as the rendering of the
+        templates calling them, there is a scenario where the assets are unreachable: when
+        you make a request to read the assets while the transaction creating them is not done.
+        Indeed, when you make an asset request, the controller has to read the `ir.attachment`
+        table.
+
+        This scenario happens when you want to print a PDF report for the first
+        time, as the assets are not in cache and must be generated. To workaround this issue, we
+        need to open multiple cursors to write in the `ir.attachment` table outside of the ~main
+        transaction. But there's another tweak: a recordset browsed with a closed cursor becomes
+        unusable. We chose to copy their content in a namedtuple.
+        """
+        return [MOCK_ATTACH(attachment.url, attachment['__last_update']) for attachment in attachments]
+
+    def get_attachments(self, type, inc=None):
+        ira = self.registry['ir.attachment']
+        domain = [('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.xmlid, ('%%' if inc is None else '.%s' % inc), type))]
+        attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
+        return self._mock_attachments(ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context))
+
+    def save_attachment(self, type, content, inc=None):
+        ira = self.registry['ir.attachment']
+        self.clean_attachments(type)
+        attachments = self.get_attachments(type, inc)
+        values = {}
+
+        with self.registry.cursor() as cr2:
+            if not attachments:
+                values["name"] = "/web/content/%s" % type
+                values["datas_fname"] = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
+                values["res_model"] = 'ir.ui.view'
+                values["public"] = True
+                values["type"] = 'binary'
+                attachment_id = ira.create(cr2, openerp.SUPERUSER_ID, values, context=self.context)
+                url = '/web/content/%s-%s/%s' % (attachment_id, self.version, values["datas_fname"])
+                values["name"] = url
+                values["url"] = url
+            else:
+                attachment_id = attachments[0].id
+
+            values["datas"] = content.encode('utf8').encode('base64')
+            ira.write(cr2, openerp.SUPERUSER_ID, attachment_id, values, context=self.context)
+            return self._mock_attachments(ira.browse(cr2, openerp.SUPERUSER_ID, attachment_id, context=self.context))[0]
+
     def js(self):
-        content = self.get_cache('js')
-        if content is None:
+        attachments = self.get_attachments('js')
+        if not attachments or attachments[0].last_update < Datetime.to_string(max([asset.last_modified for asset in self.javascripts])):
             content = ';\n'.join(asset.minify() for asset in self.javascripts)
-            self.set_cache('js', content)
-        return content
+            return self.save_attachment('js', content)
+        return attachments[0]
 
-    def css(self, page_number=None):
-        if page_number is not None:
-            return self.css_page(page_number)
-
-        content = self.get_cache('css')
-        if content is None:
-            self.compile_sass()
-            content = '\n'.join(asset.minify() for asset in self.stylesheets)
-
+    def css(self):
+        ira = self.registry['ir.attachment']
+        attachments = self.get_attachments('css')
+        if not attachments:
+            # get css content
+            css = self.preprocess_css()
             if self.css_errors:
                 msg = '\n'.join(self.css_errors)
-                content += self.css_message(msg.replace('\n', '\\A '))
+                css += self.css_message(msg)
 
             # move up all @import rules to the top
             matches = []
-            def push(matchobj):
-                matches.append(matchobj.group(0))
-                return ''
+            css = re.sub(self.rx_css_import, lambda matchobj: matches.append(matchobj.group(0)) and '', css)
+            matches.append(css)
+            css = u'\n'.join(matches)
 
-            content = re.sub(self.rx_css_import, push, content)
-
-            matches.append(content)
-            content = u'\n'.join(matches)
-            if not self.css_errors:
-                self.set_cache('css', content)
-            content = content.encode('utf-8')
-
-        return content
-
-    def css_page(self, page_number):
-        content = self.get_cache('css.%d' % (page_number,))
-        if page_number:
-            return content
-        if content is None:
-            css = self.css().decode('utf-8')
+            # split for browser max file size and browser max expression
             re_rules = '([^{]+\{(?:[^{}]|\{[^{}]*\})*\})'
             re_selectors = '()(?:\s*@media\s*[^{]*\{)?(?:\s*(?:[^,{]*(?:,|\{(?:[^}]*\}))))'
-            css_url = '@import url(\'/web/css.%%d/%s/%s\');' % (self.xmlid, self.version)
-            pages = [[]]
-            page = pages[0]
+            page = []
+            pages = [page]
             page_selectors = 0
             for rule in re.findall(re_rules, css):
                 selectors = len(re.findall(re_selectors, rule))
@@ -1236,45 +1299,13 @@ class AssetsBundle(object):
                     pages.append([rule])
                     page = pages[-1]
                     page_selectors = selectors
-            if len(pages) == 1:
-                pages = []
             for idx, page in enumerate(pages):
-                self.set_cache("css.%d" % (idx+1), ''.join(page))
-            content = '\n'.join(css_url % i for i in range(1,len(pages)+1))
-            self.set_cache("css.0", content)
-        if not content:
-            return self.css()
-        return content
-
-    def get_cache(self, type):
-        content = None
-        domain = [('url', '=', '/web/%s/%s/%s' % (type, self.xmlid, self.version))]
-        bundle = self.registry['ir.attachment'].search_read(self.cr, openerp.SUPERUSER_ID, domain, ['datas'], context=self.context)
-        if bundle and bundle[0]['datas']:
-            content = bundle[0]['datas'].decode('base64')
-        return content
-
-    def set_cache(self, type, content):
-        ira = self.registry['ir.attachment']
-        url_prefix = '/web/%s/%s/' % (type, self.xmlid)
-        # Invalidate previous caches
-        try:
-            with self.cr.savepoint():
-                domain = [('url', '=like', url_prefix + '%')]
-                oids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
-                if oids:
-                    ira.unlink(self.cr, openerp.SUPERUSER_ID, oids, context=self.context)
-                url = url_prefix + self.version
-                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
-                    datas=content.encode('utf8').encode('base64'),
-                    type='binary',
-                    name=url,
-                    url=url,
-                ), context=self.context)
-        except psycopg2.Error:
-            pass
+                attachments.append(self.save_attachment("css", ' '.join(page), inc=idx))
+        return attachments
 
     def css_message(self, message):
+        # '\A' == css content carriage return
+        message = message.replace('\n', '\\A ').replace('"', '\\"')
         return """
             body:before {
                 background: #ffc;
@@ -1284,57 +1315,72 @@ class AssetsBundle(object):
                 white-space: pre;
                 content: "%s";
             }
-        """ % message.replace('"', '\\"')
+        """ % message
 
-    def compile_sass(self):
+    def preprocess_css(self):
         """
-            Checks if the bundle contains any sass content, then compiles it to css.
-            Css compilation is done at the bundle level and not in the assets
-            because they are potentially interdependant.
+            Checks if the bundle contains any sass/less content, then compiles it to css.
+            Returns the bundle's flat css.
         """
-        sass = [asset for asset in self.stylesheets if isinstance(asset, SassAsset)]
-        if not sass:
-            return
-        source = '\n'.join([asset.get_source() for asset in sass])
+        for atype in (SassStylesheetAsset, LessStylesheetAsset):
+            assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
+            if assets:
+                cmd = assets[0].get_command()
+                source = '\n'.join([asset.get_source() for asset in assets])
+                compiled = self.compile_css(cmd, source)
 
-        # move up all @import rules to the top and exclude file imports
+                fragments = self.rx_css_split.split(compiled)
+                at_rules = fragments.pop(0)
+                if at_rules:
+                    # Sass and less moves @at-rules to the top in order to stay css 2.1 compatible
+                    self.stylesheets.insert(0, StylesheetAsset(self, inline=at_rules))
+                while fragments:
+                    asset_id = fragments.pop(0)
+                    asset = next(asset for asset in self.stylesheets if asset.id == asset_id)
+                    asset._content = fragments.pop(0)
+
+        return '\n'.join(asset.minify() for asset in self.stylesheets)
+
+    def compile_css(self, cmd, source):
+        """Sanitizes @import rules, remove duplicates @import rules, then compile"""
         imports = []
-        def push(matchobj):
+        def sanitize(matchobj):
             ref = matchobj.group(2)
-            line = '@import "%s"' % ref
+            line = '@import "%s"%s' % (ref, matchobj.group(3))
             if '.' not in ref and line not in imports and not ref.startswith(('.', '/', '~')):
                 imports.append(line)
+                return line
+            msg = "Local import '%s' is forbidden for security reasons." % ref
+            _logger.warning(msg)
+            self.css_errors.append(msg)
             return ''
-        source = re.sub(self.rx_sass_import, push, source)
-        imports.append(source)
-        source = u'\n'.join(imports)
+        source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
         try:
-            compiler = Popen(self.cmd_sass, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            compiler = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         except Exception:
-            msg = "Could not find 'sass' program needed to compile sass/scss files"
+            msg = "Could not execute command %r" % cmd[0]
             _logger.error(msg)
             self.css_errors.append(msg)
-            return
+            return ''
         result = compiler.communicate(input=source.encode('utf-8'))
         if compiler.returncode:
-            error = self.get_sass_error(''.join(result), source=source)
+            error = self.get_preprocessor_error(''.join(result), source=source)
             _logger.warning(error)
             self.css_errors.append(error)
-            return
+            return ''
         compiled = result[0].strip().decode('utf8')
-        fragments = self.rx_css_split.split(compiled)[1:]
-        while fragments:
-            asset_id = fragments.pop(0)
-            asset = next(asset for asset in sass if asset.id == asset_id)
-            asset._content = fragments.pop(0)
+        return compiled
 
-    def get_sass_error(self, stderr, source=None):
-        # TODO: try to find out which asset the error belongs to
+    def get_preprocessor_error(self, stderr, source=None):
+        """Improve and remove sensitive information from sass/less compilator error messages"""
         error = stderr.split('Load paths')[0].replace('  Use --trace for backtrace.', '')
+        if 'Cannot load compass' in error:
+            error += "Maybe you should install the compass gem using this extra argument:\n\n" \
+                     "    $ sudo gem install compass --pre\n"
         error += "This error occured while compiling the bundle '%s' containing:" % self.xmlid
         for asset in self.stylesheets:
-            if isinstance(asset, SassAsset):
+            if isinstance(asset, PreprocessedCSS):
                 error += '\n    - %s' % (asset.url if asset.url else '<inline sass>')
         return error
 
@@ -1360,21 +1406,19 @@ class WebAsset(object):
 
     def stat(self):
         if not (self.inline or self._filename or self._ir_attach):
-            addon = filter(None, self.url.split('/'))[0]
+            path = filter(None, self.url.split('/'))
+            self._filename = get_resource_path(*path)
+            if self._filename:
+                return
             try:
-                # Test url against modules static assets
-                mpath = openerp.http.addons_manifest[addon]['addons_path']
-                self._filename = mpath + self.url.replace('/', os.path.sep)
+                # Test url against ir.attachments
+                fields = ['__last_update', 'datas', 'mimetype']
+                domain = [('type', '=', 'binary'), ('url', '=', self.url)]
+                ira = self.registry['ir.attachment']
+                attach = ira.search_read(self.cr, openerp.SUPERUSER_ID, domain, fields, context=self.context)
+                self._ir_attach = attach[0]
             except Exception:
-                try:
-                    # Test url against ir.attachments
-                    fields = ['__last_update', 'datas', 'mimetype']
-                    domain = [('type', '=', 'binary'), ('url', '=', self.url)]
-                    ira = self.registry['ir.attachment']
-                    attach = ira.search_read(self.cr, openerp.SUPERUSER_ID, domain, fields, context=self.context)
-                    self._ir_attach = attach[0]
-                except Exception:
-                    raise AssetNotFound("Could not find %s" % self.name)
+                raise AssetNotFound("Could not find %s" % self.name)
 
     def to_html(self):
         raise NotImplementedError()
@@ -1398,7 +1442,7 @@ class WebAsset(object):
 
     @property
     def content(self):
-        if not self._content:
+        if self._content is None:
             self._content = self.inline or self._fetch_content()
         return self._content
 
@@ -1464,22 +1508,26 @@ class StylesheetAsset(WebAsset):
             content = super(StylesheetAsset, self)._fetch_content()
             web_dir = os.path.dirname(self.url)
 
-            content = self.rx_import.sub(
-                r"""@import \1%s/""" % (web_dir,),
-                content,
-            )
+            if self.rx_import:
+                content = self.rx_import.sub(
+                    r"""@import \1%s/""" % (web_dir,),
+                    content,
+                )
 
-            content = self.rx_url.sub(
-                r"url(\1%s/" % (web_dir,),
-                content,
-            )
+            if self.rx_url:
+                content = self.rx_url.sub(
+                    r"url(\1%s/" % (web_dir,),
+                    content,
+                )
 
-            # remove charset declarations, we only support utf-8
-            content = self.rx_charset.sub('', content)
+            if self.rx_charset:
+                # remove charset declarations, we only support utf-8
+                content = self.rx_charset.sub('', content)
+
+            return content
         except AssetError, e:
             self.bundle.css_errors.append(e.message)
             return ''
-        return content
 
     def minify(self):
         # remove existing sourcemaps, make no sense after re-mini
@@ -1499,11 +1547,9 @@ class StylesheetAsset(WebAsset):
         else:
             return '<style type="text/css"%s>%s</style>' % (media, self.with_header())
 
-class SassAsset(StylesheetAsset):
+class PreprocessedCSS(StylesheetAsset):
     html_url = '%s.css'
-    rx_indent = re.compile(r'^( +|\t+)', re.M)
-    indent = None
-    reindent = '    '
+    rx_import = None
 
     def minify(self):
         return self.with_header()
@@ -1511,31 +1557,46 @@ class SassAsset(StylesheetAsset):
     def to_html(self):
         if self.url:
             try:
-                ira = self.registry['ir.attachment']
-                url = self.html_url % self.url
-                domain = [('type', '=', 'binary'), ('url', '=', self.url)]
-                with self.cr.savepoint():
-                    ira_id = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
-                    if ira_id:
-                        # TODO: update only if needed
-                        ira.write(self.cr, openerp.SUPERUSER_ID, [ira_id], {'datas': self.content},
-                                  context=self.context)
-                    else:
-                        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
-                            datas=self.content.encode('utf8').encode('base64'),
-                            mimetype='text/css',
-                            type='binary',
-                            name=url,
-                            url=url,
-                        ), context=self.context)
+                with self.registry.cursor() as cr3:
+                    ira = self.registry['ir.attachment']
+                    url = self.html_url % self.url
+                    domain = [('type', '=', 'binary'), ('url', '=', url)]
+                    with cr3.savepoint():
+                        ira_id = ira.search(cr3, openerp.SUPERUSER_ID, domain, context=self.context)
+                        datas = self.content.encode('utf8').encode('base64')
+                        if ira_id:
+                            # TODO: update only if needed
+                            ira.write(cr3, openerp.SUPERUSER_ID, ira_id, {'datas': datas},
+                                      context=self.context)
+                        else:
+                            ira.create(cr3, openerp.SUPERUSER_ID, dict(
+                                datas=datas,
+                                mimetype='text/css',
+                                type='binary',
+                                name=url,
+                                url=url,
+                            ), context=self.context)
             except psycopg2.Error:
                 pass
-        return super(SassAsset, self).to_html()
+        return super(PreprocessedCSS, self).to_html()
+
+    def get_source(self):
+        content = self.inline or self._fetch_content()
+        return "/*! %s */\n%s" % (self.id, content)
+
+    def get_command(self):
+        raise NotImplementedError
+
+class SassStylesheetAsset(PreprocessedCSS):
+    rx_indent = re.compile(r'^( +|\t+)', re.M)
+    indent = None
+    reindent = '    '
 
     def get_source(self):
         content = textwrap.dedent(self.inline or self._fetch_content())
 
         def fix_indent(m):
+            # Indentation normalization
             ind = m.group()
             if self.indent is None:
                 self.indent = ind
@@ -1549,6 +1610,26 @@ class SassAsset(StylesheetAsset):
         except StopIteration:
             pass
         return "/*! %s */\n%s" % (self.id, content)
+
+    def get_command(self):
+        try:
+            sass = find_in_path('sass')
+        except IOError:
+            sass = 'sass'
+        return [sass, '--stdin', '-t', 'compressed', '--unix-newlines', '--compass',
+                '-r', 'bootstrap-sass']
+
+class LessStylesheetAsset(PreprocessedCSS):
+    def get_command(self):
+        try:
+            if os.name == 'nt':
+                lessc = find_in_path('lessc.cmd')
+            else:
+                lessc = find_in_path('lessc')
+        except IOError:
+            lessc = 'lessc'
+        lesspath = get_resource_path('web', 'static', 'lib', 'bootstrap', 'less')
+        return [lessc, '-', '--clean-css', '--no-js', '--no-color', '--include-path=%s' % lesspath]
 
 def rjsmin(script):
     """ Minify js with a clever regex.
@@ -1593,5 +1674,3 @@ def rjsmin(script):
         r']*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
     ).strip()
     return result
-
-# vim:et:

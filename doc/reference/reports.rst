@@ -119,14 +119,6 @@ There are some specific variables accessible in reports, mainly:
     model for the ``docs`` records
 ``time``
     a reference to :mod:`python:time` from the Python standard library
-``translate_doc``
-    a function to translate a part of a report. It must be used as follow:
-
-    ::
-
-        <t t-foreach="doc_ids" t-as="doc_id">
-          <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', account.report_invoice_document')"/>
-        </t>
 ``user``
     ``res.user`` record for the user printing the report
 ``res_company``
@@ -144,33 +136,39 @@ you need to define two templates:
 * The main report template
 * The translatable document
 
-You can then call translate_doc from your main template to obtain the
-translated document. If you wish to see the details of the translation in the
-backend, you can go to :menuselection:`Settings --> Reports --> Report -->
-<report_name> --> Search associated QWeb views --> <translatable_document> -->
-Associated translations`.
+You can then call the translatable document from your main template with the attribute 
+``t-lang`` set to a language code (for example ``fr`` or ``en_US``) or to a record field.
+You will also need to re-browse the related records with the proper context if you use
+fields that are translatable (like country names, sales conditions, etc.)
+
+.. warning::
+    
+    If your report template does not use translatable record fields, re-browsing the record
+    in another language is *not* necessary and will impact performances.
 
 For example, let's look at the Sale Order report from the Sale module::
 
     <!-- Main template -->
-    <template id="sale.report_saleorder">
+    <template id="report_saleorder">
         <t t-call="report.html_container">
-            <t t-foreach="doc_ids" t-as="doc_id">
-                <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'sale.report_saleorder_document')"/>
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
             </t>
         </t>
     </template>
 
     <!-- Translatable template -->
     <template id="report_saleorder_document">
+        <!-- Re-browse of the record with the partner lang -->
+        <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
         <t t-call="report.external_layout">
             <div class="page">
                 <div class="oe_structure"/>
                 <div class="row">
                     <div class="col-xs-6">
-                        <strong t-if="o.partner_shipping_id == o.partner_invoice_id">Invoice and shipping address:</strong>
-                        <strong t-if="o.partner_shipping_id != o.partner_invoice_id">Invoice address:</strong>
-                        <div t-field="o.partner_invoice_id" t-field-options="{&quot;no_marker&quot;: true}"/>
+                        <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoice and shipping address:</strong>
+                        <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoice address:</strong>
+                        <div t-field="doc.partner_invoice_id" t-field-options="{&quot;no_marker&quot;: true}"/>
                     <...>
                 <div class="oe_structure"/>
             </div>
@@ -178,9 +176,22 @@ For example, let's look at the Sale Order report from the Sale module::
     </template>
 
 
-The main template calls translate_doc with ``partner_id.lang`` as a parameter,
-which means it uses :ref:`a custom report model
-<reference/reports/custom_reports>` to access a ``res.partner`` record.
+The main template calls the translatable template with ``doc.partner_id.lang`` as a 
+``t-lang`` parameter, so it will be rendered in the language of the partner. This way, 
+each Sale Order will be printed in the language of the corresponding customer. If you wish 
+to translate only the body of the document, but keep the header and footer in a default 
+language, you could call the report's external layout this way::
+
+    <t t-call="report.external_layout" t-lang="en_US">
+
+.. tip::
+
+    Please take note that this works only when calling external templates, you will not be
+    able to translate part of a document by setting a ``t-lang`` attribute on an xml node other 
+    than ``t-call``. If you wish to translate part of a template, you can create an external
+    template with this partial template and call it from the main one with the ``t-lang``
+    attribute.
+
 
 Barcodes
 --------

@@ -1,10 +1,6 @@
 <template>
 <t t-name="DashBoard">
     <div class="oe_dashboard_links">
-        <button type="button" class="button oe_dashboard_link_reset" title="Reset Layout.." t-att-style="view.fields_view.custom_view_id || session.debug ? null : 'display: none'">
-            <img src="/board/static/src/img/layout_2-1.png" width="16" height="16"/>
-            <span> Reset </span>
-        </button>
         <button type="button" class="button oe_dashboard_link_change_layout" title="Change Layout..">
             <img src="/board/static/src/img/layout_1-1-1.png" width="16" height="16"/>
             <span> Change Layout </span>
@@ -63,19 +59,15 @@
     <iframe width="100%" frameborder="0" t-att-src="url"/>
 </t>
 
-<div t-name="SearchView.addtodashboard" class="oe_searchview_dashboard">
-    <h4>Add to Dashboard</h4>
-    <form>
-        <p><input placeholder="Title of new dashboard item"/></p>
-        <button class="oe_apply" type="submit">Add</button>
-    </form>
-</div>
-<t t-name="SearchView.addtodashboard.selection">
-    <select>
-        <option t-foreach="selections" t-as="element"
-                t-att-value="element.id ">
-            <t t-esc="element.name"/></option>
-    </select>
+<t t-name="SearchView.addtodashboard">
+    <li class="o_add_to_dashboard_link o_closed_menu">
+        <a href="#">Add to my Dashboard</a>
+    </li>
+    <li class="o_add_to_dashboard">
+        <input class="o_add_to_dashboard_input" type="text"/>
+    </li>
+    <li class="o_add_to_dashboard">
+        <button type="button" class="btn btn-primary btn-sm o_add_to_dashboard_button">Add</button>
+    </li>
 </t>
-
 </template>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+       <record model="web.tip" id="sale_tip_1">
+            <field name="title"></field>
+            <field name="description"><![CDATA[This progress bar shows the stages your quotation will go through.
+                Use buttons on the left to move forward to the next stages.]]></field>
+            <field name="model">sale.order</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.o_statusbar_status.o_form_field:visible</field>
+            <field name="highlight_selector">.o_statusbar_status.o_form_field:visible</field>
+            <field name="end_event">mousedown</field>
+            <field name="placement">bottom</field>
+        </record>
+
+        <record model="web.tip" id="sale_tip_2">
+            <field name="title"></field>
+            <field name="description"><![CDATA[Use pivot and graph views to analyze your sales pipeline.
+                Select measures, filter and group dimensions to get the perfect report according to your needs.]]></field>
+            <field name="model">sale.order</field>
+            <field name="mode">pivot</field>
+            <field name="trigger_selector">table.table.table-hover.table-condensed.table-bordered:visible</field>
+            <field name="highlight_selector">table.table.table-hover.table-condensed.table-bordered:visible</field>
+            <field name="end_event">mousedown</field>
+            <field name="placement">bottom</field>
+        </record>
+
+
+    </data>
+</openerp>

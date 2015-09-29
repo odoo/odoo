@@ -2,6 +2,7 @@
 // jshint evil: true, loopfunc: true
 
 var system = require('system');
+var HOST = '127.0.0.1';
 
 function waitFor (condition, callback, timeout, timeoutMessageCallback) {
     timeout = timeout || 10000;
@@ -24,14 +25,14 @@ function PhantomTest() {
     this.options = JSON.parse(system.args[system.args.length-1]);
     this.inject = this.options.inject || [];
     this.timeout = this.options.timeout ? Math.round(parseFloat(this.options.timeout)*1000 - 5000) : 10000;
-    this.origin = 'http://localhost';
+    this.origin = 'http://' + HOST;
     this.origin += this.options.port ? ':' + this.options.port : '';
 
     // ----------------------------------------------------
     // configure phantom and page
     // ----------------------------------------------------
     phantom.addCookie({
-        'domain': 'localhost',
+        'domain': HOST,
         'name': 'session_id',
         'value': this.options.session_id,
     });
@@ -57,7 +58,7 @@ function PhantomTest() {
         phantom.exit(1);
     };
     this.page.onConsoleMessage = function(message) {
-        console.log(message);
+        console.log('<phantomLog>'+message+'</phantomLog>');
     };
     this.page.onLoadFinished = function(status) {
         if (status === "success") {
@@ -92,7 +93,7 @@ function PhantomTest() {
             var message = ("Timeout\nhref: " + window.location.href +
                            "\nreferrer: " + document.referrer +
                            "\n\n" + (document.body && document.body.innerHTML)).replace(/[^a-z0-9\s~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "*");
-            console.log('error', message);
+            console.log('<phantomLog>error ' + message + '</phantomLog>');
         });
         phantom.exit(1);
     }, self.timeout);
@@ -149,5 +150,3 @@ if(system.args.length === 2) {
     pt = new PhantomTest();
     pt.run(pt.options.url_path, pt.options.code, pt.options.ready);
 }
-
-// vim:et:

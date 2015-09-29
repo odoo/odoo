@@ -3,15 +3,14 @@
 # * gamification
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:11+0000\n"
-"Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-8/language/mn/)\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-09-19 08:18+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: gamification
-#: model:email.template,body_html:gamification.email_template_badge_received
+#: model:mail.template,body_html:gamification.email_template_badge_received
 msgid ""
 "\n"
 "        <p>Congratulation, you have received the badge <strong>${object.badge_id.name}</strong> !\n"
@@ -35,7 +34,7 @@ msgid ""
 msgstr "\n        <p>Баяр хүргэе, та шинэ медаль хүлээн авлаа <strong>${object.badge_id.name}</strong> !\n            % if object.sender_id\n                Энэ медалийг танд <strong>${object.sender_id.name}</strong> өглөө.\n            % endif\n        </p>\n\n        % if object.comment\n            <p><em>${object.comment}</em></p>\n        % endif\n        "
 
 #. module: gamification
-#: model:email.template,body_html:gamification.email_template_goal_reminder
+#: model:mail.template,body_html:gamification.email_template_goal_reminder
 msgid ""
 "\n"
 "    <header>\n"
@@ -47,7 +46,7 @@ msgid ""
 msgstr "\n    <header>\n        <strong>Сануулга ${object.name}</strong>\n    </header>\n    \n    <p>Та өөрийн зорилтдоо явцаа шинэчлээгүй байна ${object.definition_id.name} (одоогоор та ${object.completeness}% хүрсэн байна) хамгийн багадаа ${object.remind_update_delay} өдөрт хийгээрэй. Үүнийг хийхээ битгий мартаарай.</p>\n            "
 
 #. module: gamification
-#: model:email.template,body_html:gamification.simple_report_template
+#: model:mail.template,body_html:gamification.simple_report_template
 msgid ""
 "\n"
 "<header>\n"
@@ -122,26 +121,21 @@ msgid ""
 msgstr "\n<header>\n    <strong>${object.name}</strong>\n</header>\n<p class=\"oe_grey\">Дараах зурвас нь ${object.name} сорилтын одоогийг зурвасыг агуулж байна. </p>\n\n% if object.visibility_mode == 'personal':\n    <table width=\"100%\" border=\"1\">\n    <tr>\n        <th>Зорилго</th>\n        <th>Хүрэх зорилт</th>\n        <th>Одоо</th>\n        <th>Гүйцэтгэсэн</th>\n    </tr>\n    % for line in ctx[\"challenge_lines\"]:\n        <tr\n            % if line['completeness'] >= 100:\n                style=\"font-weight:bold;\"\n            % endif\n            >\n            <td>${line['name']}</td>\n            <td>${line['target']}\n            % if line['suffix']:\n                ${line['suffix']}\n            % endif\n            </td>\n            <td>${line['current']}\n            % if line['suffix']:\n                ${line['suffix']}\n            % endif\n            </td>\n            <td>${line['completeness']} %</td>\n        </tr>\n    % endfor\n    </table>\n% else:\n    % for line in ctx[\"challenge_lines\"]:\n        <table width=\"100%\" border=\"1\">\n            <tr>\n                <th colspan=\"4\">${line['name']}</th>\n            </tr>\n            <tr>\n                <th>#</th>\n                <th>Хүн</th>\n                <th>Гүйцэтгэсэн</th>\n                <th>Одоо</th>\n            </tr>\n            % for goal in line['goals']:\n                <tr\n                    % if goal.completeness >= 100:\n                        style=\"font-weight:bold;\"\n                    % endif\n                    >\n                    <td>${goal['rank']}</td>\n                    <td>${goal['name']}</td>\n                    <td>${goal['completeness']}%</td>\n                    <td>${goal['current']}/${line['target']}\n                    % if line['suffix']:\n                        ${line['suffix']}\n                    % endif\n                    </td>\n                </tr>\n            % endfor\n        </table>\n\n        <br/><br/>\n\n    % endfor\n% endif\n            "
 
 #. module: gamification
-#: selection:gamification.challenge.line,condition:0
-msgid "<="
-msgstr "<="
-
-#. module: gamification
-#: code:addons/gamification/models/challenge.py:756
+#: code:addons/gamification/models/challenge.py:743
 #, python-format
 msgid ""
-"<br/>Nobody has succeeded to reach every goal, no badge is rewared for this "
-"challenge."
-msgstr "<br/>Хэн ч бүх зорилтондоо хүрээгүй, энэ сорилтонд медаль өгөгдөөгүй."
+"<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
+" challenge."
+msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:754
+#: code:addons/gamification/models/challenge.py:741
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr "<br/>(badge %s) медалийн шагнал хүрч чадсан хэрэглэгч бүрт илгээгдсэн %s."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:763
+#: code:addons/gamification/models/challenge.py:750
 #, python-format
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
@@ -149,80 +143,40 @@ msgid ""
 msgstr "<br/>Өрсөлдсөн хэрэглэгчдэд тусгай шагнал илгээгдсэн. Энэ сорилтын эрэмбэлэлт :"
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.badge_list_action
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Click to create a badge. \n"
-"                </p>\n"
-"                <p>\n"
-"                    A badge is a symbolic token granted to a user as a sign of reward.\n"
-"                    It can be deserved automatically when some conditions are met or manually by users.\n"
-"                    Some badges are harder than others to get with specific conditions.\n"
-"                </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    Медаль үүсгэхдээ дарна уу. \n                </p>\n                <p>\n                    Медаль нь хэрэглэгчид шагнал өгснийг ялгах билэг тэмдэг юм.\n                    Энэ нь тодорхой нөхцлийг хангасан тохиолдолд автоматаар олгогдохоос гадна \n                    бусад хэрэглэгчид гараар өгч болно. Зарим медаль нь бусдаасаа\n                    хатуу шалгууртай байна.\n                </p>\n            "
+"<span class=\"o_stat_text\">Related</span>\n"
+"                                    <span class=\"o_stat_text\">Goals</span>"
+msgstr ""
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.challenge_list_action
+#: model:ir.actions.act_window,help:gamification.badge_list_action
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Click to create a challenge. \n"
-"                </p>\n"
-"                <p>\n"
-"                    Assign a list of goals to chosen users to evaluate them.\n"
-"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
-"                    The goals are created for the specified users or member of the group.\n"
-"                </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    Сорилт үүсгэхдээ дарна уу. \n                </p>\n                <p>\n                    Хэрэглэгчдийг үнэлэх зорилгоор зорилгын жагсаалтыг онооно.\n                    Сорилт нь зорилтуудыг автоматаар үүсгэхээр мөчлөгүүдийг хэрэглэж болно.\n                    Зорилго нь хэрэглэгчдэд тусгайлан эсвэл бүлгэмд үүсгэгдэж болно.\n                </p>\n            "
+"A badge is a symbolic token granted to a user as a sign of reward.\n"
+"                    It can be deserved automatically when some conditions are met or manually by users.\n"
+"                    Some badges are harder than others to get with specific conditions."
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Click to create a goal definition. \n"
-"                </p>\n"
-"                <p>\n"
-"                    A goal definition is a technical model of goal defining a condition to reach.\n"
-"                    The dates, values to reach or users are defined in goal instance.\n"
-"                </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    Зорилгын тодорхойлолтыг үүсгэхдээ дарна. \n                </p>\n                <p>\n                    Зорилгын тодорхойлолт гэдэг нь зорилгод хүрэх нөхцлийг тодорхойлох модель юм.\n                    Огноонууд, зорилтот утгууд, зорилго оноогдсон хэрэглэгчид тодорхойлогдоно.\n                </p>\n            "
+"A goal definition is a technical model of goal defining a condition to reach.\n"
+"                    The dates, values to reach or users are defined in goal instance."
+msgstr ""
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.goal_list_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Click to create a goal. \n"
-"                </p>\n"
-"                <p>\n"
-"                    A goal is defined by a user and a goal definition.\n"
-"                    Goals can be created automatically by using challenges.\n"
-"                </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    Зорилго үүсгэхдээ дарна уу. \n                </p>\n                <p>\n                    Зорилго нь хэрэглэгч болон зорилгын тодорхойлолтоор тодорхойлогдоно.\n                    Зорилго нь сорилтоор автоматаар тодорхойлогдож болно.\n                </p>\n            "
-
-#. module: gamification
-#: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
-msgid ""
-"<p>\n"
-"                There is no goals associated to this challenge matching your search.\n"
-"                Make sure that your challenge is active and assigned to at least one user.\n"
-"              </p>\n"
-"            "
-msgstr "<p>\n                Таны хайлтанд нийцэх энэ сорилтонд холбогдох зорилго алга.\n                Таны сорилт идэвхтэй бөгөөд дор хаяж нэг хэрэглэгчид оноогдсон эсэхийг нягтлана уу.\n              </p>\n            "
-
-#. module: gamification
-#: selection:gamification.challenge.line,condition:0
-msgid ">="
-msgstr ">="
-
-#. module: gamification
-#: help:gamification.goal.definition,condition:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition
 msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
 msgstr "Зорилго биелсэн гэж хэдийд үзэх вэ гэхээр одоогийн утга нь хүрэх утгад хүрснээр дүгнэгдэнэ."
+
+#. module: gamification
+#: model:ir.actions.act_window,help:gamification.goal_list_action
+msgid ""
+"A goal is defined by a user and a goal definition.\n"
+"                    Goals can be created automatically by using challenges."
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -230,47 +184,61 @@ msgid "A selected list of users"
 msgstr "Сонгосон хэрэглэгдсэн жагсаалт"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_wizard
+#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Accept"
 msgstr "Зөвшөөрөх"
 
 #. module: gamification
-#: field:gamification.goal.definition,action_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_action_id
 msgid "Action"
 msgstr "Үйлдэл"
 
 #. module: gamification
-#: field:gamification.badge,active:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_needaction
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_active
 msgid "Active"
 msgstr "Идэвхитэй"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Advanced Options"
 msgstr "Нарийвчилсан Сонголтууд..."
 
 #. module: gamification
-#: field:gamification.badge,rule_auth:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth
 msgid "Allowance to Grant"
 msgstr "Батлах зөвшөөрөл"
 
 #. module: gamification
-#: help:gamification.challenge,user_domain:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_user_domain
 msgid "Alternative to a list of users"
 msgstr "Хэрэглэгчийн жагсаалтын өөр сонголт"
 
 #. module: gamification
-#: field:gamification.challenge,category:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_category
 msgid "Appears in"
 msgstr "Дотор нь харагдах"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Assign Challenge To"
 msgstr "Сорилтыг оноох"
 
 #. module: gamification
-#: field:gamification.badge,rule_auth_user_ids:0
+#: model:ir.actions.act_window,help:gamification.challenge_list_action
+msgid ""
+"Assign a list of goals to chosen users to evaluate them.\n"
+"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
+"                    The goals are created for the specified users or member of the group."
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_user_ids
 msgid "Authorized Users"
 msgstr "Зөвшөөрөгдсөн хэрэглэгчид"
 
@@ -290,14 +258,15 @@ msgid "Automatic: sum on a field"
 msgstr "Автомат: талбар дээрх нийлбэр"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_form_view
-#: field:gamification.badge,name:0 field:gamification.badge.user,badge_id:0
-#: field:gamification.badge.user.wizard,badge_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_badge_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_badge_id
+#: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge"
 msgstr "Медаль"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_form_view
+#: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Description"
 msgstr "Медалийн тодорхойлолт"
 
@@ -308,12 +277,13 @@ msgid "Badge Granted"
 msgstr "Медаль батламжлагдсан"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_list_view
+#: model:ir.ui.view,arch_db:gamification.badge_list_view
 msgid "Badge List"
 msgstr "Медалийн жагсаалт"
 
 #. module: gamification
-#: field:gamification.badge.user,badge_name:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_badge_name
+#: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Name"
 msgstr "Медалийн нэр"
 
@@ -324,7 +294,7 @@ msgid "Badges"
 msgstr "Медаль"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "Badges are granted when a challenge is finished. This is either at the end "
 "of a running period (eg: end of the month for a monthly challenge), at the "
@@ -333,7 +303,7 @@ msgid ""
 msgstr "Сорилт дуусахад медаль батламжлагдана. Энэ нь хэрэгжиж буй мөчлөг дуусахад (ж: сар тутамын сорилтын хувьд сарын төгсгөлд), сорилтын төгсгөлд (мөчлөг тохируулагдаагүй бол) эсвэл сорилтыг гараар хаахад шалгагдана."
 
 #. module: gamification
-#: field:gamification.goal.definition,batch_mode:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_mode
 msgid "Batch Mode"
 msgstr "Бөөн горим"
 
@@ -343,19 +313,19 @@ msgid "Brilliant"
 msgstr "Гайхалтай"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_kanban_view
+#: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Can not grant"
 msgstr "Батламжилж чадахгүй"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:457
+#: code:addons/gamification/models/goal.py:442
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr "Эхлэсэн зорилгын тохиргоог засч чадахгүй"
 
 #. module: gamification
-#: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
-#: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
+#: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
+#: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Cancel"
 msgstr "Цуцлах"
 
@@ -365,14 +335,14 @@ msgid "Canceled"
 msgstr "Цуцлагдсан"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Category"
 msgstr "Ангилал"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_wizard
-#: field:gamification.challenge.line,challenge_id:0
-#: field:gamification.goal,challenge_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_challenge_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_challenge_id
+#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Challenge"
 msgstr "Сорилт"
 
@@ -382,60 +352,80 @@ msgid "Challenge Description"
 msgstr "Сорилтын тодорхойлолт"
 
 #. module: gamification
-#: field:gamification.goal,line_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_line_id
 msgid "Challenge Line"
 msgstr "Сорилтын мөр"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_wizard
-#: view:gamification.challenge.line:gamification.challenge_line_list_view
+#: model:ir.ui.view,arch_db:gamification.challenge_line_list_view
+#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Challenge Lines"
 msgstr "Сорилтын мөрүүд"
 
 #. module: gamification
-#: field:gamification.challenge,name:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_name
 msgid "Challenge Name"
 msgstr "Сорилтын нэр"
 
 #. module: gamification
-#: field:gamification.badge.user,challenge_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_challenge_id
 msgid "Challenge originating"
 msgstr "Сорилтын үүсвэр"
 
 #. module: gamification
-#: help:gamification.goal,challenge_id:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_challenge_id
 msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
 msgstr "Зорилгыг үүсгэсэн сорилт, хэрэглэгчдэд сорилтыг оноож зорилгыг энэ талбарт утгатайгаар үүсгэнэ."
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_kanban
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
 #: model:ir.ui.menu,name:gamification.gamification_challenge_menu
+#: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Challenges"
 msgstr "Сорилтууд"
 
 #. module: gamification
-#: help:gamification.badge,rule_max:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
 msgstr "Энэ медалийг нэг хүнд илгээх хязгаарыг тогтоохоор бол үүнийг сонго"
 
 #. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_form_view
+#: model:ir.actions.act_window,help:gamification.badge_list_action
+msgid "Click to create a badge."
+msgstr ""
+
+#. module: gamification
+#: model:ir.actions.act_window,help:gamification.challenge_list_action
+msgid "Click to create a challenge."
+msgstr ""
+
+#. module: gamification
+#: model:ir.actions.act_window,help:gamification.goal_definition_list_action
+msgid "Click to create a goal definition."
+msgstr ""
+
+#. module: gamification
+#: model:ir.actions.act_window,help:gamification.goal_list_action
+msgid "Click to create a goal."
+msgstr ""
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Clickable Goals"
 msgstr "Дарж болох зорилгууд"
 
 #. module: gamification
-#: field:gamification.goal,closed:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_closed
 msgid "Closed goal"
 msgstr "Хаагдсан зорилго"
 
 #. module: gamification
-#: field:gamification.badge.user,comment:0
-#: field:gamification.badge.user.wizard,comment:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_comment
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_comment
 msgid "Comment"
-msgstr "Сэтгэгдэл"
+msgstr "Тайлбар"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_discover
@@ -443,23 +433,23 @@ msgid "Complete your Profile"
 msgstr "Өөрийн профайлыг гүйцээх"
 
 #. module: gamification
-#: field:gamification.goal,completeness:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_completeness
 msgid "Completeness"
 msgstr "Гүйцэтгэл"
 
 #. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_search_view
-#: field:gamification.goal.definition,computation_mode:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_computation_mode
+#: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Computation Mode"
 msgstr "Тооцоолох горим"
 
 #. module: gamification
-#: field:gamification.goal,computation_mode:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_computation_mode
 msgid "Computation mode"
 msgstr "Тооцоолох горим"
 
 #. module: gamification
-#: field:gamification.challenge.line,condition:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_condition
 msgid "Condition"
 msgstr "Нөхцөл"
 
@@ -478,44 +468,44 @@ msgid ""
 msgstr "Систем рүү холбогдох хэрэглэгчдийг үүсгэж, менеж хийнэ. Систем рүү тодорхой хугацаагаар холбогдохгүй хэрэглэгчдийг идэвхгүй болгох ажлыг мөн хийх боломжтой. Системийг хэрхэн хэрэглээнээс хамаарсан группыг хэрэглэгчдэд оноож өгөх ажлыг мөн хийх боломжтой."
 
 #. module: gamification
-#: field:gamification.badge.user,create_date:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_date
 msgid "Created"
 msgstr "Үүссэн"
 
 #. module: gamification
-#: field:gamification.badge,create_uid:0
-#: field:gamification.badge.user.wizard,create_uid:0
-#: field:gamification.challenge,create_uid:0
-#: field:gamification.challenge.line,create_uid:0
-#: field:gamification.goal,create_uid:0
-#: field:gamification.goal.definition,create_uid:0
-#: field:gamification.goal.wizard,create_uid:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_create_uid
 msgid "Created by"
 msgstr "Үүсгэгч"
 
 #. module: gamification
-#: field:gamification.badge,create_date:0
-#: field:gamification.badge.user.wizard,create_date:0
-#: field:gamification.challenge,create_date:0
-#: field:gamification.challenge.line,create_date:0
-#: field:gamification.goal,create_date:0
-#: field:gamification.goal.definition,create_date:0
-#: field:gamification.goal.wizard,create_date:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_create_date
 msgid "Created on"
-msgstr "Үүсгэсэн огноо"
+msgstr "Үүсгэсэн"
 
 #. module: gamification
-#: field:gamification.badge.user,create_uid:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_uid
 msgid "Creator"
 msgstr "Үүсгэгч"
 
 #. module: gamification
-#: field:gamification.goal.wizard,current:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_current
 msgid "Current"
 msgstr "Одоогийн"
 
 #. module: gamification
-#: field:gamification.goal,current:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_current
 msgid "Current Value"
 msgstr "Одоогийн утга"
 
@@ -526,83 +516,95 @@ msgid "Daily"
 msgstr "Өдөр тутмын"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Data"
 msgstr "Өгөгдөл"
 
 #. module: gamification
-#: field:gamification.goal.definition,field_date_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_field_date_id
 msgid "Date Field"
 msgstr "Огноо талбар"
 
 #. module: gamification
-#: help:gamification.badge,message_last_post:0
-#: help:gamification.challenge,message_last_post:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_message_last_post
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_last_post
 msgid "Date of the last message posted on the record."
 msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
 
 #. module: gamification
-#: help:gamification.challenge,category:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_category
 msgid "Define the visibility of the challenge through menus"
 msgstr "Менюгээр сорилтын үзэгдэх хүрээг тодорхойлох"
 
 #. module: gamification
-#: help:gamification.goal.definition,computation_mode:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_computation_mode
 msgid ""
 "Defined how will be computed the goals. The result of the operation will be "
 "stored in the field 'Current'."
 msgstr "Зорилго хэрхэн тооцоологдох нь тодорхойлогдсон. Үйлдлийн үр дүн нь 'Одоогийн' талбарт хадгалагдана."
 
 #. module: gamification
-#: field:gamification.goal,definition_condition:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3025
 msgid "Definition Condition"
 msgstr "Тодорхойлолтын нөхцөл"
 
 #. module: gamification
-#: field:gamification.goal,definition_description:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3034
 msgid "Definition Description"
 msgstr "Тодорхойлолтын тайлбар"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Depending on the Display mode, reports will be individual or shared."
 msgstr "Харуулах горимоос хамаарч тайлан нь хувийн болон дундын байна."
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
 msgstr "Сорилтыг тайлбарла: юу хийх, зорилт юу болох, яагаад хэрэгтэй болох..."
 
 #. module: gamification
-#: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
+#: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Describe what they did and why it matters (will be public)"
 msgstr "Тэд юу хийсэн болон яагаад хэрэгтэй болох талаар тайлбарла (нийтэд ил байх болно)"
 
 #. module: gamification
-#: field:gamification.badge,description:0
-#: field:gamification.challenge,description:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_description
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_description
 msgid "Description"
 msgstr "Тодорхойлолт"
 
 #. module: gamification
-#: field:gamification.challenge,visibility_mode:0
-#: field:gamification.goal,definition_display:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_visibility_mode
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display
 msgid "Display Mode"
 msgstr "Харуулах горим"
 
 #. module: gamification
-#: field:gamification.goal.definition,display_mode:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display_mode
 msgid "Displayed as"
 msgstr "Харагдах байдал"
 
 #. module: gamification
-#: field:gamification.goal.definition,batch_distinctive_field:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_distinctive_field
 msgid "Distinctive field for batch user"
 msgstr "Бөөн хэрэглэгчдийн ялгаатай талбар"
 
 #. module: gamification
-#: help:gamification.goal.definition,domain:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_domain
 msgid ""
 "Domain for filtering records. General rule, not user depending, e.g. "
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
@@ -611,44 +613,36 @@ msgstr "Бичлэгийг шүүх дөмэйн. Ерөнхий дүрэм, х�
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
-#: view:gamification.goal:gamification.goal_search_view
+#: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
-msgstr "Хийгдсэн"
+msgstr "Дууссан"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
-#: view:gamification.goal:gamification.goal_search_view
 #: selection:gamification.goal,state:0
+#: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Draft"
 msgstr "Ноорог"
 
 #. module: gamification
-#: field:gamification.challenge,end_date:0
-#: view:gamification.goal:gamification.goal_search_view
-#: field:gamification.goal,end_date:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_end_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_end_date
+#: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "End Date"
 msgstr "Дуусах огноо"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:561
-#: code:addons/gamification/models/goal.py:148
-#: code:addons/gamification/models/goal.py:457
-#, python-format
-msgid "Error!"
-msgstr "Алдаа!"
-
-#. module: gamification
-#: help:gamification.goal.definition,batch_mode:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_mode
 msgid "Evaluate the expression in batch instead of once for each user"
 msgstr "Илэрхийллийг бөөн горимоор тооцоолох. Хэрэглэгч тус бүр дээр нэг нэгээр биш."
 
 #. module: gamification
-#: field:gamification.goal.definition,batch_user_expression:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_user_expression
 msgid "Evaluted expression for batch mode"
 msgstr "Бөөн горимоор тооцоолсон илэрхийлэл"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_wizard
+#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Even if the challenge is failed, best challengers will be rewarded"
 msgstr "Сорилт бүтэлгүйтсэн байлаа ч сорилтын шилдэгүүд шагнагдана"
 
@@ -668,60 +662,67 @@ msgid "Failed"
 msgstr "Бүтэлгүйтсэн"
 
 #. module: gamification
-#: field:gamification.goal.definition,field_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_field_id
 msgid "Field to Sum"
 msgstr "Нийлбэрийг тооцох талбар"
 
 #. module: gamification
-#: field:gamification.goal.definition,domain:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_domain
 msgid "Filter Domain"
 msgstr "Дөмэйнийн шүүлтүүр"
 
 #. module: gamification
-#: field:gamification.badge,message_follower_ids:0
-#: field:gamification.challenge,message_follower_ids:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_follower_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_follower_ids
 msgid "Followers"
 msgstr "Дагагчид"
 
 #. module: gamification
-#: field:gamification.challenge,reward_first_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_channel_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_partner_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_first_id
 msgid "For 1st user"
 msgstr "Эхний хэрэглэгчид"
 
 #. module: gamification
-#: field:gamification.challenge,reward_second_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_second_id
 msgid "For 2nd user"
 msgstr "2-р хэрэглэгчид"
 
 #. module: gamification
-#: field:gamification.challenge,reward_third_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_third_id
 msgid "For 3rd user"
 msgstr "3-р хэрэглэгчид"
 
 #. module: gamification
-#: field:gamification.challenge,reward_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_id
 msgid "For Every Succeding User"
 msgstr "Амжилттай бүх хэрэглэгчид"
 
 #. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Formating Options"
 msgstr "Форматын сонголтууд"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_kanban_view
+#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "From"
-msgstr "Хэнээс"
+msgstr "Хаанаас"
 
 #. module: gamification
-#: field:gamification.goal.definition,full_suffix:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_full_suffix
 msgid "Full Suffix"
 msgstr "Бүтэн дагавар"
-
-#. module: gamification
-#: model:ir.module.category,name:gamification.module_goal_category
-msgid "Gamification"
-msgstr "Тоглоомчлол"
 
 #. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
@@ -759,65 +760,65 @@ msgid "Gamification user badge"
 msgstr "Тоглоомчлолын хэрэглэгчийн медаль"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_kanban
-#: view:gamification.goal:gamification.goal_form_view
-#: field:gamification.goal.wizard,goal_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_goal_id
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Goal"
 msgstr "Зорилго"
 
 #. module: gamification
-#: field:gamification.challenge.line,definition_id:0
-#: view:gamification.goal:gamification.goal_search_view
-#: field:gamification.goal,definition_id:0
-#: field:gamification.goal.definition,name:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3036
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_name
+#: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
 msgstr "Зорилгын тодорхойлолт"
 
 #. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_list_view
 #: model:ir.actions.act_window,name:gamification.goal_definition_list_action
 #: model:ir.ui.menu,name:gamification.gamification_definition_menu
+#: model:ir.ui.view,arch_db:gamification.goal_definition_list_view
 msgid "Goal Definitions"
 msgstr "Зорилгын тодорхойлолтууд"
 
 #. module: gamification
-#: field:gamification.goal.definition,description:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description
 msgid "Goal Description"
 msgstr "Зорилгын тайлбар"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Failed"
 msgstr "Зорилго бүтэлгүйтсэн"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_list_view
+#: model:ir.ui.view,arch_db:gamification.goal_list_view
 msgid "Goal List"
 msgstr "Зорилгын жагсаалт"
 
 #. module: gamification
-#: field:gamification.goal.definition,condition:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition
 msgid "Goal Performance"
 msgstr "Зорилгын гүйцэтгэл"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Reached"
 msgstr "Зорилгод хүрсэн"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
-#: view:gamification.challenge:gamification.challenge_list_view
-#: view:gamification.goal.definition:gamification.goal_definition_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_list_view
+#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Goal definitions"
 msgstr "Зорилгын тодорхойлолтууд"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
-#: view:gamification.challenge:gamification.view_challenge_kanban
-#: view:gamification.challenge:gamification.view_challenge_wizard
 #: model:ir.actions.act_window,name:gamification.goal_list_action
 #: model:ir.ui.menu,name:gamification.gamification_goal_menu
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
+#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Goals"
 msgstr "Зорилго"
 
@@ -827,51 +828,51 @@ msgid "Good Job"
 msgstr "Сайн ажил"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_kanban_view
+#: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Grant"
 msgstr "Батламжлах"
 
 #. module: gamification
-#: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
+#: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Grant Badge"
 msgstr "Медалийг батламжлах"
 
 #. module: gamification
-#: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
-#: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
+#: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
+#: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
 msgstr "Медалийг хэнд батламжлах"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_form_view
+#: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Grant this Badge"
 msgstr "Энэ медалийг батламжлах"
 
 #. module: gamification
-#: view:gamification.badge.user:gamification.badge_user_kanban_view
+#: model:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "Granted by"
 msgstr "Батламжлагч"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_form_view
+#: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Granting"
 msgstr "Батламжлах"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_search_view
-#: view:gamification.goal:gamification.goal_search_view
-#: view:gamification.goal.definition:gamification.goal_definition_search_view
+#: model:ir.ui.view,arch_db:gamification.challenge_search_view
+#: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
+#: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Group By"
 msgstr "Бүлэглэх"
 
 #. module: gamification
-#: help:gamification.challenge,report_message_group_id:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_report_message_group_id
 msgid "Group that will receive a copy of the report in addition to the user"
 msgstr "Тайлангийн хуулбарыг хүлээн авах хэрэгч дээр нэмэгдэх бүлгэм"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_search_view
+#: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "HR Challenges"
 msgstr "Хүний нөөцийн сорилтууд"
 
@@ -881,49 +882,51 @@ msgid "Hidden"
 msgstr "Нуугдсан"
 
 #. module: gamification
-#: help:gamification.badge,message_summary:0
-#: help:gamification.challenge,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
-
-#. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "How to compute the goal?"
 msgstr "Зорилгыг хэрхэн тооцоолох?"
 
 #. module: gamification
-#: field:gamification.badge,id:0 field:gamification.badge.user,id:0
-#: field:gamification.badge.user.wizard,id:0 field:gamification.challenge,id:0
-#: field:gamification.challenge.line,id:0 field:gamification.goal,id:0
-#: field:gamification.goal.definition,id:0 field:gamification.goal.wizard,id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_id
 msgid "ID"
 msgstr "ID"
 
 #. module: gamification
-#: field:gamification.goal.definition,res_id_field:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_res_id_field
 msgid "ID Field of user"
 msgstr "Хэрэглэгчийн ID талбар"
 
 #. module: gamification
-#: help:gamification.badge,remaining_sending:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_remaining_sending
 msgid "If a maxium is set"
 msgstr "Хэрэв хамгийн утга тохируулагдсан бол"
 
 #. module: gamification
-#: help:gamification.badge,message_unread:0
-#: help:gamification.challenge,message_unread:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_message_unread
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
 
 #. module: gamification
-#: help:gamification.badge.user,challenge_id:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_message_needaction
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
 msgid "If this badge was rewarded through a challenge"
 msgstr "Хэрэв энэ медаль сорилтоор шагнагдсан бол"
 
 #. module: gamification
-#: field:gamification.badge,image:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_image
 msgid "Image"
 msgstr "Зураг"
 
@@ -933,21 +936,21 @@ msgid "In Progress"
 msgstr "Боловсруулагдаж буй"
 
 #. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid ""
 "In batch mode, the domain is evaluated globally. If enabled, do not use "
 "keyword 'user' in above filter domain."
 msgstr "Бөөн горимд, дөмэйн нь глобаль тооцоологдоно. Хэрэв зөвшөөрөгдсөн бол дээрх дөмэйнийн шүүлтүүрт 'user' түлхүүр үгийг битгий хэрэглэ."
 
 #. module: gamification
-#: help:gamification.goal.definition,batch_distinctive_field:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_distinctive_field
 msgid ""
 "In batch mode, this indicates which field distinct one user form the other, "
 "e.g. user_id, partner_id..."
 msgstr "Бөөн горимд энэ нь аль талбар нэг хэрэглэгчийг нөгөө хэрэглэгчээс ялгахыг илтгэдэг, ж: user_id, partner_id..."
 
 #. module: gamification
-#: help:gamification.goal,last_update:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_last_update
 msgid ""
 "In case of manual goal, reminders are sent if the goal as not been updated "
 "for a while (defined in challenge). Ignored in case of non-manual goal or "
@@ -965,12 +968,12 @@ msgid "Individual Goals"
 msgstr "Хувийн зорилгууд"
 
 #. module: gamification
-#: field:gamification.goal.definition,model_inherited_model_ids:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_model_inherited_model_ids
 msgid "Inherited models"
 msgstr "Удамшсан моделиуд"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:334
+#: code:addons/gamification/models/goal.py:319
 #, python-format
 msgid "Invalid return content from the evaluation of code for definition %s"
 msgstr "%s тодорхойлолтонд зориулсан кодыг ажиллуулахад буцаасан утга нь буруу"
@@ -981,60 +984,65 @@ msgid "Invite new Users"
 msgstr "Шинэ хэрэглэгчдийн урих"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_wizard
+#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Invited"
 msgstr "Уригдсан"
 
 #. module: gamification
-#. openerp-web
-#: code:addons/gamification/static/src/xml/gamification.xml:105
-#, python-format
-msgid "Invited Challenges"
-msgstr "Уригдсан сорилтууд"
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_is_follower
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_is_follower
+msgid "Is Follower"
+msgstr ""
 
 #. module: gamification
-#: field:gamification.badge,message_is_follower:0
-#: field:gamification.challenge,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Дагагч эсэх"
-
-#. module: gamification
-#: field:gamification.badge,message_last_post:0
-#: field:gamification.challenge,message_last_post:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_last_post
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_last_post
 msgid "Last Message Date"
 msgstr "Сүүлийн зурвасын огноо"
 
 #. module: gamification
-#: field:gamification.challenge,last_report_date:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge___last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user___last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard___last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge___last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line___last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal___last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition___last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_last_report_date
 msgid "Last Report Date"
 msgstr "Сүүлийн тайлангийн огноо"
 
 #. module: gamification
-#: field:gamification.goal,last_update:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_last_update
 msgid "Last Update"
 msgstr "Сүүлийн Шинэчлэл"
 
 #. module: gamification
-#: field:gamification.badge,write_uid:0
-#: field:gamification.badge.user,write_uid:0
-#: field:gamification.badge.user.wizard,write_uid:0
-#: field:gamification.challenge,write_uid:0
-#: field:gamification.challenge.line,write_uid:0
-#: field:gamification.goal,write_uid:0
-#: field:gamification.goal.definition,write_uid:0
-#: field:gamification.goal.wizard,write_uid:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_write_uid
 msgid "Last Updated by"
 msgstr "Сүүлийн засвар хийсэн"
 
 #. module: gamification
-#: field:gamification.badge,write_date:0
-#: field:gamification.badge.user,write_date:0
-#: field:gamification.badge.user.wizard,write_date:0
-#: field:gamification.challenge,write_date:0
-#: field:gamification.challenge.line,write_date:0
-#: field:gamification.goal,write_date:0
-#: field:gamification.goal.definition,write_date:0
-#: field:gamification.goal.wizard,write_date:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_write_date
 msgid "Last Updated on"
 msgstr "Сүүлийн засвар хийсэн огноо"
 
@@ -1044,27 +1052,27 @@ msgid "Leader Board (Group Ranking)"
 msgstr "Тэргүүлэгчдийн самбар (Групп байрууд)"
 
 #. module: gamification
-#: field:gamification.badge,rule_max_number:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_max_number
 msgid "Limitation Number"
 msgstr "Хязгаарлалтын тоо"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Line List"
 msgstr "Мөрийн жагсаалт"
 
 #. module: gamification
-#: field:gamification.challenge,line_ids:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_ids
 msgid "Lines"
 msgstr "Мөрүүд"
 
 #. module: gamification
-#: help:gamification.challenge,line_ids:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_ids
 msgid "List of goals that will be set"
 msgstr "Тохируулагдах зорилгын жагсаалт"
 
 #. module: gamification
-#: help:gamification.challenge,user_ids:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_user_ids
 msgid "List of users participating to the challenge"
 msgstr "Сорилтонд оролцож байгаа хэрэглэгчдийн жагсаалт"
 
@@ -1074,35 +1082,30 @@ msgid "Mail Group Following"
 msgstr "Дагаж байгаа Мэйл бүлгэм"
 
 #. module: gamification
-#: model:res.groups,name:gamification.group_goal_manager
-msgid "Manager"
-msgstr "Менежер"
-
-#. module: gamification
-#: field:gamification.badge,message_ids:0
-#: field:gamification.challenge,message_ids:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_ids
 msgid "Messages"
 msgstr "Зурвасууд"
 
 #. module: gamification
-#: help:gamification.badge,message_ids:0
-#: help:gamification.challenge,message_ids:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_message_ids
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_ids
 msgid "Messages and communication history"
 msgstr "Зурвас болон харилцсан түүх"
 
 #. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_search_view
-#: field:gamification.goal.definition,model_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_model_id
+#: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Model"
 msgstr "Модел"
 
 #. module: gamification
-#: field:gamification.challenge.line,definition_monetary:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_monetary
 msgid "Monetary"
 msgstr "Мөнгөн"
 
 #. module: gamification
-#: field:gamification.goal.definition,monetary:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_monetary
 msgid "Monetary Value"
 msgstr "Мөнгөн утга"
 
@@ -1113,37 +1116,37 @@ msgid "Monthly"
 msgstr "Сар бүр"
 
 #. module: gamification
-#: field:gamification.badge,rule_max:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_max
 msgid "Monthly Limited Sending"
 msgstr "Сар бүрийн хязгаарлагдсан илгээлт"
 
 #. module: gamification
-#: field:gamification.badge,stat_this_month:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_this_month
 msgid "Monthly total"
 msgstr "Сар бүрийн дүн"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_search_view
+#: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "My Goals"
 msgstr "Миний зорилгууд"
 
 #. module: gamification
-#: field:gamification.badge,stat_my_monthly_sending:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my_monthly_sending
 msgid "My Monthly Sending Total"
 msgstr "Миний сар тутамын илгээх дүн"
 
 #. module: gamification
-#: field:gamification.badge,stat_my_this_month:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my_this_month
 msgid "My Monthly Total"
 msgstr "Миний сар тутамын дүн"
 
 #. module: gamification
-#: field:gamification.badge,stat_my:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my
 msgid "My Total"
 msgstr "Миний нийт дүн"
 
 #. module: gamification
-#: field:gamification.challenge.line,name:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_name
 msgid "Name"
 msgstr "Нэр"
 
@@ -1153,17 +1156,17 @@ msgid "Never"
 msgstr "Хэзээч үгүй"
 
 #. module: gamification
-#: help:gamification.challenge,remind_update_delay:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_remind_update_delay
 msgid "Never reminded if no value or zero is specified."
 msgstr "Утга байхгүй буюу тэг утгатай тохиолдолд хэзээ ч сануулга хийгдэхгүй"
 
 #. module: gamification
-#: field:gamification.challenge,next_report_date:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_next_report_date
 msgid "Next Report Date"
 msgstr "Дараагийн тайлангийн огноо"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_form_view
+#: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "No monthly sending limit"
 msgstr "Сар тутамын илгээх хязгаарлалт байхгүй"
 
@@ -1173,7 +1176,7 @@ msgid "No one, assigned through challenges"
 msgstr "Сорилтоор нэг ч хүн оноогдоогүй"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:766
+#: code:addons/gamification/models/challenge.py:753
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr "Тусгай медаль хүлээн авах болзолд хэн ч хүрээгүй"
@@ -1184,17 +1187,35 @@ msgid "Non recurring"
 msgstr "Давтагдах биш"
 
 #. module: gamification
-#: field:gamification.challenge,remind_update_delay:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_remind_update_delay
 msgid "Non-updated manual goals will be reminded after"
 msgstr "Шинэчлэгдээгүй гараарх зорилгуудын сануулахаа болох эцсийн хугацаа"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Notification Messages"
 msgstr "Сануулах зурвасууд"
 
 #. module: gamification
-#: field:gamification.badge,stat_count_distinct:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_needaction_counter
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_badge_message_needaction_counter
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_badge_message_unread_counter
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_count_distinct
 msgid "Number of users"
 msgstr "Хэрэглэгчдийн тоо"
 
@@ -1204,27 +1225,27 @@ msgid "On change"
 msgstr "Өөрчлөлт дээр"
 
 #. module: gamification
-#: help:gamification.badge,rule_auth_badge_ids:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth_badge_ids
 msgid "Only the people having these badges can give this badge"
 msgstr "Зөвхөн эдгээр медальтай хүн л энэ медалийг өгч чадна"
 
 #. module: gamification
-#: help:gamification.badge,rule_auth_user_ids:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth_user_ids
 msgid "Only these people can give this badge"
 msgstr "Зөвхөн эдгээр хүмүүс л энэ медалийг өгч чадна"
 
 #. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Optimisation"
 msgstr "Оновчлол"
 
 #. module: gamification
-#: field:gamification.badge,owner_ids:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_owner_ids
 msgid "Owners"
 msgstr "Эзэмшигчид"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_wizard
+#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Participating"
 msgstr "Оролцож буй"
 
@@ -1234,19 +1255,19 @@ msgid "People having some badges"
 msgstr "Медальтай хүмүүс"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_search_view
+#: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Period"
 msgstr "Мөчлөг"
 
 #. module: gamification
-#: help:gamification.challenge,period:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_period
 msgid ""
 "Period of automatic goal assigment. If none is selected, should be launched "
 "manually."
 msgstr "Зорилго автоматаар оноох мөчлөг. Хэрэв сонгоогүй бол гараар хийх ёстой."
 
 #. module: gamification
-#: field:gamification.challenge,period:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_period
 msgid "Periodicity"
 msgstr "Тогтмол хугацаат"
 
@@ -1261,12 +1282,12 @@ msgid "Progressive (using numerical values)"
 msgstr "Ахицтай (тоон утга ашиглаж)"
 
 #. module: gamification
-#: field:gamification.goal.definition,compute_code:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_compute_code
 msgid "Python Code"
 msgstr "Python код"
 
 #. module: gamification
-#: help:gamification.goal.definition,compute_code:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_compute_code
 msgid ""
 "Python code to be executed for each user. 'result' should contains the new "
 "current value. Evaluated user can be access through object.user_id."
@@ -1278,7 +1299,7 @@ msgid "Reached"
 msgstr "Хүрсэн"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
 msgstr "Одоогийн утгын хүрсэн болох утга"
 
@@ -1288,24 +1309,19 @@ msgid "Recorded manually"
 msgstr "Гараар хөтлөгдсөн"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reference"
-msgstr "Код"
+msgstr "Дугаар"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Refresh Challenge"
 msgstr "Сорилтыг дахин шинэчлэх"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_wizard
+#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Reject"
 msgstr "Татгалзах"
-
-#. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
-msgid "Related"
-msgstr "Холбогдсон"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goals_from_challenge_act
@@ -1313,146 +1329,146 @@ msgid "Related Goals"
 msgstr "Холбогдсон зорилго"
 
 #. module: gamification
-#: field:gamification.badge,remaining_sending:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_remaining_sending
 msgid "Remaining Sending Allowed"
 msgstr "Үлдсэн илээхээр зөвшөөрөгдсөн"
 
 #. module: gamification
-#: field:gamification.goal,remind_update_delay:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_remind_update_delay
 msgid "Remind delay"
 msgstr "Сануулах хүлээлт"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reminders for Manual Goals"
 msgstr "Гараарх зорилгын сануулгууд"
 
 #. module: gamification
-#: field:gamification.challenge,report_message_frequency:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_report_message_frequency
 msgid "Report Frequency"
 msgstr "Давтамжийн Тайлан"
 
 #. module: gamification
-#: field:gamification.challenge,report_template_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_report_template_id
 msgid "Report Template"
 msgstr "Тайлангийн үлгэр"
 
 #. module: gamification
-#: field:gamification.badge,rule_auth_badge_ids:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_badge_ids
 msgid "Required Badges"
 msgstr "Шаардагдах медаль"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reset Completion"
 msgstr "Биелэлтийг дахин шинэчлэх"
 
 #. module: gamification
-#: field:gamification.challenge,manager_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_manager_id
 msgid "Responsible"
 msgstr "Хариуцлага"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:561
+#: code:addons/gamification/models/challenge.py:548
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
 msgstr "Хувийн сорилтын хувьд явцыг хэрэглэгчийн мэдээлэлгүйгээр авах"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
-#: view:gamification.challenge:gamification.view_challenge_wizard
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Reward"
 msgstr "Шагнах"
 
 #. module: gamification
-#: field:gamification.challenge,reward_failure:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_failure
 msgid "Reward Bests if not Succeeded?"
 msgstr "Хэрэв гүйцэтгээгүй бол шилдгүүдийг шагнах уу?"
 
 #. module: gamification
-#: field:gamification.challenge,reward_realtime:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_realtime
 msgid "Reward as soon as every goal is reached"
 msgstr "Зорилго бүрт хүрмэгц шууд шагнах"
 
 #. module: gamification
-#: field:gamification.badge,challenge_ids:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_challenge_ids
 msgid "Reward of Challenges"
 msgstr "Сорилтуудын шагнал"
 
 #. module: gamification
-#: field:gamification.badge,goal_definition_ids:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_goal_definition_ids
 msgid "Rewarded by"
 msgstr "Шагнагч"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_form_view
+#: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Rewards for challenges"
 msgstr "Сорилтуудад зориулсан шагналууд"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_search_view
+#: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Running"
 msgstr "Ажиллаж буй"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_search_view
+#: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Running Challenges"
 msgstr "Хэрэгжиж буй сорилтууд"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
 msgstr "Тов"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_search_view
+#: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Search Challenges"
 msgstr "Сорилтуудыг хайх"
 
 #. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_search_view
+#: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Search Goal Definitions"
 msgstr "Зорилгын тодорхойлолтуудыг хайх"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_search_view
+#: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Search Goals"
 msgstr "Зорилгуудыг хайх"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_form_view
+#: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
 "enforced for administrator."
 msgstr "Хэн гараар медалийг батламжилж болохыг зөвшөөрөх нууцлалын дүрэм. Администраторуудыг албадахгүй"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Send Report"
 msgstr "Тайланг илгээх"
 
 #. module: gamification
-#: field:gamification.challenge,report_message_group_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_report_message_group_id
 msgid "Send a copy to"
 msgstr "Хуулбарыг хэнд илгээх"
 
 #. module: gamification
-#: field:gamification.badge.user,sender_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_sender_id
 msgid "Sender"
 msgstr "Илгээгч"
 
 #. module: gamification
-#: field:gamification.challenge.line,sequence:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_sequence
 msgid "Sequence"
 msgstr "Дараалал"
 
 #. module: gamification
-#: help:gamification.challenge.line,sequence:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_sequence
 msgid "Sequence number for ordering"
 msgstr "Эрэмбэлэхэд зориулсан дарааллын дугаар"
 
 #. module: gamification
-#: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
+#: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
 msgstr "Энэ зорилгод хүрсэн одоогийн утгыг тааруулах"
 
@@ -1477,120 +1493,98 @@ msgid "Setup your Company"
 msgstr "Компаниа тохируулах"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Start Challenge"
 msgstr "Сорилтыг эхлүүлэх"
 
 #. module: gamification
-#: field:gamification.challenge,start_date:0
-#: field:gamification.goal,start_date:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_start_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_start_date
 msgid "Start Date"
-msgstr "Эхлэх огноо"
+msgstr "Эхлэл огноо"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Start goal"
 msgstr "Зорилгыг эхлүүлэх"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_search_view
-#: field:gamification.challenge,state:0
-#: view:gamification.goal:gamification.goal_search_view
-#: field:gamification.goal,state:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_state
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_state
+#: model:ir.ui.view,arch_db:gamification.challenge_search_view
+#: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
 msgstr "Төлөв"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_form_view
+#: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Statistics"
 msgstr "Статистик"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Subscriptions"
 msgstr "Бүртгэлүүд"
 
 #. module: gamification
-#: field:gamification.challenge.line,definition_full_suffix:0
-#: field:gamification.goal,definition_suffix:0
-#: field:gamification.goal.definition,suffix:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_full_suffix
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3030
 msgid "Suffix"
 msgstr "Дагавар"
 
 #. module: gamification
-#: field:gamification.challenge,invited_user_ids:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_invited_user_ids
 msgid "Suggest to users"
 msgstr "Хэрэглэгчидэд зөвлөх"
 
 #. module: gamification
-#: field:gamification.badge,message_summary:0
-#: field:gamification.challenge,message_summary:0
-msgid "Summary"
-msgstr "Хураангуй"
-
-#. module: gamification
-#: field:gamification.challenge.line,target_goal:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_target_goal
 msgid "Target Value to Reach"
 msgstr "Хүрэх зорилтот утга"
 
 #. module: gamification
-#. openerp-web
-#: code:addons/gamification/static/src/xml/gamification.xml:32
-#: code:addons/gamification/static/src/xml/gamification.xml:54
-#, python-format
-msgid "Target:"
-msgstr "Зорилт:"
-
-#. module: gamification
-#. openerp-web
-#: code:addons/gamification/static/src/xml/gamification.xml:35
-#: code:addons/gamification/static/src/xml/gamification.xml:57
-#, python-format
-msgid "Target: <="
-msgstr "Зорилт: <="
-
-#. module: gamification
-#: view:gamification.goal:gamification.goal_kanban_view
+#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "Target: less than"
 msgstr "Зорилт: бага"
 
 #. module: gamification
-#: help:gamification.goal.definition,action_id:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_action_id
 msgid "The action that will be called to update the goal value."
 msgstr "Зорилгын утгыг шинэчлэхээр дуудагдах үйлдэл."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:750
+#: code:addons/gamification/models/challenge.py:737
 #, python-format
 msgid "The challenge %s is finished."
 msgstr "%s зорилт дууссан."
 
 #. module: gamification
-#: help:gamification.goal.definition,full_suffix:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_full_suffix
 msgid "The currency and suffix field"
 msgstr "Валют болон дагавар талбар"
 
 #. module: gamification
-#: help:gamification.goal.definition,field_date_id:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_field_date_id
 msgid "The date to use for the time period evaluated"
 msgstr "Тооцоологдсон хугацааны мөчлөгт хэрэглэх огноо"
 
 #. module: gamification
-#: help:gamification.challenge,end_date:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_end_date
 msgid ""
 "The day a new challenge will be automatically closed. If no periodicity is "
 "set, will use this date as the goal end date."
 msgstr "Шинэ сорилт автоматаар хаагдах өдөр. Хэрэв мөчлөг тохируулагдаагүй бол зорилгын дуусах огноог энэ огноо нь хэрэглэнэ."
 
 #. module: gamification
-#: help:gamification.challenge,start_date:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_start_date
 msgid ""
 "The day a new challenge will be automatically started. If no periodicity is "
 "set, will use this date as the goal start date."
 msgstr "Шинэ сорилт автоматаар эхлэх өдөр. Хэрэв мөчлөг тохируулагдаагүй бол зорилгын эхлэх огноог энэ огноо хэрэглэнэ."
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:148
+#: code:addons/gamification/models/goal.py:131
 #, python-format
 msgid ""
 "The domain for the definition %s seems incorrect, please check it.\n"
@@ -1599,12 +1593,12 @@ msgid ""
 msgstr "%s тодорхойлолтонд зориулагдсан дөмэйн нь буруу байх шиг байна, шалгана уу.\n\n%s"
 
 #. module: gamification
-#: help:gamification.goal.definition,field_id:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_field_id
 msgid "The field containing the value to evaluate"
 msgstr "Тооцоолох утгыг агуулж байгаа талбар"
 
 #. module: gamification
-#: help:gamification.goal.definition,res_id_field:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_res_id_field
 msgid ""
 "The field name on the user profile (res.users) containing the value for "
 "res_id for action."
@@ -1616,12 +1610,12 @@ msgid "The higher the better"
 msgstr "Илүү өндөр нь илүү сайн"
 
 #. module: gamification
-#: help:gamification.badge,owner_ids:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_owner_ids
 msgid "The list of instances of this badge granted to users"
 msgstr "Хэрэглэгчидэд батламжлагдсан медалиудын жагсаалт"
 
 #. module: gamification
-#: help:gamification.badge,unique_owner_ids:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_unique_owner_ids
 msgid "The list of unique users having received this badge."
 msgstr "Энэ медалийг хүлээн авсан хэрэглэгчдийг давхардалгүйгээр."
 
@@ -1631,83 +1625,83 @@ msgid "The lower the better"
 msgstr "Илүү нам нь илүү сайн"
 
 #. module: gamification
-#: help:gamification.badge,rule_max_number:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_rule_max_number
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
 msgstr "Нэг хүнд нэг сард энэ медаль хамгийн ихдээ илгээгдэх тоо."
 
 #. module: gamification
-#: help:gamification.goal.definition,model_id:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_model_id
 msgid "The model object for the field to evaluate"
 msgstr "Тооцоолох талбарт зориулагдсан модель обьект"
 
 #. module: gamification
-#: help:gamification.goal,remind_update_delay:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_remind_update_delay
 msgid ""
 "The number of days after which the user assigned to a manual goal will be "
 "reminded. Never reminded if no value is specified."
 msgstr "Гараарх зорилго нь хэрэглэгчид оноосноос хойш хэд хоногийн дараа сануулах өдөрийн тоо. Хэвэ утга тохируулаагүй бол сануулахгүй."
 
 #. module: gamification
-#: help:gamification.badge,stat_my_this_month:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my_this_month
 msgid ""
 "The number of time the current user has received this badge this month."
 msgstr "Энэ медалийг энэ сарт одоогийн хэрэглэгч хэдэн удаа хүлээн авса тоо."
 
 #. module: gamification
-#: help:gamification.badge,stat_my:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my
 msgid "The number of time the current user has received this badge."
 msgstr "Энэ медалийг одоогийн хэрэглэгч хүлээн авсан тоо."
 
 #. module: gamification
-#: help:gamification.badge,stat_my_monthly_sending:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
 msgstr "Энэ сард энэ медалийг одоогийн хэрэглэгчийн илгээсэн тоо."
 
 #. module: gamification
-#: help:gamification.badge,stat_count_distinct:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_count_distinct
 msgid "The number of time this badge has been received by unique users."
 msgstr "Энэ медаль давхардаагүй хэрэглэгчдийн хувьд хэдэн удаа хүлээн авагдсан тоо."
 
 #. module: gamification
-#: help:gamification.badge,stat_this_month:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_this_month
 msgid "The number of time this badge has been received this month."
 msgstr "Энэ медаль энэ сард хэдэн удаа хүлээн авагдсан тоо."
 
 #. module: gamification
-#: help:gamification.badge,stat_count:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_count
 msgid "The number of time this badge has been received."
 msgstr "Энэ медаль хэдэн удаа хүлээн авагдсан тоо."
 
 #. module: gamification
-#: help:gamification.goal.definition,monetary:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_monetary
 msgid "The target and current value are defined in the company currency."
 msgstr "Зорилтот болон одоогийн утга нь компанийн валютаар тодорхойлогдсон."
 
 #. module: gamification
-#: help:gamification.goal.definition,suffix:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix
 msgid "The unit of the target and current values"
 msgstr "Зорилтот болон одоогийн утгын нэгж."
 
 #. module: gamification
-#: help:gamification.challenge,manager_id:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_manager_id
 msgid "The user responsible for the challenge."
 msgstr "Сорилтыг хариуцаж буй хэрэглэгч."
 
 #. module: gamification
-#: help:gamification.badge.user,sender_id:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_user_sender_id
 msgid "The user who has send the badge"
 msgstr "Энэ медалийг илгээсэн хэрэглэгч"
 
 #. module: gamification
-#: help:gamification.badge,goal_definition_ids:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_goal_definition_ids
 msgid ""
 "The users that have succeeded theses goals will receive automatically the "
 "badge."
 msgstr "Эдгээр зорилгыг биелүүлсэн хэрэглэгчид медалийг автоматаар хүлээн авна."
 
 #. module: gamification
-#: help:gamification.goal.definition,batch_user_expression:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_user_expression
 msgid ""
 "The value to compare with the distinctive field. The expression can contain "
 "reference to 'user' which is a browse record of the current user, e.g. "
@@ -1715,96 +1709,104 @@ msgid ""
 msgstr "Ялгаатай талбарыг харьцуулах утга. Илэрхийлэл нь 'user'-рүү сурвалжийг агуулж болох бөгөөд энэ нь одоогийн хэрэглэгчийн browser record байна. Ж: user.id, user.partner_id.id..."
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_wizard
+#: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
+msgid ""
+"There is no goals associated to this challenge matching your search.\n"
+"                Make sure that your challenge is active and assigned to at least one user."
+msgstr ""
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "There is no reward upon completion of this challenge."
 msgstr "Энэ сорилтыг биелүүлэхэд ямарваа шагнал байхгүй."
 
 #. module: gamification
-#: help:gamification.goal,closed:0
+#: model:ir.model.fields,help:gamification.field_gamification_goal_closed
 msgid "These goals will not be recomputed."
 msgstr "Эдгээр зорилго нь дахин тооцоологдохгүй."
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:238
+#: code:addons/gamification/models/badge.py:222
 #, python-format
 msgid "This badge can not be sent by users."
 msgstr "Энэ медаль нь хэрэглэгчидээр илгээгдэх боломжгүй."
 
 #. module: gamification
-#: help:gamification.badge,image:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_image
 msgid "This field holds the image used for the badge, limited to 256x256"
 msgstr "Энэ талбар нь медальд зориулсан зурагийг хадгална, 256x256-р хязгаарлагдана"
 
 #. module: gamification
-#: field:gamification.goal,target_goal:0
+#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
+msgid "To"
+msgstr "Хүртэл"
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_target_goal
 msgid "To Reach"
 msgstr "Хүрэх"
 
 #. module: gamification
-#: field:gamification.goal,to_update:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_to_update
 msgid "To update"
 msgstr "Шинэчлэх"
 
 #. module: gamification
-#: field:gamification.badge,stat_count:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_count
 msgid "Total"
 msgstr "Дүн"
 
 #. module: gamification
-#: field:gamification.badge,unique_owner_ids:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_unique_owner_ids
 msgid "Unique Owners"
 msgstr "Давхардаагүй эзэмшигчид"
 
 #. module: gamification
-#: field:gamification.challenge.line,definition_suffix:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_suffix
 msgid "Unit"
-msgstr "Нэгж"
+msgstr "Ширхэг"
 
 #. module: gamification
-#: field:gamification.badge,message_unread:0
-#: field:gamification.challenge,message_unread:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_unread
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_unread
 msgid "Unread Messages"
 msgstr "Уншаагүй Зурвасууд"
 
 #. module: gamification
-#: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
-msgid "Update"
-msgstr "Шинэчлэх"
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_unread_counter
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:491
+#: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
+msgid "Update"
+msgstr "Шинэчлэлт"
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:476
 #, python-format
 msgid "Update %s"
 msgstr "Шинэчлэх %s"
 
 #. module: gamification
-#: field:gamification.badge.user,user_id:0
-#: field:gamification.badge.user.wizard,user_id:0
-#: view:gamification.goal:gamification.goal_search_view
-#: field:gamification.goal,user_id:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_user_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_user_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_user_id
+#: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "User"
 msgstr "Хэрэглэгч"
 
 #. module: gamification
-#: field:gamification.challenge,user_domain:0
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_user_domain
 msgid "User domain"
 msgstr "Хэрэглэгчийн дөмэйн"
 
 #. module: gamification
-#: field:gamification.challenge,user_ids:0
 #: model:ir.model,name:gamification.model_res_users
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_user_ids
 msgid "Users"
 msgstr "Хэрэглэгчид"
-
-#. module: gamification
-#: code:addons/gamification/models/badge.py:238
-#: code:addons/gamification/models/badge.py:240
-#: code:addons/gamification/models/badge.py:242
-#: code:addons/gamification/models/badge.py:244
-#: code:addons/gamification/wizard/grant_badge.py:43
-#, python-format
-msgid "Warning!"
-msgstr "Анхааруулга!"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1813,17 +1815,17 @@ msgid "Weekly"
 msgstr "Долоо хоног бүр"
 
 #. module: gamification
-#: help:gamification.badge,rule_auth:0
+#: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth
 msgid "Who can grant this badge"
 msgstr "Энэ медалийг хэн батламжилж чадах вэ"
 
 #. module: gamification
-#: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
+#: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Who would you like to reward?"
 msgstr "Хэнийг та шагнамаар байна?"
 
 #. module: gamification
-#: help:gamification.challenge,reward_realtime:0
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_reward_realtime
 msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
@@ -1836,108 +1838,110 @@ msgid "Yearly"
 msgstr "Жил бүр"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:240
+#: code:addons/gamification/models/badge.py:224
 #, python-format
 msgid "You are not in the user allowed list."
 msgstr "Та зөвшөөрөгдсөн хэрэглэгчдийн жагсаалтанд алга."
 
 #. module: gamification
-#: code:addons/gamification/wizard/grant_badge.py:43
+#: code:addons/gamification/wizard/grant_badge.py:26
 #, python-format
 msgid "You can not grant a badge to yourself"
 msgstr "Та өөртөө медаль батламжилж болохгүй."
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_form_view
+#: code:addons/gamification/models/challenge.py:235
+#, python-format
+msgid "You can not reset a challenge with unfinished goals."
+msgstr ""
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "You can still grant"
 msgstr "Та батламжилж чадна."
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:242
+#: code:addons/gamification/models/badge.py:226
 #, python-format
 msgid "You do not have the required badges."
 msgstr "Танд шаардагдах медаль алга."
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:244
+#: code:addons/gamification/models/badge.py:228
 #, python-format
 msgid "You have already sent this badge too many time this month."
 msgstr "Та энэ медалийг энэ сард хэтэрхий олон удаа илгээсэн байна."
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_form_view
+#: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "badges this month"
 msgstr "энэ сарын медалиуд"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
-#: view:gamification.goal:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "days"
 msgstr "өдөр"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.challenge_form_view
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "e.g. Monthly Sales Objectives"
 msgstr "ж. Сар тутамын борлуулалтын зорилтууд"
 
 #. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. days"
 msgstr "ж: өдөр"
 
 #. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid ""
 "e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=',"
-" 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], "
+" 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], "
 "count=True, context=context)"
-msgstr "ж: result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)"
+msgstr ""
 
 #. module: gamification
-#: view:gamification.goal.definition:gamification.goal_definition_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
 msgstr "ж: user.partner_id.id"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_kanban_view
+#: model:ir.model,name:gamification.model_gamification_badge_user_wizard
+msgid "gamification.badge.user.wizard"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model,name:gamification.model_gamification_goal_wizard
+msgid "gamification.goal.wizard"
+msgstr ""
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "granted,"
 msgstr "батламжлагдсан,"
 
 #. module: gamification
-#. openerp-web
-#: code:addons/gamification/static/src/xml/gamification.xml:108
-#, python-format
-msgid "more details..."
-msgstr "илүү дэлгэрэнгүй..."
-
-#. module: gamification
-#: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
-#: view:gamification.challenge:gamification.view_challenge_wizard
-#: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
-msgid "or"
-msgstr "эсвэл"
-
-#. module: gamification
-#: view:gamification.goal:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "refresh"
 msgstr "шинэчлэх"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_wizard
+#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "reply later"
 msgstr "дараа хариулах"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_form_view
+#: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "than the target."
 msgstr "зорилтоос."
 
 #. module: gamification
-#: view:gamification.badge.user:gamification.badge_user_kanban_view
+#: model:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "the"
 msgstr "энэ"
 
 #. module: gamification
-#: view:gamification.badge:gamification.badge_kanban_view
+#: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "this month"
 msgstr "энэ сар"

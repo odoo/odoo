@@ -2,13 +2,24 @@
 <openerp>
     <data>
 
+    <record id="view_report_campaign_analysis_pivot" model="ir.ui.view">
+        <field name="name">campaign.analysis.pivot</field>
+        <field name="model">campaign.analysis</field>
+        <field name="arch" type="xml">
+            <pivot string="Marketing Reports" disable_linking="True">
+                <field name="segment_id" type="row"/>
+                <field name="month" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="view_report_campaign_analysis_graph" model="ir.ui.view">
         <field name="name">campaign.analysis.graph</field>
         <field name="model">campaign.analysis</field>
         <field name="arch" type="xml">
-            <graph string="Marketing Reports" type="pivot" stacked="True">
-                <field name="segment_id" type="row"/>
-                <field name="month" type="col"/>
+            <graph string="Marketing Reports">
+                <field name="segment_id"/>
+                <field name="month"/>
             </graph>
         </field>
     </record>
@@ -30,8 +41,8 @@
                 <field name="country_id" invisible="1"/>
                 <field name="res_id" invisible="1"/>
                 <field name="count"/>
-                <field name="total_cost" string="Cost"/><!-- sum="Cost"/-->
-                <field name="revenue"/>
+                <field name="total_cost" string="Cost" widget="monetary"/><!-- sum="Cost"/-->
+                <field name="revenue" widget="monetary"/>
             </tree>
         </field>
     </record>
@@ -56,7 +67,7 @@
                     <filter string="Activity" name="activity" context="{'group_by':'activity_id'}"/>
                     <filter string="Status" context="{'group_by':'state'}"/>
                     <separator/>
-                    <filter string="Month" context="{'group_by':'month'}"/>
+                    <filter string="Execution Month" context="{'group_by':'month'}"/>
                 </group>
             </search>
         </field>
@@ -66,12 +77,12 @@
         <field name="name">Campaign Analysis</field>
         <field name="res_model">campaign.analysis</field>
         <field name="view_type">form</field>
-        <field name="view_mode">graph,tree</field>
+        <field name="view_mode">pivot,graph,tree</field>
         <field name="context">{'group_by': [], 'group_by_no_leaf':1}</field>
         <field name="search_view_id" ref="view_campaign_analysis_search"/>
     </record>
 
-    <menuitem action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="base.marketing_reporting_menu" sequence="20"/>
+    <menuitem name="Campaign" action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="report_marketing_campaign" sequence="20"/>
 
     </data>
 </openerp>

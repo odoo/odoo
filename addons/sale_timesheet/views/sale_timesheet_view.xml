@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_product_timesheet_form" model="ir.ui.view">
+            <field name="name">product.template.timesheet.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='track_service']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                    <attribute name="attrs">{'invisible': [('type','!=','service')]}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
+            <field name="name">hr.timesheet.employee.extd_form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='active_group']" position="before">
+                    <group string="Timesheets">
+                        <field name="timesheet_cost"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_form_inherit_sale_timesheet" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.timesheet</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                   <xpath expr="//button[@name='action_view_invoice']" position="before">
+                       <field name="timesheet_ids" invisible="1"/>
+                       <button type="object"
+                           name="action_view_timesheet"
+                           class="oe_stat_button"
+                           icon="fa-clock-o"
+                           attrs="{'invisible': [('timesheet_count', '=', 0)]}" groups="base.group_user">
+                           <field name="timesheet_count" widget="statinfo" string="Timesheet"/>
+                       </button>
+                    </xpath>
+                </data>
+           </field>
+        </record>
+    </data>
+</openerp>

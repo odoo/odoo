@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 import sys
@@ -30,6 +12,7 @@ import utils
 import color
 import os
 import logging
+import traceback
 from lxml import etree
 import base64
 from distutils.version import LooseVersion
@@ -45,6 +28,11 @@ try:
     _hush_pyflakes = [ StringIO ]
 except ImportError:
     from StringIO import StringIO
+
+try:
+    from customfonts import SetCustomFonts
+except ImportError:
+    SetCustomFonts=lambda x:None
 
 _logger = logging.getLogger(__name__)
 
@@ -385,7 +373,7 @@ class _rml_canvas(object):
         try:
             self.canvas.drawString(text=text, **v)
         except TypeError:
-            _logger.error("Bad RML: <drawString> tag requires attributes 'x' and 'y'!")
+            _logger.info("Bad RML: <drawString> tag requires attributes 'x' and 'y'!")
             raise
 
     def _drawCenteredString(self, node):
@@ -1038,14 +1026,9 @@ def parseNode(rml, localcontext=None, fout=None, images=None, path='.', title=No
     r = _rml_doc(node, localcontext, images, path, title=title)
     #try to override some font mappings
     try:
-        from customfonts import SetCustomFonts
         SetCustomFonts(r)
-    except ImportError:
-        # means there is no custom fonts mapping in this system.
-        pass
-    except Exception:
-        _logger.warning('Cannot set font mapping', exc_info=True)
-        pass
+    except Exception, exc:
+        _logger.info('Cannot set font mapping: %s', "".join(traceback.format_exception_only(type(exc),exc)))
     fp = StringIO()
     r.render(fp)
     return fp.getvalue()
@@ -1056,7 +1039,6 @@ def parseString(rml, localcontext=None, fout=None, images=None, path='.', title=
 
     #try to override some font mappings
     try:
-        from customfonts import SetCustomFonts
         SetCustomFonts(r)
     except Exception:
         pass
@@ -1084,6 +1066,3 @@ if __name__=="__main__":
     else:
         print 'Usage: trml2pdf input.rml >output.pdf'
         print 'Try \'trml2pdf --help\' for more information.'
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

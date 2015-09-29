@@ -30,9 +30,28 @@
             <tree string="Calendar Alarm" editable="bottom">
                 <field name="name"/>
                 <field name="type"/>
-                <field name="duration"/>
-                <field name="interval"/>
+                <field name="duration" on_change="onchange_duration_interval(duration, interval)"/>
+                <field name="interval" on_change="onchange_duration_interval(duration, interval)"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="calendar_alarm_view_form" model="ir.ui.view">
+            <field name="name">calendar.alarm.form</field>
+            <field name="model">calendar.alarm</field>
+            <field name="arch" type="xml">
+                <form string="Calendar Alarm">
+                 <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="type" groups="base.group_no_one"/>
+                    </group>
+                    <group>
+                        <field name="interval" on_change="onchange_duration_interval(duration, interval)"/>
+                        <field name="duration" on_change="onchange_duration_interval(duration, interval)"/>
+                    </group>
+                </group>
+            </form>
         </field>
     </record>
 
@@ -60,11 +79,12 @@
                             <label for="name"/>
                         </div>
                         <h1>
-                            <field name="name"/>
+                            <field name="name" placeholder="e.g. Business Lunch"/>
                         </h1>
                         <label for="partner_ids" string="Attendees" class="oe_edit_only"/>
                         <h2>
                             <field name="partner_ids" widget="many2manyattendee"
+                                placeholder="Select attendees..."
                                 context="{'force_email':True}"
                                 on_change="onchange_partner_ids(partner_ids)"
                                 class="oe_inline"/>
@@ -85,13 +105,14 @@
                                     <field name="start_date" string="Starting at" on_change="onchange_dates('start', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
                                     <field name="stop_date" string="Ending at" on_change="onchange_dates('stop', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
 
-                                    <field name="start_datetime" string="Starting at" on_change="onchange_dates('start', start_datetime, stop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
-                                    <field name="stop_datetime" string="Ending at" on_change="onchange_dates('stop', start_datetime, stop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
-                                    <label for="allday"/>
-                                    <div>
-                                        <field name="allday"  class="oe_inline" on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)"/>
+                                    <field name="start_datetime" string="Starting at" on_change="onchange_duration(start_datetime, duration)" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <field name="stop_datetime" invisible="1"/>
+                                    <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <div attrs="{'invisible': [('allday','=',True)]}">
+                                        <field name="duration" widget="float_time" string="Duration" on_change="onchange_duration(start_datetime, duration)" class="oe_inline"/>
+                                        <span> hours</span>
                                     </div>
-                                    <field name="duration" widget="float_time" class="oe_inline" attrs="{ 'invisible': True }"/>
+                                    <field name="allday"  on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)"/>
                                 </group>
                                 <group>
                                     <field name="categ_ids" widget="many2many_tags" />
@@ -105,48 +126,50 @@
                         </page>
                         <page string="Options">
                             <group>
-                                <group col="1">
+                                <div>
                                     <group>
                                         <field name="recurrency"/>
                                     </group>
-                                    <group attrs="{'invisible': [('recurrency','=',False)]}">
-                                        <label for="interval"/>
-                                        <div>
-                                            <field name="interval" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                            <field name="rrule_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                        </div>
-                                        <label string="Until" for="end_type"/>
-                                        <div>
-                                            <field name="end_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                            <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                            <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
-                                        </div>
-                                        <label string="Select Weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
-                                        <group col="2" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}" >
-                                            <field name="mo" />
-                                            <field name="tu" />
-                                            <field name="we" />
-                                            <field name="th" />
-                                            <field name="fr" />
-                                            <field name="sa" />
-                                            <field name="su" />
+                                    <div attrs="{'invisible': [('recurrency', '=', False)]}">
+                                        <group>
+                                            <label for="interval"/>
+                                            <div class="o_row">
+                                                <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                            </div>
+                                            <label string="Until" for="end_type"/>
+                                            <div class="o_row">
+                                                <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
+                                                <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
+                                            </div>
                                         </group>
-    
-                                        <label string="Day of Month"
-                                            attrs="{'invisible': [('rrule_type','!=','monthly')]}"/>
-    
-                                        <div attrs="{'invisible': [('rrule_type','!=','monthly')]}">
-                                            <field name="month_by"/>
-                                            <field name="day"
-                                                attrs="{'required': [('month_by','=','date'), ('rrule_type','=','monthly')],
-                                                    'invisible': [('month_by','=','day')]}"/>
-                                            <field name="byday" string="The"
-                                                attrs="{'required': [('month_by','=','day'), ('rrule_type','=','monthly')], 'invisible': [('month_by','=','date')]}"/>
-                                            <field name="week_list" nolabel="1"
-                                                attrs="{'required': [('month_by','=','day'), ('rrule_type','=','monthly')], 'invisible': [('month_by','=','date')]}"/>
-                                        </div>
-                                    </group>
-                                </group>
+                                        <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">
+                                            <field name="mo"/>
+                                            <field name="tu"/>
+                                            <field name="we"/>
+                                            <field name="th"/>
+                                            <field name="fr"/>
+                                            <field name="sa"/>
+                                            <field name="su"/>
+                                        </group>
+                                        <group attrs="{'invisible': [('rrule_type', '!=', 'monthly')]}">
+                                            <label string="Day of Month" for="month_by"/>
+                                            <div class="o_row">
+                                                <field name="month_by"/>
+                                                <field name="day"
+                                                    attrs="{'required': [('month_by', '=', 'date'), ('rrule_type', '=', 'monthly')],
+                                                            'invisible': [('month_by', '!=', 'date')]}"/>
+                                                <field name="byday" string="The"
+                                                    attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
+                                                            'invisible': [('month_by', '!=', 'day')]}"/>
+                                                <field name="week_list" nolabel="1"
+                                                    attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
+                                                            'invisible': [('month_by', '!=', 'day')]}"/>
+                                            </div>
+                                        </group>
+                                    </div>
+                                </div>
                                 <group>
                                     <field name="class"/>
                                     <field name="show_as"/>
@@ -171,11 +194,11 @@
                             </field>
                         </page>
                         <page string="Misc" groups="base.group_no_one">
-                            <label string="Owner"/>
-                            <field name="user_id" />
-                            
+                            <group>
+                                <label for="user_id" string="Owner"/>
+                                <field name="user_id" nolabel="1"/>
+                            </group>
                         </page>
-
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -187,7 +210,7 @@
     </record>
     
     <record model="ir.ui.view" id="view_calendar_event_form_popup">
-        <field name="name">Meetings Popup</field>
+        <field name="name">Meetings Dialog</field>
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -195,23 +218,24 @@
                 <field name="state" invisible="1"/>
                 <field name="is_attendee" invisible="1"/>
                 <field name="attendee_status" invisible="1"/>
-                <label for="name"/>
-                <field name="name"/>
                 <group>
                     <group>
                         <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)]}"/>
                         <field name="start_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)]}"/>
-        
-                        <field name="duration" string="Duration" widget="float_time" attrs="{'invisible': [('allday','=',True)]}"/>
+                        <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
+                        <div attrs="{'invisible': [('allday','=',True)]}">
+                            <field name="duration" widget="float_time" class="oe_inline"/>
+                            <span> hours</span>
+                        </div>
                         <field name="allday" class="oe_inline" attrs="{'invisible': [('allday','=',False)]}"/>
                         <field name="partner_ids" widget="many2manyattendee" string="Attendees"/>
                     </group>
                     <group>
+                        <field name="location"/>
                         <field name="categ_ids" widget="many2many_tags"/>
                         <field name="alarm_ids" widget="many2many_tags" />
-                        <field name="location"/>
                     </group>
-                </group>       
+                </group>
             </form>
         </field>
     </record>
@@ -222,25 +246,23 @@
         <field name="name">CRM - Meetings Tree</field>
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
-            <tree string="Meetings" fonts="bold:message_unread==True">
+            <tree string="Meetings" decoration-bf="message_needaction==True">
                 <field name="name" string="Subject"/>
                 <field name="allday" invisible="True"/>
-                <field name="start_date" string="Date"/>
-                <field name="start_datetime" string="Date"/>
-                <field name="user_id"/>
+                <field name="start" string="Start Date"/>
+                <field name="stop" string="End Date"/>
+                <field name="partner_ids"/>
                 <field name="location"/>
-                <field name="show_as"/>
-                <field name="class" string="Privacy"/>
                 <field name="state" invisible="True"/>
                 <field name="duration"/>
-                <field name="message_unread" invisible="1"/>
+                <field name="message_needaction" invisible="1"/>
             </tree>
         </field>
     </record>
 
     <!-- CRM Meeting Calendar -->
     <record model="ir.ui.view" id="view_calendar_event_calendar">
-        <field name="name">Meetings Calendar</field>
+        <field name="name">Meeting</field>
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -252,16 +274,6 @@
                 <field name="color_partner_id"/>
                 <field name="partner_ids"/>
             </calendar>
-        </field>
-    </record>
-
-    <!-- CRM Meeting Gantt  -->
-
-    <record id="view_calendar_event_gantt" model="ir.ui.view">
-        <field name="name">CRM - Meetings Gantt</field>
-        <field name="model">calendar.event</field>
-        <field name="arch" type="xml">
-            <gantt date_delay="duration" date_start="start" string="Meetings"/>
         </field>
     </record>
 
@@ -277,14 +289,14 @@
                 <field name="user_id"/>
                 <field name="show_as"/>
                 <field name="class" string="Privacy"/>
-                <filter icon="terp-go-today" string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
+                <filter string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
-                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'show_as'}"/>
-                    <filter string="Privacy" icon="terp-locked" domain="[]" context="{'group_by':'class'}"/>                    
+                    <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Availability" domain="[]" context="{'group_by':'show_as'}"/>
+                    <filter string="Privacy" domain="[]" context="{'group_by':'class'}"/>
                 </group>
             </search>
         </field>
@@ -293,7 +305,7 @@
     <record id="action_calendar_event" model="ir.actions.act_window">
         <field name="name">Meetings</field>
         <field name="res_model">calendar.event</field>
-        <field name="view_mode">calendar,tree,form,gantt</field>
+        <field name="view_mode">calendar,tree,form</field>
         <field name="view_id" ref="view_calendar_event_calendar"/>
         <field name="search_view_id" ref="view_calendar_event_search"/>
         <field name="help" type="html">
@@ -324,16 +336,10 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_view_calendar_event_gantt">
-        <field name="act_window_id" ref="action_calendar_event"/>
-        <field name="sequence" eval="4"/>
-        <field name="view_mode">gantt</field>
-        <field name="view_id" ref="view_calendar_event_gantt"/>
-    </record>
 
 
 
-    <menuitem name="Calendar" id="mail_menu_calendar" parent="mail.mail_my_stuff" sequence="10" action="action_calendar_event"/>
+    <menuitem name="Calendar" id="mail_menu_calendar" sequence="2" action="action_calendar_event" web_icon="calendar,static/description/icon.png" groups="base.group_user"/>
     <menuitem id="menu_calendar_configuration" name="Calendar" parent="base.menu_custom" groups="base.group_no_one"/>
     <menuitem id="menu_calendar_event_type" parent="menu_calendar_configuration" action="action_calendar_event_type" groups="base.group_no_one"/>
     <menuitem id="menu_calendar_alarm" parent="menu_calendar_configuration" action="action_calendar_alarm" groups="base.group_no_one"/>
@@ -342,7 +348,7 @@
     <record id="action_calendar_event_notify" model="ir.actions.act_window">
         <field name="name">Meetings</field>
         <field name="res_model">calendar.event</field>
-        <field name="view_mode">form,calendar,tree,gantt</field>
+        <field name="view_mode">form,calendar,tree</field>
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
        

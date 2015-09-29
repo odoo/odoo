@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """
 OpenERP - Server
@@ -50,12 +32,11 @@ __version__ = openerp.release.version
 _logger = logging.getLogger('openerp')
 
 def check_root_user():
-    """ Exit if the process's user is 'root' (on POSIX system)."""
+    """Warn if the process's user is 'root' (on POSIX system)."""
     if os.name == 'posix':
         import pwd
-        if pwd.getpwuid(os.getuid())[0] == 'root' :
-            sys.stderr.write("Running as user 'root' is a security risk, aborting.\n")
-            sys.exit(1)
+        if pwd.getpwuid(os.getuid())[0] == 'root':
+            sys.stderr.write("Running as user 'root' is a security risk.\n")
 
 def check_postgres_user():
     """ Exit if the configured database user is 'postgres'.
@@ -74,11 +55,11 @@ def report_configuration():
     """
     config = openerp.tools.config
     _logger.info("OpenERP version %s", __version__)
-    for name, value in [('addons paths', openerp.modules.module.ad_paths),
-                        ('database hostname', config['db_host'] or 'localhost'),
-                        ('database port', config['db_port'] or '5432'),
-                        ('database user', config['db_user'])]:
-        _logger.info("%s: %s", name, value)
+    _logger.info('addons paths: %s', openerp.modules.module.ad_paths)
+    host = config['db_host'] or os.environ.get('PGHOST', 'default')
+    port = config['db_port'] or os.environ.get('PGPORT', 'default')
+    user = config['db_user'] or os.environ.get('PGUSER', 'default')
+    _logger.info('database: %s@%s:%s', user, host, port)
 
 def rm_pid_file():
     config = openerp.tools.config
@@ -99,7 +80,6 @@ def setup_pid_file():
             pidtext = "%d" % (os.getpid())
             fd.write(pidtext)
         atexit.register(rm_pid_file)
-
 
 def export_translation():
     config = openerp.tools.config
@@ -148,6 +128,12 @@ def main(args):
     # bit overkill, but better safe than sorry I guess
     csv.field_size_limit(500 * 1024 * 1024)
 
+    if config["db_name"]:
+        try:
+            openerp.service.db._create_empty_database(config["db_name"])
+        except openerp.service.db.DatabaseExists:
+            pass
+
     if config["test_file"]:
         config["test_enable"] = True
 
@@ -178,5 +164,3 @@ class Server(Command):
     """Start the odoo server (default command)"""
     def run(self, args):
         main(args)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

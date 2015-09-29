@@ -3,16 +3,14 @@
 # * portal_sale
 # 
 # Translators:
-# Dariusz Żbikowski <darek@krokus.com.pl>, 2015
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-31 08:41+0000\n"
-"Last-Translator: Dariusz Żbikowski <darek@krokus.com.pl>\n"
-"Language-Team: Polish (http://www.transifex.com/odoo/odoo-8/language/pl/)\n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 06:41+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: portal_sale
-#: model:email.template,body_html:portal_sale.email_template_edi_invoice
+#: model:mail.template,body_html:portal_sale.email_template_edi_invoice
 msgid ""
 "\n"
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
@@ -55,7 +53,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -97,10 +95,10 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>Witaj ${object.partner_id.name},</p>\n\n    <p>Informujemy, że jest dla Ciebie dostępna nowa faktura: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>ODNIESIENIE</strong><br />\n       &nbsp;&nbsp;Numer faktury: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Kwota faktury: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data faktury: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Zamówienie: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n\n    <% set signup_url = object.get_signup_url() %>\n    % if signup_url:\n    <p>\n    Dostęp do elektronicznej faktury poprzez nasz Portal Klientów, klikając na poniższy link: \n    </p>\n        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n           href=\"${signup_url}\">View Invoice</a>\n    % endif\n    \n    % if object.paypal_url:\n    <br/>\n    <p>Możesz ją zapłacić bezpośrednio za pomocą płatności Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Jeśli masz jakiekolwiek pytania nie obawiaj się z nami skontaktować.</p>\n    <p>Dziękujemy Ci za współpracę z ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tel.:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        % endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr ""
 
 #. module: portal_sale
-#: model:email.template,body_html:portal_sale.email_template_edi_sale
+#: model:mail.template,body_html:portal_sale.email_template_edi_sale
 msgid ""
 "\n"
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
@@ -113,7 +111,10 @@ msgid ""
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       &nbsp;&nbsp;Order date:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />\n"
+"       % if object.validity_date and object.state in ('draft', 'sent'):\n"
+"       &nbsp;&nbsp;Expiration date: ${object.validity_date}<br />\n"
+"       % endif\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
 "       % endif\n"
@@ -126,7 +127,7 @@ msgid ""
 "    </p>\n"
 "\n"
 "    <% set signup_url = object.get_signup_url() %>\n"
-"    % if signup_url:\n"
+"    % if signup_url and object.amount_total > 0 :\n"
 "    <p>\n"
 "    You can access this document and pay online via our Customer Portal:\n"
 "    </p>\n"
@@ -134,11 +135,11 @@ msgid ""
 "           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "    % endif\n"
 "\n"
-"    % if object.paypal_url:\n"
+"    % if object.paypal_url and object.amount_total > 0 :\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -180,32 +181,27 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>Witaj ${object.partner_id.name},</p>\n    \n    <p>To jest ${object.state in ('draft', 'sent') and 'oferta' or 'potwierdzenie zamówienia'} z ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>ODNIESIENIE</strong><br />\n       &nbsp;&nbsp;Numer zamówienia: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Kwota zamówienia: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data zamówienia: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Powiązanie: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Twoje odniesienie: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    <% set signup_url = object.get_signup_url() %>\n    % if signup_url:\n    <p>\n    Dostęp do dokumentu i płatności online poprzez nasz Portal Klientów, klikając na poniższy link: \n    </p>\n        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n    % endif\n\n    % if object.paypal_url:\n    <br/>\n    <p>Możesz ją zapłacić bezpośrednio za pomocą płatności Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>Jeśli masz jakiekolwiek pytania nie obawiaj się z nami skontaktować.</p>\n    <p>Dziękujemy Ci za wybór ${object.company_id.name or 'nas'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tel.:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        % endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr ""
 
 #. module: portal_sale
-#: model:email.template,report_name:portal_sale.email_template_edi_sale
+#: model:mail.template,report_name:portal_sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_sale
+#: model:mail.template,subject:portal_sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Oferta' or 'Zamówienie'} (Odn. ${object.name or 'n/a' })"
 
 #. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_invoice
+#: model:mail.template,subject:portal_sale.email_template_edi_invoice
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
 msgstr "${object.company_id.name|safe} Faktura (Odn. ${object.number or 'n/a' })"
-
-#. module: portal_sale
-#: view:account.config.settings:portal_sale.portal_sale_payment_option_config
-msgid "Configure payment acquiring methods"
-msgstr "Konfiguruj metody przyjmowania płatności"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_invoice
@@ -213,7 +209,7 @@ msgid "Invoice"
 msgstr "Faktura"
 
 #. module: portal_sale
-#: model:email.template,report_name:portal_sale.email_template_edi_invoice
+#: model:mail.template,report_name:portal_sale.email_template_edi_invoice
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
@@ -236,13 +232,7 @@ msgstr "Członkowie tych grup widzą opcje płatności\nw Zamówieniach sprzeda�
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Wychodzące"
-
-#. module: portal_sale
-#: field:account.invoice,portal_payment_options:0
-#: field:sale.order,portal_payment_options:0
-msgid "Portal Payment Options"
-msgstr "Opcje płatności portalowych"
+msgstr "Wychodzace"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
@@ -263,17 +253,17 @@ msgstr "Zamówienie sprzedaży"
 #. module: portal_sale
 #: model:ir.ui.menu,name:portal_sale.portal_sales_orders
 msgid "Sales Orders"
-msgstr "Zamówienia Sprzedaży"
+msgstr "Zamówienia sprzedaży"
 
 #. module: portal_sale
-#: help:account.config.settings,group_payment_options:0
+#: model:ir.model.fields,help:portal_sale.field_account_config_settings_group_payment_options
 msgid ""
 "Show online payment options on Sale Orders and Customer Invoices to "
 "employees. If not checked, these options are only visible to portal users."
 msgstr "Pokazuje pracownikom opcje płatności za Zamówienia lub Faktury. Jeśli nie zaznaczone, to opcje są widoczne tylko dla użytkowników portalu."
 
 #. module: portal_sale
-#: field:account.config.settings,group_payment_options:0
+#: model:ir.model.fields,field_description:portal_sale.field_account_config_settings_group_payment_options
 msgid "Show payment buttons to employees too"
 msgstr "Pokaż przycisk płatności również pracownikom"
 
@@ -298,6 +288,6 @@ msgid "We haven't sent you any sales order."
 msgstr "Nie wysyłaliśmy Ci żadnej oferty."
 
 #. module: portal_sale
-#: view:account.invoice:portal_sale.view_account_invoice_filter_share
-msgid "[('share','=', False)]"
-msgstr "('share','=', False)]"
+#: model:ir.model,name:portal_sale.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"

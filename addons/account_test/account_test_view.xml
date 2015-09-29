@@ -1,9 +1,8 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
         <record model="ir.ui.view" id="account_assert_tree">
-            <field name="name">Tests</field>
+            <field name="name">accounting.assert.test.tree</field>
             <field name="model">accounting.assert.test</field>
             <field name="arch" type="xml">
                 <tree string="Tests">
@@ -15,7 +14,7 @@
         </record>
 
         <record model="ir.ui.view" id="account_assert_form">
-            <field name="name">Tests</field>
+            <field name="name">accounting.assert.test.form</field>
             <field name="model">accounting.assert.test</field>
             <field name="arch" type="xml">
                 <form string="Tests">
@@ -79,7 +78,6 @@ Example:
             </field>
         </record>
 
-        <menuitem name="Accounting Tests" parent="account.menu_finance_reporting" id="menu_action_license" action="action_accounting_assert"/>
+        <menuitem name="Accounting Tests" parent="account.menu_finance_reports" id="menu_action_license" action="action_accounting_assert" sequence="50" groups="base.group_no_one"/>
 
-    </data>
-</openerp>
+</odoo>

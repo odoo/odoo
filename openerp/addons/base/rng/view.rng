@@ -251,6 +251,19 @@
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="colors"/></rng:optional>
             <rng:optional><rng:attribute name="fonts"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-bf"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-it"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-danger"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-info"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-muted"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-primary"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-success"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-warning"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="limit">
+                    <rng:data type="int"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional>
               <rng:attribute name="editable">
                 <rng:choice>
@@ -562,6 +575,8 @@
             <rng:optional><rng:attribute name="filters"/></rng:optional>
             <rng:optional><rng:attribute name="statusbar_visible"/></rng:optional>
             <rng:optional><rng:attribute name="statusbar_colors"/></rng:optional>
+            <rng:optional><rng:attribute name="can_create" /></rng:optional>
+            <rng:optional><rng:attribute name="can_write" /></rng:optional>
             <rng:optional><rng:attribute name="interval" /></rng:optional>
             <!-- Widget *static* options defined as an arbitrary JSON dict, with
                  widget-dependent parameters. To be ignored if widget/client does
@@ -671,6 +686,21 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="pivot">
+        <rng:element name="pivot">
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="display_quantity"><rng:value>False</rng:value></rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="disable_linking"><rng:value>False</rng:value></rng:attribute>
+            </rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="button">
         <rng:element name="button">
             <rng:ref name="overload"/>
@@ -726,7 +756,6 @@
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
             <rng:optional><rng:attribute name="name" /></rng:optional>
             <rng:optional><rng:attribute name="separator" /></rng:optional>
-            <rng:optional><rng:attribute name="icon" /></rng:optional>
             <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="type" /></rng:optional>
             <rng:optional><rng:attribute name="align" /></rng:optional>
@@ -742,6 +771,7 @@
                     <rng:ref name="tree" />
                     <rng:ref name="notebook" />
                     <rng:ref name="graph" />
+                    <rng:ref name="pivot" />
                     <rng:ref name="calendar" />
                     <rng:ref name="gantt" />
                     <rng:ref name="xpath" />
@@ -769,6 +799,7 @@
             <rng:ref name="tree" />
             <rng:ref name="notebook" />
             <rng:ref name="graph" />
+            <rng:ref name="pivot" />
             <rng:ref name="calendar" />
             <rng:ref name="data" />
             <rng:ref name="gantt" />

@@ -35,23 +35,16 @@
     margin-bottom: 0;
     .border-bottom-radius(@list-group-border-radius);
   }
-
-  // Align badges within list items
-  > .badge {
-    float: right;
-  }
-  > .badge + .badge {
-    margin-right: 5px;
-  }
 }
 
 
-// Linked list items
+// Interactive list items
 //
-// Use anchor elements instead of `li`s or `div`s to create linked list items.
+// Use anchor or button elements instead of `li`s or `div`s to create interactive items.
 // Includes an extra `.active` modifier class for showing selected items.
 
-a.list-group-item {
+a.list-group-item,
+button.list-group-item {
   color: @list-group-link-color;
 
   .list-group-item-heading {
@@ -67,6 +60,11 @@ a.list-group-item {
   }
 }
 
+button.list-group-item {
+  width: 100%;
+  text-align: left;
+}
+
 .list-group-item {
   // Disabled state
   &.disabled,
@@ -74,6 +72,7 @@ a.list-group-item {
   &.disabled:focus {
     background-color: @list-group-disabled-bg;
     color: @list-group-disabled-color;
+    cursor: @cursor-disabled;
 
     // Force color to inherit for custom content
     .list-group-item-heading {

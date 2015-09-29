@@ -3,15 +3,15 @@
 # * account_analytic_default
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Stefan Dyck <stefan.dyck@googlemail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:40+0000\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-12 19:45+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: German (http://www.transifex.com/odoo/odoo-8/language/de/)\n"
+"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,76 +19,82 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_analytic_default
-#: field:product.product,rules_count:0 field:product.template,rules_count:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_rules_count
+#: model:ir.model.fields,field_description:account_analytic_default.field_product_template_rules_count
 msgid "# Analytic Rules"
 msgstr "# Buchungsregeln für Kosten"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
-msgstr "Kostenstellen"
+msgstr "Konten"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,analytic_id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
 msgstr "Kostenstelle"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_tree
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
 msgstr "Kostenstellen-Buchungsvorlage"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "Kostenstellen-Distribution"
+msgstr "Kostenstellen Distribution"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-#: view:product.product:account_analytic_default.product_form_view_default_analytic_button
-#: view:product.template:account_analytic_default.product_template_view_default_analytic_button
+#: model:ir.ui.view,arch_db:account_analytic_default.product_form_view_default_analytic_button
+#: model:ir.ui.view,arch_db:account_analytic_default.product_template_view_default_analytic_button
 msgid "Analytic Rules"
 msgstr "Kostenstellen-Kontierungsregeln"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,company_id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
 msgstr "Unternehmen"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Conditions"
 msgstr "Bedingungen"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,create_uid:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_uid
 msgid "Created by"
-msgstr "Erstellt von"
+msgstr "Angelegt von"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,create_date:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
 msgid "Created on"
-msgstr "Erstellt am"
+msgstr "Angelegt am"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,date_stop:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
 msgid "Default end date for this Analytic Account."
 msgstr "Vorgabe für Enddatum der Kostenstelle"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,date_start:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
 msgid "Default start date for this Analytic Account."
 msgstr "Standard Startdatum für Kostenstelle"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,date_stop:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_stop
 msgid "End Date"
 msgstr "Enddatum"
 
@@ -98,20 +104,33 @@ msgid "Entries"
 msgstr "Buchungen"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,sequence:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_expense_policy
+msgid "Expense Invoice Policy"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr "Zeigt eine Liste mit Kostenstellen"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
-msgstr "Gruppierung"
+msgstr "Gruppiere nach"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_product_product_expense_policy
+msgid ""
+"If you invoice at cost, the expense will be invoiced on the sale order at "
+"the cost of the analytic line;if you invoice at sales price, the price of "
+"the product will be used instead."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -119,30 +138,30 @@ msgid "Invoice Line"
 msgstr "Rechnungszeile"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,write_uid:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default___last_update
+msgid "Last Modified on"
+msgstr "Zuletzt geändert am"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_uid
 msgid "Last Updated by"
 msgstr "Zuletzt aktualisiert durch"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,write_date:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_date
 msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,partner_id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_partner_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
 msgstr "Partner"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_stock_picking
-msgid "Picking List"
-msgstr "Lieferauftrag"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,product_id:0
 #: model:ir.model,name:account_analytic_default.model_product_product
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "Produkt"
 
@@ -157,7 +176,7 @@ msgid "Sales Order Line"
 msgstr "Auftragsposition"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_company_id
 msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -165,7 +184,7 @@ msgid ""
 msgstr "Wählen Sie das Unternehmen aus, bei dem diese Kostenstelle als Standard bei einer Buchung eingetragen werden soll (z.B. bei einer Rechnung oder einem Auftrag soll dann diese Kostenstelle automatisch eingetragen werden, wenn das entsprechende Unternehmen ausgewählt wird)."
 
 #. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
 msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -173,7 +192,7 @@ msgid ""
 msgstr "Wählen Sie den Partner aus, bei dem diese Kostenstelle als Standard bei einer Buchung eingetragen werden soll (z.B. bei einer Rechnung oder einem Auftrag soll dann diese Kostenstelle automatisch eingetragen werden, wenn der entsprechende Partner ausgewählt wird)."
 
 #. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
 msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -181,23 +200,28 @@ msgid ""
 msgstr "Wählen Sie das Produkt, welches diese Kostenstelle als Standard bei einer Buchung eintragen soll (z.B. bei einer Rechnung oder einem Auftrag soll dann diese Kostenstelle automatisch eingetragen werden, wenn das entsprechende Produkt ausgewählt wird)."
 
 #. module: account_analytic_default
-#: help:account.analytic.default,user_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
 msgstr "Wählen Sie einen Benutzer mit der hinterlegten Standardkostenstelle"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,sequence:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_sequence
 msgid "Sequence"
 msgstr "Reihenfolge"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,date_start:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_start
 msgid "Start Date"
 msgstr "Startdatum"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,user_id:0
+#: model:ir.model,name:account_analytic_default.model_stock_picking
+msgid "Transfer"
+msgstr "Lieferung vornehmen"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "Benutzer"

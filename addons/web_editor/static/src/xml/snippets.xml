@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Snippet loader -->
+    <t t-name="web_editor.snippets_style">
+        <li class="navbar-form">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Block style <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="oe_snippets_style" role="menu"></ul>
+            </div>
+        </li>
+    </t>
+
+    <t t-name="web_editor.snippets">
+        <div id='oe_snippets' class="hidden-xs o_open">
+            <div id="o_arrow">
+                <span class="fa fa-angle-double-right fa-1x" style="top: 10px;"></span>
+                <div>Insert Blocks</div>
+                <span class="fa fa-angle-double-right fa-1x" style="bottom: 10px;"></span>
+            </div>
+            <div id="o_left_bar">
+                <span class='snippets_loading'>Snippets are loading...</span>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web_editor.snippet_overlay">
+        <div class="oe_overlay">
+            <div class="oe_overlay_options" contentEditable="false">
+                <div class="btn-group">
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_parent" title="Select Container Block"><i class="fa fa-upload"></i></a>
+                    <div class="dropdown oe_options hidden btn-group">
+                        <a href="#" data-toggle="dropdown" class="btn btn-primary btn-sm" title="Customize">Customize <span class="caret"/></a>
+                        <ul class="dropdown-menu" role="menu"></ul>
+                    </div>
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_move" title="Drag to Move"><i class="fa fa-arrows ml4 mr4"></i></a>
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_clone" title="Duplicate Container"><i class="fa fa-files-o ml4 mr4"></i></a>
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_remove" title="Remove Block"><i class="fa fa-trash-o ml4 mr4"></i></a>
+                </div>
+            </div>
+            <div class='oe_handles'>
+                <div class='oe_handle n readonly'><div></div></div>
+                <div class='oe_handle e readonly'><div></div></div>
+                <div class='oe_handle w readonly'><div></div></div>
+                <div class='oe_handle size readonly'>
+                    <div class="oe_handle_button auto_size">Auto Resize</div>
+                    <div class="oe_handle_button size">Resize</div>
+                </div>
+                <div class='oe_handle s readonly'><div></div></div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web_editor.snippet_manipulator">
+        <div class='oe_snippet_manipulator'></div>
+    </t>
+
+    <!-- t-field options -->
+
+    <t t-name="web_editor.many2one.button">
+        <div class="dropdown">
+            <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Search Contact"><i class="fa fa-search"></i></a>
+            <ul class="dropdown-menu contact_menu" role="menu">
+                <li><a><input href="#" type="email" placeholder="Search"/></a></li>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="web_editor.many2one.search">
+        <t t-foreach="contacts" t-as="item">
+            <li><a href="#" t-att-data-id="item.id" t-att-data-name="item.display_name"><t t-esc="item.display_name"/> <t t-if="item.city or item.country_id"><small class="text-muted">(<t t-esc="item.city"/> <t t-esc="item.country_id and item.country_id[1]"/>)</small></t></a></li>
+        </t>
+    </t>
+</templates>

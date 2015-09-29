@@ -34,4 +34,3 @@ class m(openerp.osv.osv.Model):
                 x = i * i
             t1 = time.clock()
         return True
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
 #----------------------------------------------------------
 # ir_http modular http routing
 #----------------------------------------------------------
 import datetime
 import hashlib
 import logging
-import mimetypes
 import re
 import sys
 
@@ -90,24 +90,23 @@ class ir_http(osv.AbstractModel):
                     # All other exceptions mean undetermined status (e.g. connection pool full),
                     # let them bubble up
                     request.session.logout(keep_db=True)
-            getattr(self, "_auth_method_%s" % auth_method)()
+            if request.uid is None:
+                getattr(self, "_auth_method_%s" % auth_method)()
         except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException, werkzeug.exceptions.HTTPException):
             raise
         except Exception:
-            _logger.exception("Exception during request Authentication.")
+            _logger.info("Exception during request Authentication.", exc_info=True)
             raise openerp.exceptions.AccessDenied()
         return auth_method
 
     def _serve_attachment(self):
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
-        attach = self.pool['ir.attachment'].search_read(
-            request.cr, openerp.SUPERUSER_ID, domain,
-            ['__last_update', 'datas', 'datas_fname', 'name'],
-            context=request.context)
+        attach = self.pool['ir.attachment'].search_read(request.cr, openerp.SUPERUSER_ID, domain, ['__last_update', 'datas', 'name', 'mimetype', 'checksum'], context=request.context)
         if attach:
             wdate = attach[0]['__last_update']
             datas = attach[0]['datas'] or ''
             name = attach[0]['name']
+            checksum = attach[0]['checksum'] or hashlib.sha1(datas).hexdigest()
 
             if (not datas and name != request.httprequest.path and
                     name.startswith(('http://', 'https://', '/'))):
@@ -121,26 +120,29 @@ class ir_http(osv.AbstractModel):
                 # just in case we have a timestamp without microseconds
                 response.last_modified = datetime.datetime.strptime(wdate, server_format)
 
-            response.set_etag(hashlib.sha1(datas).hexdigest())
+            response.set_etag(checksum)
             response.make_conditional(request.httprequest)
 
             if response.status_code == 304:
                 return response
 
-            response.mimetype = (mimetypes.guess_type(attach[0]['datas_fname'] or '')[0] or
-                                 'application/octet-stream')
+            response.mimetype = attach[0]['mimetype'] or 'application/octet-stream'
             response.data = datas.decode('base64')
             return response
 
     def _handle_exception(self, exception):
+        # If handle_exception returns something different than None, it will be used as a response
+
         # This is done first as the attachment path may
-        # not match any HTTP controller.
+        # not match any HTTP controller
         if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404:
             attach = self._serve_attachment()
             if attach:
                 return attach
 
-        # If handle_exception returns something different than None, it will be used as a response
+        # Don't handle exception but use werkeug debugger if server in --dev mode
+        if openerp.tools.config['dev_mode']:
+            raise
         try:
             return request._handle_exception(exception)
         except openerp.exceptions.AccessDenied:
@@ -163,7 +165,6 @@ class ir_http(osv.AbstractModel):
         processing = self._postprocess_args(arguments, rule)
         if processing:
             return processing
-
 
         # set and execute handler
         try:
@@ -189,10 +190,14 @@ class ir_http(osv.AbstractModel):
     def routing_map(self):
         if not hasattr(self, '_routing_map'):
             _logger.info("Generating routing map")
-            cr = request.cr
-            m = request.registry.get('ir.module.module')
-            ids = m.search(cr, openerp.SUPERUSER_ID, [('state', '=', 'installed'), ('name', '!=', 'web')], context=request.context)
-            installed = set(x['name'] for x in m.read(cr, 1, ids, ['name'], context=request.context))
+            Modules = request.env['ir.module.module'].sudo()
+            installed = {
+                module.name
+                for module in Modules.search([
+                    ('state', 'in', ('installed', 'to remove', 'to upgrade')),
+                    ('name', '!=', 'web')
+                ])
+            }
             if openerp.tools.config['test_enable']:
                 installed.add(openerp.modules.module.current_test)
             mods = [''] + openerp.conf.server_wide_modules + sorted(installed)
@@ -224,5 +229,3 @@ def convert_exception_to(to_type, with_message=False):
         raise to_type, message, tb
     except to_type, e:
         return e
-
-# vim:et:

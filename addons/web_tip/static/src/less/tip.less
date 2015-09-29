@@ -1,0 +1,92 @@
+.oe_tip_overlay {
+    .o-position-absolute(0, 0, 0, 0);
+    opacity: 0.6;
+    z-index: 1001;
+    background-color: #000;
+    background: -moz-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
+    background: -webkit-gradient(radial,center center,0px,center center,100%,color-stop(0%,rgba(0,0,0,0.4)),color-stop(100%,rgba(0,0,0,0.9)));
+    background: -webkit-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
+    background: -o-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
+    background: -ms-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
+    background: radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#66000000',endColorstr='#e6000000',GradientType=1);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    .o-transition(all, 300ms, ease-out);
+}
+
+.oe_tip_helper {
+    position: absolute;
+    z-index: 1008;
+    border: 5px solid @odoo-view-background-color;
+    border-radius: @border-radius-base;
+    box-shadow: 0 2px 15px rgba(0,0,0,.4);
+    .o-transition(all, 300ms, ease-out);
+}
+
+.oe_tip_close {
+    padding: 5px 5px 10px 10px !important;
+    margin-top: -15px;
+    margin-right: -15px;
+}
+
+.oe_tip_fix_parent {
+    z-index: auto !important;
+    opacity: 1.0 !important;
+    transition: none !important;
+}
+
+.oe_tip_show_element {
+    z-index: 1011 !important;
+    position: relative !important;
+    border: none !important;
+}
+
+.oe_breathing {
+  background: transparent url(/web_tip/static/src/img/tip_throbber.png) no-repeat center center;
+  cursor : pointer;
+  height: 58px;
+  width: 58px;
+  position: absolute;
+  z-index: 1;
+  .o-animation(bounce, .5s, steps(12), 0s, infinite, alternate);
+}
+
+@-webkit-keyframes bounce {
+  from{ background-position: 0 0}
+  to{ background-position: -696px 0}
+}
+@-moz-keyframes bounce {
+  from{ background-position: 0 0}
+  to{ background-position: -696px 0}
+}
+@-o-keyframes explode {
+  from{ background-position: 0 0}
+  to{ background-position: -696px 0}
+}
+@keyframes bounce {
+  from{ background-position: 0 0}
+  to{ background-position: -696px 0}
+}
+
+.oe_explode {
+  opacity: 0;
+  .o-animation(explode, .5s);
+}
+
+@-webkit-keyframes explode {
+  from{ opacity: 1; transform: scale(1, 1); }
+  to{ opacity: 0; transform: scale(2, 2); }
+}
+@-moz-keyframes explode {
+  from{ opacity: 1; transform: scale(1, 1);}
+  to{ opacity: 0; transform: scale(2, 2);}
+}
+@-o-keyframes explode {
+  from{ opacity: 1; transform: scale(1, 1);}
+  to{ opacity: 0; transform: scale(2, 2);}
+}
+@keyframes explode {
+  from{ opacity: 1; transform: scale(1, 1);}
+  to{ opacity: 0; transform: scale(2, 2);}
+}

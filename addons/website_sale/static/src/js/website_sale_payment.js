@@ -1,4 +1,15 @@
+odoo.define('website_sale.payment', function (require) {
+"use strict";
+
+var ajax = require('web.ajax');
+
 $(document).ready(function () {
+    // If option is enable
+    if ($("#checkbox_cgv").length) {
+      $("#checkbox_cgv").click(function() {
+        $("div.oe_sale_acquirer_button").find('input, button').prop("disabled", !this.checked);
+      });
+    }
 
     // When choosing an acquirer, display its Pay Now button
     var $payment = $("#payment_method");
@@ -18,9 +29,11 @@ $(document).ready(function () {
       if (! acquirer_id) {
         return false;
       }
-      openerp.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function (data) {
+      ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function () {
         $form.submit();
       });
    });
+
+});
 
 });

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
 
@@ -28,15 +10,6 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 class sale_order_dates(osv.osv):
     """Add several date fields to Sale Orders, computed or user-entered"""
     _inherit = 'sale.order'
-
-    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
-        """Compute the expected date from the requested date, not the order date"""
-        if order and order.requested_date:
-            date_planned = datetime.strptime(order.requested_date, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_planned -= timedelta(days=order.company_id.security_lead)
-            return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        return super(sale_order_dates, self)._get_date_planned(
-                cr, uid, order, line, start_date, context=context)
 
     def _get_effective_date(self, cr, uid, ids, name, arg, context=None):
         """Read the shipping date from the related packings"""
@@ -63,7 +36,7 @@ class sale_order_dates(osv.osv):
             for line in order.order_line:
                 if line.state == 'cancel':
                     continue
-                dt = order_datetime + timedelta(days=line.delay or 0.0)
+                dt = order_datetime + timedelta(days=line.customer_lead or 0.0)
                 dt_s = dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 dates_list.append(dt_s)
             if dates_list:
@@ -107,4 +80,15 @@ class sale_order_dates(osv.osv):
     }
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class SaleOrderLine(osv.osv):
+    _inherit = 'sale.order.line'
+
+    def _prepare_order_line_procurement(self, cr, uid, ids, group_id=False, context=None):
+        vals = super(SaleOrderLine, self)._prepare_order_line_procurement(cr, uid, ids, group_id=group_id, context=context)
+        line = self.browse(cr, uid, ids, context=context)
+        if line.order_id.requested_date:
+            date_planned = datetime.strptime(line.order_id.requested_date, DEFAULT_SERVER_DATETIME_FORMAT) - timedelta(days=line.order_id.company_id.security_lead)
+            vals.update({
+                'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            })
+        return vals

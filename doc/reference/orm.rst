@@ -766,8 +766,8 @@ Method decorators
 =================
 
 .. automodule:: openerp.api
-    :members: one, multi, model, depends, constrains, onchange, returns,
-              v7, v8
+    :members: multi, model, depends, constrains, onchange, returns,
+              one, v7, v8
 
 .. _reference/orm/fields:
 

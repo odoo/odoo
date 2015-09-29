@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 """
 Store database-specific configuration parameters
 """
@@ -27,12 +9,13 @@ import datetime
 
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
-from openerp.tools import misc, config
+from openerp.tools import misc, config, ormcache
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.
 """
 _default_parameters = {
+    "database.secret": lambda: (str(uuid.uuid4()), ['base.group_erp_manager']),
     "database.uuid": lambda: (str(uuid.uuid1()), []),
     "database.create_date": lambda: (datetime.datetime.now().strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT), ['base.group_user']),
     "web.base.url": lambda: ("http://localhost:%s" % config.get('xmlrpc_port'), []),
@@ -67,7 +50,6 @@ class ir_config_parameter(osv.osv):
                 value, groups = func()
                 self.set_param(cr, SUPERUSER_ID, key, value, groups=groups)
 
-
     def get_param(self, cr, uid, key, default=False, context=None):
         """Retrieve the value for a given key.
 
@@ -76,14 +58,19 @@ class ir_config_parameter(osv.osv):
         :return: The value of the parameter, or ``default`` if it does not exist.
         :rtype: string
         """
-        ids = self.search(cr, uid, [('key','=',key)], context=context)
-        if not ids:
+        result = self._get_param(cr, uid, key)
+        if result is None:
             return default
-        param = self.browse(cr, uid, ids[0], context=context)
-        value = param.value
-        return value
+        return result
 
-    def set_param(self, cr, uid, key, value, groups=[], context=None):
+    @ormcache('uid', 'key')
+    def _get_param(self, cr, uid, key):
+        params = self.search_read(cr, uid, [('key', '=', key)], fields=['value'], limit=1)
+        if not params:
+            return None
+        return params[0]['value']
+
+    def set_param(self, cr, uid, key, value, groups=(), context=None):
         """Sets the value of a parameter.
 
         :param string key: The key of the parameter value to set.
@@ -93,6 +80,7 @@ class ir_config_parameter(osv.osv):
                  not exist.
         :rtype: string
         """
+        self._get_param.clear_cache(self)
         ids = self.search(cr, uid, [('key','=',key)], context=context)
 
         gids = []
@@ -114,4 +102,10 @@ class ir_config_parameter(osv.osv):
             self.create(cr, uid, vals, context=context)
             return False
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    def write(self, cr, uid, ids, vals, context=None):
+        self._get_param.clear_cache(self)
+        return super(ir_config_parameter, self).write(cr, uid, ids, vals, context=context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        self._get_param.clear_cache(self)
+        return super(ir_config_parameter, self).unlink(cr, uid, ids, context=context)

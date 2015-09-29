@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="category_1" model="slide.category">
+            <field name="name">Featured Presentations</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="category_2" model="slide.category">
+            <field name="name">Odoo Days</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="tag1" model="slide.tag">
+            <field name="name">CMS</field>
+        </record>
+
+        <record id="tag2" model="slide.tag">
+            <field name="name">Marketing</field>
+        </record>
+
+        <record id="tag3" model="slide.tag">
+            <field name="name">POS</field>
+        </record>
+
+        <record id="tag4" model="slide.tag">
+            <field name="name">Customer Voice</field>
+        </record>
+
+        <record id="tag5" model="slide.tag">
+            <field name="name">Odoo Days</field>
+        </record>
+
+        <record id="slide_0" model="slide.slide">
+            <field name="name">Odoo Explained</field>
+            <field name="url">http://www.youtube.com/watch?v=o0UM3Lg7K4Y</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag2'))]"/>
+        </record>
+        <record id="slide_1" model="slide.slide">
+            <field name="name">Open Source Website Builder and eCommerce: Odoo</field>
+            <field name="url">https://www.youtube.com/watch?v=pp7OCqWoRjQ</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag1'))]"/>
+        </record>
+        <record id="slide_2" model="slide.slide">
+            <field name="name">Odoo Open Days 2014</field>
+            <field name="url">https://www.youtube.com/watch?v=ILTPZUTWKhg&amp;list=UUkQPikELWZFLgQNHd73jkdg</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_2"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag3'))]"/>
+        </record>
+        <record id="slide_3" model="slide.slide">
+            <field name="name">Odoo - The Voice of the Customer: Alpinter</field>
+            <field name="url">https://www.youtube.com/watch?v=5DPGnN9_uKU&amp;list=UUkQPikELWZFLgQNHd73jkdg</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_2"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag4'))]"/>
+        </record>
+        <record id="slide_4" model="slide.slide">
+            <field name="name">Odoo SEO - Boost Your Website Trafic</field>
+            <field name="url">https://www.youtube.com/watch?v=5PKqZpl0TcA</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag1'))]"/>
+        </record>
+        <record id="slide_5" model="slide.slide">
+            <field name="name">Odoo POS Indiegogo Campaign</field>
+            <field name="url">https://www.youtube.com/watch?v=C_Laaz4mORg</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag3'))]"/>
+        </record>
+        <record id="slide_6" model="slide.slide">
+            <field name="name">Odoo Marketing - part 1: ATTRACT</field>
+            <field name="url">https://www.youtube.com/watch?v=qhSCMShJkTY&amp;list=UUkQPikELWZFLgQNHd73jkdg</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
+        </record>
+        <record id="slide_7" model="slide.slide">
+            <field name="name">Odoo Marketing - part 1: ATTRACT_2</field>
+            <field name="url">https://www.youtube.com/watch?v=L1Ye6ATzZXY&amp;list=UUkQPikELWZFLgQNHd73jkdg</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
+        </record>
+        <record id="slide_8" model="slide.slide">
+            <field name="name">Odoo Marketing - part 1: ATTRACT_3</field>
+            <field name="url">https://www.youtube.com/watch?v=sEvZyNZCtOs&amp;list=UUkQPikELWZFLgQNHd73jkdg</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
+        </record>
+
+        <record id="slide_9" model="slide.slide">
+            <field name="name">Open Days 2014 Infographic</field>
+            <field name="datas" type="base64" file="website_slides/static/src/img/Open_Days_2014_Infographic.png"/>
+            <field name="image" type="base64" file="website_slides/static/src/img/Open_Days_2014_Infographic.png"/>
+            <field name="slide_type">infographic</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_2"/>
+            <field name="website_published" eval="True"/>
+            <field name="likes">13</field>
+            <field name="slide_views">7399</field>
+            <field name="tag_ids" eval="[(4, ref('tag5'))]"/>
+        </record>
+        <record id="slide_10" model="slide.slide">
+            <field name="name">Odoo Roadmap &amp; Strategy - Fabien Pinckaers</field>
+            <field name="datas" type="base64" file="website_slides/static/src/img/keynote.pdf"/>
+            <field name="image" type="base64" file="website_slides/static/src/img/keynote.png"/>
+            <field name="slide_type">presentation</field>
+            <field name="channel_id" ref="channel_partial"/>
+            <field name="category_id" ref="category_2"/>
+            <field name="website_published" eval="True"/>
+            <field name="likes">13</field>
+            <field name="slide_views">6399</field>
+            <field name="index_content">1. Odoo Roadmap &amp; Strategy Fabien Pinckaers, Founder
+2. From 2,000,000 users to 10,000,000 users. or how we will turn Odoo mainstream...
+3. from $2M to $10M Investment Areas To Turn Odoo Mainstream 5 or how to spend $10M as fast as possible and burn a lot of energy...
+4. Release A Product That Deprecates Every Competitor 1 This is something we excel at...
+5. A product growth no one can follow
+6. Version 9: roadmap o 40% Usability: – Improving all existing apps, the right feature at the right place – User onboarding, ease of use o 20% Accounting: – 8 countries in the core o 20% CMS / eCommerce o 10% New design: – Merge front/backend, mobile, modern design o 10% Framework: o New API
+7. 1 Release cycle February 2012: v6.1 (13 months) 2 January 2013: v7 (11 months) 3 June 2014: v8 (18 months) 4 June 2015: v9 (12 months) 5 Every new version is a revolution. Version 9 will be even more impressive! January 2011: v6.0
+8. Attract The Mass Of Users 2 It's all about getting users, a lot of users. Not only customers.
+9. An attractive pricing... o The cloud, free for 2 users: – Why the cloud? Smooth user experience. High satisfaction rates as everything works out-of-the-box – Unlimited applications: CRM, CMS, eCommerce, Accounting, etc. o Millions of CMS/eCommerce for free: – Already 50k pages on CMS/eCommerce websites built with Odoo CMS Beta – You can do a lot with 2 users: we don't need to get revenues from CMS/eCommerce-only instances as we have so many applications to upsell
+10. Affordable implementations o Lower entry barrier - no huge starting costs for SMEs: – No complex implementation projects – A fixed-price packaged offer o New service offer, 100€ / month per application for: – Implementation assistance and configuration – Unlimited customization of screens, reports, workflows – Monthly upgrades – Training material – Unlimited support tickets, 24/24 response time!
+11. Disrupt A Market Having A Huge Traction 3 Creating the frontend of all apps will not only increase the quality of all apps but also disrupt the CMS/eCommerce market.
+12. " " The CMS/eCommerce market looks like the ERP market 6 years ago, before Odoo entered into it. Full of complex products that did not evolve over the past 3 years.
+13. Traditional ERPs o The monetization (and main focus) remains on business apps: – Accounting – Warehouse Management – Project Management – Point of sale – Marketing – HR, ... o But CMS/eCommerce will bring a huge volume of prospects to our other business apps
+14. Make Partners Rich By Making Customers Super-Happy 4 You will like our product and services so much that you will always want to purchase more.
+15. Traditional ERPs o Buy an ERP – Invest on 7 years o Maintain as long as you can – Implementations are so painful that you have no other choice – Upgrades are too expensive o After 7 years : it breaks – You change the product and call other vendors
+16. Traditional ERPs o Modern companies deserve to: – Evolve continuously – Benefit from top features every year – Be free of any legacy constraints – Have the flexibility to customize easily o Odoo Enterprise – our main value proposition: – Providing so much value to customers through continuous upgrades that they will want to purchase even more
+17. Odoo Enterprise o Odoo Enterprise is our core business: – Unlimited upgrades – Unlimited bugfix support – Optional hosting on our cloud – Guarantees : security, performance, legal o Customers shouldn't have to pay for: – Painful upgrades; if upgrades are costly, they tend to not upgrade – Bugs take delay the project and costs man*days of work
+18. " " Story of a 1300 users customer I met last week...
+19. Let's Burn A Few Millions In Marketing Too 5 We have an awesome product, a huge channel of partners, a strong service offer, ... Now, people need to know it.
+20.
+21. Marketing activities o Smart Content: – Documentation, books, blog posts, white papers, Q&amp;A – Translations of website and documentation – A super clean website, marketing optimized ! o Inbound Marketing: – SEO, SEA, funnel optimization with a powerful CMS o User/developer on boarding: – Users : usability, clean features, etc. – Devs: docs, easy installation, modules scafolding, ... – Community: efficient tools and communication o Local Events: share, meet and inform people
+22. All of this while maintaining a fun working environment and a sane relationship between partners, customers and the community.
+23. Relationship between proprietary software vendors and their implementation partners
+24. What we do By enforcing full open source rules, we set up the rules to guarantee a sane relationship between all parties of the value chain: ● Vendor: Odoo SA ● Customers ● Partners ● Community
+25. 2014-2015 This will be an epic time...</field>
+            <field name="tag_ids" eval="[(4, ref('tag5'))]"/>
+        </record>
+
+        <record id="slide_11" model="slide.slide">
+            <field name="name">OpenSource CMS, A performance comparison - Mantavya Gajjar</field>
+            <field name="datas" type="base64" file="website_slides/static/src/img/odoo-cms-comparision.pdf"/>
+            <field name="image" type="base64" file="website_slides/static/src/img/odoo-cms-comparision.png"/>
+            <field name="slide_type">presentation</field>
+            <field name="channel_id" ref="channel_public"/>
+            <field name="category_id" ref="category_2"/>
+            <field name="website_published" eval="True"/>
+            <field name="likes">10</field>
+            <field name="slide_views">4718</field>
+            <field name="index_content">1. Open Source CMS  A performance comparision Mantavya Gajjar – Managining Director, Odoo India
+2. Topics 1 2 3 4 5 o Introduction – Products to Compare – Test Environment o Test Cases (home, catalogue, product pages) – Performance ● Google PageSpeed Inside ● Speed Test using Pingdom – Scalability ● Load Test using Blitz – Maintainability ● Source Code – cloc ● Community to maintain the source code – W3C Markup Validations o Conclusion
+3. Introduction
+4. Introduction Open Source Products, compared with Odoo
+5. Odoo o Version Saas4 o Standard Data / Modules – Demo data with Odoo Website, Commerce, Forum, News, etc
+6. Magento o Version 1.8.1.0 o Custom Data / Module – Home page and widgets – Added some products and their description
+7. Drupal o Version 7.27 o Custom Data / Modules – CK-Editor &amp; CK-Finder – Ubercart for e-commerce, Rules, ctools, views, entity
+8. Prestashop o Version 1.6 o No Custom Data / Modules – Use default demo shop
+9. Performance Google PageSpeed Insight &amp; Pingdom
+10. Google PageSpeed Insights Home page on desktop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+11. Home Page
+12. Odoo vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+13. Odoo vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+14. Odoo vs Prestashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+15. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+16. Google Page Speed Insights Home page on mobile Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+17. Odoo Vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+18. Odoo Vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+19. Odoo Vs Prestashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+20. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+21. Google PageSpeed Insights Product Catalogue on Desktop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+22. Odoo Vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+23. Odoo Vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+24. Odoo Vs Prestashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+25. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+26. Google PageSpeed Insights Product Catalogue on Mobile Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+27. Odoo Vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+28. Odoo Vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+29. Odoo Vs Prestashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+30. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+31. Google PageSpeed Insights Product Page on Desktop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+32. Odoo Vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+33. Odoo Vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+34. Odoo Vs Prestashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+35. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+36. Google PageSpeed Insights Product Page on Mobile Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/
+37. Odoo Vs Drupal Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+38. Odoo Vs Magento Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+39. Odoo Vs Preshashop Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+40. Summary : Google Page Speed Computed by Google Page Speed Insight : https://developers.google.com/speed/pagespeed/insights/ Rating is out of 100
+41. Speed Test using Pingdom Resources Loads to render page
+42. Resources Load to render page As browser can load only 4 fles in parallal on midsie traffc website, then latency time and number of resources to donwload impact time to load more resources Odoo load faster because concatenate several fles, minify and gzip the content, even all the modules installed
+43. Resources Load to render page
+44. Resources Load to render page
+45. Scaleablity Using Blitz, simulate the 250 users
+46. Load Test using Blitz Region – Virginia | Duration – 60 Seconds | Load – 1 To 250 Users Computed using Blitz: https://www.blitz.io
+47. Software Confgurations Magento, Prestashop, Drupa o Ubuntu 14.04 latest LTS o Apache 2.2 Server o PHP 5 Framework o MySQL Server 5.0 Odoo o Ubuntu 14.04 latest LTS o Nginx 1.4 o Odoo Framework o PostgreSQL 9.1
+48. Hardware Confguration o IBM Server Series X3500 M4, 15 MB L3 Cache o 300 GB GSAS Drive 10K RPMs o Intel(R) Xeon(R) CPU E5-2620 0 @ 2.00GHz, 12 cores o 8 GB Physical RAM o 15 MBPS Dedicated Internet connection line Network : o 15 MBPS dedicated Internet connection
+49. Odoo Region – Virginia | Duration – 60 Seconds | Load – 1 To 250 Users The max hit rate was: 88 hits per second Website and Ecommerce apps installed Confguration  :
+50. Odoo ● Fastest: 530 ms | Slowest: 1655 ms | Average: 829 ms ● First time out happened at 47.4 second at 198 users ● 3646 successful hits in 60 sec, avg 52,45,920 hits/day capacity. Response Time :
+51. Drupal Region – Virginia | Duration – 60 Seconds | Load – 1 To 250 Users The max hit rate was : 37 hits per second Confguration  :
+52. Drupal ● Fastest: 1172 ms | Slowest: 4943 ms | Average: 2141 ms ● First time out happened at 30 second at 125 users ● 1,083 successful hits in 60 sec, avg 15,59,520 hits/day capacity. Response Time :
+53. Magento Region – Virginia | Duration – 60 Seconds | Load – 1 To 250 Users The max hit rate was : 21 hits per second Confguration  :
+54. Magento ● Fastest: 1639 ms | Slowest: 16315 ms | Average: 7813 ms ● First time out happened at 35 second at 146 users ● 528 successful hits in 60 sec, avg 0.7 M hits/day capacity. Response Time :
+55. Prestashop Region – Virginia | Duration – 60 Seconds | Load – 1 To 250 Users The max hit rate was : 16 hits per second Confguration  :
+56. Prestashop ● Fastest: 1678 ms | Slowest: 9228 ms | Average: 5598 ms ● First time out happened at 25 second at 104 users ● 663 successful hits in 60 sec, avg 0.95 M hits/day capacity. Response Time :
+57. Load Test Summary
+58. Summary Speed : o Odoo is 3x times faster than the Drupal o Odoo is 6x times faster than the Magento o Odoo is 2x times faster than the Prestashop Scalability : o Odoo timeout at 198 users o Drupal timeout at 125 users o Magento timeout at 148 users o Prestashop timeout at 104 users
+59. W3C Markup Validation HTML Validation
+60. W3C Check Odoo's main problem o Element meta is missing one or more of the following attributes: content, property. o An img element must have an alt attribute, except under certain conditions o The width attribute on the table element is obsolete. Use CSS instead. Team is working on those issues , will be fxed soon
+61. Maintainability lines of code and contributors
+62. Test 1 : Source Code Comparision between : o Odoo : includes all modules. I.e accounting, wms, mrp, websites, etc... o Drupal, Magento and Prestashop : only core modules Odoo is : o 1.3x times smaller then the drupal o 5.5x times smaller then the magento o 1.9x times smaller then the prestashop
+63. Odoo Statistic provided by ohloh.net available at https://www.ohloh.net/p/odoo
+64. Drupal Statistic provided by ohloh.net available at https://www.ohloh.net/p/drupal
+65. Magento Statistic provided by ohloh.net available at https://www.ohloh.net/p/magento
+66. Prestashop Statistic provided by ohloh.net available at https://www.ohloh.net/p/PrestaShop
+67. Conclusion
+68. Conclusion Performance : o Odoo is 3x times faster than the Drupal o Odoo is 6x times faster than the Magento o Odoo is 2x times faster than the Prestashop Scalability : o Odoo timeout at 198 users o Drupal timeout at 125 users o Magento timeout at 148 users o Prestashop timeout at 104 users Maintainability : o 1.3x times smaller then the drupal o 5.5x times smaller then the magento o 1.9x times smaller then the prestashop
+69. Questions ?
+70. Odoo sales@odoo.com +32 (0) 2 290 34 90 www.odoo.com R&amp;D and services offce Chaussée de Namur 40 B-1367 Grand Rosière Sales offce Avenue Van Nieuwenhuyse 5 B-1160 Brussels Thank You</field>
+        </record>
+
+        <record model="slide.channel" id="channel_public">
+            <field name="promote_strategy">custom</field>
+            <field name="custom_slide_id" ref="slide_0"/>
+        </record>
+
+  </data>
+</openerp>
+

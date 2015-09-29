@@ -320,7 +320,7 @@ var py = {};
                     if (token === 'in' && tokens[tokens.length-1].id === 'not') {
                         symbol = symbols['not in'];
                         tokens.pop();
-                    } else if (token === 'not' && tokens[tokens.length-1].id === 'is') {
+                    } else if (token === 'not' && tokens.length > 0 && tokens[tokens.length-1].id === 'is') {
                         symbol = symbols['is not'];
                         tokens.pop();
                     } else {
@@ -971,6 +971,12 @@ var py = {};
         __init__: function () {
             this._values = [];
         },
+        __len__: function () {
+            return this._values.length;
+        },
+        __nonzero__: function () {
+            return py.PY_size(this) > 0 ? py.True : py.False;
+        },
         __contains__: function (value) {
             for(var i=0, len=this._values.length; i<len; ++i) {
                 if (py.PY_isTrue(this._values[i].__eq__(value))) {
@@ -1000,7 +1006,12 @@ var py = {};
             return t;
         }
     });
-    py.list = py.tuple;
+    py.list = py.type('list', null, {
+        __nonzero__: function () {
+            return this.__len__ > 0 ? py.True : py.False;
+        },
+    });
+    _.defaults(py.list, py.tuple) // Copy attributes not redefined in type list
     py.dict = py.type('dict', null, {
         __init__: function () {
             this._store = {};
@@ -1014,6 +1025,12 @@ var py = {};
         },
         __setitem__: function (key, value) {
             this._store[key.__hash__()] = [key, value];
+        },
+        __len__: function () {
+            return Object.keys(this._store).length
+        },
+        __nonzero__: function () {
+            return py.PY_size(this) > 0 ? py.True : py.False;
         },
         get: function () {
             var args = py.PY_parseArgs(arguments, ['k', ['d', py.None]]);

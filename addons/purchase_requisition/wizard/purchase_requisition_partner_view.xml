@@ -2,24 +2,23 @@
       <data>
 
         <record id="view_purchase_requisition_partner" model="ir.ui.view">
-            <field name="name">Choose Supplier</field>
+            <field name="name">Choose Vendor</field>
             <field name="model">purchase.requisition.partner</field>
             <field name="arch" type="xml">
-                <form string="Choose Supplier">
+                <form string="Choose Vendor">
                     <group>
-                        <field name="partner_id" context="{'default_supplier': 1, 'default_customer': 0}"/>
+                        <field name="partner_ids" widget="many2many_tags" context="{'default_supplier': 1, 'default_customer': 0}"/>
                     </group>
                     <footer>
-                        <button name="create_order" string="Create Request for Quotation" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button name="create_order" string="Create Request for Quotation" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
             </field>
         </record>
 
         <record id="action_purchase_requisition_partner" model="ir.actions.act_window">
-               <field name="name">Choose Supplier</field>
+               <field name="name">Choose Vendor</field>
                <field name="type">ir.actions.act_window</field>
                <field name="res_model">purchase.requisition.partner</field>
                <field name="view_type">form</field>

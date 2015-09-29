@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from openerp.osv import osv, fields
 
 
@@ -10,10 +9,10 @@ class MailComposeMessage(osv.TransientModel):
 
     _columns = {
         'mass_mailing_campaign_id': fields.many2one(
-            'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
+            'mail.mass_mailing.campaign', 'Mass Mailing Campaign'
         ),
         'mass_mailing_id': fields.many2one(
-            'mail.mass_mailing', 'Mass Mailing'
+            'mail.mass_mailing', 'Mass Mailing', ondelete='cascade'
         ),
         'mass_mailing_name': fields.char('Mass Mailing'),
         'mailing_list_ids': fields.many2many(
@@ -21,11 +20,13 @@ class MailComposeMessage(osv.TransientModel):
         ),
     }
 
-    def get_mail_values(self, cr, uid, wizard, res_ids, context=None):
+    def get_mail_values(self, cr, uid, ids, res_ids, context=None):
         """ Override method that generated the mail content by creating the
         mail.mail.statistics values in the o2m of mail_mail, when doing pure
         email mass mailing. """
-        res = super(MailComposeMessage, self).get_mail_values(cr, uid, wizard, res_ids, context=context)
+        res = super(MailComposeMessage, self).get_mail_values(cr, uid, ids, res_ids, context=context)
+        # TDE: arg was wiards, not ids - but new API -> multi with ensure_one
+        wizard = self.browse(cr, uid, ids[0], context=context)
         # use only for allowed models in mass mailing
         if wizard.composition_mode == 'mass_mail' and \
                 (wizard.mass_mailing_name or wizard.mass_mailing_id) and \
@@ -58,6 +59,6 @@ class MailComposeMessage(osv.TransientModel):
                     })],
                     # email-mode: keep original message for routing
                     'notification': mass_mailing.reply_to_mode == 'thread',
-                    'auto_delete': True,
+                    'auto_delete': not mass_mailing.keep_archives,
                 })
         return res

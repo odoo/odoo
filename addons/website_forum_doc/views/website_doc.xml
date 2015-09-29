@@ -3,7 +3,7 @@
     <data>
 
         <!-- Front-end assets: custom css -->
-        <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="website_forum_doc assets">
             <xpath expr="." position="inside">
                 <link rel='stylesheet' href='/website_forum_doc/static/src/css/website_forum_doc.css'/>
             </xpath>
@@ -149,7 +149,7 @@
                                         from the Q&amp;A section where you can
                                         discuss it and get feedback.
                                     </div>
-                                    &amp;nbsp; <a t-attf-href="/forum/#{slug(forum)}/question/#{slug(post)}" class="fa fa-arrow-right mt16"> Related question</a>
+                                    <a t-attf-href="/forum/#{slug(forum)}/question/#{slug(post)}" class="fa fa-arrow-right mt16 ml8"> Related question</a>
                                 </div>
                             </div>
                         </div>

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools import float_compare
@@ -78,8 +60,7 @@ class stock_move_consume(osv.osv_memory):
                 #consumed more in wizard than previously planned
                 extra_more_qty = qty - consumed_qty
                 #create new line for a remaining qty of the product
-                extra_move_id = production_obj._make_consume_line_from_data(cr, uid, production, data.product_id, data.product_id.uom_id.id, extra_more_qty, False, 0, context=context)
+                extra_move_id = production_obj._make_consume_line_from_data(cr, uid, production, data.product_id, data.product_id.uom_id.id, extra_more_qty, context=context)
                 move_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': data.restrict_lot_id.id}, context=context)
                 move_obj.action_done(cr, uid, [extra_move_id], context=context)
-
         return {'type': 'ir.actions.act_window_close'}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="account_payment_method_check" model="account.payment.method">
+            <field name="name">Check</field>
+            <field name="code">check_printing</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <function model="account.journal" name="_enable_check_printing_on_bank_journals"/>
+
+
+        <record model="ir.actions.server" id="action_account_print_checks">
+            <field name="name">Print Checks</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="code">
+                if context.get('active_model') == 'account.payment' and context.get('active_ids'):
+                    action = self.pool['account.payment'].print_checks(cr, uid, context['active_ids'], context=context)
+            </field>
+        </record>
+
+        <record model="ir.values" id="account_print_checks">
+            <field name="model_id" ref="account.model_account_payment" />
+            <field name="name">Print Checks</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,' +str(ref('action_account_print_checks'))" />
+            <field name="key">action</field>
+            <field name="model">account.payment</field>
+        </record>
+
+    </data>
+</openerp>

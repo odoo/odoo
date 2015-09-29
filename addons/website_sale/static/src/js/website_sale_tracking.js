@@ -1,14 +1,18 @@
+odoo.define('website_sale.tracking', function(require) {
+
+var ajax = require('web.ajax');
+
 $(document).ready(function () {
 
     // Watching a product
     if ($("#product_detail.oe_website_sale").length) {
-        prod_id = $("input[name='product_id']").attr('value');
+        var prod_id = $("input[name='product_id']").attr('value');
         vpv("/stats/ecom/product_view/" + prod_id);
     }
 
     // Add a product into the cart
     $(".oe_website_sale form[action='/shop/cart/update'] a.a-submit").on('click', function(o) {
-        prod_id = $("input[name='product_id']").attr('value');
+        var prod_id = $("input[name='product_id']").attr('value');
         vpv("/stats/ecom/product_add_to_cart/" + prod_id);
     });
 
@@ -33,13 +37,13 @@ $(document).ready(function () {
         vpv("/stats/ecom/order_payment/" + method);
     });
 
-    if ($(".oe_website_sale div.oe_cart div.oe_website_sale_tx_status").length) {
+    if ($(".oe_website_sale div.oe_website_sale_tx_status").length) {
         track_ga('require', 'ecommerce');
 
-        order_id = $(".oe_website_sale div.oe_cart div.oe_website_sale_tx_status").data("order-id");
+        var order_id = $(".oe_website_sale div.oe_website_sale_tx_status").data("order-id");
         vpv("/stats/ecom/order_confirmed/" + order_id);
 
-        openerp.jsonRpc("/shop/tracking_last_order/").then(function(o) {
+        ajax.jsonRpc("/shop/tracking_last_order/").then(function(o) {
             track_ga('ecommerce:clear');
 
             if (o.transaction && o.lines) {
@@ -63,5 +67,7 @@ $(document).ready(function () {
         website_ga = this.ga || function(){};
         website_ga.apply(this, arguments);
     }
+
+});
 
 });

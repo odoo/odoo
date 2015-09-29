@@ -3,6 +3,7 @@
 <data>
 <template id="report_intrastatinvoice_document">
     <t t-call="report.external_layout">
+        <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
         <div class="page">
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-7">
@@ -18,8 +19,8 @@
                 <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
                 <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
                 <span t-if="o.type == 'out_refund'">Refund</span>
-                <span t-if="o.type == 'in_refund'">Supplier Refund</span>
-                <span t-if="o.type == 'in_invoice'">Supplier Invoice</span>
+                <span t-if="o.type == 'in_refund'">Vendor Refund</span>
+                <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
                 <span t-field="o.number"/>
             </h2>
 
@@ -38,6 +39,9 @@
                 </div>
             </div>
 
+            <!-- Is there a discount on at least one line? -->
+            <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
+
             <table class="table table-condensed">
                 <thead>
                     <tr>
@@ -48,20 +52,20 @@
                         <th class="text-right">Quantity</th>
                         <th groups="product.group_uom">Unit of measure</th>
                         <th class="text-right">Unit Price</th>
-                        <th class="text-right" groups="sale.group_discount_per_so_line">Discount (%)</th>
+                        <th class="text-right" t-if="display_discount" groups="sale.group_discount_per_so_line">Discount (%)</th>
                         <th class="text-right">Amount</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr t-foreach="o.invoice_line" t-as="l">
+                    <tr t-foreach="o.invoice_line_ids" t-as="l">
                         <td><span t-field="l.name"/></td>
-                        <td class="text-right"><span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_id))"/></td>
+                        <td class="text-right"><span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_ids))"/></td>
                         <td class="text-right"><span t-esc="l.product_id.intrastat_id.name"/></td>
                         <td class="text-right"><span t-esc="l.product_id.weight"/></td>
                         <td class="text-right"><span t-field="l.quantity"/></td>
-                        <td groups="product.group_uom"><span t-field="l.uos_id"/></td>
+                        <td groups="product.group_uom"><span t-field="l.uom_id"/></td>
                         <td class="text-right"><span t-field="l.price_unit"/></td>
-                        <td groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
+                        <td t-if="display_discount" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
                         <td class="text-right">
                             <span t-field="l.price_subtotal"
                                 t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
@@ -95,23 +99,18 @@
                 </div>
             </div>
 
-            <div class="row" t-if="o.tax_line">
+            <div class="row" t-if="o.tax_line_ids">
                 <div class="col-xs-3">
                     <table class="table table-condensed">
                         <thead>
                             <tr>
                                 <th>Tax</th>
-                                <th class="text-right">Base</th>
                                 <th class="text-right">Amount</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.tax_line" t-as="t">
+                            <tr t-foreach="o.tax_line_ids" t-as="t">
                                 <td><span t-field="t.name"/></td>
-                                <td class="text-right">
-                                    <span t-field="t.base"
-                                        t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                                </td>
                                 <td class="text-right">
                                     <span t-field="t.amount"
                                         t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
@@ -126,13 +125,13 @@
                 <strong>Comment:</strong>
                 <span t-field="o.comment"/>
             </p>
-            <p t-if="o.payment_term">
+            <p t-if="o.payment_term_id">
                 <strong>Payment Term:</strong>
-                <span t-field="o.payment_term"/>
+                <span t-field="o.payment_term_id"/>
             </p>
-            <p t-if="o.fiscal_position">
+            <p t-if="o.fiscal_position_id">
                 <strong>Fiscal Position:</strong>
-                <span t-field="o.fiscal_position.note"/>
+                <span t-field="o.fiscal_position_id.note"/>
             </p>
         </div>
     </t>
@@ -140,8 +139,8 @@
 
 <template id="report_intrastatinvoice">
     <t t-call="report.html_container">
-        <t t-foreach="doc_ids" t-as="doc_id">
-            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'report_intrastat.report_intrastatinvoice_document')"/>
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report_intrastat.report_intrastatinvoice_document" t-lang="o.partner_id.lang"/>
         </t>
     </t>
 </template>

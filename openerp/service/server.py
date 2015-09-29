@@ -15,9 +15,10 @@ import subprocess
 import sys
 import threading
 import time
-import unittest2
+import unittest
 
 import werkzeug.serving
+from werkzeug.debug import DebuggedApplication
 
 if os.name == 'posix':
     # Unix only for workers
@@ -41,6 +42,13 @@ import openerp.tools.config as config
 from openerp.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import watchdog
+    from watchdog.observers import Observer
+    from watchdog.events import FileCreatedEvent, FileModifiedEvent, FileMovedEvent
+except ImportError:
+    watchdog = None
 
 SLEEP_INTERVAL = 60     # 1 min
 
@@ -111,89 +119,36 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
             super(ThreadedWSGIServerReloadable, self).server_activate()
 
 #----------------------------------------------------------
-# AutoReload watcher
+# FileSystem Watcher for autoreload and cache invalidation
 #----------------------------------------------------------
-
-class AutoReload(object):
-    def __init__(self, server):
-        self.server = server
-        self.files = {}
-        self.modules = {}
-        import pyinotify
-        class EventHandler(pyinotify.ProcessEvent):
-            def __init__(self, autoreload):
-                self.autoreload = autoreload
-
-            def process_IN_CREATE(self, event):
-                _logger.debug('File created: %s', event.pathname)
-                self.autoreload.files[event.pathname] = 1
-
-            def process_IN_MODIFY(self, event):
-                _logger.debug('File modified: %s', event.pathname)
-                self.autoreload.files[event.pathname] = 1
-
-        self.wm = pyinotify.WatchManager()
-        self.handler = EventHandler(self)
-        self.notifier = pyinotify.Notifier(self.wm, self.handler, timeout=0)
-        mask = pyinotify.IN_MODIFY | pyinotify.IN_CREATE  # IN_MOVED_FROM, IN_MOVED_TO ?
+class FSWatcher(object):
+    def __init__(self):
+        self.observer = Observer()
         for path in openerp.modules.module.ad_paths:
             _logger.info('Watching addons folder %s', path)
-            self.wm.add_watch(path, mask, rec=True)
+            self.observer.schedule(self, path, recursive=True)
 
-    def process_data(self, files):
-        xml_files = [i for i in files if i.endswith('.xml')]
-        for i in xml_files:
-            for path in openerp.modules.module.ad_paths:
-                if i.startswith(path):
-                    # find out wich addons path the file belongs to
-                    # and extract it's module name
-                    right = i[len(path) + 1:].split('/')
-                    if len(right) < 2:
-                        continue
-                    module = right[0]
-                    self.modules[module] = 1
-        if self.modules:
-            _logger.info('autoreload: xml change detected, autoreload activated')
-            restart()
+    def dispatch(self, event):
+        if isinstance(event, (FileCreatedEvent, FileModifiedEvent, FileMovedEvent)):
+            if not event.is_directory:
+                path = getattr(event, 'dest_path', event.src_path)
+                if path.endswith('.py'):
+                    try:
+                        source = open(path, 'rb').read() + '\n'
+                        compile(source, path, 'exec')
+                    except SyntaxError:
+                        _logger.error('autoreload: python code change detected, SyntaxError in %s', path)
+                    else:
+                        _logger.info('autoreload: python code updated, autoreload activated')
+                        restart()
 
-    def process_python(self, files):
-        # process python changes
-        py_files = [i for i in files if i.endswith('.py')]
-        py_errors = []
-        # TODO keep python errors until they are ok
-        if py_files:
-            for i in py_files:
-                try:
-                    source = open(i, 'rb').read() + '\n'
-                    compile(source, i, 'exec')
-                except SyntaxError:
-                    py_errors.append(i)
-            if py_errors:
-                _logger.info('autoreload: python code change detected, errors found')
-                for i in py_errors:
-                    _logger.info('autoreload: SyntaxError %s', i)
-            else:
-                _logger.info('autoreload: python code updated, autoreload activated')
-                restart()
-
-    def check_thread(self):
-        # Check if some files have been touched in the addons path.
-        # If true, check if the touched file belongs to an installed module
-        # in any of the database used in the registry manager.
-        while 1:
-            while self.notifier.check_events(1000):
-                self.notifier.read_events()
-                self.notifier.process_events()
-            l = self.files.keys()
-            self.files.clear()
-            self.process_data(l)
-            self.process_python(l)
-
-    def run(self):
-        t = threading.Thread(target=self.check_thread)
-        t.setDaemon(True)
-        t.start()
+    def start(self):
+        self.observer.start()
         _logger.info('AutoReload watcher running')
+
+    def stop(self):
+        self.observer.stop()
+        self.observer.join()
 
 #----------------------------------------------------------
 # Servers: Threaded, Gevented and Prefork
@@ -814,7 +769,7 @@ class WorkerCron(Worker):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
-            db_names = openerp.service.db.exp_list(True)
+            db_names = openerp.service.db.list_dbs(True)
         return db_names
 
     def process_work(self):
@@ -882,7 +837,8 @@ def _reexec(updated_modules=None):
         subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)
     args = stripped_sys_argv()
-    args += ["-u", ','.join(updated_modules)]
+    if updated_modules:
+        args += ["-u", ','.join(updated_modules)]
     if not args or args[0] != exe:
         args.insert(0, exe)
     os.execv(sys.executable, args)
@@ -904,12 +860,12 @@ def load_test_file_py(registry, test_file):
         if mod_mod:
             mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
             if test_path == mod_path:
-                suite = unittest2.TestSuite()
-                for t in unittest2.TestLoader().loadTestsFromModule(mod_mod):
+                suite = unittest.TestSuite()
+                for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
                     suite.addTest(t)
                 _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
                 stream = openerp.modules.module.TestStream()
-                result = unittest2.TextTestRunner(verbosity=2, stream=stream).run(suite)
+                result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
                 success = result.wasSuccessful()
                 if hasattr(registry._assertion_report,'report_result'):
                     registry._assertion_report.report_result(success)
@@ -955,18 +911,22 @@ def start(preload=None, stop=False):
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
-    if config['auto_reload']:
-        autoreload = AutoReload(server)
-        autoreload.run()
+    watcher = None
+    if config['dev_mode']:
+        if watchdog:
+            watcher = FSWatcher()
+            watcher.start()
+        else:
+            _logger.warning("'watchdog' module not installed. Code autoreload feature is disabled")
+        server.app = DebuggedApplication(server.app, evalex=True)
 
     rc = server.run(preload, stop)
 
     # like the legend of the phoenix, all ends with beginnings
     if getattr(openerp, 'phoenix', False):
-        modules = []
-        if config['auto_reload']:
-            modules = autoreload.modules.keys()
-        _reexec(modules)
+        if watcher:
+            watcher.stop()
+        _reexec()
 
     return rc if rc else 0
 
@@ -978,5 +938,3 @@ def restart():
         threading.Thread(target=_reexec).start()
     else:
         os.kill(server.pid, signal.SIGHUP)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -88,19 +70,23 @@ class procurement_order(osv.osv):
         'orderpoint_id': fields.many2one('stock.warehouse.orderpoint', 'Minimum Stock Rule'),
     }
 
-    def propagate_cancel(self, cr, uid, procurement, context=None):
-        if procurement.rule_id.action == 'move' and procurement.move_ids:
-            self.pool.get('stock.move').action_cancel(cr, uid, [m.id for m in procurement.move_ids], context=context)
+    def propagate_cancels(self, cr, uid, ids, context=None):
+        move_cancel = []
+        for procurement in self.browse(cr, uid, ids, context=context):
+            if procurement.rule_id.action == 'move' and procurement.move_ids:
+                move_cancel += [m.id for m in procurement.move_ids]
+        if move_cancel:
+            self.pool.get('stock.move').action_cancel(cr, uid, move_cancel, context=context)
+        return True
 
     def cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         to_cancel_ids = self.get_cancel_ids(cr, uid, ids, context=context)
         ctx = context.copy()
-        #set the context for the propagation of the procurement cancelation
+        #set the context for the propagation of the procurement cancellation
         ctx['cancel_procurement'] = True
-        for procurement in self.browse(cr, uid, to_cancel_ids, context=ctx):
-            self.propagate_cancel(cr, uid, procurement, context=ctx)
+        self.propagate_cancels(cr, uid, to_cancel_ids, context=ctx)
         return super(procurement_order, self).cancel(cr, uid, to_cancel_ids, context=ctx)
 
     def _find_parent_locations(self, cr, uid, procurement, context=None):
@@ -116,6 +102,139 @@ class procurement_order(osv.osv):
             warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
             return {'value': {'location_id': warehouse.lot_stock_id.id}}
         return {}
+
+    #Doing assignation, ... in multi
+    def _assign_multi(self, cr, uid, procurements, context=None):
+        res = {}
+        todo_procs = []
+        context = context or {}
+        for procurement in procurements:
+            if procurement.rule_id:
+                res[procurement.id] = True
+            elif procurement.product_id.type in ['product', 'consu']:
+                todo_procs += [procurement]
+
+        res_dict = self._find_suitable_rule_multi(cr, uid, todo_procs, context=context)
+        rule_dict = {}
+        for proc in res_dict.keys():
+            if res_dict[proc]:
+                if rule_dict.get(res_dict[proc]):
+                    rule_dict[res_dict[proc]] += [proc]
+                else:
+                    rule_dict[res_dict[proc]] = [proc]
+
+        for rule in rule_dict.keys():
+            self.write(cr, uid, rule_dict[rule], {'rule_id': rule}, context=context)
+
+
+    def _get_route_group_dict(self, cr, uid, procurements, context=None):
+        """
+            Returns a dictionary with key the routes and values the products associated
+        """
+        ids = [x.id for x in procurements]
+        cr.execute("""
+            SELECT proc_id, route_id FROM
+            ((SELECT p.id AS proc_id, route_id
+                FROM stock_route_product AS link, procurement_order AS p, product_template AS pt, product_product pp
+                WHERE pp.product_tmpl_id = pt.id AND link.product_id = pt.id AND pp.id = p.product_id
+                    AND p.id in %s)
+             UNION (SELECT p.id AS proc_id, link.route_id AS route_id
+                    FROM stock_location_route_categ AS link, product_product AS pp, procurement_order AS p,
+                         product_template AS pt, product_category AS pc, product_category AS pc_product
+                    WHERE p.product_id = pp.id AND pp.product_tmpl_id = pt.id AND pc_product.id = pt.categ_id AND
+                    pc.parent_left <= pc_product.parent_left AND pc.parent_right >= pc_product.parent_left
+                    AND link.categ_id = pc.id AND pp.id IN %s)) p ORDER BY proc_id, route_id
+        """, (tuple(ids), tuple(ids), ))
+        product_routes = cr.fetchall()
+        old_proc = False
+        key = tuple()
+        key_routes = {}
+        proc = False
+        for proc, route in product_routes:
+            if not old_proc:
+                old_proc = proc
+            if old_proc == proc:
+                key += (route,)
+            else:
+                if key_routes.get(key):
+                    key_routes[key] += [old_proc]
+                else:
+                    key_routes[key] = [old_proc]
+                old_proc = proc
+                key = (route,)
+        if proc: #do not forget last one as we passed through it
+            if key_routes.get(key):
+                key_routes[key] += [proc]
+            else:
+                key_routes[key] = [proc]
+        return key_routes
+
+
+    def _get_wh_loc_dict(self, cr, uid, procurements, context=None):
+        wh_dict = {}
+        for procurement in procurements:
+            if wh_dict.get(procurement.warehouse_id.id):
+                if wh_dict[procurement.warehouse_id.id].get(procurement.location_id):
+                    wh_dict[procurement.warehouse_id.id][procurement.location_id] += [procurement]
+                else:
+                    wh_dict[procurement.warehouse_id.id][procurement.location_id] = [procurement]
+            else:
+                wh_dict[procurement.warehouse_id.id] = {}
+                wh_dict[procurement.warehouse_id.id][procurement.location_id] = [procurement]
+        return wh_dict
+
+
+    def _find_suitable_rule_multi(self, cr, uid, procurements, domain = [], context=None):
+        '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
+        results_dict = {}
+        pull_obj = self.pool.get('procurement.rule')
+        warehouse_route_ids = []
+        for procurement in procurements: #Could be replaced by one query for all route_ids
+            if procurement.route_ids:
+                procurement_route_ids = [x.id for x in procurement.route_ids]
+                loc = procurement.location_id
+                loc_domain = [('location_id.parent_left', '<=', loc.parent_left),
+                                ('location_id.parent_right', '>=', loc.parent_left)]
+                if procurement.warehouse_id:
+                    domain += ['|', ('warehouse_id', '=', procurement.warehouse_id.id), ('warehouse_id', '=', False)]
+                res = pull_obj.search(cr, uid, loc_domain + [('route_id', 'in', procurement_route_ids)], order='route_sequence, sequence', context=context)
+                if res and res[0]:
+                    results_dict[procurement.id] = res[0]
+
+        procurements_to_check = [x for x in procurements if x.id not in results_dict.keys()]
+        #group by warehouse_id:
+        wh_dict = self._get_wh_loc_dict(cr, uid, procurements_to_check, context=context)
+        for wh in wh_dict.keys():
+            warehouse_route_ids = []
+            domain = []
+            check_wh = False
+            for loc in wh_dict[wh].keys():
+                procurement = wh_dict[wh][loc][0]
+                loc_domain = [('location_id.parent_left', '<=', loc.parent_left),
+                                ('location_id.parent_right', '>=', loc.parent_left)]
+                if wh and not check_wh:
+                    domain += ['|', ('warehouse_id', '=', procurement.warehouse_id.id), ('warehouse_id', '=', False)]
+                    warehouse_route_ids = [x.id for x in procurement.warehouse_id.route_ids]
+                check_wh = True
+                key_routes = self._get_route_group_dict(cr, uid, wh_dict[wh][loc], context=context)
+                for key in key_routes.keys():
+                    procurements = self.browse(cr, uid, key_routes[key], context=context)
+                    domain = loc_domain + domain
+                    res = pull_obj.search(cr, uid, domain + [('route_id', 'in', list(key))], order='route_sequence, sequence', context=context)
+                    result = False
+                    if res and res[0]:
+                        result = res[0]
+                    elif warehouse_route_ids:
+                        res = pull_obj.search(cr, uid, domain + [('route_id', 'in', warehouse_route_ids)], order='route_sequence, sequence', context=context)
+                        result = res and res[0]
+                    if not result:
+                        res = pull_obj.search(cr, uid, domain + [('route_id', '=', False)], order='sequence', context=context)
+                        result = res and res[0]
+                    for proc in key_routes[key]:
+                        results_dict[proc] = result
+        return results_dict
+
+
 
     def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
         '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
@@ -160,20 +279,15 @@ class procurement_order(osv.osv):
         #it is possible that we've already got some move done, so check for the done qty and create
         #a new move with the correct qty
         already_done_qty = 0
-        already_done_qty_uos = 0
         for move in procurement.move_ids:
             already_done_qty += move.product_uom_qty if move.state == 'done' else 0
-            already_done_qty_uos += move.product_uos_qty if move.state == 'done' else 0
         qty_left = max(procurement.product_qty - already_done_qty, 0)
-        qty_uos_left = max(procurement.product_uos_qty - already_done_qty_uos, 0)
         vals = {
             'name': procurement.name,
             'company_id': procurement.rule_id.company_id.id or procurement.rule_id.location_src_id.company_id.id or procurement.rule_id.location_id.company_id.id or procurement.company_id.id,
             'product_id': procurement.product_id.id,
             'product_uom': procurement.product_uom.id,
             'product_uom_qty': qty_left,
-            'product_uos_qty': (procurement.product_uos and qty_uos_left) or qty_left,
-            'product_uos': (procurement.product_uos and procurement.product_uos.id) or procurement.product_uom.id,
             'partner_id': procurement.rule_id.partner_address_id.id or (procurement.group_id and procurement.group_id.partner_id.id) or False,
             'location_id': procurement.rule_id.location_src_id.id,
             'location_dest_id': procurement.location_id.id,
@@ -207,6 +321,7 @@ class procurement_order(osv.osv):
 
     def run(self, cr, uid, ids, autocommit=False, context=None):
         new_ids = [x.id for x in self.browse(cr, uid, ids, context=context) if x.state not in ('running', 'done', 'cancel')]
+        context = dict(context or {}, procurement_auto_defer=True) #When creating
         res = super(procurement_order, self).run(cr, uid, new_ids, autocommit=autocommit, context=context)
 
         #after all the procurements are run, check if some created a draft stock move that needs to be confirmed
@@ -217,6 +332,10 @@ class procurement_order(osv.osv):
                 move_to_confirm_ids += [m.id for m in procurement.move_ids if m.state == 'draft']
         if move_to_confirm_ids:
             self.pool.get('stock.move').action_confirm(cr, uid, move_to_confirm_ids, context=context)
+        # If procurements created other procurements, run the created in batch
+        procurement_ids = self.search(cr, uid, [('move_dest_id.procurement_id', 'in', new_ids)], order='id', context=context)
+        if procurement_ids:
+            res = res and self.run(cr, uid, procurement_ids, autocommit=autocommit, context=context)
         return res
 
     def _check(self, cr, uid, procurement, context=None):
@@ -303,7 +422,11 @@ class procurement_order(osv.osv):
         return {}
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
-        date_planned = start_date + relativedelta(days=orderpoint.product_id.seller_delay or 0.0)
+        days = orderpoint.lead_days or 0.0
+        if orderpoint.lead_type=='purchase':
+            # These days will be substracted when creating the PO
+            days += orderpoint.product_id._select_seller(orderpoint.product_id).delay or 0.0
+        date_planned = start_date + relativedelta(days=days)
         return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
     def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, context=None):
@@ -321,13 +444,7 @@ class procurement_order(osv.osv):
             'group_id': orderpoint.group_id.id,
         }
 
-    def _product_virtual_get(self, cr, uid, order_point):
-        product_obj = self.pool.get('product.product')
-        return product_obj._product_available(cr, uid,
-                [order_point.product_id.id],
-                context={'location': order_point.location_id.id})[order_point.product_id.id]['virtual_available']
-
-    def _procure_orderpoint_confirm(self, cr, uid, use_new_cursor=False, company_id = False, context=None):
+    def _procure_orderpoint_confirm(self, cr, uid, use_new_cursor=False, company_id=False, context=None):
         '''
         Create procurement based on Orderpoint
 
@@ -339,46 +456,80 @@ class procurement_order(osv.osv):
         if use_new_cursor:
             cr = openerp.registry(cr.dbname).cursor()
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
-
         procurement_obj = self.pool.get('procurement.order')
+        product_obj = self.pool.get('product.product')
+
         dom = company_id and [('company_id', '=', company_id)] or []
-        orderpoint_ids = orderpoint_obj.search(cr, uid, dom)
+        orderpoint_ids = orderpoint_obj.search(cr, uid, dom, order="location_id")
         prev_ids = []
+        tot_procs = []
         while orderpoint_ids:
-            ids = orderpoint_ids[:100]
-            del orderpoint_ids[:100]
-            for op in orderpoint_obj.browse(cr, uid, ids, context=context):
-                try:
-                    prods = self._product_virtual_get(cr, uid, op)
-                    if prods is None:
-                        continue
-                    if float_compare(prods, op.product_min_qty, precision_rounding=op.product_uom.rounding) < 0:
-                        qty = max(op.product_min_qty, op.product_max_qty) - prods
-                        reste = op.qty_multiple > 0 and qty % op.qty_multiple or 0.0
-                        if float_compare(reste, 0.0, precision_rounding=op.product_uom.rounding) > 0:
-                            qty += op.qty_multiple - reste
+            ids = orderpoint_ids[:1000]
+            del orderpoint_ids[:1000]
+            product_dict = {}
+            ops_dict = {}
+            ops = orderpoint_obj.browse(cr, uid, ids, context=context)
 
-                        if float_compare(qty, 0.0, precision_rounding=op.product_uom.rounding) <= 0:
+            #Calculate groups that can be executed together
+            for op in ops:
+                key = (op.location_id.id,)
+                if not product_dict.get(key):
+                    product_dict[key] = [op.product_id]
+                    ops_dict[key] = [op]
+                else:
+                    product_dict[key] += [op.product_id]
+                    ops_dict[key] += [op]
+
+            for key in product_dict.keys():
+                ctx = context.copy()
+                ctx.update({'location': ops_dict[key][0].location_id.id})
+                prod_qty = product_obj._product_available(cr, uid, [x.id for x in product_dict[key]],
+                                                          context=ctx)
+                subtract_qty = orderpoint_obj.subtract_procurements_from_orderpoints(cr, uid, [x.id for x in ops_dict[key]], context=context)
+                for op in ops_dict[key]:
+                    try:
+                        prods = prod_qty[op.product_id.id]['virtual_available']
+                        if prods is None:
                             continue
+                        if float_compare(prods, op.product_min_qty, precision_rounding=op.product_uom.rounding) <= 0:
+                            qty = max(op.product_min_qty, op.product_max_qty) - prods
+                            reste = op.qty_multiple > 0 and qty % op.qty_multiple or 0.0
+                            if float_compare(reste, 0.0, precision_rounding=op.product_uom.rounding) > 0:
+                                qty += op.qty_multiple - reste
 
-                        qty -= orderpoint_obj.subtract_procurements(cr, uid, op, context=context)
+                            if float_compare(qty, 0.0, precision_rounding=op.product_uom.rounding) < 0:
+                                continue
 
-                        qty_rounded = float_round(qty, precision_rounding=op.product_uom.rounding)
-                        if qty_rounded > 0:
-                            proc_id = procurement_obj.create(cr, uid,
-                                                             self._prepare_orderpoint_procurement(cr, uid, op, qty_rounded, context=context),
-                                                             context=context)
-                            self.check(cr, uid, [proc_id])
-                            self.run(cr, uid, [proc_id])
-                    if use_new_cursor:
-                        cr.commit()
-                except OperationalError:
-                    if use_new_cursor:
-                        orderpoint_ids.append(op.id)
-                        cr.rollback()
-                        continue
-                    else:
-                        raise
+                            qty -= subtract_qty[op.id]
+
+                            qty_rounded = float_round(qty, precision_rounding=op.product_uom.rounding)
+                            if qty_rounded > 0:
+                                proc_id = procurement_obj.create(cr, uid,
+                                                                 self._prepare_orderpoint_procurement(cr, uid, op, qty_rounded, context=context),
+                                                                 context=context)
+                                tot_procs.append(proc_id)
+                            if use_new_cursor:
+                                cr.commit()
+                    except OperationalError:
+                        if use_new_cursor:
+                            orderpoint_ids.append(op.id)
+                            cr.rollback()
+                            continue
+                        else:
+                            raise
+            try:
+                tot_procs.reverse()
+                self.run(cr, uid, tot_procs, context=context)
+                tot_procs = []
+                if use_new_cursor:
+                    cr.commit()
+            except OperationalError:
+                if use_new_cursor:
+                    cr.rollback()
+                    continue
+                else:
+                    raise
+
             if use_new_cursor:
                 cr.commit()
             if prev_ids == ids:

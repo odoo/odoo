@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import pkgutil
-import unittest2
+import unittest
 
 import openerp.modules.registry
 import openerp

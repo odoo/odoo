@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.actions.act_window" id="action_view_click_statistics">
+            <field name="name">Statistics of Clicks</field>
+            <field name="res_model">link.tracker.click</field>
+            <field name="view_mode">graph</field>
+            <field name="domain">[('link_id', 'IN', ids)]</field>
+        </record>
+
+        <!-- Search -->
+        <record id="view_link_tracker_filter" model="ir.ui.view">
+            <field name="name">Links</field>
+            <field name="model">link.tracker</field>
+            <field name="arch" type="xml">
+                <search string="Tracked Link">
+                    <field name="title"/>
+                    <field name="url" string="Title and URL" filter_domain="['|', ('title', 'ilike', self), ('url', 'ilike', self)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Website links views -->
+        <record id="view_link_tracker_form" model="ir.ui.view">
+            <field name="name">link.tracker.form</field>
+            <field name="model">link.tracker</field>
+            <field name="arch" type="xml">
+                <form string="Website Link">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object" icon="fa-sign-out" name="action_visit_page"
+                                string="Visit Page" class="oe_stat_button"/>
+
+                            <button type="object" class="oe_stat_button" name="action_view_statistics" icon="fa-bar-chart-o">
+                                <field name="count" string="Clicks" widget="statinfo"/>
+                            </button>
+
+                        </div>
+                        <group>
+                            <field name="title"/>
+                            <field name="url"/>
+                            <field name="short_url"/>
+                        </group>
+
+                        <group>
+                            <field name="campaign_id"/>
+                            <field name="medium_id"/>
+                            <field name="source_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_link_tracker_form_stats" model="ir.ui.view">
+            <field name="name">link.tracker.my.form</field>
+            <field name="model">link.tracker</field>
+            <field name="arch" type="xml">
+                <form string="Website Link Graph">
+                    <sheet>
+                        <field name="link_click_ids">
+                            <graph>
+                                <field name="link_id"/>
+                                <field name="ip"/>
+                                <field name="country_id"/>
+                            </graph>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_link_tracker_stats">
+            <field name="name">link.tracker.form.graph.action</field>
+            <field name="res_model">link.tracker</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_link_tracker_form_stats"/>
+        </record>
+
+        <record id="view_link_tracker_tree" model="ir.ui.view">
+            <field name="name">link.tracker.tree</field>
+            <field name="model">link.tracker</field>
+            <field name="arch" type="xml">
+                <tree string="Website Links">
+                    <field name="create_date"/>
+                    <field name="title"/>
+                    <field name="url"/>
+                    <field name="short_url"/>
+                    <field name="count"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_link_tracker_graph" model="ir.ui.view" >
+            <field name="name">link.tracker.graph</field>
+            <field name="model">link.tracker</field>
+            <field name="arch" type="xml">
+                <graph string="Website Links"  type="bar">
+                    <field name="url" type="row"/>
+                    <field name="count" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Action for website links-->
+        <record model="ir.actions.act_window" id="action_link_tracker">
+            <field name="name">Link Tracker</field>
+            <field name="res_model">link.tracker</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+        </record>
+
+        <!-- Website links click views -->
+        <record id="view_link_tracker_click_form" model="ir.ui.view">
+            <field name="name">link.tracker.click.form</field>
+            <field name="model">link.tracker.click</field>
+            <field name="arch" type="xml">
+                <form string="Website Link Clicks">
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="link_id"/>
+                            <field name="ip"/>
+                            <field name="country_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_link_tracker_click_tree" model="ir.ui.view">
+            <field name="name">link.tracker.click.tree</field>
+            <field name="model">link.tracker.click</field>
+            <field name="arch" type="xml">
+                <tree string="Website Links Clicks">
+                    <field name="link_id"/>
+                    <field name="ip"/>
+                    <field name="country_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_link_tracker_click_graph" model="ir.ui.view" >
+            <field name="name">link.tracker.click.graph</field>
+            <field name="model">link.tracker.click</field>
+            <field name="arch" type="xml">
+                <graph string="Website Link Clicks">
+                    <field name="link_id"/>
+                    <field name="ip"/>
+                    <field name="country_id"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Action for website links click-->
+        <record model="ir.actions.act_window" id="action_link_tracker_click">
+            <field name="name">Tracked Links</field>
+            <field name="res_model">link.tracker.click</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree,form</field>
+        </record>
+
+        <menuitem id="menu_url_shortener_main" name="Link Tracker" parent="utm.menu_link_tracker_root" groups="base.group_no_one"/>
+        <menuitem id="menu_url_shortener_links" name="Tracked Links" parent="menu_url_shortener_main" action="action_link_tracker"/>
+    </data>
+</openerp>

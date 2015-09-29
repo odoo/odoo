@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # TODO:
 #   Error treatment: exception, request, ... -> send request to user_id
@@ -25,6 +7,7 @@
 import time
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class subscription_document(osv.osv):
     _name = "subscription.document"
@@ -115,7 +98,7 @@ class subscription_subscription(osv.osv):
                 id = int(id)
                 model = self.pool[model_name]
             except:
-                raise osv.except_osv(_('Wrong Source Document!'), _('Please provide another source document.\nThis one does not exist!'))
+                raise UserError(_('Please provide another source document.\nThis one does not exist!'))
 
             default = {'state':'draft'}
             doc_obj = self.pool.get('subscription.document')
@@ -142,7 +125,7 @@ class subscription_subscription(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context or {}):
             if record.state=="running":
-                raise osv.except_osv(_('Error!'),_('You cannot delete an active subscription!'))
+                raise UserError(_('You cannot delete an active subscription!'))
         return super(subscription_subscription, self).unlink(cr, uid, ids, context)
 
     def set_done(self, cr, uid, ids, context=None):
@@ -165,7 +148,3 @@ class subscription_subscription_history(osv.osv):
         'subscription_id': fields.many2one('subscription.subscription', 'Subscription', ondelete='cascade'),
         'document_id': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

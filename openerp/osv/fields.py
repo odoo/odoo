@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Fields:
       - simple
@@ -50,25 +32,14 @@ import openerp
 import openerp.tools as tools
 from openerp.tools.translate import _
 from openerp.tools import float_repr, float_round, frozendict, html_sanitize
-import simplejson
+import json
 from openerp import SUPERUSER_ID, registry
 
 @contextmanager
 def _get_cursor():
     # yield a valid cursor from any environment or create a new one if none found
-    from openerp.api import Environment
-    from openerp.http import request
-    try:
-        request.env     # force request's env to be computed
-    except RuntimeError:
-        pass    # ignore if not in a request
-    for env in Environment.envs:
-        if not env.cr.closed:
-            yield env.cr
-            break
-    else:
-        with registry().cursor() as cr:
-            yield cr
+    with registry().cursor() as cr:
+        yield cr
 
 EMPTY_DICT = frozendict()
 
@@ -205,7 +176,7 @@ class _column(object):
     def to_field(self):
         """ convert column `self` to a new-style field """
         from openerp.fields import Field
-        return Field.by_type[self._type](column=self, **self.to_field_args())
+        return Field.by_type[self._type](origin=self, **self.to_field_args())
 
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
@@ -385,6 +356,7 @@ class html(text):
     def to_field_args(self):
         args = super(html, self).to_field_args()
         args['sanitize'] = self._sanitize
+        args['strip_style'] = self._strip_style
         return args
 
 import __builtin__
@@ -426,6 +398,15 @@ class float(_column):
 
     def digits_change(self, cr):
         pass
+
+class monetary(_column):
+    _type = 'monetary'
+    _symbol_set = ('%s', lambda x: __builtin__.float(x or 0.0))
+    _symbol_get = lambda self,x: x or 0.0
+
+    def to_field_args(self):
+        raise NotImplementedError("fields.monetary is only supported in the new API, "
+                                  "but you can use widget='monetary' in client-side views")
 
 class date(_column):
     _type = 'date'
@@ -591,6 +572,7 @@ class datetime(_column):
 class binary(_column):
     _type = 'binary'
     _classic_read = False
+    _classic_write = property(lambda self: not self.attachment)
 
     # Binary values may be byte strings (python 2.6 byte array), but
     # the legacy OpenERP convention is to transfer and store binaries
@@ -603,35 +585,69 @@ class binary(_column):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self, x: x and str(x)
 
-    __slots__ = ['filters']
+    __slots__ = ['attachment', 'filters']
 
     def __init__(self, string='unknown', filters=None, **args):
         args['_prefetch'] = args.get('_prefetch', False)
+        args['attachment'] = args.get('attachment', False)
         _column.__init__(self, string=string, filters=filters, **args)
 
-    def get(self, cr, obj, ids, name, user=None, context=None, values=None):
-        if not context:
-            context = {}
-        if not values:
-            values = []
-        res = {}
-        for i in ids:
-            val = None
-            for v in values:
-                if v['id'] == i:
-                    val = v[name]
-                    break
+    def to_field_args(self):
+        args = super(binary, self).to_field_args()
+        args['attachment'] = self.attachment
+        return args
 
-            # If client is requesting only the size of the field, we return it instead
-            # of the content. Presumably a separate request will be done to read the actual
-            # content if it's needed at some point.
-            # TODO: after 6.0 we should consider returning a dict with size and content instead of
-            #       having an implicit convention for the value
-            if val and context.get('bin_size_%s' % name, context.get('bin_size')):
-                res[i] = tools.human_size(long(val))
+    def get(self, cr, obj, ids, name, user=None, context=None, values=None):
+        result = dict.fromkeys(ids, False)
+
+        if self.attachment:
+            # values are stored in attachments, retrieve them
+            atts = obj.pool['ir.attachment'].browse(cr, SUPERUSER_ID, [], context)
+            domain = [
+                ('res_model', '=', obj._name),
+                ('res_field', '=', name),
+                ('res_id', 'in', ids),
+            ]
+            for att in atts.search(domain):
+                # the 'bin_size' flag is handled by the field 'datas' itself
+                result[att.res_id] = att.datas
+        else:
+            # If client is requesting only the size of the field, we return it
+            # instead of the content. Presumably a separate request will be done
+            # to read the actual content if it's needed at some point.
+            context = context or {}
+            if context.get('bin_size') or context.get('bin_size_%s' % name):
+                postprocess = lambda val: tools.human_size(long(val))
             else:
-                res[i] = val
-        return res
+                postprocess = lambda val: val
+            for val in (values or []):
+                result[val['id']] = postprocess(val[name])
+
+        return result
+
+    def set(self, cr, obj, id, name, value, user=None, context=None):
+        assert self.attachment
+        # retrieve the attachment that stores the value, and adapt it
+        att = obj.pool['ir.attachment'].browse(cr, SUPERUSER_ID, [], context).search([
+            ('res_model', '=', obj._name),
+            ('res_field', '=', name),
+            ('res_id', '=', id),
+        ])
+        if value:
+            if att:
+                att.write({'datas': value})
+            else:
+                att.create({
+                    'name': name,
+                    'res_model': obj._name,
+                    'res_field': name,
+                    'res_id': id,
+                    'type': 'binary',
+                    'datas': value,
+                })
+        else:
+            att.unlink()
+        return []
 
 class selection(_column):
     _type = 'selection'
@@ -941,6 +957,7 @@ class many2many(_column):
                                                'is not possible when source and destination models are '\
                                                'the same'
                 tbl = '%s_%s_rel' % tables
+                openerp.models.check_pg_name(tbl)
             if not col1:
                 col1 = '%s_id' % source_model._table
             if not col2:
@@ -950,16 +967,16 @@ class many2many(_column):
     def _get_query_and_where_params(self, cr, model, ids, values, where_params):
         """ Extracted from ``get`` to facilitate fine-tuning of the generated
             query. """
-        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
-                   FROM %(rel)s, %(from_c)s \
-                  WHERE %(rel)s.%(id1)s IN %%s \
-                    AND %(rel)s.%(id2)s = %(tbl)s.id \
-                 %(where_c)s  \
-                 %(order_by)s \
-                 %(limit)s \
-                 OFFSET %(offset)d' \
-                 % values
-        return query, where_params
+        query = """SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s
+                     FROM %(rel)s, %(from_c)s
+                    WHERE %(where_c)s
+                      AND %(rel)s.%(id1)s IN %%s
+                      AND %(rel)s.%(id2)s = %(tbl)s.id
+                      %(order_by)s
+                      %(limit)s
+                   OFFSET %(offset)d
+                """ % values
+        return query, where_params + [tuple(ids)]
 
     def get(self, cr, model, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
@@ -985,27 +1002,31 @@ class many2many(_column):
 
         wquery = obj._where_calc(cr, user, domain, context=context)
         obj._apply_ir_rules(cr, user, wquery, 'read', context=context)
-        order_by = obj._generate_order_by(None, wquery)
+        order_by = obj._generate_order_by(cr, user, None, wquery, context=context)
         from_c, where_c, where_params = wquery.get_sql()
-        if where_c:
-            where_c = ' AND ' + where_c
+        if not where_c:
+            where_c = '1=1'
 
         limit_str = ''
         if self._limit is not None:
             limit_str = ' LIMIT %d' % self._limit
 
-        query, where_params = self._get_query_and_where_params(cr, model, ids, {'rel': rel,
-               'from_c': from_c,
-               'tbl': obj._table,
-               'id1': id1,
-               'id2': id2,
-               'where_c': where_c,
-               'limit': limit_str,
-               'order_by': order_by,
-               'offset': offset,
-                }, where_params)
+        query_parts = {
+            'rel': rel,
+            'from_c': from_c,
+            'tbl': obj._table,
+            'id1': id1,
+            'id2': id2,
+            'where_c': where_c,
+            'limit': limit_str,
+            'order_by': order_by,
+            'offset': offset,
+        }
+        query, where_params = self._get_query_and_where_params(cr, model, ids,
+                                                               query_parts,
+                                                               where_params)
 
-        cr.execute(query, [tuple(ids),] + where_params)
+        cr.execute(query, where_params)
         for r in cr.fetchall():
             res[r[1]].append(r[0])
         return res
@@ -1411,6 +1432,9 @@ class function(_column):
         args['store'] = bool(self.store)
         if self._type in ('float',):
             args['digits'] = self._digits_compute or self._digits
+        elif self._type in ('binary',):
+            # limitation: binary function fields cannot be stored in attachments
+            args['attachment'] = False
         elif self._type in ('selection', 'reference'):
             args['selection'] = self.selection
         elif self._type in ('many2one', 'one2many', 'many2many'):
@@ -1688,10 +1712,10 @@ class serialized(_column):
     __slots__ = []
 
     def _symbol_set_struct(val):
-        return simplejson.dumps(val)
+        return json.dumps(val)
 
     def _symbol_get_struct(self, val):
-        return simplejson.loads(val or '{}')
+        return json.loads(val or '{}')
 
     _symbol_c = '%s'
     _symbol_f = _symbol_set_struct
@@ -1801,6 +1825,3 @@ class column_info(object):
         return '%s(%s, %s, %s, %s, %s)' % (
             self.__class__.__name__, self.name, self.column,
             self.parent_model, self.parent_column, self.original_parent)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

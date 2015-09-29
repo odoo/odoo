@@ -1,24 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 import logging
 from functools import partial
@@ -28,13 +9,15 @@ from lxml import etree
 from lxml.builder import E
 
 import openerp
+from openerp import api
 from openerp import SUPERUSER_ID, models
 from openerp import tools
 import openerp.exceptions
 from openerp.osv import fields, osv, expression
-from openerp.service.security import check_super
+from openerp.service.db import check_super
 from openerp.tools.translate import _
 from openerp.http import request
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -53,7 +36,7 @@ class res_groups(osv.osv):
 
     def _get_full_name(self, cr, uid, ids, field, arg, context=None):
         res = {}
-        for g in self.browse(cr, uid, ids, context):
+        for g in self.browse(cr, SUPERUSER_ID, ids, context=context):
             if g.category_id:
                 res[g.id] = '%s / %s' % (g.category_id.name, g.name)
             else:
@@ -102,7 +85,10 @@ class res_groups(osv.osv):
         'view_access': fields.many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', 'Views'),
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
+        'color': fields.integer('Color Index'),
         'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
+        'share': fields.boolean('Share Group',
+                    help="Group created to set access rights for sharing data with some users.")
     }
 
     _sql_constraints = [
@@ -127,8 +113,7 @@ class res_groups(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if 'name' in vals:
             if vals['name'].startswith('-'):
-                raise osv.except_osv(_('Error'),
-                        _('The name of the group can not start with "-"'))
+                raise UserError(_('The name of the group can not start with "-"'))
         res = super(res_groups, self).write(cr, uid, ids, vals, context=context)
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         self.pool['res.users'].has_group.clear_cache(self.pool['res.users'])
@@ -160,15 +145,30 @@ class res_users(osv.osv):
             # To change their own password users must use the client-specific change password wizard,
             # so that the new password is immediately used for further RPC requests, otherwise the user
             # will face unexpected 'Access Denied' exceptions.
-            raise osv.except_osv(_('Operation Canceled'), _('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
+            raise UserError(_('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
         self.write(cr, uid, id, {'password': value})
 
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
         return dict.fromkeys(ids, '')
 
+    def _is_share(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for user in self.browse(cr, uid, ids, context=context):
+            res[user.id] = not self.has_group(cr, user.id, 'base.group_user')
+        return res
+
+    def _get_users_from_group(self, cr, uid, ids, context=None):
+        result = set()
+        groups = self.pool['res.groups'].browse(cr, uid, ids, context=context)
+        # Clear cache to avoid perf degradation on databases with thousands of users
+        groups.invalidate_cache()
+        for group in groups:
+            result.update(user.id for user in group.users)
+        return list(result)
+
     _columns = {
         'id': fields.integer('ID'),
-        'login_date': fields.date('Latest connection', select=1, copy=False),
+        'login_date': fields.datetime('Latest connection', select=1, copy=False),
         'partner_id': fields.many2one('res.partner', required=True,
             string='Related Partner', ondelete='restrict',
             help='Partner-related data of the user', auto_join=True),
@@ -191,6 +191,11 @@ class res_users(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True,
             help='The company this user is currently working for.', context={'user_preference': True}),
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
+        'share': fields.function(_is_share, string='Share User', type='boolean',
+             store={
+                 'res.users': (lambda self, cr, uid, ids, c={}: ids, None, 50),
+                 'res.groups': (_get_users_from_group, None, 50),
+             }, help="External user with limited access, created only for the purpose of sharing data."),
     }
 
     # overridden inherited fields to bypass access rights, in case you have
@@ -207,21 +212,13 @@ class res_users(osv.osv):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
         return self.pool.get('res.partner').onchange_state(cr, uid, partner_ids, state_id, context=context)
 
-    def onchange_type(self, cr, uid, ids, is_company, context=None):
-        """ Wrapper on the user.partner onchange_type, because some calls to the
-            partner form view applied to the user may trigger the
-            partner.onchange_type method, but applied to the user object.
-        """
-        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
-        return self.pool['res.partner'].onchange_type(cr, uid, partner_ids, is_company, context=context)
-
-    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+    def onchange_parent_id(self, cr, uid, ids, parent_id, context=None):
         """ Wrapper on the user.partner onchange_address, because some calls to the
             partner form view applied to the user may trigger the
             partner.onchange_type method, but applied to the user object.
         """
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
-        return self.pool['res.partner'].onchange_address(cr, uid, partner_ids, use_parent_address, parent_id, context=context)
+        return self.pool['res.partner'].onchange_address(cr, uid, partner_ids, parent_id, context=context)
 
     def _check_company(self, cr, uid, ids, context=None):
         return all(((this.company_id in this.company_ids) or not this.company_ids) for this in self.browse(cr, uid, ids, context))
@@ -337,6 +334,14 @@ class res_users(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
+
+        if values.get('active') == False:
+            for current_id in ids:
+                if current_id == SUPERUSER_ID:
+                    raise UserError(_("You cannot unactivate the admin user."))
+                elif current_id == uid:
+                    raise UserError(_("You cannot unactivate the user you're currently logged in as."))
+
         if ids == [uid]:
             for key in values.keys():
                 if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):
@@ -365,13 +370,13 @@ class res_users(osv.osv):
             for id in ids:
                 if id in self.__uid_cache[db]:
                     del self.__uid_cache[db][id]
-        self._context_get.clear_cache(self)
+        self.context_get.clear_cache(self)
         self.has_group.clear_cache(self)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         if 1 in ids:
-            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
+            raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         db = cr.dbname
         if db in self.__uid_cache:
             for id in ids:
@@ -400,9 +405,9 @@ class res_users(osv.osv):
             default['login'] = _("%s (copy)") % user2copy['login']
         return super(res_users, self).copy(cr, uid, id, default, context)
 
-    @tools.ormcache(skiparg=2)
-    def _context_get(self, cr, uid):
-        user = self.browse(cr, SUPERUSER_ID, uid)
+    @tools.ormcache('uid')
+    def context_get(self, cr, uid, context=None):
+        user = self.browse(cr, SUPERUSER_ID, uid, context)
         result = {}
         for k in self._fields:
             if k.startswith('context_'):
@@ -417,9 +422,6 @@ class res_users(osv.osv):
                     res = res.id
                 result[context_key] = res or False
         return result
-
-    def context_get(self, cr, uid, context=None):
-        return self._context_get(cr, uid)
 
     def action_get(self, cr, uid, context=None):
         dataobj = self.pool['ir.model.data']
@@ -533,7 +535,7 @@ class res_users(osv.osv):
         self.check(cr.dbname, uid, old_passwd)
         if new_passwd:
             return self.write(cr, uid, uid, {'password': new_passwd})
-        raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
+        raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
 
     def preference_save(self, cr, uid, ids, context=None):
         return {
@@ -548,7 +550,7 @@ class res_users(osv.osv):
             'target': 'new',
         }
 
-    @tools.ormcache(skiparg=2)
+    @tools.ormcache('uid', 'group_ext_id')
     def has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
 
@@ -564,6 +566,13 @@ class res_users(osv.osv):
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
+
+    @api.multi
+    def _is_admin(self):
+        return self.id == openerp.SUPERUSER_ID or self.sudo(self).has_group('base.group_erp_manager')
+
+    def get_company_currency_id(self, cr, uid, context=None):
+        return self.browse(cr, uid, uid, context=context).company_id.currency_id.id
 
 #----------------------------------------------------------
 # Implied groups
@@ -736,16 +745,22 @@ class groups_view(osv.osv):
     def create(self, cr, uid, values, context=None):
         res = super(groups_view, self).create(cr, uid, values, context)
         self.update_user_groups_view(cr, uid, context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
         return res
 
     def write(self, cr, uid, ids, values, context=None):
         res = super(groups_view, self).write(cr, uid, ids, values, context)
         self.update_user_groups_view(cr, uid, context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(groups_view, self).unlink(cr, uid, ids, context)
         self.update_user_groups_view(cr, uid, context)
+        # ir_values.get_actions() depends on action records
+        self.pool['ir.values'].clear_caches()
         return res
 
     def update_user_groups_view(self, cr, uid, context=None):
@@ -753,17 +768,18 @@ class groups_view(osv.osv):
         # and introduces the reified group fields
         # we have to try-catch this, because at first init the view does not exist
         # but we are already creating some basic groups
-        if not context or context.get('install_mode'):
+        user_context = dict(context or {})
+        if user_context.get('install_mode'):
             # use installation/admin language for translatable names in the view
-            context = dict(context or {})
-            context.update(self.pool['res.users'].context_get(cr, uid))
-        view = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.user_groups_view', context=context)
+            user_context.update(self.pool['res.users'].context_get(cr, uid))
+        view = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.user_groups_view', context=user_context)
         if view and view.exists() and view._name == 'ir.ui.view':
+            group_no_one = view.env.ref('base.group_no_one')
             xml1, xml2 = [], []
-            xml1.append(E.separator(string=_('Application'), colspan="4"))
-            for app, kind, gs in self.get_groups_by_application(cr, uid, context):
+            xml1.append(E.separator(string=_('Application'), colspan="2"))
+            for app, kind, gs in self.get_groups_by_application(cr, uid, user_context):
                 # hide groups in category 'Hidden' (except to group_no_one)
-                attrs = {'groups': 'base.group_no_one'} if app and app.xml_id == 'base.module_category_hidden' else {}
+                attrs = {'groups': 'base.group_no_one'} if app and (app.xml_id == 'base.module_category_hidden' or app.xml_id == 'base.module_category_extra') else {}
                 if kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(map(int, gs))
@@ -775,16 +791,24 @@ class groups_view(osv.osv):
                     xml2.append(E.separator(string=app_name, colspan="4", **attrs))
                     for g in gs:
                         field_name = name_boolean_group(g.id)
-                        xml2.append(E.field(name=field_name, **attrs))
+                        if g == group_no_one:
+                            # make the group_no_one invisible in the form view
+                            xml2.append(E.field(name=field_name, invisible="1", **attrs))
+                        else:
+                            xml2.append(E.field(name=field_name, **attrs))
 
-            xml = E.field(*(xml1 + xml2), name="groups_id", position="replace")
+            xml2.append({'class': "o_label_nowrap"})
+            xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
-            view.write({'arch': xml_content})
+            view.with_context(context, lang=None).write({'arch': xml_content})
         return True
 
     def get_application_groups(self, cr, uid, domain=None, context=None):
-        return self.search(cr, uid, domain or [])
+        if domain is None:
+            domain = []
+        domain.append(('share', '=', False))
+        return self.search(cr, uid, domain, context=context)
 
     def get_groups_by_application(self, cr, uid, context=None):
         """ return all groups classified by application (module category), as a list of pairs:
@@ -871,7 +895,7 @@ class users_view(osv.osv):
             for group_xml_id in context["default_groups_ref"]:
                 group_split = group_xml_id.split('.')
                 if len(group_split) != 2:
-                    raise osv.except_osv(_('Invalid context value'), _('Invalid context default_groups_ref value (model.name_id) : "%s"') % group_xml_id)
+                    raise UserError(_('Invalid context default_groups_ref value (model.name_id) : "%s"') % group_xml_id)
                 try:
                     temp, group_id = ir_model_data.get_object_reference(cr, uid, group_split[0], group_split[1])
                 except ValueError:
@@ -917,7 +941,7 @@ class users_view(osv.osv):
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True, attributes=None):
         res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access, attributes)
         # add reified groups fields
-        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+        if not self.pool['res.users']._is_admin(cr, uid, [uid]):
             return res
         for app, kind, gs in self.pool['res.groups'].get_groups_by_application(cr, uid, context):
             if kind == 'selection':
@@ -1009,6 +1033,3 @@ class change_password_user(osv.TransientModel):
             line.user_id.write({'password': line.new_passwd})
         # don't keep temporary passwords in the database longer than necessary
         self.write(cr, uid, ids, {'new_passwd': False}, context=context)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

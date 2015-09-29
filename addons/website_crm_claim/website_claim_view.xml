@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="website_crm_claim.link_claims" name="Claims Link from User Account" inherit_id="website.layout" groups="base.group_portal">
+        <xpath expr="//li[@id='o_logout']" position="before">
+            <li><a href="/web#action=website_crm_claim.crm_claim_category_claim0" role="menuitem">Claims</a></li>
+        </xpath>
+    </template>
+
+</odoo>
+        

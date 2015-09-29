@@ -5,16 +5,20 @@ import zipfile
 from os.path import join as opj
 
 import openerp
+from openerp import fields
 from openerp.osv import osv
 from openerp.tools import convert_file
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
 MAX_FILE_SIZE = 100 * 1024 * 1024 # in megabytes
 
-class view(osv.osv):
+class ir_module_module(osv.osv):
     _inherit = "ir.module.module"
+
+    imported = fields.Boolean(string="Imported Module", default=False)
 
     def import_module(self, cr, uid, module, path, force=False, context=None):
         known_mods = self.browse(cr, uid, self.search(cr, uid, []))
@@ -27,7 +31,7 @@ class view(osv.osv):
         unmet_dependencies = set(terp['depends']).difference(installed_mods)
         if unmet_dependencies:
             msg = _("Unmet module dependencies: %s")
-            raise osv.except_osv(_('Error !'), msg % ', '.join(unmet_dependencies))
+            raise UserError(msg % ', '.join(unmet_dependencies))
 
         mod = known_mods_names.get(module)
         if mod:
@@ -35,7 +39,7 @@ class view(osv.osv):
             mode = 'update' if not force else 'init'
         else:
             assert terp.get('installable', True), "Module not installable"
-            self.create(cr, uid, dict(name=module, state='installed', **values))
+            self.create(cr, uid, dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
 
         for kind in ['data', 'init_xml', 'update_xml']:
@@ -79,7 +83,7 @@ class view(osv.osv):
         if not module_file:
             raise Exception("No file sent.")
         if not zipfile.is_zipfile(module_file):
-            raise osv.except_osv(_('Error !'), _('File is not a zip file!'))
+            raise UserError(_('File is not a zip file!'))
 
         success = []
         errors = dict()
@@ -88,7 +92,7 @@ class view(osv.osv):
             for zf in z.filelist:
                 if zf.file_size > MAX_FILE_SIZE:
                     msg = _("File '%s' exceed maximum allowed file size")
-                    raise osv.except_osv(_('Error !'), msg % zf.filename)
+                    raise UserError(msg % zf.filename)
 
             with openerp.tools.osutil.tempdir() as module_dir:
                 z.extractall(module_dir)

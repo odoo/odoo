@@ -1,27 +1,10 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.exceptions import UserError
 
 
 class crm_lead(osv.osv):
@@ -31,7 +14,7 @@ class crm_lead(osv.osv):
         try:
             model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'crm_lead_channel_interested_act')
         except ValueError:
-            raise osv.except_osv(_('Error!'), _("The CRM Channel Interested Action is missing"))
+            raise UserError(_("The CRM Channel Interested Action is missing"))
         action = self.pool[model].read(cr, uid, [action_id], context=context)[0]
         action_context = eval(action['context'])
         action_context['interested'] = interested
@@ -55,5 +38,5 @@ class crm_lead(osv.osv):
                     else:
                         salesmans_leads[salesman_id] = [lead.id]
         for salesman_id, lead_ids in salesmans_leads.items():
-            salesteam_id = self.on_change_user(cr, uid, lead_ids, salesman_id, context=None)['value'].get('section_id')
-            self.write(cr, uid, lead_ids, {'user_id': salesman_id, 'section_id': salesteam_id}, context=context)
+            salesteam_id = self.on_change_user(cr, uid, lead_ids, salesman_id, context=None)['value'].get('team_id')
+            self.write(cr, uid, lead_ids, {'user_id': salesman_id, 'team_id': salesteam_id}, context=context)

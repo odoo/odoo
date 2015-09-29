@@ -3,16 +3,15 @@
 # * account_analytic_default
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# Rona Lin <ssauapw@qq.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-07 12:18+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-14 04:41+0000\n"
+"Last-Translator: Rona Lin <ssauapw@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,27 +19,28 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_analytic_default
-#: field:product.product,rules_count:0 field:product.template,rules_count:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_rules_count
+#: model:ir.model.fields,field_description:account_analytic_default.field_product_template_rules_count
 msgid "# Analytic Rules"
 msgstr "# 分析规则"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
 msgstr "账户"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,analytic_id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
 msgstr "分析账户"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_tree
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
 msgstr "默认分析"
 
@@ -52,67 +52,85 @@ msgstr "分析分配"
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-#: view:product.product:account_analytic_default.product_form_view_default_analytic_button
-#: view:product.template:account_analytic_default.product_template_view_default_analytic_button
+#: model:ir.ui.view,arch_db:account_analytic_default.product_form_view_default_analytic_button
+#: model:ir.ui.view,arch_db:account_analytic_default.product_template_view_default_analytic_button
 msgid "Analytic Rules"
 msgstr "分析规则"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,company_id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
 msgstr "公司"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Conditions"
 msgstr "条件"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,create_uid:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建于"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,create_date:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建于"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,date_stop:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
 msgid "Default end date for this Analytic Account."
 msgstr "该分析账户的默认结束日期"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,date_start:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
 msgid "Default start date for this Analytic Account."
 msgstr "该分析账户的默认开始日期"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,date_stop:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_stop
 msgid "End Date"
-msgstr "结束日期"
+msgstr "终止日期"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
 msgid "Entries"
-msgstr "条目"
+msgstr "分录"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,sequence:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_expense_policy
+msgid "Expense Invoice Policy"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr "给出显示分析分配清单的序列顺序"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
-msgstr "分组按"
+msgstr "分组"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_product_product_expense_policy
+msgid ""
+"If you invoice at cost, the expense will be invoiced on the sale order at "
+"the cost of the analytic line;if you invoice at sales price, the price of "
+"the product will be used instead."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -120,30 +138,30 @@ msgid "Invoice Line"
 msgstr "发票行"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,write_uid:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default___last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_uid
 msgid "Last Updated by"
 msgstr "最后更新"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,write_date:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_date
 msgid "Last Updated on"
-msgstr "最后更新日期"
+msgstr "最后更新"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,partner_id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_partner_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_stock_picking
-msgid "Picking List"
-msgstr "分拣清单"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,product_id:0
 #: model:ir.model,name:account_analytic_default.model_product_product
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "产品"
 
@@ -155,10 +173,10 @@ msgstr "产品模板"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "销售订单明细"
+msgstr "销售订单行"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_company_id
 msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -166,7 +184,7 @@ msgid ""
 msgstr "选择一个公司用于默认分析指定的成本管理分析（例如：根据所选公司创建新客户单据或销售订单，系统将自动照此进行成本管理分析）"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
 msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -174,7 +192,7 @@ msgid ""
 msgstr "选择一个伙伴用于默认分析指定的成本管理分析（例如：根据所选伙伴创建新客户单据或销售订单，系统将自动照此进行成本管理分析）"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
 msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -182,23 +200,28 @@ msgid ""
 msgstr "选择一个产品用于默认分析指定的成本管理分析（例如：根据所选产品创建新客户单据或销售订单，系统将自动照此进行成本管理分析）"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,user_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
 msgstr "选择一个用户用在分析账户指定的默认值"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,sequence:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_sequence
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,date_start:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_start
 msgid "Start Date"
 msgstr "开始日期"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,user_id:0
+#: model:ir.model,name:account_analytic_default.model_stock_picking
+msgid "Transfer"
+msgstr "转移"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "用户"

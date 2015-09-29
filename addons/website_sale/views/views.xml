@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-
+<odoo>
     <record model="ir.ui.view" id="product_pricelist_view">
         <field name="name">product.pricelist.website.form</field>
         <field name="model">product.pricelist</field>
         <field name="inherit_id" ref="product.product_pricelist_view"/>
         <field name="arch" type="xml">
-            <field name="active" position="after">
+            <field name="currency_id" position="before">
                 <field name="code"/>
             </field>
         </field>
@@ -19,26 +17,30 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
-            <group name="website_and_pos" position="inside">
-                <group name="website" string="Website">
+            <group name="email_template_and_project"  position="before">
+                <group name="website" string="Website" >
                     <field name="website_url" invisible="1"/>
-                    <field name="public_categ_ids" widget="many2many_tags"/>
-                    <field name="website_published" class="pull-right" widget="website_button"/>
+                    <field name="public_categ_ids" widget="many2many_tags" string="Website Categories"/>
                     <field name="alternative_product_ids" widget="many2many_tags"/>
                     <field name="accessory_product_ids" widget="many2many_tags"/>
-                    <field name="website_style_ids" widget="many2many_tags"/>
-                    <field name="website_sequence"/>
+                    <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                 </group>
             </group>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="website_publish_button"
+                    type="object" icon="fa-globe">
+                    <field name="website_published" widget="website_button"/>
+                </button>
+            </div>
         </field>
     </record>
 
     <!-- Product attribute -->
 
-    <record id="variants_template_tree_view" model="ir.ui.view">
-        <field name="name">variants.template.tree</field>
+    <record id="product_attribute_value_view_tree_inherit_website_sale" model="ir.ui.view">
+        <field name="name">product.attribute.value.view.tree.inherit.website.sale</field>
         <field name="model">product.attribute.value</field>
-        <field name="inherit_id" ref="product.variants_template_tree_view"/>
+        <field name="inherit_id" ref="product.product_attribute_value_view_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="color"/>
@@ -71,7 +73,7 @@
         <field name="name">product.public.category.form</field>
         <field name="model">product.public.category</field>
         <field name="arch" type="xml">
-            <form string="Public Categories">
+            <form string="Website Public Categories">
                 <sheet>
                     <field name="image_medium" widget='image' class="oe_avatar oe_right"/>
                     <div class="oe_left">
@@ -97,7 +99,7 @@
         </field>
     </record>
     <record id="product_public_category_action" model="ir.actions.act_window">
-        <field name="name">Public Product Categories</field>
+        <field name="name">Website Product Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.public.category</field>
         <field name="view_type">form</field>
@@ -109,16 +111,57 @@
           </p><p>
             Categories are used to browse your products through the
             touchscreen interface.
-          </p><p>
-            If you put a photo on the category, the layout of the
-            touchscreen interface will automatically. We suggest not to put
-            a photo on categories for small (1024x768) screens.
           </p>
         </field>
     </record>
-    <menuitem action="product_public_category_action" id="menu_product_public_category" parent="product.prod_config_main" sequence="10" />
-    <!-- END -->
+    <menuitem action="product_public_category_action" id="menu_product_public_category" parent="product.prod_config_main" sequence="2" />
 
- </data>
+    <record id="website_sale_pricelists_by_website" model="ir.actions.act_window">
+        <field name="name">Website Pricelist</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">website_pricelist</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" eval="False"/>
+    </record>
+    <menuitem action="website_sale_pricelists_by_website" id="menu_website_sale_pricelists" parent="product.menu_product_pricelist_main" sequence="1" />
 
-</openerp>
+     <!-- Product Public Categories -->
+    <record id="website_pricelist_form_view" model="ir.ui.view">
+        <field name="name">website_pricelist.form</field>
+        <field name="model">website_pricelist</field>
+        <field name="arch" type="xml">
+            <form string="Website PriceLists">
+                <group>
+                    <field name="website_id"/>
+                    <field name="selectable"/>
+                    <field name="pricelist_id"/>
+                    <field name="country_group_ids"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="website_pricelist_tree_view" model="ir.ui.view">
+        <field name="name">website_pricelist.tree</field>
+        <field name="model">website_pricelist</field>
+        <field name="arch" type="xml">
+            <tree string="Website PriceLists">
+                <field name="website_id"/>
+                <field name="selectable"/>
+                <field name="pricelist_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="inherits_website_sale_country_group_form">
+        <field name="name">website_sale.country_group.form</field>
+        <field name="model">res.country.group</field>
+        <field name="inherit_id" ref="base.view_country_group_form"/>
+        <field name="arch" type="xml">
+            <group name="country_group" position="after">
+                <field name="website_pricelist_ids"/>
+            </group>
+        </field>
+    </record>
+</odoo>

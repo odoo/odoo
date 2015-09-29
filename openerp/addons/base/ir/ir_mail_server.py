@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2014 OpenERP S.A. (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -36,6 +18,8 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import html2text
 import openerp.tools as tools
+from openerp.exceptions import UserError
+from openerp.exceptions import except_orm
 
 # ustr was originally from tools.misc.
 # it is moved to loglevels until we refactor tools.
@@ -45,7 +29,7 @@ _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
 
 
-class MailDeliveryException(osv.except_osv):
+class MailDeliveryException(except_orm):
     """Specific exception subclass for mail delivery errors"""
     def __init__(self, name, value):
         super(MailDeliveryException, self).__init__(name, value)
@@ -205,14 +189,14 @@ class ir_mail_server(osv.osv):
                                     password=smtp_server.smtp_pass, encryption=smtp_server.smtp_encryption,
                                     smtp_debug=smtp_server.smtp_debug)
             except Exception, e:
-                raise osv.except_osv(_("Connection Test Failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
+                raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s") % tools.ustr(e))
             finally:
                 try:
                     if smtp: smtp.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
-        raise osv.except_osv(_("Connection Test Succeeded!"), _("Everything seems properly set up!"))
+        raise UserError(_("Connection Test Succeeded! Everything seems properly set up!"))
 
     def connect(self, host, port, user=None, password=None, encryption=False, smtp_debug=False):
         """Returns a new SMTP connection to the give SMTP server, authenticated
@@ -229,10 +213,8 @@ class ir_mail_server(osv.osv):
         """
         if encryption == 'ssl':
             if not 'SMTP_SSL' in smtplib.__all__:
-                raise osv.except_osv(
-                             _("SMTP-over-SSL mode unavailable"),
-                             _("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
-                               "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
+                raise UserError(_("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
+                                    "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
             connection = smtplib.SMTP_SSL(host, port)
         else:
             connection = smtplib.SMTP(host, port)
@@ -437,7 +419,7 @@ class ir_mail_server(osv.osv):
 
         x_forge_to = message['X-Forge-To']
         if x_forge_to:
-            # `To:` header forged, e.g. for posting on mail.groups, to avoid confusion
+            # `To:` header forged, e.g. for posting on mail.channels, to avoid confusion
             del message['X-Forge-To']
             del message['To'] # avoid multiple To: headers!
             message['To'] = x_forge_to
@@ -473,9 +455,7 @@ class ir_mail_server(osv.osv):
                 smtp_encryption = 'starttls' # STARTTLS is the new meaning of the smtp_ssl flag as of v7.0
 
         if not smtp_server:
-            raise osv.except_osv(
-                         _("Missing SMTP Server"),
-                         _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
+            raise UserError(_("Missing SMTP Server")+ "\n" + _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
 
         try:
             message_id = message['Message-Id']
@@ -499,7 +479,7 @@ class ir_mail_server(osv.osv):
             msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (tools.ustr(smtp_server),
                                                                              e.__class__.__name__,
                                                                              tools.ustr(e))
-            _logger.error(msg)
+            _logger.info(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
 
@@ -512,5 +492,3 @@ class ir_mail_server(osv.osv):
         else:
             result = {'value': {'smtp_port': 25}}
         return result
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

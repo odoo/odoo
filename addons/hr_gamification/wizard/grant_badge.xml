@@ -20,15 +20,15 @@
             <field name="model">gamification.badge.user.wizard</field>
             <field name="arch" type="xml">
                 <form string="Reward Employee with">
-                    What are you thank for?
+                    What are you thankful for?
                     <group>
                         <field name="employee_id" invisible="1" />
                         <field name="badge_id" nolabel="1" colspan="4" />
                         <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" />
                     </group>
                     <footer>
-                        <button string="Reward Employee" type="object" name="action_grant_badge" class="oe_highlight" /> or
-                        <button string="Cancel" special="cancel" class="oe_link"/>
+                        <button string="Reward Employee" type="object" name="action_grant_badge" class="btn-primary" />
+                        <button string="Cancel" special="cancel" class="btn-default"/>
                     </footer>
                 </form>
             </field>

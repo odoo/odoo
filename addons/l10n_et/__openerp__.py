@@ -1,23 +1,7 @@
 #-*- coding:utf-8 -*-
-##############################################################################
-#
-#    Copyright (C) 2012 Michael Telahun Makonnen <mmakonnen@gmail.com>.
-#    All Rights Reserved.
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+# Copyright (C) 2012 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 
 {
     'name': 'Ethiopia - Accounting',
@@ -37,22 +21,15 @@ This is the latest Ethiopian OpenERP localization and consists of:
     'website':'http://miketelahun.wordpress.com',
     'depends': [
         'base_vat',
-        'account_chart',
-    ],
-    'init_xml': [
-        'data/account.account.type.csv',
-        'data/account.account.template.csv',
-        'data/account.tax.code.template.csv',
-        'data/account.chart.template.csv',
-        'data/account.tax.template.csv',
-        'data/res.country.state.csv',
     ],
     'data': [
-        'l10n_et_wizard.xml',
-    ],
-    'test': [
-    ],
-    'demo': [
+        'data/account_chart_template.xml',
+        'data/account.account.template.csv',
+        'data/set_account_on_chart_template.xml',
+        'data/account_account_tag.xml',
+        'data/account.tax.template.csv',
+        'data/account_chart_template.yml',
+        'data/res.country.state.csv',
     ],
     'installable': True,
     'active': False,

@@ -1,0 +1,173 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+        <!-- Bundle (minimal) for embedded slide iframe -->
+        <template id="website_slides.slide_embed_assets" name="Website slides embed assets">
+            <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
+            <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+            <link type="text/less" href="/website_slides/static/src/less/website_slides.less" rel="stylesheet" t-ignore="true"/>
+
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <t t-call="web.bootstrap"/>
+            <t t-call="website.pdf_js_lib"></t>
+            <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
+            <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
+        </template>
+
+        <!--
+            This template is the PDF Viewer. It will mostly rendered throught an iFrame.
+            The js file to bind event is slides_embed.js
+        -->
+        <template id="embed_slide" name="Embedded Slide Page">
+            <html>
+                <head t-if="not private">
+                    <title><t t-esc="slide.name"/></title>
+                    <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
+                    <t t-call-assets="website_slides.slide_embed_assets"/>
+                </head>
+                <body t-if="private" style="position: inherit;">
+                    <title><t t-esc="slide.name"/></title>
+                    <div class="slide-private-view">
+                        <h3 style="border-bottom: 1px solid !important;padding-bottom: 10px;"><i class="fa fa-exclamation-triangle"></i> This <t t-esc="slide.slide_type"/> is private.</h3>
+                        <div t-field="slide.channel_id.access_error_msg" />
+                    </div>
+                </body>
+                <body>
+                <div id="PDFViewer" t-if="not private" class="panel panel-default oe_slides_panel">
+                    <!-- PDF Viewer Header : contains the name, and the share links -->
+                    <div t-if="is_embedded" class="navbar-default oe_slides_share_bar">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-8 col-md-8 col-sm-4 col-xs-4 text-left">
+                                    <div class="oe_slides_ellipsis">
+                                        <a target="_new" t-att-href="slide.website_url">
+                                            <span  t-esc="slide.name" t-attf-title="#{slide.name}"/>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 text-right">
+                                    <b class="oe_slide_js_embed_option_link" data-slide-option-id="#slide_share"><i class="fa fa-share-alt"></i> Share</b>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 text-right">
+                                    <b class="oe_slide_js_embed_option_link" data-slide-option-id="#slide_email"><i class="fa fa-envelope"></i> Email</b>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 text-right">
+                                    <b class="oe_slide_js_embed_option_link" data-slide-option-id="#slide_embed"><i class="fa fa-code"></i> Embed</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--  PDF Viewer Body : contains the canvas, the loader, or the image-->
+                    <div id="PDFSlideViewer" style="position:relative;"
+                            t-attf-data-slideid="#{slide.id}"
+                            t-attf-data-slideurl="/slides/slide/#{slide.id}/pdf_content"
+                            t-attf-data-downloadable="#{slide.download_security}"
+                            t-att-data-defaultpage="page">
+                        <t t-if="is_embedded">
+                            <div id="slide_share" class="oe_slide_embed_option">
+                                <t t-call="website_slides.slide_social_media"/>
+                            </div>
+                            <div id="slide_email" class="oe_slide_embed_option">
+                                <t t-call="website_slides.slide_social_email"/>
+                            </div>
+                            <div id="slide_embed" class="oe_slide_embed_option">
+                                <t t-call="website_slides.slide_social_embed"/>
+                            </div>
+                        </t>
+                        <div id="slide_suggest" class="oe_slide_embed_option">
+                            <t t-foreach="related_slides" t-as="suggest_slide">
+                                <div class="col-md-4 col-sm-4 col-xs-4 oe_slides_suggestion_media">
+                                    <a t-att-href="suggest_slide.website_url" target="_new">
+                                        <div class="oe_slides_suggestion_caption">
+                                            <h4><t t-esc="suggest_slide.name"/></h4>
+                                        </div>
+                                        <span class="oe-image-thumbnail">
+                                            <img class="img-responsive" t-attf-src="/web/image/slide.slide/#{suggest_slide.id}/image_thumb" alt="suggest_slide.name"/>
+                                        </span>
+                                    </a>
+
+                                </div>
+                            </t>
+                        </div>
+                        <t t-if="slide.slide_type in ('presentation', 'document')">
+                            <div id="PDFViewerLoader" class="oe_slides_loader">
+                                <img class="img-responsive" t-attf-src="/web/image/slide.slide/#{slide.id}/image_medium" style="margin:auto;height:100%"/>
+                                <h4 class="text-center">
+                                    <i class="fa fa-spinner fa-spin"></i> Loading ...
+                                </h4>
+                            </div>
+                            <canvas id="PDFViewerCanvas" class="img-responsive" style="margin:auto;height:100%;display:none;"></canvas>
+                        </t>
+                        <t t-if="slide.slide_type in ('infographic')">
+                            <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%"/>
+                        </t>
+                    </div>
+                    <!-- Fixed bottom navbar -->
+                    <div class="navbar navbar-default navbar-fixed-bottom" role="navigation" t-if="slide.slide_type in ('presentation', 'document')">
+                        <div class="container-fluid oe_slides_panel_footer">
+                            <div class="row" style="padding-top:15px;">
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-left">
+                                    <input type="number" class="text-center" id="page_number"></input> / <span id="page_count"></span>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 hide o_slide_navigation_buttons">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                        <span id="first" title="First slide">
+                                            <i class="fa fa-step-backward fa-2x"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                        <span id="previous" title="Previous slide" role="button">
+                                            <i class="fa fa-arrow-circle-left fa-2x"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                        <span id="next" title="Next slide" role="button">
+                                            <i class="fa fa-arrow-circle-right fa-2x"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                        <span id="last" title="Last slide" role="button">
+                                            <i class="fa fa-step-forward fa-2x"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 pull-right text-right">
+                                    <a t-if="slide.download_security and not is_embedded" target="_top" t-attf-href="/slides/slide/#{slide.id}/download" title="Download" id="download">
+                                        <i class="fa fa-download fa-2x"></i>
+                                    </a>
+                                    <span id="fullscreen" title="View fullscreen">
+                                        <i class="fa fa-arrows-alt fa-2x"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+                </body>
+            </html>
+        </template>
+
+        <!--
+            Template render isntead of Embedded Slide, it this one is forbidden.
+            So, it will mostly be rendered throught an iFrame
+        -->
+        <template id="embed_slide_forbidden" name="Forbidden Embedded Slide">
+            <html>
+                <head t-if="not private">
+                    <title><t t-esc="slide.name"/></title>
+                    <t t-call-assets="website_slides.slide_embed_assets" t-js="false"/>
+                </head>
+                <body>
+                    <title><t t-esc="slide.name"/></title>
+                    <div class="slide-private-view">
+                        <h3 style="border-bottom: 1px solid !important;padding-bottom: 10px;"><i class="fa fa-exclamation-triangle"></i> This <t t-esc="slide.slide_type"/> is private.</h3>
+                        <div t-field="slide.channel_id.access_error_msg" />
+                    </div>
+                </body>
+            </html>
+        </template>
+    </data>
+</openerp>

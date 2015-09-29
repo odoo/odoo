@@ -1,10 +1,31 @@
 -
   In order to check account budget module in OpenERP I created a budget with few budget positions
 -
+  Checking if the budgetary positions have accounts or not
+-
+  !python {model: ir.model.data} : |
+    if not self.pool.get('account.budget.post').browse(cr, uid, ref('account_budget_post_sales0')).account_ids:
+      vals = {
+        'name': 'Product Sales - (test)',
+        'code': 'X2020',
+        'user_type_id': ref('account.data_account_type_revenue'),
+        'tag_ids': [(6,0,[ref('account.account_tag_operating')])],
+      }
+      self._update(cr, uid, 'account.account', 'account_budget', vals, 'a_sale')
+      self.pool.get('account.budget.post').write(cr, uid, [ref('account_budget_post_sales0')], {'account_ids': [(6,0,[ref('a_sale')])]})
+    if not self.pool.get('account.budget.post').browse(cr, uid, ref('account_budget_post_purchase0')).account_ids:
+      vals = {
+        'name': 'Expense - (test)',
+        'code': 'X2120',
+        'user_type_id': ref('account.data_account_type_expenses'),
+        'tag_ids': [(6,0,[ref('account.account_tag_operating')])],
+      }
+      self._update(cr, uid, 'account.account', 'account_budget', vals, 'a_expense')
+      self.pool.get('account.budget.post').write(cr, uid, [ref('account_budget_post_purchase0')], {'account_ids': [(6,0,[ref('a_expense')])]})
+-
   Creating a crossovered.budget record
 -
   !record {model: crossovered.budget, id: crossovered_budget_budget0}:
-    code: B2011
     date_from: !eval "'%s-01-01' %(datetime.now().year+1)"
     date_to: !eval "'%s-12-31' %(datetime.now().year+1)"
     name: !eval "'Budget %s' %(datetime.now().year+1)"
@@ -16,12 +37,12 @@
 -
   !record {model: crossovered.budget, id: crossovered_budget_budget0}:
     crossovered_budget_line:
-      - analytic_account_id: account.analytic_consultancy
+      - analytic_account_id: analytic.analytic_partners_camp_to_camp
         date_from: !eval "'%s-01-01' %(datetime.now().year+1)"
         date_to: !eval "'%s-12-31' %(datetime.now().year+1)"
         general_budget_id: account_budget.account_budget_post_purchase0
         planned_amount: 10000.0
-      - analytic_account_id: account.analytic_super_product_trainings
+      - analytic_account_id: analytic.analytic_our_super_product
         date_from: !eval "'%s-09-01' %(datetime.now().year+1)"
         date_to: !eval "'%s-09-30' %(datetime.now().year+1)"
         general_budget_id: account_budget.account_budget_post_sales0
@@ -68,4 +89,3 @@
 -
   !assert {model: crossovered.budget, id: crossovered_budget_budget0}:
     - state == 'done'
-

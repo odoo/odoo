@@ -3,15 +3,14 @@
 # * l10n_be_intrastat
 # 
 # Translators:
-# Belkacem Mohammed <belkacem77@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-03 18:32+0000\n"
-"PO-Revision-Date: 2015-07-18 18:18+0000\n"
-"Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
-"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-8/language/kab/)\n"
+"POT-Creation-Date: 2015-09-21 09:29+0000\n"
+"PO-Revision-Date: 2015-09-22 09:30+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,14 +23,14 @@ msgid "April"
 msgstr "Yebrir"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat_xml.xml_decl,arrivals:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_arrivals
 msgid "Arrivals"
 msgstr "Arrivals"
 
 #. module: l10n_be_intrastat
 #: selection:l10n_be_intrastat_xml.xml_decl,month:0
 msgid "August"
-msgstr "Ɣuct"
+msgstr "ɣuct"
 
 #. module: l10n_be_intrastat
 #: model:l10n_be_intrastat.region,name:l10n_be_intrastat.intrastat_region_3
@@ -39,21 +38,21 @@ msgid "Brussels region"
 msgstr "Brussels region"
 
 #. module: l10n_be_intrastat
-#: view:l10n_be_intrastat_xml.xml_decl:l10n_be_intrastat.view_intrastat_declaration_xml
+#: model:ir.ui.view,arch_db:l10n_be_intrastat.view_intrastat_declaration_xml
 msgid "Cancel"
 msgstr "Sefsex"
 
 #. module: l10n_be_intrastat
-#: view:l10n_be_intrastat_xml.xml_decl:l10n_be_intrastat.view_intrastat_declaration_xml
+#: model:ir.ui.view,arch_db:l10n_be_intrastat.view_intrastat_declaration_xml
 msgid "Close"
-msgstr "Fermer"
+msgstr "Mdel"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat.region,code:0
-#: field:l10n_be_intrastat.transaction,code:0
-#: field:l10n_be_intrastat.transport_mode,code:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_region_code
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transaction_code
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transport_mode_code
 msgid "Code"
-msgstr "Code"
+msgstr "Tangalt"
 
 #. module: l10n_be_intrastat
 #: sql_constraint:l10n_be_intrastat.region:0
@@ -65,36 +64,36 @@ msgstr "Code must be unique."
 #. module: l10n_be_intrastat
 #: model:ir.model,name:l10n_be_intrastat.model_res_company
 msgid "Companies"
-msgstr "Sociétés"
+msgstr "Tikebbaniyin"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat_xml.xml_decl,tax_code_id:0
-msgid "Company Tax Chart"
-msgstr "Aɣawas n Tẓeṭṭaṭ n tkebbanit"
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_company_id
+msgid "Company"
+msgstr ""
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat.region,country_id:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_region_country_id
 msgid "Country"
 msgstr "Tamurt"
 
 #. module: l10n_be_intrastat
-#: view:l10n_be_intrastat_xml.xml_decl:l10n_be_intrastat.view_intrastat_declaration_xml
+#: model:ir.ui.view,arch_db:l10n_be_intrastat.view_intrastat_declaration_xml
 msgid "Create XML"
-msgstr "Sirew XML"
+msgstr "Rnu XML"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat.region,create_uid:0
-#: field:l10n_be_intrastat.transaction,create_uid:0
-#: field:l10n_be_intrastat.transport_mode,create_uid:0
-#: field:l10n_be_intrastat_xml.xml_decl,create_uid:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_region_create_uid
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transaction_create_uid
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transport_mode_create_uid
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_create_uid
 msgid "Created by"
 msgstr "Yerna-t"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat.region,create_date:0
-#: field:l10n_be_intrastat.transaction,create_date:0
-#: field:l10n_be_intrastat.transport_mode,create_date:0
-#: field:l10n_be_intrastat_xml.xml_decl,create_date:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_region_create_date
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transaction_create_date
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transport_mode_create_date
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_create_date
 msgid "Created on"
 msgstr "Yerna di"
 
@@ -104,26 +103,34 @@ msgid "December"
 msgstr "Bujember"
 
 #. module: l10n_be_intrastat
-#: field:res.company,incoterm_id:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_res_company_incoterm_id
 msgid "Default incoterm for Intrastat"
 msgstr "Default incoterm for Intrastat"
 
 #. module: l10n_be_intrastat
-#: field:res.company,transport_mode_id:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_res_company_transport_mode_id
 msgid "Default transport mode"
 msgstr "Default transport mode"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat.region,description:0
-#: field:l10n_be_intrastat.transaction,description:0
-#: field:l10n_be_intrastat.transport_mode,name:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_region_description
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transaction_description
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transport_mode_name
 msgid "Description"
 msgstr "Aglam"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat_xml.xml_decl,dispatches:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_dispatches
 msgid "Dispatches"
 msgstr "Dispatches"
+
+#. module: l10n_be_intrastat
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_region_display_name
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transaction_display_name
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transport_mode_display_name
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: l10n_be_intrastat
 #: selection:l10n_be_intrastat_xml.xml_decl,state:0
@@ -153,7 +160,7 @@ msgid "February"
 msgstr "Furar"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat_xml.xml_decl,name:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_name
 msgid "File Name"
 msgstr "Isem n ufaylu"
 
@@ -163,70 +170,71 @@ msgid "Flemish region"
 msgstr "Flemish region"
 
 #. module: l10n_be_intrastat
-#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:96
+#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:71
 #, python-format
 msgid "Go to company configuration screen"
 msgstr "Go to company configuration screen"
 
 #. module: l10n_be_intrastat
-#: view:l10n_be_intrastat_xml.xml_decl:l10n_be_intrastat.view_intrastat_declaration_xml
+#: model:ir.ui.view,arch_db:l10n_be_intrastat.view_intrastat_declaration_xml
 msgid "Here is the XML file with your intrastat declaration:"
 msgstr "Here is the XML file with your intrastat declaration:"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat.region,id:0
-#: field:l10n_be_intrastat.transaction,id:0
-#: field:l10n_be_intrastat.transport_mode,id:0
-#: field:l10n_be_intrastat_xml.xml_decl,id:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_region_id
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transaction_id
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transport_mode_id
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_id
 msgid "ID"
 msgstr "Asulay"
 
 #. module: l10n_be_intrastat
-#: field:account.invoice,incoterm_id:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_account_invoice_incoterm_id
 msgid "Incoterm"
 msgstr "Incoterm"
 
 #. module: l10n_be_intrastat
-#: help:account.invoice,incoterm_id:0 help:res.company,incoterm_id:0
+#: model:ir.model.fields,help:l10n_be_intrastat.field_account_invoice_incoterm_id
+#: model:ir.model.fields,help:l10n_be_intrastat.field_res_company_incoterm_id
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "International Commercial Terms are a series of predefined commercial terms used in international transactions."
+msgstr "Les Incoterms sont une série de termes commerciaux prédéfinie utilisés dans les transactions internationales."
 
 #. module: l10n_be_intrastat
-#: view:product.category:l10n_be_intrastat.l10n_be_intrastat_xml_decl_product_category_view
+#: model:ir.ui.view,arch_db:l10n_be_intrastat.l10n_be_intrastat_xml_decl_product_category_view
 msgid "Intrastat"
 msgstr "Intrastat"
 
 #. module: l10n_be_intrastat
-#: field:product.category,intrastat_id:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_product_category_intrastat_id
 msgid "Intrastat Code"
-msgstr "Intrastat Code"
+msgstr "Tangalt Intrastat"
 
 #. module: l10n_be_intrastat
-#: field:account.invoice,intrastat_country_id:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_account_invoice_intrastat_country_id
 msgid "Intrastat Country"
 msgstr "Intrastat Country"
 
 #. module: l10n_be_intrastat
 #: model:ir.actions.act_window,name:l10n_be_intrastat.action_intrastat_xml_declaration
 #: model:ir.ui.menu,name:l10n_be_intrastat.l10n_be_intrastat_xml_declaration
-#: view:l10n_be_intrastat_xml.xml_decl:l10n_be_intrastat.view_intrastat_declaration_xml
+#: model:ir.ui.view,arch_db:l10n_be_intrastat.view_intrastat_declaration_xml
 msgid "Intrastat Declaration"
 msgstr "Intrastat Declaration"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat_xml.xml_decl,file_save:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_file_save
 msgid "Intrastat Report File"
 msgstr "Afaylu n wassaɣ Intrastat"
 
 #. module: l10n_be_intrastat
-#: field:account.invoice,intrastat_transaction_id:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_account_invoice_line_intrastat_transaction_id
 msgid "Intrastat Transaction Type"
 msgstr "Intrastat Transaction Type"
 
 #. module: l10n_be_intrastat
-#: field:account.invoice,transport_mode_id:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_account_invoice_transport_mode_id
 msgid "Intrastat Transport Mode"
 msgstr "Intrastat Transport Mode"
 
@@ -238,10 +246,10 @@ msgstr "Intrastat XML Declaration"
 #. module: l10n_be_intrastat
 #: model:ir.model,name:l10n_be_intrastat.model_report_intrastat_code
 msgid "Intrastat code"
-msgstr "Intrastat code"
+msgstr "Tangalt Intrastat"
 
 #. module: l10n_be_intrastat
-#: help:account.invoice,intrastat_country_id:0
+#: model:ir.model.fields,help:l10n_be_intrastat.field_account_invoice_intrastat_country_id
 msgid "Intrastat country, delivery for sales, origin for purchases"
 msgstr "Intrastat country, delivery for sales, origin for purchases"
 
@@ -251,32 +259,33 @@ msgid "Intrastat extended"
 msgstr "Intrastat extended"
 
 #. module: l10n_be_intrastat
-#: help:account.invoice,intrastat_transaction_id:0
+#: model:ir.model.fields,help:l10n_be_intrastat.field_account_invoice_line_intrastat_transaction_id
 msgid "Intrastat nature of transaction"
 msgstr "Intrastat nature of transaction"
 
 #. module: l10n_be_intrastat
-#: field:res.company,region_id:0 field:stock.warehouse,region_id:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_res_company_region_id
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_stock_warehouse_region_id
 msgid "Intrastat region"
 msgstr "Intrastat region"
 
 #. module: l10n_be_intrastat
-#: view:l10n_be_intrastat.transaction:l10n_be_intrastat.intra_view_transaction_form
+#: model:ir.ui.view,arch_db:l10n_be_intrastat.intra_view_transaction_form
 msgid "Intrastat transaction form"
 msgstr "Intrastat transaction form"
 
 #. module: l10n_be_intrastat
-#: view:l10n_be_intrastat.transaction:l10n_be_intrastat.intra_view_transaction_tree
+#: model:ir.ui.view,arch_db:l10n_be_intrastat.intra_view_transaction_tree
 msgid "Intrastat transaction types"
 msgstr "Intrastat transaction types"
 
 #. module: l10n_be_intrastat
-#: view:l10n_be_intrastat.transport_mode:l10n_be_intrastat.intra_view_transport_mode_form
+#: model:ir.ui.view,arch_db:l10n_be_intrastat.intra_view_transport_mode_form
 msgid "Intrastat transportation mode form"
 msgstr "Intrastat transportation mode form"
 
 #. module: l10n_be_intrastat
-#: view:l10n_be_intrastat.transport_mode:l10n_be_intrastat.intra_view_transport_mode_tree
+#: model:ir.ui.view,arch_db:l10n_be_intrastat.intra_view_transport_mode_tree
 msgid "Intrastat transportation modes"
 msgstr "Intrastat transportation modes"
 
@@ -284,6 +293,11 @@ msgstr "Intrastat transportation modes"
 #: model:ir.model,name:l10n_be_intrastat.model_account_invoice
 msgid "Invoice"
 msgstr "Tafaturt"
+
+#. module: l10n_be_intrastat
+#: model:ir.model,name:l10n_be_intrastat.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
 
 #. module: l10n_be_intrastat
 #: selection:l10n_be_intrastat_xml.xml_decl,month:0
@@ -301,18 +315,26 @@ msgid "June"
 msgstr "Yunyu"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat.region,write_uid:0
-#: field:l10n_be_intrastat.transaction,write_uid:0
-#: field:l10n_be_intrastat.transport_mode,write_uid:0
-#: field:l10n_be_intrastat_xml.xml_decl,write_uid:0
-msgid "Last Updated by"
-msgstr "Asnifel aneggaru sɣur"
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_region___last_update
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transaction___last_update
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transport_mode___last_update
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl___last_update
+msgid "Last Modified on"
+msgstr ""
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat.region,write_date:0
-#: field:l10n_be_intrastat.transaction,write_date:0
-#: field:l10n_be_intrastat.transport_mode,write_date:0
-#: field:l10n_be_intrastat_xml.xml_decl,write_date:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_region_write_uid
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transaction_write_uid
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transport_mode_write_uid
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_write_uid
+msgid "Last Updated by"
+msgstr "Aleqqem aneggaru sɣuṛ"
+
+#. module: l10n_be_intrastat
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_region_write_date
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transaction_write_date
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_transport_mode_write_date
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_write_date
 msgid "Last Updated on"
 msgstr "Aleqqem aneggaru di"
 
@@ -327,12 +349,12 @@ msgid "May"
 msgstr "Maggu"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat_xml.xml_decl,month:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_month
 msgid "Month"
 msgstr "Aggur"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat.region,name:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_region_name
 msgid "Name"
 msgstr "Isem"
 
@@ -352,7 +374,7 @@ msgid "Product"
 msgstr "Afaris"
 
 #. module: l10n_be_intrastat
-#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:291
+#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:266
 #, python-format
 msgid "Product \"%s\" has no intrastat code, please configure it"
 msgstr "Product \"%s\" has no intrastat code, please configure it"
@@ -373,7 +395,7 @@ msgid "Sales Order"
 msgstr "Taladna n uznuzu"
 
 #. module: l10n_be_intrastat
-#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:156
+#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:131
 #, python-format
 msgid "Save"
 msgstr "Kles"
@@ -390,12 +412,12 @@ msgid "Standard"
 msgstr "Standard"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat_xml.xml_decl,state:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_state
 msgid "State"
-msgstr "Addad"
+msgstr "Aɣir(Wilaya)"
 
 #. module: l10n_be_intrastat
-#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:280
+#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:255
 #, python-format
 msgid ""
 "The Intrastat Region of the selected company is not set, please make sure to"
@@ -403,7 +425,7 @@ msgid ""
 msgstr "The Intrastat Region of the selected company is not set, please make sure to configure it first."
 
 #. module: l10n_be_intrastat
-#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:109
+#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:84
 #, python-format
 msgid ""
 "The country of your company is not set, please make sure to configure it "
@@ -411,7 +433,7 @@ msgid ""
 msgstr "The country of your company is not set, please make sure to configure it first."
 
 #. module: l10n_be_intrastat
-#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:316
+#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:291
 #, python-format
 msgid ""
 "The default Incoterm of your company is not set, please make sure to "
@@ -419,7 +441,7 @@ msgid ""
 msgstr "The default Incoterm of your company is not set, please make sure to configure it first."
 
 #. module: l10n_be_intrastat
-#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:304
+#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:279
 #, python-format
 msgid ""
 "The default Intrastat transport mode of your company is not set, please make"
@@ -427,7 +449,7 @@ msgid ""
 msgstr "The default Intrastat transport mode of your company is not set, please make sure to configure it first."
 
 #. module: l10n_be_intrastat
-#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:116
+#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:91
 #, python-format
 msgid ""
 "The registry number of your company is not set, please make sure to "
@@ -445,22 +467,32 @@ msgid "Warehouse"
 msgstr "Agadir"
 
 #. module: l10n_be_intrastat
-#: view:l10n_be_intrastat_xml.xml_decl:l10n_be_intrastat.view_intrastat_declaration_xml
+#: model:ir.ui.view,arch_db:l10n_be_intrastat.view_intrastat_declaration_xml
 msgid "XML Intratstat Declaration"
 msgstr "XML Intratstat Declaration"
 
 #. module: l10n_be_intrastat
-#: field:l10n_be_intrastat_xml.xml_decl,year:0
+#: model:ir.model.fields,field_description:l10n_be_intrastat.field_l10n_be_intrastat_xml_xml_decl_year
 msgid "Year"
-msgstr "Aseggawas"
+msgstr "Aseggwas"
 
 #. module: l10n_be_intrastat
-#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:120
+#: code:addons/l10n_be_intrastat/wizard/xml_decl.py:95
 #, python-format
 msgid "Year must be 4 digits number (YYYY)"
 msgstr "Year must be 4 digits number (YYYY)"
 
 #. module: l10n_be_intrastat
-#: view:l10n_be_intrastat_xml.xml_decl:l10n_be_intrastat.view_intrastat_declaration_xml
-msgid "or"
-msgstr "neɣ"
+#: model:ir.model,name:l10n_be_intrastat.model_l10n_be_intrastat_region
+msgid "l10n_be_intrastat.region"
+msgstr ""
+
+#. module: l10n_be_intrastat
+#: model:ir.model,name:l10n_be_intrastat.model_l10n_be_intrastat_transaction
+msgid "l10n_be_intrastat.transaction"
+msgstr ""
+
+#. module: l10n_be_intrastat
+#: model:ir.model,name:l10n_be_intrastat.model_l10n_be_intrastat_transport_mode
+msgid "l10n_be_intrastat.transport_mode"
+msgstr ""

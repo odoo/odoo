@@ -3,15 +3,14 @@
 # * portal_sale
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:47+0000\n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 06:41+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: portal_sale
-#: model:email.template,body_html:portal_sale.email_template_edi_invoice
+#: model:mail.template,body_html:portal_sale.email_template_edi_invoice
 msgid ""
 "\n"
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
@@ -54,7 +53,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -96,10 +95,10 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div stil=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; dimensiune-font: 12px; culoare: rgb(34, 34, 34); culoare-fundal: rgb(255, 255, 255); \">\n\n    <p>Buna ziua ${obiect.partener_id.nume},</p>\n\n    <p>O noua factura este disponibila pentru dumneavoastra: </p>\n    \n    <p stil=\"limita-stanga: 1px solid #8e0000; marginea-stanga: 30px;\">\n       &nbsp;&nbsp;<strong>REFERINTE</strong><br />\n       &nbsp;&nbsp;Numarul facturii: <strong>${obiect.numar}</strong><br />\n       &nbsp;&nbsp;Total factura: <strong>${obiect.valoarea_totala} ${obiect.valuta_id.nume}</strong><br />\n       &nbsp;&nbsp;Data facturii: ${obiect.data_factura}<br />\n       % if obiect.origine:\n       &nbsp;&nbsp;Referinta comenzii: ${obiect.origine}<br />\n       % endif\n       % if obiect.utilizator_id:\n       &nbsp;&nbsp;Contactul dumneavoastra: <a href=\"destinatar email:${obiect.utilizator_id.email sau ''}?subiect=Factura%20${obiect.numar}\">${obiect.utilizator_id.nume}</a>\n       % endif\n    </p>  \n\n    <% setati url_inregistrare = obiect.obtine_url_inregistrare() %>\n    % if url_inregistrare:\n    <p>\n    Puteti accesa documentul facturii si sa platiti online prin intermediul Portalului Clienti:\n    </p>\n        <a stil=\"afisare:block; latime: 150px; inaltime:20px; marginea-stanga: 120px; culoare: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; dimensiune-font: 13px; grosime-font: bold; aliniere-text: centru; decor-text: niciunul !important; inaltime-linie: 1; umplutura: 5px 0px 0px 0px; culoare-fundal: #8E0000; limita-raza: 5px 5px; repetare-fundal: repetare fara-repetare;\"\n           href=\"${url_inregistrare}\">Vizualizare Factura</a>\n    % endif\n    \n    % if obiect.paypal_url:\n    <br/>\n    <p>De asemenea, puteti plati direct cu Paypal:</p>\n        <a stil=\"marginea-stanga: 120px;\" href=\"${obiect.paypal_url}\">\n            <img class=\"oe_edi_paypal_buton\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Daca aveti intrebari, nu ezitati sa ne contactati.</p>\n    <p>Va multumim pentru ca ati ales ${obiect.companie_id.nume sau 'pe noi'}!</p>\n    <br/>\n    <br/>\n    <div stil=\"latime: 375px; margine: 0px; umplutura: 0px; culoare-fundal: #8E0000; limita-de sus-stanga-raza: 5px 5px; limita-de sus-dreapta-raza: 5px 5px; repetare-fundal: repetare fara repetare;\">\n        <h3 stil=\"margine: 0px; umplutura: 2px 14px; dimensiune-font: 12px; culoare: #DDD;\">\n            <strong style=\"text-transformare:majuscule;\">${obiect.companie_id.nume}</strong></h3>\n    </div>\n    <div stil=\"latime: 347px; margine: 0px; umplutura: 5px 14px; inaltime-linie: 16px; culoare-fundal: #F2F2F2;\">\n        <span stil=\"culoare: #222; marginea-de jos: 5px; afisare: block; \">\n        % if obiect.companie_id.strada:\n            ${obiect.companie_id.strada}<br/>\n        % endif\n        % if obiect.companie_id.strada2:\n            ${obiect.companie_id.strada2}<br/>\n        % endif\n        % if obiect.companie_id.oras sau obiect.companie=_id.cod postal:\n            ${obiect.companie_id.cod postal} ${obiect.companie_id.oras}<br/>\n        % endif\n        % if obiect.companie_id.tara_id:\n            ${obiect.companie_id.stat_id si ('%s, ' % obiect.companie_id.stat_id.nume) sau ''} ${obiect.companie_id.tara_id.nume sau ''}<br/>\n        % endif\n        </span>\n        % if obiect.companie_id.telefon:\n            <div stil=\"marginea-de sus: 0px; marginea-dreapta: 0px; marginea-de jos: 0px; marginea-stanga: 0px; umplutura-de sus: 0px; umplutura-dreapta: 0px; umplutura-de jos: 0px; umplutura-stanga: 0px; \">\n                Telefon:&nbsp; ${obiect.companie_id.telefon}\n            </div>\n        % endif\n        % if obiect.companie_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${obiect.companie_id.website}\">${obiect.companie_id.website}</a>\n            </div>\n        % endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr ""
 
 #. module: portal_sale
-#: model:email.template,body_html:portal_sale.email_template_edi_sale
+#: model:mail.template,body_html:portal_sale.email_template_edi_sale
 msgid ""
 "\n"
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
@@ -112,7 +111,10 @@ msgid ""
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       &nbsp;&nbsp;Order date:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />\n"
+"       % if object.validity_date and object.state in ('draft', 'sent'):\n"
+"       &nbsp;&nbsp;Expiration date: ${object.validity_date}<br />\n"
+"       % endif\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
 "       % endif\n"
@@ -125,7 +127,7 @@ msgid ""
 "    </p>\n"
 "\n"
 "    <% set signup_url = object.get_signup_url() %>\n"
-"    % if signup_url:\n"
+"    % if signup_url and object.amount_total > 0 :\n"
 "    <p>\n"
 "    You can access this document and pay online via our Customer Portal:\n"
 "    </p>\n"
@@ -133,11 +135,11 @@ msgid ""
 "           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "    % endif\n"
 "\n"
-"    % if object.paypal_url:\n"
+"    % if object.paypal_url and object.amount_total > 0 :\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -179,44 +181,39 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div stil=\"font-familie: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; dimensiune-font: 12px; culoare: rgb(34, 34, 34); culoare-fundal: rgb(255, 255, 255); \">\n\n    <p>Buna ziua ${obiect.partener_id.nume},</p>\n    \n    <p>Iata ${obiect.stare in ('ciorna', 'trimis') si 'cotatie' sau 'confirmarea comenzii'} de la ${obiect.companie_id.nume}: </p>\n\n    <p stil=\"limita-stanga: 1px solid #8e0000; marginea-stanga: 30px;\">\n       &nbsp;&nbsp;<strong>REFERINTE</strong><br />\n       &nbsp;&nbsp;Numar comanda: <strong>${obiect.nume}</strong><br />\n       &nbsp;&nbsp;Total comanda: <strong>${obiect.valoarea_totala} ${obiect.lista_de_preturi_id.valuta_id.nume}</strong><br />\n       &nbsp;&nbsp;Data comenzii: ${obiect.data_comenzii}<br />\n       % if originea.obiectului:\n       &nbsp;&nbsp;Referinta comenzii: ${origine.obiect}<br />\n       % endif\n       % if obiect.ref_comanda_client:\n       &nbsp;&nbsp;Referinta dumneavoastra: ${obiect.ref_comanda_client}<br />\n       % endif\n       % if object.id_utilizator:\n       &nbsp;&nbsp;Contactul dumneavoastra: <a href=\"destinatar email:${obiect.utilizator_id.email sau ''}?subiect=Comanda%20${obiect.nume}\">${obiect.id_utilizator.nume}</a>\n       % endif\n    </p>\n\n    <% seteaza url_inregistrare = obiect.obtine_url_inregistrare() %>\n    % if url_inregistrare:\n    <p>\n    Puteti accesa acest document si sa platiti online prin intermediul Portalului Clienti:\n    </p>\n        <a stil=\"afiseaza:block; latime: 150px; inaltime:20px; marginea-stanga: 120px; culoare: #DDD; font-familie: 'Lucida Grande', Helvetica, Arial, sans-serif; dimensiune-font: 13px; grosime-font: bold; pozitionare-text: centru; decor-text: niciunul !important; inaltime-linie: 1; umplutura: 5px 0px 0px 0px; culoare-fundarl: #8E0000; raza-limita: 5px 5px; repetare-fundal: repetare fara-repetare;\"\n           href=\"${url_inregistrare}\">Vizualizare ${obiect.stare in ('ciorna', 'trimis') si 'Cotatie' sau 'Comanda'}</a>\n    % endif\n\n    % if obiect.paypal_url:\n    <br/>\n    <p>Este de asemenea posibil sa platiti direct cu Paypal:</p>\n        <a stil=\"marginea-stanga: 120px;\" href=\"${obiect.paypal_url}\">\n            <img class=\"oe_edi_paypal_buton\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>Daca aveti intrebari, nu ezitati sa ne contactati.</p>\n    <p>Va multumim pentru ca ati ales ${obiect.companie_id.nume sau 'pe noi'}!</p>\n    <br/>\n    <br/>\n    <div stil=\"latime: 375px; margine: 0px; umplutura: 0px; culoare-fundal: #8E0000; marginea-de sus-stanga-raza: 5px 5px; marginea-de sus-dreapta-raza: 5px 5px; repetare-fundal: repetare fara-repetare;\">\n        <h3 stil \"margine: 0px; umplutura: 2px 14px; dimensiune-font: 12px; culoare: #DDD;\">\n            <strong style=\"text-transformare:majuscule;\">${obiect.companie_id.nume}</strong></h3>\n    </div>\n    <div stil=\"width: 347px; margine: 0px; umplutura: 5px 14px; inaltime-linie: 16px; culoare-fundal: #F2F2F2;\">\n        <span stil=\"culoare: #222; marginea-de jos: 5px; afisare: block; \">\n        % if obiect.companie_id.strada:\n            ${obiect.companie_id.strada}<br/>\n        % endif\n        % if obiect.companie_id.strada2:\n            ${obiect.companie_id.strada2}<br/>\n        % endif\n        % if obiect.companie_id.oras sau obiect.companie_id.cod_postal:\n            ${obiect.companie_id.cod postal} ${obiect.companie_id.oras}<br/>\n        % endif\n        % if obiect.companie_id.tara_id:\n            ${obiect.companie_id.stat_id si ('%s, ' % obiect.companie_id.stat_id.nume) sau ''} ${obiect.companie_id.tara_id.nume sau ''}<br/>\n        % endif\n        </span>\n        % if obiect.companie_id.telefon:\n            <div stil=\"marginea-de sus: 0px; marginea-dreapta: 0px; marginea-de jos: 0px; marginea-stanga: 0px; umplutura-sus: 0px; umplutura-dreapta: 0px; umplutura-jos: 0px; umplutura-stanga: 0px; \">\n                Telefon:&nbsp; ${obiect.companie_id.telefon}\n            </div>\n        % endif\n        % if obiect.companie_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${obiect.companie_id.website}\">${obiect.companie_id.website}</a>\n            </div>\n        % endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr ""
 
 #. module: portal_sale
-#: model:email.template,report_name:portal_sale.email_template_edi_sale
+#: model:mail.template,report_name:portal_sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_sale
+#: model:mail.template,subject:portal_sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Ofertă' or 'Comandă'} (Ref ${object.name or 'n/a' })"
 
 #. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_invoice
+#: model:mail.template,subject:portal_sale.email_template_edi_invoice
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
 msgstr "${object.company_id.name|safe} Factura (Ref ${object.number or 'n/a' })"
 
 #. module: portal_sale
-#: view:account.config.settings:portal_sale.portal_sale_payment_option_config
-msgid "Configure payment acquiring methods"
-msgstr "Configureaza metodele de efectuare a platii"
-
-#. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_invoice
 msgid "Invoice"
-msgstr "Factură"
+msgstr "Factura"
 
 #. module: portal_sale
-#: model:email.template,report_name:portal_sale.email_template_edi_invoice
+#: model:mail.template,report_name:portal_sale.email_template_edi_invoice
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
-msgstr "Factura_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
+msgstr "Factura_${(obiect.numar sau '').inlocuieste('/','_')}_${obiect.stare == 'ciorna' si 'ciorna' sau ''}"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
@@ -238,65 +235,59 @@ msgid "Outgoing Mails"
 msgstr "Email-uri Expediate"
 
 #. module: portal_sale
-#: field:account.invoice,portal_payment_options:0
-#: field:sale.order,portal_payment_options:0
-msgid "Portal Payment Options"
-msgstr "Opțiuni de Plata Portal"
-
-#. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
 #: model:ir.ui.menu,name:portal_sale.portal_quotations
 msgid "Quotations"
-msgstr "Cotații"
+msgstr "Cotații (oferte)"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_orders_portal
 msgid "Sale Orders"
-msgstr "Comenzi"
+msgstr "Comenzi de Vanzari"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Comandă"
+msgstr "Comanda de vanzare"
 
 #. module: portal_sale
 #: model:ir.ui.menu,name:portal_sale.portal_sales_orders
 msgid "Sales Orders"
-msgstr "Comenzi"
+msgstr "Comenzi de vânzări"
 
 #. module: portal_sale
-#: help:account.config.settings,group_payment_options:0
+#: model:ir.model.fields,help:portal_sale.field_account_config_settings_group_payment_options
 msgid ""
 "Show online payment options on Sale Orders and Customer Invoices to "
 "employees. If not checked, these options are only visible to portal users."
 msgstr "Le arata angajatilor optiunile de plata online in Comenzile de Vanzari si in Facturile Clientilor. Daca nu este selectat, aceste optiuni sunt vizibile doar utilizatorilor portalului."
 
 #. module: portal_sale
-#: field:account.config.settings,group_payment_options:0
+#: model:ir.model.fields,field_description:portal_sale.field_account_config_settings_group_payment_options
 msgid "Show payment buttons to employees too"
 msgstr "Arata butoanele de plata si angajatilor"
 
 #. module: portal_sale
 #: model:res.groups,name:portal_sale.group_payment_options
 msgid "View Online Payment Options"
-msgstr "Vizualizați Opțiunile de Plată Online"
+msgstr "Vizualizati Optiunile de Plata Online"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
 msgid "We haven't sent you any invoice."
-msgstr "Nu v-am trimis nicio factură."
+msgstr "Nu v-am trimis nicio factura."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
 msgid "We haven't sent you any quotation."
-msgstr "Nu v-am trimis nicio cotație."
+msgstr "Nu v-am trimis nicio cotatie."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_orders_portal
 msgid "We haven't sent you any sales order."
-msgstr "Nu v-am trimis nicio comandă."
+msgstr "Nu v-am trimis nicio comanda de vanzari."
 
 #. module: portal_sale
-#: view:account.invoice:portal_sale.view_account_invoice_filter_share
-msgid "[('share','=', False)]"
-msgstr "[('share','=', False)]"
+#: model:ir.model,name:portal_sale.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"

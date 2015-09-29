@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # This assumes an existing but uninitialized database.
-import unittest2
+import unittest
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -51,7 +51,7 @@ def uninstall_module(module_name):
     cr.close()
     reload_registry()
 
-class test_uninstall(unittest2.TestCase):
+class test_uninstall(unittest.TestCase):
     """
     Test the install/uninstall of a test module. The module is available in
     `openerp.tests` which should be present in the addons-path.
@@ -82,7 +82,4 @@ class test_uninstall(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    unittest.main()

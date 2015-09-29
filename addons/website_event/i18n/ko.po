@@ -5,12 +5,12 @@
 # Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-17 07:49+0000\n"
-"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"POT-Creation-Date: 2015-09-14 10:28+0000\n"
+"PO-Revision-Date: 2015-09-10 15:22+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,84 +18,159 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_event
-#: view:website:website_event.index
-msgid "'Content'"
-msgstr "'내용'"
+#: code:addons/website_event/controllers/main.py:210
+#, python-format
+msgid "%(month)s %(start_day)s%(end_day)s"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.country_events_list
+msgid "<b>Upcoming Events</b>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid ""
+"<br/>\n"
+"                    <i class=\"fa fa-clock-o\"/> To"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<em>Configure and Launch Event Registration</em>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<i class=\"fa fa-clock-o\"/> From"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.index
+#: model:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i>to</i>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_right_quotes
+msgid "<small>Author</small>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.country_events
+msgid "<span class=\"oe_snippet_thumbnail_title\">Local Events</span>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_location
+msgid "<span>Online Events</span>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<span>Unlimited</span>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "<strong>Attendees</strong>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "<strong>Email</strong>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "<strong>Name</strong>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<strong>Participate on Twitter</strong>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "<strong>Phone</strong> <span class=\"text-muted\">(Optional)</span>"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:18
+#: code:addons/website_event/static/src/js/website.tour.event.js:25
 #, python-format
 msgid "Add Content"
 msgstr "내용 추가"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:122
+#: code:addons/website_event/controllers/main.py:105
 #, python-format
 msgid "All Categories"
 msgstr "모든 분류"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:133
+#: code:addons/website_event/controllers/main.py:116
 #, python-format
 msgid "All Countries"
 msgstr "모든 국가"
 
 #. module: website_event
-#: view:website:website_event.layout
+#: model:ir.ui.view,arch_db:website_event.layout
 msgid "All Events"
 msgstr "모든 일정"
 
 #. module: website_event
-#: view:website:website_event.index
-msgid "Author"
-msgstr "작성자"
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Cancel Registration"
+msgstr "등록 취소"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:41
+#: code:addons/website_event/static/src/js/website.tour.event.js:48
 #, python-format
 msgid "Click <em>Continue</em> to create the event."
 msgstr "일정을 작성하려면 <em>계속</em>을 클릭하십시오."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:26
+#: code:addons/website_event/static/src/js/website.tour.event.js:33
 #, python-format
 msgid "Click here to create a new event."
 msgstr "새로운 일정을 작성하려면 여기를 클릭하십시오."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:97
+#: code:addons/website_event/static/src/js/website.tour.event.js:89
 #, python-format
 msgid "Click here to customize your event further."
 msgstr "추가 일정을 사용자 지정하려면 여기를 클릭하십시오."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:90
+#: code:addons/website_event/static/src/js/website.tour.event.js:82
 #, python-format
 msgid "Click to publish your event."
 msgstr "일정을 게시하려면 클릭하십시오."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:47
+#: code:addons/website_event/static/src/js/website.tour.event.js:54
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 #, python-format
 msgid "Continue"
 msgstr "계속"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:40
+#: code:addons/website_event/static/src/js/website.tour.event.js:47
 #, python-format
 msgid "Create Event"
 msgstr "일정 작성"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:34
+#: code:addons/website_event/static/src/js/website.tour.event.js:41
 #, python-format
 msgid ""
 "Create a name for your new event and click <em>'Continue'</em>. e.g: "
@@ -104,44 +179,51 @@ msgstr "새로운 일정 제목을 작성하고 <em>'계속'</em>을 클릭하�
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:11
+#: code:addons/website_event/static/src/js/website.tour.event.js:18
 #, python-format
 msgid "Create an Event"
 msgstr "일정 작성"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:33
+#: code:addons/website_event/static/src/js/website.tour.event.js:40
 #, python-format
 msgid "Create an Event Name"
 msgstr "일정 제목 작성"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:8
+#: code:addons/website_event/static/src/js/website.tour.event.js:15
 #, python-format
 msgid "Create an event"
 msgstr "일정 작성"
 
 #. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event_show_menu
+msgid ""
+"Creates menus Introduction, Location and Register on the page  of the event "
+"on the website."
+msgstr ""
+
+#. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:96
+#: code:addons/website_event/static/src/js/website.tour.event.js:88
 #, python-format
 msgid "Customize your event"
 msgstr "일정 사용자 지정"
 
 #. module: website_event
-#: field:event.event,show_menu:0
+#: model:ir.model.fields,field_description:website_event.field_event_event_show_menu
 msgid "Dedicated Menu"
 msgstr "전용 메뉴"
 
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:59
-#: code:addons/website_event/static/src/js/website.tour.event.js:74
+#: code:addons/website_event/static/src/js/website.tour.event.js:66
 #, python-format
 msgid "Drag & Drop a block"
-msgstr "구역 끌어다 놓기"
+msgstr "블록을 끌어다 놓기"
 
 #. module: website_event
 #. openerp-web
@@ -152,10 +234,20 @@ msgstr "'이미지-문자' 블록을 끌어 페이지에 놓습니다."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:75
+#: code:addons/website_event/static/src/js/website.tour.event.js:67
 #, python-format
 msgid "Drag the 'Text Block' in your event page."
 msgstr "일정 페이지에 '문자 블럭'을 끌어옵니다."
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_complete
+msgid "E-mail"
+msgstr "이메일"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "End of Subscription"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -163,24 +255,32 @@ msgid "Event"
 msgstr "일정"
 
 #. module: website_event
-#: view:website:website_event.introduction-open-days-in-los-angeles
-#: view:website:website_event.template_intro
+#: model:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Event Details"
+msgstr "일정 세부사항"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.template_intro
 msgid "Event Introduction"
 msgstr "일정 소개"
 
 #. module: website_event
-#: view:website:website_event.location-open-days-in-los-angeles
-#: view:website:website_event.template_location
+#: model:ir.ui.view,arch_db:website_event.template_location
 msgid "Event Location"
 msgstr "일정 위치"
 
 #. module: website_event
-#: field:event.event,menu_id:0
+#: model:ir.model.fields,field_description:website_event.field_event_event_menu_id
 msgid "Event Menu"
 msgstr "일정 메뉴"
 
 #. module: website_event
-#: view:website:website_event.404
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Event Subscription"
+msgstr "일정 구독"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.404
 msgid "Event not found!"
 msgstr "일정을 찾을 수 없습니다!"
 
@@ -191,57 +291,49 @@ msgid "Event published"
 msgstr "일정 게시"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Event registration not yet started."
+msgstr ""
+
+#. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_unpublished
 #: model:mail.message.subtype,name:website_event.mt_event_unpublished
 msgid "Event unpublished"
 msgstr "일정 게시안함"
 
 #. module: website_event
-#: view:website:website.layout
+#: model:ir.ui.view,arch_db:website_event.header_footer_custom
 #: model:website.menu,name:website_event.menu_events
 msgid "Events"
 msgstr "일정"
 
 #. module: website_event
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event.event_right_country_event
 msgid "Events from Your Country"
 msgstr "귀하의 국가 기념일"
 
 #. module: website_event
-#: view:website:website.snippets
+#: model:ir.ui.view,arch_db:website_event.country_events
 msgid "Events in visitor's country"
 msgstr "방문자 국가 기념일"
 
 #. module: website_event
-#: view:website:website_event.country_events_list
+#: model:ir.ui.view,arch_db:website_event.country_events_list
 msgid "Events:"
 msgstr "일정 :"
 
 #. module: website_event
-#: view:website:website_event.event_description_full
+#: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid ""
 "Find out what people see and say about this event,\n"
 "                            and join the conversation."
 msgstr "일정에 대해 사람들이 보는 것과 말하는 것을 알아내고,\n                            대화에 참여합니다."
 
 #. module: website_event
-#: view:website:website_event.event_description_full
-msgid "From"
-msgstr "보낸 사람"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:68
-#, python-format
-msgid "Insert another block to your event."
-msgstr "일정에 다른 블록을 삽입합니다."
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:53
-#, python-format
-msgid "Insert blocks to layout the body of your event."
-msgstr "일정 본문에 블록을 삽입합니다."
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Free"
+msgstr "무료"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:44
@@ -251,185 +343,207 @@ msgstr "소개"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:52
-#: code:addons/website_event/static/src/js/website.tour.event.js:67
-#, python-format
-msgid "Layout your event"
-msgstr "일정 배치"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:12
+#: code:addons/website_event/static/src/js/website.tour.event.js:19
 #, python-format
 msgid "Let's go through the first steps to publish a new event."
 msgstr "새로운 일정을 게시하는 첫 번째 단계를 시작합니다."
 
 #. module: website_event
-#: view:website:website.snippets
-msgid "Local Events"
-msgstr "내부 일정"
-
-#. module: website_event
 #: code:addons/website_event/models/event.py:45
 #, python-format
 msgid "Location"
-msgstr "위치"
+msgstr "차고"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_complete
+msgid "N/A"
+msgstr "해당 없음"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Name"
+msgstr "이름"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:215
-#: code:addons/website_event/static/src/js/website.tour.event.js:25
-#: code:addons/website_event/static/src/js/website_event.editor.js:11
-#: view:website:website.layout
+#: code:addons/website_event/controllers/main.py:192
+#: code:addons/website_event/static/src/js/website.tour.event.js:32
+#: code:addons/website_event/static/src/js/website_event.editor.js:14
+#: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
 msgid "New Event"
 msgstr "새 일정"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:45
+#: code:addons/website_event/static/src/js/website.tour.event.js:52
 #, python-format
 msgid "New Event Created"
 msgstr "새 일정 작성됨"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:37
 #, python-format
 msgid "Next Events"
 msgstr "다음 일정"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:64
+#: code:addons/website_event/controllers/main.py:46
 #, python-format
 msgid "Next Week"
 msgstr "다음 주"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:72
+#: code:addons/website_event/controllers/main.py:54
 #, python-format
 msgid "Next month"
 msgstr "다음 달"
 
 #. module: website_event
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event.index
 msgid "No event found"
 msgstr "일정을 찾을 수 없습니다"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:76
+#: code:addons/website_event/controllers/main.py:58
 #, python-format
 msgid "Old Events"
 msgstr "오래된 일정"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:82
+#: code:addons/website_event/static/src/js/website.tour.event.js:74
 #, python-format
 msgid "Once you click on save, your event is updated."
 msgstr "저장하면 일정이 갱신됩니다."
 
 #. module: website_event
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event.index
 msgid "Online"
 msgstr "온라인"
 
 #. module: website_event
-#: view:website:website_event.index
-msgid "Online Events"
-msgstr "온라인 일정"
-
-#. module: website_event
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event.index
 msgid "Organized by:"
 msgstr "주최 :"
 
 #. module: website_event
-#: view:website:website_event.event_description_full
+#: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Organizer"
 msgstr "주최자"
 
 #. module: website_event
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event.index
 msgid "Our Events"
 msgstr "일정"
 
 #. module: website_event
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event.event_right_photos
 msgid "Our Trainings"
 msgstr "교육"
 
 #. module: website_event
-#: view:website:website_event.event_description_full
-msgid "Participate on Twitter"
-msgstr "트위터에 참여"
+#: model:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Phone"
+msgstr "전화"
 
 #. module: website_event
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event.event_right_photos
 msgid "Photos of Past Events"
 msgstr "지난 일정 사진"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:89
-#, python-format
-msgid "Publish your event"
-msgstr "일정 게시"
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Price"
+msgstr "가격"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:67
-#, python-format
-msgid "Register"
-msgstr "등록"
-
-#. module: website_event
-#: view:website:website_event.404
-msgid "Return to the event list."
-msgstr "일정 목록으로 돌아가기"
+#: model:ir.ui.view,arch_db:website_event.view_event_sale_form
+msgid "Print Badges"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:81
 #, python-format
-msgid "Save your modifications"
-msgstr "수정 내용 저장"
+msgid "Publish your event"
+msgstr "일정 게시"
 
 #. module: website_event
-#: view:website:website_event.country_events_list
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Quantity"
+msgstr "수량"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Reference"
+msgstr "참조"
+
+#. module: website_event
+#: code:addons/website_event/models/event.py:53
+#, python-format
+msgid "Register"
+msgstr "등록"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Register Now"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.404
+msgid "Return to the event list."
+msgstr "일정 목록으로 돌아가기"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:73
+#, python-format
+msgid "Save your modifications"
+msgstr "수정 사항 저장"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.country_events_list
 msgid "See all events from"
 msgstr "모든 일정 보기"
 
 #. module: website_event
-#: view:website:website_event.country_events_list
+#: model:ir.ui.view,arch_db:website_event.country_events_list
 msgid "See all upcoming events"
 msgstr "모든 예정된 일정 보기"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:13
+#: code:addons/website_event/static/src/js/website.tour.event.js:20
 #, python-format
 msgid "Skip It"
-msgstr "건너뛰기"
+msgstr "건너 뛰기"
 
 #. module: website_event
-#: view:website:website_event.event_description_full
+#: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Social Stream"
 msgstr "사회관계망"
 
 #. module: website_event
-#: view:website:website_event.404
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Sold Out"
+msgstr "매진"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.404
 msgid "Sorry, the requested event is not available anymore."
 msgstr "죄송합니다, 이용할 수 없는 일정입니다."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:13
+#: code:addons/website_event/static/src/js/website.tour.event.js:20
 #, python-format
 msgid "Start Tutorial"
-msgstr "자습서 시작"
+msgstr "사용 지침서 시작"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:19
+#: code:addons/website_event/static/src/js/website.tour.event.js:26
 #, python-format
 msgid ""
 "The <em>Content</em> menu allows you to create new pages, events, menus, "
@@ -437,54 +551,69 @@ msgid ""
 msgstr "<em>내용</em> 메뉴는 새 페이지, 일정, 메뉴 등을 작성할 수 있습니다."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:60
+#: model:ir.model.fields,help:website_event.field_event_event_website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+
+#. module: website_event
+#: code:addons/website_event/controllers/main.py:42
 #, python-format
 msgid "This Week"
 msgstr "이번 주"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:46
+#: code:addons/website_event/static/src/js/website.tour.event.js:53
 #, python-format
 msgid "This is your new event page. We will edit the event presentation page."
 msgstr "새 일정 페이지입니다. 일정 소개 페이지를 편집합니다."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:68
+#: code:addons/website_event/controllers/main.py:50
 #, python-format
 msgid "This month"
 msgstr "이번 달"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:56
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Ticket Type"
+msgstr "티켓 유형"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Ticket Type #"
+msgstr ""
+
+#. module: website_event
+#: code:addons/website_event/controllers/main.py:38
 #, python-format
 msgid "Today"
 msgstr "오늘"
 
 #. module: website_event
-#: field:event.event,twitter_hashtag:0
+#: model:ir.model.fields,field_description:website_event.field_event_event_twitter_hashtag
 msgid "Twitter Hashtag"
 msgstr "트위터 해시태그('#특정단어')"
 
 #. module: website_event
-#: view:website:website_event.country_events_list
-msgid "Upcoming Events"
-msgstr "예정된 일정"
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "Use the top menu <i>'Content'</i> to create your first event."
+msgstr ""
 
 #. module: website_event
-#: view:website:website_event.index
-msgid "Use the top menu"
-msgstr "상단 메뉴 사용"
-
-#. module: website_event
-#: view:website:website_event.event_description_full
+#: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Use this tag:"
 msgstr "이 태그 사용 :"
 
 #. module: website_event
-#: field:event.event,website_published:0
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_published
 msgid "Visible in Website"
 msgstr "웹사이트 표시"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_complete
+msgid "We are glad to confirm your subscription to our event"
+msgstr ""
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -492,47 +621,47 @@ msgid "Website Home"
 msgstr "웹사이트 홈"
 
 #. module: website_event
-#: field:event.event,website_message_ids:0
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
 msgid "Website Messages"
 msgstr "웹사이트 메시지"
 
 #. module: website_event
-#: help:event.event,website_message_ids:0
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_url
+msgid "Website URL"
+msgstr "웹 사이트 URL"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
 msgid "Website communication history"
 msgstr "웹사이트 대화 이력"
 
 #. module: website_event
-#: field:event.event,website_meta_description:0
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_meta_description
 msgid "Website meta description"
 msgstr "웹사이트 메타 설명"
 
 #. module: website_event
-#: field:event.event,website_meta_keywords:0
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_meta_keywords
 msgid "Website meta keywords"
 msgstr "웹사이트 메타 핵심어"
 
 #. module: website_event
-#: field:event.event,website_meta_title:0
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_meta_title
 msgid "Website meta title"
 msgstr "웹사이트 메타 제목"
 
 #. module: website_event
-#: field:event.event,website_url:0
-msgid "Website url"
-msgstr "웹사이트 URL"
-
-#. module: website_event
-#: view:website:website_event.event_description_full
+#: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "When"
 msgstr "기간"
 
 #. module: website_event
-#: view:website:website_event.event_description_full
+#: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Where"
 msgstr "장소"
 
 #. module: website_event
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event.event_right_quotes
 msgid ""
 "Write here a quote from one of your attendees.\n"
 "                        It gives confidence in your\n"
@@ -540,26 +669,26 @@ msgid ""
 msgstr "참석자가 인용문을 작성합니다.\n                        일정에 대한\n                        신뢰를 제공합니다."
 
 #. module: website_event
-#: view:website:website_event.index
-msgid "col-md-6"
-msgstr "col-md-6"
+#: model:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Your subscription"
+msgstr ""
 
 #. module: website_event
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event.index
 msgid "not published"
 msgstr "게시안함"
 
 #. module: website_event
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "or"
+msgstr "또는"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.index
 msgid "pull-right"
 msgstr "오른쪽 당김"
 
 #. module: website_event
-#: view:website:website_event.event_details view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event.event_details
 msgid "to"
-msgstr "받는 사람"
-
-#. module: website_event
-#: view:website:website_event.index
-msgid "to create your first event."
-msgstr "첫 번째 일정 작성."
+msgstr "까지"

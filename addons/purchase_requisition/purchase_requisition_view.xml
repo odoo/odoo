@@ -19,7 +19,7 @@
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='approved']" position="after">
-                <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
+                <filter string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
             </xpath>
         </field>
     </record>
@@ -28,10 +28,10 @@
         <field name="name">purchase.requisition.form</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <form string="Call for Bids">
+            <form string="Call for Tenders">
             <header>              
                 <button name="sent_suppliers" states="draft" string="Confirm Call" class="oe_highlight"/>
-                <button name="open_bid" states="in_progress" string="Close Call for Bids" class="oe_highlight"/>
+                <button name="open_bid" states="in_progress" string="Close Call for Tenders" class="oe_highlight"/>
                 <button name="tender_reset" states="cancel" string="Reset to Draft" type="object" />
                 <button name="open_product_line" states="open" string="Choose product lines" type="object" class="oe_highlight" groups="purchase.group_advance_bidding"/>
                 <button name="generate_po" states="open" string="Done" type="object" class="oe_highlight"/>
@@ -39,27 +39,24 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
             <sheet>
-                <div class="oe_right oe_button_box" style="margin-top: 10px">
-                    <button name="open_product_line" type="object" string="View Products Lines"
+                <div class="oe_button_box" name="button_box">
+                    <button name="open_product_line" type="object" string="Product Lines" class="oe_stat_button" icon="fa-list"
                         attrs="{'invisible': ['|', ('state', 'not in', ('open','done')), ('exclusive', '=', 'exclusive')]}" groups="purchase.group_advance_bidding"/>
-                    
+                    <button name="open_rfq" type="object" string="RFQs/Bids" class="oe_stat_button" icon="fa-list-alt"
+                        attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <button name="%(action_purchase_requisition_partner)d" type="action"
+                        string="Request a Quotation" icon="fa-cogs"
+                        attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
                 </div>
                 <div class="pull-left">
                     <label for="name" class="oe_edit_only oe_inline"/>
                     <h1>
-                        <field name="name" class="oe_inline" attrs="{'readonly': [('state','not in',('draft'))]}"/>
-                    </h1>
-                </div>
-                <div class="pull-left">
-                    <label for="origin" class="oe_edit_only oe_inline"/>
-                    <h1>
-                        <label string="," attrs="{'invisible':[('origin','=',False)]}"/>
-                        <field name="origin" class="oe_inline" placeholder="e.g. PO0025"/>
+                        <field name="name" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </h1>
                 </div>
                 <group>
                     <group>
-                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'purchase_requisition.group_purchase_requisition_user', 'purchase.group_purchase_user', 'account.group_account_invoice']}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'purchase.group_purchase_user', 'account.group_account_invoice']}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="exclusive" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="multiple_rfq_per_supplier" attrs="{'readonly': [('state','not in',('draft'))]}"/>
@@ -68,9 +65,9 @@
                         <field name="date_end" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
-                        <field name="origin" placeholder="e.g. OP0025" attrs="{'readonly': [('state','not in',('draft'))]}"/>
-                        <field name="picking_type_id" widget="selection" groups="stock.group_locations" attrs="{'readonly': [('state','not in',('draft'))]}"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="origin" placeholder="e.g. PO0025" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="picking_type_id" widget="selection" groups="stock.group_stock_adv_location" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </group>
                 </group>
                 <notebook>
@@ -91,31 +88,25 @@
                                     <field name="product_uom_id" />
                                     <field name="schedule_date"/>
                                     <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/>
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                             </form>
                         </field>
-                        <div class="oe_right oe_button_box" style="margin-top: 10px">
-                            <button name="%(action_purchase_requisition_partner)d" type="action"
-                                string="Request a Quotation" icon="gtk-execute"
-                                attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
-                            <button name="open_rfq" type="object" string="View RFQs/Bids" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
-                        </div>
                         <separator string="Requests for Quotation"/>
-                        <field name="purchase_ids">
+                        <field name="purchase_ids" options="{'reload_on_button': true}">
                             <tree string="Purchase Order">
                                 <field name="name" string="Reference"/>
                                 <field name="date_order" string="Order Date"/>
                                 <field name="partner_id"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="location_id" groups="stock.group_locations"/>
-                                <field name="minimum_planned_date" invisible="1"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                <field name="dest_address_id" groups="stock.group_locations"/>
+                                <field name="date_planned" invisible="1"/>
                                 <field name="origin"/>
                                 <field name="state"/>
-                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>
-                                <button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-apply"/>
-                                <button name="purchase_approve" states="confirmed" string="Approved by Supplier" icon="gtk-ok"/>
-                                <button name="wkf_send_rfq" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" icon="gtk-network"/>
+                                <button name="button_cancel" states="draft,sent,to approve,purchase" string="Cancel Purchase Order" type="object" icon="fa-times"/>
+                                <button name="button_confirm" states="draft" string="Confirm Purchase Order" type="object" icon="fa-check"/>
+                                <button name="button_approve" states="to approve" string="Approved by Vendor" type="object" icon="fa-check-square-o"/>
+                                <button name="action_rfq_send" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" icon="fa-envelope-o"/>
                             </tree>
                         </field>
                         <separator string="Terms and Conditions"/>
@@ -134,12 +125,12 @@
         <field name="name">purchase.requisition.tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree fonts="bold:message_unread==True" colors="grey:state == 'cancel';red:date_end and date_end&lt;current_date;black:date_end&gt;current_date;" string="Call for Bids">
-                <field name="message_unread" invisible="1"/>
+            <tree decoration-bf="message_needaction==True" decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Call for Tenders">
+                <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <field name="ordering_date"/>
                 <field name="user_id"/>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                 <field name="date_end"/>
                 <field name="origin"/>
                 <field name="state"/>
@@ -151,21 +142,21 @@
             <field name="name">purchase.requisition.list.select</field>
             <field name="model">purchase.requisition</field>
             <field name="arch" type="xml">
-                <search string="Search Call for Bids">
-                    <field name="name" string="Call for Bids"/>
+                <search string="Search Call for Tenders">
+                    <field name="name" string="Call for Tenders"/>
                     <field name="exclusive" />
-                    <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Call for Bids"/>
-                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','in_progress')]" help="Call for Bids in negotiation"/>
-                    <filter icon="terp-dialog-close" string="Closed Bids" domain="[('state','=','open')]" help="Call for Bids where bids are closed"/>
+                    <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Call for Tenders"/>
+                    <filter string="Confirmed" domain="[('state','=','in_progress')]" help="Call for Tenders in negotiation"/>
+                    <filter string="Closed Tenders" domain="[('state','=','open')]" help="Call for Tenders where tenders are closed"/>
                     <separator/>
-                    <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
+                    <filter string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
                     <field name="user_id" />
                     <group expand="0" string="Group By">
-                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Ordering Date" icon="terp-go-month" domain="[]" context="{'group_by':'ordering_date'}"/>
-                        <filter string="End Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
+                        <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Source" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Ordering Date" domain="[]" context="{'group_by':'ordering_date'}"/>
+                        <filter string="End Month" domain="[]" context="{'group_by':'date_end'}"/>
                     </group>
                 </search>
             </field>
@@ -173,7 +164,7 @@
 
 
     <record model="ir.actions.act_window" id="action_purchase_requisition">
-        <field name="name">Calls for Bids</field>
+        <field name="name">Purchase Tenders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
@@ -182,12 +173,12 @@
         <field name="search_view_id" ref="view_purchase_requisition_filter"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
-            Click to start a new Call for Bids process. 
+            Click to start a new Call for Tenders process. 
           </p><p>
-            A Call for Bids is a procedure for generating competing offers from
-            different bidders. In the call for bids, you can record the
+            A Call for Tenders is a procedure for generating competing offers from
+            different bidders. In the call for tenders, you can record the
             products you need to buy and generate the creation of RfQs to
-            suppliers. Once the bids have been registered, you can review and
+            vendors. Once the tenders have been registered, you can review and
             compare them and you can validate some and cancel others.
           </p>
         </field>
@@ -205,7 +196,7 @@
         <field name="inherit_id" ref="stock.view_template_property_form"/>
         <field name="arch" type="xml">
             <field name="route_ids" position="after">
-                <field name="purchase_requisition"/>
+                <field name="purchase_requisition" widget="radio"/>
             </field>
         </field>
     </record>
@@ -234,26 +225,27 @@
             <field name="model">purchase.order.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order Lines" create="false" colors="blue:state == 'confirmed';gray:state == 'cancel'">
+                <tree string="Purchase Order Lines" create="false" decoration-info="quantity_tendered&gt;0">
                     <field name="name"/>
-                    <field name="partner_id" string="Supplier" />
+                    <field name="partner_id" string="Vendor"/>
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>
-                    <field name="quantity_bid"/>
+                    <field name="quantity_tendered"/>
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="price_subtotal"/>
-                    <field name="state" invisible="1"/>
-                    <field name="invoiced" invisible="1"/>
-                    <button name="action_draft" states="confirmed" type="object" string="Cancel Choice" icon="gtk-cancel"/>
-                    <button name="%(action_bid_line_qty)d" type="action" states="draft" string="Change Quantity" icon="gtk-ok"/>
-                    <button name="action_confirm" states="draft" type="object" string="Confirm Order" icon="gtk-apply"/>
+                    <field name="order_id" invisible="1"/>
+                    <button name="button_cancel" type="object" string="Cancel Choice" icon="fa-times"
+                        attrs="{'invisible': [('quantity_tendered', '=', 0)]}"/>
+                    <button name="%(action_bid_line_qty)d" type="action" string="Change Quantity" icon="fa-plus-square-o"/>
+                    <button name="button_confirm" type="object" string="Confirm Order" icon="fa-check"
+                        attrs="{'invisible': [('quantity_tendered', '>', 0)]}"/>
                 </tree>
             </field>
     </record>
 
     <record id="purchase_line_tree" model="ir.actions.act_window">
-            <field name="name">Bid Lines</field>
+            <field name="name">Tender Lines</field>
             <field name="res_model">purchase.order.line</field>
             <field name="context">{"search_default_groupby_product" : True,}</field>
             <field name="view_type">form</field>

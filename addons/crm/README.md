@@ -15,13 +15,6 @@ Track your opportunities pipeline with the revolutionary kanban view. Work
 inside your sales funnel and get instant visual information about next actions,
 new messages, top opportunities and expected revenues.
 
-Social Network Integration
---------------------------
-
-Bring social intelligence to your sales process. Gain insights from social
-media site LinkedIn to find prospects easily and load their data automatically
-into your address book.
-
 Lead Management Made Easy
 -------------------------
 
@@ -83,7 +76,7 @@ sales performance at every stage of your customer relationship.
 Drive Engagement with Gamification
 ----------------------------------
 
-### Leverage sales' natural desire for competition
+### Leverage your team's natural desire for competition
 
 Reinforce good habits and improve win rates with real-time recognition and
 rewards inspired by [game mechanics](http://en.wikipedia.org/wiki/Gamification).
@@ -94,7 +87,7 @@ objectives and team leader boards.
 
 Promote leaders and competition amongst sales team with performance ratios.
 
-### Personnal Objectives
+### Personal Objectives
 
 Assign clear goals to users to align them with the company objectives.
 

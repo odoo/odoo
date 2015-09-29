@@ -787,13 +787,6 @@ method should simply set the value of the field to compute on every record in
             for record in self:
                 record.name = str(random.randint(1, 1e6))
 
-Our compute method is very simple: it loops over ``self`` and performs the same
-operation on every record. We can make it slightly simpler by using the
-decorator :func:`~openerp.api.one` to automatically loop on the collection::
-
-        @api.one
-        def _compute_name(self):
-            self.name = str(random.randint(1, 1e6))
 
 Dependencies
 ------------
@@ -812,10 +805,10 @@ field whenever some of its dependencies have been modified::
         name = fields.Char(compute='_compute_name')
         value = fields.Integer()
 
-        @api.one
         @api.depends('value')
         def _compute_name(self):
-            self.name = "Record with value %s" % self.value
+            for record in self:
+                self.name = "Record with value %s" % self.value
 
 .. exercise:: Computed fields
 
@@ -990,18 +983,30 @@ Tree views can take supplementary attributes to further customize their
 behavior:
 
 ``colors``
-    mappings of colors to conditions. If the condition evaluates to ``True``,
-    the corresponding color is applied to the row:
+    .. deprecated:: 9.0
+        replaced by ``decoration-{$name}``
+
+``decoration-{$name}``
+    allow changing the style of a row's text based on the corresponding
+    record's attributes.
+
+    Values are Python expressions. For each record, the expression is evaluated
+    with the record's attributes as context values and if ``true``, the
+    corresponding style is applied to the row. Other context values are
+    ``uid`` (the id of the current user) and ``current_date`` (the current date
+    as a string of the form ``yyyy-MM-dd``).
+
+    ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
+    (``font-style: italic``), or any bootstrap contextual color (``danger``,
+    ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 
     .. code-block:: xml
 
-        <tree string="Idea Categories" colors="blue:state=='draft';red:state=='trashed'">
+        <tree string="Idea Categories" decoration-info="state=='draft'"
+            decoration-danger="state=='trashed'">
             <field name="name"/>
             <field name="state"/>
         </tree>
-
-    Clauses are separated by ``;``, the color and condition are separated by
-    ``:``.
 
 ``editable``
     Either ``"top"`` or ``"bottom"``. Makes the tree view editable in-place
@@ -1825,6 +1830,7 @@ Examples can be easily adapted from XML-RPC to JSON-RPC.
     * https://github.com/syleam/openobject-library
     * https://github.com/nicolas-van/openerp-client-lib
     * https://pypi.python.org/pypi/oersted/
+    * https://github.com/abhishek-jaiswal/php-openerp-lib
 
 .. [#autofields] it is possible to :attr:`disable the automatic creation of some
                  fields <openerp.models.Model._log_access>`

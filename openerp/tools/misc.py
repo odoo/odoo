@@ -1,24 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 """
@@ -37,8 +18,7 @@ import threading
 import time
 import werkzeug.utils
 import zipfile
-from collections import defaultdict, Mapping, OrderedDict
-from datetime import datetime
+from collections import defaultdict, Hashable, Iterable, Mapping, OrderedDict
 from itertools import islice, izip, groupby
 from lxml import etree
 from which import which
@@ -73,10 +53,7 @@ def find_in_path(name):
     path = os.environ.get('PATH', os.defpath).split(os.pathsep)
     if config.get('bin_path') and config['bin_path'] != 'None':
         path.append(config['bin_path'])
-    try:
-        return which(name, path=os.pathsep.join(path))
-    except IOError:
-        return None
+    return which(name, path=os.pathsep.join(path))
 
 def _exec_pipe(prog, args, env=None):
     cmd = (prog,) + args
@@ -106,15 +83,25 @@ def find_pg_tool(name):
         raise Exception('Command `%s` not found.' % name)
 
 def exec_pg_environ():
-    """ On systems where pg_restore/pg_dump require an explicit password (i.e.
-    on Windows where TCP sockets are used), it is necessary to pass the
+    """
+    Force the database PostgreSQL environment variables to the database
+    configuration of Odoo.
+
+    Note: On systems where pg_restore/pg_dump require an explicit password
+    (i.e.  on Windows where TCP sockets are used), it is necessary to pass the
     postgres user password in the PGPASSWORD environment variable or in a
     special .pgpass file.
 
     See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
     """
     env = os.environ.copy()
-    if not env.get('PGPASSWORD') and openerp.tools.config['db_password']:
+    if openerp.tools.config['db_host']:
+        env['PGHOST'] = openerp.tools.config['db_host']
+    if openerp.tools.config['db_port']:
+        env['PGPORT'] = str(openerp.tools.config['db_port'])
+    if openerp.tools.config['db_user']:
+        env['PGUSER'] = openerp.tools.config['db_user']
+    if openerp.tools.config['db_password']:
         env['PGPASSWORD'] = openerp.tools.config['db_password']
     return env
 
@@ -446,27 +433,6 @@ class UpdateableDict(local):
     def __ne__(self, y):
         return self.dict.__ne__(y)
 
-class currency(float):
-    """ Deprecate
-    
-    .. warning::
-    
-    Don't use ! Use res.currency.round()
-    """
-
-    def __init__(self, value, accuracy=2, rounding=None):
-        if rounding is None:
-            rounding=10**-accuracy
-        self.rounding=rounding
-        self.accuracy=accuracy
-
-    def __new__(cls, value, accuracy=2, rounding=None):
-        return float.__new__(cls, round(value, accuracy))
-
-    #def __str__(self):
-    #   display_value = int(self*(10**(-self.accuracy))/self.rounding)*self.rounding/(10**(-self.accuracy))
-    #   return str(display_value)
-
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
@@ -643,48 +609,6 @@ class profile(object):
 
         return wrapper
 
-__icons_list = ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
-'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
-'STOCK_CONNECT', 'STOCK_CONVERT', 'STOCK_COPY', 'STOCK_CUT', 'STOCK_DELETE',
-'STOCK_DIALOG_AUTHENTICATION', 'STOCK_DIALOG_ERROR', 'STOCK_DIALOG_INFO',
-'STOCK_DIALOG_QUESTION', 'STOCK_DIALOG_WARNING', 'STOCK_DIRECTORY', 'STOCK_DISCONNECT',
-'STOCK_DND', 'STOCK_DND_MULTIPLE', 'STOCK_EDIT', 'STOCK_EXECUTE', 'STOCK_FILE',
-'STOCK_FIND', 'STOCK_FIND_AND_REPLACE', 'STOCK_FLOPPY', 'STOCK_GOTO_BOTTOM',
-'STOCK_GOTO_FIRST', 'STOCK_GOTO_LAST', 'STOCK_GOTO_TOP', 'STOCK_GO_BACK',
-'STOCK_GO_DOWN', 'STOCK_GO_FORWARD', 'STOCK_GO_UP', 'STOCK_HARDDISK',
-'STOCK_HELP', 'STOCK_HOME', 'STOCK_INDENT', 'STOCK_INDEX', 'STOCK_ITALIC',
-'STOCK_JUMP_TO', 'STOCK_JUSTIFY_CENTER', 'STOCK_JUSTIFY_FILL',
-'STOCK_JUSTIFY_LEFT', 'STOCK_JUSTIFY_RIGHT', 'STOCK_MEDIA_FORWARD',
-'STOCK_MEDIA_NEXT', 'STOCK_MEDIA_PAUSE', 'STOCK_MEDIA_PLAY',
-'STOCK_MEDIA_PREVIOUS', 'STOCK_MEDIA_RECORD', 'STOCK_MEDIA_REWIND',
-'STOCK_MEDIA_STOP', 'STOCK_MISSING_IMAGE', 'STOCK_NETWORK', 'STOCK_NEW',
-'STOCK_NO', 'STOCK_OK', 'STOCK_OPEN', 'STOCK_PASTE', 'STOCK_PREFERENCES',
-'STOCK_PRINT', 'STOCK_PRINT_PREVIEW', 'STOCK_PROPERTIES', 'STOCK_QUIT',
-'STOCK_REDO', 'STOCK_REFRESH', 'STOCK_REMOVE', 'STOCK_REVERT_TO_SAVED',
-'STOCK_SAVE', 'STOCK_SAVE_AS', 'STOCK_SELECT_COLOR', 'STOCK_SELECT_FONT',
-'STOCK_SORT_ASCENDING', 'STOCK_SORT_DESCENDING', 'STOCK_SPELL_CHECK',
-'STOCK_STOP', 'STOCK_STRIKETHROUGH', 'STOCK_UNDELETE', 'STOCK_UNDERLINE',
-'STOCK_UNDO', 'STOCK_UNINDENT', 'STOCK_YES', 'STOCK_ZOOM_100',
-'STOCK_ZOOM_FIT', 'STOCK_ZOOM_IN', 'STOCK_ZOOM_OUT',
-'terp-account', 'terp-crm', 'terp-mrp', 'terp-product', 'terp-purchase',
-'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
-'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph',
-'terp-check','terp-go-month','terp-go-year','terp-go-today','terp-document-new','terp-camera_test',
-'terp-emblem-important','terp-gtk-media-pause','terp-gtk-stop','terp-gnome-cpu-frequency-applet+',
-'terp-dialog-close','terp-gtk-jump-to-rtl','terp-gtk-jump-to-ltr','terp-accessories-archiver',
-'terp-stock_align_left_24','terp-stock_effects-object-colorize','terp-go-home','terp-gtk-go-back-rtl',
-'terp-gtk-go-back-ltr','terp-personal','terp-personal-','terp-personal+','terp-accessories-archiver-minus',
-'terp-accessories-archiver+','terp-stock_symbol-selection','terp-call-start','terp-dolar',
-'terp-face-plain','terp-folder-blue','terp-folder-green','terp-folder-orange','terp-folder-yellow',
-'terp-gdu-smart-failing','terp-go-week','terp-gtk-select-all','terp-locked','terp-mail-forward',
-'terp-mail-message-new','terp-mail-replied','terp-rating-rated','terp-stage','terp-stock_format-scientific',
-'terp-dolar_ok!','terp-idea','terp-stock_format-default','terp-mail-','terp-mail_delete'
-]
-
-def icons(*a, **kw):
-    global __icons_list
-    return [(x, x) for x in __icons_list ]
-
 def detect_ip_addr():
     """Try a very crude method to figure out a valid external
        IP or hostname for the current machine. Don't rely on this
@@ -736,90 +660,6 @@ def detect_ip_addr():
     except Exception:
         ip_addr = 'localhost'
     return ip_addr
-
-# RATIONALE BEHIND TIMESTAMP CALCULATIONS AND TIMEZONE MANAGEMENT:
-#  The server side never does any timestamp calculation, always
-#  sends them in a naive (timezone agnostic) format supposed to be
-#  expressed within the server timezone, and expects the clients to
-#  provide timestamps in the server timezone as well.
-#  It stores all timestamps in the database in naive format as well,
-#  which also expresses the time in the server timezone.
-#  For this reason the server makes its timezone name available via the
-#  common/timezone_get() rpc method, which clients need to read
-#  to know the appropriate time offset to use when reading/writing
-#  times.
-def get_win32_timezone():
-    """Attempt to return the "standard name" of the current timezone on a win32 system.
-       @return the standard name of the current win32 timezone, or False if it cannot be found.
-    """
-    res = False
-    if sys.platform == "win32":
-        try:
-            import _winreg
-            hklm = _winreg.ConnectRegistry(None,_winreg.HKEY_LOCAL_MACHINE)
-            current_tz_key = _winreg.OpenKey(hklm, r"SYSTEM\CurrentControlSet\Control\TimeZoneInformation", 0,_winreg.KEY_ALL_ACCESS)
-            res = str(_winreg.QueryValueEx(current_tz_key,"StandardName")[0])  # [0] is value, [1] is type code
-            _winreg.CloseKey(current_tz_key)
-            _winreg.CloseKey(hklm)
-        except Exception:
-            pass
-    return res
-
-def detect_server_timezone():
-    """Attempt to detect the timezone to use on the server side.
-       Defaults to UTC if no working timezone can be found.
-       @return the timezone identifier as expected by pytz.timezone.
-    """
-    try:
-        import pytz
-    except Exception:
-        _logger.warning("Python pytz module is not available. "
-            "Timezone will be set to UTC by default.")
-        return 'UTC'
-
-    # Option 1: the configuration option (did not exist before, so no backwards compatibility issue)
-    # Option 2: to be backwards compatible with 5.0 or earlier, the value from time.tzname[0], but only if it is known to pytz
-    # Option 3: the environment variable TZ
-    sources = [ (config['timezone'], 'OpenERP configuration'),
-                (time.tzname[0], 'time.tzname'),
-                (os.environ.get('TZ',False),'TZ environment variable'), ]
-    # Option 4: OS-specific: /etc/timezone on Unix
-    if os.path.exists("/etc/timezone"):
-        tz_value = False
-        try:
-            f = open("/etc/timezone")
-            tz_value = f.read(128).strip()
-        except Exception:
-            pass
-        finally:
-            f.close()
-        sources.append((tz_value,"/etc/timezone file"))
-    # Option 5: timezone info from registry on Win32
-    if sys.platform == "win32":
-        # Timezone info is stored in windows registry.
-        # However this is not likely to work very well as the standard name
-        # of timezones in windows is rarely something that is known to pytz.
-        # But that's ok, it is always possible to use a config option to set
-        # it explicitly.
-        sources.append((get_win32_timezone(),"Windows Registry"))
-
-    for (value,source) in sources:
-        if value:
-            try:
-                tz = pytz.timezone(value)
-                _logger.info("Using timezone %s obtained from %s.", tz.zone, source)
-                return value
-            except pytz.UnknownTimeZoneError:
-                _logger.warning("The timezone specified in %s (%s) is invalid, ignoring it.", source, value)
-
-    _logger.warning("No valid timezone could be detected, using default UTC "
-        "timezone. You can specify it explicitly with option 'timezone' in "
-        "the server configuration.")
-    return 'UTC'
-
-def get_server_timezone():
-    return "UTC"
-
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 DEFAULT_SERVER_TIME_FORMAT = "%H:%M:%S"
@@ -941,54 +781,6 @@ def posix_to_ldml(fmt, locale):
         buf.append("'")
 
     return ''.join(buf)
-
-def server_to_local_timestamp(src_tstamp_str, src_format, dst_format, dst_tz_name,
-        tz_offset=True, ignore_unparsable_time=True):
-    """
-    Convert a source timestamp string into a destination timestamp string, attempting to apply the
-    correct offset if both the server and local timezone are recognized, or no
-    offset at all if they aren't or if tz_offset is false (i.e. assuming they are both in the same TZ).
-
-    WARNING: This method is here to allow formatting dates correctly for inclusion in strings where
-             the client would not be able to format/offset it correctly. DO NOT use it for returning
-             date fields directly, these are supposed to be handled by the client!!
-
-    @param src_tstamp_str: the str value containing the timestamp in the server timezone.
-    @param src_format: the format to use when parsing the server timestamp.
-    @param dst_format: the format to use when formatting the resulting timestamp for the local/client timezone.
-    @param dst_tz_name: name of the destination timezone (such as the 'tz' value of the client context)
-    @param ignore_unparsable_time: if True, return False if src_tstamp_str cannot be parsed
-                                   using src_format or formatted using dst_format.
-
-    @return local/client formatted timestamp, expressed in the local/client timezone if possible
-            and if tz_offset is true, or src_tstamp_str if timezone offset could not be determined.
-    """
-    if not src_tstamp_str:
-        return False
-
-    res = src_tstamp_str
-    if src_format and dst_format:
-        # find out server timezone
-        server_tz = get_server_timezone()
-        try:
-            # dt_value needs to be a datetime.datetime object (so no time.struct_time or mx.DateTime.DateTime here!)
-            dt_value = datetime.strptime(src_tstamp_str, src_format)
-            if tz_offset and dst_tz_name:
-                try:
-                    import pytz
-                    src_tz = pytz.timezone(server_tz)
-                    dst_tz = pytz.timezone(dst_tz_name)
-                    src_dt = src_tz.localize(dt_value, is_dst=True)
-                    dt_value = src_dt.astimezone(dst_tz)
-                except Exception:
-                    pass
-            res = dt_value.strftime(dst_format)
-        except Exception:
-            # Normal ways to end up here are if strptime or strftime failed
-            if not ignore_unparsable_time:
-                return False
-    return res
-
 
 def split_every(n, iterable, piece_maker=tuple):
     """Splits an iterable into length-n pieces. The last piece will be shorter
@@ -1175,7 +967,7 @@ class CountingStream(object):
 
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
-    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-d', '--database', '-u', '--update', '-i', '--init']))
+    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init']))
     assert all(config.parser.has_option(s) for s in strip_args)
     takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
 
@@ -1256,6 +1048,16 @@ def dumpstacks(sig=None, frame=None):
 
     _logger.info("\n".join(code))
 
+def freehash(arg):
+    if isinstance(arg, Mapping):
+        return hash(frozendict(arg))
+    elif isinstance(arg, Iterable):
+        return hash(frozenset(arg))
+    elif isinstance(arg, Hashable):
+        return hash(arg)
+    else:
+        return id(arg)
+
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
     def __delitem__(self, key):
@@ -1272,6 +1074,26 @@ class frozendict(dict):
         raise NotImplementedError("'setdefault' not supported on frozendict")
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
+    def __hash__(self):
+        return hash(frozenset((key, freehash(val)) for key, val in self.iteritems()))
+
+class Collector(Mapping):
+    """ A mapping from keys to lists. This is essentially a space optimization
+        for ``defaultdict(list)``.
+    """
+    __slots__ = ['_map']
+    def __init__(self):
+        self._map = {}
+    def add(self, key, val):
+        vals = self._map.setdefault(key, [])
+        if val not in vals:
+            vals.append(val)
+    def __getitem__(self, key):
+        return self._map.get(key, ())
+    def __iter__(self):
+        return iter(self._map)
+    def __len__(self):
+        return len(self._map)
 
 class OrderedSet(OrderedDict):
     """ A simple collection that remembers the elements insertion order. """
@@ -1299,4 +1121,39 @@ else:
     def html_escape(text):
         return werkzeug.utils.escape(text)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
+    """
+        Assuming 'Account' decimal.precision=3:
+            formatLang(value) -> digits=2 (default)
+            formatLang(value, digits=4) -> digits=4
+            formatLang(value, dp='Account') -> digits=3
+            formatLang(value, digits=5, dp='Account') -> digits=5
+    """
+
+    if digits is None:
+        digits = DEFAULT_DIGITS = 2
+        if dp:
+            decimal_precision_obj = env['decimal.precision']
+            digits = decimal_precision_obj.precision_get(dp)
+        elif (hasattr(value, '_field') and isinstance(value._field, (float_field, function_field)) and value._field.digits):
+                digits = value._field.digits[1]
+                if not digits and digits is not 0:
+                    digits = DEFAULT_DIGITS
+
+    if isinstance(value, (str, unicode)) and not value:
+        return ''
+
+    lang = env.user.company_id.partner_id.lang or 'en_US'
+    lang_objs = env['res.lang'].search([('code', '=', lang)])
+    if not lang_objs:
+        lang_objs = env['res.lang'].search([('code', '=', 'en_US')])
+    lang_obj = lang_objs[0]
+
+    res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+
+    if currency_obj:
+        if currency_obj.position == 'after':
+            res = '%s %s' % (res, currency_obj.symbol)
+        elif currency_obj and currency_obj.position == 'before':
+            res = '%s %s' % (currency_obj.symbol, res)
+    return res

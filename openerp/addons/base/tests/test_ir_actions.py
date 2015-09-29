@@ -1,6 +1,6 @@
-import unittest2
+import unittest
 
-from openerp.osv.orm import except_orm
+from openerp.exceptions import ValidationError
 import openerp.tests.common as common
 from openerp.tools import mute_logger
 
@@ -194,7 +194,6 @@ workflow"""
             'state': 'trigger',
             'use_relational_model': 'base',
             'wkf_model_id': self.res_partner_model_id,
-            'wkf_model_name': 'res.partner',
             'wkf_transition_id': partner_trs1_id,
         })
         self.ir_actions_server.run(cr, uid, [self.act_id], self.context)
@@ -205,7 +204,6 @@ workflow"""
         self.ir_actions_server.write(cr, uid, [self.act_id], {
             'use_relational_model': 'relational',
             'wkf_model_id': self.res_country_model_id,
-            'wkf_model_name': 'res.country',
             'wkf_field_id': self.res_partner_country_field_id,
             'wkf_transition_id': country_trs1_id,
         })
@@ -398,11 +396,11 @@ workflow"""
         self.assertEqual(res.get('type'), 'ir.actions.act_url')
 
         # Test loops
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValidationError):
             self.ir_actions_server.write(cr, uid, [self.act_id], {
                 'child_ids': [(6, 0, [self.act_id])]
             })
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

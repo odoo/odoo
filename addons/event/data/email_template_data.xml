@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="event_registration_mail_template_badge" model="mail.template">
+            <field name="name">Event: Registration Badge</field>
+            <field name="model_id" ref="event.model_event_registration"/>
+            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
+            <field name="email_to" >${object.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="subject">Your badge for ${object.event_id.name}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="report_event_registration_badge"/>
+            <field name="report_name">badge_of_${(object.event_id.name or '').replace('/','_')}</field>
+            <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>
+<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.
+Please, Find your <b>Event Badge</b> attached with this mail.</p>
+<p>Thank you for your participation!</p>
+<p>Best regards</p>]]></field>
+        </record>
+
+        <record id="event_subscription" model="mail.template">
+            <field name="name">Event subscription</field>
+            <field name="model_id" ref="event.model_event_registration"/>
+            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
+            <field name="email_to" >${object.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="reply_to">${object.event_id.reply_to|safe}</field>
+            <field name="subject">Your subscription at ${object.event_id.name}</field>
+            <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>
+<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.
+You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>
+<p>Thank you for your participation!</p>
+<p>Best regards</p>]]></field>
+        </record>
+
+        <record id="event_reminder" model="mail.template">
+            <field name="name">Event: reminder</field>
+            <field name="model_id" ref="event.model_event_registration"/>
+            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
+            <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="reply_to">${object.event_id.reply_to|safe}</field>
+            <field name="subject">Reminder of event ${object.event_id.name}</field>
+            <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>
+<p>This is a reminder for ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.
+For any further information please contact our event department.</p>
+<p>Thank you for your participation!</p>
+<p>Best regards</p>]]></field>
+        </record>
+
+        <record id="event_thanks" model="mail.template">
+            <field name="name">Event: thanks for attending</field>
+            <field name="model_id" ref="event.model_event_registration"/>
+            <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
+            <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="reply_to">${object.event_id.reply_to|safe}</field>
+            <field name="subject">Thanks for attending ${object.event_id.name}</field>
+            <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>
+<p>We would like to thank you for your presence at our event ${object.event_id.name}.
+<br/><br/>
+    % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:
+        <strong>The ${object.event_id.organizer_id.name} Team</strong>
+    % elif object.event_id.organizer_id:
+        <strong>${object.event_id.organizer_id.name}</strong>
+    % endif
+</p>]]></field>
+        </record>
+
+    </data>
+</openerp>

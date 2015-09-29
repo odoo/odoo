@@ -2,7 +2,7 @@
 class assertion_report(object):
     """
     Simple pair of success and failures counts (used to record YAML and XML
-    `assert` tags as well as unittest2 tests outcome (in this case, not
+    `assert` tags as well as unittest tests outcome (in this case, not
     individual `assert`)).
     """
     def __init__(self):
@@ -26,4 +26,3 @@ class assertion_report(object):
     def __str__(self):
         res = 'Assertions report: %s successes, %s failures' % (self.successes, self.failures)
         return res
-

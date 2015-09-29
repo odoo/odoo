@@ -6,40 +6,38 @@
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
                 <form string="Model">
-                    <sheet>
-                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
-                        <div class="oe_title">
-                            <label for="modelname" class="oe_edit_only"/>
-                            <h1>
-                                <field name="modelname" />
-                            </h1>
-                            <label for="brand_id" class="oe_edit_only"/>
-                            <h2>
-                                <field name="brand_id" on_change="on_change_brand(brand_id)"/>
-                            </h2>
-                        </div>
-                        <notebook>
-                            <page string="Vendors">
-                                <field name="vendors" widget="many2many_kanban">
-                                    <kanban quick_create="false" create="true">
-                                        <field name="name"/>
-                                        <templates>
-                                            <t t-name="kanban-box">
-                                                <div style="position: relative">
-                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                    <div class="oe_module_vignette">
-                                                        <div class="oe_module_desc">
-                                                            <field name="name"/>
-                                                        </div>
+                    <field name="image_medium" widget='image' class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="modelname" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Model S"/>
+                        </h1>
+                        <label for="brand_id" class="oe_edit_only"/>
+                        <h2>
+                            <field name="brand_id" on_change="on_change_brand(brand_id)" placeholder="e.g. Tesla"/>
+                        </h2>
+                    </div>
+                    <notebook>
+                        <page string="Vendors">
+                            <field name="vendors" widget="many2many_kanban">
+                                <kanban quick_create="false" create="true">
+                                    <field name="name"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div style="position: relative">
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                <div class="oe_module_vignette">
+                                                    <div class="oe_module_desc">
+                                                        <field name="name"/>
                                                     </div>
                                                 </div>
-                                            </t>
-                                        </templates>
-                                    </kanban>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -50,7 +48,7 @@
             <field name="arch" type="xml">
                 <tree string="Models">
                     <field name="brand_id" />
-                    <field name="modelname" />
+                    <field name="name" />
                 </tree>
             </field>
         </record>
@@ -62,7 +60,7 @@
                 <search string="Vehicles costs" >
                     <field name="brand_id" />
                     <group expand="1" string="Group By">
-                        <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Brand"/>
+                        <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Make"/>
                     </group>
                 </search>
             </field>
@@ -78,7 +76,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new model.
               </p><p>
-                You can define several models (e.g. A3, A4) for each brand (Audi).
+                You can define several models (e.g. A3, A4) for each make (Audi).
               </p>
             </field>
         </record>
@@ -87,7 +85,7 @@
             <field name="name">fleet.vehicle.model.brand.tree</field>
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
-                <tree string="Model Brand">
+                <tree string="Model Make">
                     <field name="name" />
                 </tree>
             </field>
@@ -97,18 +95,16 @@
             <field name="name">fleet.vehicle.model.brand.form</field>
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
-                <form string="Model Brand">
-                    <sheet>
-                        <group>
-                            <div>
-                                <field name="image_medium" widget="image" class="oe_left oe_avatar"/>
-                                <label for="name" class="oe_edit_only"/>
-                                <h1>
-                                    <field name="name" class="oe_inline" />
-                                </h1>
-                            </div>
-                        </group>
-                    </sheet>
+                <form string="Model Make">
+                    <group>
+                        <div>
+                            <field name="image_medium" widget="image" class="oe_avatar"/>
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>
@@ -123,10 +119,10 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette oe_semantic_html_override">
-                                <a type="open" href="#" class="oe_kanban_action oe_kanban_action_a">
-                                    <img t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_small', record.id.value)" class="oe_employee_picture"/>
+                                <a type="open" href="#" class="oe_kanban_action">
+                                    <img t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_small', record.id.value)" class="img-responsive" style="width:100px;"/>
                                 </a>
-                                <div style="text-align:center;">
+                                <div class="text-center">
                                     <h4 class="oe_partner_heading">
                                         <a type="open">
                                             <field name="name"/>
@@ -134,9 +130,6 @@
                                     </h4>
                                 </div>
                             </div>
-                            <script>
-                            $('.oe_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
-                        </script>
                         </t>
                     </templates>
                 </kanban>
@@ -144,13 +137,13 @@
         </record>
 
         <record model='ir.actions.act_window' id='fleet_vehicle_model_brand_act'>
-            <field name="name">Model brand of Vehicle</field>
+            <field name="name">Model make of Vehicle</field>
             <field name="res_model">fleet.vehicle.model.brand</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new brand.
+                Click to create a new make.
               </p>
             </field>
         </record>
@@ -174,16 +167,16 @@
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a vehicule status.
+                Click to create a vehicle status.
               </p><p>
                 You can customize available status to track the evolution of
-                each vehicule. Example: Active, Being Repaired, Sold.
+                each vehicle. Example: Active, Being Repaired, Sold.
               </p>
             </field>
         </record>
 
-        <menuitem name="Fleet" id="menu_root" sequence="110" groups="group_fleet_user"/>
-        <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="3" groups="group_fleet_manager"/>
+        <menuitem name="Fleet" id="menu_root" sequence="115" groups="group_fleet_user" icon="fa-car" web_icon="fleet,static/description/icon.png"/>
+        <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="100" groups="group_fleet_manager"/>
         <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" groups="base.group_no_one"/>
         <menuitem action="fleet_vehicle_model_brand_act" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" groups="base.group_no_one"/>
         <menuitem action="fleet_vehicle_state_act" parent="fleet_configuration" id="fleet_vehicle_state_menu" groups="group_fleet_manager"/>
@@ -197,20 +190,7 @@
                         <field name="state_id"  widget="statusbar" clickable="True" />
                     </header>
                     <sheet>
-                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
-                        <div class="oe_title">
-                            <label for="model_id" class="oe_edit_only"/>
-                            <h1>
-                                <field name="model_id" class="oe_inline" on_change="on_change_model(model_id)"/>
-                            </h1>
-                            <label for="license_plate" class="oe_edit_only"/>
-                            <h2>
-                                <field name="license_plate" class="oe_inline"/>
-                            </h2>
-                            <label for="tag_ids" class="oe_edit_only"/>
-                            <field name="tag_ids" widget="many2many_tags" />
-                        </div>
-                        <div class="oe_right oe_button_box">
+                        <div class="oe_button_box" name="button_box">
                             <button name="return_action_to_open"
                                 type="object"
                                 class="oe_stat_button"
@@ -252,6 +232,19 @@
                                 <field name="odometer_count" widget="statinfo" string="Odometer"/>
                             </button>
                         </div>
+                        <field name="image_medium" widget='image' class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="model_id" class="oe_edit_only"/>
+                            <h1>
+                                <field name="model_id" on_change="on_change_model(model_id)" placeholder="e.g. Model S"/>
+                            </h1>
+                            <label for="license_plate" class="oe_edit_only"/>
+                            <h2>
+                                <field name="license_plate" class="oe_inline" placeholder="e.g. PAE 326"/>
+                            </h2>
+                            <label for="tag_ids" class="oe_edit_only"/>
+                            <field name="tag_ids" widget="many2many_tags" />
+                        </div>
                         <group col="2" string="General Properties">
                             <group >
                                 <field name="driver_id" />
@@ -260,10 +253,10 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group >
-                                <label for="odometer" />
-                                <div>
-                                    <field name="odometer" class="oe_inline"/>
-                                    <field name="odometer_unit" class="oe_inline"/>
+                                <label for="odometer"/>
+                                <div class="o_row">
+                                    <field name="odometer"/>
+                                    <field name="odometer_unit"/>
                                 </div>
                                 <field name="acquisition_date" />
                                 <field name="car_value" />
@@ -279,14 +272,14 @@
                                 <field name="transmission" />
                                 <field name="fuel_type" />
                                 <label for="co2"/>
-                                <div>
-                                    <field name="co2" class="oe_inline"/> g/km
+                                <div class="o_row">
+                                    <field name="co2"/><span>g/km</span>
                                 </div>
                                 <field name="horsepower" />
                                 <field name="horsepower_tax" />
                                 <label for="power"/>
-                                <div>
-                                    <field name="power" class="oe_inline"/> kW
+                                <div class="o_row">
+                                    <field name="power"/><span>kW</span>
                                 </div>
                             </group>
                         </group>
@@ -302,14 +295,14 @@
             <field name="name">fleet.vehicle.tree</field>
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
-                <tree string="Vehicle" colors="orange:contract_renewal_due_soon and not contract_renewal_overdue;red:contract_renewal_overdue">
+                <tree string="Vehicle" decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue" decoration-danger="contract_renewal_overdue">
                     <field name="license_plate" />
                     <field name="model_id" />
                     <field name="driver_id" />
                     <field name="vin_sn" />
                     <field name="acquisition_date" />
                     <field name="state_id"/>
-                    <field name="odometer" />
+                    <field name="odometer"/>
                     <field name="odometer_unit" />
                     <field name="contract_renewal_due_soon" invisible="1"/>
                     <field name="contract_renewal_overdue" invisible="1" />
@@ -358,33 +351,17 @@
 
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_vignette oe_semantic_html_override">
-                                <a type="open" href="#" class="oe_kanban_action oe_kanban_action_a">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_tags_section">
+                                    <field name="tag_ids"/>
+                                </div>
+                                <div class="o_kanban_image">
                                     <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.value)"/>
-                                </a>
+                                </div>
                                 <div class="oe_kanban_details">
-                                    <h4 class="oe_partner_heading">
-                                        <a type="open">
-                                            <field name="license_plate"/><br/>
-                                            <field name="model_id" />
-                                        </a>
-                                    </h4>
-                                    <t t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value">
-                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
-                                            <span class="oe_tag oe_kanban_color_3"><field name="contract_renewal_name" />
-                                               <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
-                                            </span>
-                                        </a>
-                                    </t>
-
-                                    <t t-if="record.contract_renewal_overdue.raw_value">
-                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
-                                            <span class="oe_tag oe_kanban_color_2"><field name="contract_renewal_name" />
-                                                <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
-                                            </span>
-                                        </a>
-                                    </t>
-
+                                    <strong>
+                                        <field name="license_plate"/> : <field name="model_id"/>
+                                    </strong>
                                     <ul>
                                         <li>
                                             <t t-if="record.driver_id.raw_value"><field name="driver_id"/></t>
@@ -392,10 +369,15 @@
                                         <li>
                                             <t t-if="record.location.raw_value"><field name="location"/></t>
                                         </li>
-
                                     </ul>
-
-                                    <field name="tag_ids"/>
+                                    <div class="o_kanban_button">
+                                        <a t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-warning" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
+                                            <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
+                                        </a>
+                                        <a t-if="record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-danger" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
+                                            <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </t>
@@ -455,9 +437,9 @@
                             </group>
                             <group string="Odometer details">
                                 <label for="odometer"/>
-                                <div>
-                                    <field name="odometer" class="oe_inline"/>
-                                    <field name="odometer_unit" class="oe_inline"/>
+                                <div class="o_row">
+                                    <field name="odometer"/>
+                                    <field name="odometer_unit"/>
                                 </div>
                             </group>
                         </group>
@@ -521,7 +503,7 @@
             <field name="name">fleet.vehicle.log.contract.tree</field>
             <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contract logs" colors="orange:days_left>0 and days_left&lt;15;red:days_left==0;grey:state=='closed'">
+                <tree string="Contract logs" decoration-warning="days_left>0 and days_left&lt;15" decoration-danger="days_left==0" decoration-muted="state=='closed'">
                     <field name="start_date" />
                     <field name="expiration_date" />
                     <field name="days_left" invisible="1"/>
@@ -654,7 +636,7 @@
             <field name="arch" type="xml">
                 <form string="Fuel Logs">
                     <sheet>
-                        <group col="2">
+                        <group>
                             <group string="Vehicle Details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                             </group>
@@ -664,12 +646,12 @@
                                 <field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)"/>
                             </group>
                         </group>
-                        <group col="2">
+                        <group>
                             <group string="Odometer Details">
                                 <label for="odometer"/>
-                                <div>
-                                    <field name="odometer" class="oe_inline"/>
-                                    <field name="odometer_unit" class="oe_inline"/>
+                                <div class="o_row">
+                                    <field name="odometer"/>
+                                    <field name="odometer_unit"/>
                                 </div>
                             </group>
                             <group string="Additional Details">
@@ -679,9 +661,7 @@
                                 <field name="vendor_id" context="{'default_supplier': True}"/>
                             </group>
                         </group>
-                        <group string="Notes">
-                            <field nolabel="1" name="notes" placeholder="Write here any other information"/>
-                        </group>
+                        <field name="notes" placeholder="Write here any other information"/>
                     </sheet>
                 </form>
             </field>
@@ -768,9 +748,9 @@
                             </group>
                             <group string="Odometer Details">
                                 <label for="odometer"/>
-                                <div>
-                                    <field name="odometer" class="oe_inline"/>
-                                    <field name="odometer_unit" class="oe_inline"/>
+                                <div class="o_row">
+                                    <field name="odometer"/>
+                                    <field name="odometer_unit"/>
                                 </div>
                             </group>
                         </group>
@@ -898,16 +878,40 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_effective_costs_report'>
-            <field name="name">fleet.vehicle.cost.graph</field>
+        <record model='ir.ui.view' id='fleet_vehicle_effective_costs_report_pivot'>
+            <field name="name">fleet.vehicle.cost.pivot</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
-                <graph string="Vehicles costs" type="pivot">
+                <pivot string="Vehicles costs">
                     <field name="vehicle_id" type="row"/>
                     <field name="cost_type" type="row"/>
                     <field name="date" interval="year" type="col"/>
                     <field name="amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_effective_costs_report'>
+            <field name="name">fleet.vehicle.cost.graph</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <graph string="Vehicles costs">
+                    <field name="vehicle_id"/>
+                    <field name="date" interval="year"/>
+                    <field name="amount" type="measure"/>
                 </graph>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_indicative_costs_report_pivot'>
+            <field name="name">fleet.vehicle.cost.pivot</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <pivot string="Vehicles costs" >
+                    <field name="vehicle_id" type="row"/>
+                    <field name="cost_type" type="col"/>
+                    <field name="amount" type="measure"/>
+                </pivot>
             </field>
         </record>
 
@@ -915,7 +919,7 @@
             <field name="name">fleet.vehicle.cost.graph</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
-                <graph string="Vehicles costs" type="pivot">
+                <graph string="Vehicles costs">
                     <field name="parent_id" type="row"/>
                     <field name="cost_type" type="col"/>
                     <field name="amount" type="measure"/>
@@ -961,7 +965,7 @@
                             </group>
                             <group>
                                 <field name="date"/>
-                                <field name="parent_id"/>
+                                <field name="parent_id" groups="base.group_no_one"/>
                             </group>
                         </group>
                     </sheet>

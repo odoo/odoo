@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <!-- Equipment categories -->
+    <record id="hr_equipment_monitor" model="hr.equipment.category">
+        <field name="name">Monitors</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="color">3</field>
+    </record>
+    <record id="hr_equipment_phone" model="hr.equipment.category">
+        <field name="name">Phones</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Equipments -->
+    <record id="hr_equipment_monitor1" model="hr.equipment">
+        <field name="name">Samsung Monitor 15"</field>
+        <field name="category_id" ref="hr_equipment_monitor"/>
+        <field name="employee_id" ref="hr.employee_al"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="assign_date" eval="time.strftime('%Y-%m-10')"/>
+        <field name="serial_no">MT/122/11112222</field>
+        <field name="model">NP300E5X</field>
+    </record>
+    <record id="hr_equipment_monitor4" model="hr.equipment">
+        <field name="name">Samsung Monitor 15"</field>
+        <field name="category_id" ref="hr_equipment_monitor"/>
+        <field name="employee_id" ref="hr.employee_stw"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="assign_date" eval="time.strftime('%Y-01-01')"/>
+        <field name="serial_no">MT/125/22778837</field>
+        <field name="model">NP355E5X</field>
+    </record>
+    <record id="hr_equipment_monitor6" model="hr.equipment">
+        <field name="name">Samsung Monitor 15"</field>
+        <field name="category_id" ref="hr_equipment_monitor"/>
+        <field name="employee_id" ref="hr.employee_qdp"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="assign_date" eval="time.strftime('%Y-02-01')"/>
+        <field name="serial_no">MT/127/18291018</field>
+        <field name="model">NP355E5X</field>
+        <field name="color">3</field>
+    </record>
+     <record id="hr_equipment_computer3" model="hr.equipment">
+        <field name="name">Acer Laptop</field>
+        <field name="category_id" ref="hr_equipment_computer"/>
+        <field name="employee_id" ref="hr.employee_jve"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="assign_date" eval="time.strftime('%Y-03-08')"/>
+        <field name="serial_no">LP/203/19281928</field>
+        <field name="model">NE56R</field>
+     </record>
+     <record id="hr_equipment_computer5" model="hr.equipment">
+        <field name="name">Acer Laptop</field>
+        <field name="category_id" ref="hr_equipment_computer"/>
+        <field name="employee_id" ref="hr.employee_jgo"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="assign_date" eval="time.strftime('%Y-04-08')"/>
+        <field name="serial_no">LP/205/12928291</field>
+        <field name="model">V5131</field>
+     </record>
+     <record id="hr_equipment_computer9" model="hr.equipment">
+        <field name="name">HP Laptop</field>
+        <field name="category_id" ref="hr_equipment_computer"/>
+        <field name="employee_id" ref="hr.employee_vad"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="assign_date" eval="time.strftime('%Y-%m-11')"/>
+        <field name="serial_no">LP/303/28292090</field>
+        <field name="model">17-j059nr</field>
+     </record>
+     <record id="hr_equipment_computer11" model="hr.equipment">
+        <field name="name">HP Laptop</field>
+        <field name="category_id" ref="hr_equipment_computer"/>
+        <field name="employee_id" ref="hr.employee_jth"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="assign_date" eval="time.strftime('%Y-05-01')"/>
+        <field name="serial_no">LP/305/17281718</field>
+     </record>
+     <record id="hr_equipment_printer1" model="hr.equipment">
+        <field name="name">HP Inkjet printer</field>
+        <field name="category_id" ref="hr_equipment_printer"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="serial_no">PR/011/2928191889</field>
+     </record>
+
+    <!--Maintenance Request-->
+
+    <record id="m_request_3" model="hr.equipment.request">
+        <field name="name">Resolution is bad</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="employee_id" ref="hr.employee_qdp"/>
+        <field name="equipment_id" ref="hr_equipment_monitor6"/>
+        <field name="category_id" ref="hr_equipment_monitor"/>
+        <field name="color">7</field>
+        <field name="stage_id" ref="stage_3"/>
+    </record>
+    <record id="m_request_4" model="hr.equipment.request">
+        <field name="name">Some keys are not working</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="employee_id" ref="hr.employee_qdp"/>
+        <field name="equipment_id" ref="hr_equipment_computer3"/>
+        <field name="category_id" ref="hr_equipment_computer"/>
+        <field name="stage_id" ref="stage_0"/>
+    </record>
+    <record id="m_request_6" model="hr.equipment.request">
+        <field name="name">Motherboard failed</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="employee_id" ref="hr.employee_jgo"/>
+        <field name="equipment_id" ref="hr_equipment_computer5"/>
+        <field name="category_id" ref="hr_equipment_computer"/>
+         <field name="stage_id" ref="stage_4"/>
+    </record>
+    <record id="m_request_7" model="hr.equipment.request">
+        <field name="name">Battery drains fast</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="employee_id" ref="hr.employee_vad"/>
+        <field name="equipment_id" ref="hr_equipment_computer9"/>
+        <field name="category_id" ref="hr_equipment_computer"/>
+        <field name="stage_id" ref="stage_1"/>
+    </record>
+    <record id="m_request_8" model="hr.equipment.request">
+        <field name="name">Touchpad not working</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="employee_id" ref="hr.employee_jth"/>
+        <field name="equipment_id" ref="hr_equipment_computer11"/>
+        <field name="category_id" ref="hr_equipment_computer"/>
+        <field name="stage_id" ref="stage_1"/>
+    </record>
+</data>
+</odoo>

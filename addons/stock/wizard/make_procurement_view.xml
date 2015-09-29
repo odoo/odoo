@@ -17,18 +17,23 @@
                     </p>
                     <group>
                         <field name="warehouse_id" groups="stock.group_locations"/>
-                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                        <field name="product_tmpl_id" invisible="1"/>
+                        <field name="product_variant_count" invisible="1"/>
+                        <field name="product_id" on_change="onchange_product_id(product_id, context)"
+                            widget="selection"
+                            domain="[('product_tmpl_id', '=', product_tmpl_id)]"
+                            attrs="{'readonly': [('product_variant_count', '=', 1)]}"/>
                         <label for="qty"/>
                         <div>
                             <field name="qty" class="oe_inline"/>
-                            <field name="uom_id" groups="product.group_uom"/>
+                            <field name="uom_id" groups="product.group_uom" class="oe_inline"/>
                         </div>
                         <field name="date_planned"/>
+                        <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
                     </group>
                     <footer>
-                        <button name="make_procurement" string="Ask New Products" type="object"  class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button name="make_procurement" string="Ask New Products" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
             </field>
