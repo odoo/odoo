@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-  <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <record model="workflow" id="wkf_pos">
       <field name="name">Pos workflow</field>
       <field name="osv">pos.order</field>
@@ -74,10 +73,6 @@
       <field name="signal">cancel</field>
     </record>
 
-
-  </data>
-
-  <data>
     <record model="workflow" id="wkf_pos_session">
       <field name="name">POS Session Workflow</field>
       <field name="osv">pos.session</field>
@@ -168,8 +163,4 @@
       <field name="act_to" ref="act_close" />
       <field name="condition">cash_control == False</field>
     </record>
-
-
-
-  </data>
-</openerp>
+</odoo>

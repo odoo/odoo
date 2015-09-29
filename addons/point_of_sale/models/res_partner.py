@@ -1,27 +1,24 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import api, fields, models
 
-from openerp.osv import osv, fields
 
-
-class res_users(osv.osv):
+class ResPartner(models.Model):
     _inherit = 'res.partner'
-    _columns = {
-        'barcode' : fields.char('Barcode', help="BarCode", oldname='ean13'),
-    }
 
-    def create_from_ui(self, cr, uid, partner, context=None):
+    barcode = fields.Char(string='Barcode', help="BarCode", oldname='ean13')
+
+    @api.model
+    def create_from_ui(self, partner):
         """ create or modify a partner from the point of sale ui.
             partner contains the partner's fields. """
-
-        #image is a dataurl, get the data after the comma
-        if partner.get('image',False):
-            img =  partner['image'].split(',')[1]
-            partner['image'] = img
-
-        if partner.get('id',False):  # Modifying existing partner
-            partner_id = partner['id']
-            del partner['id']
-            self.write(cr, uid, [partner_id], partner, context=context)
+        # image is a dataurl, get the data after the comma
+        if partner.get('image'):
+            partner['image'] = partner['image'].split(',')[1]
+        partner_id = partner.pop('id', False)
+        if partner_id:  # Modifying existing partner
+            self.browse(partner_id).write(partner)
         else:
-            partner_id = self.create(cr, uid, partner, context=context)
+            partner_id = self.create(partner).id
         
         return partner_id
