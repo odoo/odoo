@@ -487,24 +487,13 @@ class Field(object):
         def make_depends(deps):
             return tuple(deps(model) if callable(deps) else deps)
 
-        def make_callable(name):
-            return lambda recs, *args, **kwargs: getattr(recs, name)(*args, **kwargs)
-
-        # convert compute into a callable and determine depends
         if isinstance(self.compute, basestring):
             # if the compute method has been overridden, concatenate all their _depends
             self.depends = ()
             for method in resolve_mro(model, self.compute, callable):
                 self.depends += make_depends(getattr(method, '_depends', ()))
-            self.compute = make_callable(self.compute)
         else:
             self.depends = make_depends(getattr(self.compute, '_depends', ()))
-
-        # convert inverse and search into callables
-        if isinstance(self.inverse, basestring):
-            self.inverse = make_callable(self.inverse)
-        if isinstance(self.search, basestring):
-            self.search = make_callable(self.search)
 
     def _setup_regular_full(self, model):
         """ Setup the inverse field(s) of ``self``. """
@@ -864,7 +853,10 @@ class Field(object):
         for field in computed:
             records._cache[field] = field.null(records.env)
             records.env.computed[field].update(records._ids)
-        self.compute(records)
+        if isinstance(self.compute, basestring):
+            getattr(records, self.compute)()
+        else:
+            self.compute(records)
         for field in computed:
             records.env.computed[field].difference_update(records._ids)
 
@@ -932,15 +924,17 @@ class Field(object):
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
-        if self.inverse:
+        if isinstance(self.inverse, basestring):
+            getattr(records, self.inverse)()
+        else:
             self.inverse(records)
 
     def determine_domain(self, records, operator, value):
         """ Return a domain representing a condition on ``self``. """
-        if self.search:
-            return self.search(records, operator, value)
+        if isinstance(self.search, basestring):
+            return getattr(records, self.search)(operator, value)
         else:
-            return [(self.name, operator, value)]
+            return self.search(records, operator, value)
 
     ############################################################################
     #
