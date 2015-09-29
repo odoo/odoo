@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api
+from openerp.tools.translate import _
 
 class stock_backorder_confirmation(models.TransientModel):
     _name = 'stock.backorder.confirmation'
@@ -29,6 +30,7 @@ class stock_backorder_confirmation(models.TransientModel):
         if cancel_backorder:
             backorder_pick = self.env['stock.picking'].search([('backorder_id', '=', self.pick_id.id)])
             backorder_pick.action_cancel()
+            self.pick_id.message_post(body=_("Back order <em>%s</em> <b>cancelled</b>.") % (backorder_pick.name))
 
     @api.multi
     def process(self):
