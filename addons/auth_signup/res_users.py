@@ -285,24 +285,27 @@ class res_users(osv.Model):
 
     def create(self, cr, uid, values, context=None):
         # overridden to automatically invite user to sign up
-        user_id = super(res_users, self).create(cr, uid, values, context=context)
+        user_id = super(res_users, self).\
+            create(cr, uid, values, context=context)
         self._send_invitation(cr, uid, user_id, context=context)
         return user_id
 
     def write(self, cr, uid, ids, values, context=None):
         # overridden to automatically invite user to sign up
-        res = super(res_users, self).write(cr, uid, ids, values, context=context)
+        res = super(res_users, self).\
+            write(cr, uid, ids, values, context=context)
         if res and values.get('email'):
             self._send_invitation(cr, uid, ids, context=context)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        new_id = super(res_users, self).copy(cr, uid, id, default=default, context=context)
+        new_id = super(res_users, self).\
+            copy(cr, uid, id, default=default, context=context)
         if new_id:
             user = self.browse(cr, uid, new_id, context=context)
             self.pool['res.partner'].write(cr, uid, user.partner_id.id, dict(
-                signup_token = False,
-                signup_type = False,
-                signup_expiration = False,
+                signup_token=False,
+                signup_type=False,
+                signup_expiration=False,
             ), context=context)
         return new_id
