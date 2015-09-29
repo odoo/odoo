@@ -6,9 +6,9 @@ import account_journal
 import barcode_rule
 import pos_category
 import pos_config
+import pos_config_setting
 import pos_order
 import pos_session
 import product
 import res_partner
-import res_config
 import res_users
