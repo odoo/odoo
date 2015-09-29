@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
 from datetime import datetime
-from openerp.osv import fields, osv
 from openerp.exceptions import UserError
 from openerp.tools.translate import _
+from openerp import api, fields, models
 
 #----------------------------------------------------------
 # Work Centers
@@ -15,323 +14,287 @@ from openerp.tools.translate import _
 # unit_per_cycle : how many units are produced for one cycle
 
 
-class mrp_production_workcenter_line(osv.osv):
+class MrpProductionWorkcenterLine(models.Model):
 
-    def _get_date_end(self, cr, uid, ids, field_name, arg, context=None):
+    @api.depends('hour', 'date_planned')
+    def _get_date_end(self):
         """ Finds ending date.
         @return: Dictionary of values.
         """
-        ops = self.browse(cr, uid, ids, context=context)
-        date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops if op.date_planned]
-
-        intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
-
-        res = {}
-        for op in ops:
-            res[op.id] = False
-            if op.date_planned:
-                i = intervals.get((op.date_planned, op.hour, op.workcenter_id.calendar_id.id))
-                if i:
-                    res[op.id] = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+        for operation in self:
+            if operation.date_planned:
+                intervals = self.env['resource.calendar'].interval_get_multi(
+                    [(operation.date_planned, operation.hour, operation.workcenter_id.calendar_id.id)])
+                interval = intervals.get(
+                    (operation.date_planned, operation.hour, operation.workcenter_id.calendar_id.id))
+                if interval:
+                    operation.date_planned_end = fields.Datetime.to_string(interval[-1][1])
                 else:
-                    res[op.id] = op.date_planned
-        return res
+                    operation.date_planned_end = operation.date_planned
 
-    def onchange_production_id(self, cr, uid, ids, production_id, context=None):
-        if not production_id:
-            return {}
-        production = self.pool.get('mrp.production').browse(cr, uid, production_id, context=None)
-        result = {
-            'product': production.product_id.id,
-            'qty': production.product_qty,
-            'uom': production.product_uom.id,
-        }
-        return {'value': result}
+    @api.onchange('production_id')
+    def onchange_production_id(self):
+        self.product = self.production_id.product_id.id
+        self.uom = self.production_id.product_uom.id
+        self.qty = self.production_id.product_qty
 
     _inherit = 'mrp.production.workcenter.line'
     _order = "sequence, date_planned"
 
-    _columns = {
-       'state': fields.selection([('draft','Draft'),('cancel','Cancelled'),('pause','Pending'),('startworking', 'In Progress'),('done','Finished')],'Status', readonly=True, copy=False,
-                                 help="* When a work order is created it is set in 'Draft' status.\n" \
-                                       "* When user sets work order in start mode that time it will be set in 'In Progress' status.\n" \
-                                       "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n" \
-                                       "* When the user cancels the work order it will be set in 'Canceled' status.\n" \
-                                       "* When order is completely processed that time it is set in 'Finished' status."),
-       'date_planned': fields.datetime('Scheduled Date', select=True),
-       'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime'),
-       'date_start': fields.datetime('Start Date'),
-       'date_finished': fields.datetime('End Date'),
-       'delay': fields.float('Working Hours',help="The elapsed time between operation start and stop in this Work Center",readonly=True),
-       'production_state':fields.related('production_id','state',
-            type='selection',
-            selection=[('draft','Draft'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],
-            string='Production Status', readonly=True),
-       'product':fields.related('production_id','product_id',type='many2one',relation='product.product',string='Product',
-            readonly=True),
-       'qty':fields.related('production_id','product_qty',type='float',string='Qty',readonly=True, store=True),
-       'uom':fields.related('production_id','product_uom',type='many2one',relation='product.uom',string='Unit of Measure',readonly=True),
-    }
+    state = fields.Selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('pause', 'Pending'), ('startworking', 'In Progress'), ('done', 'Finished')], 'Status', readonly=True, copy=False, default='draft',
+                             help="* When a work order is created it is set in 'Draft' status.\n"
+                             "* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+                                  "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
+                                  "* When the user cancels the work order it will be set in 'Canceled' status.\n"
+                                  "* When order is completely processed that time it is set in 'Finished' status.")
+    date_planned = fields.Datetime('Scheduled Date', select=True)
+    date_planned_end = fields.Datetime(compute="_get_date_end", string='End Date')
+    date_start = fields.Datetime('Start Date')
+    date_finished = fields.Datetime('End Date')
+    delay = fields.Float('Working Hours', help="The elapsed time between operation start and stop in this Work Center", readonly=True, default=0.0)
+    production_state = fields.Selection([('draft', 'Draft'), ('confirmed', 'Waiting Goods'), ('ready', 'Ready to Produce'), (
+        'in_production', 'In Production'), ('cancel', 'Canceled'), ('done', 'Done')], String='Production Status', readonly=True, related='production_id.state', default='draft')
+    product = fields.Many2one(comodel_name='product.product', related='production_id.product_id', string='Product',
+                              readonly=True)
+    qty = fields.Float(String='Qty', readonly=True, related='production_id.product_qty', store=True)
+    uom = fields.Many2one(comodel_name='product.uom', related='production_id.product_uom', string='Unit of Measure', readonly=True)
 
-    _defaults = {
-        'state': 'draft',
-        'delay': 0.0,
-        'production_state': 'draft'
-    }
-
-    def modify_production_order_state(self, cr, uid, ids, action):
+    @api.multi
+    def modify_production_order_state(self, action):
         """ Modifies production order state if work order state is changed.
         @param action: Action to perform.
         @return: Nothing
         """
-        prod_obj_pool = self.pool.get('mrp.production')
-        oper_obj = self.browse(cr, uid, ids)[0]
-        prod_obj = oper_obj.production_id
+        MrpProduction = self.env['mrp.production']
         if action == 'start':
-            if prod_obj.state =='confirmed':
-                prod_obj_pool.force_production(cr, uid, [prod_obj.id])
-                prod_obj_pool.signal_workflow(cr, uid, [prod_obj.id], 'button_produce')
-            elif prod_obj.state =='ready':
-                prod_obj_pool.signal_workflow(cr, uid, [prod_obj.id], 'button_produce')
-            elif prod_obj.state =='in_production':
+            if self.production_id.state == 'confirmed':
+                self.production_id.force_production()
+                self.production_id.signal_workflow('button_produce')
+            elif self.production_id.state == 'ready':
+                self.production_id.signal_workflow('button_produce')
+            elif self.production_id.state == 'in_production':
                 return
             else:
-                raise UserError(_('Manufacturing order cannot be started in state "%s"!') % (prod_obj.state,))
+                raise UserError(_('Manufacturing order cannot be started in state "%s"!') % (self.production_id.state,))
         else:
-            open_count = self.search_count(cr,uid,[('production_id','=',prod_obj.id), ('state', '!=', 'done')])
+            open_count = self.search_count([('production_id', '=', self.production_id.id), ('state', '!=', 'done')])
             flag = not bool(open_count)
             if flag:
-                for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context= None):
+                for production in self.production_id:
                     if production.move_lines or production.move_created_ids:
-                        prod_obj_pool.action_produce(cr,uid, production.id, production.product_qty, 'consume_produce', context = None)
-                prod_obj_pool.signal_workflow(cr, uid, [oper_obj.production_id.id], 'button_produce_done')
-        return
+                        MrpProduction.action_produce(production.id, production.product_qty, 'consume_produce')
+                MrpProduction.signal_workflow('button_produce_done')
 
-    def write(self, cr, uid, ids, vals, context=None, update=True):
-        result = super(mrp_production_workcenter_line, self).write(cr, uid, ids, vals, context=context)
-        prod_obj = self.pool.get('mrp.production')
+    @api.multi
+    def write(self, vals, update=True):
+        result = super(MrpProductionWorkcenterLine, self).write(vals)
+        MrpProduction = self.env['mrp.production']
         if vals.get('date_planned', False) and update:
-            for prod in self.browse(cr, uid, ids, context=context):
-                if prod.production_id.workcenter_lines:
-                    dstart = min(vals['date_planned'], prod.production_id.workcenter_lines[0]['date_planned'])
-                    prod_obj.write(cr, uid, [prod.production_id.id], {'date_start':dstart}, context=context, mini=False)
+            for production in self:
+                if production.production_id.workcenter_lines:
+                    dstart = min(vals['date_planned'], production.production_id.workcenter_lines[0]['date_planned'])
+                    MrpProduction.write({'date_start': dstart}, mini=False)
         return result
 
-    def action_draft(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_draft(self):
         """ Sets state to draft.
         @return: True
         """
-        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+        return self.write({'state': 'draft'})
 
-    def action_start_working(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_start_working(self):
         """ Sets state to start working and writes starting date.
         @return: True
         """
-        self.modify_production_order_state(cr, uid, ids, 'start')
-        self.write(cr, uid, ids, {'state':'startworking', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        self.modify_production_order_state('start')
+        self.write({'state': 'startworking', 'date_start': fields.Datetime.now()})
         return True
 
-    def action_done(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_done(self):
         """ Sets state to done, writes finish date and calculates delay.
         @return: True
         """
         delay = 0.0
-        date_now = time.strftime('%Y-%m-%d %H:%M:%S')
-        obj_line = self.browse(cr, uid, ids[0])
-
-        date_start = datetime.strptime(obj_line.date_start,'%Y-%m-%d %H:%M:%S')
-        date_finished = datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
+        date_now = fields.Datetime.now()
+        date_start = fields.Datetime.from_string(self.date_start)
+        date_finished = fields.Datetime.from_string(date_now)
         delay += (date_finished-date_start).days * 24
         delay += (date_finished-date_start).seconds / float(60*60)
-
-        self.write(cr, uid, ids, {'state':'done', 'date_finished': date_now,'delay':delay}, context=context)
-        self.modify_production_order_state(cr,uid,ids,'done')
+        self.write({'state': 'done', 'date_finished': date_now, 'delay': delay})
+        self.modify_production_order_state('done')
         return True
 
-    def action_cancel(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_cancel(self):
         """ Sets state to cancel.
         @return: True
         """
-        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+        return self.write({'state': 'cancel'})
 
-    def action_pause(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_pause(self):
         """ Sets state to pause.
         @return: True
         """
-        return self.write(cr, uid, ids, {'state':'pause'}, context=context)
+        return self.write({'state': 'pause'})
 
-    def action_resume(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_resume(self):
         """ Sets state to startworking.
         @return: True
         """
-        return self.write(cr, uid, ids, {'state':'startworking'}, context=context)
+        return self.write({'state': 'startworking'})
 
 
-class mrp_production(osv.osv):
+class MrpProduction(models.Model):
     _inherit = 'mrp.production'
-    _columns = {
-        'allow_reorder': fields.boolean('Free Serialisation', help="Check this to be able to move independently all production orders, without moving dependent ones."),
-    }
 
-    def _production_date_end(self, cr, uid, ids, prop, unknow_none, context=None):
+    allow_reorder = fields.Boolean('Free Serialisation', help="Check this to be able to move independently all production orders, without moving dependent ones.")
+
+    @api.multi
+    def _production_date_end(self):
         """ Calculates planned end date of production order.
         @return: Dictionary of values
         """
-        result = {}
-        for prod in self.browse(cr, uid, ids, context=context):
-            result[prod.id] = prod.date_planned
-            for line in prod.workcenter_lines:
-                result[prod.id] = max(line.date_planned_end, result[prod.id])
-        return result
+        for production in self:
+            for line in production.workcenter_lines:
+                production.date_planned = max(line.date_planned_end, production.date_planned)
 
-    def action_production_end(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_production_end(self):
         """ Finishes work order if production order is done.
         @return: Super method
         """
-        obj = self.browse(cr, uid, ids, context=context)[0]
-        workcenter_pool = self.pool.get('mrp.production.workcenter.line')
-        for workcenter_line in obj.workcenter_lines:
+        for workcenter_line in self.workcenter_lines:
             if workcenter_line.state == 'draft':
                 workcenter_line.signal_workflow('button_start_working')
             workcenter_line.signal_workflow('button_done')
-        return super(mrp_production,self).action_production_end(cr, uid, ids, context=context)
+        return super(MrpProduction, self).action_production_end()
 
-    def action_in_production(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_in_production(self):
         """ Changes state to In Production and writes starting date.
         @return: True
         """
-        workcenter_pool = self.pool.get('mrp.production.workcenter.line')
-        for prod in self.browse(cr, uid, ids):
-            if prod.workcenter_lines:
-                workcenter_pool.signal_workflow(cr, uid, [prod.workcenter_lines[0].id], 'button_start_working')
-        return super(mrp_production,self).action_in_production(cr, uid, ids, context=context)
-    
-    def action_cancel(self, cr, uid, ids, context=None):
+        for production in self:
+            if production.workcenter_lines:
+                production.workcenter_lines[0].signal_workflow('button_start_working')
+        return super(MrpProduction, self).action_in_production()
+
+    @api.multi
+    def action_cancel(self):
         """ Cancels work order if production order is canceled.
         @return: Super method
         """
-        workcenter_pool = self.pool.get('mrp.production.workcenter.line')
-        obj = self.browse(cr, uid, ids,context=context)[0]
-        workcenter_pool.signal_workflow(cr, uid, [record.id for record in obj.workcenter_lines], 'button_cancel')
-        return super(mrp_production,self).action_cancel(cr,uid,ids,context=context)
+        MrpProductionWorkcenterLine = self.env['mrp.production.workcenter.line']
+        MrpProductionWorkcenterLine.signal_workflow('button_cancel')
+        return super(MrpProduction, self).action_cancel()
 
-    def _compute_planned_workcenter(self, cr, uid, ids, context=None, mini=False):
+    @api.multi
+    def _compute_planned_workcenter(self, mini=False):
         """ Computes planned and finished dates for work order.
         @return: Calculated date
         """
-        dt_end = datetime.now()
-        if context is None:
-            context = {}
-        for po in self.browse(cr, uid, ids, context=context):
-            dt_end = datetime.strptime(po.date_planned, '%Y-%m-%d %H:%M:%S')
-            if not po.date_start:
-                self.write(cr, uid, [po.id], {
-                    'date_start': po.date_planned
-                }, context=context, update=False)
+        date_end = datetime.now()
+        for production in self:
+            date_end = fields.Datetime.from_string(production.date_planned)
+            if not production.date_start:
+                production.write(
+                    {'date_start': production.date_planned}, update=False)
             old = None
-            for wci in range(len(po.workcenter_lines)):
-                wc  = po.workcenter_lines[wci]
-                if (old is None) or (wc.sequence>old):
-                    dt = dt_end
-                if context.get('__last_update'):
-                    del context['__last_update']
-                if (wc.date_planned < dt.strftime('%Y-%m-%d %H:%M:%S')) or mini:
-                    self.pool.get('mrp.production.workcenter.line').write(cr, uid, [wc.id],  {
-                        'date_planned': dt.strftime('%Y-%m-%d %H:%M:%S')
-                    }, context=context, update=False)
-                    i = self.pool.get('resource.calendar').interval_get(
-                        cr,
-                        uid,
-                        #passing False makes resource_resource._schedule_hours run 1000 iterations doing nothing
-                        wc.workcenter_id.calendar_id and wc.workcenter_id.calendar_id.id or None,
-                        dt,
-                        wc.hour or 0.0
-                    )
-                    if i:
-                        dt_end = max(dt_end, i[-1][1])
+            for wci in range(len(production.workcenter_lines)):
+                wc = production.workcenter_lines[wci]
+                if (old is None) or (wc.sequence > old):
+                    dt = date_end
+                if (wc.date_planned < fields.Datetime.to_string(dt)) or mini:
+                    production.workcenter_lines.write({
+                        'date_planned': fields.Datetime.to_string(dt)})
+                    interval = self.env['resource.calendar'].interval_get(
+                        wc.workcenter_id.calendar_id and wc.workcenter_id.calendar_id.id or None, dt, wc.hour or 0.0)
+                    if interval:
+                        date_end = max(date_end, interval[-1][1])
                 else:
-                    dt_end = datetime.strptime(wc.date_planned_end, '%Y-%m-%d %H:%M:%S')
-
+                    date_end = fields.Datetime.from_string(
+                        wc.date_planned_end)
                 old = wc.sequence or 0
-            super(mrp_production, self).write(cr, uid, [po.id], {
-                'date_finished': dt_end
-            })
-        return dt_end
+            super(MrpProduction, self).write(
+                {'date_finished': date_end})
+        return date_end
 
-    def _move_pass(self, cr, uid, ids, context=None):
+    @api.multi
+    def _move_pass(self):
         """ Calculates start date for stock moves finding interval from resource calendar.
         @return: True
         """
-        for po in self.browse(cr, uid, ids, context=context):
-            if po.allow_reorder:
+        for production in self:
+            if production.allow_reorder:
                 continue
-            todo = list(po.move_lines)
-            dt = datetime.strptime(po.date_start,'%Y-%m-%d %H:%M:%S')
+            todo = list(production.move_lines)
+            date = fields.Datetime.from_string(production.date_start)
             while todo:
                 l = todo.pop(0)
-                if l.state in ('done','cancel','draft'):
+                if l.state in ('done', 'cancel', 'draft'):
                     continue
                 todo += l.move_dest_id_lines
-                date_end = l.production_id.date_finished
-                if date_end and datetime.strptime(date_end, '%Y-%m-%d %H:%M:%S') > dt:
-                    if l.production_id.state not in ('done','cancel'):
+                if l.production_id.state and (l.production_id.date_finished > date):
+                    if l.production_id.state not in ('done', 'cancel'):
                         for wc in l.production_id.workcenter_lines:
-                            i = self.pool.get('resource.calendar').interval_min_get(
-                                cr,
-                                uid,
-                                wc.workcenter_id.calendar_id.id or False,
-                                dt, wc.hour or 0.0
-                            )
-                            dt = i[0][0]
-                        if l.production_id.date_start > dt.strftime('%Y-%m-%d %H:%M:%S'):
-                            self.write(cr, uid, [l.production_id.id], {'date_start':dt.strftime('%Y-%m-%d %H:%M:%S')}, mini=True)
+                            interval = self.env['resource.calendar'].interval_min_get(wc.workcenter_id.calendar_id.id or False, date, wc.hour or 0.0)
+                            date = interval[0][0]
+                        if l.production_id.date_start > fields.Datetime.from_string(date):
+                            self.write({'date_start': fields.Datetime.from_string(date)}, mini=True)
         return True
 
-    def _move_futur(self, cr, uid, ids, context=None):
+    @api.multi
+    def _move_futur(self):
         """ Calculates start date for stock moves.
         @return: True
         """
-        for po in self.browse(cr, uid, ids, context=context):
-            if po.allow_reorder:
+        for production in self:
+            if production.allow_reorder:
                 continue
-            for line in po.move_created_ids:
+            for line in production.move_created_ids:
                 l = line
                 while l.move_dest_id:
                     l = l.move_dest_id
-                    if l.state in ('done','cancel','draft'):
+                    if l.state in ('done', 'cancel', 'draft'):
                         break
-                    if l.production_id.state in ('done','cancel'):
+                    if l.production_id.state in ('done', 'cancel'):
                         break
-                    if l.production_id and (l.production_id.date_start < po.date_finished):
-                        self.write(cr, uid, [l.production_id.id], {'date_start': po.date_finished})
+                    if l.production_id and (l.production_id.date_start < production.date_finished):
+                        self.write({'date_start': production.date_finished})
                         break
         return True
 
-
-    def write(self, cr, uid, ids, vals, context=None, update=True, mini=True):
+    @api.multi
+    def write(self, vals, update=True, mini=True):
         direction = {}
         if vals.get('date_start', False):
-            for po in self.browse(cr, uid, ids, context=context):
-                direction[po.id] = cmp(po.date_start, vals.get('date_start', False))
-        result = super(mrp_production, self).write(cr, uid, ids, vals, context=context)
+            for production in self:
+                direction[production.id] = cmp(production.date_start, vals.get('date_start', False))
+        result = super(MrpProduction, self).write(vals)
         if (vals.get('workcenter_lines', False) or vals.get('date_start', False) or vals.get('date_planned', False)) and update:
-            self._compute_planned_workcenter(cr, uid, ids, context=context, mini=mini)
+            self._compute_planned_workcenter(mini=mini)
         for d in direction:
             if direction[d] == 1:
                 # the production order has been moved to the passed
-                self._move_pass(cr, uid, [d], context=context)
+                self._move_pass()
                 pass
             elif direction[d] == -1:
-                self._move_futur(cr, uid, [d], context=context)
+                self._move_futur()
                 # the production order has been moved to the future
                 pass
         return result
 
-    def action_compute(self, cr, uid, ids, properties=None, context=None):
+    @api.multi
+    def action_compute(self, properties=None):
         """ Computes bills of material of a product and planned date of work order.
         @param properties: List containing dictionaries of properties.
         @return: No. of products.
         """
-        result = super(mrp_production, self).action_compute(cr, uid, ids, properties=properties, context=context)
-        self._compute_planned_workcenter(cr, uid, ids, context=context)
+        result = super(MrpProduction, self).action_compute(properties=properties)
+        self._compute_planned_workcenter()
         return result

@@ -47,7 +47,7 @@ So, that we can compare the theoretic delay and real delay.
         'views/mrp_production_views.xml'
     ],
     'demo': [ 
-             'data/mrp_operations_demo.yml'
+             'data/mrp_operations_demo.xml'
     ],
     'test': [ 
         'test/workcenter_operations.yml',

@@ -1,36 +1,35 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields,osv
+from openerp import fields, models
 from openerp import tools
 import openerp.addons.decimal_precision as dp
 
-class mrp_workorder(osv.osv):
+
+class MrpWorkorder(models.Model):
     _name = "mrp.workorder"
     _description = "Work Order Report"
     _auto = False
-    _columns = {
-        'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
-        'date': fields.date('Date', readonly=True),
-        'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
-        'category_id': fields.many2one('product.category', 'Product Category', readonly=True),
-        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
-        'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Cancelled'),('done','Finished')], 'Status', readonly=True),
-        'total_hours': fields.float('Total Hours', readonly=True),
-        'total_cycles': fields.float('Total Cycles', readonly=True),
-        'delay': fields.float('Delay', readonly=True),
-        'production_id': fields.many2one('mrp.production', 'Production', readonly=True),
-        'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', readonly=True),
-        'user_id': fields.many2one('res.users', 'Responsible'),
-        'routing_id': fields.many2one('mrp.routing', string='Routing', readonly=True),
-        'bom_id': fields.many2one('mrp.bom', 'Bill of Material', readonly=True),
-    }
+    nbr = fields.Integer('# of Lines', readonly=True)  # TDE FIXME master: rename into nbr_lines
+    date = fields.Date('Date', readonly=True)
+    product_id = fields.Many2one('product.product', 'Product', readonly=True)
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
+    category_id = fields.Many2one('product.category', 'Product Category', readonly=True)
+    product_qty = fields.Float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True)
+    state = fields.Selection([('draft', 'Draft'), ('startworking', 'In Progress'), ('pause', 'Pause'), ('cancel', 'Cancelled'), ('done', 'Finished')], 'Status', readonly=True)
+    total_hours = fields.Float('Total Hours', readonly=True)
+    total_cycles = fields.Float('Total Cycles', readonly=True)
+    delay = fields.Float('Delay', readonly=True)
+    production_id = fields.Many2one('mrp.production', 'Production', readonly=True)
+    workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', readonly=True)
+    user_id = fields.Many2one('res.users', 'Responsible')
+    routing_id = fields.Many2one('mrp.routing', string='Routing', readonly=True)
+    bom_id = fields.Many2one('mrp.bom', 'Bill of Material', readonly=True)
 
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'mrp_workorder')
+        tools.drop_view_if_exists(cr, 'mrp_Workorder')
         cr.execute("""
-            create or replace view mrp_workorder as (
+            create or replace view mrp_Workorder as (
                 select
                     date(wl.date_planned) as date,
                     min(wl.id) as id,

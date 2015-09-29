@@ -1,46 +1,45 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
 
     <!-- Activities -->
-    <record model="workflow" id="wkf_prod_workcenter">
+    <record id="wkf_prod_workcenter" model="workflow">
         <field name="name">mrp.production.workcenter.line.basic</field>
         <field name="osv">mrp.production.workcenter.line</field>
         <field name="on_create">True</field>
     </record>
 
-    <record model="workflow.activity" id="prod_act_wc_draft">
+    <record id="prod_act_wc_draft" model="workflow.activity">
         <field name="wkf_id" ref="wkf_prod_workcenter"/>
         <field name="flow_start">True</field>
         <field name="name">draft</field>
         <field name="kind">function</field>
         <field name="action">action_draft()</field>
     </record>
-    <record model="workflow.activity" id="prod_act_wc_start">
+    <record id="prod_act_wc_start" model="workflow.activity">
         <field name="wkf_id" ref="wkf_prod_workcenter"/>
         <field name="name">startworking</field>
         <field name="kind">function</field>
         <field name="action">action_start_working()</field>
     </record>
-    <record model="workflow.activity" id="prod_act_wc_cancel">
+    <record id="prod_act_wc_cancel" model="workflow.activity">
         <field name="wkf_id" ref="wkf_prod_workcenter"/>
         <field name="name">cancel</field>
         <field name="kind">function</field>
         <field name="action">action_cancel()</field>
     </record>
-    <record model="workflow.activity" id="prod_act_wc_pause">
+    <record id="prod_act_wc_pause" model="workflow.activity">
         <field name="wkf_id" ref="wkf_prod_workcenter"/>
         <field name="name">pause</field>
         <field name="kind">function</field>
         <field name="action">action_pause()</field>
     </record>
-    <record model="workflow.activity" id="prod_act_wc_resume">
+    <record id="prod_act_wc_resume" model="workflow.activity">
         <field name="wkf_id" ref="wkf_prod_workcenter"/>
         <field name="name">resume</field>
         <field name="kind">function</field>
         <field name="action">action_resume()</field>
     </record>
-    <record model="workflow.activity" id="prod_act_wc_done">
+    <record id="prod_act_wc_done" model="workflow.activity">
         <field name="wkf_id" ref="wkf_prod_workcenter"/>
         <field name="name">done</field>
         <field name="kind">function</field>
@@ -49,58 +48,57 @@
     </record>
 
     <!-- Transition -->
-    <record model="workflow.transition" id="prod_trans_wc_draft_start">
+    <record id="prod_trans_wc_draft_start" model="workflow.transition">
         <field name="act_from" ref="prod_act_wc_draft"/>
         <field name="act_to" ref="prod_act_wc_start"/>
         <field name="signal">button_start_working</field>
     </record>
-    <record model="workflow.transition" id="prod_trans_wc_start_done">
+    <record id="prod_trans_wc_start_done" model="workflow.transition">
         <field name="act_from" ref="prod_act_wc_start"/>
         <field name="act_to" ref="prod_act_wc_done"/>
         <field name="signal">button_done</field>
     </record>
-    <record model="workflow.transition" id="prod_trans_wc_draft_cancel">
+    <record id="prod_trans_wc_draft_cancel" model="workflow.transition">
         <field name="act_from" ref="prod_act_wc_draft"/>
         <field name="act_to" ref="prod_act_wc_cancel"/>
         <field name="signal">button_cancel</field>
     </record>
-    <record model="workflow.transition" id="prod_trans_wc_cancel_draft">
+    <record id="prod_trans_wc_cancel_draft" model="workflow.transition">
         <field name="act_from" ref="prod_act_wc_cancel"/>
         <field name="act_to" ref="prod_act_wc_draft"/>
         <field name="signal">button_draft</field>
     </record>
-    <record model="workflow.transition" id="prod_trans_wc_start_cancel">
+    <record id="prod_trans_wc_start_cancel" model="workflow.transition">
         <field name="act_from" ref="prod_act_wc_start"/>
         <field name="act_to" ref="prod_act_wc_cancel"/>
         <field name="signal">button_cancel</field>
     </record>
-    <record model="workflow.transition" id="prod_trans_wc_start_pause">
+    <record id="prod_trans_wc_start_pause" model="workflow.transition">
         <field name="act_from" ref="prod_act_wc_start"/>
         <field name="act_to" ref="prod_act_wc_pause"/>
         <field name="signal">button_pause</field>
     </record>
 
-    <record model="workflow.transition" id="prod_trans_wc_pause_resume">
+    <record id="prod_trans_wc_pause_resume" model="workflow.transition">
         <field name="act_from" ref="prod_act_wc_pause"/>
         <field name="act_to" ref="prod_act_wc_resume"/>
         <field name="signal">button_resume</field>
     </record>
 
-    <record model="workflow.transition" id="prod_trans_wc_resume_pause">
+    <record id="prod_trans_wc_resume_pause" model="workflow.transition">
         <field name="act_from" ref="prod_act_wc_resume"/>
         <field name="act_to" ref="prod_act_wc_pause"/>
         <field name="signal">button_pause</field>
     </record>
-    <record model="workflow.transition" id="prod_trans_wc_resume_cancel">
+    <record id="prod_trans_wc_resume_cancel" model="workflow.transition">
         <field name="act_from" ref="prod_act_wc_resume"/>
         <field name="act_to" ref="prod_act_wc_cancel"/>
         <field name="signal">button_cancel</field>
     </record>
-    <record model="workflow.transition" id="prod_trans_wc_resume_done">
+    <record id="prod_trans_wc_resume_done" model="workflow.transition">
         <field name="act_from" ref="prod_act_wc_resume"/>
         <field name="act_to" ref="prod_act_wc_done"/>
         <field name="signal">button_done</field>
     </record>
 
-</data>
 </openerp>
