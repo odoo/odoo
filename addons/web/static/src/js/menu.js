@@ -22,6 +22,7 @@ var Menu = Widget.extend({
             }
         });
         core.bus.on('do_reload_needaction', this, this.do_reload_needaction);
+        core.bus.on('change_menu_section', this, this.on_change_top_menu);
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -35,7 +36,13 @@ var Menu = Widget.extend({
         var self = this;
         this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container');
         this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
-        this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
+        this.$el.on('click', 'a[data-menu]', function (event) {
+            event.preventDefault();
+            var menu_id = $(event.currentTarget).data('menu');
+            var needaction = $(event.target).is('div#menu_counter');
+            core.bus.trigger('change_menu_section', menu_id, needaction);
+        });
+
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
         if (self.current_menu) {
@@ -135,7 +142,6 @@ var Menu = Widget.extend({
         var $clicked_menu, $sub_menu, $main_menu;
         $clicked_menu = this.$el.add(this.$secondary_menus).find('a[data-menu=' + id + ']');
         this.trigger('open_menu', id, $clicked_menu);
-        core.bus.trigger('change_menu_section', $clicked_menu.parents('.oe_secondary_menu').data('menu-parent') || 0); 
 
         if (this.$secondary_menus.has($clicked_menu).length) {
             $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
@@ -230,17 +236,15 @@ var Menu = Widget.extend({
         }
     },
     /**
-     * Jquery event handler for menu click
+     * Change the current top menu
      *
-     * @param {Event} ev the jquery event
+     * @param {int} [menu_id] the top menu id
+     * @param {boolean} [needaction] true to redirect to menu's needactions
      */
-    on_top_menu_click: function(ev) {
-        ev.preventDefault();
+    on_change_top_menu: function(menu_id, needaction) {
         var self = this;
-        var id = $(ev.currentTarget).data('menu');
-
         // Fetch the menu leaves ids in order to check if they need a 'needaction'
-        var $secondary_menu = this.$el.parents().find('.oe_secondary_menu[data-menu-parent=' + id + ']');
+        var $secondary_menu = this.$el.parents().find('.oe_secondary_menu[data-menu-parent=' + menu_id + ']');
         var $menu_leaves = $secondary_menu.children().find('.oe_menu_leaf');
         var menu_ids = _.map($menu_leaves, function (leave) {return parseInt($(leave).attr('data-menu'), 10);});
 
@@ -249,7 +253,7 @@ var Menu = Widget.extend({
         });
         this.$el.parents().find(".oe_secondary_menus_container").scrollTop(0,0);
 
-        this.on_menu_click(ev);
+        this.menu_click(menu_id, needaction);
     },
     on_menu_click: function(ev) {
         ev.preventDefault();
