@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2015-09-29 10:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -123,7 +123,7 @@ msgid "No shipping costs on sales orders"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:136
+#: code:addons/sale_stock/sale_stock.py:142
 #, python-format
 msgid "Not enough inventory!"
 msgstr ""
@@ -140,7 +140,7 @@ msgid "Order Routing"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:148
+#: code:addons/sale_stock/sale_stock.py:153
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr ""
@@ -173,6 +173,11 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
 msgid "Route"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
+msgid "Sale Order"
 msgstr ""
 
 #. module: sale_stock
@@ -242,9 +247,14 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:178
+#: code:addons/sale_stock/sale_stock.py:195
 #, python-format
 msgid "This product is packaged by %d . You should sell %d ."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_picking
+msgid "Transfer"
 msgstr ""
 
 #. module: sale_stock
@@ -254,19 +264,19 @@ msgid "Warehouse"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:177
+#: code:addons/sale_stock/sale_stock.py:194
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:149
+#: code:addons/sale_stock/sale_stock.py:154
 #, python-format
 msgid "You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:137
+#: code:addons/sale_stock/sale_stock.py:143
 #, python-format
 msgid "You plan to sell %.2f %s but you only have %.2f %s available!\n"
 "The stock on hand is %.2f %s."
@@ -276,3 +286,4 @@ msgstr ""
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr ""
+
