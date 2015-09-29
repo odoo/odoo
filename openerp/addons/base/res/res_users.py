@@ -268,9 +268,6 @@ class res_users(osv.osv):
             pass
         return result
 
-    def _get_default_image(self, cr, uid, context=None):
-        return self.pool['res.partner']._get_default_image(cr, uid, False, colorize=True, context=context)
-
     _defaults = {
         'password': '',
         'active': True,
@@ -278,7 +275,6 @@ class res_users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'image': _get_default_image,
     }
 
     # User can write on a few of his own fields (but not his groups for example)

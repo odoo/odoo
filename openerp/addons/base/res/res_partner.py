@@ -269,7 +269,8 @@ class res_partner(osv.Model, format_address):
 
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
-        help="This field holds the image used as avatar for this contact, limited to 1024x1024px")
+        help="This field holds the image used as avatar for this contact, limited to 1024x1024px",
+        default=lambda self: self._get_default_image(False, True))
     image_medium = openerp.fields.Binary("Medium-sized image",
         compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
         help="Medium-sized image of this contact. It is automatically "\
