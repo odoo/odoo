@@ -253,7 +253,7 @@ class AccountInvoiceLine(models.Model):
         if self.product_id.invoice_policy == "delivery":
             for s_line in self.sale_line_ids:
                 # qtys already invoiced
-                qty_done = sum([uom_obj._compute_qty_obj(x.product_uom, x.product_uom_qty, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
+                qty_done = sum([uom_obj._compute_qty_obj(x.uom_id, x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
                 quantity = uom_obj._compute_qty_obj(self.uom_id, self.quantity, self.product_id.uom_id)
                 # Put moves in fixed order by date executed
                 moves = self.env['stock.move']
@@ -270,7 +270,7 @@ class AccountInvoiceLine(models.Model):
                     if move.state != 'done':
                         continue
                     invoiced_qty += move.product_qty
-                    if invoiced_qty < qty_done:
+                    if invoiced_qty <= qty_done:
                         continue
                     qty_to_consider = move.product_qty
                     if invoiced_qty - move.product_qty < qty_done:
