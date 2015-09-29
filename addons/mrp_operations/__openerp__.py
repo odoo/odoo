@@ -49,8 +49,5 @@ So, that we can compare the theoretic delay and real delay.
     'demo': [ 
              'data/mrp_operations_demo.xml'
     ],
-    'test': [ 
-        'test/workcenter_operations.yml',
-    ],
     'installable': True,
 }
