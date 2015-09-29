@@ -104,9 +104,12 @@ class mrp_product_produce(osv.osv_memory):
         return prod and prod.product_id.id or False
     
     def _get_track(self, cr, uid, context=None):
-        prod = self._get_product_id(cr, uid, context=context)
-        prod_obj = self.pool.get("product.product")
-        return prod and prod_obj.browse(cr, uid, prod, context=context).track_production or False
+        product_id = self._get_product_id(cr, uid, context=context)
+        if not product_id:
+            return False
+        product = self.pool.get("product.product").browse(
+            cr, uid, product_id, context=context)
+        return product.track_all or product.track_production or False
 
     _defaults = {
          'product_qty': _get_product_qty,
