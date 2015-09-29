@@ -824,17 +824,19 @@
             </div>
 
             <div id="wrapwrap">
-                <div class="navbar navbar-default navbar-static-top">
-                    <div class="container">
-                        <div class="collapse navbar-collapse navbar-top-collapse">
-                            <ul class="nav navbar-nav pull-right">
-                                <li><a href="/">Home</a></li>
-                                <li><a href="javascript: window.history.back()">Back</a></li>
-                            </ul>
+                <header>
+                    <div class="navbar navbar-default navbar-static-top">
+                        <div class="container">
+                            <div class="collapse navbar-collapse navbar-top-collapse">
+                                <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                    <li><a href="/">Home</a></li>
+                                    <li><a href="javascript: window.history.back()">Back</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="mb32">
+                </header>
+                <main>
                     <div class="oe_structure">
                         <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
                     </div>
@@ -861,7 +863,7 @@
                     <t t-if="editable or request.debug">
                         <t t-call="website.http_error_debug"/>
                     </t>
-                </div>
+                </main>
             </div>
         </body>
     </html>
