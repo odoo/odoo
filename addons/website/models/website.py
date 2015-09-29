@@ -212,7 +212,7 @@ class website(osv.osv):
         website_id = context.get('website_id')
         key = template_module+'.'+page_name
         page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': key}, context=context)
-        page = view.browse(cr, uid, page_id, context=context)
+        page = view.browse(cr, uid, page_id, context=dict(context, lang=None))
         page.write({
             'arch': page.arch.replace(template, page_xmlid),
             'name': page_name,
