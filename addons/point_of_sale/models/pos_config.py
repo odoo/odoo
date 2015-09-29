@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import uuid
 
-from openerp import SUPERUSER_ID
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
-class pos_config(osv.osv):
+class PosConfig(models.Model):
     _name = 'pos.config'
 
     POS_CONFIG_STATE = [
@@ -16,300 +14,229 @@ class pos_config(osv.osv):
         ('deprecated', 'Deprecated')
     ]
 
-    def _get_currency(self, cr, uid, ids, fieldnames, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for pos_config in self.browse(cr, uid, ids, context=context):
+    def _default_sale_journal(self):
+        return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
+
+    def _default_pricelist(self):
+        return self.env['product.pricelist'].search([], limit=1)
+
+    def _get_default_location(self):
+        return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
+
+    def _get_default_nomenclature(self):
+        return self.env['barcode.nomenclature'].search([], limit=1)
+
+    def _get_group_pos_manager(self):
+        return self.env.ref('point_of_sale.group_pos_manager')
+
+    def _get_group_pos_user(self):
+        return self.env.ref('point_of_sale.group_pos_user')
+
+    name = fields.Char(string='Point of Sale Name', index=True, required=True, help="An internal identification of the point of sale")
+    journal_ids = fields.Many2many(
+        'account.journal', 'pos_config_journal_rel',
+        'pos_config_id', 'journal_id', string='Available Payment Methods',
+        domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",)
+    picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type')
+    stock_location_id = fields.Many2one(
+        'stock.location', string='Stock Location',
+        domain=[('usage', '=', 'internal')], required=True, default=_get_default_location)
+    journal_id = fields.Many2one(
+        'account.journal', string='Sale Journal',
+        domain=[('type', '=', 'sale')],
+        help="Accounting journal used to post sales entries.",
+        default=_default_sale_journal)
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
+    iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer")
+    iface_payment_terminal = fields.Boolean(string='Payment Terminal', help="Enables Payment Terminal integration")
+    iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration")
+    iface_vkeyboard = fields.Boolean(string='Virtual KeyBoard', help="Enables an integrated Virtual Keyboard")
+    iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy")
+    iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner")
+    iface_invoicing = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale', default=True)
+    iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens')
+    iface_print_auto = fields.Boolean(string='Automatic Receipt Printing', default=False,
+        help='The receipt will automatically be p-rinted at the end of each order')
+    iface_print_skip_screen = fields.Boolean(string='Skip Receipt Screen', default=True,
+        help='The receipt screen will be skipped if the receipt can be printed automatically.')
+    iface_precompute_cash = fields.Boolean(string='Prefill Cash Payment',
+        help='The payment input will behave similarily to bank payment input, and will be prefilled with the exact due amount')
+    iface_tax_included = fields.Boolean(string='Include Taxes in Prices',
+        help='The displayed prices will always include all taxes, even if the taxes have been setup differently')
+    iface_start_categ_id = fields.Many2one('pos.category', string='Start Category',
+        help='The point of sale will display this product category by default. If no category is specified, all available products will be shown')
+    iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
+        help="The product categories will be displayed with pictures.")
+    cash_control = fields.Boolean(string='Cash Control', help="Check the amount of the cashbox at opening and closing.")
+    receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt")
+    receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt")
+    proxy_ip = fields.Char(string='IP Address', size=45,
+        help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty')
+    state = fields.Selection(POS_CONFIG_STATE, string='Status', required=True, readonly=True, copy=False, default=POS_CONFIG_STATE[0][0])
+    uuid = fields.Char(readonly=True, default=lambda self: str(uuid.uuid4()),
+        help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data')
+    sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
+        help="This sequence is automatically created by Odoo but you can change it "
+        "to customize the reference numbers of your orders.", copy=False)
+    session_ids = fields.One2many('pos.session', 'config_id', string='Sessions')
+    current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session")
+    current_session_state = fields.Char(compute='_compute_current_session')
+    last_session_closing_cash = fields.Float(compute='_compute_last_session')
+    last_session_closing_date = fields.Date(compute='_compute_last_session')
+    pos_session_username = fields.Char(compute='_compute_current_session_user')
+    group_by = fields.Boolean(string='Group Journal Items', default=True,
+        help="Check this if you want to group the Journal Items by Product while closing a Session")
+    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, default=_default_pricelist)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcodes', required=True, default=_get_default_nomenclature,
+        help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers')
+    group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
+        help='This field is there to pass the id of the pos manager group to the point of sale client')
+    group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
+        help='This field is there to pass the id of the pos user group to the point of sale client')
+    tip_product_id = fields.Many2one('product.product', string='Tip Product',
+        help="The product used to encode the customer tip. Leave empty if you do not accept tips.")
+    fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions')
+
+    @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id')
+    def _compute_currency(self):
+        for pos_config in self:
             if pos_config.journal_id:
-                currency_id = pos_config.journal_id.currency_id.id or pos_config.journal_id.company_id.currency_id.id
+                pos_config.currency_id = pos_config.journal_id.currency_id.id or pos_config.journal_id.company_id.currency_id.id
             else:
-                currency_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id
-            result[pos_config.id] = currency_id
-        return result
+                pos_config.currency_id = self.env.user.company_id.currency_id.id
 
-    def _get_current_session(self, cr, uid, ids, fieldnames, args, context=None):
-        result = dict()
+    @api.depends('session_ids')
+    def _compute_current_session(self):
+        for pos_config in self:
+            session = pos_config.session_ids.filtered(lambda r: r.user_id.id == self.env.uid and not r.state == 'closed')
+            pos_config.current_session_id = session
+            pos_config.current_session_state = session.state
 
-        for record in self.browse(cr, uid, ids, context=context):
-            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed')
-            result[record.id] = {
-                'current_session_id': session_id,
-                'current_session_state': session_id.state,
-            }
-        return result
-
-    def _get_last_session(self, cr, uid, ids, fieldnames, args, context=None):
-        result = dict()
-
-        for record in self.browse(cr, uid, ids, context=context):
-            session_ids = self.pool['pos.session'].search_read(
-                cr, uid,
-                [('config_id', '=', record.id), ('state', '=', 'closed')],
+    @api.depends('session_ids')
+    def _compute_last_session(self):
+        PosSession = self.env['pos.session']
+        for pos_config in self:
+            session = PosSession.search_read(
+                [('config_id', '=', pos_config.id), ('state', '=', 'closed')],
                 ['cash_register_balance_end_real', 'stop_at'],
-                order="stop_at desc", limit=1, context=context)
-            if session_ids:
-                result[record.id] = {
-                    'last_session_closing_cash': session_ids[0]['cash_register_balance_end_real'],
-                    'last_session_closing_date': session_ids[0]['stop_at'],
-                }
+                order="stop_at desc", limit=1)
+            if session:
+                pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
+                pos_config.last_session_closing_date = session[0]['stop_at']
             else:
-                result[record.id] = {
-                    'last_session_closing_cash': 0,
-                    'last_session_closing_date': None,
-                }
-        return result
+                pos_config.last_session_closing_cash = 0
+                pos_config.last_session_closing_date = False
 
-    def _get_current_session_user(self, cr, uid, ids, fieldnames, args, context=None):
-        result = dict()
+    @api.depends('session_ids')
+    def _compute_current_session_user(self):
+        for pos_config in self:
+            pos_config.pos_session_username = pos_config.session_ids.filtered(lambda s: s.state == 'opened').user_id.name
 
-        for record in self.browse(cr, uid, ids, context=context):
-            result[record.id] = record.session_ids.filtered(lambda r: r.state == 'opened').user_id.name
-        return result
+    @api.constrains('company_id', 'stock_location_id')
+    def _check_company_location(self):
+        if self.stock_location_id.company_id and self.stock_location_id.company_id.id != self.company_id.id:
+            raise UserError(_("The company of the stock location is different than the one of point of sale"))
 
-    _columns = {
-        'name' : fields.char('Point of Sale Name', select=1,
-             required=True, help="An internal identification of the point of sale"),
-        'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 
-             'pos_config_id', 'journal_id', 'Available Payment Methods',
-             domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",),
-        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
-        'stock_location_id': fields.many2one('stock.location', 'Stock Location', domain=[('usage', '=', 'internal')], required=True),
-        'journal_id' : fields.many2one('account.journal', 'Sale Journal',
-             domain=[('type', '=', 'sale')],
-             help="Accounting journal used to post sales entries."),
-        'currency_id' : fields.function(_get_currency, type="many2one", string="Currency", relation="res.currency"),
-        'iface_cashdrawer' : fields.boolean('Cashdrawer', help="Automatically open the cashdrawer"),
-        'iface_payment_terminal' : fields.boolean('Payment Terminal', help="Enables Payment Terminal integration"),
-        'iface_electronic_scale' : fields.boolean('Electronic Scale', help="Enables Electronic Scale integration"),
-        'iface_vkeyboard' : fields.boolean('Virtual KeyBoard', help="Enables an integrated Virtual Keyboard"),
-        'iface_print_via_proxy' : fields.boolean('Print via Proxy', help="Bypass browser printing and prints via the hardware proxy"),
-        'iface_scan_via_proxy' : fields.boolean('Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner"),
-        'iface_invoicing': fields.boolean('Invoicing',help='Enables invoice generation from the Point of Sale'),
-        'iface_big_scrollbars': fields.boolean('Large Scrollbars',help='For imprecise industrial touchscreens'),
+    @api.constrains('company_id', 'journal_id')
+    def _check_company_journal(self):
+        if self.journal_id and self.journal_id.company_id.id != self.company_id.id:
+            raise UserError(_("The company of the sale journal is different than the one of point of sale"))
 
-        'iface_print_auto': fields.boolean('Automatic Receipt Printing', help='The receipt will automatically be printed at the end of each order'),
-        'iface_print_skip_screen': fields.boolean('Skip Receipt Screen', help='The receipt screen will be skipped if the receipt can be printed automatically.'),
-        'iface_precompute_cash': fields.boolean('Prefill Cash Payment',  help='The payment input will behave similarily to bank payment input, and will be prefilled with the exact due amount'),
-        'iface_tax_included':   fields.boolean('Include Taxes in Prices', help='The displayed prices will always include all taxes, even if the taxes have been setup differently'),
-        'iface_start_categ_id': fields.many2one('pos.category','Start Category', help='The point of sale will display this product category by default. If no category is specified, all available products will be shown'),
-        'iface_display_categ_images': fields.boolean('Display Category Pictures', help="The product categories will be displayed with pictures."),
-        'cash_control': fields.boolean('Cash Control', help="Check the amount of the cashbox at opening and closing."),
-        'receipt_header': fields.text('Receipt Header',help="A short text that will be inserted as a header in the printed receipt"),
-        'receipt_footer': fields.text('Receipt Footer',help="A short text that will be inserted as a footer in the printed receipt"),
-        'proxy_ip':       fields.char('IP Address', help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty', size=45),
+    @api.constrains('company_id', 'journal_ids')
+    def _check_company_payment(self):
+        if self.env['account.journal'].search_count([('id', 'in', self.journal_ids.ids), ('company_id', '!=', self.company_id.id)]):
+            raise UserError(_("The company of a payment method is different than the one of point of sale"))
 
-        'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True, copy=False),
-        'uuid'  : fields.char('uuid', readonly=True, help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data'),
-        'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
-            help="This sequence is automatically created by Odoo but you can change it "\
-                "to customize the reference numbers of your orders.", copy=False),
-        'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
-        'current_session_id': fields.function(_get_current_session, multi="session", type="many2one", relation="pos.session", string="Current Session"),
-        'current_session_state': fields.function(_get_current_session, multi="session", type='char'),
-        'last_session_closing_cash': fields.function(_get_last_session, multi="last_session", type='float'),
-        'last_session_closing_date': fields.function(_get_last_session, multi="last_session", type='date'),
-        'pos_session_username': fields.function(_get_current_session_user, type='char'),
-        'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
-        'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcodes', help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers', required=True),
-        'group_pos_manager_id': fields.many2one('res.groups','Point of Sale Manager Group', help='This field is there to pass the id of the pos manager group to the point of sale client'),
-        'group_pos_user_id':    fields.many2one('res.groups','Point of Sale User Group', help='This field is there to pass the id of the pos user group to the point of sale client'),
-        'tip_product_id':       fields.many2one('product.product','Tip Product', help="The product used to encode the customer tip. Leave empty if you do not accept tips."),
-        'fiscal_position_ids': fields.many2many('account.fiscal.position', string='Fiscal Positions')
-    }
+    @api.onchange('iface_print_via_proxy')
+    def _onchange_iface_print_via_proxy(self):
+        self.iface_print_auto = self.iface_print_via_proxy
 
-    def _check_company_location(self, cr, uid, ids, context=None):
-        for config in self.browse(cr, uid, ids, context=context):
-            if config.stock_location_id.company_id and config.stock_location_id.company_id.id != config.company_id.id:
-                return False
-        return True
+    @api.onchange('picking_type_id')
+    def _onchange_picking_type_id(self):
+        if self.picking_type_id.default_location_src_id.usage == 'internal' and self.picking_type_id.default_location_dest_id.usage == 'customer':
+            self.stock_location_id = self.picking_type_id.default_location_src_id.id
 
-    def _check_company_journal(self, cr, uid, ids, context=None):
-        for config in self.browse(cr, uid, ids, context=context):
-            if config.journal_id and config.journal_id.company_id.id != config.company_id.id:
-                return False
-        return True
-
-    def _check_company_payment(self, cr, uid, ids, context=None):
-        for config in self.browse(cr, uid, ids, context=context):
-            journal_ids = [j.id for j in config.journal_ids]
-            if self.pool['account.journal'].search(cr, uid, [
-                    ('id', 'in', journal_ids),
-                    ('company_id', '!=', config.company_id.id)
-                ], count=True, context=context):
-                return False
-        return True
-
-    _constraints = [
-        (_check_company_location, "The company of the stock location is different than the one of point of sale", ['company_id', 'stock_location_id']),
-        (_check_company_journal, "The company of the sale journal is different than the one of point of sale", ['company_id', 'journal_id']),
-        (_check_company_payment, "The company of a payment method is different than the one of point of sale", ['company_id', 'journal_ids']),
-    ]
-
-    def name_get(self, cr, uid, ids, context=None):
+    @api.multi
+    def name_get(self):
         result = []
-        states = {
-            'opening_control': _('Opening Control'),
-            'opened': _('In Progress'),
-            'closing_control': _('Closing Control'),
-            'closed': _('Closed & Posted'),
-        }
-        for record in self.browse(cr, uid, ids, context=context):
-            if (not record.session_ids) or (record.session_ids[0].state=='closed'):
-                result.append((record.id, record.name+' ('+_('not used')+')'))
+        for config in self:
+            if (not config.session_ids) or (config.session_ids[0].state == 'closed'):
+                result.append((config.id, config.name + ' (' + _('not used') + ')'))
                 continue
-            session = record.session_ids[0]
-            result.append((record.id, record.name + ' ('+session.user_id.name+')')) #, '+states[session.state]+')'))
+            result.append((config.id, config.name + ' (' + config.session_ids[0].user_id.name + ')'))
         return result
 
-    def _default_sale_journal(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', company_id)], limit=1, context=context)
-        return res and res[0] or False
-
-    def _default_pricelist(self, cr, uid, context=None):
-        res = self.pool.get('product.pricelist').search(cr, uid, [], limit=1, context=context)
-        return res and res[0] or False
-
-    def _get_default_location(self, cr, uid, context=None):
-        wh_obj = self.pool.get('stock.warehouse')
-        user = self.pool.get('res.users').browse(cr, uid, uid, context)
-        res = wh_obj.search(cr, uid, [('company_id', '=', user.company_id.id)], limit=1, context=context)
-        if res and res[0]:
-            return wh_obj.browse(cr, uid, res[0], context=context).lot_stock_id.id
-        return False
-
-    def _get_default_company(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
-        return company_id
-
-    def _get_default_nomenclature(self, cr, uid, context=None):
-        nom_obj = self.pool.get('barcode.nomenclature')
-        res = nom_obj.search(cr, uid, [], limit=1, context=context)
-        return res and res[0] or False
-
-    def _get_group_pos_manager(self, cr, uid, context=None):
-        group = self.pool.get('ir.model.data').get_object_reference(cr,uid,'point_of_sale','group_pos_manager')
-        if group:
-            return group[1]
-        else:
-            return False
-
-    def _get_group_pos_user(self, cr, uid, context=None):
-        group = self.pool.get('ir.model.data').get_object_reference(cr,uid,'point_of_sale','group_pos_user')
-        if group:
-            return group[1]
-        else:
-            return False
-
-    _defaults = {
-        'uuid'  : lambda self, cr, uid, context={}: str(uuid.uuid4()),
-        'state' : POS_CONFIG_STATE[0][0],
-        'journal_id': _default_sale_journal,
-        'group_by' : True,
-        'pricelist_id': _default_pricelist,
-        'iface_invoicing': True,
-        'iface_print_auto': False,
-        'iface_print_skip_screen': True,
-        'stock_location_id': _get_default_location,
-        'company_id': _get_default_company,
-        'barcode_nomenclature_id': _get_default_nomenclature,
-        'group_pos_manager_id': _get_group_pos_manager,
-        'group_pos_user_id': _get_group_pos_user,
-    }
-
-    def onchange_picking_type_id(self, cr, uid, ids, picking_type_id, context=None):
-        p_type_obj = self.pool.get("stock.picking.type")
-        p_type = p_type_obj.browse(cr, uid, picking_type_id, context=context)
-        if p_type.default_location_src_id and p_type.default_location_src_id.usage == 'internal' and p_type.default_location_dest_id and p_type.default_location_dest_id.usage == 'customer':
-            return {'value': {'stock_location_id': p_type.default_location_src_id.id}}
-        return False
-
-    def onchange_iface_print_via_proxy(self, cr, uid, ids, print_via_proxy, context=None):
-        return {'value': {'iface_print_auto': print_via_proxy}}
-
-    def set_active(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state' : 'active'}, context=context)
-
-    def set_inactive(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state' : 'inactive'}, context=context)
-
-    def set_deprecate(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state' : 'deprecated'}, context=context)
-
-    def create(self, cr, uid, values, context=None):
-        ir_sequence = self.pool.get('ir.sequence')
-        # force sequence_id field to new pos.order sequence
-        values['sequence_id'] = ir_sequence.create(cr, SUPERUSER_ID, {
-            'name': 'POS Order %s' % values['name'],
+    @api.model
+    def create(self, values):
+        IrSequence = self.env['ir.sequence']
+        val = {
+            'name': _('POS Order %s') % values['name'],
             'padding': 4,
-            'prefix': "%s/"  % values['name'],
+            'prefix': "%s/" % values['name'],
             'code': "pos.order",
             'company_id': values.get('company_id', False),
-        }, context=context)
+        }
+        # force sequence_id field to new pos.order sequence
+        values['sequence_id'] = IrSequence.create(val).id
 
         # TODO master: add field sequence_line_id on model
         # this make sure we always have one available per company
-        ir_sequence.create(cr, SUPERUSER_ID, {
-            'name': 'POS order line %s' % values['name'],
-            'padding': 4,
-            'prefix': "%s/"  % values['name'],
-            'code': "pos.order.line",
-            'company_id': values.get('company_id', False),
-        }, context=context)
+        val.update(name=_('POS order line %s') % values['name'], code='pos.order.line')
+        IrSequence.create(val)
+        return super(PosConfig, self).create(values)
 
-        return super(pos_config, self).create(cr, uid, values, context=context)
+    @api.multi
+    def unlink(self):
+        for pos_config in self.filtered(lambda pos_config: pos_config.sequence_id):
+            pos_config.sequence_id.unlink()
+        return super(PosConfig, self).unlink()
 
-    def unlink(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.sequence_id:
-                obj.sequence_id.unlink()
-        return super(pos_config, self).unlink(cr, uid, ids, context=context)
+    @api.multi
+    def set_active(self):
+        self.write({'state': 'active'})
+
+    @api.multi
+    def set_inactive(self):
+        self.write({'state': 'inactive'})
+
+    @api.multi
+    def set_deprecate(self):
+        self.write({'state': 'deprecated'})
 
     # Methods to open the POS
-
-    def open_ui(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, "you can open only one session at a time"
-
-        record = self.browse(cr, uid, ids[0], context=context)
-        context = dict(context or {})
-        context['active_id'] = record.current_session_id.id
+    @api.multi
+    def open_ui(self):
+        assert len(self.ids) == 1, "you can open only one session at a time"
         return {
             'type': 'ir.actions.act_url',
             'url':   '/pos/web/',
             'target': 'self',
         }
 
-    def open_existing_session_cb_close(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, "you can open only one session at a time"
+    @api.multi
+    def open_existing_session_cb_close(self):
+        assert len(self.ids) == 1, "you can open only one session at a time"
+        self.current_session_id.signal_workflow('cashbox_control')
+        return self.open_session_cb()
 
-        record = self.browse(cr, uid, ids[0], context=context)
-        record.current_session_id.signal_workflow('cashbox_control')
-        return self.open_session_cb(cr, uid, ids, context)
+    @api.multi
+    def open_session_cb(self):
+        assert len(self.ids) == 1, "you can open only one session at a time"
+        if not self.current_session_id:
+            self.current_session_id = self.env['pos.session'].create({
+                'user_id': self.env.uid,
+                'config_id': self.id
+            })
+            if self.current_session_id.state == 'opened':
+                return self.open_ui()
+            return self._open_session(self.current_session_id.id)
+        return self._open_session(self.current_session_id.id)
 
-    def open_session_cb(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, "you can open only one session at a time"
-
-        proxy = self.pool.get('pos.session')
-        record = self.browse(cr, uid, ids[0], context=context)
-        current_session_id = record.current_session_id
-        if not current_session_id:
-            values = {
-                'user_id': uid,
-                'config_id': record.id,
-            }
-            session_id = proxy.create(cr, uid, values, context=context)
-            self.write(cr, SUPERUSER_ID, record.id, {'current_session_id': session_id}, context=context)
-            if record.current_session_id.state == 'opened':
-                return self.open_ui(cr, uid, ids, context=context)
-            return self._open_session(session_id)
-        return self._open_session(current_session_id.id)
-
-    def open_existing_session_cb(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, "you can open only one session at a time"
-
-        record = self.browse(cr, uid, ids[0], context=context)
-        return self._open_session(record.current_session_id.id)
+    @api.multi
+    def open_existing_session_cb(self):
+        assert len(self.ids) == 1, "you can open only one session at a time"
+        return self._open_session(self.current_session_id.id)
 
     def _open_session(self, session_id):
         return {
