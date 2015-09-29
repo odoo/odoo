@@ -272,6 +272,8 @@ class res_users(osv.Model):
                 return True
 
     def _send_invitation(self, cr, uid, ids, context=None):
+        if type(ids) in (int, long):
+            ids = [ids]
         for user in self.browse(cr, uid, ids, context=context):
             if context and context.get('reset_password') \
                     and user.email \
@@ -284,7 +286,7 @@ class res_users(osv.Model):
     def create(self, cr, uid, values, context=None):
         # overridden to automatically invite user to sign up
         user_id = super(res_users, self).create(cr, uid, values, context=context)
-        self._send_invitation(cr, uid, [user_id], context=context)
+        self._send_invitation(cr, uid, user_id, context=context)
         return user_id
 
     def write(self, cr, uid, ids, values, context=None):
