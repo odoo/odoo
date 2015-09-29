@@ -27,6 +27,10 @@ class stock_inventory(osv.osv):
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
+    def _get_price_unit(self):
+        self.ensure_one()
+        return self.product_id.standard_price
+
     def _get_price(self, cr, uid, inv, company_currency, i_line, price_unit):
         cur_obj = self.pool.get('res.currency')
         if inv.currency_id.id != company_currency:
@@ -46,6 +50,62 @@ class account_invoice_line(osv.osv):
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
+
+    @api.model
+    def invoice_line_move_line_get(self):
+        res = super(account_invoice,self).invoice_line_move_line_get()
+        if self.company_id.anglo_saxon_accounting:
+            if self.type in ('out_invoice','out_refund'):
+                for i_line in self.invoice_line_ids:
+                    res.extend(self._anglo_saxon_sale_move_lines(i_line))
+        return res
+
+    @api.model
+    def _anglo_saxon_sale_move_lines(self, i_line):
+        """Return the additional move lines for sales invoices and refunds.
+
+        i_line: An account.invoice.line object.
+        res: The move line entries produced so far by the parent move_line_get.
+        """
+        inv = i_line.invoice_id
+        company_currency = inv.company_id.currency_id.id
+
+        if i_line.product_id.type in ('product', 'consu') and i_line.product_id.valuation == 'real_time':
+            accounts = i_line.product_id.product_tmpl_id.get_product_accounts()
+            # debit account dacc will be the output account
+            dacc = accounts['stock_output'].id
+            # credit account cacc will be the expense account
+            cacc = accounts['expense'].id
+            if dacc and cacc:
+                price_unit = i_line._get_price_unit()
+                return [
+                    {
+                        'type':'src',
+                        'name': i_line.name[:64],
+                        'price_unit': price_unit,
+                        'quantity': i_line.quantity,
+                        'price': self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit),
+                        'account_id':dacc,
+                        'product_id':i_line.product_id.id,
+                        'uom_id':i_line.uom_id.id,
+                        'account_analytic_id': False,
+                        'taxes':i_line.invoice_line_tax_ids,
+                    },
+
+                    {
+                        'type':'src',
+                        'name': i_line.name[:64],
+                        'price_unit': price_unit,
+                        'quantity': i_line.quantity,
+                        'price': -1 * self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit),
+                        'account_id':cacc,
+                        'product_id':i_line.product_id.id,
+                        'uom_id':i_line.uom_id.id,
+                        'account_analytic_id': False,
+                        'taxes':i_line.invoice_line_tax_ids,
+                    },
+                ]
+        return []
 
     def _prepare_refund(self, cr, uid, invoice, date_invoice=None, date=None, description=None, journal_id=None, context=None):
         invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date, date,

@@ -242,114 +242,41 @@ class StockMove(models.Model):
         return result
 
 
-class AccountInvoice(models.Model):
-    _inherit = "account.invoice"
+class AccountInvoiceLine(models.Model):
+    _inherit = "account.invoice.line"
 
-    @api.model
-    def invoice_line_move_line_get(self):
-        res = super(AccountInvoice,self).invoice_line_move_line_get()
-        if self.company_id.anglo_saxon_accounting:
-            if self.type in ('out_invoice','out_refund'):
-                for i_line in self.invoice_line_ids:
-                    res.extend(self._anglo_saxon_sale_move_lines(i_line))
-        return res
-
-    @api.model
-    def _anglo_saxon_sale_move_lines(self, i_line):
-        """Return the additional move lines for sales invoices and refunds.
-
-        i_line: An account.invoice.line object.
-        """
-        inv = i_line.invoice_id
-        company_currency = inv.company_id.currency_id.id
-        uom_obj = self.env['product.uom']
-        if i_line.product_id.type in ('product', 'consu') and i_line.product_id.valuation == 'real_time':
-            # debit account dacc will be the output account
-            # first check the product, if empty check the category
-            dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
-            if not dacc:
-                dacc = i_line.product_id.categ_id.property_stock_account_output_categ_id and i_line.product_id.categ_id.property_stock_account_output_categ_id.id
-            # in both cases the credit account cacc will be the expense account
-            # first check the product, if empty check the category
-            cacc = i_line.product_id.property_account_expense_id and i_line.product_id.property_account_expense_id.id
-            if not cacc:
-                cacc = i_line.product_id.categ_id.property_account_expense_categ_id and i_line.product_id.categ_id.property_account_expense_categ_id.id
-            if dacc and cacc:
-                # Search for moves and check for just a part being paid
-                if i_line.product_id.invoice_policy == 'delivery':
-                    # Search moves that have not been invoiced yet: search according to default order
-                    for s_line in i_line.sale_line_ids:
-                        #Check qtys already invoiced
-                        qty_done = sum([uom_obj._compute_qty_obj(x.product_uom, x.product_uom_qty, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
-                        qty_from_moves = 0.0
-                        average = 0.0
-                        qty_done_rest = qty_done
-                        i_qty = uom_obj._compute_qty_obj(i_line.uom_id, i_line.quantity, i_line.product_id.uom_id)
-                        i_qty_rest = i_qty
-                        # Put moves in fixed order by date executed
-                        moves = self.env['stock.move'].browse()
-                        for procurement in s_line.procurement_ids:
-                            moves |= procurement.move_ids
-                        sorted(moves, lambda x: x.date)
-                        # Go through all the moves and do nothing until you get to qty_done
-                        # Beyond qty_done we need to calculate the average of the price_unit
-                        # on the moves we encounter.
-                        for move in moves:
-                            if move.state != 'done':
-                                continue
-                            if i_qty_rest <= 0.0:
-                                break
-                            qty_to_take = 0
-                            if qty_done_rest > 0.0 and qty_done_rest >= move.product_qty:
-                                qty_done_rest -= move.product_qty
-                            else:
-                                qty_to_take = move.product_qty - qty_done_rest
-                                qty_done_rest = 0
-                                # Check qty
-                                if i_qty_rest > qty_to_take:
-                                    i_qty_rest -= qty_to_take
-                                else:
-                                    qty_to_take = i_qty_rest
-                                    i_qty_rest = 0
-                                # Take average
-                                if qty_from_moves == 0:
-                                    average = move.price_unit
-                                    qty_from_moves = qty_to_take
-                                else:
-                                    average = (average * qty_from_moves + move.price_unit * qty_to_take) / (qty_from_moves + qty_to_take)
-                                    qty_from_moves += qty_to_take
-                        if qty_from_moves:
-                            price_unit = average
-                        else:
-                            price_unit = i_line.product_id.standard_price
-                else:
-                    price_unit = i_line.product_id.standard_price
-
-                return [
-                    {
-                        'type':'src',
-                        'name': i_line.name[:64],
-                        'price_unit':price_unit,
-                        'quantity':i_line.quantity,
-                        'price': i_line._get_price(inv, company_currency, i_line, price_unit),
-                        'account_id':dacc,
-                        'product_id':i_line.product_id.id,
-                        'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': False,
-                        'taxes':i_line.invoice_line_tax_ids,
-                    },
-
-                    {
-                        'type':'src',
-                        'name': i_line.name[:64],
-                        'price_unit':price_unit,
-                        'quantity':i_line.quantity,
-                        'price': -1 * i_line._get_price(inv, company_currency, i_line, price_unit),
-                        'account_id':cacc,
-                        'product_id':i_line.product_id.id,
-                        'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': False,
-                        'taxes':i_line.invoice_line_tax_ids,
-                    },
-                ]
-        return []
+    def _get_price_unit(self):
+        price_unit = super(AccountInvoiceLine,self)._get_price_unit()
+        # in case of anglo saxon with a product configured as invoiced based on delivery, with perpetual
+        # valuation and real price costing method, we must find the real price for the cost of good sold
+        if self.product_id.invoice_policy == "delivery":
+            for s_line in self.sale_line_ids:
+                # qtys already invoiced
+                qty_done = s_line.qty_invoiced - self.quantity
+                # Put moves in fixed order by date executed
+                moves = self.env['stock.move']
+                for procurement in s_line.procurement_ids:
+                    moves |= procurement.move_ids
+                moves.sorted(lambda x: x.date)
+                # Go through all the moves and do nothing until you get to qty_done
+                # Beyond qty_done we need to calculate the average of the price_unit
+                # on the moves we encounter.
+                average_price_unit = 0
+                qty_delivered = 0
+                invoiced_qty = 0
+                for move in moves:
+                    if move.state != 'done':
+                        continue
+                    invoiced_qty += move.product_qty
+                    if invoiced_qty < qty_done:
+                        continue
+                    qty_to_consider = move.product_qty
+                    if move.product_qty > qty_done:
+                        qty_to_consider = move.product_qty - qty_done
+                    qty_to_consider = min(qty_to_consider, self.quantity - qty_delivered)
+                    qty_delivered += qty_to_consider
+                    average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move.price_unit * qty_to_consider) / qty_delivered
+                    if qty_delivered == self.quantity:
+                        break
+                price_unit = average_price_unit or price_unit
+        return price_unit
