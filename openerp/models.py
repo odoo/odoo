@@ -2684,13 +2684,14 @@ class BaseModel(object):
         if stored_fields:
             # trigger computation of new-style stored fields with a compute
             def func(cr):
+                fnames = [f.name for f in stored_fields]
                 _logger.info("Storing computed values of %s fields %s",
-                    self._name, ', '.join(sorted(f.name for f in stored_fields)))
+                             self._name, ', '.join(sorted(fnames)))
                 recs = self.browse(cr, SUPERUSER_ID, [], {'active_test': False})
                 recs = recs.search([])
                 if recs:
+                    recs.invalidate_cache(fnames, recs.ids)
                     map(recs._recompute_todo, stored_fields)
-                    recs.recompute()
 
             todo_end.append((1000, func, ()))
 
