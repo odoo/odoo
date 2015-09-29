@@ -2538,6 +2538,8 @@ class stock_move(osv.osv):
                     quants = quant_obj.quants_get_preferred_domain(cr, uid, qty, move_rec, ops=ops, lot_id=lot, domain=domain,
                                                         preferred_domain_list=preferred_domain_list, context=context)
                     move_quants_dict[lot] += quants
+                    lot_qty[lot] -= qty
+                    lot_move_qty[move] -= qty
 
                 #Move all the quants related to that lot/move
                 if move_quants_dict[lot]:
