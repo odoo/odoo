@@ -242,7 +242,7 @@ var WebClient = Widget.extend({
      * This allows to widgets that are not inside the ActionManager to perform do_action
      */
     do_action: function() {
-        this.action_manager.do_action.apply(this, arguments);
+        return this.action_manager.do_action.apply(this, arguments);
     },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {
