@@ -103,5 +103,5 @@ class event(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'new',
-            'url': '/report/html/%s/%s' % ('event.event_event_report_template_badge', self.id),
+            'url': '/report/html/%s/%s?enable_editor' % ('event.event_event_report_template_badge', self.id),
         }
