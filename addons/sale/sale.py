@@ -1212,13 +1212,6 @@ class sale_order_line(osv.osv):
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
                 if update_tax:
-                    # The superuser is used by website_sale in order to create a sale order. We need to make
-                    # sure we only select the taxes related to the company of the partner. This should only
-                    # apply if the partner is linked to a company.
-                    if uid == SUPERUSER_ID and context.get('company_id'):
-                        taxes = product_obj.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
-                    else:
-                        taxes = product_obj.taxes_id
                     price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, taxes, result['tax_id'])
                 result.update({'price_unit': price})
                 if context.get('uom_qty_change', False):
