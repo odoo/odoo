@@ -13,9 +13,6 @@ This module adds 'Allow Canceling Entries' field on form view of account journal
 If set to true it allows user to cancel entries & invoices.
     """,
     'website': 'https://www.odoo.com/page/accounting',
-    'depends' : ['account'],
-    'data': ['account_cancel_view.xml' ],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
+    'depends': ['account'],
+    'data': ['views/account_cancel_view.xml'],
 }
