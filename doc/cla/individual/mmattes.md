@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Markus Mattes markus@mmattes.de https://github.com/mmattes
+Markus Mattes mmattes87@gmail.com https://github.com/mmattes
