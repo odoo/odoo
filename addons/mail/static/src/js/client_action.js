@@ -324,7 +324,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     fetch_and_render_thread: function () {
         var self = this;
         return chat_manager.fetch(this.channel_id, this.domain).then(function(result) {
-            self.thread.render(result, {display_load_more: !chat_manager.all_history_loaded(self.channel_id)});
+            var history_loaded = chat_manager.all_history_loaded(self.channel_id, self.domain);
+            self.thread.render(result, {display_load_more: !history_loaded});
         });
     },
 
@@ -336,7 +337,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         return chat_manager
             .fetch_more(this.channel_id, this.domain)
             .then(function(result) {
-                self.thread.render(result, {display_load_more: !chat_manager.all_history_loaded(self.channel_id)});
+                var history_loaded = chat_manager.all_history_loaded(self.channel_id, self.domain);
+                self.thread.render(result, {display_load_more: !history_loaded});
                 offset += framework.getPosition(document.querySelector(oldest_msg_selector)).top;
                 self.thread.scroll_to({offset: offset});
             });
@@ -416,8 +418,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         if ((this.channel_id === "channel_starred" && !message.is_starred) ||
             (this.channel_id === "channel_inbox" && !message.is_needaction)) {
             chat_manager.fetch(this.channel_id, this.domain).then(function (messages) {
-                var options = {display_load_more: !chat_manager.all_history_loaded(self.channel_id)};
-                self.thread.remove_message_and_render(message.id, messages, options);
+                var history_loaded = chat_manager.all_history_loaded(self.channel_id, self.domain);
+                self.thread.remove_message_and_render(message.id, messages, {display_load_more: !history_loaded});
             });
         } else if (_.contains(message.channel_ids, this.channel_id)) {
             this.fetch_and_render_thread();

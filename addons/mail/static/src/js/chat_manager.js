@@ -177,9 +177,13 @@ function make_channel (data, options) {
         uuid: data.uuid,
         is_detached: data.is_minimized,
         is_folded: data.state === "folded",
-        loaded: false,
         autoswitch: 'autoswitch' in options ? options.autoswitch : true,
         hidden: options.hidden,
+        cache: {'[]': {
+            all_history_loaded: false,
+            loaded: false,
+            message_ids: [],
+        }},
     };
     if (data.public === "private") {
         channel.type = "private";
@@ -190,6 +194,27 @@ function make_channel (data, options) {
         channel.status = data.direct_partner[0].im_status;
     }
     return channel;
+}
+
+function get_channel_cache (channel_id, domain) {
+    var stringified_domain = JSON.stringify(domain || []);
+    var channel = _.findWhere(channels, {id: channel_id});
+    if (!channel.cache[stringified_domain]) {
+        channel.cache[stringified_domain] = {
+            all_history_loaded: false,
+            loaded: false,
+            message_ids: [],
+        };
+    }
+    return channel.cache[stringified_domain];
+}
+
+function remove_message_from_channel (channel_id, message) {
+    message.channel_ids = _.without(message.channel_ids, channel_id);
+    var channel = _.findWhere(channels, { id: channel_id });
+    _.each(channel.cache, function (cache) {
+        cache.message_ids = _.without(cache.message_ids, message.id);
+    });
 }
 
 // options: domain, load_more
@@ -214,17 +239,19 @@ function fetch_from_channel (channel_id, options) {
     }
 
     return MessageModel.call('message_fetch', [domain], {limit: LIMIT}).then(function (msgs) {
-        var channel = _.findWhere(channels, {id: channel_id});
-        channel.loaded = true;
-        if (!channel.all_history_loaded) {
-            channel.all_history_loaded =  msgs.length < LIMIT;
+        var cache = get_channel_cache(channel_id, options.domain);
+
+        cache.message_ids = _.uniq(cache.message_ids.concat(_.pluck(msgs, 'id')));
+        if (!cache.all_history_loaded) {
+            cache.all_history_loaded =  msgs.length < LIMIT;
         }
+        cache.loaded = true;
 
         _.each(msgs, function (msg) {
             add_message(msg, {channel_id: channel_id, silent: true});
         });
         return _.filter(messages, function (m) {
-            return _.contains(m.channel_ids, channel_id);
+            return _.contains(cache.message_ids, m.id);
         });
     });
 }
@@ -254,6 +281,7 @@ function fetch_document_messages (ids, options) {
     }
 }
 
+
 // Public interface
 //----------------------------------------------------------------------------------
 var chat_manager = {
@@ -262,10 +290,10 @@ var chat_manager = {
 
     get_messages: function (options) {
         if ('channel_id' in options) { // channel message
-            var channel = _.findWhere(channels, {id: options.channel_id});
-            if (channel.loaded) {
+            var channel_cache = get_channel_cache(options.channel_id, options.domain);
+            if (channel_cache.loaded) {
                 return $.when(_.filter(messages, function (message) {
-                    return _.contains(message.channel_ids, channel.id);
+                    return _.contains(message.channel_ids, options.channel_id);
                 }));
             } else {
                 return fetch_from_channel(options.channel_id);
@@ -290,13 +318,16 @@ var chat_manager = {
 
         return MessageModel.call('set_message_starred', [[message_id], !msg.is_starred]).then(function () {
             msg.is_starred = !msg.is_starred;
+            if (!msg.is_starred) {
+                remove_message_from_channel("channel_starred", msg);
+            }
             chat_manager.bus.trigger('update_message', msg);
         });
     },
     mark_as_read: function (message_id) {
         return MessageModel.call('set_message_done', [[message_id]]).then(function () {
             var message = _.findWhere(messages, { id: message_id });
-            message.channel_ids = _.without(message.channel_ids, "channel_inbox");
+            remove_message_from_channel("channel_inbox", message);
             chat_manager.bus.trigger('update_message', message);
             needaction_counter = needaction_counter - 1;
             chat_manager.bus.trigger('update_needaction', needaction_counter);
@@ -311,8 +342,8 @@ var chat_manager = {
         return _.findWhere(channels, {id: id}) || channels[0];
     },
 
-    all_history_loaded: function (channel_id) {
-        return this.get_channel(channel_id).all_history_loaded;
+    all_history_loaded: function (channel_id, domain) {
+        return get_channel_cache(channel_id, domain).all_history_loaded;
     },
 
     get_emojis: function() {
