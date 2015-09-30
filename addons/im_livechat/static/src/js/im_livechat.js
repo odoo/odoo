@@ -7,11 +7,14 @@ var user_session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
-var mail_chat_common = require('mail.chat_common');
+// var mail_chat_common = require('mail.chat_common');
 
 var _t = core._t;
 var QWeb = core.qweb;
 
+return {
+    LivechatButton: Widget,
+};
 
 /*
  * Conversation Patch
