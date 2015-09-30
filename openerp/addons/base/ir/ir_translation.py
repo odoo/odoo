@@ -219,13 +219,21 @@ class ir_translation(osv.osv):
                 model.write(cr, uid, [record.res_id], {field_name: value}, context=context_wo_lang)
         return self.write(cr, uid, id, {'src': value}, context=context)
 
+    def _search_src(self, cr, uid, obj, name, args, context):
+        ''' the source term is stored on 'src' field '''
+        res = []
+        for field, operator, value in args:
+            res.append(('src', operator, value))
+        return res
+
     _columns = {
         'name': fields.char('Translated field', required=True),
         'res_id': fields.integer('Record ID', select=True),
         'lang': fields.selection(_get_language, string='Language'),
         'type': fields.selection(TRANSLATION_TYPE, string='Type', select=True),
-        'src': fields.text('Old source'),
-        'source': fields.function(_get_src, fnct_inv=_set_src, type='text', string='Source'),
+        'src': fields.text('Internal Source'),  # stored in database, kept for backward compatibility
+        'source': fields.function(_get_src, fnct_inv=_set_src, fnct_search=_search_src,
+            type='text', string='Source term'),
         'value': fields.text('Translation Value'),
         'module': fields.char('Module', help="Module this term belongs to", select=True),
 
