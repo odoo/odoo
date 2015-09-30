@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mass_mailing_enterprise_config_settings" model="ir.ui.view">
+        <field name="name">mass mailing enterprise settings</field>
+        <field name="model">mass.mailing.config.settings</field>
+        <field name="inherit_id" ref="mass_mailing.view_mass_mailing_configuration"/>
+        <field name="arch" type="xml">
+            <field name="group_mass_mailing_campaign" position="after">
+                <field name="module_mass_mailing_themes" class="oe_inline" widget="upgrade_radio"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -24,6 +24,18 @@ class website_config_settings(osv.osv_memory):
         'cdn_activated': fields.related('website_id', 'cdn_activated', type="boolean", string='Use CDN'),
         'cdn_url': fields.related('website_id', 'cdn_url', type="char", string='CDN Base URL'),
         'cdn_filters': fields.related('website_id', 'cdn_filters', type="text", string='CDN Filters'),
+        'module_website_form_editor': fields.selection([
+            (0, "Disable the form builder"),
+            (1, "Enable the form builder"),
+            ], "Form builder"),
+        'cta_blocks': fields.selection([
+            (0, "Disable call to action blocks"),
+            (1, "Enable call to action blocks"),
+            ], "Call to Action"),
+        'module_website_version': fields.selection([
+            (0, "Disable versioning, A/B testing"),
+            (1, "Enable versioning, A/B testing"),
+            ], "Versioning"),
     }
 
     def on_change_website_id(self, cr, uid, ids, website_id, context=None):

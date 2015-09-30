@@ -22,6 +22,7 @@ OpenERP Website CMS
         'views/website_views.xml',
         'views/snippets.xml',
         'views/res_config.xml',
+        'views/enterprise_config_view.xml',
         'views/ir_actions.xml',
         'views/website_backend_navbar.xml',
     ],

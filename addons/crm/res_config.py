@@ -19,7 +19,27 @@ class crm_configuration(osv.TransientModel):
             (0, "Each mail sent to the alias creates a new opportunity"),
             (1, "Use leads if you need a qualification step before creating an opportunity or a customer")
             ], "Leads", 
-            implied_group='crm.group_use_lead')
+            implied_group='crm.group_use_lead'),
+        'module_crm_voip': fields.selection([
+            (0, "Do not activate the integrated VoIP widget"),
+            (1, "Activate the integrated VoIP widget"),
+            ], "VoIP"),
+        'module_sale_contract': fields.selection([
+            (0, "Do not manage reccuring revenue"),
+            (1, "Manage and forecast your recurring revenue"),
+            ], "Recuring revenue"),
+        'module_website_sign': fields.selection([
+            (0, "Do not allow partner to sign contracts online"),
+            (1, "Allow your partners to sign contracts online"),
+            ], "eSign"),
+        'module_website_sale_digital': fields.selection([
+            (0, "Do not sell your digital products"),
+            (1, "Sell your digital products seamlessly"),
+            ], "Digital Products"),
+        'module_website_portal': fields.selection([
+            (0, "Do not activate the customer portal"),
+            (1, "Activate the customer portal"),
+            ], "Customer Portal"),
     }
 
     _defaults = {

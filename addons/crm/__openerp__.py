@@ -70,6 +70,7 @@ Dashboard for CRM will include:
         'res_partner_view.xml',
 
         'res_config_view.xml',
+        'enterprise_config_view.xml',
         'base_partner_merge_view.xml',
 
         'sales_team_view.xml',
