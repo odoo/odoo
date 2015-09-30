@@ -28,10 +28,6 @@ class website_config_settings(osv.osv_memory):
             (0, "Disable the form builder"),
             (1, "Enable the form builder"),
             ], "Form builder"),
-        'cta_blocks': fields.selection([
-            (0, "Disable call to action blocks"),
-            (1, "Enable call to action blocks"),
-            ], "Call to Action"),
         'module_website_version': fields.selection([
             (0, "Disable versioning, A/B testing"),
             (1, "Enable versioning, A/B testing"),

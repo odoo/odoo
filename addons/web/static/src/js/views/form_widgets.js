@@ -1639,10 +1639,6 @@ var UpgradeBoolean = FieldBoolean.extend({
         'click input': 'click_on_input',
     },
 
-    init: function() {
-        this._super.apply(this, arguments);
-    },
-
     click_on_input: function(event) {
         var self = this;
 
@@ -1676,11 +1672,6 @@ var UpgradeBoolean = FieldBoolean.extend({
                 this.$checkbox.prop("checked", false);
             });
         }
-    },
-
-    render_value: function() {
-        this._super();
-        this.$el.append(" <span class='label label-primary'>Enterprise</span>");
     },
 
     confirm_upgrade: function() {
