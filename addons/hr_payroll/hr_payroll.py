@@ -949,7 +949,7 @@ class hr_employee(osv.osv):
         current_date = datetime.now().strftime('%Y-%m-%d')
         for employee in self.browse(cr, uid, ids, context=context):
             if not employee.contract_ids:
-                res[employee.id] = {'basic': 0.0}
+                res[employee.id] = 0.0
                 continue
             cr.execute( 'SELECT SUM(wage) '\
                         'FROM hr_contract '\
@@ -958,7 +958,7 @@ class hr_employee(osv.osv):
                         'AND (date_end > %s OR date_end is NULL)',
                          (employee.id, current_date, current_date))
             result = dict(cr.dictfetchone())
-            res[employee.id] = {'basic': result['sum']}
+            res[employee.id] = result['sum']
         return res
 
     def _payslip_count(self, cr, uid, ids, field_name, arg, context=None):
