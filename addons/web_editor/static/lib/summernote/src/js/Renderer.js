@@ -785,7 +785,7 @@ define([
       var keyMap = options.keyMap[agent.isMac ? 'mac' : 'pc'];
       var id = func.uniqueId();
 
-      $holder.addClass('note-air-editor note-editable panel-body');
+      $holder.addClass('note-air-editor note-editable'); // ODOO: removing panel-body class to remove unwanted style
       $holder.attr({
         'data-note-id': id, // ODOO: we use [data-note-id="{id}"] instead of [id="{id}"]
         // 'id': 'note-editor-' + id,
