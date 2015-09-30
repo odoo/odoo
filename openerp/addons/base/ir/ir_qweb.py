@@ -1249,7 +1249,7 @@ class AssetsBundle(object):
 
     def js(self):
         attachments = self.get_attachments('js')
-        if not attachments or attachments[0]['__last_update'] < Datetime.to_string(max([asset.last_modified for asset in self.javascripts])):
+        if not attachments:
             content = ';\n'.join(asset.minify() for asset in self.javascripts)
             return self.save_attachment('js', content)
         return attachments[0]
