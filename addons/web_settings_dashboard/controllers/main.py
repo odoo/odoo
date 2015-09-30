@@ -13,8 +13,8 @@ class WebSettingsDashboard(http.Controller):
             ('application', '=',  True),
             ('state', 'in', ['installed', 'to upgrade', 'to remove'])
         ])
-        active_users = request.env['res.users'].search_count([('active', '=', True), ('login_date', '!=', False)])
-        pending_users = request.env['res.users'].search([('login_date', '=', False)], order="create_date desc")
+        active_users = request.env['res.users'].search_count([('active', '=', True), ('log_ids', '!=', False)])
+        pending_users = request.env['res.users'].search([('log_ids', '=', False)], order="create_date desc")
 
         return {
             'apps': {

@@ -119,6 +119,12 @@ class res_groups(osv.osv):
         self.pool['res.users'].has_group.clear_cache(self.pool['res.users'])
         return res
 
+class ResUsersLog(osv.Model):
+    _name = 'res.users.log'
+    _order = 'id desc'
+    # Currenly only uses the magical fields: create_uid, create_date,
+    # for recording logins. To be extended for other uses (chat presence, etc.)
+
 class res_users(osv.osv):
     """ User class. A res.users record models an OpenERP user and is different
         from an employee.
@@ -167,7 +173,6 @@ class res_users(osv.osv):
 
     _columns = {
         'id': fields.integer('ID'),
-        'login_date': fields.datetime('Latest connection', select=1, copy=False),
         'partner_id': fields.many2one('res.partner', required=True,
             string='Related Partner', ondelete='restrict',
             help='Partner-related data of the user', auto_join=True),
@@ -201,6 +206,8 @@ class res_users(osv.osv):
     # access to the user but not its corresponding partner
     name = openerp.fields.Char(related='partner_id.name', inherited=True)
     email = openerp.fields.Char(related='partner_id.email', inherited=True)
+    log_ids = openerp.fields.One2many('res.users.log', 'create_uid', string='User log entries')
+    login_date = openerp.fields.Datetime(related='log_ids.create_date', string='Latest connection')
 
     def on_change_login(self, cr, uid, ids, login, context=None):
         if login and tools.single_email_re.match(login):
@@ -436,46 +443,25 @@ class res_users(osv.osv):
         if not res:
             raise openerp.exceptions.AccessDenied()
 
+    def _update_last_login(self, cr, uid):
+        # only create new records to avoid any side-effect on concurrent transactions
+        # extra records will be deleted by the periodical garbage collection
+        self.pool['res.users.log'].create(cr, uid, {}) # populated by defaults
+
     def _login(self, db, login, password):
         if not password:
             return False
         user_id = False
-        cr = self.pool.cursor()
         try:
-            # autocommit: our single update request will be performed atomically.
-            # (In this way, there is no opportunity to have two transactions
-            # interleaving their cr.execute()..cr.commit() calls and have one
-            # of them rolled back due to a concurrent access.)
-            cr.autocommit(True)
-            # check if user exists
-            res = self.search(cr, SUPERUSER_ID, [('login','=',login)])
-            if res:
-                user_id = res[0]
-                # check credentials
-                self.check_credentials(cr, user_id, password)
-                # We effectively unconditionally write the res_users line.
-                # Even w/ autocommit there's a chance the user row will be locked,
-                # in which case we can't delay the login just for the purpose of
-                # update the last login date - hence we use FOR UPDATE NOWAIT to
-                # try to get the lock - fail-fast
-                # Failing to acquire the lock on the res_users row probably means
-                # another request is holding it. No big deal, we don't want to
-                # prevent/delay login in that case. It will also have been logged
-                # as a SQL error, if anyone cares.
-                try:
-                    # NO KEY introduced in PostgreSQL 9.3 http://www.postgresql.org/docs/9.3/static/release-9-3.html#AEN115299
-                    update_clause = 'NO KEY UPDATE' if cr._cnx.server_version >= 90300 else 'UPDATE'
-                    cr.execute("SELECT id FROM res_users WHERE id=%%s FOR %s NOWAIT" % update_clause, (user_id,), log_exceptions=False)
-                    cr.execute("UPDATE res_users SET login_date = now() AT TIME ZONE 'UTC' WHERE id=%s", (user_id,))
-                    self.invalidate_cache(cr, user_id, ['login_date'], [user_id])
-                except Exception:
-                    _logger.debug("Failed to update last_login for db:%s login:%s", db, login, exc_info=True)
+            with self.pool.cursor() as cr:
+                res = self.search(cr, SUPERUSER_ID, [('login','=',login)])
+                if res:
+                    user_id = res[0]
+                    self.check_credentials(cr, user_id, password)
+                    self._update_last_login(cr, user_id)
         except openerp.exceptions.AccessDenied:
             _logger.info("Login failed for db:%s login:%s", db, login)
             user_id = False
-        finally:
-            cr.close()
-
         return user_id
 
     def authenticate(self, db, login, password, user_agent_env):

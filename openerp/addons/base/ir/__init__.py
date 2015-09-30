@@ -15,7 +15,7 @@ import ir_translation
 import ir_exports
 import ir_rule
 import ir_config_parameter
-import osv_memory_autovacuum
+import ir_autovacuum
 import ir_mail_server
 import ir_fields
 import ir_qweb
