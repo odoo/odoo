@@ -1,0 +1,126 @@
+odoo.define('mail.ChatThread', function (require) {
+"use strict";
+
+var core = require('web.core');
+var Widget = require('web.Widget');
+
+var QWeb = core.qweb;
+var _t = core._t;
+
+var ORDER = {
+    ASC: 1,
+    DESC: -1,
+};
+
+var Thread = Widget.extend({
+    className: 'o_mail_thread',
+
+    events: {
+        "click .o_mail_redirect": "on_click_redirect",
+        "click .o_thread_show_more": "on_click_show_more",
+        "click .o_thread_message_needaction": function (event) {
+            var message_id = $(event.currentTarget).data('message-id');
+            this.trigger("mark_as_read", message_id);
+        },
+        "click .o_thread_message_star": function (event) {
+            var message_id = $(event.currentTarget).data('message-id');
+            this.trigger("toggle_star_status", message_id);
+        },
+    },
+
+    init: function (parent, options) {
+        this._super.apply(this, arguments);
+        this.options = _.defaults(options || {}, {
+            display_order: ORDER.ASC,
+            display_needactions: true,
+            default_username: _t('Anonymous'),
+            display_document_link: true,
+            display_avatar: true,
+        });
+    },
+
+    render: function (messages, options) {
+        var msgs = _.map(messages, this._preprocess_message.bind(this));
+        if (this.options.display_order === ORDER.DESC) {
+            msgs.reverse();
+        }
+        this.$el.html(QWeb.render('mail.ChatThread', {
+            messages: msgs,
+            options: _.extend({}, this.options, options),
+            ORDER: ORDER,
+        }));
+    },
+
+    on_click_redirect: function (event) {
+        event.preventDefault();
+        var res_id = $(event.target).data('oe-id');
+        var res_model = $(event.target).data('oe-model');
+        this.trigger('redirect', res_model, res_id);
+    },
+
+    on_click_show_more: function () {
+        this.trigger('load_more_messages');
+    },
+
+    _preprocess_message: function (message) {
+        var msg = _.extend({}, message);
+
+        // Compute displayed author
+        if (!msg.author_id || !msg.author_id[1]) {
+            msg.displayed_author = msg.email_from || this.options.default_username;
+        }
+
+        // Compute the avatar_url
+        if (msg.author_id && msg.author_id[0]) {
+            msg.avatar_src = "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
+        } else if (msg.msg_type === 'email') {
+            msg.avatar_src = "/mail/static/src/img/email_icon.png";
+        } else {
+            msg.avatar_src = "/mail/static/src/img/smiley/avatar.jpg";
+        }
+
+        // Compute url of attachments
+        _.each(msg.attachment_ids, function(a) {
+            a.url = '/web/content/' + a.id + '?download=true';
+        });
+
+        return msg;
+    },
+
+    /**
+     * Removes a message and re-renders the thread
+     * @param {int} [message_id] the id of the removed message
+     * @param {array} [messages] the list of messages to display, without the removed one
+     */
+    remove_message_and_render: function (message_id, messages) {
+        var self = this;
+        this.$('.o_thread_message[data-message-id=' + message_id + ']').fadeOut({
+            done: function () { self.render(messages); }
+        });
+    },
+
+    /**
+     * Scrolls the thread to a given message or offset if any, to bottom otherwise
+     * @param {int} [target.id] optional: the id of the message to scroll to
+     * @param {int} [target.offset] optional: the number of pixels to scroll
+     */
+    scroll_to: function (target) {
+        target = target || {};
+        if (target.id !== undefined) {
+            this.$el.scrollTo(this.$('.o_thread_message[data-message-id=' + target.id + ']'));
+        } else if (target.offset !== undefined) {
+            this.$el.scrollTop(target.offset);
+        } else {
+            this.$el.scrollTop(this.el.scrollHeight);
+        }
+    },
+    get_scrolltop: function () {
+        return this.$el.scrollTop();
+    },
+});
+
+Thread.ORDER = ORDER;
+
+return Thread;
+
+});

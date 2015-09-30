@@ -1,0 +1,71 @@
+@mail-thread-avatar-size: 50px;
+
+.o_mail_thread {
+    .o_thread_show_more {
+        text-align: center;
+    }
+
+    .o_thread_date_separator {
+        margin-bottom: 15px;
+        border-bottom: solid @gray-lighter 2px;
+        text-align: center;
+
+        .o_thread_date {
+            position: relative;
+            top: 10px;
+            margin: 0 auto;
+            padding: 0 10px;
+            font-weight: bold;
+            background: white;
+        }
+    }
+
+    .o_thread_message {
+        .o-flex-display();
+        margin: 10px 0;
+
+        .o_thread_message_avatar {
+            .o-flex(0, 0, @mail-thread-avatar-size);
+            margin-right: 10px;
+            @media (max-width: @screen-xs-max) {
+                .o-flex(0, 0, @mail-thread-avatar-size/2);
+            }
+
+            .o_thread_message_avatar_img {
+                display: block;
+                margin: 0 auto; // center the avatar
+                max-width: @mail-thread-avatar-size;
+                @media (max-width: @screen-xs-max) {
+                    max-width: @mail-thread-avatar-size/2;
+                }
+            }
+        }
+
+        .o_thread_message_core {
+            .o-flex(1, 1, auto);
+
+            .o_mail_subject {
+                font-style: italic;
+            }
+
+            > p {
+                margin: 0 0 9px; // Required by the old design to override a general rule on p's
+            }
+
+            .o_thread_message_star, .o_thread_message_needaction {
+                cursor: pointer;
+                opacity: 0.5;
+                &:hover {
+                    opacity: 1;
+                }
+                &.fa-star {
+                    color: gold;
+                }
+            }
+
+            .o_mail_redirect {
+                cursor: pointer;
+            }
+        }
+    }
+}
