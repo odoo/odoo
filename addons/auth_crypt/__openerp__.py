@@ -35,6 +35,6 @@ necessarily have to be enabled).
 """,
     'depends': ['base'],
     'data': [],
-    'auto_install': True,
+    'auto_install': False,
     'installable': True,
 }
