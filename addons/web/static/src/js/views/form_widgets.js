@@ -1684,13 +1684,20 @@ var UpgradeBoolean = FieldBoolean.extend({
     },
 
     confirm_upgrade: function() {
-      var self = this;
+        var self = this;
         new Model("res.users").call("read", [session.uid, ["partner_id"]]).done(function(data) {
             if(data.partner_id) {
                 new Model("res.partner").call("read", [data.partner_id[0], ["name", "lang", "country_id", "email", "phone"]]).done(function(data) {
-                  if (data.name[0]) {
-                      framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?name="+data.name+"&email="+data.email+"&phone="+data.phone+"&country_id="+data.country_id[0]+"&lang="+data.lang);
-                  }
+                    // Remove false value
+                    data.country_id = data.country_id[0];
+                    var sanitized_data = _.omit(data, function(value, key, object) {
+                        if (_.isUndefined(value) || ( (_.isBoolean(value)) && (value === false) ) || key === "id") {
+                            return true;
+                        }
+                    });
+                    // prepare to url (+urlencode)
+                    var url_args = $.param(sanitized_data);
+                    framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?" + url_args);
                 });
             }
         });
