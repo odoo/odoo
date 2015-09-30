@@ -192,6 +192,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.bus.on('anyone_listening', self, function (channel, query) {
                     query.is_displayed = query.is_displayed || channel.id === self.channel_id;
                 });
+                chat_manager.bus.on('update_needaction', self, self.render_sidebar);
             });
     },
 

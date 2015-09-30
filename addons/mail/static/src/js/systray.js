@@ -3,12 +3,11 @@ odoo.define('mail.systray', function (require) {
 
 var core = require('web.core');
 var Model = require('web.Model');
-var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var web_client = require('web.web_client');
 var Widget = require('web.Widget');
 
-var internal_bus = core.bus;
+var chat_manager = require('mail.chat_manager');
 
 /**
  * Widget Top Menu Notification Counter
@@ -21,38 +20,23 @@ var NotificationTopButton = Widget.extend({
         events: {
             "click": "on_click",
         },
-        init: function () {
-            this._super.apply(this, arguments);
-            this.set('counter', 0);
-        },
         willStart: function () {
             var self = this;
             var ir_model = new Model("ir.model.data");
             var def1 = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_menu_root_chat"]);
             var def2 = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_action_client_chat"]);
-            var def3 = session.rpc('/mail/needaction');
-            var def4 = this._super();
-            return $.when(def1, def2, def3, def4).then(function (menu_id, action_id, needaction_count) {
+            return $.when(def1, def2, this._super()).then(function (menu_id, action_id) {
                 self.discuss_menu_id = menu_id;
                 self.client_action_id = action_id;
-                self.set('counter', needaction_count);
             });
         },
         start: function () {
-            this.on("change:counter", this, this.on_change_counter);
-            // events
-            internal_bus.on('mail_needaction_new', this, this.counter_increment);
-            internal_bus.on('mail_needaction_done', this, this.counter_decrement);
+            chat_manager.bus.on("update_needaction", this, this.update_counter);
+            this.update_counter(chat_manager.get_needaction_counter());
             return this._super();
         },
-        counter_increment: function (inc) {
-            this.set('counter', this.get('counter')+inc);
-        },
-        counter_decrement: function (dec) {
-            this.set('counter', this.get('counter')-dec);
-        },
-        on_change_counter: function () {
-            this.$('.fa-comment').html(this.get('counter') || '');
+        update_counter: function (counter) {
+            this.$('.fa-comment').html(counter);
         },
         on_click: function (event) {
             var self = this;

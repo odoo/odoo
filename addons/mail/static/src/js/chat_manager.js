@@ -298,6 +298,8 @@ var chat_manager = {
             var message = _.findWhere(messages, { id: message_id });
             message.channel_ids = _.without(message.channel_ids, "channel_inbox");
             chat_manager.bus.trigger('update_message', message);
+            needaction_counter = needaction_counter - 1;
+            chat_manager.bus.trigger('update_needaction', needaction_counter);
         });
     },
 
