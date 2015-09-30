@@ -41,7 +41,7 @@ from openerp.modules.module import get_resource_path
 _logger = logging.getLogger(__name__)
 
 MAX_CSS_RULES = 4095
-MOCK_ATTACH = namedtuple('mock_attach', ['url', 'last_update'])
+MOCK_ATTACH = namedtuple('mock_attach', ['id', 'url', 'last_update'])
 
 #--------------------------------------------------------------------
 # QWeb template engine
@@ -1229,7 +1229,7 @@ class AssetsBundle(object):
         transaction. But there's another tweak: a recordset browsed with a closed cursor becomes
         unusable. We chose to copy their content in a namedtuple.
         """
-        return [MOCK_ATTACH(attachment.url, attachment['__last_update']) for attachment in attachments]
+        return [MOCK_ATTACH(attachment.id, attachment.url, attachment['__last_update']) for attachment in attachments]
 
     def get_attachments(self, type, inc=None):
         ira = self.registry['ir.attachment']
