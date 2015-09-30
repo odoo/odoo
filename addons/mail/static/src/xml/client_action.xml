@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        ChatMailThread
+        Layout of the client action
+        param: widget: the widget (ChatMailThread)
+    -->
+    <t t-name="mail.client_action">
+        <div class="o_mail_chat">
+            <div class="o_mail_chat_sidebar"/>
+            <div class="o_mail_chat_content"/>
+        </div>
+    </t>
+
+    <div t-name="mail.chat.Sidebar" class="o_mail_chat_sidebar">
+        <div class="o_mail_chat_channel_item" data-channel-id="channel_inbox">
+            @ Inbox
+            <span t-attf-class="badge pull-right #{(!needaction_counter ? 'hide' : '')}">
+                <t t-esc="needaction_counter"/>
+            </span>
+        </div>
+        <div class="o_mail_chat_channel_item" data-channel-id="channel_starred">
+            <span class="fa fa-star-o"/> Starred
+        </div>
+
+        <div class="o_mail_sidebar_title">
+            <h4>Channels</h4>
+            <span class="fa fa-plus o_add" data-type="public"/>
+        </div>
+        <t t-foreach="channels" t-as="channel">
+            <t t-if="channel.type === 'public'">
+                <div class="o_mail_chat_channel_item" t-att-data-channel-id="channel.id">
+                    <t t-esc="channel.name"/>
+                </div>
+            </t>
+        </t>
+        <div class="o_mail_add_channel" data-type="public">
+            <input type="text" placeholder="Add a channel"/>
+        </div>
+
+        <div class="o_mail_sidebar_title">
+            <h4>Direct Messages</h4>
+            <span class="fa fa-plus o_add" data-type="dm"/>
+        </div>
+        <t t-foreach="channels" t-as="channel">
+            <t t-if="channel.type === 'dm'">
+                <div class="o_mail_chat_channel_item" t-att-data-channel-id="channel.id">
+                    <i t-att-class="'fa ' + (channel.status == 'online' ? 'fa-circle' : 'fa-circle-o')"/>
+                    <t t-esc="channel.name"/>
+                    <span class="fa fa-times pull-right o_mail_partner_unpin" t-att-title="_t('Close')" t-att-data-channel-id="channel.id"/>
+                </div>
+            </t>
+        </t>
+        <div class="o_mail_add_channel" data-type="dm">
+            <input type="text" placeholder="Open chat"/>
+        </div>
+
+        <div class="o_mail_sidebar_title">
+            <h4>Private Channels</h4>
+            <span class="fa fa-plus o_add" data-type="private"/>
+        </div>
+        <t t-foreach="channels" t-as="channel">
+            <t t-if="channel.type === 'private'">
+                <div class="o_mail_chat_channel_item" t-att-data-channel-id="channel.id">
+                    <t t-esc="channel.name"/>
+                </div>
+            </t>
+        </t>
+        <div class="o_mail_add_channel" data-type="private">
+            <input type="text" placeholder="Add a channel"/>
+        </div>
+
+
+        <!-- <a href="#" class="o_mail_chat_add_more_text"><span class="fa fa-plus"/>Add</a>
+        <div class="o_mail_chat_add_more_search_bar" style="display: none;">
+            <input type="text"/>
+        </div> -->
+        <!-- <t t-call="mail.chat.ChatMailThread.channels">
+            <t t-set="channel_slot" t-value="'channel_private_group'"/>
+        </t> -->
+    </div>
+
+    <!--
+        Buttons of the Control Panel
+    -->
+    <t t-name="mail.chat.ControlButtons">
+        <div>
+            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite" t-att-title='_t("Invite people")'>Invite</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_detach" t-att-title='_t("Detach the conversation")'>Detach</button>
+        </div>
+    </t>
+
+    <div t-name="mail.PartnerInviteDialog">
+        <input type="text" class="o_mail_chat_partner_invite_input" id="mail_search_partners"/>
+    </div>
+</templates>
