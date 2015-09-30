@@ -2524,8 +2524,8 @@ class stock_move(osv.osv):
                         qty = qty_min
                         redo_false_quants = True
                     else:
-                        move_quants_dict[lot] += [false_quants_move[0]]
-                        qty = false_quants_move[0][1]
+                        qty = false_quants_move[0].qty
+                        move_quants_dict[lot] += [(false_quants_move[0], qty)]
                         false_quants_move.pop(0)
                     lot_qty[lot] -= qty
                     lot_move_qty[move] -= qty
