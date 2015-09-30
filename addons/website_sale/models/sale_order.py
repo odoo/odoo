@@ -136,7 +136,7 @@ class website(orm.Model):
                                (If not selectable but the current pricelist we had this pricelist anyway)
         :param list all_pl: List of all pricelist available for this website
 
-        :returns: list of pricelist
+        :returns: list of pricelist ids
         """
         pcs = []
 
@@ -154,9 +154,9 @@ class website(orm.Model):
         partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id
         if not pcs or partner.property_product_pricelist.id != website_pl:
             pcs.append(partner.property_product_pricelist)
-        pcs = list(set(pcs))  # remove duplicate
-        pcs.sort(key=lambda x: x.name)  # sort by name
-        return pcs
+        # remove duplicates and sort by name
+        pcs = sorted(set(pcs), key=lambda pl: pl.name)
+        return [pl.id for pl in pcs]
 
     def get_pricelist_available(self, cr, uid, show_visible=False, context=None):
         """ Return the list of pricelists that can be used on website for the current user.
@@ -165,18 +165,14 @@ class website(orm.Model):
         :param str country_code: code iso or False, If set, we search only price list available for this country
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
 
-        :returns: list of pricelist
+        :returns: pricelist recordset
         """
         isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
-        return self._get_pl(
-                cr,
-                uid,
-                isocountry,
-                show_visible,
-                request.website.pricelist_id.id,
-                request.session.get('website_sale_current_pl'),
-                request.website.website_pricelist_ids
-        )
+        pl_ids = self._get_pl(cr, uid, isocountry, show_visible,
+                              request.website.pricelist_id.id,
+                              request.session.get('website_sale_current_pl'),
+                              request.website.website_pricelist_ids)
+        return self.pool['product.pricelist'].browse(cr, uid, pl_ids, context=context)
 
     def is_pricelist_available(self, cr, uid, pl_id, context=None):
         """ Return a boolean to specify if a specific pricelist can be manually set on the website.
