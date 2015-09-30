@@ -272,7 +272,7 @@ class Post(models.Model):
     can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights')
     can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
     can_view = fields.Boolean('Can View', compute='_get_post_karma_rights')
-    can_display_biography = fields.Boolean('Can userbiography of the author be viewed', compute='_get_post_karma_rights')
+    can_display_biography = fields.Boolean("Is the author's biography visible from his post", compute='_get_post_karma_rights')
     can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights')
     can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights')
     can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights')
