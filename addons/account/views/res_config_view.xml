@@ -184,11 +184,33 @@
                         </div>
                     </group>
                     <group>
-                         <field name="module_account_reports" class="oe_inline" widget="upgrade_boolean"/>
-                         <field name="module_account_yodlee" class="oe_inline" widget="upgrade_boolean"/>
-                         <field name="module_account_bank_statement_import_qif" class="oe_inline" widget="upgrade_boolean"/>
-                         <field name="module_l10n_us_check_printing" class="oe_inline" widget="upgrade_boolean"/>
-                         <field name="module_account_reports_followup" class="oe_inline" widget="upgrade_boolean"/>
+                        <label for="id" string="Enterprise Modules"/>
+                        <div>
+                            <div class="oe_inline">
+                                <label for="module_account_reports"/>
+                                <field name="module_account_reports" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="oe_inline">
+                                <label for="module_account_yodlee"/>
+                                <field name="module_account_yodlee" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="oe_inline">
+                                <label for="module_account_bank_statement_import_qif"/>
+                                <field name="module_account_bank_statement_import_qif" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="oe_inline">
+                                <label for="module_account_bank_statement_import_ofx"/>
+                                <field name="module_account_bank_statement_import_ofx" widget="upgrade_boolean"/>
+                            </div> 
+                            <div class="oe_inline">
+                                <label for="module_l10n_us_check_printing"/>
+                                <field name="module_l10n_us_check_printing" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="oe_inline">
+                                <label for="module_account_reports_followup"/>
+                                <field name="module_account_reports_followup" widget="upgrade_boolean"/>
+                            </div>
+                        </div>
                     </group>
                     <!-- Invisible section which is inherited in other modules -->
                     <separator name="analytic_account" string="Analytic Accounting" invisible="1"/>
