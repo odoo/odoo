@@ -75,7 +75,7 @@ class AccountChartTemplate(models.Model):
 
     @api.multi
     def _process_taxes_translations(self, company_id, langs, field):
-        in_ids = self.tax_template_ids
+        in_ids = self.env['account.tax.template'].search([('chart_template_id', '=', self.id)], order='id')
         out_ids = self.env['account.tax'].search([('company_id', '=', company_id)], order='id')
         return self.process_translations(langs, field, in_ids, out_ids)
 
