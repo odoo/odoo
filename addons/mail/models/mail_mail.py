@@ -4,6 +4,7 @@ import base64
 import logging
 from email.utils import formataddr
 from urlparse import urljoin
+from datetime import datetime, timedelta
 
 from openerp import _, api, fields, models
 from openerp import tools
@@ -11,6 +12,17 @@ from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
+
+
+class MailLog(models.Model):
+    _name = 'mail.log.sent'
+    _description = 'Preserved Outgoing Mails Log'
+    _rec_name = 'subject'
+
+    subject = fields.Char('Subject', readonly=1)
+    date = fields.Datetime('Date', default=fields.Datetime.now, readonly=1)
+    nbr_recipients = fields.Integer(string="Recipients")
+    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server', readonly=1)
 
 
 class MailMail(models.Model):
@@ -80,11 +92,29 @@ class MailMail(models.Model):
     def cancel(self):
         return self.write({'state': 'cancel'})
 
+    def prepare_filtered_mails(self):
+        filtered_mails = self.env['mail.mail']
+        default_mail_server = self.env['ir.mail_server']._get_default_mail_server()
+        mail_server_list = {}
+        for mail in self:
+            ms = mail.mail_server_id or default_mail_server
+            if ms in mail_server_list:
+                mail_server_list[ms] |= mail
+            else:
+                mail_server_list[ms] = mail
+
+        # Prioritize and respect quota for mails
+        for ms, mails in mail_server_list.iteritems():
+            default = default_mail_server == ms
+            filtered_mails |= ms._get_mails_quota_aware(mails, default=default)
+
+        return filtered_mails
+
     @api.model
     def process_email_queue(self, ids=None):
-        """Send immediately queued messages, committing after each
-           message is sent - this is not transactional and should
-           not be called during another transaction!
+        """Send immediately queued messages after filtering in case of
+           a mail quota, committing after each message is sent - this is not
+           transactional and should not be called during another transaction!
 
            :param list ids: optional list of emails ids to send. If passed
                             no search is performed, and these ids are used
@@ -100,12 +130,13 @@ class MailMail(models.Model):
             if 'filters' in self._context:
                 filters.extend(self._context['filters'])
             ids = self.search(filters).ids
+        filtered_mails = self.browse(ids).prepare_filtered_mails()
         res = None
         try:
             # Force auto-commit - this is meant to be called by
             # the scheduler, and we can't allow rolling back the status
             # of previously sent emails!
-            res = self.browse(ids).send(auto_commit=True)
+            res = filtered_mails.send(auto_commit=True)
         except Exception:
             _logger.exception("Failed processing mail queue")
         return res
@@ -129,6 +160,8 @@ class MailMail(models.Model):
             self._postprocess_sent_message(mail, mail_sent=mail_sent)
 
         if mail_sent:
+            mail_server = self.mail_server_id or self.env['ir.mail_server']._get_default_mail_server()
+            self.env['mail.log.sent'].sudo().write({'subject': self.subject, 'date': datetime.utcnow(), 'nbr_recipients': len(mail.send_get_email_list()), 'mail_server_id': mail_server.id})
             self.sudo().filtered(lambda self: self.auto_delete).unlink()
         return True
 
@@ -175,6 +208,16 @@ class MailMail(models.Model):
         return res
 
     @api.multi
+    def send_get_email_list(self):
+        self.ensure_one()
+        email_list = []
+        if self.email_to:
+            email_list.append(self.send_get_email_dict())
+        for partner in self.recipient_ids:
+            email_list.append(self.send_get_email_dict(partner=partner))
+        return email_list
+
+    @api.multi
     def send(self, auto_commit=False, raise_exception=False):
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
@@ -209,11 +252,7 @@ class MailMail(models.Model):
                                for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas'])]
 
                 # specific behavior to customize the send email for notified partners
-                email_list = []
-                if mail.email_to:
-                    email_list.append(mail.send_get_email_dict())
-                for partner in mail.recipient_ids:
-                    email_list.append(mail.send_get_email_dict(partner=partner))
+                email_list = mail.send_get_email_list()
 
                 # headers
                 headers = {}

@@ -48,6 +48,7 @@ Main Features
         'wizard/email_template_preview_view.xml',
         'views/mail_template_views.xml',
         'views/ir_actions_views.xml',
+        'views/ir_mail_server_view.xml',
         'views/res_partner_views.xml',
         'views/contact_views.xml',
     ],

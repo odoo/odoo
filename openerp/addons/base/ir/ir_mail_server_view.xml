@@ -7,22 +7,32 @@
             <field name="arch" type="xml">
                 <form string="Outgoing Mail Servers">
                   <sheet>
-                    <group col="4">
+                    <h1>
                         <field name="name"/>
+                    </h1>
+                    <group col="8">
                         <field name="sequence"/>
                     </group>
-                    <group col="4" string="Connection Information">
-                        <field name="smtp_host"/>
-                        <field name="smtp_port"/>
-                        <field name="smtp_debug" groups="base.group_no_one"/>
-                     </group>
-                     <group string="Security and Authentication" colspan="4">
-                        <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
-                        <field name="smtp_user"/>
-                        <field name="smtp_pass" password="True"/>
-                        <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network"/>
-                    </group>
-                  </sheet>  
+                    <notebook>
+                        <page name="connect" string="Connection">
+                            <group col="4" string="Connection Information">
+                                <field name="smtp_host"/>
+                                <field name="smtp_port"/>
+                                <field name="smtp_debug" groups="base.group_no_one"/>
+                             </group>
+                             <group name="group_security" string="Security and Authentication">
+                                <group>
+                                    <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
+                                    <field name="smtp_user"/>
+                                    <field name="smtp_pass" password="True"/>
+                                    <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network"/>
+                                </group>
+                                <group />
+                            </group>
+                        </page>
+                    </notebook>
+                    
+                  </sheet>
                 </form>
             </field>
         </record>
