@@ -253,21 +253,6 @@ class account_payment(models.Model):
     def _get_invoices(self):
         return self.invoice_ids
 
-    @api.model
-    def create(self, vals):
-        self._check_communication(vals['payment_method_id'], vals.get('communication', ''))
-        return super(account_payment, self).create(vals)
-
-    def _check_communication(self, payment_method_id, communication):
-        """ This method is to be overwritten by payment type modules. The method body would look like :
-            if payment_method_id == self.env.ref('my_module.payment_method_id').id:
-                try:
-                    communication.decode('ascii')
-                except UnicodeError:
-                    raise ValidationError(_("The communication cannot contain any special character"))
-        """
-        pass
-
     @api.multi
     def button_journal_entries(self):
         return {
