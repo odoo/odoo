@@ -4,6 +4,7 @@
 import time
 
 from openerp.osv import fields, osv
+from openerp import api
 
 class account_analytic_default(osv.osv):
     _name = "account.analytic.default"
@@ -58,8 +59,9 @@ class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
     _description = "Invoice Line"
 
-    def product_id_change(self):
-        res = super(account_invoice_line, self).product_id_change()
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        res = super(account_invoice_line, self)._onchange_product_id()
         rec = self.env['account.analytic.default'].account_get(self.product_id.id, self.invoice_id.partner_id.id, self._uid,
                                                                time.strftime('%Y-%m-%d'), company_id=self.company_id.id, context=self._context)
         if rec:
@@ -85,21 +87,13 @@ class stock_picking(osv.osv):
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
 
-    # Method overridden to set the analytic account by default on criterion match
-    def invoice_line_create(self, cr, uid, ids, invoice_id, quantity, context=None):
-        create_ids = super(sale_order_line, self).invoice_line_create(cr, uid, ids, invoice_id, quantity, context=context)
-        if not ids:
-            return create_ids
-        sale_line = self.browse(cr, uid, ids[0], context=context)
-        inv_line_obj = self.pool.get('account.invoice.line')
-        anal_def_obj = self.pool.get('account.analytic.default')
-
-        for line in inv_line_obj.browse(cr, uid, create_ids, context=context):
-            rec = anal_def_obj.account_get(cr, uid, line.product_id.id, sale_line.order_id.partner_id.id, sale_line.order_id.user_id.id, time.strftime('%Y-%m-%d'), context=context)
-
-            if rec:
-                inv_line_obj.write(cr, uid, [line.id], {'account_analytic_id': rec.analytic_id.id}, context=context)
-        return create_ids
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        res = super(sale_order_line, self)._prepare_invoice_line(qty)
+        default_analytic_account = self.env['account.analytic.default'].account_get(self.product_id.id, self.order_id.partner_id.id, self.order_id.user_id.id, time.strftime('%Y-%m-%d'))
+        if default_analytic_account:
+            res.update({'account_analytic_id': default_analytic_account.analytic_id.id})
+        return res
 
 
 class product_product(osv.Model):
