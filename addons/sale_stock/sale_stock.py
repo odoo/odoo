@@ -253,3 +253,46 @@ class StockPicking(models.Model):
             self.sale_id = sale_order.id if sale_order else False
 
     sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order", compute='_compute_sale_id')
+
+
+class AccountInvoiceLine(models.Model):
+    _inherit = "account.invoice.line"
+
+    def _get_price_unit(self):
+        price_unit = super(AccountInvoiceLine,self)._get_price_unit()
+        # in case of anglo saxon with a product configured as invoiced based on delivery, with perpetual
+        # valuation and real price costing method, we must find the real price for the cost of good sold
+        uom_obj = self.env['product.uom']
+        if self.product_id.invoice_policy == "delivery":
+            for s_line in self.sale_line_ids:
+                # qtys already invoiced
+                qty_done = sum([uom_obj._compute_qty_obj(x.uom_id, x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
+                quantity = uom_obj._compute_qty_obj(self.uom_id, self.quantity, self.product_id.uom_id)
+                # Put moves in fixed order by date executed
+                moves = self.env['stock.move']
+                for procurement in s_line.procurement_ids:
+                    moves |= procurement.move_ids
+                moves.sorted(lambda x: x.date)
+                # Go through all the moves and do nothing until you get to qty_done
+                # Beyond qty_done we need to calculate the average of the price_unit
+                # on the moves we encounter.
+                average_price_unit = 0
+                qty_delivered = 0
+                invoiced_qty = 0
+                for move in moves:
+                    if move.state != 'done':
+                        continue
+                    invoiced_qty += move.product_qty
+                    if invoiced_qty <= qty_done:
+                        continue
+                    qty_to_consider = move.product_qty
+                    if invoiced_qty - move.product_qty < qty_done:
+                        qty_to_consider = invoiced_qty - qty_done
+                    qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
+                    qty_delivered += qty_to_consider
+                    average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move.price_unit * qty_to_consider) / qty_delivered
+                    if qty_delivered == quantity:
+                        break
+                price_unit = average_price_unit or price_unit
+                price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id)
+        return price_unit
