@@ -778,7 +778,7 @@
                                   </div>
                               </td>
                               <td class="text-center" id="td-price" name="price">
-                                  <del class="text-danger mr8" t-att-style="'' if (compute_currency(line.product_id.lst_price) - line.price_reduce) &gt; 1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
+                                  <del class="text-danger mr8" t-if="compute_currency(line.product_id.lst_price) - line.price_reduce &lt;= 1" style="text-decoration: line-through; white-space: nowrap;"
                                     t-field="line.product_id.lst_price" t-field-options='{
                                         "widget": "monetary",
                                         "from_currency": "line.company_id.currency_id",

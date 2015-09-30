@@ -79,5 +79,11 @@
     </xpath>
 </template>
 
+<template id="cart" inherit_id="website_sale.cart" name="Hide product reduction for event tickets">
+    <xpath expr="//del" position="attributes">
+        <attribute name="t-if" separator=" and " add="not line.event_id"/>
+    </xpath>
+</template>
+
 </data>
 </openerp>

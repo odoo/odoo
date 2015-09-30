@@ -255,7 +255,6 @@ class QWeb(orm.AbstractModel):
         return self.render_node(element, qwebcontext, generated_attributes=qwebcontext.pop('generated_attributes', ''))
 
     def render_node(self, element, qwebcontext, generated_attributes=''):
-        t_render = None
         template_attributes = {}
 
         debugger = element.get('t-debug')
@@ -265,37 +264,43 @@ class QWeb(orm.AbstractModel):
             else:
                 _logger.warning("@t-debug in template '%s' is only available in --dev mode" % qwebcontext['__template__'])
 
-        for (attribute_name, attribute_value) in element.attrib.iteritems():
-            attribute_name = str(attribute_name)
-            if attribute_name == "groups":
-                cr = qwebcontext.get('request') and qwebcontext['request'].cr or None
-                uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
-                can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
-                if not can_see:
-                    return ''
+        result = None
+        if 't-if' in element.attrib and not self.eval_bool(element.attrib['t-if'], qwebcontext):
+            result = ''
+        elif 'groups' in element.attrib:
+            cr = qwebcontext.get('request') and qwebcontext['request'].cr or None
+            uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
+            can_see = self.user_has_groups(cr, uid, groups=element.attrib['groups']) if cr and uid else False
+            if not can_see:
+                result = ''
 
-            attribute_value = attribute_value.encode("utf8")
+        if result is None:
+            t_render = None
 
-            if attribute_name.startswith("t-"):
-                for attribute in self._render_att:
-                    if attribute_name[2:].startswith(attribute):
-                        attrs = self._render_att[attribute](
-                            self, element, attribute_name, attribute_value, qwebcontext)
-                        for att, val in attrs:
-                            if not val: continue
-                            generated_attributes += self.render_attribute(element, att, val, qwebcontext)
-                        break
+            for (attribute_name, attribute_value) in element.attrib.iteritems():
+                attribute_name = str(attribute_name)
+                attribute_value = attribute_value.encode("utf8")
+
+                if attribute_name.startswith("t-"):
+                    for attribute in self._render_att:
+                        if attribute_name[2:].startswith(attribute):
+                            attrs = self._render_att[attribute](
+                                self, element, attribute_name, attribute_value, qwebcontext)
+                            for att, val in attrs:
+                                if not val: continue
+                                generated_attributes += self.render_attribute(element, att, val, qwebcontext)
+                            break
+                    else:
+                        if attribute_name[2:] in self._render_tag:
+                            t_render = attribute_name[2:]
+                        template_attributes[attribute_name[2:]] = attribute_value
                 else:
-                    if attribute_name[2:] in self._render_tag:
-                        t_render = attribute_name[2:]
-                    template_attributes[attribute_name[2:]] = attribute_value
-            else:
-                generated_attributes += self.render_attribute(element, attribute_name, attribute_value, qwebcontext)
+                    generated_attributes += self.render_attribute(element, attribute_name, attribute_value, qwebcontext)
 
-        if t_render:
-            result = self._render_tag[t_render](self, element, template_attributes, generated_attributes, qwebcontext)
-        else:
-            result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
+            if t_render:
+                result = self._render_tag[t_render](self, element, template_attributes, generated_attributes, qwebcontext)
+            else:
+                result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
 
         if element.tail:
             result += self.render_tail(element.tail, element, qwebcontext)
@@ -430,11 +435,6 @@ class QWeb(orm.AbstractModel):
             qwebcontext[k] = copy_qwebcontext[k]
 
         return "".join(ru)
-
-    def render_tag_if(self, element, template_attributes, generated_attributes, qwebcontext):
-        if self.eval_bool(template_attributes["if"], qwebcontext):
-            return self.render_element(element, template_attributes, generated_attributes, qwebcontext)
-        return ""
 
     def render_tag_call(self, element, template_attributes, generated_attributes, qwebcontext):
         d = qwebcontext.copy()
