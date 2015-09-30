@@ -98,14 +98,17 @@ $('.oe_website_sale').each(function () {
             product_ids.push(entry[0]);});
         var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
 
-        ajax.jsonRpc("/shop/get_unit_price", 'call', {'product_ids': product_ids,'add_qty': parseInt(qty)})
-        .then(function (data) {
-            var current = product_dom.data("attribute_value_ids");
-            for(var j=0; j < current.length; j++){
-                current[j][2] = data[current[j][0]];
-            }
-            product_dom.attr("data-attribute_value_ids", JSON.stringify(current)).trigger("change");
-        });
+        if ($("#product_detail").length) {
+            // display the reduction from the pricelist in function of the quantity
+            ajax.jsonRpc("/shop/get_unit_price", 'call', {'product_ids': product_ids,'add_qty': parseInt(qty)})
+            .then(function (data) {
+                var current = product_dom.data("attribute_value_ids");
+                for(var j=0; j < current.length; j++){
+                    current[j][2] = data[current[j][0]];
+                }
+                product_dom.attr("data-attribute_value_ids", JSON.stringify(current)).trigger("change");
+            });
+        }
     });
 
     // change for css
@@ -121,7 +124,7 @@ $('.oe_website_sale').each(function () {
           };
     })();
 
-    $(oe_website_sale).find(".oe_cart input.js_quantity").on("change", function () {
+    $(oe_website_sale).on("change", ".oe_cart input.js_quantity", function () {
       var $input = $(this);
         if ($input.data('update_change')) {
             return;
@@ -140,64 +143,45 @@ $('.oe_website_sale').each(function () {
         });
         if (isNaN(value)) value = 0;
         $input.data('update_change', true);
-        if ($(this).hasClass('js_no_gup')) { // if get_unit_price (gup) not needed
-            var gup = $.when();
-        }
-        else {
-            var gup = ajax.jsonRpc("/shop/get_unit_price", 'call', {
-                'product_ids': product_ids,
-                'add_qty': value,
-                'use_order_pricelist': true})
-            .then(function (res) {
-                //basic case
-                $dom.find('span.oe_currency_value').last().text(res[product_id].toFixed(2));
-                $dom.find('.text-danger').toggle(res[product_id]<default_price && (default_price-res[product_id] > default_price/100));
-                //optional case
-                $dom_optional.each(function(){
-                    var id = $(this).find('span[data-product-id]').data('product-id');
-                    var price = parseFloat($(this).find(".text-danger > span.oe_currency_value").text());
-                    $(this).find("span.oe_currency_value").last().text(res[id].toFixed(2));
-                    $(this).find('.text-danger').toggle(res[id]<price && (price-res[id]>price/100));
-                });
-            });
-        }
-        gup.then(function(res) {
-            ajax.jsonRpc("/shop/cart/update_json", 'call', {
-            'line_id': line_id,
-            'product_id': parseInt($input.data('product-id'),10),
-            'set_qty': value})
-            .then(function (data) {
-                $input.data('update_change', false);
-                if (value !== parseInt($input.val(), 10)) {
-                    $input.trigger('change');
-                    return;
-                }
-                if (!data.quantity) {
-                    location.reload(true);
-                    return;
-                }
-                var $q = $(".my_cart_quantity");
-                $q.parent().parent().removeClass("hidden", !data.quantity);
-                $q.html(data.cart_quantity).hide().fadeIn(600);
 
-                $input.val(data.quantity);
-                $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
-                $("#cart_total").replaceWith(data['website_sale.total']);
-                if (data.warning) {
-                    var cart_alert = $('.oe_cart').parent().find('#data_warning');
-                    if (cart_alert.length === 0) {
-                        $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
-                                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning + '</div>');
-                    }
-                    else {
-                        cart_alert.html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning);
-                    }
-                    $input.val(data.quantity);
+        ajax.jsonRpc("/shop/cart/update_json", 'call', {
+        'line_id': line_id,
+        'product_id': parseInt($input.data('product-id'),10),
+        'set_qty': value})
+        .then(function (data) {
+            $input.data('update_change', false);
+            if (value !== parseInt($input.val(), 10)) {
+                $input.trigger('change');
+                return;
+            }
+            var $q = $(".my_cart_quantity");
+            $q.parent().parent().removeClass("hidden", !data.quantity);
+            $q.html(data.cart_quantity).hide().fadeIn(600);
+
+            $input.val(data.quantity);
+            $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
+
+            $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
+
+            if (data.warning) {
+                var cart_alert = $('.oe_cart').parent().find('#data_warning');
+                if (cart_alert.length === 0) {
+                    $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
+                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning + '</div>');
                 }
-            });
+                else {
+                    cart_alert.html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning);
+                }
+                $input.val(data.quantity);
+            }
         });
       }, 500);
     });
+
+    $(oe_website_sale).on("click", ".oe_cart a.js_add_suggested_products", function () {
+        $(this).prev('input').val(1).trigger('change');
+    });
+
 
     // hack to add and rome from cart with json
     $(oe_website_sale).on('click', 'a.js_add_cart_json', function (ev) {

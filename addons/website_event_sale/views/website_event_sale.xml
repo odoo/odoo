@@ -79,7 +79,7 @@
     </xpath>
 </template>
 
-<template id="cart" inherit_id="website_sale.cart" name="Hide product reduction for event tickets">
+<template id="cart" inherit_id="website_sale.cart_lines" name="Hide product reduction for event tickets">
     <xpath expr="//del" position="attributes">
         <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'hidden' or ''}"/>
     </xpath>

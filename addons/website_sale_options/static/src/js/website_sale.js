@@ -89,18 +89,6 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                                 product_ids.push(values[0]);
                             });
                         });
-                        ajax.jsonRpc("/shop/get_unit_price", 'call', {'product_ids': product_ids, 'add_qty': parseInt(qty)})
-                        .then(function (data) {
-                            for(var i=0; i < $products_dom.length; i++) {
-                                var current = $products_dom[i].data("attribute_value_ids");
-                                for(var j=0; j < current.length; j++){
-                                    current[j][2] = data[current[j][0]];
-                                }
-                                $products_dom[i].attr("data-attribute_value_ids", JSON.stringify(current)).trigger("change");
-                            }
-                            $dom.find(".oe_price .oe_currency_value").text(data[product_id].toFixed(2));
-                            $dom.find('.text-danger.oe_default_price').toggle(data[product_id]<default_price && (default_price-data[product_id]>default_price/100)).css('text-decoration', 'line-through');
-                        });
                 });
             });
         return false;
