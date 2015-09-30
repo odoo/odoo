@@ -26,6 +26,13 @@
                         <field name="group_stock_tracking_lot" widget="radio"/>
                         <field name="group_stock_tracking_owner" widget="radio"/>
                     </group>
+                    <group>
+                        <field name="module_stock_barcode" widget="upgrade_boolean"/>
+                        <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                        <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                        <field name="module_delivery_ups"  widget="upgrade_boolean"/>
+                        <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                    </group>
                     <group string="Location &amp; Warehouse">
                         <field name="module_procurement_jit" widget="radio"/>
                         <field name="group_stock_multiple_locations" widget="radio"/>

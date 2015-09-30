@@ -72,6 +72,16 @@ class AccountConfigSettings(models.TransientModel):
     module_account_accountant = fields.Boolean(string='Full accounting features: journals, legal statements, chart of accounts, etc.',
         help="""If you do not check this box, you will be able to do invoicing & payments,
              but not accounting (Journal Items, Chart of  Accounts, ...)""")
+    module_account_reports = fields.Boolean("Use dynamic reports for the accounting")
+    group_multi_currency = fields.Boolean(string='Allow multi currencies',
+        implied_group='base.group_multi_currency',
+        help="Allows you multi currency environment")
+    group_analytic_accounting = fields.Boolean(string='Analytic accounting',
+        implied_group='analytic.group_analytic_accounting',
+        help="Allows you to use the analytic accounting.")
+    currency_exchange_journal_id = fields.Many2one('account.journal',
+        related='company_id.currency_exchange_journal_id',
+        string="Rate Difference Journal",)
     module_account_asset = fields.Boolean(string='Assets management & Revenue recognition',
         help='Asset management: This allows you to manage the assets owned by a company or a person. '
                  'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n\n'
@@ -86,20 +96,39 @@ class AccountConfigSettings(models.TransientModel):
              '-This installs the module account_budget.')
     module_account_tax_cash_basis = fields.Boolean(string="Allow Tax Cash Basis",
                                         help='Generate tax cash basis entrie when reconciliating entries')
+
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
         help="Allows you to put invoices in pro-forma state.")
+    module_account_reports_followup = fields.Boolean("Enable payment followup management",
+        help='This allows to automate letters for unpaid invoices, with multi-level recalls.\n'
+             '-This installs the module account_reports_followup.')
+
     default_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", help="This sale tax will be assigned by default on new products.", oldname="default_sale_tax")
     default_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", help="This purchase tax will be assigned by default on new products.", oldname="default_purchase_tax")
-    group_multi_currency = fields.Boolean(string='Allow multi currencies',
-        implied_group='base.group_multi_currency',
-        help="Allows you multi currency environment")
-    group_analytic_accounting = fields.Boolean(string='Analytic accounting',
-        implied_group='analytic.group_analytic_accounting',
-        help="Allows you to use the analytic accounting.")
-    currency_exchange_journal_id = fields.Many2one('account.journal',
-        related='company_id.currency_exchange_journal_id',
-        string="Rate Difference Journal",)
+
+    module_l10n_us_check_printing = fields.Boolean("Allow check printing and deposits")
+
+    module_account_batch_deposit = fields.Boolean(string='Use batch deposit',
+        help='This allows you to group received checks before you deposit them to the bank.\n'
+             '-This installs the module account_batch_deposit.')
+    module_account_sepa = fields.Boolean(string='Use SEPA payments',
+        help='If you check this box, you will be able to register your payment using SEPA.\n'
+            '-This installs the module account_sepa.')
+
+    module_account_plaid = fields.Boolean(string="Import from Plaid.com",
+                                          help='Get your bank statements from you bank and import them through plaid.com.\n'
+                                          '-that installs the module account_plaid.')
+    module_account_yodlee = fields.Boolean("Import from Yodlee.com",
+        help='Get your bank statements from you bank and import them through yodlee.com.\n'
+                                          '-that installs the module account_yodlee.')
+    module_account_bank_statement_import_qif = fields.Boolean("Import .qif files",
+        help='Get your bank statements from your bank and import them in Odoo in the .QIF format.\n'
+            'This installs the module account_bank_statement_import_qif.')
+    module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format",
+        help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
+            'This installs the module account_bank_statement_import_ofx.')
+
 
     @api.model
     def _default_has_default_company(self):

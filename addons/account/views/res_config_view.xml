@@ -109,6 +109,10 @@
                         </div>
                         <label for="id" string="Features"/>
                         <div>
+                            <div>
+                                <field name="module_account_reports" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_reports"/>
+                            </div>
                             <div name="group_multi_currency">
                                 <field name="group_multi_currency" class="oe_inline"/>
                                 <label for="group_multi_currency"/>
@@ -138,13 +142,17 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="eInvoicing &amp; Payments"/>
+                    <separator string="Invoicing &amp; Payments"/>
                     <group>
                         <label for="id" string="Customer"/>
                         <div name="customer_payments">
                             <div>
                                 <field name="group_proforma_invoices" class="oe_inline"/>
                                 <label for="group_proforma_invoices"/>
+                            </div>
+                            <div>
+                                <field name="module_account_reports_followup" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_reports_followup"/>
                             </div>
                         </div>
                     </group>
@@ -165,6 +173,15 @@
                             </div>
                         </div>
                     </group>
+                    <group>
+                        <label for="id" string="Payments"/>
+                        <div name="customer_payments">
+                            <div name='payment_acquirer'>
+                                <label for="paypal_account"/>
+                                <field name="paypal_account" placeholder="e.g. sales@odoo.com" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
                     <separator string="Bank &amp; Cash"/>
                     <group name="bank_cash">
                         <label for="id" string="Configuration"/>
@@ -177,9 +194,38 @@
                                 <label for="transfer_account_id"/>
                                 <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('has_chart_of_accounts','!=',False)]}"/>
                             </div>
-                            <div name='payment_acquirer'>
-                                <label for="paypal_account"/>
-                                <field name="paypal_account" placeholder="e.g. sales@odoo.com" class="oe_inline"/>
+                            <div>
+                                <field name="module_l10n_us_check_printing" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_l10n_us_check_printing"/>
+                            </div>
+                            <div>
+                                <field name="module_account_batch_deposit" widget="upgrade_boolean"/>
+                                <label for="module_account_batch_deposit"/>
+                            </div>
+                            <div>
+                                <field name="module_account_sepa" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_sepa"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Bank Statements"/>
+                        <div>
+                            <div>
+                                <field name="module_account_yodlee" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_yodlee"/>
+                            </div>
+                            <div>
+                                <field name="module_account_plaid" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_plaid"/>
+                            </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_qif" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_qif"/>
+                            </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_ofx" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_ofx"/>
                             </div>
                         </div>
                     </group>

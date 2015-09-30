@@ -1629,6 +1629,80 @@ var FieldToggleBoolean = common.AbstractField.extend({
     },
 });
 
+/**
+    This widget is intended to be used in config settings.
+    When checked, an upgrade popup is showed to the user.
+*/
+var UpgradeBoolean = FieldBoolean.extend({
+    template: "FieldUpgradeBoolean",
+    events: {
+        'click input': 'click_on_input',
+    },
+
+    init: function() {
+        this._super.apply(this, arguments);
+    },
+
+    click_on_input: function(event) {
+        var self = this;
+
+        if(this.$checkbox.prop("checked")) {
+
+            var message = _t('You need to upgrade to Odoo Enterprise to activate this feature.');
+
+            var buttons = [
+                {
+                    text: _t("Upgrade now"),
+                    classes: 'btn-primary',
+                    close: true,
+                    click: this.confirm_upgrade,
+                },
+                {
+                    text: _t("Cancel"),
+                    close: true,
+                },
+            ];
+
+            var dialog = new Dialog(this, {
+                size: 'medium',
+                buttons: buttons,
+                $content: $('<div>', {
+                    text: message,
+                }),
+                title: _t("Odoo Enterprise"),
+            }).open();
+
+            dialog.on('closed', this, function() {
+                this.$checkbox.prop("checked", false);
+            });
+        }
+    },
+
+    render_value: function() {
+        this._super();
+        this.$el.append(" <span class='label label-primary oe_inline'>Enterprise</span>");
+    },
+
+    confirm_upgrade: function() {
+        var self = this;
+        new Model("res.users").call("read", [session.uid, ["partner_id"]]).done(function(data) {
+            if(data.partner_id) {
+                new Model("res.partner").call("read", [data.partner_id[0], ["name", "lang", "country_id", "email", "phone"]]).done(function(data) {
+                    // Remove false value
+                    data.country_id = data.country_id[0];
+                    var sanitized_data = _.omit(data, function(value, key, object) {
+                        if (_.isUndefined(value) || ( (_.isBoolean(value)) && (value === false) ) || key === "id") {
+                            return true;
+                        }
+                    });
+                    // prepare to url (+urlencode)
+                    var url_args = $.param(sanitized_data);
+                    framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?" + url_args);
+                });
+            }
+        });
+    },
+});
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
@@ -1665,7 +1739,8 @@ core.form_widget_registry
     .add('kanban_state_selection', KanbanSelection)
     .add('statinfo', StatInfo)
     .add('timezone_mismatch', TimezoneMismatch)
-    .add('label_selection', LabelSelection);
+    .add('label_selection', LabelSelection)
+    .add('upgrade_boolean', UpgradeBoolean);
 
 
 /**

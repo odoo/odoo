@@ -21,6 +21,7 @@
                         <field name="module_website_quote" widget="radio"/>
                         <field name="module_sale_margin" widget="radio"/>
                         <field name="auto_done_setting" widget="radio"/>
+                        <field name="module_sale_contract" class="oe_inline" widget="upgrade_boolean"/>
                     </group>
                     <group name="manage_price">
                         <label for="sale_pricelist_setting" string="Sale Price"/>
@@ -30,6 +31,10 @@
                             <field name="group_pricelist_item" class="oe_inline" invisible="1"/>
                             <field name="group_product_pricelist" class="oe_inline" invisible="1"/>
                         </div>
+                    </group>
+                    <group string="Customer portal">
+                        <field name="module_website_portal" class="oe_inline" widget="upgrade_boolean"/>
+                        <field name="module_website_sale_digital" class="oe_inline" widget="upgrade_boolean"/>
                     </group>
                 </div>
             </field>
