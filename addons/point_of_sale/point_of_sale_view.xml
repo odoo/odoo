@@ -86,13 +86,17 @@
                                 <field name="pos_reference"/>
                             </group>
                             <group string="Accounting Information">
-                                <field name="sale_journal" domain="[('type','=','sale')]"/>
-                                <field name="invoice_id" readonly="1"
-                                    attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
-                                <button name="%(pos_invoice_report)d" string="Re-Print"
-                                    icon="gtk-print" type="action" attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
-                                <field name="account_move" readonly="1"
-                                    attrs="{'invisible':[('state','&lt;&gt;','done')]}"/>
+                                <group>
+                                    <field name="sale_journal" domain="[('type','=','sale')]"/>
+                                    <field name="invoice_id" readonly="1"
+                                        attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
+                                    <field name="account_move" readonly="1"
+                                        attrs="{'invisible':[('state','&lt;&gt;','done')]}"/>
+                                </group>
+                                <group>
+                                    <button name="%(pos_invoice_report)d" string="Re-Print"
+                                        icon="gtk-print" type="action" attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Notes" >
