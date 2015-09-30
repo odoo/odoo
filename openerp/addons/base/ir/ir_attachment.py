@@ -7,14 +7,13 @@ import logging
 import mimetypes
 import os
 import re
+import time
 
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.exceptions import AccessError
 from openerp.osv import fields,osv
 from openerp import SUPERUSER_ID
-from openerp.exceptions import UserError
-from openerp.tools.translate import _
 from openerp.tools.misc import ustr
 
 _logger = logging.getLogger(__name__)
@@ -70,7 +69,7 @@ class ir_attachment(osv.osv):
     ---------------------------
 
     The 'data' function field (_data_get,data_set) is implemented using
-    _file_read, _file_write and _file_delete which can be overridden to
+    _file_read, _file_write and _file_gc which can be overridden to
     implement other storage engines, such methods should check for other
     location pseudo uri (example: hdfs://hadoppserver)
 
@@ -164,19 +163,37 @@ class ir_attachment(osv.osv):
                 _logger.info("_file_write writing %s", full_path, exc_info=True)
         return fname
 
-    def _file_delete(self, cr, uid, fname):
-        # using SQL to include files hidden through unlink or due to record rules
-        cr.execute("SELECT COUNT(*) FROM ir_attachment WHERE store_fname = %s", (fname,))
-        count = cr.fetchone()[0]
-        full_path = self._full_path(cr, uid, fname)
-        if not count and os.path.exists(full_path):
-            try:
-                os.unlink(full_path)
-            except OSError:
-                _logger.info("_file_delete could not unlink %s", full_path, exc_info=True)
-            except IOError:
-                # Harmless and needed for race conditions
-                _logger.info("_file_delete could not unlink %s", full_path, exc_info=True)
+    def _file_gc(self, cr, uid, context=None):
+        t0 = time.time()
+        # prevent all concurrent updates on ir_attachment while collecting!
+        cr.execute("LOCK ir_attachment IN SHARE MODE")
+        # retrieve the file names to keep
+        cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IS NOT NULL")
+        fnames = set(row[0] for row in cr.fetchall())
+        # retrieve all file names, and delete garbage
+        checked = 0
+        removed = 0
+        for (dirpath, _, filenames) in os.walk(self._filestore(cr, uid, context)):
+            dirname = os.path.basename(dirpath)
+            for filename in filenames:
+                checked += 1
+                fname = "%s/%s" % (dirname, filename)
+                if fname not in fnames:
+                    filepath = os.path.join(dirpath, filename)
+                    try:
+                        os.unlink(filepath)
+                        removed += 1
+                    except (OSError, IOError):
+                        _logger.info("_file_gc could not unlink %s", filepath, exc_info=True)
+        _logger.info("filestore gc %d files, %d kept, %d removed, in %0.3fs",
+                     checked, len(fnames), removed, time.time() - t0)
+
+    def filestore_gc(self, cr, uid, context=None):
+        """ Public method to trigger the garbage collection of the filestore. """
+        location = self._storage(cr, uid, context)
+        if location != 'db':
+            self._file_gc(cr, uid, context)
+        return True
 
     def _data_get(self, cr, uid, ids, name, arg, context=None):
         if context is None:
@@ -208,7 +225,6 @@ class ir_attachment(osv.osv):
             context = {}
         # browse the attachment and get the file to delete
         attach = self.browse(cr, uid, id, context=context)
-        fname_to_delete = attach.store_fname
         location = self._storage(cr, uid, context)
         # compute the index_content field
         vals['index_content'] = self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, attach.mimetype),
@@ -225,13 +241,7 @@ class ir_attachment(osv.osv):
                 'db_datas': value
             })
         # SUPERUSER_ID as probably don't have write access, trigger during create
-        super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], vals, context=context)
-
-        # After de-referencing the file in the database, check whether we need
-        # to garbage-collect it on the filesystem
-        if fname_to_delete:
-            self._file_delete(cr, uid, fname_to_delete)
-        return True
+        return super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], vals, context=context)
 
     def _compute_checksum(self, bin_data):
         """ compute the checksum for the given datas
@@ -436,19 +446,7 @@ class ir_attachment(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         self.check(cr, uid, ids, 'unlink', context=context)
-
-        # First delete in the database, *then* in the filesystem if the
-        # database allowed it. Helps avoid errors when concurrent transactions
-        # are deleting the same file, and some of the transactions are
-        # rolled back by PostgreSQL (due to concurrent updates detection).
-        to_delete = [a.store_fname
-                        for a in self.browse(cr, uid, ids, context=context)
-                            if a.store_fname]
-        res = super(ir_attachment, self).unlink(cr, uid, ids, context)
-        for file_path in to_delete:
-            self._file_delete(cr, uid, file_path)
-
-        return res
+        return super(ir_attachment, self).unlink(cr, uid, ids, context)
 
     def create(self, cr, uid, values, context=None):
         # remove computed field depending of datas

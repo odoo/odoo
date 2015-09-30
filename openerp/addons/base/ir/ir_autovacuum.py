@@ -11,7 +11,6 @@ class AutoVacuum(models.TransientModel):
     """ Expose the vacuum method to the cron jobs mechanism. """
     _name = 'ir.autovacuum'
 
-
     def _gc_transient_models(self, cr, uid, *args, **kwargs):
         for model in self.pool.itervalues():
             if model.is_transient():
@@ -30,4 +29,5 @@ class AutoVacuum(models.TransientModel):
     def power_on(self, cr, uid, *args, **kwargs):
         self._gc_transient_models(cr, uid, *args, **kwargs)
         self._gc_user_logs(cr, uid, *args, **kwargs)
+        self.pool['ir.attachment'].filestore_gc(cr, uid)
         return True
