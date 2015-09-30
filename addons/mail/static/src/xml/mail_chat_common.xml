@@ -33,7 +33,7 @@
                     <div class="o_mail_chat_im_message_avatar">
                         <img t-if="message.message_type == 'email' &amp;&amp; (!message.author_id || !message.author_id[0]) &amp;&amp; message.email_from" src="/mail/static/src/img/email_icon.png" alt="avatar" class="img-responsive img-rounded"/>
                         <img t-if="message.message_type == 'email' &amp;&amp; (message.author_id &amp;&amp; message.author_id[0]) &amp;&amp; !message.email_from" t-att-src="'/web/image/res.partner/'+message.author_id[0]+'/image_small'" class="img-responsive img-rounded"/>
-                        <img t-if="message.message_type !== 'email' &amp;&amp; (message.author_id &amp;&amp; message.author_id[0])" t-att-src="'/web/image/res.partner/'+message.author_id[0]+'/image_small'" class="img-responsive img-rounded"/>
+                        <img t-if="message.message_type !== 'email' &amp;&amp; (message.author_id &amp;&amp; message.author_id[0])" t-att-src="'/web/image/mail.message/'+message.id+'/author_avatar'" class="img-responsive img-rounded"/>
                         <img t-if="message.message_type !== 'email' &amp;&amp; (!message.author_id || !message.author_id[0])" src="/mail/static/src/img/smiley/avatar.jpg" class="img-responsive img-rounded"/>
                         </div>
                     <div class="o_mail_chat_im_message_core">
