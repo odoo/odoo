@@ -8,7 +8,12 @@
             <field name="cdn_filters" position="after">
                 <field name="salesperson_id"/>
                 <field name="salesteam_id"/>
+                <field name="module_delivery_fedex" class="oe_inline" widget="upgrade_boolean"/>
+                <field name="module_delivery_ups" class="oe_inline" widget="upgrade_boolean"/>
+                <field name="module_delivery_usps" class="oe_inline" widget="upgrade_boolean"/>
+                <field name="module_sale_ebay" class="oe_inline" widget="upgrade_boolean"/>
             </field>
+
         </field>
     </record>
 </odoo>

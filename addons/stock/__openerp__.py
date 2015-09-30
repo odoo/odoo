@@ -65,7 +65,6 @@ Dashboard / Reports for Inventory Management will include:
         'partner_view.xml',
         'report/report_stock_view.xml',
         'res_config_view.xml',
-        'enterprise_config_view.xml',
         'views/report_package_barcode.xml',
         'views/report_lot_barcode.xml',
         'views/report_location_barcode.xml',

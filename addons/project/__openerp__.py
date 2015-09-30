@@ -43,7 +43,6 @@ Dashboard / Reports for Project Management will include:
         'report/project_report_view.xml',
         'report/project_cumulative.xml',
         'res_config_view.xml',
-        'enterprise_config_view.xml',
         'views/project.xml',
         'project_tip_data.xml',
         'project_dashboard.xml',
