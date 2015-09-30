@@ -169,6 +169,10 @@
                     <group name="bank_cash">
                         <label for="id" string="Configuration"/>
                         <div name="bank_options">
+                            <div>
+                                <field name="module_account_batch_deposit" widget="upgrade_boolean"/>
+                                <label for="module_account_batch_deposit"/>
+                            </div>
                             <div name='company_footer'>
                                 <label for="company_footer"/>
                                 <field name="company_footer"/>
@@ -184,31 +188,42 @@
                         </div>
                     </group>
                     <group>
-                        <label for="id" string="Enterprise Modules"/>
+                        <label for="id" string="Bank Statements"/>
                         <div>
-                            <div class="oe_inline">
-                                <label for="module_account_reports"/>
-                                <field name="module_account_reports" widget="upgrade_boolean"/>
-                            </div>
-                            <div class="oe_inline">
-                                <label for="module_account_yodlee"/>
+                            <div>
                                 <field name="module_account_yodlee" widget="upgrade_boolean"/>
+                                <label for="module_account_yodlee"/>
                             </div>
-                            <div class="oe_inline">
-                                <label for="module_account_bank_statement_import_qif"/>
+                            <div>
+                                <field name="module_account_plaid" widget="upgrade_boolean"/>
+                                <label for="module_account_plaid"/>
+                            </div>
+                            <div>
                                 <field name="module_account_bank_statement_import_qif" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_qif"/>
                             </div>
-                            <div class="oe_inline">
-                                <label for="module_account_bank_statement_import_ofx"/>
+                            <div>
                                 <field name="module_account_bank_statement_import_ofx" widget="upgrade_boolean"/>
-                            </div> 
-                            <div class="oe_inline">
-                                <label for="module_l10n_us_check_printing"/>
-                                <field name="module_l10n_us_check_printing" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_ofx"/>
                             </div>
-                            <div class="oe_inline">
-                                <label for="module_account_reports_followup"/>
+                            <div>
+                                <field name="module_account_sepa" widget="upgrade_boolean"/>
+                                <label for="module_account_sepa"/>
+                            </div>
+                        </div>
+                        <label for="id" string="Reports"/>
+                        <div>
+                            <div>
+                                <field name="module_account_reports" widget="upgrade_boolean"/>
+                                <label for="module_account_reports"/>
+                            </div>
+                            <div>
+                                <field name="module_l10n_us_check_printing" widget="upgrade_boolean"/>
+                                <label for="module_l10n_us_check_printing"/>
+                            </div>
+                            <div>
                                 <field name="module_account_reports_followup" widget="upgrade_boolean"/>
+                                <label for="module_account_reports_followup"/>
                             </div>
                         </div>
                     </group>

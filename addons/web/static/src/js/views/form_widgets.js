@@ -1680,7 +1680,7 @@ var UpgradeBoolean = FieldBoolean.extend({
 
     render_value: function() {
         this._super();
-        this.$el.append(" <span class='label label-primary'>Enterprise</span>");
+        this.$el.append(" <span class='label label-primary oe_inline'>Enterprise</span>");
     },
 
     confirm_upgrade: function() {

@@ -121,6 +121,9 @@ class AccountConfigSettings(models.TransientModel):
     module_account_reports_followup = fields.Boolean("Enable payment followup management",
         help='This allows to automate letters for unpaid invoices, with multi-level recalls.\n'
              '-This installs the module account_reports_followup.')
+    module_account_batch_deposit = fields.Boolean(string='Use batch deposit',
+        help='This allows you to group received checks before you deposit them to the bank.\n'
+             '-This installs the module account_batch_deposit.')
 
     @api.model
     def _default_has_default_company(self):
