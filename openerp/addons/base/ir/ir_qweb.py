@@ -272,7 +272,7 @@ class QWeb(orm.AbstractModel):
                 uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
                 can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
                 if not can_see:
-                    return ''
+                    return element.tail and self.render_tail(element.tail, element, qwebcontext) or ''
 
             attribute_value = attribute_value.encode("utf8")
 
