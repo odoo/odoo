@@ -1657,29 +1657,22 @@ define(['summernote/summernote'], function () {
                 });
             }
 
-            var match, $control;
-            if (href && (match = /mailto:(.+)/.exec(href))) {
-                this.$('input.email-address').val(match[1]).change();
-            }
-            if (href && !$control) {
-                this.page_exists(href).then(function (exist) {
-                    if (exist) {
-                        self.$('#link-page').select2('data', {'id': href, 'text': href});
-                    } else {
-                        self.$('input.url').val(href).change();
-                        self.$('input.window-new').closest("div").show();
-                    }
-                });
-            }
-
-            this.page_exists(href).then(function (exist) {
-                if (exist) {
-                    self.$('#link-page').select2('data', {'id': href, 'text': href});
-                } else {
-                    self.$('input.url').val(href).change();
-                    self.$('input.window-new').closest("div").show();
+            var match;
+            if(href){
+                if (match = /mailto:(.+)/.exec(href)) {
+                    this.$('input.email-address').val(match[1]).change();
                 }
-            });
+                else {
+                    this.page_exists(href).then(function (exist) {
+                        if (exist) {
+                            self.$('#link-page').select2('data', {'id': href, 'text': href});
+                        } else {
+                            self.$('input.url').val(href).change();
+                            self.$('input.window-new').closest("div").show();
+                        }
+                    });
+                }
+            }
 
             this.preview();
         },
