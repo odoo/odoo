@@ -391,10 +391,8 @@ class sale_order(osv.osv):
         """
         if context is None:
             context = {}
-        journal_ids = self.pool.get('account.journal').search(cr, uid,
-            [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
-            limit=1)
-        if not journal_ids:
+        journal_id = self.pool['account.invoice'].default_get(cr, uid, ['journal_id'], context=context)['journal_id']
+        if not journal_id:
             raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
         invoice_vals = {
@@ -404,7 +402,7 @@ class sale_order(osv.osv):
             'reference': order.client_order_ref or order.name,
             'account_id': order.partner_invoice_id.property_account_receivable.id,
             'partner_id': order.partner_invoice_id.id,
-            'journal_id': journal_ids[0],
+            'journal_id': journal_id,
             'invoice_line': [(6, 0, lines)],
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
