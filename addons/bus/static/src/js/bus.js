@@ -1,4 +1,5 @@
 odoo.define('bus.bus', function (require) {
+"use strict";
 
 var session = require('web.session');
 var Widget = require('web.Widget');
@@ -40,11 +41,15 @@ bus.Bus = Widget.extend({
         var self = this;
         self.activated = true;
         var data = {'channels': self.channels, 'last': self.last, 'options' : self.options};
-        session.rpc('/longpolling/poll', data, {shadow : true}).then(function(result) {
+        this.current_poll = $.Deferred();
+        this.current_poll.then(function (result) {
             _.each(result, _.bind(self.on_notification, self));
             if(!self.stop){
                 self.poll();
             }
+        });
+        session.rpc('/longpolling/poll', data, {shadow : true}).then(function(result) {
+            self.current_poll.resolve(result);
         }, function(unused, e) {
             // no error popup if request is interrupted or fails for any reason
             e.preventDefault();
@@ -57,6 +62,12 @@ bus.Bus = Widget.extend({
             this.last = notification.id;
         }
         this.trigger("notification", [notification.channel, notification.message]);
+    },
+    restart_poll: function () {
+        if (this.current_poll) {
+            this.current_poll.fail();
+        }
+        this.poll();
     },
     add_channel: function(channel){
         if(!_.contains(this.channels, channel)){
