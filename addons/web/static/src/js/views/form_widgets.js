@@ -1634,6 +1634,7 @@ var FieldToggleBoolean = common.AbstractField.extend({
     When checked, an upgrade popup is showed to the user.
 */
 var UpgradeBoolean = FieldBoolean.extend({
+    template: "FieldUpgradeBoolean",
     events: {
         'click input': 'click_on_input',
     },
@@ -1679,8 +1680,7 @@ var UpgradeBoolean = FieldBoolean.extend({
 
     render_value: function() {
         this._super();
-        var e = this.$("label[for^='" + this.uniqueId + "']").last();
-        e.append(" <span class='label label-primary'>Enterprise</span>");
+        this.$el.append(" <span class='label label-primary'>Enterprise</span>");
     },
 
     confirm_upgrade: function() {
