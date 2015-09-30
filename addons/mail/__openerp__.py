@@ -58,11 +58,12 @@ Main Features
     'installable': True,
     'application': True,
     'qweb': [
-        'static/src/xml/mail_thread.xml',
-        'static/src/xml/mail_chatter.xml',
-        'static/src/xml/mail_chat_common.xml',
-        'static/src/xml/mail_chat_backend.xml',
-        'static/src/xml/mail_followers.xml',
+        'static/src/xml/client_action.xml',
+        'static/src/xml/composer.xml',
+        'static/src/xml/chatter.xml',
+        'static/src/xml/systray.xml',
+        'static/src/xml/thread.xml',
+        'static/src/xml/chat_window.xml',
         'static/src/xml/announcement.xml',
     ],
 }
