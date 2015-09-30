@@ -61,4 +61,5 @@ Wizards provided by this module:
     ],
     'installable': True,
     'website': 'https://www.odoo.com/page/accounting',
+    'post_init_hook': 'load_translations',
 }
