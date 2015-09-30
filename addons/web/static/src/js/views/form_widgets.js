@@ -1633,7 +1633,7 @@ var FieldToggleBoolean = common.AbstractField.extend({
     This widget is intended to be used in config settings.
     When checked, an upgrade popup is showed to the user.
 */
-var UpgradeRadio = FieldRadio.extend({
+var UpgradeBoolean = FieldBoolean.extend({
     events: {
         'click input': 'click_on_input',
     },
@@ -1645,9 +1645,9 @@ var UpgradeRadio = FieldRadio.extend({
     click_on_input: function(event) {
         var self = this;
 
-        if($(event.target).val() == 1) {
+        if(this.$checkbox.prop("checked")) {
 
-            var message = 'You need to upgrade to Odoo Enterprise to activate this feature.';
+            var message = _t('You need to upgrade to Odoo Enterprise to activate this feature.');
 
             var buttons = [
                 {
@@ -1671,8 +1671,8 @@ var UpgradeRadio = FieldRadio.extend({
                 title: _t("Odoo Enterprise"),
             }).open();
 
-            dialog.on('closed', null, function() {
-                self.$('input').first().prop("checked", true);
+            dialog.on('closed', this, function() {
+                this.$checkbox.prop("checked", false);
             });
         }
     },
@@ -1733,7 +1733,7 @@ core.form_widget_registry
     .add('statinfo', StatInfo)
     .add('timezone_mismatch', TimezoneMismatch)
     .add('label_selection', LabelSelection)
-    .add('upgrade_radio', UpgradeRadio);
+    .add('upgrade_boolean', UpgradeBoolean);
 
 
 /**

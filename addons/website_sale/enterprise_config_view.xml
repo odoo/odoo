@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="website_sale.website_config_settings_view_form"/>
         <field name="arch" type="xml">
             <field name="cdn_filters" position="after">
-                <field name="module_delivery_fedex" class="oe_inline" widget="upgrade_radio"/>
-                <field name="module_delivery_ups" class="oe_inline" widget="upgrade_radio"/>
-                <field name="module_delivery_usps" class="oe_inline" widget="upgrade_radio"/>
-                <field name="module_sale_ebay" class="oe_inline" widget="upgrade_radio"/>
+                <field name="module_delivery_fedex" class="oe_inline" widget="upgrade_boolean"/>
+                <field name="module_delivery_ups" class="oe_inline" widget="upgrade_boolean"/>
+                <field name="module_delivery_usps" class="oe_inline" widget="upgrade_boolean"/>
+                <field name="module_sale_ebay" class="oe_inline" widget="upgrade_boolean"/>
             </field>
         </field>
     </record>

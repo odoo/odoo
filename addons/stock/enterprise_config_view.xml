@@ -7,11 +7,11 @@
         <field name="arch" type="xml">
             <group name="traceability" position="after">
                 <group>
-                    <field name="module_stock_barcode" class="oe_inline" widget="upgrade_radio"/>
-                    <field name="module_delivery_fedex" class="oe_inline" widget="upgrade_radio"/>
-                    <field name="module_delivery_ups" class="oe_inline" widget="upgrade_radio"/>
-                    <field name="module_delivery_usps" class="oe_inline" widget="upgrade_radio"/>
-                    <field name="module_inter_company_rules" class="oe_inline" widget="upgrade_radio"/>
+                    <field name="module_stock_barcode" class="oe_inline" widget="upgrade_boolean"/>
+                    <field name="module_delivery_fedex" class="oe_inline" widget="upgrade_boolean"/>
+                    <field name="module_delivery_ups" class="oe_inline" widget="upgrade_boolean"/>
+                    <field name="module_delivery_usps" class="oe_inline" widget="upgrade_boolean"/>
+                    <field name="module_inter_company_rules" class="oe_inline" widget="upgrade_boolean"/>
                 </group>
             </group>
         </field>
