@@ -10,7 +10,7 @@
   </xpath>
 </template>
 
-<template id="optional_products" inherit_id="website_sale.cart" name="Optional products">
+<template id="optional_products" inherit_id="website_sale.cart_lines" name="Optional products">
   <xpath expr="//table[@id='cart_products']/tbody//td[@id='td-qty']/div" position="attributes">
     <attribute name="t-if">not line.linked_line_id</attribute>
   </xpath>
