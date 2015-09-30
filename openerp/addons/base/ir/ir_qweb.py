@@ -1254,12 +1254,12 @@ class AssetsBundle(object):
                 url = '/web/content/%s-%s/%s' % (attachment_id, self.version, values["datas_fname"])
                 values["name"] = url
                 values["url"] = url
-            else:
-                attachment_id = attachments[0].id
 
-            values["datas"] = content.encode('utf8').encode('base64')
-            ira.write(cr2, openerp.SUPERUSER_ID, attachment_id, values, context=self.context)
-            return self._mock_attachments(ira.browse(cr2, openerp.SUPERUSER_ID, attachment_id, context=self.context))[0]
+                values["datas"] = content.encode('utf8').encode('base64')
+                ira.write(cr2, openerp.SUPERUSER_ID, attachment_id, values, context=self.context)
+                return self._mock_attachments(ira.browse(cr2, openerp.SUPERUSER_ID, attachment_id, context=self.context))[0]
+
+        return attachments[0]
 
     def js(self):
         attachments = self.get_attachments('js')
