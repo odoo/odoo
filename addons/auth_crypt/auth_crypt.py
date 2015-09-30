@@ -14,7 +14,11 @@ default_crypt_context = CryptContext(
     # kdf which can be verified by the context. The default encryption kdf is
     # the first of the list
     ['pbkdf2_sha512', 'md5_crypt'],
-    deprecated=['auto'],
+    # deprecated algorithms are still verified as usual, but ``needs_update``
+    # will indicate that the stored hash should be replaced by a more recent
+    # algorithm. Passlib 1.6 supports an `auto` value which deprecates any
+    # algorithm but the default, but Ubuntu LTS only provides 1.5 so far.
+    deprecated=['md5_crypt'],
 )
 
 class res_users(osv.osv):
