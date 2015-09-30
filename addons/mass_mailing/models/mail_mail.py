@@ -66,13 +66,13 @@ class MailMail(osv.Model):
         links_blacklist = ['/unsubscribe_from_list']
 
         if mail.mailing_id and body and mail.statistics_ids:
-            for match in re.findall(URL_REGEX, self.body_html):
+            for match in re.findall(URL_REGEX, mail.body_html):
 
                 href = match[0]
                 url = match[1]
 
                 if not [s for s in links_blacklist if s in href]:
-                    new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
+                    new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
                     body = body.replace(href, new_href)
 
         # prepend <base> tag for images using absolute urls
