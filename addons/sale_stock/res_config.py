@@ -18,7 +18,7 @@ class SaleConfiguration(models.TransientModel):
         ], "Default Shipping Policy")
     group_mrp_properties = fields.Selection([
         (0, "Don't use manufacturing properties (recommended as its easier)"),
-        (1, 'Allow setting manufacturing order properties per order line (avanced)')
+        (1, 'Allow setting manufacturing order properties per order line (advanced)')
         ], "Properties on SO Lines",
         implied_group='sale.group_mrp_properties',
         help="Allows you to tag sales order lines with properties.")
