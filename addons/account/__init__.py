@@ -20,6 +20,7 @@ def _auto_install_l10n(cr, registry):
             module_list.append('l10n_' + country_code.lower())
         if country_code == 'US':
             module_list.append('account_plaid')
+            module_list.append('account_check_printing')
         if country_code in ['US', 'AU', 'NZ']:
             module_list.append('account_yodlee')
 
