@@ -1947,6 +1947,7 @@ return {
     OrderWidget: OrderWidget,
     NumpadWidget: NumpadWidget,
     ProductScreenWidget: ProductScreenWidget,
+    ProductListWidget: ProductListWidget,
 };
 
 });
