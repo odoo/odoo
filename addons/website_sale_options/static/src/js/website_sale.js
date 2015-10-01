@@ -95,19 +95,3 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
     });
 
 });
-
-
-odoo.define('website_sale_options.cart', function(require) {
-"use strict";
-require('website_sale.cart');
-
-$('#cart_products input.js_quantity').change(function () {
-    var value = $(this).val();
-    var $next = $(this).closest('tr').next('.optional_product');
-    while($next.length) {
-        $next.find('.js_quantity').text(value);
-        $next = $next.next('.optional_product');
-    }
-});
-
-});
