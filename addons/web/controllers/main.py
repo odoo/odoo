@@ -565,12 +565,6 @@ class Home(http.Controller):
             values['error'] = "Wrong login/password"
         return request.render('web.login', values)
 
-    @http.route('/login', type='http', auth="none")
-    def login(self, db, login, key, redirect="/web", **kw):
-        if not http.db_filter([db]):
-            return werkzeug.utils.redirect('/', 303)
-        return login_and_redirect(db, login, key, redirect_url=redirect)
-
 class WebClient(http.Controller):
 
     @http.route('/web/webclient/csslist', type='json', auth="none")
@@ -736,7 +730,7 @@ class Database(http.Controller):
     def manager(self, **kw):
         return self._render_template()
 
-    @http.route('/web/database/create', type='http', auth="none")
+    @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
         try:
             request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang,  password)
@@ -746,7 +740,7 @@ class Database(http.Controller):
             error = "Database creation error: %s" % e
         return self._render_template(error=error)
 
-    @http.route('/web/database/duplicate', type='http', auth="none")
+    @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
     def duplicate(self, master_pwd, name, new_name):
         try:
             request.session.proxy("db").duplicate_database(master_pwd, name, new_name)
@@ -755,7 +749,7 @@ class Database(http.Controller):
             error = "Database duplication error: %s" % e
             return self._render_template(error=error)
 
-    @http.route('/web/database/drop', type='http', auth="none")
+    @http.route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
     def drop(self, master_pwd, name):
         try:
             request.session.proxy("db").drop(master_pwd, name)
@@ -764,7 +758,7 @@ class Database(http.Controller):
             error = "Database deletion error: %s" % e
             return self._render_template(error=error)
 
-    @http.route('/web/database/backup', type='http', auth="none")
+    @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
     def backup(self, master_pwd, name, backup_format = 'zip'):
         try:
             openerp.service.db.check_super(master_pwd)
@@ -782,7 +776,7 @@ class Database(http.Controller):
             error = "Database backup error: %s" % e
             return self._render_template(error=error)
 
-    @http.route('/web/database/restore', type='http', auth="none")
+    @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
     def restore(self, master_pwd, backup_file, name, copy=False):
         try:
             data = base64.b64encode(backup_file.read())
@@ -792,7 +786,7 @@ class Database(http.Controller):
             error = "Database restore error: %s" % e
             return self._render_template(error=error)
 
-    @http.route('/web/database/change_password', type='http', auth="none")
+    @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
     def change_password(self, master_pwd, master_pwd_new):
         try:
             request.session.proxy("db").change_admin_password(master_pwd, master_pwd_new)

@@ -544,6 +544,7 @@
                                 </div>
                                 <div t-att-class="comments and 'tab-pane fade active in' or 'tab-pane fade'" id="discuss">
                                     <form id="comment" class="js_website_submit_form" t-attf-action="/slides/slide/#{slide.id}/comment" method="POST">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                         <div class="media">
                                             <span class="pull-left" t-if="not is_public_user">
                                                 <img class="img img-circle media-object"

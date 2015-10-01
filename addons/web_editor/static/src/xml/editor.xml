@@ -88,6 +88,7 @@
                   enctype="multipart/form-data"
                   target="fileframe"
                   class="form-inline">
+                <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
                 <div class="well">
                     <div class="form-group pull-left">
                         <input type="file" name="upload" t-att-accept="widget.accept" multiple="multiple" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>

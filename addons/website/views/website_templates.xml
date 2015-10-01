@@ -130,6 +130,13 @@
             <t t-call-assets="website.assets_frontend" t-js="false"/>
             <t t-call-assets="web.assets_common" t-css="false"/>
             <t t-call-assets="website.assets_frontend" t-css="false"/>
+            <script type="text/javascript">
+                odoo.define('web.csrf', function (require) {
+                    var token = "<t t-esc="request.csrf_token(None)"/>";
+                    require('web.core').csrf_token = token;
+                    require('qweb').default_dict.csrf_token = token;
+                });
+            </script>
 
             <t t-raw="head or ''" name='layout_head'/>
         </head>
@@ -846,6 +853,7 @@
                             <p>An error occured while rendering the template <code t-esc="qweb_exception.qweb['template']"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
                             <form action="/website/reset_templates" method="post" id="reset_templates_form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <ul class="oe_template_fallback">
                                     <li t-foreach="views" t-as="view">
                                         <label>

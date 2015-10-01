@@ -314,7 +314,7 @@ class WebsiteBlog(http.Controller):
         new_blog_post = request.registry['blog.post'].browse(cr, uid, new_blog_post_id, context=context)
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
-    @http.route('/blog/post_duplicate', type='http', auth="public", website=True)
+    @http.route('/blog/post_duplicate', type='http', auth="public", website=True, methods=['POST'])
     def blog_post_copy(self, blog_post_id, **post):
         """ Duplicate a blog.
 

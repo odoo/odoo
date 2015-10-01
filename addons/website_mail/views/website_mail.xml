@@ -44,6 +44,7 @@
             <t t-set="can_comment" t-value="sha_in or token or not is_user_public"/>
             <section class="mb32 hidden-print" t-if="can_comment">
                 <form class="o_website_chatter_form" t-attf-action="/website_mail/post/#{chatter_mode}" method="POST">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <img class="img pull-left img-circle" t-attf-src="/web/image/res.partner/#{user_id.partner_id.id}/image_small/50x50" style="width: 50px; margin-right: 10px;"/>
                     <div class="pull-left mb32" style="width: 75%%">
                         <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>

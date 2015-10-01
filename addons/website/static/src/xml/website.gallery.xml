@@ -19,6 +19,7 @@
                     </div>
                     <div class="modal-body">
                         <form action="/web_editor/attachment/add" method="post" enctype="multipart/form-data" >
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="form-group">
                                 <input name="upload" type="file" value="Choose images" multiple="multiple" accept="image/*"/> 
                             </div>

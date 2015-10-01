@@ -92,7 +92,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                         ajax.jsonRpc("/shop/get_unit_price", 'call', {'product_ids': product_ids, 'add_qty': parseInt(qty)})
                         .then(function (data) {
                             for(var i=0; i < $products_dom.length; i++) {
-                                current = $products_dom[i].data("attribute_value_ids");
+                                var current = $products_dom[i].data("attribute_value_ids");
                                 for(var j=0; j < current.length; j++){
                                     current[j][2] = data[current[j][0]];
                                 }

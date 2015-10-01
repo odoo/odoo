@@ -229,7 +229,8 @@
                       <!-- modal relative to the actions Accept/Reject/Cancel -->
                       <div class="modal fade" id="modalaccept" role="dialog" aria-hidden="true">
                         <div class="modal-dialog" t-if="not quotation.require_payment and not need_payment">
-                          <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" class="js_accept_json modal-content js_website_submit_form">
+                           <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" class="js_accept_json modal-content js_website_submit_form">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                               <h4 class="modal-title">Validate Order</h4>
@@ -305,6 +306,7 @@
                       <div class="modal fade" id="modaldecline" role="dialog" aria-hidden="true">
                         <div class="modal-dialog">
                           <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline" class="modal-content">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                               <h4 class="modal-title">Reject This Quote</h4>

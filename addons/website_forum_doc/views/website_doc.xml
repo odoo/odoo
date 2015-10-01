@@ -198,6 +198,7 @@
                 <div class="container">
                     <div class="well">
                         <form t-attf-action="/forum/#{ slug(forum) }/promote_ok" method="post" role="form" class="form-horizontal">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input name="post_id" t-att-value="post.id" type="hidden"/>
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="reason">Question:</label>

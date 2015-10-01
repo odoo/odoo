@@ -66,6 +66,7 @@
 
 <template id="products_item" name="Products item">
   <form action="/shop/cart/update" method="post">
+  <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
   <div itemscope="itemscope" itemtype="http://schema.org/Product">
   <div class="ribbon-wrapper">
     <div class="ribbon btn btn-danger">Sale</div>
@@ -366,7 +367,7 @@
                 <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
 
                 <form t-att-action="keep('/shop/cart/update')" class="js_add_cart_variants" method="POST">
-
+                  <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                   <div class="js_product">
                     <t t-placeholder="select">
                       <input type="hidden" class="product_id" name="product_id" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
@@ -668,6 +669,7 @@
           <h1 class="mb32">Extra Step</h1>
           <div class="row">
             <form class="form-horizontal" method="post">
+              <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
               <div class="form-group">
                 <label for="x_test" class="col-sm-2 control-label">Field 1</label>
                 <div class="col-sm-10">
@@ -898,7 +900,8 @@
                        }'/>
                   </td>
                   <td class="text-center">
-                      <form action="/shop/cart/update" method="post">
+                    <form action="/shop/cart/update" method="post">
+                          <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                           <input name="product_id" t-att-value="product.id" type="hidden"/>
                           <a class="btn btn-link a-submit"><strong>Add to Cart</strong></a>
                       </form>
@@ -925,6 +928,7 @@
           <p class="bg-warning">This promo code is not available</p>
       </t>
       <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist" method="post" class="mb32">
+          <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
           <div class="input-group">
               <input name="promo" class='form-control' type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or ''"/>
               <div class="input-group-btn">
@@ -947,7 +951,7 @@
         </t>
           <h1>Your Address</h1>
           <form action="/shop/confirm_order" method="post">
-
+          <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
           <div class="row">
           <div class="col-md-8 oe_cart">
               <h3 class="page-header mt16">Billing Information
@@ -1209,6 +1213,7 @@
           <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
             <div class="col-lg-8 col-sm-8">
               <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
+                  <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                   <a style="width:127px;" class="btn btn-primary a-submit">
                     <span t-if="order.amount_total > 0">Pay Now <span class="fa fa-long-arrow-right"></span></span>
                     <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-long-arrow-right"></span></span>

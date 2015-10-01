@@ -108,7 +108,7 @@ class WebsiteSurvey(http.Controller):
     # Survey displaying
     @http.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>',
                  '/survey/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'],
-                type='http', auth='public', website=True)
+                type='http', auth='public', website=True, methods=['POST'])
     def fill_survey(self, survey, token, prev=None, **post):
         '''Display and validates a survey'''
         cr, uid, context = request.cr, request.uid, request.context
