@@ -1081,13 +1081,12 @@ var abstractReconciliationLine = Widget.extend({
         self.$el.wrap(container);
         return $.when(self.$el.parent().animate({height: 0, marginBottom: 0}, speed*height/150)).then(function() {
             $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
+            _.each(self.getChildren(), function(o){ o.destroy() });
+            self.$el.parent().remove();
             return $.when(self.destroy()).then(function(){
                 if (doPostMortemProcess)
                     postMortemProcess.call(self);
             });
-            self.$el.parent().hide();
-            if (doPostMortemProcess)
-                postMortemProcess.call(self);
         });
     },
 
@@ -1755,8 +1754,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
             }
         };
         self.field_manager.fields_view.fields["change_partner"] = change_partner_field;
-        var field_object = new FieldMany2One(self.field_manager, change_partner_node);
-        self.change_partner_field = field_object;
+        self.change_partner_field = new FieldMany2One(self.field_manager, change_partner_node);
         self.change_partner_field.appendTo(self.$(".change_partner_container"));
         self.change_partner_field.on("change:value", self.change_partner_field, function() {
             self.changePartner(this.get_value());
