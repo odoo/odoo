@@ -1669,8 +1669,6 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         if (self.st_line.no_match) self.$el.addClass("no_match");
         self.bindPopoverTo(self.$(".line_info_button"));
         self.createFormWidgets();
-        //Ugly fix to make the many2one dropdown work
-        self.$el.append($('ul.ui-autocomplete'));
         // Special case hack : no identified partner
         if (self.st_line.has_no_partner) {
             self.updateBalance();
