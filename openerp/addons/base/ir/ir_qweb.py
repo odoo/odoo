@@ -1209,8 +1209,18 @@ class AssetsBundle(object):
         return hashlib.sha1(check).hexdigest()
 
     def clean_attachments(self, type):
+        """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
+        saving a fresh one.
+
+        When `type` is css we need to check that we are deleting a different version (and not *any*
+        version) because css may be paginated and, therefore, may produce multiple attachments for
+        the same bundle's version.
+        """
         ira = self.registry['ir.attachment']
-        domain = ['&', '!', ('url', '=like', '/web/content/%%-%s/%%' % self.version), ('url', '=like', '/web/content/%%-%%/%s%%.%s' % (self.xmlid, type))]
+        domain = [
+            ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.xmlid, type)),  # The wilcards are id, version and pagination number (if any)
+            '!', ('url', '=like', '/web/content/%-{}/%'.format(self.version))
+        ]
         attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
         return ira.unlink(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context)
 
