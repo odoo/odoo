@@ -12,13 +12,13 @@ class MassMailController(http.Controller):
         if mailing.exists():
             if mailing.mailing_model == 'mail.mass_mailing.contact':
                 contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email', 'ilike', email)])
-                return request.website.render('mass_mailing.page_unsubscribe', {
+                return request.website.render('website_mass_mailing.page_unsubscribe', {
                     'contacts': contacts,
                     'email': email,
                     'mailing_id': mailing_id})
             else:
                 mailing.update_opt_out(mailing_id, email, [res_id], True)
-                return request.website.render('mass_mailing.page_unsubscribed')
+                return request.website.render('website_mass_mailing.page_unsubscribed')
 
     @http.route(['/mail/mailing/unsubscribe'], type='json', auth='none')
     def unsubscribe(self, mailing_id, opt_in_ids, opt_out_ids, email):
