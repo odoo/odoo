@@ -190,14 +190,7 @@ class ir_http(osv.AbstractModel):
     def routing_map(self):
         if not hasattr(self, '_routing_map'):
             _logger.info("Generating routing map")
-            Modules = request.env['ir.module.module'].sudo()
-            installed = {
-                module.name
-                for module in Modules.search([
-                    ('state', 'in', ('installed', 'to remove', 'to upgrade')),
-                    ('name', '!=', 'web')
-                ])
-            }
+            installed = request.registry._init_modules - {'web'}
             if openerp.tools.config['test_enable']:
                 installed.add(openerp.modules.module.current_test)
             mods = [''] + openerp.conf.server_wide_modules + sorted(installed)
