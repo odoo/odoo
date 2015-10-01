@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Social Network',
+    'name': 'Discuss',
     'version': '1.0',
-    'category': 'Social Network',
+    'category': 'Discuss',
     'sequence': 25,
     'summary': 'Discussions, Mailing Lists, News',
     'description': """
