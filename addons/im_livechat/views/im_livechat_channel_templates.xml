@@ -141,12 +141,13 @@
 
             <t t-if="info" t-translation="off">
                 document.addEventListener("DOMContentLoaded", function(event) {
-
+                    <t t-if="web_session_required">
                     odoo.define('web.session', function (require) {
                         var Session = require('web.Session');
                         var modules = odoo._modules;
                         return new Session(undefined, "<t t-esc="info['server_url']"/>", {modules:modules, use_cors: false});
                     });
+                    </t>
 
                     odoo.define('im_livechat.livesupport', function (require) {
                         var im_livechat = require('im_livechat.im_livechat');

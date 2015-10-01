@@ -31,7 +31,7 @@ class LivechatController(http.Controller):
         username = kwargs.get("username", _("Visitor"))
         channel = request.env['im_livechat.channel'].sudo().browse(channel_id)
         info = request.env['im_livechat.channel'].match_rules(request, channel.id, username=username)
-        return request.render('im_livechat.loader', {'info': info}) if info else False
+        return request.render('im_livechat.loader', {'info': info, 'web_session_required': True}) if info else False
 
     @http.route('/im_livechat/get_session', type="json", auth='public')
     def get_session(self, channel_id, anonymous_name, **kwargs):
