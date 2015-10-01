@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2015-10-01 06:26+0000\n"
+"PO-Revision-Date: 2015-10-01 06:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -64,18 +64,7 @@ msgid "\n"
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
-"        % endif\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
@@ -687,7 +676,7 @@ msgid "Invoice"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:786
+#: code:addons/sale/sale.py:791
 #, python-format
 msgid "Invoice %s paid"
 msgstr ""
@@ -1005,6 +994,11 @@ msgid "Order"
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Order #"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
 msgid "Order Date"
 msgstr ""
@@ -1024,11 +1018,6 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Order Number"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Order #"
 msgstr ""
 
 #. module: sale
@@ -1101,7 +1090,7 @@ msgid "Please define an accounting sale journal for this company."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:655
+#: code:addons/sale/sale.py:660
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d) - or for its category: \"%s\"."
 msgstr ""
@@ -1232,6 +1221,11 @@ msgid "Quotation"
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Quotation #"
+msgstr ""
+
+#. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
 msgstr ""
@@ -1244,11 +1238,6 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Quotation #"
 msgstr ""
 
 #. module: sale
@@ -1759,7 +1748,7 @@ msgid "Wrong value entered!"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:742
+#: code:addons/sale/sale.py:747
 #, python-format
 msgid "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
