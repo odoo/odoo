@@ -91,11 +91,12 @@ var Thread = Widget.extend({
      * Removes a message and re-renders the thread
      * @param {int} [message_id] the id of the removed message
      * @param {array} [messages] the list of messages to display, without the removed one
+     * @param {object} [options] options for the thread rendering
      */
-    remove_message_and_render: function (message_id, messages) {
+    remove_message_and_render: function (message_id, messages, options) {
         var self = this;
         this.$('.o_thread_message[data-message-id=' + message_id + ']').fadeOut({
-            done: function () { self.render(messages); }
+            done: function () { self.render(messages, options); }
         });
     },
 

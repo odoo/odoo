@@ -409,7 +409,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         if ((this.channel_id === "channel_starred" && !message.is_starred) ||
             (this.channel_id === "channel_inbox" && !message.is_needaction)) {
             chat_manager.fetch(this.channel_id, this.domain).then(function (messages) {
-                self.thread.remove_message_and_render(message.id, messages);
+                var options = {display_load_more: !chat_manager.all_history_loaded(self.channel_id)};
+                self.thread.remove_message_and_render(message.id, messages, options);
             });
         } else if (_.contains(message.channel_ids, this.channel_id)) {
             this.fetch_and_render_thread();
