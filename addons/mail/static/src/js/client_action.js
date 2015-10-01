@@ -192,7 +192,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.bus.on('anyone_listening', self, function (channel, query) {
                     query.is_displayed = query.is_displayed || channel.id === self.channel_id;
                 });
-                chat_manager.bus.on('update_needaction', self, self.render_sidebar);
+                chat_manager.bus.on('update_needaction', self, self.on_update_needaction);
             });
     },
 
@@ -428,6 +428,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         if (channel.autoswitch) {
             this.set_channel(channel.id);
         }
+    },
+    on_update_needaction: function () {
+        var $needaction_badge = QWeb.render("mail.chat.SidebarNeedaction", {
+            needaction_counter: chat_manager.get_needaction_counter()
+        });
+        this.$('.o_mail_sidebar_needaction').replaceWith($needaction_badge);
     },
 
     on_click_button_invite: function () {

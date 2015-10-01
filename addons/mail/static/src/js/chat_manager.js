@@ -410,7 +410,11 @@ function init () {
             // new message in a channel
             var message = notification[1];
             var channel_id = message.channel_ids[0];
-            add_message(message, { channel_id: channel_id, show_notification: true} );
+            message = add_message(message, { channel_id: channel_id, show_notification: true} );
+            if (_.contains(message.channel_ids, 'channel_inbox')) {
+                needaction_counter = needaction_counter + 1;
+                chat_manager.bus.trigger('update_needaction', needaction_counter);
+            }
         }
         if (model === 'res.partner') {
             var chat_session = notification[1];
