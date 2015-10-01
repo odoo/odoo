@@ -33,19 +33,21 @@
         .o_mail_chat_channel_item {
             width: 100%;
             .o-webclient-padding(@top: 5px, @bottom: 5px);
-            padding-left: 2*@odoo-horizontal-padding; // larger padding than titles
+            padding-left: 1.5*@odoo-horizontal-padding; // larger padding than titles
             > .badge {
                 margin: 0;
             }
             .o_mail_partner_unpin {
-                padding: 8px;
-                padding-top: 2px;
+                padding: 2px 8px;
+            }
+            &.o_unread_message {
+                font-weight: bold;
             }
         }
         .o_mail_add_channel {
             width: 100%;
             .o-webclient-padding(@top: 5px, @bottom: 5px);
-            padding-left: 2*@odoo-horizontal-padding; // larger padding than titles
+            padding-left: 1.5*@odoo-horizontal-padding; // larger padding than titles
             span {
                 margin-right: 5px;
             }

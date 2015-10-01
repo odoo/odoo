@@ -306,6 +306,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$('.o_mail_chat_channel_item')
             .removeClass('o_active')
             .filter('[data-channel-id=' + channel_id + ']')
+            .removeClass('o_unread_message')
             .addClass('o_active');
 
         this.$('.o_chat_composer').toggle(channel.type !== 'static');
@@ -401,6 +402,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 self.thread.scroll_to({id: message.id});
             });
         }
+        // Indicate in the sidebar that there is a new message in the corresponding channels
+        _.each(_.without(message.channel_ids, this.channel_id), function (channel_id) {
+                self.$('.o_mail_chat_channel_item')
+                    .filter('[data-channel-id=' + channel_id + ']')
+                    .addClass('o_unread_message');
+        });
         // Dump scroll position of channels in which the new message arrived
         this.channels_scrolltop = _.omit(this.channels_scrolltop, message.channel_ids);
     },
