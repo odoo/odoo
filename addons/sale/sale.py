@@ -498,11 +498,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.price_reduce = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        for line in self:
-            line.customer_lead = line.product_id and line.product_id.sale_delay or 0.0
-
     @api.multi
     @api.onchange('order_id', 'product_id')
     def _compute_tax_id(self):
