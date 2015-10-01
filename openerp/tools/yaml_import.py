@@ -714,31 +714,11 @@ class YamlInterpreter(object):
                 res = None
 
         if node.action:
-            action_type = node.type or 'act_window'
-            if action_type == 'act_window':
-                action_id = self.get_id(node.action)
-                self.cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%s', (action_id,))
-                ir_act_window_result = self.cr.fetchone()
-                assert ir_act_window_result, "No window action defined for this id %s !\n" \
-                        "Verify that this is a window action or add a type argument." % (node.action,)
-                action_type, action_mode, action_name, view_id, target = ir_act_window_result
-                if view_id:
-                    self.cr.execute('SELECT type FROM ir_ui_view WHERE id=%s', (view_id,))
-                    # TODO guess why action_mode is ir_act_window.view_mode above and ir_ui_view.type here
-                    action_mode = self.cr.fetchone()
-                self.cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%s ORDER BY sequence LIMIT 1', (action_id,))
-                if self.cr.rowcount:
-                    action_mode = self.cr.fetchone()
-                if not values.get('name', False):
-                    values['name'] = action_name
-            elif action_type == 'wizard':
-                action_id = self.get_id(node.action)
-                self.cr.execute('select name from ir_act_wizard where id=%s', (action_id,))
-                ir_act_wizard_result = self.cr.fetchone()
-                if (not values.get('name', False)) and ir_act_wizard_result:
-                    values['name'] = ir_act_wizard_result[0]
-            else:
-                raise YamlImportException("Unsupported type '%s' in menuitem tag." % action_type)
+            action = self.get_record(node.action)
+            values['action'] = '%s,%s' % (action._name, action.id)
+            if not values.get('name'):
+                values['name'] = action.name
+
         if node.sequence:
             values['sequence'] = node.sequence
 
@@ -748,15 +728,8 @@ class YamlInterpreter(object):
                 'ir.ui.menu', self.module, values, node.id, mode=self.mode, \
                 noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
 
-        if node.id and parent_id:
-            self.id_map[node.id] = int(parent_id)
-
-        if node.action and pid:
-            action_type = node.type or 'act_window'
-            action_id = self.get_id(node.action)
-            action = "ir.actions.%s,%d" % (action_type, action_id)
-            self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action', \
-                    'tree_but_open', 'Menuitem', [('ir.ui.menu', int(parent_id))], action, True, True, xml_id=node.id)
+        if node.id and pid:
+            self.id_map[node.id] = int(pid)
 
     def process_act_window(self, node):
         assert getattr(node, 'id'), "Attribute %s of act_window is empty !" % ('id',)
