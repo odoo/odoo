@@ -327,11 +327,17 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
     },
 
+    get_thread_rendering_options: function () {
+        return {
+            display_load_more: !chat_manager.all_history_loaded(this.channel, this.domain),
+            display_needactions: this.channel.display_needactions,
+        };
+    },
+
     fetch_and_render_thread: function () {
         var self = this;
         return chat_manager.fetch(this.channel, this.domain).then(function(result) {
-            var history_loaded = chat_manager.all_history_loaded(self.channel, self.domain);
-            self.thread.render(result, {display_load_more: !history_loaded});
+            self.thread.render(result, self.get_thread_rendering_options());
         });
     },
 
@@ -343,8 +349,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         return chat_manager
             .fetch_more(this.channel, this.domain)
             .then(function(result) {
-                var history_loaded = chat_manager.all_history_loaded(self.channel, self.domain);
-                self.thread.render(result, {display_load_more: !history_loaded});
+                self.thread.render(result, self.get_thread_rendering_options());
                 offset += framework.getPosition(document.querySelector(oldest_msg_selector)).top;
                 self.thread.scroll_to({offset: offset});
             });
@@ -425,8 +430,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         if ((current_channel_id === "channel_starred" && !message.is_starred) ||
             (current_channel_id === "channel_inbox" && !message.is_needaction)) {
             chat_manager.fetch(this.channel, this.domain).then(function (messages) {
-                var history_loaded = chat_manager.all_history_loaded(self.channel, self.domain);
-                self.thread.remove_message_and_render(message.id, messages, {display_load_more: !history_loaded});
+                var options = self.get_thread_rendering_options();
+                self.thread.remove_message_and_render(message.id, messages, options);
             });
         } else if (_.contains(message.channel_ids, current_channel_id)) {
             this.fetch_and_render_thread();

@@ -179,6 +179,7 @@ function make_channel (data, options) {
         is_folded: data.state === "folded",
         autoswitch: 'autoswitch' in options ? options.autoswitch : true,
         hidden: options.hidden,
+        display_needactions: options.display_needactions,
         cache: {'[]': {
             all_history_loaded: false,
             loaded: false,
@@ -410,15 +411,15 @@ var chat_manager = {
 // ---------------------------------------------------------------------------------
 function init () {
     add_channel({
-       id: "channel_inbox",
-       name: _t("Inbox"),
-       type: "static"
-    });
+        id: "channel_inbox",
+        name: _t("Inbox"),
+        type: "static",
+    }, { display_needactions: true });
 
     add_channel({
-       id: "channel_starred",
-       name: _t("Starred"),
-       type: "static"
+        id: "channel_starred",
+        name: _t("Starred"),
+        type: "static"
     });
 
     var load_channels = session.rpc('/mail/client_action').then(function (result) {
