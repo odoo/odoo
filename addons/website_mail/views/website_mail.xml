@@ -71,7 +71,7 @@
                     <t t-if="message.website_published or website.env.user.sudo(website.env.user.id).has_group('base.group_website_publisher')">
                         <li class="media" t-if="message.message_type == 'comment'" t-att-id="'message-%s' % message.id">
                             <div class="media-body">
-                                <img class="media-object pull-left img-circle" t-attf-src="/web/image/mail.message/#{message.id}/author_avatar"
+                                <img class="media-object pull-left img-circle" t-attf-src="/mail/#{message.model}/#{message.res_id}/avatar/#{message.author_id.id}"
                                     style="width: 50px; margin-right: 10px;"/>
                             <div class="media-body">
                                 <h5 class="media-heading">
