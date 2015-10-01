@@ -201,6 +201,13 @@ class MailThread(models.AbstractModel):
             doc_name = self.env['ir.model'].search([('model', '=', self._name)]).read(['name'])[0]['name']
             thread.message_post(body=_('%s created') % doc_name)
 
+        # auto_subscribe: take values and defaults into account
+        create_values = dict(values)
+        for key, val in self._context.iteritems():
+            if key.startswith('default_') and key[8:] not in create_values:
+                create_values[key[8:]] = val
+        thread.message_auto_subscribe(create_values.keys(), values=create_values)
+
         # track values
         if not self._context.get('mail_notrack'):
             if 'lang' not in self._context:
@@ -211,13 +218,6 @@ class MailThread(models.AbstractModel):
             if tracked_fields:
                 initial_values = {thread.id: dict.fromkeys(tracked_fields, False)}
                 track_thread.message_track(tracked_fields, initial_values)
-
-        # auto_subscribe: take values and defaults into account
-        create_values = dict(values)
-        for key, val in self._context.iteritems():
-            if key.startswith('default_') and key[8:] not in create_values:
-                create_values[key[8:]] = val
-        thread.message_auto_subscribe(create_values.keys(), values=create_values)
 
         return thread
 

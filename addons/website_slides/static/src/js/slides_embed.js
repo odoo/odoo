@@ -139,10 +139,10 @@ $(document).ready(function () {
 
         // switching slide with keyboard
         $(document).keydown(function (ev) {
-            if (ev.keyCode === 37) {
+            if (ev.keyCode === 37 || ev.keyCode === 38) {
                 embedded_viewer.previous();
             }
-            if (ev.keyCode === 39) {
+            if (ev.keyCode === 39 || ev.keyCode === 40) {
                  embedded_viewer.next();
             }
         });

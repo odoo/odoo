@@ -136,7 +136,7 @@ class YamlInterpreter(object):
         id = xml_id
         if '.' in xml_id:
             module, id = xml_id.split('.', 1)
-            assert '.' not in id, "The ID reference '%s' must contains maximum one dot.\n" \
+            assert '.' not in id, "The ID reference '%s' must contain at most one dot.\n" \
                                   "It is used to refer to other modules ID, in the form: module.record_id" \
                                   % (xml_id,)
             if module != self.module:
@@ -165,9 +165,9 @@ class YamlInterpreter(object):
                 _, id = self.pool['ir.model.data'].get_object_reference(self.cr, self.uid, module, checked_xml_id)
                 self.id_map[xml_id] = id
             except ValueError:
-                raise ValueError("""%s not found when processing %s.
+                raise ValueError("""%r not found when processing %s.
     This Yaml file appears to depend on missing data. This often happens for
-    tests that belong to a module's test suite and depend on each other.""" % (checked_xml_id, self.filename))
+    tests that belong to a module's test suite and depend on each other.""" % (xml_id, self.filename))
 
         return id
 
@@ -337,7 +337,7 @@ class YamlInterpreter(object):
                 self.cr.commit()
 
     def _create_record(self, model, fields, view_info=None, parent={}, default=True, context=None):
-        """This function processes the !record tag in yalm files. It simulates the record creation through an xml
+        """This function processes the !record tag in yaml files. It simulates the record creation through an xml
             view (either specified on the !record tag or the default one for this object), including the calls to
             on_change() functions, and sending only values for fields that aren't set as readonly.
             :param model: model instance
@@ -526,7 +526,11 @@ class YamlInterpreter(object):
             else:
                 value = ids
         elif node.id:
-            value = self.get_id(node.id)
+            if field and field.type == 'reference':
+                record = self.get_record(node.id)
+                value = "%s,%s" % (record._name, record.id)
+            else:
+                value = self.get_id(node.id)
         else:
             value = None
         return value
@@ -544,7 +548,7 @@ class YamlInterpreter(object):
             elements = self.process_ref(expression, field)
             if field.type in ("many2many", "one2many"):
                 value = [(6, 0, elements)]
-            else: # many2one
+            else: # many2one or reference
                 if isinstance(elements, (list,tuple)):
                     value = self._get_first_result(elements)
                 else:
@@ -565,6 +569,9 @@ class YamlInterpreter(object):
             # enforce ISO format for string datetime values, to be locale-agnostic during tests
             time.strptime(expression, misc.DEFAULT_SERVER_DATETIME_FORMAT)
             value = expression
+        elif field.type == "reference":
+            record = self.get_record(expression)
+            value = "%s,%s" % (record._name, record.id)
         else: # scalar field
             if is_eval(expression):
                 value = self.process_eval(expression)

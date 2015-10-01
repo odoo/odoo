@@ -29,7 +29,7 @@ var GraphView = View.extend({
         this.widget = undefined;
     },
     start: function () {
-        var load_fields = this.model.call('fields_get', [])
+        var load_fields = this.model.call('fields_get', [], {context: this.dataset.get_context()})
                 .then(this.prepare_fields.bind(this));
 
         return $.when(this._super(), load_fields);

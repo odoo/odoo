@@ -152,7 +152,7 @@ var PDFSlidesViewer = (function(){
     }
 
     PDFSlidesViewer.prototype.toggleFullScreen = function(){
-        var el = this.canvas;
+        var el = this.canvas.parentNode;
 
         var isFullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled || false;
         if(isFullscreenAvailable){ // Full screen supported

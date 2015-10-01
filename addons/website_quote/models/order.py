@@ -217,7 +217,9 @@ class sale_order(osv.osv):
         options = []
         for option in quote_template.options:
             if pricelist_id:
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], option.product_id.id, 1, context=context)[pricelist_id]
+                uom_context = context.copy()
+                uom_context['uom'] = option.uom_id.id
+                price = pricelist_obj.price_get(cr, uid, [pricelist_id], option.product_id.id, 1, context=uom_context)[pricelist_id]
             else:
                 price = option.price_unit
             options.append((0, 0, {
@@ -405,6 +407,10 @@ class sale_order_option(osv.osv):
         if product.description_sale:
             self.name += '\n' + product.description_sale
         self.uom_id = product.product_tmpl_id.uom_id
+        if product and self.order_id.pricelist_id:
+            partner_id = self.order_id.partner_id.id
+            pricelist = self.order_id.pricelist_id.id
+            self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
 
 
 class product_template(osv.Model):
