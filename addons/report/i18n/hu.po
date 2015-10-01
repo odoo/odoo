@@ -3,13 +3,14 @@
 # * report
 # 
 # Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-10 10:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2015-09-30 20:00+0000\n"
+"Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,13 +21,13 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "&amp;bull;"
-msgstr ""
+msgstr "&amp;bull;"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.layout
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
-msgstr ""
+msgstr "&lt;!DOCTYPE html&gt;"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -86,12 +87,12 @@ msgstr "A9  13  37 x 52 mm"
 #. module: report
 #: model:ir.model,name:report.model_report_paperformat
 msgid "Allows customization of a report."
-msgstr "Lehetővé teszi egy jelentés szereksztését"
+msgstr "Lehetővé teszi egy kimutatás testreszabását."
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_report_ids
 msgid "Associated reports"
-msgstr "Társítot kimutatások"
+msgstr "Társított kimutatások"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -144,7 +145,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9  23  33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:253
+#: code:addons/report/models/report.py:257
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Rossz kimutatás hivatkozás"
@@ -201,12 +202,27 @@ msgstr "Alapértelmezett papír formátum?"
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Név megjelenítése"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
 msgid "Display a header line"
 msgstr "Egy fejléc sor mutatása"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit external footer"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit external header"
+msgstr "Külső fejléc szerkesztése"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit internal header"
+msgstr "Belső fejléc szerkesztése"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -260,7 +276,7 @@ msgstr "Fekvő"
 #: model:ir.model.fields,field_description:report.field_report_abstract_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_paperformat___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Utoljára frissítve ekkor"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_write_uid
@@ -362,6 +378,18 @@ msgid "Portrait"
 msgstr "Álló"
 
 #. module: report
+#: model:ir.actions.report.xml,name:report.action_report_externalpreview
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Preview External Report"
+msgstr "A külső jelentés előnézete"
+
+#. module: report
+#: model:ir.actions.report.xml,name:report.action_report_internalpreview
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Preview Internal Report"
+msgstr "A belső jelentés előnézete"
+
+#. module: report
 #. openerp-web
 #: code:addons/report/static/src/js/qwebactionmanager.js:76
 #: code:addons/report/static/src/js/qwebactionmanager.js:84
@@ -404,7 +432,17 @@ msgid "Tabloid 29 279.4 x 431.8 mm"
 msgstr "Tabloid 29 279.4 x 431.8 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:253
+#: model:ir.ui.view,arch_db:report.preview_externalreport
+msgid "This is a sample of an external report."
+msgstr "Ez egy külső jelentés példája."
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.preview_internalreport
+msgid "This is a sample of an internal report."
+msgstr "Ez egy belső jelentés példája."
+
+#. module: report
+#: code:addons/report/models/report.py:257
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Ezt a jelentést nem töltötte be az adatbázisba: %s."
@@ -430,7 +468,7 @@ msgid "Website:"
 msgstr "Weboldal:"
 
 #. module: report
-#: code:addons/report/models/report.py:409
+#: code:addons/report/models/report.py:413
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf sikertelen (hiba kód: %s). Üzenet: %s"
@@ -453,7 +491,7 @@ msgid ""
 "Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
 "support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr ""
+msgstr "Frissítenie kell a  Wkhtmltopdf\n legalább 0.12.0 verzióra, hogy a megfelelő fejlécet és lábjegyzetet mutassa és \n támogassa a tábálázatok oldalak közti tördelését.<br><br><a href=\"http://wkhtmltopdf.org/\" \n target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml
@@ -463,4 +501,4 @@ msgstr "ir.actions.report.xml"
 #. module: report
 #: model:ir.model,name:report.model_report_abstract_report
 msgid "report.abstract_report"
-msgstr ""
+msgstr "report.abstract_report"

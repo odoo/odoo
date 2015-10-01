@@ -4,12 +4,14 @@
 # 
 # Translators:
 # liyes <bodetools@gmail.com>, 2015
+# 卓忆科技 <zhanghao@jointd.com>, 2015
+# 珠海-老天 <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-10 00:57+0000\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2015-09-30 09:27+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -145,7 +147,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 毫米"
 
 #. module: report
-#: code:addons/report/models/report.py:253
+#: code:addons/report/models/report.py:257
 #, python-format
 msgid "Bad Report Reference"
 msgstr "错误的报表引用"
@@ -208,6 +210,21 @@ msgstr "显示名称"
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
 msgid "Display a header line"
 msgstr "显示标题行"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit external footer"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit external header"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit internal header"
+msgstr ""
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -363,6 +380,18 @@ msgid "Portrait"
 msgstr "肖像"
 
 #. module: report
+#: model:ir.actions.report.xml,name:report.action_report_externalpreview
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Preview External Report"
+msgstr ""
+
+#. module: report
+#: model:ir.actions.report.xml,name:report.action_report_internalpreview
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Preview Internal Report"
+msgstr ""
+
+#. module: report
 #. openerp-web
 #: code:addons/report/static/src/js/qwebactionmanager.js:76
 #: code:addons/report/static/src/js/qwebactionmanager.js:84
@@ -405,7 +434,17 @@ msgid "Tabloid 29 279.4 x 431.8 mm"
 msgstr "Tabloid 29 279.4 x 431.8 毫米"
 
 #. module: report
-#: code:addons/report/models/report.py:253
+#: model:ir.ui.view,arch_db:report.preview_externalreport
+msgid "This is a sample of an external report."
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.preview_internalreport
+msgid "This is a sample of an internal report."
+msgstr ""
+
+#. module: report
+#: code:addons/report/models/report.py:257
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "该报表不能被载入到数据库:  %s。"
@@ -431,7 +470,7 @@ msgid "Website:"
 msgstr "网站:"
 
 #. module: report
-#: code:addons/report/models/report.py:409
+#: code:addons/report/models/report.py:413
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf 失效 (错误代码: %s). 消息: %s"
@@ -454,7 +493,7 @@ msgid ""
 "Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
 "support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr ""
+msgstr "您需要升级您的 \nWkhtmltopdf 到至少 0.12.0 以显示正确的页首与页尾 \n以及支持制表键间隔页面。<br><br><a href=\"http://wkhtmltopdf.org/\"\n\ntarget=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml

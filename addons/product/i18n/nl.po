@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-24 11:42+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2015-09-30 09:23+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +43,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% korting en %s toeslag"
 
 #. module: product
-#: code:addons/product/product.py:739 code:addons/product/product.py:1135
+#: code:addons/product/product.py:710 code:addons/product/product.py:1134
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -139,6 +139,13 @@ msgid "8-port Switch"
 msgstr "8-poort Switch"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid ""
+"<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
+msgstr ""
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>kg</span>"
 msgstr "<span>kg</span>"
@@ -172,7 +179,7 @@ msgid ""
 msgstr "<strong> Waarschuwing</strong>: attributen toevoegen of verwijderen\nverwijdert bestaande varianten en maakt deze opnieuw aan met als gevolg\ndat u mogelijk wijzigingen verliest."
 
 #. module: product
-#: code:addons/product/product.py:981 sql_constraint:product.product:0
+#: code:addons/product/product.py:977 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr "Een barcode kan maar aan één product toegewezen worden!"
@@ -683,7 +690,7 @@ msgid ""
 msgstr "Conversie tussen maateenheden kan alleen plaatsvinden als deze behoren tot dezelfde categorie. De conversie wordt gemaakt op basis van ratio's."
 
 #. module: product
-#: code:addons/product/product.py:118
+#: code:addons/product/product.py:119
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
@@ -1640,18 +1647,6 @@ msgid "Logistical Units"
 msgstr "Logistieke eenheden"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_id
-#: model:ir.model.fields,field_description:product.field_product_template_seller_id
-msgid "Main Vendor"
-msgstr "Hoofdfabrikant"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_id
-#: model:ir.model.fields,help:product.field_product_template_seller_id
-msgid "Main vendor who has highest priority in vendor list."
-msgstr "Standaard leverancier met de hoogste prioriteit in de leverancierslijst"
-
-#. module: product
 #: model:res.groups,name:product.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "Beheer meerdere maateenheden"
@@ -1877,11 +1872,6 @@ msgstr "Overige informatie"
 #: selection:product.pricelist.item,base:0
 msgid "Other Pricelist"
 msgstr "Andere prijslijst"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Other Pricelist  -"
-msgstr "Andere prijslijst -"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -2210,6 +2200,7 @@ msgid "Product Unit of Measure"
 msgstr "Maateenheid product"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
@@ -2267,7 +2258,7 @@ msgid "Products your store in the inventory"
 msgstr "Producten die u opslaat in de voorraad"
 
 #. module: product
-#: code:addons/product/product.py:846
+#: code:addons/product/product.py:817
 #, python-format
 msgid "Products: "
 msgstr "Producten: "
@@ -2277,11 +2268,6 @@ msgstr "Producten: "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "Verkoopprijs"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Public Price  -"
-msgstr "Publieke prijs -"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2299,12 +2285,6 @@ msgstr "Omschrijving inkoop"
 #: model:ir.model.fields,field_description:product.field_product_template_uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr "Inkoop maateenheid"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_price
-#: model:ir.model.fields,help:product.field_product_template_seller_price
-msgid "Purchase price from main vendor."
-msgstr "Inkoopprijs van de standaardleverancier."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_qty
@@ -2495,12 +2475,6 @@ msgstr "Beeldscherm"
 #: model:ir.model.fields,help:product.field_product_template_categ_id
 msgid "Select category for the current product"
 msgstr "Selecteer een categorie voor het huidige product"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_selected_seller_id
-#: model:ir.model.fields,field_description:product.field_product_template_selected_seller_id
-msgid "Selected Seller"
-msgstr "Geselecteerde verkoper"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_sequence
@@ -2697,14 +2671,6 @@ msgid ""
 msgstr "Klik om uw favoriete liedjes af te spelen. Of hele albums.\nOf alles van een artiest. U kan zelfs genres doorzoeken en samenstellen.\nBlader door uw muziek: Album kunst ziet er geweldig uit op het groter scherm.\nOf om de dingen fris te houden, schudt u de iPod nano en het start automatisch een ander liedje uit uw muziekbibliotheek."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_selected_seller_id
-#: model:ir.model.fields,help:product.field_product_template_selected_seller_id
-msgid ""
-"Technical field that selects a seller based on priority (sequence) and an "
-"optional partner and/or a minimal quantity in the context"
-msgstr "Technisch veld dat een verkoper selecteert gebaseerd op prioriteit (reeks) en een optionele relatie en/of een minimale hoeveelheid in de context"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_name_template
 msgid "Template Name"
 msgstr "Sjabloonnaam"
@@ -2804,7 +2770,7 @@ msgid ""
 msgstr "De minimale bestelhoeveelheid bij deze fabrikant, uitgedrukt in de maateenheid van de fabrikant indien bekend, anders in de standaard maateenheid van het product."
 
 #. module: product
-#: code:addons/product/product.py:328
+#: code:addons/product/product.py:329
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2936,21 +2902,6 @@ msgstr "Dit veld bevat de afbeelding welke wordt gebruikt voor het product, bepe
 #: model:ir.model.fields,help:product.field_product_supplierinfo_qty
 msgid "This is a quantity which is converted into Default Unit of Measure."
 msgstr "Deze hoeveelheid zal worden geconverteerd naar de standaard maateenheid."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_qty
-#: model:ir.model.fields,help:product.field_product_template_seller_qty
-msgid "This is minimum quantity to purchase from Main Vendor."
-msgstr "De minimale bestelhoeveelheid bij de hoofdleverancier."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_seller_delay
-#: model:ir.model.fields,help:product.field_product_template_seller_delay
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the receipts for this product and for the default vendor. It is used by "
-"the scheduler to order requests based on reordering delays."
-msgstr "Dit is de gemiddelde vertraging in dagen tussen een aankooporderbevestiging en de goederen ontvangst voor dit product en voor de standaard fabrikant."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
@@ -3182,18 +3133,6 @@ msgid "Vendor Information"
 msgstr "Fabrikant informatie"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_delay
-#: model:ir.model.fields,field_description:product.field_product_template_seller_delay
-msgid "Vendor Lead Time"
-msgstr "Levertermijn van leverancier"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_price
-#: model:ir.model.fields,field_description:product.field_product_template_seller_price
-msgid "Vendor Price"
-msgstr "Fabrikant prijs"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
 msgstr "Fabrikant productcode"
@@ -3202,12 +3141,6 @@ msgstr "Fabrikant productcode"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
 msgstr "Fabrikant productnaam"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_qty
-#: model:ir.model.fields,field_description:product.field_product_template_seller_qty
-msgid "Vendor Quantity"
-msgstr "Fabrikant hoeveelheid"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
@@ -3279,6 +3212,13 @@ msgstr "Gewichten"
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "When one playlist isn’t enough."
 msgstr "Wanneer één afspeellijst niet genoeg is."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
+msgid ""
+"When this field is filled in, the vendor data will only apply to the "
+"variant."
+msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3

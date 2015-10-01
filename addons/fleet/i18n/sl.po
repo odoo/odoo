@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
+"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"PO-Revision-Date: 2015-09-30 09:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:374
+#: code:addons/fleet/fleet.py:373
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr "%s %s je dodan voznemu parku!"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:650
+#: code:addons/fleet/fleet.py:649
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr "%s pogodb, ki morajo biti prenovljene ali zaprte!"
@@ -489,7 +489,7 @@ msgid "Created on"
 msgstr "Ustvarjeno"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2864
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2863
 msgid "Current state of the vehicle"
 msgstr "Trenutno stanje vozila"
 
@@ -584,7 +584,7 @@ msgid "Driver of the vehicle"
 msgstr "Voznik vozila"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:391
+#: code:addons/fleet/fleet.py:390
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "Voznik: od '%s' to '%s'"
@@ -617,7 +617,7 @@ msgid "Emissions"
 msgstr "Emisije"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:29
+#: code:addons/fleet/fleet.py:31
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
 msgstr "Praznjenje vrednosti odometra ni dovoljeno."
@@ -838,7 +838,7 @@ msgstr "Hibrid"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2813
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2812
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
@@ -999,7 +999,7 @@ msgid "License Plate"
 msgstr "Registrska številka"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:398
+#: code:addons/fleet/fleet.py:397
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr "Registrska številka: od '%s' do '%s'"
@@ -1079,17 +1079,17 @@ msgid "Manual"
 msgstr "Ročno"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_medium
+msgid "Medium-sized image"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_medium
 msgid ""
 "Medium-sized logo of the brand. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr "Srednje velik logotip znamke. Samodejno spremeni velikost na slike 128px x 128 px in ohrani razmerja. Uporabite to polje v pogledu obrazca ali nekaterih pogledih tipa kanban."
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_medium
-msgid "Medium-sized photo"
-msgstr "Srednje velika slika"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_ids
@@ -1107,7 +1107,7 @@ msgid "Miles"
 msgstr "Milj"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2846
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2845
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
 msgid "Model"
@@ -1136,12 +1136,12 @@ msgid "Model of a vehicle"
 msgstr "Model vozila"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2846
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2845
 msgid "Model of the vehicle"
 msgstr "Model vozila"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:387
+#: code:addons/fleet/fleet.py:386
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "Model: od '%s' to '%s'"
@@ -1185,8 +1185,8 @@ msgid "No"
 msgstr "Ne"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:386 code:addons/fleet/fleet.py:390
-#: code:addons/fleet/fleet.py:394 code:addons/fleet/fleet.py:397
+#: code:addons/fleet/fleet.py:385 code:addons/fleet/fleet.py:389
+#: code:addons/fleet/fleet.py:393 code:addons/fleet/fleet.py:396
 #, python-format
 msgid "None"
 msgstr "Nobeno"
@@ -1445,7 +1445,7 @@ msgid "Refueling Details"
 msgstr "Podrobnosti o točenju goriva"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:721
+#: code:addons/fleet/fleet.py:720
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 #, python-format
@@ -1572,16 +1572,16 @@ msgstr "Nastavi pogodbo 'V tek'"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_small
-msgid "Smal-sized photo"
-msgstr "Manjša slika"
+msgid "Small-sized image"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_small
 msgid ""
-"Small-sized photo of the brand. It is automatically resized as a 64x64px "
+"Small-sized logo of the brand. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "Manjša slika znamke. Samodejno spremeni velikost na 64px x 64px in ohrani razmerje. Uporabite to polje kjerkoli potrebujete manjšo sliko."
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -1599,7 +1599,7 @@ msgid "Starter Replacement"
 msgstr "Zamenjava zaganjalnika"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2864
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2863
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_tree
 msgid "State"
 msgstr "Regija"
@@ -1610,7 +1610,7 @@ msgid "State name already exists"
 msgstr "Naziv stanja že obstaja"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:395
+#: code:addons/fleet/fleet.py:394
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "Stanje: od '%s' do '%s'"
@@ -1774,7 +1774,7 @@ msgstr "ID številka motorja/šasije"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2879
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2878
 msgid "Unit"
 msgstr "Enota"
 

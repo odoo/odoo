@@ -3,12 +3,14 @@
 # * report
 # 
 # Translators:
+# Esteban Echeverry <tebanep@nubark.com>, 2015
+# Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-11 04:17+0000\n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2015-09-30 09:27+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -144,7 +146,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:253
+#: code:addons/report/models/report.py:257
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Referencia de informe errónea"
@@ -201,12 +203,27 @@ msgstr "¿Formato de papel por defecto?"
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre mostrado"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
 msgid "Display a header line"
 msgstr "Mostrar una línea de cabecera"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit external footer"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit external header"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Edit internal header"
+msgstr ""
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -362,6 +379,18 @@ msgid "Portrait"
 msgstr "Horizontal"
 
 #. module: report
+#: model:ir.actions.report.xml,name:report.action_report_externalpreview
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Preview External Report"
+msgstr ""
+
+#. module: report
+#: model:ir.actions.report.xml,name:report.action_report_internalpreview
+#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+msgid "Preview Internal Report"
+msgstr ""
+
+#. module: report
 #. openerp-web
 #: code:addons/report/static/src/js/qwebactionmanager.js:76
 #: code:addons/report/static/src/js/qwebactionmanager.js:84
@@ -404,7 +433,17 @@ msgid "Tabloid 29 279.4 x 431.8 mm"
 msgstr "Tabloide 29 279,4 x 431,8 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:253
+#: model:ir.ui.view,arch_db:report.preview_externalreport
+msgid "This is a sample of an external report."
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.preview_internalreport
+msgid "This is a sample of an internal report."
+msgstr ""
+
+#. module: report
+#: code:addons/report/models/report.py:257
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Este informe no está cargado en la base de datos: %s."
@@ -430,7 +469,7 @@ msgid "Website:"
 msgstr "Sitio web:"
 
 #. module: report
-#: code:addons/report/models/report.py:409
+#: code:addons/report/models/report.py:413
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf falló (error code: %s). Mensaje: %s"

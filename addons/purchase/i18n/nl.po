@@ -3,14 +3,15 @@
 # * purchase
 # 
 # Translators:
+# Erwin van der Ploeg <erwin@bas-solutions.nl>, 2015
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-24 09:54+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"PO-Revision-Date: 2015-09-30 09:28+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -171,7 +172,7 @@ msgstr "# Inkopen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr "# Fabrikant rekeningen"
+msgstr "# Leveranciersfacturen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_count
@@ -277,6 +278,16 @@ msgid "Advance bidding process"
 msgstr "Uitgebreid biedingen proces"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_advance_purchase_requisition
+msgid "Advanced Calls for Tenders"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.config.settings,group_advance_purchase_requisition:0
+msgid "Advanced call for tender (choose products from different RFQ)"
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
 msgid "Allow suppliers to deliver directly to your customers"
 msgstr "Sta leveranciers toe om direct te leveren aan uw klanten"
@@ -368,7 +379,7 @@ msgid "Billed Qty"
 msgstr "In rekening gebrachte Hvh"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:617 code:addons/purchase/stock.py:57
+#: code:addons/purchase/purchase.py:604 code:addons/purchase/stock.py:57
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -395,7 +406,7 @@ msgid ""
 "Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.\n"
 "                    You can configure per product if you directly do a Request for Quotation\n"
 "                    to one vendor or if you want a Call for Tenders to compare offers from several vendors."
-msgstr "Aanbestedingen worden gebruikt wanneer u aanvragen wilt genereren voor offertes naar verschillende fabrikanten voor een gegeven set van producten.\nU kan per product configureren of u direct een offerteaanvraag\nnaar een fabrikant wilt sturen of dat u meerdere fabrikanten wilt vragen voor een offerte om ze te vergelijken."
+msgstr "Aanbestedingen worden gebruikt wanneer u aanvragen wilt genereren voor offertes naar verschillende fabrikanten voor een gegeven set van producten.\nU kan per product configureren of u direct een offerteaanvraag\nnaar een leverancier wilt sturen of dat u meerdere leveranciers wilt vragen voor een offerte om ze te vergelijken."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_ok
@@ -405,7 +416,7 @@ msgid "Can be Purchased"
 msgstr "Kan gekocht worden"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:633
+#: code:addons/purchase/purchase.py:620
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -430,7 +441,7 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:480
+#: code:addons/purchase/purchase.py:528
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Het is niet mogelijk een inkooporder te verwijderen in de '%s' status."
@@ -438,7 +449,7 @@ msgstr "Het is niet mogelijk een inkooporder te verwijderen in de '%s' status."
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Click here to record a vendor bill."
-msgstr "Klik hier om een fabrikant rekening aan te maken."
+msgstr "Klik hier om een leveranciersfactuur aan te maken."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -464,7 +475,7 @@ msgstr "Klik om een nieuw product te definiëren."
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Click to record a vendor bill related to this purchase."
-msgstr "Klik om een fabrikant rekening regel aan te maken gerelateerd aan deze inkoop."
+msgstr "Klik om een leveranciersfactuur aan te maken gerelateerd aan deze inkoop."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -719,6 +730,13 @@ msgid "In order to delete a purchase order, you must cancel it first."
 msgstr "Om een inkooporder te kunnen verwijderen, dient u deze eerst te annuleren."
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_advance_purchase_requisition
+msgid ""
+"In the process of a public tendering, you can compare the tender lines and "
+"choose for each requested product which quantity you will buy from each bid."
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 msgid "Incoming  Products"
 msgstr "Inkomende producten"
@@ -831,12 +849,12 @@ msgstr "Locatie & Magazijn"
 #. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
 msgid "Manage Vendor Price"
-msgstr "Beheer fabrikant prijs"
+msgstr "Beheer leveranciersprijs"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_manage_vendor_price:0
 msgid "Manage vendor price on the product form"
-msgstr "Beheer fabrikant prijs op het productformulier"
+msgstr "Beheer leveranciersprijs op het productformulier"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -854,7 +872,7 @@ msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
-msgstr "Foutmarge op een fabrikant aflevertijd. Wanneer het systeem inkooporders aanmaakt voor het verwerven van producten, dan zullen de inkooporders zoveel dagen eerder worden aangemaakt, rekening houdende met onverwachte vertragingen."
+msgstr "Foutmarge op een leverancier aflevertijd. Wanneer het systeem inkooporders aanmaakt voor het verwerven van producten, dan zullen de inkooporders zoveel dagen eerder worden aangemaakt, rekening houdende met onverwachte vertragingen."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_ids
@@ -894,11 +912,11 @@ msgid "No variants on products"
 msgstr "Geen productvarianten"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:777
+#: code:addons/purchase/purchase.py:771
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
-msgstr "Geen leverancier geassocieerd aan product %s. Gelieve één in te stellen voor deze verwerving."
+msgstr "Geen leverancier geassocieerd aan product %s. U dient er één in te stellen voor deze verwerving."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1141,7 +1159,7 @@ msgid ""
 "Purchase Analysis allows you to easily check and analyse your company "
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
-msgstr "Inkoop analyse laat u eenvoudig de inkoop historie en prestaties van uw bedrijf controleren en analyseren. Vanuit dit menu kunt u de onderhandeling prestaties volgen, de levering prestaties van uw fabrikanten volgen, etc."
+msgstr "Inkoopanalyse laat u eenvoudig de inkoophistorie en prestaties van uw bedrijf controleren en analyseren. Vanuit dit menu kunt u de onderhandeling prestaties volgen, de levering prestaties van uw leveranciers volgen, etc."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
@@ -1205,7 +1223,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Inkooporder statistieken"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:481
+#: code:addons/purchase/purchase.py:529
 #, python-format
 msgid "Purchase order line deleted."
 msgstr "Inkooporderregel verwijderd."
@@ -1342,7 +1360,7 @@ msgid ""
 "Reference of the sales order or bid sent by the vendor. It's used to do the "
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
-msgstr "Referentie van de verkooporder of bieding van uw fabrikant. Het is bedoelde om de koppeling te doen tussen ontvangen producten omdat deze referentie meestal geschreven is op de leveringsorder verzonden door uw fabrikant."
+msgstr "Referentie van de verkooporder of bieding van uw leverancier. Het is bedoelde om de koppeling te doen tussen ontvangen producten omdat deze referentie meestal geschreven is op de pakbon verzonden door uw leverancier."
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
@@ -1422,6 +1440,11 @@ msgid "Shipment"
 msgstr "Levering"
 
 #. module: purchase
+#: selection:purchase.config.settings,group_advance_purchase_requisition:0
+msgid "Simple call for tender (only choose from one RFQ)"
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/puchased in different unit of measures (advanced)"
@@ -1433,6 +1456,7 @@ msgid "Source Document"
 msgstr "Bron document"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_state
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_state
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1492,7 +1516,7 @@ msgid ""
 "The product form contains detailed information to improve the\n"
 "            purchase process: prices, procurement logistics, accounting data,\n"
 "            available vendors, etc."
-msgstr "Het productformulier bevat gedetailleerde informatie om het \ninkoopproces te verbeteren: prijzen, verwervingslogistiek, rekeninggegevens, beschikbare fabrikanten, enz."
+msgstr "Het productformulier bevat gedetailleerde informatie om het \ninkoopproces te verbeteren: prijzen, verwervingslogistiek, rekeninggegevens, beschikbare leveranciers, enz."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1508,7 +1532,7 @@ msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
-msgstr "De offerteaanvraag is de eerste stap in de inkoop flow. Eenmaal\ngeconverteerd in een inkooporder bent u in de mogelijkheid om het ticket\nvan de producten en de leveranciersrekening te beheren."
+msgstr "De offerteaanvraag is de eerste stap in de inkoop flow. Eenmaal\ngeconverteerd in een inkooporder kunt u de ontvangen producten beheren en de leveranciersfactuur."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1587,7 +1611,7 @@ msgstr "Onmogelijk om inkooporder %s te annuleren omdat sommige ontvangsten al v
 msgid ""
 "Unable to cancel this purchase order.i You must first cancel related vendor "
 "bills."
-msgstr "Onmogelijk om dit inkooporder te annuleren. U moet eerst de gerelateerde fabrikant rekeningen annuleren."
+msgstr "Onmogelijk om deze inkooporder te annuleren. U moet eerst de gerelateerde leveranciersfactuur annuleren."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1642,7 +1666,7 @@ msgid ""
 "            vendor. When registering a new bill, set the purchase order\n"
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
-msgstr "Gebruik deze menu om de facturen te beheren die worden ontvangen van uw\nfabrikant. Wanneer u een nieuwe rekening geregistreerd wordt zet u de inkooporder en Odoo zal automatisch de rekening invullen afhankelijk van de bestelde\nof ontvangen hoeveelheden."
+msgstr "Gebruik deze menu om de facturen te beheren die worden ontvangen van uw\nleverancier. Wanneer u een nieuwe factuur ontvangt, bevestig de inkooporder en Odoo zal de factuur automatisch vullen met de bestelde of geleverde hoeveelheden."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1651,7 +1675,7 @@ msgid ""
 "                references, vendor, products, etc. For each purchase order,\n"
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
-msgstr "Gebruik dit menu om te zoeken binnen inkooporders op\nreferenties, fabrikant, producten, enz. Voor elke inkooporder\nkan u de gerelateerde discussie met de fabrikant traceren, de ontvangen\nproducten beheren en de fabrikant rekeningen beheren."
+msgstr "Gebruik dit menu om te zoeken binnen inkooporders op\nreferenties, leverancier, producten, enz. Voor elke inkooporder\nkan u de gerelateerde discussie met de leverancier traceren, de ontvangen producten beheren en de leveranciersfacturen beheren."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -1672,7 +1696,7 @@ msgstr "BTW:"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor"
-msgstr "Fabrikant"
+msgstr "Leverancier"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -1681,22 +1705,22 @@ msgstr "Fabrikant"
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 msgid "Vendor Bills"
-msgstr "Fabrikantrekeningen"
+msgstr "Leveranciersfacturen"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 msgid "Vendor Bills."
-msgstr "Fabrikantrekeningen."
+msgstr "Leveranciersfacturen."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_manage_vendor_price
 msgid "Vendor Price"
-msgstr "Fabrikant prijs"
+msgstr "Leveranciersprijs"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_ref
 msgid "Vendor Reference"
-msgstr "Fabrikant referentie"
+msgstr "Leveranciers referentie"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -1705,7 +1729,7 @@ msgid ""
 "                    orders or receipts. This allows you to control bills\n"
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
-msgstr "Fabrikant rekening kunnen op voorhand gegenereerd worden gebaseerd op inkooporders\nof tickets. Dit staat u toe de rekeningen te beheren\ndie u ontvangt van fabrikanten aan de hand van het concept\ndocument in Odoo."
+msgstr "Leveranciersfacturen kunnen op voorhand gegenereerd worden gebaseerd op inkooporders\nof ontvangsten. Dit staat u toe de facturen te beheren\ndie u ontvangt van leveranciers aan de hand van het concept\ndocument in Odoo."
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1745,7 +1769,7 @@ msgstr "Werken met productvarianten biedt u de mogelijkheid om varianten voor ee
 msgid ""
 "You can control the invoice from your vendor according to\n"
 "            what you purchased (services) or received (products)."
-msgstr "U kan de factuur beheren vanuit uw fabrikant overeenkomstig met\nwat u heeft ingekocht (diensten) of ontvangen (producten)."
+msgstr "U kan de factuur beheren vanuit uw leverancier overeenkomstig met\nwat u heeft ingekocht (diensten) of ontvangen (producten)."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
