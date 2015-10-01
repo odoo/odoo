@@ -842,17 +842,8 @@ class Message(models.Model):
         # update message
         self.write({'channel_ids': [(6, 0, channels.ids)], 'needaction_partner_ids': [(6, 0, partners.ids)]})
 
-        # notify partners
-        # TDE TODO: model-dependant ? (like customer -> always email ?)
-        email_channels = channels.filtered(lambda channel: channel.email_send)
-        self.env['res.partner'].sudo().search([
-            '|',
-            ('id', 'in', partners.ids),
-            ('channel_ids', 'in', email_channels.ids),
-            ('email', '!=', self_sudo.author_id and self_sudo.author_id.email or self.email_from),
-            ('notify_email', '!=', 'none')]
-        )._notify(self, force_send=force_send, user_signature=user_signature)
         # notify partners and channels
+        partners._notify(self, force_send=force_send, user_signature=user_signature)
         channels._notify(self)
 
         # Discard cache, because child / parent allow reading and therefore
