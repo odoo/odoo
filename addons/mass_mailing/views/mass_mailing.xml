@@ -337,6 +337,7 @@
 
                                 <field name="mailing_domain" widget="char_domain"
                                     placeholder="Select recipients"
+                                    context="{'search_default_not_opt_out': 1}"
                                     options="{'model_field': 'mailing_model'}"/>
 
                                 <div attrs="{'invisible': [('mailing_model', '&lt;&gt;', 'mail.mass_mailing.contact')]}">
