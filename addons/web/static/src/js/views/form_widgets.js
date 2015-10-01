@@ -1633,58 +1633,47 @@ var FieldToggleBoolean = common.AbstractField.extend({
     This widget is intended to be used in config settings.
     When checked, an upgrade popup is showed to the user.
 */
-var UpgradeBoolean = FieldBoolean.extend({
-    template: "FieldUpgradeBoolean",
+
+var AbstractFieldUpgrade = {
     events: {
-        'click input': 'click_on_input',
+        'click input': 'on_click_input',
     },
-
-    init: function() {
+    
+    start: function() {
         this._super.apply(this, arguments);
+        
+        this.get_enterprise_label().after($("<span>", {
+            text: "Enterprise",
+            'class': "label label-primary oe_inline"
+        }));
     },
-
-    click_on_input: function(event) {
-        var self = this;
-
-        if(this.$checkbox.prop("checked")) {
-
-            var message = _t('You need to upgrade to Odoo Enterprise to activate this feature.');
-
-            var buttons = [
-                {
-                    text: _t("Upgrade now"),
-                    classes: 'btn-primary',
-                    close: true,
-                    click: this.confirm_upgrade,
-                },
-                {
-                    text: _t("Cancel"),
-                    close: true,
-                },
-            ];
-
-            var dialog = new Dialog(this, {
-                size: 'medium',
-                buttons: buttons,
-                $content: $('<div>', {
-                    text: message,
-                }),
-                title: _t("Odoo Enterprise"),
-            }).open();
-
-            dialog.on('closed', this, function() {
-                this.$checkbox.prop("checked", false);
-            });
-        }
+    
+    open_dialog: function() {
+        var message = _t('You need to upgrade to Odoo Enterprise to activate this feature.');
+        var buttons = [
+            {
+                text: _t("Upgrade now"),
+                classes: 'btn-primary',
+                close: true,
+                click: this.confirm_upgrade,
+            },
+            {
+                text: _t("Cancel"),
+                close: true,
+            },
+        ];
+        
+        return new Dialog(this, {
+            size: 'medium',
+            buttons: buttons,
+            $content: $('<div>', {
+                text: message,
+            }),
+            title: _t("Odoo Enterprise"),
+        }).open();
     },
-
-    render_value: function() {
-        this._super();
-        this.$el.append(" <span class='label label-primary oe_inline'>Enterprise</span>");
-    },
-
+  
     confirm_upgrade: function() {
-        var self = this;
         new Model("res.users").call("read", [session.uid, ["partner_id"]]).done(function(data) {
             if(data.partner_id) {
                 new Model("res.partner").call("read", [data.partner_id[0], ["name", "lang", "country_id", "email", "phone"]]).done(function(data) {
@@ -1702,7 +1691,42 @@ var UpgradeBoolean = FieldBoolean.extend({
             }
         });
     },
+    
+    get_enterprise_label: function() {},
+    on_click_input: function() {},
+};
+
+var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
+    template: "FieldUpgradeBoolean",
+    
+    get_enterprise_label: function() {
+        return this.$label;
+    },
+
+    on_click_input: function(event) {
+        if(this.$checkbox.prop("checked")) {
+            this.open_dialog().on('closed', this, function() {
+                this.$checkbox.prop("checked", false);
+            });
+        }
+    },
 });
+
+var UpgradeRadio = FieldRadio.extend(AbstractFieldUpgrade, {
+  
+    get_enterprise_label: function() {
+        return this.$('label').last();
+    },
+    
+    on_click_input: function(event) {
+        if($(event.target).val() == 1) {
+            this.open_dialog().on('closed', this, function() {
+                this.$('input').first().prop("checked", true);
+            });
+        }
+    },
+});
+
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
@@ -1740,7 +1764,8 @@ core.form_widget_registry
     .add('statinfo', StatInfo)
     .add('timezone_mismatch', TimezoneMismatch)
     .add('label_selection', LabelSelection)
-    .add('upgrade_boolean', UpgradeBoolean);
+    .add('upgrade_boolean', UpgradeBoolean)
+    .add('upgrade_radio', UpgradeRadio);
 
 
 /**
