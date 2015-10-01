@@ -1,7 +1,8 @@
 odoo.define('im_livechat.chat_backend', function (require) {
 "use strict";
 
-var mail_chat_backend = require('mail.chat_backend');
+// var mail_chat_backend = require('mail.chat_backend');
+return;
 
 
 /**

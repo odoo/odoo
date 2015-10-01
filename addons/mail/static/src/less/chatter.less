@@ -1,14 +1,48 @@
-.o_mail_followers {
-    height: 0px; // to be on the same line as mail composer buttons
-    float: right;
-    @media (min-width: @screen-sm-min) {
-        &.o_form_field {
-            margin: 0; // override o_form_field's margin-bottom of 5px
+.o_chatter {
+    width: 100%;
+
+    .o_chat_composer {
+        margin-top: 10px;
+
+        .o_chatter_composer_info {
+            display: inline-block;
+            margin-bottom: 5px;
+            color: @odoo-main-color-muted;
+            font-style: italic;
+        }
+
+        .o_chatter_composer_subtypes {
+            > label {
+                display: inline-block; // Required for old design compatibility
+                width: 100px;
+            }
+
+            .o_chatter_composer_subtype_select {
+                display: inline-block;
+                min-width: 150px;
+                width: auto;
+            }
+        }
+
+        .o_composer {
+            margin-top: 10px;
+
+            .o_composer_input {
+                width: 100%;
+                margin-bottom: 5px;
+            }
         }
     }
+
+    .o_mail_thread {
+        margin-top: 10px;
+    }
+}
+
+.o_followers {
+    float: right;
     @media (max-width: @screen-xs-max) {
-        height: auto; // to be displayed above the mail composer buttons
-        float: left;
+        display: none; // Hide the followers in mobile
     }
 
     .o_followers_actions {
@@ -16,7 +50,7 @@
         float: right;
 
         .o_followers_follow_button {
-            width: 110px;
+            width: 120px;
 
             .o_follow, .o_followers_unfollow, .o_followers_following {
                 display: none;
@@ -49,7 +83,7 @@
         float: right;
         margin-left: 5px;
         > button {
-            width: 120px;
+            width: 140px;
         }
 
         .o_followers_count {
@@ -80,7 +114,7 @@
                 }
                 .o_edit_subtype {
                     .o-position-absolute(6px, 18px);
-                    cursor: pointer;   
+                    cursor: pointer;
                 }
             }
 

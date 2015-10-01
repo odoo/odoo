@@ -226,6 +226,10 @@ class Registry(Mapping):
                     r, c)
         return r, c
 
+    def in_test_mode(self):
+        """ Test whether the registry is in 'test' mode. """
+        return self.test_cr is not None
+
     def enter_test_mode(self):
         """ Enter the 'test' mode, where one cursor serves several requests. """
         assert self.test_cr is None

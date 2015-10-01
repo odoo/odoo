@@ -1,9 +1,9 @@
 odoo.define('mail_tip.mail_tip', function (require) {
 "use strict";
 
-var mail = require('mail.chatter');
+var Chatter = require('mail.Chatter');
 
-mail.ChatterMailThread.include({
+Chatter.include({
     render_value: function() {
         var self = this;
         this._super.apply(this, arguments).done(function() {
