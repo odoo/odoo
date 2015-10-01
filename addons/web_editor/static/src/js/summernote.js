@@ -997,6 +997,7 @@ $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDi
   var $editable = layoutInfo.editable();
   var dimension = sDim.split('x');
   var r = range.create();
+  if (!r) return;
   r = r.deleteContents();
 
   var isBodyContainer = dom.isBodyContainer;
@@ -1530,6 +1531,7 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
 
     var parent;
     var r = range.create();
+    if (!r) return;
     var node = r.sc;
     while (node && node !== $editable[0]) {
 
@@ -1630,6 +1632,7 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
     var $editable = layoutInfo.editable();
     $editable.data('NoteHistory').recordUndo($editable);
     var r = range.create();
+    if (!r) return;
 
     var flag = false;
     function indentUL (UL, start, end) {
@@ -1842,6 +1845,7 @@ $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, va
     document.execCommand('removeFormat');
     document.execCommand('removeFormat');
     var r = range.create();
+    if (!r) return;
     r = dom.merge(node, r.sc, r.so, r.ec, r.eo, null, true);
     range.create(r.sc, r.so, r.ec, r.eo).select();
     event.preventDefault();
@@ -2132,6 +2136,7 @@ $.summernote.pluginEvents.foreColor = function (event, editor, layoutInfo, foreC
 $.summernote.pluginEvents.backColor = function (event, editor, layoutInfo, backColor) {
   var $editable = layoutInfo.editable();
   var r = range.create();
+  if (!r) return;
   if (r.isCollapsed() && r.isOnCell()) {
     var cell = dom.ancestor(r.sc, dom.isCell);
     cell.className = cell.className.replace(new RegExp('(^|\\s+)bg-[^\\s]+(\\s+|$)', 'gi'), '');
