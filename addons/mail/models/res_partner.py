@@ -134,12 +134,11 @@ class Partner(models.Model):
             return True
 
         # existing custom notification email
+        base_template = None
         if message.model:
             base_template = self.env.ref('mail.mail_template_data_notification_email_%s' % message.model.replace('.', '_'), raise_if_not_found=False)
-            if base_template:
-                # do something custom
-                pass
-        base_template = self.env.ref('mail.mail_template_data_notification_email_default')
+        if not base_template:
+            base_template = self.env.ref('mail.mail_template_data_notification_email_default')
 
         base_template_ctx = self._notify_prepare_template_context(message)
         if not user_signature:
