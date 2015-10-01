@@ -100,6 +100,30 @@ class AccountConfigSettings(models.TransientModel):
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)
+    module_account_reports = fields.Boolean("Use dynamic reports for the accounting")
+    module_account_plaid = fields.Boolean(string="Import of Bank Statements from Plaid.",
+                                          help='Get your bank statements from you bank and import them through plaid.com.\n'
+                                          '-that installs the module account_plaid.')
+    module_account_sepa = fields.Boolean(string='Use sepa payment',
+        help='If you check this box, you will be able to register your payment using SEPA.\n'
+            '-This installs the module account_sepa.')
+
+    module_account_yodlee = fields.Boolean("Use Yodlee as an account aggregation service",
+        help='Get your bank statements from you bank and import them through yodlee.com.\n'
+                                          '-that installs the module account_yodlee.')
+    module_account_bank_statement_import_qif = fields.Boolean("Bank statement import in .qif format",
+        help='Get your bank statements from your bank and import them in Odoo in the .QIF format.\n'
+            'This installs the module account_bank_statement_import_qif.')
+    module_account_bank_statement_import_ofx = fields.Boolean("Bank statement import in .ofx format",
+        help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
+            'This installs the module account_bank_statement_import_ofx.')
+    module_l10n_us_check_printing = fields.Boolean("Allow check printing and deposits")
+    module_account_reports_followup = fields.Boolean("Enable payment followup management",
+        help='This allows to automate letters for unpaid invoices, with multi-level recalls.\n'
+             '-This installs the module account_reports_followup.')
+    module_account_batch_deposit = fields.Boolean(string='Use batch deposit',
+        help='This allows you to group received checks before you deposit them to the bank.\n'
+             '-This installs the module account_batch_deposit.')
 
     @api.model
     def _default_has_default_company(self):

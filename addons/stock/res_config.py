@@ -157,6 +157,26 @@ class stock_config_settings(osv.osv_memory):
             (1, "Adapt lead times using the suppliers' open days calendars (advanced)")
             ], "Minimum Stock Rules",
             help='This allows you to handle minimum stock rules differently by the possibility to take into account the purchase and delivery calendars \n-This installs the module stock_calendar.'),
+        'module_stock_barcode': fields.selection([
+            (0, 'Disable barcode support'),
+            (1, 'Enable barcode support')
+            ], "Barcode Support"),
+        'module_delivery_fedex': fields.selection([
+                (0, "Do not activate the Fedex integration"),
+                (1, "Activate the Fedex integration"),
+                ], "Fedex Integration"),
+        'module_delivery_ups': fields.selection([
+                (0, "Do not activate the UPS integration"),
+                (1, "Activate the UPS integration"),
+                ], "UPS Integration"),
+        'module_delivery_usps': fields.selection([
+                (0, "Do not activate the USPS integration"),
+                (1, "Activate the USPS integration"),
+                ], "USPS Integration"),
+        'module_inter_company_rules': fields.selection([
+            (0, 'Disable multi-company flows'),
+            (1, 'Enable multi-company flows')
+            ], "Multi-company"),
     }
 
     def onchange_adv_location(self, cr, uid, ids, group_stock_adv_location, context=None):

@@ -54,6 +54,14 @@ class project_configuration(osv.osv_memory):
             (1, "Automatically generate an email alias at the project creation")
             ], "Project Alias",
             help="Odoo will generate an email alias at the project creation from project name."),
+        'module_project_timesheet_synchro': fields.selection([
+            (0, "Do not install the Chrome app for timesheets"),
+            (1, "Install the Chrome app for timesheets"),
+            ], "Timesheets Apps"),
+        'module_project_forecast': fields.selection([
+            (0, "Disable forecasts"),
+            (1, "Enable forecasts"),
+            ], "Forecasts"),
     }
 
     def onchange_time_estimation_project_timesheet(self, cr, uid, ids, group_time_work_estimation_tasks):
