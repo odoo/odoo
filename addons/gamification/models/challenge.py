@@ -90,7 +90,7 @@ class gamification_challenge(osv.Model):
     
     def _get_categories(self, cr, uid, context=None):
         return [
-            ('hr', 'Human Ressources / Engagement'),
+            ('hr', 'Human Resources / Engagement'),
             ('other', 'Settings / Gamification Tools'),
         ]
 

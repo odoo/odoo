@@ -57,7 +57,7 @@ class MailThread(models.AbstractModel):
         Options:
             - _mail_flat_thread: if set to True, all messages without parent_id
                 are automatically attached to the first message posted on the
-                ressource. If set to False, the display of Chatter is done using
+                resource. If set to False, the display of Chatter is done using
                 threads, and no parent_id is automatically set.
     '''
     _name = 'mail.thread'

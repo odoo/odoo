@@ -241,7 +241,7 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
     return r
 
 def manifest_list(extension, mods=None, db=None, debug=None):
-    """ list ressources to load specifying either:
+    """ list resources to load specifying either:
     mods: a comma separated string listing modules
     db: a database name (return all installed modules in that database)
     """

@@ -22,10 +22,10 @@ class Rating(models.Model):
     def new_access_token(self):
         return uuid.uuid4().hex
 
-    res_name = fields.Char(string='Resource Name', compute='_compute_res_name', store=True, help="The name of the rated ressource.")
+    res_name = fields.Char(string='Resource Name', compute='_compute_res_name', store=True, help="The name of the rated resource.")
     res_model = fields.Char(string='Document Model', required=True, help="Model name of the rated object", index=True)
     res_id = fields.Integer(string='Document ID', required=True, help="Identifier of the rated object", index=True)
-    rated_partner_id = fields.Many2one('res.partner', string="Rated Partner", help="Owner of the rated ressource")
+    rated_partner_id = fields.Many2one('res.partner', string="Rated Partner", help="Owner of the rated resource")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
     rating = fields.Float(string="Rating", group_operator="avg", default=-1, help="Rating value")
     feedback = fields.Text('Feedback reason', help="Reason of the rating")
