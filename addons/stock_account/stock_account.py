@@ -39,9 +39,8 @@ class account_invoice_line(osv.osv):
             price = price_unit * i_line.quantity
         return round(price, inv.currency_id.decimal_places)
 
-    @api.v8
     def get_invoice_line_account(self, type, product, fpos, company):
-        if self.company_id.anglo_saxon_accounting and type in ('in_invoice', 'in_refund'):
+        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund'):
             accounts = product.product_tmpl_id.get_product_accounts(fpos)
             if type == 'in_invoice':
                 return accounts['stock_input']
@@ -242,7 +241,7 @@ class stock_quant(osv.osv):
         return quant
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False, context=None):
-        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id,  dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
+        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, quants, move, context=context)
         return res
@@ -421,7 +420,7 @@ class AccountChartTemplate(models.Model):
     @api.multi
     def generate_properties(self, acc_template_ref, company, property_list=None):
         super(AccountChartTemplate, self).generate_properties(acc_template_ref=acc_template_ref, company=company)
-        PropertyObj = self.env['ir.property'] # Property Stock Journal
+        PropertyObj = self.env['ir.property']  # Property Stock Journal
         value = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'STJ'), ('type', '=', 'general')], limit=1)
         if value:
             field = self.env['ir.model.fields'].search([('name', '=', 'property_stock_journal'), ('model', '=', 'product.category'), ('relation', '=', 'account.journal')], limit=1)
@@ -439,7 +438,7 @@ class AccountChartTemplate(models.Model):
                 #create the property
                 PropertyObj.create(vals)
 
-        todo_list = [ # Property Stock Accounts
+        todo_list = [  # Property Stock Accounts
             'property_stock_account_input_categ_id',
             'property_stock_account_output_categ_id',
             'property_stock_valuation_account_id',
@@ -454,7 +453,7 @@ class AccountChartTemplate(models.Model):
                     'company_id': company.id,
                     'fields_id': field.id,
                     'value': value,
-                    'res_id': 'product.category,'+str(self.env['ir.model.data'].xmlid_to_res_id('product.product_category_all')),
+                    'res_id': 'product.category,' + str(self.env['ir.model.data'].xmlid_to_res_id('product.product_category_all')),
                 }
                 properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id)])
                 if properties:
