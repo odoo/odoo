@@ -583,9 +583,10 @@ class MailThread(models.AbstractModel):
         # At this point, all access rights should be ok. We sudo everything to
         # access rights checks and speedup the computation.
         recipients_sudo = recipients.sudo()
-        # message_sudo = message.sudo()
-
-        access_link = self._notification_link_helper('view', message_id=message.id)
+        if self._context.get('auto_delete', False):
+            access_link = self._notification_link_helper('view')
+        else:
+            access_link = self._notification_link_helper('view', message_id=message.id)
 
         if message.model:
             model_name = self.env['ir.model'].sudo().search([('model', '=', self.env[message.model]._name)]).name_get()[0][1]

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from openerp import _, api, fields, models
-from openerp import tools
 
 
 class Invite(models.TransientModel):
@@ -49,21 +48,16 @@ class Invite(models.TransientModel):
             model_name = model_ids.name_get()[0][1]
             # send an email if option checked and if a message exists (do not send void emails)
             if wizard.send_mail and wizard.message and not wizard.message == '<br>':  # when deleting the message, cleditor keeps a <br>
-                # TDE FIXME: use a template + _notification methods
-                # add signature
-                signature = self.env.user.signature
-                wizard.message = tools.append_content_to_html(wizard.message, signature, plaintext=False, container_tag='div')
-
-                # send mail to new followers
-                self.env['mail.mail'].create({
-                    'model': wizard.res_model,
-                    'res_id': wizard.res_id,
+                message = self.env['mail.message'].create({
+                    'subject': _('Invitation to follow %s: %s') % (model_name, document.name_get()[0][1]),
+                    'body': wizard.message,
                     'record_name': document.name_get()[0][1],
                     'email_from': email_from,
                     'reply_to': email_from,
-                    'subject': _('Invitation to follow %s: %s') % (model_name, document.name_get()[0][1]),
-                    'body_html': '%s' % wizard.message,
-                    'auto_delete': True,
-                    'message_id': self.env['mail.message']._get_message_id({'no_auto_thread': True}),
-                    'recipient_ids': [(4, id) for id in new_partners.ids]}).send()
+                    'model': wizard.res_model,
+                    'res_id': wizard.res_id,
+                    'no_auto_thread': True,
+                })
+                new_partners.with_context(auto_delete=True)._notify(message, force_send=True, user_signature=True)
+                message.unlink()
         return {'type': 'ir.actions.act_window_close'}
