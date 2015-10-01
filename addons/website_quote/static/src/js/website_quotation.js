@@ -79,6 +79,9 @@ if(!$('.o_website_quote').length) {
                 self.$('#signer').toggleClass('has-error', !signer_name);
                 self.$('#drawsign').toggleClass('panel-danger', is_empty).toggleClass('panel-default', !is_empty);
                 if (is_empty || ! signer_name){
+                    setTimeout(function () {
+                        self.$('button[type="submit"], a.a-submit').removeAttr('data-loading-text').button('reset');
+                    })
                     return false;
                 }
                 ajax.jsonRpc("/quote/"+action[1], 'call', {
