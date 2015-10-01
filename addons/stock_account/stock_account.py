@@ -75,7 +75,8 @@ class account_invoice(osv.osv):
             # debit account dacc will be the output account
             dacc = accounts['stock_output'].id
             # credit account cacc will be the expense account
-            cacc = accounts['expense'].id
+            fpos = i_line.invoice_id.fiscal_position_id
+            cacc = fpos.map_account(accounts['expense']).id
             if dacc and cacc:
                 price_unit = i_line._get_price_unit()
                 return [
