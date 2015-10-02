@@ -337,12 +337,14 @@ class ir_ui_menu(osv.osv):
                 if menu.action.res_model in self.pool:
                     obj = self.pool[menu.action.res_model]
                     if obj._needaction:
+                        needaction_context = dict(context)
                         if menu.action.type == 'ir.actions.act_window':
                             dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
+                            needaction_context.update(eval(menu.action.context or '{}'))
                         else:
                             dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
                         res[menu.id]['needaction_enabled'] = obj._needaction
-                        res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, dom, context=context)
+                        res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, dom, context=needaction_context)
         return res
 
     def get_user_roots(self, cr, uid, context=None):
