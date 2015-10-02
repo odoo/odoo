@@ -44,10 +44,6 @@ class sale_configuration(osv.TransientModel):
             (0, 'Salespeople do not need to view margins when quoting'),
             (1, 'Display margins on quotations and sales orders')
             ], "Margins"),
-        'module_website_sale_digital': fields.selection([
-            (0, 'No digital products'),
-            (1, 'Allows to sell downloadable content from the portal')
-            ], "Digital Products"),
         'module_website_quote': fields.selection([
             (0, 'Print quotes or send by email'),
             (1, 'Send online quotations based on templates (advanced)')
@@ -72,9 +68,9 @@ class sale_configuration(osv.TransientModel):
             (0, "Allow to edit sales order from the 'Sales Order' menu (not from the Quotation menu)"),
             (1, "Never allow to modify a confirmed sale order")
             ], "Sale Order Modification"),
-        'module_sale_contract': fields.boolean("Subscriptions and recurring revenue"),
-        'module_website_sale_digital': fields.boolean("Sell digital products"),
-        'module_website_portal': fields.boolean("Customer portal"),
+        'module_sale_contract': fields.boolean("Enable subscriptions and recurring revenue management"),
+        'module_website_sale_digital': fields.boolean("Sell digital products - provide downloadable content on your customer portal"),
+        'module_website_portal': fields.boolean("Enable customer portal"),
     }
 
     _defaults = {

@@ -12,10 +12,16 @@
                     </header>
                     <group string="Point of Sale">
                         <field name="module_pos_restaurant" widget="radio"/>
-                        <field name="module_pos_loyalty" widget="upgrade_boolean"/>
                         <field name="module_pos_discount" widget="radio"/>
                         <field name="module_pos_mercury" widget="radio"/>
                         <field name="module_pos_reprint" widget="radio"/>
+                        <label for="module_pos_loyalty"/>
+                        <div>
+                              <div>
+                                  <field name="module_pos_loyalty" widget="upgrade_boolean"/>
+                                  <label for="module_pos_loyalty" string="Manage loyalty program with points and rewards for customers"/>
+                              </div>
+                        </div>
                     </group>
                 </form>
             </field>

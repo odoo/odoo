@@ -25,13 +25,29 @@
                         <field name="module_product_expiry" widget="radio" attrs="{'invisible': [('group_stock_production_lot','=', 0)]}"/>
                         <field name="group_stock_tracking_lot" widget="radio"/>
                         <field name="group_stock_tracking_owner" widget="radio"/>
-                    </group>
-                    <group>
-                        <field name="module_stock_barcode" widget="upgrade_boolean"/>
-                        <field name="module_delivery_dhl" widget="upgrade_boolean"/>
-                        <field name="module_delivery_fedex" widget="upgrade_boolean"/>
-                        <field name="module_delivery_ups"  widget="upgrade_boolean"/>
-                        <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                        <label for="id" string="Extra features"/>
+                        <div>
+                            <div>
+                                <field name="module_stock_barcode" widget="upgrade_boolean"/>
+                                <label for="module_stock_barcode"/>
+                            </div>
+                            <div>
+                                <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                                <label for="module_delivery_dhl"/>
+                            </div>
+                            <div>
+                                <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                                <label for="module_delivery_fedex"/>
+                            </div>
+                            <div>
+                                <field name="module_delivery_ups"  widget="upgrade_boolean"/>
+                                <label for="module_delivery_ups"/>
+                            </div>
+                            <div>
+                                <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                                <label for="module_delivery_usps"/>
+                            </div>
+                        </div>
                     </group>
                     <group string="Location &amp; Warehouse">
                         <field name="module_procurement_jit" widget="radio"/>
