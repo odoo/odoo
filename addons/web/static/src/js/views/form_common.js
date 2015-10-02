@@ -668,6 +668,8 @@ var AbstractField = FormWidget.extend(FieldInterface, {
             this.trigger('changed_value');
             this._check_css_flags();
         });
+
+        this.$translate = $(); // Enterprise compatibility
     },
     renderElement: function() {
         var self = this;
