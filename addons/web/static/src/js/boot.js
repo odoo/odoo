@@ -192,7 +192,7 @@
                 if (odoo.debug && !_.isEmpty(debug_jobs)) log.push('\nDebug:                  ', debug_jobs);
 
                 if (odoo.debug || !_.isEmpty(failed) || !_.isEmpty(unloaded)) {
-                    console[_.isEmpty(unloaded) ? 'info' : 'error'].apply(console, log);
+                    console[_.isEmpty(failed) || _.isEmpty(unloaded) ? 'info' : 'error'].apply(console, log);
                 }
             }
         },
