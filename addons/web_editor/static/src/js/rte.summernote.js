@@ -518,28 +518,31 @@ function summernote_mousedown (event) {
             summernote_ie_fix(event, function (node) { return node.dataset && node.dataset.oeModel; });
         } else if ($editable.length) {
             if (summernote_ie_fix(event, function (node) { return node.tagName === "A"; })) {
-                r = range.create();
+                var r = range.create();
                 r.select();
             }
         }
     }
 
-    // remember_selection when click on non editable area
+    // restore range if range lost after clicking on non-editable area
     var r = range.create();
-    if ($(r ? dom.node(r.sc) : event.srcElement || event.target).closest('#web_editor-top-navbar, #oe_main_menu_navbar, .note-popover, .note-toolbar, .modal').length) {
-        if (!$(event.target).is('input, select, label, button:not(.note-color-btn), a')) {
-            if (!remember_selection && $editable[0]) {
-                remember_selection = range.create(dom.firstChild($editable[0]), 0);
-            }
-            if (remember_selection) {
-                try {
-                    remember_selection.select();
-                } catch (e) {
-                    console.warn(e);
-                }
+    var editables = $(".o_editable[contenteditable], .note-editable[contenteditable]");
+    var r_editable = editables.has((r||{}).sc);
+    if (!r_editable.closest('.note-editor').is($editable) && !r_editable.filter('.o_editable').is(editables)) {
+        var saved_editable = editables.has((remember_selection||{}).sc);
+        if($editable.length && !saved_editable.closest('.o_editable, .note-editor').is($editable)) {
+            remember_selection = range.create(dom.firstChild($editable[0]), 0);
+        } else if(!saved_editable.length) {
+            remember_selection = undefined;
+        }
+        if(remember_selection) {
+            try {
+                remember_selection.select();
+            } catch (e) {
+                console.warn(e);
             }
         }
-    } else if (r && $(dom.node(r.sc)).closest('.o_editable, .note-editable').length) {
+    } else if(r_editable.length) {
         remember_selection = r;
     }
 

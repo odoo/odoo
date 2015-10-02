@@ -1841,6 +1841,8 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
 $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, value) {
     var $editable = layoutInfo.editable();
     $editable.data('NoteHistory').recordUndo($editable);
+    var r = range.create();
+    if(!r) return;
     var node = range.create().sc.parentNode;
     document.execCommand('removeFormat');
     document.execCommand('removeFormat');
@@ -2169,7 +2171,8 @@ options.onCreateLink = function (sLinkUrl) {
 /* table */
 
 function summernote_table_scroll (event) {
-    if (range.create().isOnCell()) {
+    var r = range.create();
+    if (r && r.isOnCell()) {
         $('.o_table_handler').remove();
     }
 }
