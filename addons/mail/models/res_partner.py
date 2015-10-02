@@ -124,6 +124,7 @@ class Partner(models.Model):
             ('channel_ids', 'in', email_channels.ids),
             ('email', '!=', message_sudo.author_id and message_sudo.author_id.email or message.email_from),
             ('notify_email', '!=', 'none')])._notify_by_email(message, force_send=force_send, user_signature=user_signature)
+        self._notify_by_chat(message)
         return True
 
     @api.multi
@@ -187,6 +188,15 @@ class Partner(models.Model):
             emails.send()
 
         return True
+
+    @api.multi
+    def _notify_by_chat(self, message):
+        """ Broadcast the message to all the partner since """
+        message_values = message.message_format()[0]
+        notifications = []
+        for partner in self:
+            notifications.append([(self._cr.dbname, 'ir.needaction', partner.id), dict(message_values)])
+        self.env['bus.bus'].sendmany(notifications)
 
     @api.model
     def get_needaction_count(self):

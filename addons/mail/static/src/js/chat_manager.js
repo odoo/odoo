@@ -438,6 +438,13 @@ function init () {
 
     bus.on('notification', null, function (notification) {
         var model = notification[0][1];
+        if (model === 'ir.needaction') {
+            // new message in the inbox
+            var message = notification[1];
+            message = add_message(message, { channel_id: 'channel_inbox', show_notification: true} );
+            needaction_counter = needaction_counter + 1;
+            chat_manager.bus.trigger('update_needaction', needaction_counter);
+        }
         if (model === 'mail.channel') {
             // new message in a channel
             var message = notification[1];
@@ -449,11 +456,7 @@ function init () {
                 channel_ready = chat_manager.join_channel(channel_id, { autoswitch: false });
             }
             $.when(channel_ready).then(function () {
-                message = add_message(message, { channel_id: channel_id, show_notification: true });
-                if (_.contains(message.channel_ids, 'channel_inbox')) {
-                    needaction_counter = needaction_counter + 1;
-                    chat_manager.bus.trigger('update_needaction', needaction_counter);
-                }
+                add_message(message, { channel_id: channel_id, show_notification: true });
             });
         }
         if (model === 'res.partner') {
