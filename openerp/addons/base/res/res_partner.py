@@ -129,7 +129,7 @@ class res_partner_category(osv.Model):
     }
     _parent_store = True
     _parent_order = 'name'
-    _order = 'parent_left'
+    _order = 'parent_left, name'
 
 
 class res_partner_title(osv.osv):
