@@ -123,8 +123,8 @@ options.registry["width-x"] = options.Class.extend({
 });
 
 
-var fn_popover_update = $.summernote.eventHandler.popover.update;
-$.summernote.eventHandler.popover.update = function ($popover, oStyle, isAirMode) {
+var fn_popover_update = $.summernote.eventHandler.modules.popover.update;
+$.summernote.eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
     fn_popover_update.call(this, $popover, oStyle, isAirMode);
     $("span.o_table_handler, div.note-table").remove();
 };

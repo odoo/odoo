@@ -855,8 +855,6 @@ var VideoDialog = Widget.extend({
             var src = $media.data('src');
             this.$("input#urlvideo").val(src);
             this.get_video();
-        } else {
-            this.add_class = "pull-left";
         }
         return this._super();
     },
