@@ -155,7 +155,13 @@ $('.oe_website_sale').each(function () {
                 return;
             }
             var $q = $(".my_cart_quantity");
-            $q.parent().parent().removeClass("hidden", !data.quantity);
+            if (data.cart_quantity) {
+                $q.parent().parent().removeClass("hidden");
+            }
+            else {
+                $q.parent().parent().addClass("hidden");
+                $('a[href^="/shop/checkout"]').addClass("hidden")
+            }
             $q.html(data.cart_quantity).hide().fadeIn(600);
 
             $input.val(data.quantity);
