@@ -376,15 +376,17 @@ var chat_manager = {
                 bus.restart_poll();
             });
     },
-    join_channel: function (channel_id) {
+    join_channel: function (channel_id, options) {
         return ChannelModel
             .call('channel_join_and_get_info', [[channel_id]])
-            .then(add_channel);
+            .then(function (result) {
+                add_channel(result, options);
+            });
     },
 
     unsubscribe: function (channel_id) {
         var def;
-	var channel = chat_manager.get_channel(channel_id);
+        var channel = chat_manager.get_channel(channel_id);
         if (channel.type === "dm") {
             def = ChannelModel.call('channel_pin', [channel.uuid, false]);
         } else {
@@ -441,11 +443,19 @@ function init () {
             // new message in a channel
             var message = notification[1];
             var channel_id = message.channel_ids[0];
-            message = add_message(message, { channel_id: channel_id, show_notification: true} );
-            if (_.contains(message.channel_ids, 'channel_inbox')) {
-                needaction_counter = needaction_counter + 1;
-                chat_manager.bus.trigger('update_needaction', needaction_counter);
+            // fetch the channel info if not done already
+            var channel = _.findWhere(channels, {id: channel_id});
+            var channel_ready;
+            if (!channel) {
+                channel_ready = chat_manager.join_channel(channel_id, { autoswitch: false });
             }
+            $.when(channel_ready).then(function () {
+                message = add_message(message, { channel_id: channel_id, show_notification: true });
+                if (_.contains(message.channel_ids, 'channel_inbox')) {
+                    needaction_counter = needaction_counter + 1;
+                    chat_manager.bus.trigger('update_needaction', needaction_counter);
+                }
+            });
         }
         if (model === 'res.partner') {
             var chat_session = notification[1];
