@@ -1104,7 +1104,7 @@ class AssetsBundle(object):
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
-    def __init__(self, xmlid, debug=False, cr=None, uid=None, context=None, registry=None):
+    def __init__(self, xmlid, cr=None, uid=None, context=None, registry=None):
         self.xmlid = xmlid
         self.cr = request.cr if cr is None else cr
         self.uid = request.uid if uid is None else uid
