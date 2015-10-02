@@ -5,6 +5,7 @@ var chat_manager = require('mail.chat_manager');
 var ChatComposer = require('mail.ChatComposer');
 var ChatThread = require('mail.ChatThread');
 
+var config = require('web.config');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var data = require('web.data');
@@ -314,6 +315,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
         return this.fetch_and_render_thread().then(function () {
             self.thread.scroll_to({offset: new_channel_scrolltop});
+            if (!config.device.touch) {
+                self.composer.focus();
+            }
             self.action_manager.do_push_state({
                 action: self.action.id,
                 active_id: self.channel_id,

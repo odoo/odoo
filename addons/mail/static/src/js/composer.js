@@ -479,6 +479,9 @@ var Composer = Widget.extend({
     is_empty: function () {
         return !this.$input.val().trim() && !this.$('.o_attachments').children().length;
     },
+    focus: function () {
+        this.$input.focus();
+    },
 });
 
 return Composer;
