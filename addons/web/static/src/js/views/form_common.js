@@ -1061,10 +1061,6 @@ var SelectCreateDialog = ViewDialog.extend({
 
 var DomainEditorDialog = SelectCreateDialog.extend({
     init: function(parent, options) {
-        if (options.readonly) {
-            this._super(parent, options);
-            return;
-        }
         options = _.defaults(options, {initial_facet: {
             category: _t("Custom Filter"),
             icon: 'fa-star',
