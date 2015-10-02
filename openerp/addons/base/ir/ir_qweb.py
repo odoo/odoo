@@ -1104,12 +1104,13 @@ class AssetsBundle(object):
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
-    def __init__(self, xmlid, cr=None, uid=None, context=None, registry=None):
+    def __init__(self, xmlid, cr=None, uid=None, context=None, registry=None, max_css_rules=MAX_CSS_RULES):
         self.xmlid = xmlid
         self.cr = request.cr if cr is None else cr
         self.uid = request.uid if uid is None else uid
         self.context = request.context if context is None else context
         self.registry = request.registry if registry is None else registry
+        self.max_css_rules = max_css_rules
         self.javascripts = []
         self.stylesheets = []
         self.css_errors = []
@@ -1284,7 +1285,7 @@ class AssetsBundle(object):
             page_selectors = 0
             for rule in re.findall(re_rules, css):
                 selectors = len(re.findall(re_selectors, rule))
-                if page_selectors + selectors < MAX_CSS_RULES:
+                if page_selectors + selectors < self.max_css_rules:
                     page_selectors += selectors
                     page.append(rule)
                 else:
