@@ -599,21 +599,21 @@ class account_account(osv.osv):
                 }.get(operator, (operator, lambda n: n))
 
                 ids = self.search(cr, user, ['|', ('code', code_op, code_conv(name)), '|', ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit,
-                    context=context.get('lang') and {'lang':context['lang']})
+                    context=context)
 
                 if not ids and len(name.split()) >= 2:
                     #Separating code and name of account for searching
                     operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
                     ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit,
-                        context=context.get('lang') and {'lang':context['lang']})
+                        context=context)
             else:
                 ids = self.search(cr, user, ['&','!', ('code', '=like', name+"%"), ('name', operator, name)]+args, limit=limit,
-                    context=context.get('lang') and {'lang':context['lang']})
+                    context=context)
                 # as negation want to restric, do if already have results
                 if ids and len(name.split()) >= 2:
                     operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
                     ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2), ('id', 'in', ids)]+ args, limit=limit,
-                        context=context.get('lang') and {'lang':context['lang']})
+                        context=context)
         else:
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
