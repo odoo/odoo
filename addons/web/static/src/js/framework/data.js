@@ -758,7 +758,7 @@ var BufferedDataSet = DataSetStatic.extend({
         // this.readonly_fields.
         var cached = this.get_cache(id);
         if (options) {
-            _.extend(cached.from_read, options.from_read);
+            !options.to_evict ? _.extend(cached.from_read, options.from_read) : (cached.from_read = options.from_read);
             _.extend(cached.changes, options.changes);
             _.extend(cached.readonly_fields, options.readonly_fields);
             if (options.to_create !== undefined) cached.to_create = options.to_create;
@@ -925,7 +925,7 @@ var BufferedDataSet = DataSetStatic.extend({
         // and this breaks the assumptions of other methods (that the data
         // for new and altered records is both in the cache and in the change
         // or to_create collection)
-        this._update_cache(id, {'from_read': {}});
+        this._update_cache(id, {'from_read': {}, 'to_evict': true});
     },
     call_button: function (method, args) {
         this.evict_record(args[0][0]);
