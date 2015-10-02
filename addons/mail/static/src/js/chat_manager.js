@@ -75,9 +75,9 @@ function make_message (data, channel_id) {
         res_id: data.res_id,
     };
 
-    _.each(_.keys(emoji_substitutions), function(key){
-        var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1'); //]
-        var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + escaped_key + ")(?:\\s|$|</[a-z]*>)");
+    _.each(_.keys(emoji_substitutions), function (key) {
+        var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
+        var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + escaped_key + ")(?=\\s|$|</[a-z]*>)", "g");
         msg.body = msg.body.replace(regexp, ' <span class="o_mail_emoji">'+emoji_substitutions[key]+'</span> ');
     });
 
