@@ -2216,7 +2216,7 @@ the most useful being:
                 }
             });
 
-            instance.web.form.custom_widgets.add('coordinates', 'local.WidgetCoordinates');
+            instance.web.form.custom_widgets.add('coordinates', 'instance.oepetstore.WidgetCoordinates');
 
         .. code-block:: xml
 
@@ -2280,7 +2280,7 @@ the most useful being:
                 },
             });
 
-            instance.web.form.custom_widgets.add('coordinates', 'local.WidgetCoordinates');
+            instance.web.form.custom_widgets.add('coordinates', 'instance.oepetstore.WidgetCoordinates');
 
         .. code-block:: xml
 
