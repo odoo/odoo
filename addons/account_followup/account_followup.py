@@ -82,7 +82,8 @@ Best Regards,
 
 
     def _check_description(self, cr, uid, ids, context=None):
-        for line in self.browse(cr, uid, ids, context=context):
+        lang = self.pool['res.users'].browse(cr, uid, uid, context=context).lang
+        for line in self.browse(cr, uid, ids, context=dict(context or {}, lang=lang)):
             if line.description:
                 try:
                     line.description % {'partner_name': '', 'date':'', 'user_signature': '', 'company_name': ''}
