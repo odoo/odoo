@@ -1602,7 +1602,6 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
             context.initial_data_provided === true && (context.reconciliation_proposition === undefined || context.line === undefined))
             console.error("[Warning] bankStatementReconciliationLine instanciated with incorrect context.");
 
-        this.is_rapprochement; // matching a statement line with an already reconciled journal item
         this.line_id = context.line_id;
         this.model_bank_statement_line = this.getParent().model_bank_statement_line;
         this.formatCurrencies = this.getParent().formatCurrencies;
@@ -1617,9 +1616,6 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
             if (this.getParent().excluded_move_lines_ids[this.partner_id] === undefined)
                 this.getParent().excluded_move_lines_ids[this.partner_id] = [];
             this.getParent().excludeMoveLines(this, this.partner_id, context.reconciliation_proposition);
-
-            // This is computed on mvLinesSelectedChanged, which is not triggered  if the widget is instanciated with a reconciliation proposition
-            this.is_rapprochement = this.get("mv_lines_selected").length > 0 && this.get("mv_lines_selected")[0].already_paid;
         } else {
             this.st_line = undefined;
             this.partner_id = undefined;
@@ -1861,16 +1857,14 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         // Adjust to different cases
         if (balance_type === "equal") {
             displayValidState(true);
-        } else if (! self.is_rapprochement) {
-            if (balance_type === "greater") {
-                createOpenBalance(_t("Create Write-off"));
-            } else if (balance_type === "lower") {
-                if (self.st_line.has_no_partner) {
-                    createOpenBalance(_t("Choose counterpart"));
-                } else {
-                    displayValidState(false, _t("Validate"));
-                    createOpenBalance(_t("Open balance"));
-                }
+        } else if (balance_type === "greater") {
+            createOpenBalance(_t("Create Write-off"));
+        } else if (balance_type === "lower") {
+            if (self.st_line.has_no_partner) {
+                createOpenBalance(_t("Choose counterpart"));
+            } else {
+                displayValidState(false, _t("Validate"));
+                createOpenBalance(_t("Open balance"));
             }
         }
 
@@ -1881,7 +1875,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
                 && balance_type === "greater"
                 && Math.abs(self.get("balance")) < Math.abs(last_line.debit - last_line.credit)
                 && ! last_line.partial_reconcile
-                && ! self.is_rapprochement;
+                && ! last_line.already_paid;
             last_line.propose_partial_reconcile = propose_partial;
             self.updateAccountingViewMatchedLines();
         }
@@ -1921,10 +1915,6 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
 
         self.getParent().excludeMoveLines(self, self.partner_id, added_lines);
         self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines);
-
-        self.is_rapprochement = added_lines.length > 0 && added_lines[0].already_paid;
-        if (self.is_rapprochement)
-            self.set("lines_created", []);
 
         self._super(elt, val);
     },
