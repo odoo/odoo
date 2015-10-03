@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 14:50+0000\n"
-"PO-Revision-Date: 2015-09-26 23:28+0000\n"
-"Last-Translator: Leonardo Germán Chianea <noamixcontenidos@gmail.com>\n"
+"PO-Revision-Date: 2015-10-02 21:42+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-8/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,7 +113,7 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\n\nInformación general:\n---------\n\n* Plan General de Contabilidad y plantilla de Impuestos  para empresas en Japón.\n* Esto probablemente no cubra todas las cuentas necesarias para una empresa. Se espera que añada, elimine y modifique las cuentas sobre la base de esta plantilla.\n\nNota:\n-----\n\n* Posiciones fiscales '内税' y '外税' se han añadido para manejar los requerimientos especiales que puedan surgir de la aplicación TPV. [1]  Puede que no sea necesario usar esto en su totalidad bajo circunstancias normales.\n\n[1] Ver https://github.com/odoo/odoo/pull/6470 para más detalles.\n\n    "
 
 #. module: base
 #: code:addons/base/res/res_config.py:379
@@ -200,7 +200,7 @@ msgid ""
 "    Will be removed from Saas-6 and will be put in procurement_jit\n"
 "    over there, where procurement_jit will depend on stock\n"
 "    "
-msgstr ""
+msgstr "\n    If you install this module, it can make sure that not only\n    the ship of pick-pack-ship will be created in batch, but\n    the pick and the pack also.  (which will dramatically improve performance)\n\n    Will be removed from Saas-6 and will be put in procurement_jit\n    over there, where procurement_jit will depend on stock\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -908,7 +908,7 @@ msgid ""
 "- Council Implementing Regulation (EU) No 1042/2013\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nEU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and electronic services\n=============================================================================================\n\nAs of January 1rst, 2015, telecommunications, broadcasting\nand electronic services sold within the European Union\nhave to be always taxed in the country where the customer\nbelongs. In order to simplify the application of this EU\ndirective, the Mini One Stop Shop (MOSS) registration scheme\nallows businesses to make a unique tax declaration.\n\nThis module makes it possible by helping with the creation\nof the required EU fiscal positions and taxes in order to\nautomatically apply and record the required taxes.\n\nThis module installs a wizard to help setup fiscal positions\nand taxes for selling electronic services inside EU.\n\nThe wizard lets you select:\n - the EU countries to which you are selling these\n   services\n - your national VAT tax for services, to be mapped\n   to the target country's tax\n - optionally: a template fiscal position, in order\n   to copy the account mapping. Should be your\n   existing B2C Intra-EU fiscal position. (defaults\n   to no account mapping)\n - optionally: an account to use for collecting the\n   tax amounts (defaults to the account used by your\n   national VAT tax for services)\n\nIt creates the corresponding fiscal positions and taxes,\nautomatically applicable for EU sales with a customer\nin the selected countries.\nThe wizard can be run again for adding more countries.\n\nThe wizard creates a separate Chart of Taxes for collecting the\nVAT amounts of the MOSS declaration, so extracting the MOSS\ndata should be easy.\nLook for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\nTaxes Report menu (Generic Accounting Report).\n\nReferences\n++++++++++\n- Directive 2008/8/EC\n- Council Implementing Regulation (EU) No 1042/2013\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
@@ -1069,7 +1069,7 @@ msgid ""
 "Generates Intrastat XML report for declaration\n"
 "Based on invoices.\n"
 "    "
-msgstr ""
+msgstr "\nGenera un informe Intrastat en XML para declaración\nbasado en facturas. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_account
@@ -2727,7 +2727,7 @@ msgid ""
 "    * the 2015 chart of taxes is implemented to a large extent,\n"
 "      see the first sheet of tax.xls for details of coverage\n"
 "    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
-msgstr ""
+msgstr "\nÉste es el módulo base para gestionar el plan de cuentas para Luxemburgo.\n======================================================================\n\n    * Plan de cuentas oficial de Luxemburgo (plan e impuesto de la ley de junio de 2009 + 2015),\n    * Códigos de impuesto para Luxemburgo\n    * Impuestos principales usados en Luxemburgo\n    * Posición fiscal por defecto para local, intracomunitario y extracomunitario\n\nNotas:\n    * El gráfico de 2015 de los impuestos se aplica en gran medida,\n     ver la primera hoja de tax.xls para más detalles de cobertura\n    * para actualizar la tabla de plantilla de impuestos, actualice tax.xls y ejecute tax2csv.py\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -3871,7 +3871,7 @@ msgid ""
 "\n"
 "Works with Worldline keys version 2.0, contains implementation of\n"
 "payments acquirer using Worldline SIPS."
-msgstr ""
+msgstr "\nProveedor de pago en-línea Worldline SIPS\n\nFunciona con claves Worldline versión 2.0, contiene la implementación del proveedor de pagos Worldline SIPS."
 
 #. module: base
 #: code:addons/base/res/res_company.py:68
@@ -3991,7 +3991,7 @@ msgstr "%s (copia)"
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
 "an o2m."
-msgstr ""
+msgstr "%s Esto debe ser  '%s' en el modelo actual, o un campo del mismo nombre en una relación one2many."
 
 #. module: base
 #: view:res.lang:base.res_lang_form
@@ -4269,7 +4269,7 @@ msgstr "======================================================"
 #: code:addons/models.py:3458
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
-msgstr ""
+msgstr "Ha sido modificado un documento desde la última vez que lo vio (%s:%d)"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_groups
@@ -4305,7 +4305,7 @@ msgstr "Un módulo para probar la importación/exportación."
 #. module: base
 #: model:ir.module.module,description:base.module_test_new_api
 msgid "A module to test the API."
-msgstr ""
+msgstr "Un módulo para probar la API."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_uninstall
@@ -4407,7 +4407,7 @@ msgstr "Reglas de acceso"
 #: code:addons/models.py:4485
 #, python-format
 msgid "AccessError"
-msgstr ""
+msgstr "AccessError"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -5094,7 +5094,7 @@ msgstr "Autor"
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr ""
+msgstr "Método de pago Authorize.Net"
 
 #. module: base
 #: field:ir.actions.act_window,auto_search:0
@@ -5148,7 +5148,7 @@ msgstr "BANCO"
 #: code:addons/translate.py:990
 #, python-format
 msgid "Bad file format"
-msgstr ""
+msgstr "Formato erróneo de archivo"
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -5328,7 +5328,7 @@ msgstr "Vista base"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Basque / Euskara"
-msgstr ""
+msgstr "Vasco / Euskara"
 
 #. module: base
 #: selection:res.currency,position:0
@@ -5343,7 +5343,7 @@ msgstr "Bielorrusia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
-msgstr ""
+msgstr "Declaración Intrasat belga"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -6077,7 +6077,7 @@ msgstr "Cuentas bancarias de la compañía"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_17
 msgid "Company Contact"
-msgstr ""
+msgstr "Contacto de la compañía"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_inventory_form
@@ -6251,7 +6251,7 @@ msgstr "Restricción"
 #: code:addons/model.py:129
 #, python-format
 msgid "Constraint Error"
-msgstr ""
+msgstr "Error por restricción"
 
 #. module: base
 #: field:ir.model.constraint,type:0
@@ -6373,7 +6373,7 @@ msgstr "Costa Rica - Contabilidad"
 #: code:addons/loading.py:292
 #, python-format
 msgid "Could not load base module"
-msgstr ""
+msgstr "No se pudo cargar el módulo base"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:642
@@ -6881,7 +6881,7 @@ msgstr "Estructura de la base de datos"
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
 "type incoherence in a previous request"
-msgstr ""
+msgstr "La recogida de datos de la BD ha perdido varios ids ({}) y tiene ids extra ({}). Puede ser causado por una incoherencia de tipo en una petición anterior"
 
 #. module: base
 #: help:ir.values,res_id:0
@@ -7276,7 +7276,7 @@ msgstr "Las duraciones no pueden ser negativas"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Dutch (BE) / Nederlands (BE)"
-msgstr ""
+msgstr "Holandés (BE) / Nederlands (BE)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7301,7 +7301,7 @@ msgstr "Driver del hardware ESC/POS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_service
 msgid "EU Mini One Stop Shop (MOSS)"
-msgstr ""
+msgstr "EU Mini One Stop Shop (MOSS)"
 
 #. module: base
 #: sql_constraint:ir.model:0
@@ -7402,7 +7402,7 @@ msgstr "Empleados"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (AU)"
-msgstr ""
+msgstr "Inglés (Australia)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7476,7 +7476,7 @@ msgstr "Error de contexto:\nVista `%(view_name)s`"
 #: code:addons/models.py:1266
 #, python-format
 msgid "Error details:"
-msgstr ""
+msgstr "Detalles de error:"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:419 code:addons/base/ir/ir_model.py:421
@@ -8191,7 +8191,7 @@ msgstr "Georgia"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Georgian / ქართული ენა"
-msgstr ""
+msgstr "Georgiano / ქართული ენა"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9123,7 +9123,7 @@ msgstr "El canal de mensajería instantánea le permite enviar mensajes en vivo 
 #: code:addons/models.py:1460
 #, python-format
 msgid "Insufficient fields for Calendar View!"
-msgstr ""
+msgstr "¡Insuficientes campos para la vista calendario!"
 
 #. module: base
 #: code:addons/models.py:1472
@@ -9131,7 +9131,7 @@ msgstr ""
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
 "or a date_delay"
-msgstr ""
+msgstr "Campos insuficientes para generar una vista de calendario para %s. Falta un campo date_stop o date_delay."
 
 #. module: base
 #: selection:ir.property,type:0
@@ -9142,7 +9142,7 @@ msgstr "Entero"
 #: code:addons/model.py:149 code:addons/model.py:151
 #, python-format
 msgid "Integrity Error"
-msgstr ""
+msgstr "Error de integridad"
 
 #. module: base
 #: view:ir.rule:base.view_rule_form
@@ -9181,13 +9181,13 @@ msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
 "separated list of valid field names (optionally followed by asc/desc for the"
 " direction)"
-msgstr ""
+msgstr "Se ha indicado un \"order\" no válido. Una especificación \"order\" válida es una lista separada por comas de nombres de campos válidos (opcionalmente seguidos por asc/desc para indicar la dirección)"
 
 #. module: base
 #: code:addons/models.py:1543
 #, python-format
 msgid "Invalid Architecture!"
-msgstr ""
+msgstr "¡Estructura no válida!"
 
 #. module: base
 #: code:addons/base/res/res_bank.py:189
@@ -9199,7 +9199,7 @@ msgstr "Formato de nombre de tipo de banco no válido."
 #: code:addons/models.py:1460 code:addons/models.py:1471
 #, python-format
 msgid "Invalid Object Architecture!"
-msgstr ""
+msgstr "¡Estructura del objeto no válida!"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:92
@@ -9241,7 +9241,7 @@ msgstr "Se ha especificado una directiva de formato fecha/hora no válida. Consu
 #: code:addons/models.py:2095
 #, python-format
 msgid "Invalid group_by"
-msgstr ""
+msgstr "group_by no válido"
 
 #. module: base
 #: code:addons/models.py:2096
@@ -9249,7 +9249,7 @@ msgstr ""
 msgid ""
 "Invalid group_by specification: \"%s\".\n"
 "A group_by specification must be a list of valid fields."
-msgstr ""
+msgstr "La especificación group_by no es válida: \"%s\".\nUna especificación group_by debe contener una lista de campos válidos."
 
 #. module: base
 #: sql_constraint:ir.ui.view:0
@@ -9395,7 +9395,7 @@ msgstr "Japón"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp
 msgid "Japan - Accounting"
-msgstr ""
+msgstr "Japón - Contabilidad"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9460,7 +9460,7 @@ msgstr "Planificación 'Just in time' (bajo demanda) con inventario"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Kabyle / Taqbaylit"
-msgstr ""
+msgstr "Kabyle / Taqbaylit"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -9537,7 +9537,7 @@ msgstr "República Kyrgyz (Kyrgyzstan)"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "LGPL Version 3"
-msgstr ""
+msgstr "LGPL Versión 3"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.res_partner_address_report
@@ -10354,13 +10354,13 @@ msgstr "Servidor SMTP ausente"
 #: code:addons/models.py:6067
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
-msgstr ""
+msgstr "Falta el valor requerido para el campo '%s' (%s)"
 
 #. module: base
 #: code:addons/models.py:6064
 #, python-format
 msgid "Missing required value for the field '%s'."
-msgstr ""
+msgstr "Falta el valor requerido para el campo '%s'."
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -10541,7 +10541,7 @@ msgstr "Dependencias de módulos"
 msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
 " %s"
-msgstr ""
+msgstr "Falló el módulo cargando %s: no se pudo procesar el archivo %s:\n%s"
 
 #. module: base
 #: code:addons/base/module/module.py:681
@@ -10866,7 +10866,7 @@ msgstr "No hay asociado ningún tipo de cambio para la moneda '%s' para el perio
 #: code:addons/models.py:1543
 #, python-format
 msgid "No default view of type '%s' could be found !"
-msgstr ""
+msgstr "¡No se pudo encontrar una vista por defecto de tipo '%s'!"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -11104,7 +11104,7 @@ msgstr "Propiedad 'On delete' (al borrar) para campos many2one"
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
 "again after refreshing."
-msgstr ""
+msgstr "Uno de los documentos al que está intentado acceder ha sido eliminado. Inténtelo por favor de nuevo tras actualizar."
 
 #. module: base
 #: code:addons/models.py:3892
@@ -11112,7 +11112,7 @@ msgstr ""
 msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
-msgstr ""
+msgstr "Uno de los registros que está intentando modificar ya ha sido eliminado (tipo documento: %s)."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
@@ -11554,7 +11554,7 @@ msgstr "Método de pago: Implementación Adyen"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_authorize
 msgid "Payment Acquirer: Authorize.net Implementation"
-msgstr ""
+msgstr "Proveedor de pago: Implementación de Authorize.net"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_buckaroo
@@ -12170,7 +12170,7 @@ msgstr "Registro"
 #: code:addons/models.py:4769
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
-msgstr ""
+msgstr "¡No se ha encontrado el registro #%d de %s, no se puede copiar!"
 
 #. module: base
 #: field:ir.actions.act_window,res_id:0 field:ir.actions.server,id_value:0
@@ -12201,7 +12201,7 @@ msgstr "El registro no puede ser modificado en este momento"
 #: code:addons/models.py:4894
 #, python-format
 msgid "Record does not exist or has been deleted."
-msgstr ""
+msgstr "El registro no existe o ha sido eliminado."
 
 #. module: base
 #: view:ir.rule:base.view_rule_form view:ir.rule:base.view_rule_tree
@@ -12233,7 +12233,7 @@ msgstr "Se ha encontrado una recursión en las acciones de servidor hijas"
 #: code:addons/models.py:3995
 #, python-format
 msgid "Recursivity Detected."
-msgstr ""
+msgstr "Recursividad detectada."
 
 #. module: base
 #: report:ir.module.reference:0
@@ -12249,7 +12249,7 @@ msgstr "Registgro de referencia"
 #: model:ir.actions.act_window,name:base.res_request_link-act
 #: model:ir.ui.menu,name:base.menu_res_request_link_act
 msgid "Referenceable Models"
-msgstr ""
+msgstr "Modelos referenciables"
 
 #. module: base
 #: code:addons/base/res/res_company.py:168
@@ -12409,7 +12409,7 @@ msgstr "Distribuidores"
 #: code:addons/models.py:1085
 #, python-format
 msgid "Resolve other errors first"
-msgstr ""
+msgstr "Resuelva otros errores primero"
 
 #. module: base
 #: field:ir.exports,resource:0
@@ -12806,7 +12806,7 @@ msgstr "Ver todos los posibles valores"
 #: code:addons/common.py:50
 #, python-format
 msgid "See http://openerp.com"
-msgstr ""
+msgstr "ver http://odoo.com"
 
 #. module: base
 #: help:multi_company.default,field_id:0
@@ -12950,7 +12950,7 @@ msgstr "Campo serializacion"
 #: code:addons/models.py:418
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr ""
+msgstr "¡No se ha encontrado el campo de serialización `%s` para el campo `%s`!"
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -13209,7 +13209,7 @@ msgstr "Lo siento, no está autorizado para modificar este documento."
 #: code:addons/models.py:4618
 #, python-format
 msgid "Sorting field %s not found on model %s"
-msgstr ""
+msgstr "Campo de ordenación %s no encontrado en el modelo %s"
 
 #. module: base
 #: field:ir.translation,source:0
@@ -13800,7 +13800,7 @@ msgstr "Plantilla de planes contables"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_new_api
 msgid "Test API"
-msgstr ""
+msgstr "Test API"
 
 #. module: base
 #: view:ir.mail_server:base.ir_mail_server_form
@@ -14043,7 +14043,7 @@ msgid ""
 "The operation cannot be completed, probably due to the following:\n"
 "- deletion: you may be trying to delete a record while other records still reference it\n"
 "- creation/update: a mandatory field is not correctly set"
-msgstr ""
+msgstr "No puede completarse la operación, probablemente debido a lo siguiente:\n- eliminación: es posible que esté intentando eliminar un registro mientras que otros registros todavía tengan referencias a él\n- creación/actualización: un campo obligatorio no está introducido correctamente"
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -14118,7 +14118,7 @@ msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
+msgstr "No se ha podido completar la operación por restricciones de seguridad. Contacte por favor con su administrador de sistema.\n\n(Tipo de documento: %s, Operación: %s)"
 
 #. module: base
 #: code:addons/fields.py:913
@@ -14169,7 +14169,7 @@ msgstr "El usuario para el que el filtro es privado. Cuando está vacío, el fil
 #: code:addons/models.py:6079
 #, python-format
 msgid "The value for the field '%s' already exists."
-msgstr ""
+msgstr "El valor para el campo '%s' ya existe."
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:97
@@ -14631,7 +14631,7 @@ msgstr "Ucraniano / українська"
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
-msgstr ""
+msgstr "No se ha podido eliminar este documento ya que se utiliza como una propiedad por defecto"
 
 #. module: base
 #: code:addons/base/module/module.py:372
@@ -14703,13 +14703,13 @@ msgstr "Estados Unidos - Plan de cuentas"
 #: code:addons/models.py:1230
 #, python-format
 msgid "Unknown database identifier '%s'"
-msgstr ""
+msgstr "Identificador de base de datos '%s' desconocido"
 
 #. module: base
 #: code:addons/models.py:1083
 #, python-format
 msgid "Unknown error during import:"
-msgstr ""
+msgstr "Error desconocido durante la importación"
 
 #. module: base
 #: code:addons/report_sxw.py:392
@@ -14740,7 +14740,7 @@ msgstr "¡Dependencia no  satisfecha!"
 #, python-format
 msgid ""
 "Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
-msgstr ""
+msgstr "Extensión no reconocida: debe ser .csv, .po o .tgz (recibido .%s)."
 
 #. module: base
 #: view:ir.translation:base.view_translation_search
@@ -14932,7 +14932,7 @@ msgstr "Filtros definidos por el usuario"
 #: code:addons/models.py:3995
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "Error de usuario"
 
 #. module: base
 #: field:ir.mail_server,smtp_user:0
@@ -15489,7 +15489,7 @@ msgstr "Elementos de trabajo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
 msgid "Worldline SIPS Payment Acquiring  for online payments"
-msgstr ""
+msgstr "Proveedor para pagos en-linea Wordline SIPS"
 
 #. module: base
 #: view:ir.model.access:base.ir_access_view_search
@@ -15753,7 +15753,7 @@ msgstr "cr: cursor a la base de datos"
 #: code:addons/models.py:4299
 #, python-format
 msgid "created."
-msgstr ""
+msgstr "creado."
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:315
@@ -15898,7 +15898,7 @@ msgstr "S.L."
 #: code:addons/loading.py:292
 #, python-format
 msgid "module base cannot be loaded! (hint: verify addons-path)"
-msgstr ""
+msgstr "¡no se puede cargar el módulo base! (consejo: verifique las rutas en addons-path)"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:346
@@ -15922,7 +15922,7 @@ msgstr "no"
 #: code:addons/amount_to_text_en.py:116
 #, python-format
 msgid "no translation function found for lang: '%s'"
-msgstr ""
+msgstr "No se encontró una función de traducción para el idioma: '%s'"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -15977,7 +15977,7 @@ msgstr "pool: Colección de modelos ORM (igual que self.pool)"
 #: code:addons/mail.py:285
 #, python-format
 msgid "read more"
-msgstr ""
+msgstr "leer más"
 
 #. module: base
 #: view:res.config:base.res_config_view_base
@@ -16017,7 +16017,7 @@ msgstr "test-inherit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits
 msgid "test-inherits"
-msgstr ""
+msgstr "test-inherits"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
