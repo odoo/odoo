@@ -219,9 +219,15 @@ class ir_sequence(models.Model):
         return interpolated_prefix + '%%0%sd' % self.padding % number_next + interpolated_suffix
 
     def _create_date_range_seq(self, date):
-        year = fields.Date.from_string(date).strftime('%Y')
-        date_from = '{}-01-01'.format(year)
-        date_to = '{}-12-31'.format(year)
+        year = int(fields.Date.from_string(date).strftime('%Y'))
+        fiscalyear_last_month = self.env.user.company_id.fiscalyear_last_month if hasattr(self.env.user.company_id, 'fiscalyear_last_month') else 12
+        fiscalyear_last_day = self.env.user.company_id.fiscalyear_last_day if hasattr(self.env.user.company_id, 'fiscalyear_last_day') else 31
+        year_end_date = datetime.strptime('{}-{}-{}'.format(year, fiscalyear_last_month, fiscalyear_last_day), '%Y-%m-%d')
+        if datetime.strptime(date, '%Y-%m-%d') <= year_end_date:
+            year -= 1
+        date_from = datetime.strptime('{}-{}-{}'.format(year, fiscalyear_last_month, fiscalyear_last_day), '%Y-%m-%d') + timedelta(days=1)
+        date_to = datetime.strptime('{}-{}-{}'.format(year + 1, fiscalyear_last_month, fiscalyear_last_day), '%Y-%m-%d')
+
         date_range = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '>=', date), ('date_from', '<=', date_to)], order='date_from desc')
         if date_range:
             date_to = datetime.strptime(date_range.date_from, '%Y-%m-%d') + timedelta(days=-1)
