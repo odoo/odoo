@@ -187,7 +187,7 @@ class ir_sequence(models.Model):
             number_next = _update_nogap(self, self.number_increment)
         return self.get_next_char(number_next)
 
-    def get_next_char(self, number_next):
+    def get_next_char(self, number_next, date_to=None):
         def _interpolate(s, d):
             if s:
                 return s % d
@@ -207,6 +207,11 @@ class ir_sequence(models.Model):
             for key, sequence in sequences.iteritems():
                 res[key] = now.strftime(sequence)
                 res['range_' + key] = t.strftime(sequence)
+
+            if date_to:
+                seq_date_to = datetime.strptime(date_to, '%Y-%m-%d')
+                res['range_y'] = seq_date_to.strftime('%y')
+                res['range_year'] = seq_date_to.strftime('%Y')
 
             return res
 
@@ -345,7 +350,7 @@ class ir_sequence_date_range(models.Model):
             number_next = _select_nextval(self.env.cr, 'ir_sequence_%03d_%03d' % (self.sequence_id.id, self.id))
         else:
             number_next = _update_nogap(self, self.sequence_id.number_increment)
-        return self.sequence_id.get_next_char(number_next)
+        return self.sequence_id.get_next_char(number_next, self.date_to)
 
     @api.multi
     def _alter_sequence(self, number_increment=None, number_next=None):
