@@ -246,6 +246,27 @@ class mrp_bom(osv.osv):
                 return True
         return False
 
+    def _prepare_wc_line(self, cr, uid, bom, wc_use, level=0, factor=1, context=None):
+        wc = wc_use.workcenter_id
+        d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
+        mult = (d + (m and 1.0 or 0.0))
+        cycle = mult * wc_use.cycle_nbr
+        return {
+            'name': tools.ustr(wc_use.name) + ' - ' + tools.ustr(bom.product_tmpl_id.name_get()[0][1]),
+            'workcenter_id': wc.id,
+            'sequence': level + (wc_use.sequence or 0),
+            'cycle': cycle,
+            'hour': float(wc_use.hour_nbr * mult + ((wc.time_start or 0.0) + (wc.time_stop or 0.0) + cycle * (wc.time_cycle or 0.0)) * (wc.time_efficiency or 1.0)),
+        }
+
+    def _prepare_consume_line(self, cr, uid, bom_line_id, quantity, context=None):
+        return {
+            'name': bom_line_id.product_id.name,
+            'product_id': bom_line_id.product_id.id,
+            'product_qty': quantity,
+            'product_uom': bom_line_id.product_uom.id
+        }
+
     def _bom_explode(self, cr, uid, bom, product, factor, properties=None, level=0, routing_id=False, previous_products=None, master_bom=None, context=None):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
         @param bom: BoM of particular product template.
@@ -281,17 +302,9 @@ class mrp_bom(osv.osv):
         routing = (routing_id and routing_obj.browse(cr, uid, routing_id)) or bom.routing_id or False
         if routing:
             for wc_use in routing.workcenter_lines:
-                wc = wc_use.workcenter_id
-                d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
-                mult = (d + (m and 1.0 or 0.0))
-                cycle = mult * wc_use.cycle_nbr
-                result2.append({
-                    'name': tools.ustr(wc_use.name) + ' - ' + tools.ustr(bom.product_tmpl_id.name_get()[0][1]),
-                    'workcenter_id': wc.id,
-                    'sequence': level + (wc_use.sequence or 0),
-                    'cycle': cycle,
-                    'hour': float(wc_use.hour_nbr * mult + ((wc.time_start or 0.0) + (wc.time_stop or 0.0) + cycle * (wc.time_cycle or 0.0)) * (wc.time_efficiency or 1.0)),
-                })
+                result2.append(self._prepare_wc_line(
+                    cr, uid, bom, wc_use, level=level, factor=factor,
+                    context=context))
 
         for bom_line_id in bom.bom_line_ids:
             if self._skip_bom_line(cr, uid, bom_line_id, product, context=context):
@@ -307,12 +320,8 @@ class mrp_bom(osv.osv):
 
             #If BoM should not behave like kit, just add the product, otherwise explode further
             if (not bom_id) or (self.browse(cr, uid, bom_id, context=context).type != "phantom"):
-                result.append({
-                    'name': bom_line_id.product_id.name,
-                    'product_id': bom_line_id.product_id.id,
-                    'product_qty': quantity,
-                    'product_uom': bom_line_id.product_uom.id
-                })
+                result.append(self._prepare_consume_line(
+                    cr, uid, bom_line_id, quantity, context=context))
             else:
                 all_prod = [bom.product_tmpl_id.id] + (previous_products or [])
                 bom2 = self.browse(cr, uid, bom_id, context=context)
