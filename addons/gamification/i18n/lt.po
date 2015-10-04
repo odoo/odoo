@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-09-19 08:18+0000\n"
+"POT-Creation-Date: 2015-09-30 12:39+0000\n"
+"PO-Revision-Date: 2015-10-01 09:17+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -121,7 +121,7 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:743
+#: code:addons/gamification/models/challenge.py:746
 #, python-format
 msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
@@ -129,13 +129,13 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:741
+#: code:addons/gamification/models/challenge.py:744
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:750
+#: code:addons/gamification/models/challenge.py:753
 #, python-format
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
@@ -544,12 +544,12 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3025
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_2090
 msgid "Definition Condition"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3034
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_2099
 msgid "Definition Description"
 msgstr ""
 
@@ -768,7 +768,7 @@ msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3036
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_2101
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_name
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
@@ -1171,12 +1171,17 @@ msgid "No monthly sending limit"
 msgstr ""
 
 #. module: gamification
+#: model:gamification.badge,description:gamification.badge_problem_solver
+msgid "No one can solve challenges like you do."
+msgstr ""
+
+#. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "No one, assigned through challenges"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:753
+#: code:addons/gamification/models/challenge.py:756
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr ""
@@ -1369,7 +1374,7 @@ msgid "Responsible"
 msgstr "Atsakingas asmuo"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:548
+#: code:addons/gamification/models/challenge.py:551
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
 msgstr ""
@@ -1529,7 +1534,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3030
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_2095
 msgid "Suffix"
 msgstr "Sufiksas"
 
@@ -1554,7 +1559,7 @@ msgid "The action that will be called to update the goal value."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:737
+#: code:addons/gamification/models/challenge.py:740
 #, python-format
 msgid "The challenge %s is finished."
 msgstr ""
@@ -1726,7 +1731,7 @@ msgid "These goals will not be recomputed."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:222
+#: code:addons/gamification/models/badge.py:223
 #, python-format
 msgid "This badge can not be sent by users."
 msgstr ""
@@ -1832,13 +1837,18 @@ msgid ""
 msgstr ""
 
 #. module: gamification
+#: model:gamification.badge,description:gamification.badge_idea
+msgid "With your brilliant ideas, you are an inspiration to others."
+msgstr ""
+
+#. module: gamification
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Yearly"
 msgstr "Kas metus"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:224
+#: code:addons/gamification/models/badge.py:225
 #, python-format
 msgid "You are not in the user allowed list."
 msgstr ""
@@ -1861,15 +1871,25 @@ msgid "You can still grant"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:226
+#: model:gamification.badge,description:gamification.badge_good_job
+msgid "You did great at your job."
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/badge.py:227
 #, python-format
 msgid "You do not have the required badges."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:228
+#: code:addons/gamification/models/badge.py:229
 #, python-format
 msgid "You have already sent this badge too many time this month."
+msgstr ""
+
+#. module: gamification
+#: model:gamification.badge,description:gamification.badge_hidden
+msgid "You have found the hidden badge"
 msgstr ""
 
 #. module: gamification
