@@ -460,12 +460,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
     on_click_button_unsubscribe: function () {
         var self = this;
+        var channel = this.channel;
         chat_manager
-            .unsubscribe(this.channel)
+            .unsubscribe(channel)
             .then(this.set_channel.bind(this, chat_manager.get_channel("channel_inbox")))
             .then(this.render_sidebar.bind(this))
             .then(function () {
-                var msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), self.channel.name);
+                var msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), channel.name);
                 self.do_notify(_t("Unsubscribed"), msg);
             });
     },
