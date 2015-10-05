@@ -37,8 +37,12 @@
             </div>
             <div class="o_thread_message_core">
                 <span class="pull-right">
-                    <i t-if="message.is_needaction &amp;&amp; options.display_needactions" class="fa fa-check o_thread_message_needaction" t-att-data-message-id="message.id" t-att-title="_t('Mark as Done')"/>
-                    <i t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')" t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
+                    <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
+                       class="fa fa-check o_thread_message_needaction"
+                       t-att-data-message-id="message.id" t-att-title="_t('Mark as Done')"/>
+                    <i t-if="options.display_stars"
+                        t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
+                        t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
                 </span>
                 <p class="text-muted">
                     <t t-if="message.is_note">

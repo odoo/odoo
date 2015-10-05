@@ -34,6 +34,7 @@ var Thread = Widget.extend({
         this.options = _.defaults(options || {}, {
             display_order: ORDER.ASC,
             display_needactions: true,
+            display_stars: true,
             default_username: _t('Anonymous'),
             display_document_link: true,
             display_avatar: true,

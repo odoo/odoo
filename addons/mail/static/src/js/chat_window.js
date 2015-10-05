@@ -16,12 +16,15 @@ return Widget.extend({
         "click .o_chat_title": "on_click_fold",
     },
 
-    init: function (parent, channel_id, title, is_folded) {
+    init: function (parent, channel_id, title, is_folded, options) {
         this._super(parent);
         this.title = title;
         this.channel_id = channel_id;
         this.placeholder = _t("Say something");
         this.folded = is_folded;
+        this.options = _.defaults(options || {}, {
+            display_stars: true,
+        });
     },
     start: function () {
         this.$content = this.$('.o_chat_content');
@@ -30,6 +33,7 @@ return Widget.extend({
         this.thread = new ChatThread(this, {
             display_avatar: false,
             display_needactions: false,
+            display_stars: this.options.display_stars,
         });
         this.thread.on('toggle_star_status', this, function (message_id) {
             this.trigger('toggle_star_status', message_id);
