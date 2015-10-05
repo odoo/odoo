@@ -65,14 +65,6 @@ Main Features
     'demo': [
         'data/point_of_sale_demo.xml',
     ],
-    'test': [
-        '../account/test/account_minimal_test.xml',
-        'test/tests_before.xml',
-        'test/00_register_open.yml',
-        'test/01_order_to_payment.yml',
-        'test/02_order_to_invoice.yml',
-        'test/account_statement_reports.yml',
-    ],
     'installable': True,
     'application': True,
     'qweb': ['static/src/xml/pos.xml'],
