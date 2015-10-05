@@ -17,7 +17,7 @@ class sale_order(osv.Model):
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {
                 'cart_quantity': int(sum(l.product_uom_qty for l in (order.website_order_line or []))),
-                'only_services': all(l.product_id and l.product_id.type == 'service' for l in order.website_order_line)
+                'only_services': all(l.product_id and l.product_id.type in ('service', 'digital') for l in order.website_order_line)
             }
         return res
 
