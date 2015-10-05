@@ -266,7 +266,7 @@ class crm_phonecall(osv.osv):
         Open meeting's calendar view to schedule a meeting on current phonecall.
         :return dict: dictionary value for created meeting view
         """
-        partner_ids = []
+        partner_ids = [self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id]
         phonecall = self.browse(cr, uid, ids[0], context)
         if phonecall.partner_id and phonecall.partner_id.email:
             partner_ids.append(phonecall.partner_id.id)
