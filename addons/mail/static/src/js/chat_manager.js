@@ -119,9 +119,9 @@ function add_channel_to_message (message, channel_id) {
 function post_channel_message (data) {
     return ChannelModel.call('message_post', [data.channel_id], {
         message_type: 'comment',
-        content_subtype: 'html',
+        content_subtype: 'plaintext',
         partner_ids: data.partner_ids,
-        body: data.content,
+        body: _.str.trim(data.content),
         subtype: 'mail.mt_comment',
         attachment_ids: data.attachment_ids,
     });
@@ -130,7 +130,7 @@ function post_channel_message (data) {
 function post_document_message (model_name, res_id, data) {
     var values = {
         attachment_ids: data.attachment_ids,
-        body: data.content,
+        body: _.str.trim(data.content),
         content_subtype: data.content_subtype,
         message_type: data.message_type,
         partner_ids: data.partner_ids,

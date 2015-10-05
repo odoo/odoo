@@ -525,29 +525,12 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
-def html_escape_keep_url(self, message):
-    """ Escape the message and transform the url into clickable link
-        :param string message: the message to escape url and transform them into clickable link
-        :returns the escaped message
-        :rtype : string
-    """
-    safe_message = ""
-    first = 0
-    last = 0
-    for m in re.finditer('(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?', message):
-        last = m.start()
-        safe_message += cgi.escape(message[first:last])
-        safe_message += '<a href="%s" target="_blank">%s</a>' % (cgi.escape(m.group(0)), m.group(0))
-        first = m.end()
-        last = m.end()
-    safe_message += cgi.escape(message[last:])
-    return safe_message
-
 def plaintext2html(text, container_tag=False):
     """ Convert plaintext into html. Content of the text is escaped to manage
         html entities, using cgi.escape().
         - all \n,\r are replaced by <br />
         - enclose content into <p>
+        - convert url into clickable link
         - 2 or more consecutive <br /> are considered as paragraph breaks
 
         :param string container_tag: container of the html; by default the
@@ -559,7 +542,18 @@ def plaintext2html(text, container_tag=False):
     text = text.replace('\n', '<br/>')
     text = text.replace('\r', '<br/>')
 
-    # 2-3: form paragraphs
+    # 2. clickable links
+    idx = 0
+    final = ''
+    link_tags = re.compile(r'(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?')
+    for item in re.finditer(link_tags, text):
+        final += text[idx:item.start()]
+        final += '<a href="%s" target="_blank">%s</a>' % (item.group(0), item.group(0))
+        idx = item.end()
+    final += text[idx:]
+    text = final
+
+    # 3-4: form paragraphs
     idx = 0
     final = '<p>'
     br_tags = re.compile(r'(([<]\s*[bB][rR]\s*\/?[>]\s*){2,})')
@@ -568,7 +562,7 @@ def plaintext2html(text, container_tag=False):
         idx = item.end()
     final += text[idx:] + '</p>'
 
-    # 4. container
+    # 5. container
     if container_tag:
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
     return ustr(final)
