@@ -836,7 +836,7 @@ class Message(models.Model):
             partners = self_sudo.partner_ids
 
         # remove author from notified partners
-        if self_sudo.author_id:
+        if not self._context.get('mail_notify_author', False) and self_sudo.author_id:
             partners = partners - self_sudo.author_id
 
         # update message
