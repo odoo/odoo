@@ -25,7 +25,7 @@ from operator import itemgetter
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp import tools
+from openerp import api, tools
 from openerp.addons.base.res.res_partner import format_address
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
@@ -685,7 +685,7 @@ class crm_lead(format_address, osv.osv):
                 merged_data['stage_id'] = section_stage_ids and section_stage_ids[0] or False
         # Write merged data into first opportunity
         self.write(cr, uid, [highest.id], merged_data, context=context)
-        # Delete tail opportunities 
+        # Delete tail opportunities
         # We use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
         self.unlink(cr, SUPERUSER_ID, [x.id for x in tail_opportunities], context=context)
 
@@ -730,28 +730,35 @@ class crm_lead(format_address, osv.osv):
 
         return True
 
+    @api.one
+    def _map_values_to_partner(self, name, is_company, parent_id=False):
+        """Values to create or update a ``res.partner`` from this lead."""
+        return {
+            "name": name,
+            "user_id": self.user_id.id,
+            "comment": self.description,
+            "section_id": self.section_id.id or False,
+            "parent_id": parent_id,
+            "phone": self.phone,
+            "mobile": self.mobile,
+            "email": (tools.email_split(self.email_from) and
+                      tools.email_split(self.email_from)[0] or False),
+            "fax": self.fax,
+            "title": self.title and self.title.id or False,
+            "function": self.function,
+            "street": self.street,
+            "street2": self.street2,
+            "zip": self.zip,
+            "city": self.city,
+            "country_id": self.country_id and self.country_id.id or False,
+            "state_id": self.state_id and self.state_id.id or False,
+            "is_company": is_company,
+            "type": "contact",
+        }
+
     def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
         partner = self.pool.get('res.partner')
-        vals = {'name': name,
-            'user_id': lead.user_id.id,
-            'comment': lead.description,
-            'section_id': lead.section_id.id or False,
-            'parent_id': parent_id,
-            'phone': lead.phone,
-            'mobile': lead.mobile,
-            'email': tools.email_split(lead.email_from) and tools.email_split(lead.email_from)[0] or False,
-            'fax': lead.fax,
-            'title': lead.title and lead.title.id or False,
-            'function': lead.function,
-            'street': lead.street,
-            'street2': lead.street2,
-            'zip': lead.zip,
-            'city': lead.city,
-            'country_id': lead.country_id and lead.country_id.id or False,
-            'state_id': lead.state_id and lead.state_id.id or False,
-            'is_company': is_company,
-            'type': 'contact'
-        }
+        vals = lead._map_values_to_partner(name, is_company, parent_id)[0]
         partner = partner.create(cr, uid, vals, context=context)
         return partner
 
