@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_attendanceerrors">
 <t t-call="report.html_container">
 <t t-foreach="get_employees(data['form']['emp_ids'])" t-as="employee">
@@ -22,8 +21,8 @@
     <tbody>
         <tr t-foreach="lst(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay'])" t-as="att">
             <td><span t-esc="att['action']"/></td>
-            <td><span t-esc="formatLang(att['date'],date_time=True)"/></td>
-            <td><span t-esc="formatLang(att['create_date'],date_time=True)"/></td>
+            <td><span t-esc="att['date']"/></td>
+            <td><span t-esc="att['create_date']"/></td>
             <td><span t-esc="att['delay']"/></td>
             <td><span t-esc="att['delay2']"/></td>
         </tr>
@@ -41,5 +40,4 @@
 </t>
 </t>
 </template>
-</data>
-</openerp>
+</odoo>
