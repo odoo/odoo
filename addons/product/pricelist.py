@@ -11,6 +11,7 @@ from openerp.tools.translate import _
 
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError
+from openerp import api, models, fields as Fields
 
 #----------------------------------------------------------
 # Price lists
@@ -267,29 +268,6 @@ class product_pricelist_item(osv.osv):
                 return False
         return True
 
-    def _get_pricelist_item_name_price(self, cr, uid, ids, fields, args, context=None):
-        """This function is used to set some fields used for usability purposes only (state explicitly what a rule does)
-        """
-        res = {}
-        for item in self.browse(cr, uid, ids, context=context):
-            res[item.id] = {'name': '', 'price': ''}
-            if item.categ_id:
-                res[item.id]['name'] = _("Category: %s") % (item.categ_id.name)
-            elif item.product_tmpl_id:
-                res[item.id]['name'] = item.product_tmpl_id.name
-            elif item.product_id:
-                res[item.id]['name'] = item.product_id.display_name.replace('[%s]' % item.product_id.code, '')
-            else:
-                res[item.id]['name'] = _("All Products")
-
-            if item.compute_price == 'fixed':
-                res[item.id]['price'] = ("%s %s") % (item.fixed_price, item.pricelist_id.currency_id.name)
-            elif item.compute_price == 'percentage':
-                res[item.id]['price'] = _("%s %% discount") % (item.percent_price)
-            else:
-                res[item.id]['price'] = _("%s %% discount and %s surcharge") % (abs(item.price_discount), item.price_surcharge)
-        return res
-
     _columns = {
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Specify a template if this rule only applies to one product template. Keep empty otherwise."),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Specify a product if this rule only applies to one product. Keep empty otherwise."),
@@ -328,9 +306,6 @@ class product_pricelist_item(osv.osv):
         'compute_price': fields.selection([('fixed', 'Fix Price'), ('percentage', 'Percentage (discount)'), ('formula', 'Formula')], select=True, default='fixed'),
         'fixed_price': fields.float('Fixed Price'),
         'percent_price': fields.float('Percentage Price'),
-        #functional fields used for usability purposes
-        'name': fields.function(_get_pricelist_item_name_price, type="char", string='Name', multi='item_name_price', help="Explicit rule name for this pricelist line."),
-        'price': fields.function(_get_pricelist_item_name_price, type="char", string='Price', multi='item_name_price', help="Explicit rule name for this pricelist line."),
     }
 
     _defaults = {
@@ -344,3 +319,31 @@ class product_pricelist_item(osv.osv):
         (_check_recursion, 'Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!', ['base_pricelist_id']),
         (_check_margin, 'Error! The minimum margin should be lower than the maximum margin.', ['price_min_margin', 'price_max_margin'])
     ]
+
+
+class product_pricelist_item_new(models.Model):
+    _inherit = "product.pricelist.item"
+
+    @api.one
+    @api.depends('categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
+        'pricelist_id', 'percent_price', 'price_discount', 'price_surcharge')
+    def _get_pricelist_item_name_price(self):
+        if self.categ_id:
+            self.name = _("Category: %s") % (self.categ_id.name)
+        elif self.product_tmpl_id:
+            self.name = self.product_tmpl_id.name
+        elif self.product_id:
+            self.name = self.product_id.display_name.replace('[%s]' % self.product_id.code, '')
+        else:
+            self.name = _("All Products")
+
+        if self.compute_price == 'fixed':
+            self.price = ("%s %s") % (self.fixed_price, self.pricelist_id.currency_id.name)
+        elif self.compute_price == 'percentage':
+            self.price = _("%s %% discount") % (self.percent_price)
+        else:
+            self.price = _("%s %% discount and %s surcharge") % (abs(self.price_discount), self.price_surcharge)
+
+    #functional fields used for usability purposes
+    name = Fields.Char(compute='_get_pricelist_item_name_price', string='Name', multi='item_name_price', help="Explicit rule name for this pricelist line.")
+    price = Fields.Char(compute='_get_pricelist_item_name_price', string='Price', multi='item_name_price', help="Explicit rule name for this pricelist line.")
