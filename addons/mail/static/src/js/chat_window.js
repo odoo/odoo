@@ -47,7 +47,7 @@ return Widget.extend({
         this.thread.render(messages, {display_load_more: false});
     },
     scrollBottom: function () {
-        this.$content.scrollTo('max');
+        this.$content.scrollTop(this.$content[0].scrollHeight);
     },
     fold: function () {
         this.$el.animate({

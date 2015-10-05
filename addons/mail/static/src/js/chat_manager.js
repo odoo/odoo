@@ -41,11 +41,14 @@ function add_message (data, options) {
                 channel.hidden = false;
                 chat_manager.bus.trigger('new_channel', channel);
             }
-            if ((channel.type === "dm") && (options.show_notification)) {
+            if (!_.contains(["static", "public", "private"], channel.type) && (options.show_notification)) {
                 var query = { is_displayed: false };
                 chat_manager.bus.trigger('anyone_listening', channel, query);
                 if (!query.is_displayed) {
-                    var title = _t('New message from ') + msg.author_id[1];
+                    var title = _t('New message');
+                    if (msg.author_id[1]) {
+                        title += _t(' from ') + msg.author_id[1];
+                    }
                     var trunc_text = function (t, limit) {
                         return (t.length > limit) ? t.substr(0, limit-1)+'&hellip;' : t;
                     };
@@ -177,7 +180,7 @@ function make_channel (data, options) {
     var channel = {
         id: data.id,
         name: data.name,
-        type: data.type || "public",
+        type: data.type || data.channel_type,
         all_history_loaded: false,
         uuid: data.uuid,
         is_detached: data.is_minimized,
@@ -191,7 +194,9 @@ function make_channel (data, options) {
             message_ids: [],
         }},
     };
-    if (data.public === "private") {
+    if (channel.type === "channel" && data.public !== "private") {
+        channel.type = "public";
+    } else if (data.public === "private") {
         channel.type = "private";
     }
     if ('direct_partner' in data) {

@@ -6,14 +6,13 @@
         <div class="o_chat_window">
             <div class="o_chat_header">
                 <span class="o_chat_title">
-                    <t t-raw="widget.title"/>
+                    <t t-esc="widget.title"/>
                 </span>
                 <span>
                     <a href="#" class="o_chat_window_close fa fa-close"></a>
                 </span>
             </div>
             <div class="o_chat_content">
-                <!-- <t t-call="mail.chat.im.Conversation.messages"/> -->
             </div>
             <div class="o_chat_input">
                 <input t-att-placeholder="widget.placeholder"/>
