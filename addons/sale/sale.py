@@ -421,12 +421,12 @@ class SaleOrderLine(models.Model):
           invoice. This is also hte default value if the conditions of no other status is met.
         - to invoice: we refer to the quantity to invoice of the line. Refer to method
           `_get_to_invoice_qty()` for more information on how this quantity is calculated.
-        - upselling: we consider the SO line in two situations. First case, the quantity invoiced is
-          larger the the quantity ordered. Second case, the quantity invoiced is at least equal to
-          the quantity ordered, and moreover we have delivered more than ordered. The latter
-          situation could arise if, for example, a project took more time than expected but we
-          decided not to invoice the extra cost to the client.
-        - invoiced: the quantity invoiced is strictly equal to the quantity ordered.
+        - upselling: this is possible only for a product invoiced on ordered quantities for which
+          we delivered more than expected. The could arise if, for example, a project took more
+          time than expected but we decided not to invoice the extra cost to the client. This
+          occurs onyl in state 'sale', so that when a SO is set to done, the upselling opportunity
+          is removed from the list.
+        - invoiced: the quantity invoiced is larger or equal to the quantity ordered.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
@@ -434,11 +434,10 @@ class SaleOrderLine(models.Model):
                 line.invoice_status = 'no'
             elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 line.invoice_status = 'to invoice'
-            elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) == 1 or\
-                    (float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) >= 0 and\
-                    float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1):
+            elif line.state == 'sale' and line.product_id.invoice_policy == 'order' and\
+                    float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1:
                 line.invoice_status = 'upselling'
-            elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) == 0:
+            elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) >= 0:
                 line.invoice_status = 'invoiced'
             else:
                 line.invoice_status = 'no'
@@ -460,7 +459,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id.invoice_policy', 'order_id.state')
     def _compute_qty_delivered_updateable(self):
         for line in self:
-            line.qty_delivered_updateable = line.product_id.invoice_policy in ('order', 'delivery') and line.order_id.state == 'sale'
+            line.qty_delivered_updateable = line.product_id.invoice_policy in ('order', 'delivery') and line.order_id.state == 'sale' and line.product_id.track_service == 'manual'
 
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
