@@ -1,0 +1,22 @@
+<openerp>
+    <template id="test_assetsbundle.bundle1">
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile1.js"></script>
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile2.js"></script>
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile3.js"></script>
+    </template>
+
+    <template id="test_assetsbundle.template1" name="test template 1">
+&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <t t-call-assets="test_assetsbundle.bundle1"/>
+    </head>
+    <body>
+    </body>
+</html>
+    </template>
+
+    <template id="test_assetsbundle.bundle2">
+        <link rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile1.css"/>
+    </template>
+</openerp>
