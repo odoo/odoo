@@ -76,3 +76,18 @@ class base_action_rule_test(common.TransactionCase):
         lead.write({'state': 'done'})
         self.assertEqual(lead.state, 'done')
         self.assertEqual(lead.user_id, self.user_demo)
+
+    def test_04_recomputed_field(self):
+        """
+        Check that a rule is executed whenever a field is recomputed after a
+        change on another model.
+        """
+        partner = self.env.ref('base.res_partner_1')
+        partner.write({'customer': False})
+        lead = self.create_lead(state='open', partner_id=partner.id)
+        self.assertFalse(lead.customer)
+        self.assertEqual(lead.user_id, self.user_admin)
+        # change partner, recompute on lead should trigger the rule
+        partner.write({'customer': True})
+        self.assertTrue(lead.customer)
+        self.assertEqual(lead.user_id, self.user_demo)

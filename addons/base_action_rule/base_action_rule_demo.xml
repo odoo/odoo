@@ -35,5 +35,13 @@
             <field name="filter_pre_id" ref="test_filter_open"/>
             <field name="filter_id" ref="test_filter_done"/>
         </record>
+
+        <record id="test_rule_on_recompute" model="base.action.rule">
+            <field name="name">Test rule on recompute</field>
+            <field name="kind">on_write</field>
+            <field name="model_id" ref="base_action_rule.model_base_action_rule_lead_test"/>
+            <field name="act_user_id" ref="base.user_demo"/>
+            <field name="filter_domain">[('customer', '=', True)]</field>
+        </record>
     </data>
 </openerp>
