@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!-- Action Rule Form View -->
         <record id="view_base_action_rule_form" model="ir.ui.view">
             <field name="name">base.action.rule.form</field>
@@ -12,7 +11,7 @@
                         <h1><field name="name"/></h1>
                         <group>
                             <group>
-                                <field name="model_id" on_change="onchange_model_id(model_id, context)"/>
+                                <field name="model_id"/>
                                 <field name="model" invisible="1"/>
                             </group>
                             <group>
@@ -26,25 +25,23 @@
                                     <p><b>Please choose the document type before setting the conditions.</b></p>
                                 </group>
                                 <group attrs="{'invisible': [('model', '=', False)]}">
-                                    <field name="kind" required="1"
-                                        on_change="onchange_kind(kind)"/>
+                                    <field name="kind"/>
                                     <label for="filter_pre_id" attrs="{'invisible': [('kind', '!=', 'on_write')]}"/>
                                     <div attrs="{'invisible': [('kind', '!=', 'on_write')]}">
                                         <field name="filter_pre_domain" widget="char_domain" options="{'model_field': 'model'}"
-                                            class="oe_inline"/>
-                                        <div class="oe_edit_only oe_inline">Set selection based on a search filter:
+                                            class="o_row"/>
+                                        <div class="oe_edit_only o_row">Set selection based on a search filter:
                                             <field name="filter_pre_id" domain="[('model_id', '=', model), '|', ('user_id', '=', uid), ('user_id', '=', False)]"
-                                                class="oe_inline" context="{'default_model_id': model, 'default_active': False, 'active_test': False}"
-                                                on_change="onchange_filter_pre_id(filter_pre_id, context)"/></div>
+                                                class="o_row" context="{'default_model_id': model, 'default_active': False, 'active_test': False}"/></div>
                                     </div>
                                     <label for="filter_id"/>
                                     <div>
                                         <field name="filter_domain" widget="char_domain" options="{'model_field': 'model'}"
-                                            class="oe_inline"/>
-                                        <div class="oe_edit_only oe_inline">Set selection based on a search filter:
+                                            class="o_row"/>
+                                        <div class="oe_edit_only o_row">Set selection based on a search filter:
                                             <field name="filter_id" domain="[('model_id', '=', model), '|', ('user_id', '=', uid), ('user_id', '=', False)]"
-                                                class="oe_inline" context="{'default_model_id': model, 'default_active': False, 'active_test': False}"
-                                                on_change="onchange_filter_id(filter_id, context)"/></div>
+                                                class="o_row" context="{'default_model_id': model, 'default_active': False, 'active_test': False}"/>
+                                        </div>
                                     </div>
                                     <field name="on_change_fields"
                                         attrs="{'invisible': [('kind', '!=', 'on_change')], 'required': [('kind', '=', 'on_change')]}"/>
@@ -53,10 +50,10 @@
                                     <label for="trg_date_range" string="Delay After Trigger Date"
                                         attrs="{'invisible': [('trg_date_id','=',False)]}"/>
                                     <div attrs="{'invisible': [('trg_date_id','=',False)]}">
-                                        <field name="trg_date_range" class="oe_inline"/>
-                                        <field name="trg_date_range_type" class="oe_inline" attrs="{'required': [('trg_date_id','!=',False)]}"/>
+                                        <field name="trg_date_range" class="o_row"/>
+                                        <field name="trg_date_range_type" class="o_row" attrs="{'required': [('trg_date_id','!=',False)]}"/>
                                     </div>
-                                    <field name="trg_date_calendar_id" class="oe_inline"
+                                    <field name="trg_date_calendar_id" class="o_row"
                                         attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'day')]}"/>
                                 </group>
                                 <div attrs="{'invisible': [('model', '=', False)]}">
@@ -127,5 +124,4 @@
         <menuitem id="menu_base_action_rule_form"
             parent="base.menu_automation" action="base_action_rule_act" sequence="1"/>
 
-    </data>
-</openerp>
+</odoo>
