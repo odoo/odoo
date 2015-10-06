@@ -1,0 +1,23 @@
+.o_kitten_mode_activated {
+    background-size: cover;
+    background-attachment: fixed;
+}
+.o_kitten_mode_activated > * {
+    opacity: 0.8;
+}
+
+.o-border-radius(@size) {
+    -moz-border-radius: @size;
+    -webkit-border-radius: @size;
+    border-radius: @size;
+}
+.o-box-shadow(@shadow) {
+    -moz-box-shadow: @shadow;
+    -webkit-box-shadow: @shadow;
+    box-shadow: @shadow;
+}
+
+.o_loading_kitten {
+    .o-border-radius(15px);
+    .o-box-shadow(0 0 5px 5px #999);
+}
