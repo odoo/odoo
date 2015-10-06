@@ -250,7 +250,7 @@ class StockPicking(models.Model):
                 if move.procurement_id.sale_line_id:
                     sale_order = move.procurement_id.sale_line_id.order_id
                     break
-            self.sale_id = sale_order.id if sale_order else False
+            picking.sale_id = sale_order.id if sale_order else False
 
     sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order", compute='_compute_sale_id')
 
