@@ -1,0 +1,16 @@
+<openerp>
+    <data>
+<template id="checkout_form_assets_frontend" inherit_id="website_sale.checkout" name="checkout_inherit">
+      <xpath expr="//form[contains(@action,'confirm_order')]" position="attributes">
+		<attribute name="id">CheckoutForm</attribute>
+      </xpath>
+</template>
+
+<template id="validator_assets_frontend" inherit_id="website_sale.assets_frontend" name="data_validator">
+      <xpath expr="." position="inside">
+         <script type="text/javascript" src="/website_data_validate/static/src/js/customer_data_validate.js"></script>
+     </xpath>
+</template>
+
+    </data>
+</openerp>

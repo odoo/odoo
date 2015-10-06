@@ -11,7 +11,7 @@
     'images': ['static/description/hr.png'],
     'author': "Optima ICT Services LTD",
     'website': "http://www.optima.co.ke",
-    'price': 400,
+    'price': 574,
     'currency': 'EUR',
 
     # Categories can be used to filter modules in modules listing
@@ -21,14 +21,13 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'hr', 'hr_contract', 'account', 'hr_payroll', 'optima_social'],
+    'depends': ['base', 'hr', 'hr_contract', 'account', 'hr_payroll', 'optima_social', 'hr_timesheet_sheet'],
 
     # always loaded
     'data': [
-        'security/rules.xml',
         'security/groups.xml',
+        'security/rules.xml',
         'security/ir.model.access.csv',
-	'data.xml',
 	'hr_overtime_data.xml',
 	'hr_advance_data.xml',
         'hr.xml',
@@ -45,6 +44,9 @@
 	'views/epay_register.xml',
 	'views/nhif_register.xml',
 	'views/nssf_register.xml',
+	'views/hr_ke_payroll.xml',
+	'views/hr_ke_contract.xml',
+	'data.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

@@ -1,0 +1,20 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="payment_acquirer_mobile_money">
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="arch" type="xml">
+              <xpath expr="//div[@name='payment_acquirer']" position="inside">
+                    <div>
+                        <field name="module_payment_mpesa" class="oe_inline"/>
+                        <label for="module_payment_mpesa"/>
+                    </div>
+                    <div>
+                        <field name="module_payment_airtel" class="oe_inline"/>
+                        <label for="module_payment_airtel"/>
+                    </div>
+	      </xpath>
+	    </field>
+        </record>
+    </data>
+</openerp>
