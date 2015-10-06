@@ -6,7 +6,7 @@ Enable UTM trackers in shared links.
 =====================================================
         """,
     'version': '1.0',
-    'depends': ['marketing'],
+    'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',
         'views/utm.xml',
