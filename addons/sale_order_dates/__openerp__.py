@@ -20,6 +20,5 @@ You can add the following additional dates to a sales order:
     'depends': ['sale_stock'],
     'data': ['views/sale_order_views.xml'],
     'demo': [],
-    'test': ['test/requested_date.yml'],
     'installable': True,
 }
