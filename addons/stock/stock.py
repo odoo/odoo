@@ -290,6 +290,7 @@ class StockQuant(models.Model):
     negative_move_id = fields.Many2one('stock.move', 'Move Negative Quant', help='If this is a negative quant, this will be the move that caused this negative quant.', readonly=True)
     negative_dest_location_id = fields.Many2one(related='negative_move_id.location_dest_id', relation='stock.location', string="Negative Destination Location", readonly=True, help="Technical field used to record the destination location of a move that created a negative quant")
 
+    @api.v7
     def init(self, cr):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_quant_product_location_index',))
         if not cr.fetchone():
@@ -370,13 +371,13 @@ class StockQuant(models.Model):
                 quant = self._quant_create(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=location_from, force_location_to=location_to)
             else:
                 self._quant_split(quant, qty)
-                to_move_quants.append(quant.id)
+                to_move_quants.append(quant)
             quants_reconcile.append(quant)
-        to_move_quants_obj = self.browse(to_move_quants)
         if to_move_quants:
-            to_recompute_move_ids = to_move_quants_obj.filtered(lambda x: x.reservation_id and x.reservation_id.id == move.id).reservation_id
-            self.move_quants_write(to_move_quants_obj, move, location_to, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
-            to_recompute_move_ids.recalculate_move_state()
+            to_recompute_move_ids = [x.reservation_id.id for x in to_move_quants if x.reservation_id and x.reservation_id.id != move.id]
+            self.move_quants_write(to_move_quants, move, location_to, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
+            self.pool.get('stock.move').recalculate_move_state(self._cr, self._uid, to_recompute_move_ids, context=self._context)
+            # self.env['stock.move'].recalculate_move_state(to_recompute_move_ids)
         if location_to.usage == 'internal':
             # Do manual search for quant to avoid full table scan (order by id)
             self._cr.execute("""
@@ -389,6 +390,10 @@ class StockQuant(models.Model):
 
     @api.model
     def move_quants_write(self, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
+        if len(quants) > 1:
+                quant = [quants[0] + x for x in quants[1:]][0]
+        else:
+            quant = quants[0]
         vals = {'location_id': location_dest_id.id,
                 'history_ids': [(4, move.id)],
                 'reservation_id': False}
@@ -396,7 +401,7 @@ class StockQuant(models.Model):
             vals['lot_id'] = lot_id
         if not entire_pack:
             vals.update({'package_id': dest_package_id})
-        quants.sudo().write(vals)
+        quant.sudo().write(vals)
 
     @api.model
     def quants_get_preferred_domain(self, qty, move, ops=False, lot_id=False, domain=None, preferred_domain_list=[]):
@@ -541,10 +546,10 @@ class StockQuant(models.Model):
         quant.sudo().write({'qty': qty_round})
         return new_quant
 
-    @api.multi
-    def _get_latest_move(self):
+    @api.model
+    def _get_latest_move(self, quant):
         move = False
-        for m in self.history_ids:
+        for m in quant.history_ids:
             if not move or m.date > move.date:
                 move = m
         return move
@@ -554,7 +559,7 @@ class StockQuant(models.Model):
         path = []
         for move in solving_quant.history_ids:
             path.append((4, move.id))
-        solved_quant_ids.sudo().write({'history_ids': path})
+        self.browse(solved_quant_ids).sudo().write({'history_ids': path})
 
     @api.model
     def _search_quants_to_reconcile(self, quant):
@@ -619,15 +624,15 @@ class StockQuant(models.Model):
                 if remaining_to_solve_quant_ids:
                     remaining_to_solve_quant_ids.sudo().write({'propagated_from_id': remaining_neg_quant.id})
             solved_quant = self.browse(solved_quant_ids)
-            if solving_quant.propagated_from_id and solved_quant:
+            if solving_quant.propagated_from_id and solved_quant_ids:
                 solved_quant.sudo().write({'propagated_from_id': solving_quant.propagated_from_id.id})
             #delete the reconciled quants, as it is replaced by the solved quants
             quant_neg.sudo().unlink()
-            if solved_quant:
+            if solved_quant_ids:
                 #price update + accounting entries adjustments
-                self._price_update(solving_quant.cost)
+                solved_quant._price_update(solving_quant.cost)
                 #merge history (and cost?)
-                self._quants_merge(solved_quant, solving_quant)
+                self._quants_merge(solved_quant_ids, solving_quant)
             solving_quant.sudo().unlink()
             solving_quant = remaining_solving_quant
 
@@ -669,9 +674,9 @@ class StockQuant(models.Model):
         return res
 
     @api.model
-    def _check_location(self, location):
-        if location.usage == 'view':
-            raise UserError(_('You cannot move to a location of type view %s.') % (location.name))
+    def _check_location(self, location_to):
+        if location_to.usage == 'view':
+            raise UserError(_('You cannot move to a location of type view %s.') % (location_to.name))
         return True
 
 #----------------------------------------------------------
@@ -2542,7 +2547,6 @@ class stock_move(osv.osv):
                     preferred_domain_list = [preferred_domain] + [fallback_domain] + [fallback_domain2]
                     quants = quant_obj.quants_get_preferred_domain(cr, uid, record.qty, move, ops=ops, domain=dom,
                                                         preferred_domain_list=preferred_domain_list, context=context)
-
                     quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, location_from=ops.location_id,
                                           lot_id=False, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id,
                                           dest_package_id=quant_dest_package_id, entire_pack=entire_pack, context=context)
