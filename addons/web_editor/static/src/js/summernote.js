@@ -1039,7 +1039,12 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
             }
         } else {
             if (!outdent){
-                var next = r.sc.splitText(r.so);
+                if(dom.isText(r.sc)) {
+                    var next = r.sc.splitText(r.so);
+                } else {
+                    var next = document.createTextNode('')
+                    $(r.sc.childNodes[r.so]).before(next);
+                }
                 editor.typing.insertTab($editable, r, options.tabsize);
                 r = range.create(next, 0, next, 0);
                 r = dom.merge(r.sc.parentNode, r.sc, r.so, r.ec, r.eo, null, true);
@@ -1434,7 +1439,7 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
                 if (prevTr) {
                     node = (dom.lastElementChild(prevTr).lastChild && dom.lastElementChild(prevTr).lastChild.tagName ? dom.lastElementChild(prevTr).lastChild.previousSibling : dom.lastElementChild(prevTr).lastChild) || dom.lastElementChild(prevTr);
                 } else {
-                    node = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(tr)));
+                    node = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(tr)) || $editable.get(0));
                 }
                 $(tr).empty();
                 if(!$(tr).closest('table').has('td, th').length) {
