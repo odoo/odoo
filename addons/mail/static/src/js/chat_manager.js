@@ -10,6 +10,7 @@ var web_client = require('web.web_client');
 
 var _t = core._t;
 var LIMIT = 20;
+var preview_msg_max_size = 50;
 
 var MessageModel = new Model('mail.message', session.context);
 var ChannelModel = new Model('mail.channel', session.context);
@@ -44,7 +45,11 @@ function add_message (data, options) {
                 var query = { is_displayed: false };
                 chat_manager.bus.trigger('anyone_listening', channel, query);
                 if (!query.is_displayed) {
-                    web_client.do_notify(_t('New message'), _t("You received a message from ") + msg.author_id[1]);
+                    var title = _t('New message from ') + msg.author_id[1];
+                    var trunc_text = function (t, limit) {
+                        return (t.length > limit) ? t.substr(0, limit-1)+'&hellip;' : t;
+                    };
+                    web_client.do_notify(title, trunc_text(msg.body, preview_msg_max_size));
                 }
             }
         }
