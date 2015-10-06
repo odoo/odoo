@@ -258,8 +258,8 @@ class StockPicking(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
-    def _get_price_unit(self):
-        price_unit = super(AccountInvoiceLine,self)._get_price_unit()
+    def _get_anglo_saxon_price_unit(self):
+        price_unit = super(AccountInvoiceLine,self)._get_anglo_saxon_price_unit()
         # in case of anglo saxon with a product configured as invoiced based on delivery, with perpetual
         # valuation and real price costing method, we must find the real price for the cost of good sold
         uom_obj = self.env['product.uom']

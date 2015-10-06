@@ -27,7 +27,7 @@ class stock_inventory(osv.osv):
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
-    def _get_price_unit(self):
+    def _get_anglo_saxon_price_unit(self):
         self.ensure_one()
         return self.product_id.standard_price
 
@@ -76,7 +76,7 @@ class account_invoice(osv.osv):
             # credit account cacc will be the expense account
             cacc = accounts['expense'].id
             if dacc and cacc:
-                price_unit = i_line._get_price_unit()
+                price_unit = i_line._get_anglo_saxon_price_unit()
                 return [
                     {
                         'type':'src',
@@ -88,7 +88,6 @@ class account_invoice(osv.osv):
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
                         'account_analytic_id': False,
-                        'taxes':i_line.invoice_line_tax_ids,
                     },
 
                     {
@@ -101,7 +100,6 @@ class account_invoice(osv.osv):
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
                         'account_analytic_id': False,
-                        'taxes':i_line.invoice_line_tax_ids,
                     },
                 ]
         return []
@@ -363,7 +361,7 @@ class stock_move(osv.osv):
         if any([q.qty <= 0 for q in move.quant_ids]):
             #if there is a negative quant, the standard price shouldn't be updated
             return
-        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will svaluate it at 6€
+        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will valuate it at 6€
         average_valuation_price = 0.0
         for q in move.quant_ids:
             average_valuation_price += q.qty * q.cost
