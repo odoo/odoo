@@ -329,7 +329,7 @@ class Channel(models.Model):
             else:
                 # create a new one
                 channel = self.create({
-                    'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner_id}) for partner_id in partners_to],
+                    'channel_partner_ids': [(4, partner_id) for partner_id in partners_to],
                     'public': 'private',
                     'channel_type': 'chat',
                     'email_send': False,
@@ -497,6 +497,6 @@ class Channel(models.Model):
             'name': name,
             'public': privacy,
             'email_send': False,
-            'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]
+            'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
         return new_channel.channel_info()[0]
