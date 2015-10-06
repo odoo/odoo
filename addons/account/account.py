@@ -580,6 +580,8 @@ class account_account(osv.osv):
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if context is None:
+            context = {}
         if not args:
             args = []
         args = args[:]
@@ -604,18 +606,18 @@ class account_account(osv.osv):
                     'like': ('=like', plus_percent),
                 }.get(operator, (operator, lambda n: n))
 
-                ids = self.search(cr, user, ['|', ('code', code_op, code_conv(name)), '|', ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
+                ids = self.search(cr, user, ['|', ('code', code_op, code_conv(name)), '|', ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit, context=context)
 
                 if not ids and len(name.split()) >= 2:
                     #Separating code and name of account for searching
                     operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
-                    ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit)
+                    ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit, context=context)
             else:
-                ids = self.search(cr, user, ['&','!', ('code', '=like', name+"%"), ('name', operator, name)]+args, limit=limit)
+                ids = self.search(cr, user, ['&','!', ('code', '=like', name+"%"), ('name', operator, name)]+args, limit=limit, context=context)
                 # as negation want to restric, do if already have results
                 if ids and len(name.split()) >= 2:
                     operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
-                    ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2), ('id', 'in', ids)]+ args, limit=limit)
+                    ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2), ('id', 'in', ids)]+ args, limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
