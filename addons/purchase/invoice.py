@@ -118,8 +118,11 @@ class AccountInvoice(models.Model):
                             valuation_price_unit = company_currency.compute(inv.currency_id, valuation_price_unit, context={'date': inv.date_invoice})
                         if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
                             # price with discount and without tax included
-                            price_unit = self.env['account.tax'].compute_all(line['taxes'], i_line.price_unit * (1-(i_line.discount or 0.0)/100.0),\
-                                inv.currency_id.id, line['quantity'])['total_excluded']
+                            price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
+                            if line['tax_ids']:
+                                #line['tax_ids'] is like [(4, tax_id, None), (4, tax_id2, None)...]
+                                taxes = self.env['account.tax'].browse([x[1] for x in line['tax_ids']])
+                                price_unit = taxes.compute_all(price_unit, currency=inv.currency_id, quantity=line['quantity'])['total_excluded']
                             price_line = round(valuation_price_unit * line['quantity'], account_prec)
                             price_diff = round(price_unit - price_line, account_prec)
                             line.update({'price': price_line})
@@ -133,7 +136,6 @@ class AccountInvoice(models.Model):
                                 'product_id': line['product_id'],
                                 'uom_id': line['uom_id'],
                                 'account_analytic_id': line['account_analytic_id'],
-                                'taxes': line.get('taxes', []),
                                 })
                 return diff_res
         return []
