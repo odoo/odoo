@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
+from openerp import fields, models, api
 
 
-class pos_discount(osv.osv_memory):
+class PosDiscount(models.TransientModel):
     _name = 'pos.discount'
     _description = 'Add a Global Discount'
-    _columns = {
-        'discount': fields.float('Discount (%)', required=True, digits=(16,2)),
-    }
-    _defaults = {
-        'discount': 5,
-    }
 
-    def apply_discount(self, cr, uid, ids, context=None):
+    discount = fields.Float(string='Discount (%)', required=True, digits=(16, 2), default=5)
+
+    @api.multi
+    def apply_discount(self):
         """
          To give the discount of  product and check the.
 
@@ -24,14 +21,11 @@ class pos_discount(osv.osv_memory):
          @param context: A standard dictionary
          @return : nothing
         """
-        order_ref = self.pool.get('pos.order')
-        order_line_ref = self.pool.get('pos.order.line')
-        if context is None:
-            context = {}
-        this = self.browse(cr, uid, ids[0], context=context)
-        record_id = context and context.get('active_id', False)
-        if isinstance(record_id, (int, long)):
-            record_id = [record_id]
-        for order in order_ref.browse(cr, uid, record_id, context=context):
-            order_line_ref.write(cr, uid, [x.id for x in order.lines], {'discount':this.discount}, context=context)
+        self.ensure_one()
+        context = dict(self.env.context or {})
+        active_id = context.get('active_id', False) or False
+        if isinstance(active_id, (int, long)):
+            active_id = [active_id]
+        for order in self.env['pos.order'].browse(active_id):
+            order.lines.write({'discount': self.discount})
         return {}
