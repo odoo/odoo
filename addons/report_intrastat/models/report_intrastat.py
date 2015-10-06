@@ -1,42 +1,43 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp.tools.sql import drop_view_if_exists
-from openerp.addons.decimal_precision import decimal_precision as dp
+from odoo import fields, models
+from odoo.tools.sql import drop_view_if_exists
 
 
-class report_intrastat_code(osv.osv):
+class ReportIntrastatCode(models.Model):
     _name = "report.intrastat.code"
     _description = "Intrastat code"
     _translate = False
-    _columns = {
-        'name': fields.char('Intrastat Code'),
-        'description': fields.char('Description'),
-    }
+
+    name = fields.Char(string='Intrastat Code')
+    description = fields.Char()
 
 
-class report_intrastat(osv.osv):
+class ReportIntrastat(models.Model):
     _name = "report.intrastat"
     _description = "Intrastat report"
     _auto = False
-    _columns = {
-        'name': fields.char('Year', required=False, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
-        'supply_units':fields.float('Supply Units', readonly=True),
-        'ref':fields.char('Source document', readonly=True),
-        'code': fields.char('Country code', size=2, readonly=True),
-        'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
-        'weight': fields.float('Weight', readonly=True),
-        'value': fields.float('Value', readonly=True, digits=0),
-        'type': fields.selection([('import', 'Import'), ('export', 'Export')], 'Type'),
-        'currency_id': fields.many2one('res.currency', "Currency", readonly=True),
-        'company_id': fields.many2one('res.company', "Company", readonly=True),
-    }
-    def init(self, cr):
-        drop_view_if_exists(cr, 'report_intrastat')
-        cr.execute("""
+
+    name = fields.Char(string='Year', readonly=True)
+    month = fields.Selection([
+        ('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
+        ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'),
+        ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')],
+        readonly=True)
+    supply_units = fields.Float(readonly=True)
+    ref = fields.Char(string='Source document', readonly=True)
+    code = fields.Char(string='Country code', readonly=True)
+    intrastat_id = fields.Many2one('report.intrastat.code', string='Intrastat code', readonly=True)
+    weight = fields.Float(readonly=True)
+    value = fields.Float(readonly=True, digits=0)
+    type = fields.Selection([('import', 'Import'), ('export', 'Export')])
+    currency_id = fields.Many2one('res.currency', string="Currency", readonly=True)
+    company_id = fields.Many2one('res.company', string="Company", readonly=True)
+
+    def init(self):
+        drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute("""
             create or replace view report_intrastat as (
                 select
                     to_char(inv.date_invoice, 'YYYY') as name,

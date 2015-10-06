@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from odoo import fields, models
 
 
-class product_template(osv.osv):
-    _name = "product.template"
+class ProductTemplate(models.Model):
     _inherit = "product.template"
-    _columns = {
-        'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code'),
-    }
+
+    intrastat_id = fields.Many2one('report.intrastat.code', string='Intrastat code')

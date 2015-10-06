@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from odoo import fields, models
 
 
-class res_country(osv.osv):
-    _name = 'res.country'
+class ResCountry(models.Model):
     _inherit = 'res.country'
-    _columns = {
-        'intrastat': fields.boolean('Intrastat member'),
-    }
-    _defaults = {
-        'intrastat': lambda *a: False,
-    }
+
+    intrastat = fields.Boolean(string='Intrastat member')
