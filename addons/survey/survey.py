@@ -518,15 +518,6 @@ class survey_page(osv.Model):
         'sequence': 10
     }
 
-    # Public methods #
-
-    def copy_data(self, cr, uid, ids, default=None, context=None):
-        current_rec = self.read(cr, uid, ids, fields=['title'], context=context)
-        title = _("%s (copy)") % (current_rec.get('title'))
-        default = dict(default or {}, title=title)
-        return super(survey_page, self).copy_data(cr, uid, ids, default,
-            context=context)
-
 
 class survey_question(osv.Model):
     ''' Questions that will be asked in a survey.
@@ -641,13 +632,6 @@ class survey_question(osv.Model):
 
     def onchange_validation_email(self, cr, uid, ids, validation_email, context=None):
         return {'value': {'validation_required': False}} if validation_email else {}
-
-    def copy_data(self, cr, uid, ids, default=None, context=None):
-        current_rec = self.read(cr, uid, ids, context=context)
-        question = _("%s (copy)") % (current_rec.get('question'))
-        default = dict(default or {}, question=question)
-        return super(survey_question, self).copy_data(cr, uid, ids, default,
-            context=context)
 
     # Validation methods
 
