@@ -75,9 +75,9 @@ function make_message (data, channel_id) {
         res_id: data.res_id,
     };
 
-    _.each(_.keys(emoji_substitutions), function(key){
-        var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1'); //]
-        var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + escaped_key + ")(?:\\s|$|</[a-z]*>)");
+    _.each(_.keys(emoji_substitutions), function (key) {
+        var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
+        var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + escaped_key + ")(?=\\s|$|</[a-z]*>)", "g");
         msg.body = msg.body.replace(regexp, ' <span class="o_mail_emoji">'+emoji_substitutions[key]+'</span> ');
     });
 
@@ -177,9 +177,14 @@ function make_channel (data, options) {
         uuid: data.uuid,
         is_detached: data.is_minimized,
         is_folded: data.state === "folded",
-        loaded: false,
         autoswitch: 'autoswitch' in options ? options.autoswitch : true,
         hidden: options.hidden,
+        display_needactions: options.display_needactions,
+        cache: {'[]': {
+            all_history_loaded: false,
+            loaded: false,
+            message_ids: [],
+        }},
     };
     if (data.public === "private") {
         channel.type = "private";
@@ -192,12 +197,32 @@ function make_channel (data, options) {
     return channel;
 }
 
+function get_channel_cache (channel, domain) {
+    var stringified_domain = JSON.stringify(domain || []);
+    if (!channel.cache[stringified_domain]) {
+        channel.cache[stringified_domain] = {
+            all_history_loaded: false,
+            loaded: false,
+            message_ids: [],
+        };
+    }
+    return channel.cache[stringified_domain];
+}
+
+function remove_message_from_channel (channel_id, message) {
+    message.channel_ids = _.without(message.channel_ids, channel_id);
+    var channel = _.findWhere(channels, { id: channel_id });
+    _.each(channel.cache, function (cache) {
+        cache.message_ids = _.without(cache.message_ids, message.id);
+    });
+}
+
 // options: domain, load_more
-function fetch_from_channel (channel_id, options) {
+function fetch_from_channel (channel, options) {
     var domain =
-        (channel_id === "channel_inbox") ? [['needaction', '=', true]] :
-        (channel_id === "channel_starred") ? [['starred', '=', true]] :
-                                            [['channel_ids', 'in', channel_id]];
+        (channel.id === "channel_inbox") ? [['needaction', '=', true]] :
+        (channel.id === "channel_starred") ? [['starred', '=', true]] :
+                                            [['channel_ids', 'in', channel.id]];
 
     options = options || {};
     if (options.domain) {
@@ -205,7 +230,7 @@ function fetch_from_channel (channel_id, options) {
     }
     if (options.load_more) {
         var min_message_id = _.chain(messages)
-            .filter(function (msg) { return _.contains(msg.channel_ids, channel_id); })
+            .filter(function (msg) { return _.contains(msg.channel_ids, channel.id); })
             .pluck("id")
             .min()
             .value();
@@ -214,17 +239,19 @@ function fetch_from_channel (channel_id, options) {
     }
 
     return MessageModel.call('message_fetch', [domain], {limit: LIMIT}).then(function (msgs) {
-        var channel = _.findWhere(channels, {id: channel_id});
-        channel.loaded = true;
-        if (!channel.all_history_loaded) {
-            channel.all_history_loaded =  msgs.length < LIMIT;
+        var cache = get_channel_cache(channel, options.domain);
+
+        cache.message_ids = _.uniq(cache.message_ids.concat(_.pluck(msgs, 'id')));
+        if (!cache.all_history_loaded) {
+            cache.all_history_loaded =  msgs.length < LIMIT;
         }
+        cache.loaded = true;
 
         _.each(msgs, function (msg) {
-            add_message(msg, {channel_id: channel_id, silent: true});
+            add_message(msg, {channel_id: channel.id, silent: true});
         });
         return _.filter(messages, function (m) {
-            return _.contains(m.channel_ids, channel_id);
+            return _.contains(cache.message_ids, m.id);
         });
     });
 }
@@ -254,6 +281,7 @@ function fetch_document_messages (ids, options) {
     }
 }
 
+
 // Public interface
 //----------------------------------------------------------------------------------
 var chat_manager = {
@@ -262,22 +290,23 @@ var chat_manager = {
 
     get_messages: function (options) {
         if ('channel_id' in options) { // channel message
-            var channel = _.findWhere(channels, {id: options.channel_id});
-            if (channel.loaded) {
+            var channel = this.get_channel(options.channel_id);
+            var channel_cache = get_channel_cache(channel, options.domain);
+            if (channel_cache.loaded) {
                 return $.when(_.filter(messages, function (message) {
-                    return _.contains(message.channel_ids, channel.id);
+                    return _.contains(message.channel_ids, options.channel_id);
                 }));
             } else {
-                return fetch_from_channel(options.channel_id);
+                return fetch_from_channel(channel);
             }
         } else { // chatter message
         }
     },
-    fetch: function (channel_id, domain) {
-        return fetch_from_channel(channel_id, {domain: domain});
+    fetch: function (channel, domain) {
+        return fetch_from_channel(channel, {domain: domain});
     },
-    fetch_more: function (channel_id, domain) {
-        return fetch_from_channel(channel_id, {domain: domain, load_more: true});
+    fetch_more: function (channel, domain) {
+        return fetch_from_channel(channel, {domain: domain, load_more: true});
     },
     /**
      * Fetches chatter messages from their ids
@@ -290,13 +319,16 @@ var chat_manager = {
 
         return MessageModel.call('set_message_starred', [[message_id], !msg.is_starred]).then(function () {
             msg.is_starred = !msg.is_starred;
+            if (!msg.is_starred) {
+                remove_message_from_channel("channel_starred", msg);
+            }
             chat_manager.bus.trigger('update_message', msg);
         });
     },
     mark_as_read: function (message_id) {
         return MessageModel.call('set_message_done', [[message_id]]).then(function () {
             var message = _.findWhere(messages, { id: message_id });
-            message.channel_ids = _.without(message.channel_ids, "channel_inbox");
+            remove_message_from_channel("channel_inbox", message);
             chat_manager.bus.trigger('update_message', message);
             needaction_counter = needaction_counter - 1;
             chat_manager.bus.trigger('update_needaction', needaction_counter);
@@ -311,8 +343,8 @@ var chat_manager = {
         return _.findWhere(channels, {id: id}) || channels[0];
     },
 
-    all_history_loaded: function (channel_id) {
-        return this.get_channel(channel_id).all_history_loaded;
+    all_history_loaded: function (channel, domain) {
+        return get_channel_cache(channel, domain).all_history_loaded;
     },
 
     get_emojis: function() {
@@ -323,8 +355,7 @@ var chat_manager = {
         return needaction_counter;
     },
 
-    detach_channel: function (channel_id) {
-        var channel = this.get_channel(channel_id);
+    detach_channel: function (channel) {
         return ChannelModel.call("channel_minimize", [channel.uuid, true]);
     },
     remove_chatter_messages: function (model) {
@@ -345,19 +376,20 @@ var chat_manager = {
                 bus.restart_poll();
             });
     },
-    join_channel: function (channel_id) {
+    join_channel: function (channel_id, options) {
         return ChannelModel
             .call('channel_join_and_get_info', [[channel_id]])
-            .then(add_channel);
+            .then(function (result) {
+                add_channel(result, options);
+            });
     },
 
-    unsubscribe: function (channel_id) {
+    unsubscribe: function (channel) {
         var def;
-	var channel = chat_manager.get_channel(channel_id);
         if (channel.type === "dm") {
             def = ChannelModel.call('channel_pin', [channel.uuid, false]);
         } else {
-            def = ChannelModel.call('action_unfollow', [[channel_id]]);
+            def = ChannelModel.call('action_unfollow', [[channel.id]]);
         }
         return def.then(function () {
             channels = _.without(channels, channel);
@@ -379,15 +411,15 @@ var chat_manager = {
 // ---------------------------------------------------------------------------------
 function init () {
     add_channel({
-       id: "channel_inbox",
-       name: _t("Inbox"),
-       type: "static"
-    });
+        id: "channel_inbox",
+        name: _t("Inbox"),
+        type: "static",
+    }, { display_needactions: true });
 
     add_channel({
-       id: "channel_starred",
-       name: _t("Starred"),
-       type: "static"
+        id: "channel_starred",
+        name: _t("Starred"),
+        type: "static"
     });
 
     var load_channels = session.rpc('/mail/client_action').then(function (result) {
@@ -410,11 +442,19 @@ function init () {
             // new message in a channel
             var message = notification[1];
             var channel_id = message.channel_ids[0];
-            message = add_message(message, { channel_id: channel_id, show_notification: true} );
-            if (_.contains(message.channel_ids, 'channel_inbox')) {
-                needaction_counter = needaction_counter + 1;
-                chat_manager.bus.trigger('update_needaction', needaction_counter);
+            // fetch the channel info if not done already
+            var channel = _.findWhere(channels, {id: channel_id});
+            var channel_ready;
+            if (!channel) {
+                channel_ready = chat_manager.join_channel(channel_id, { autoswitch: false });
             }
+            $.when(channel_ready).then(function () {
+                message = add_message(message, { channel_id: channel_id, show_notification: true });
+                if (_.contains(message.channel_ids, 'channel_inbox')) {
+                    needaction_counter = needaction_counter + 1;
+                    chat_manager.bus.trigger('update_needaction', needaction_counter);
+                }
+            });
         }
         if (model === 'res.partner') {
             var chat_session = notification[1];

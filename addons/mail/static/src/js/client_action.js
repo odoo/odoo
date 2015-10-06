@@ -5,6 +5,7 @@ var chat_manager = require('mail.chat_manager');
 var ChatComposer = require('mail.ChatComposer');
 var ChatThread = require('mail.ChatThread');
 
+var config = require('web.config');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var data = require('web.data');
@@ -90,7 +91,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         "click .o_mail_chat_channel_item": function (event) {
             event.preventDefault();
             var channel_id = this.$(event.currentTarget).data('channel-id');
-            this.set_channel(channel_id);
+            this.set_channel(chat_manager.get_channel(channel_id));
         },
         "click .o_mail_sidebar_title .o_add": function (event) {
             event.preventDefault();
@@ -107,18 +108,20 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             event.stopPropagation();
             var self = this;
             var channel_id = $(event.target).data("channel-id");
-            chat_manager.unsubscribe(channel_id).then(function () {
-                self.render_sidebar();
-                self.set_channel("channel_inbox");
-            });
+            chat_manager
+                .unsubscribe(chat_manager.get_channel(channel_id))
+                .then(function () {
+                    self.render_sidebar();
+                    self.set_channel(chat_manager.get_channel("channel_inbox"));
+                });
         },
     },
 
     on_attach_callback: function () {
-        this.thread.scroll_to({offset: this.channels_scrolltop[this.channel_id]});
+        this.thread.scroll_to({offset: this.channels_scrolltop[this.channel.id]});
     },
     on_detach_callback: function () {
-        this.channels_scrolltop[this.channel_id] = this.thread.get_scrolltop();
+        this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
     },
 
     init: function(parent, action) {
@@ -140,7 +143,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         };
         var dataset = new data.DataSetSearch(this, 'mail.message');
         var view_id = (this.action && this.action.search_view_id && this.action.search_view_id[0]) || false;
-        var default_channel = this.action.context.active_id || this.action.params.default_active_id || 'channel_inbox';
+        var default_channel_id = this.action.context.active_id ||
+                                 this.action.params.default_active_id ||
+                                 'channel_inbox';
         this.searchview = new SearchView(this, dataset, view_id, {}, options);
         this.searchview.on('search_data', this, this.on_search);
 
@@ -184,13 +189,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.render_sidebar();
 
         return $.when(def1, def2, def3, def4)
-            .then(this.set_channel.bind(this, default_channel))
+            .then(this.set_channel.bind(this, chat_manager.get_channel(default_channel_id)))
             .then(function () {
                 chat_manager.bus.on('new_message', self, self.on_new_message);
                 chat_manager.bus.on('update_message', self, self.on_update_message);
                 chat_manager.bus.on('new_channel', self, self.on_new_channel);
                 chat_manager.bus.on('anyone_listening', self, function (channel, query) {
-                    query.is_displayed = query.is_displayed || channel.id === self.channel_id;
+                    query.is_displayed = query.is_displayed || channel.id === self.channel.id;
                 });
                 chat_manager.bus.on('update_needaction', self, self.on_update_needaction);
             });
@@ -283,16 +288,14 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
     },
 
-    set_channel: function (channel_id) {
+    set_channel: function (channel) {
         var self = this;
         // Store scroll position of previous channel
-        if (this.channel_id) {
-            this.channels_scrolltop[this.channel_id] = this.thread.get_scrolltop();
+        if (this.channel) {
+            this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
         }
-        var new_channel_scrolltop = this.channels_scrolltop[channel_id];
-        var channel = chat_manager.get_channel(channel_id);
-        channel_id = channel.id;
-        this.channel_id = channel_id;
+        var new_channel_scrolltop = this.channels_scrolltop[channel.id];
+        this.channel = channel;
         this.set("title", channel.name);
         this.$buttons.toggle(channel.type !== "static");
         this.$buttons
@@ -300,12 +303,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             .toggle(channel.type !== "dm");
 
         this.update_cp();
-        this.action.context.active_id = channel_id;
-        this.action.context.active_ids = [channel_id];
+        this.action.context.active_id = channel.id;
+        this.action.context.active_ids = [channel.id];
 
         this.$('.o_mail_chat_channel_item')
             .removeClass('o_active')
-            .filter('[data-channel-id=' + channel_id + ']')
+            .filter('[data-channel-id=' + channel.id + ']')
             .removeClass('o_unread_message')
             .addClass('o_active');
 
@@ -314,17 +317,27 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
         return this.fetch_and_render_thread().then(function () {
             self.thread.scroll_to({offset: new_channel_scrolltop});
+            if (!config.device.touch) {
+                self.composer.focus();
+            }
             self.action_manager.do_push_state({
                 action: self.action.id,
-                active_id: self.channel_id,
+                active_id: self.channel.id,
             });
         });
     },
 
+    get_thread_rendering_options: function () {
+        return {
+            display_load_more: !chat_manager.all_history_loaded(this.channel, this.domain),
+            display_needactions: this.channel.display_needactions,
+        };
+    },
+
     fetch_and_render_thread: function () {
         var self = this;
-        return chat_manager.fetch(this.channel_id, this.domain).then(function(result) {
-            self.thread.render(result, {display_load_more: !chat_manager.all_history_loaded(self.channel_id)});
+        return chat_manager.fetch(this.channel, this.domain).then(function(result) {
+            self.thread.render(result, self.get_thread_rendering_options());
         });
     },
 
@@ -334,9 +347,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var oldest_msg_selector = '.o_thread_message[data-message-id="' + oldest_msg_id + '"]';
         var offset = -framework.getPosition(document.querySelector(oldest_msg_selector)).top;
         return chat_manager
-            .fetch_more(this.channel_id, this.domain)
+            .fetch_more(this.channel, this.domain)
             .then(function(result) {
-                self.thread.render(result, {display_load_more: !chat_manager.all_history_loaded(self.channel_id)});
+                self.thread.render(result, self.get_thread_rendering_options());
                 offset += framework.getPosition(document.querySelector(oldest_msg_selector)).top;
                 self.thread.scroll_to({offset: offset});
             });
@@ -384,11 +397,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.update_cp(); // do not reload the client action, just display it, but a refresh of the control panel is needed.
         this.action_manager.do_push_state({
             action: this.action.id,
-            active_id: this.channel_id,
+            active_id: this.channel.id,
         });
     },
     on_post_message: function (message) {
-        message.channel_id = this.channel_id;
+        message.channel_id = this.channel.id;
         chat_manager
             .post_message(message)
             .fail(function () {
@@ -397,13 +410,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
     on_new_message: function (message) {
         var self = this;
-        if (_.contains(message.channel_ids, this.channel_id)) {
+        if (_.contains(message.channel_ids, this.channel.id)) {
             this.fetch_and_render_thread().then(function () {
                 self.thread.scroll_to({id: message.id});
             });
         }
         // Indicate in the sidebar that there is a new message in the corresponding channels
-        _.each(_.without(message.channel_ids, this.channel_id), function (channel_id) {
+        _.each(_.without(message.channel_ids, this.channel.id), function (channel_id) {
                 self.$('.o_mail_chat_channel_item')
                     .filter('[data-channel-id=' + channel_id + ']')
                     .addClass('o_unread_message');
@@ -413,20 +426,21 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
     on_update_message: function (message) {
         var self = this;
-        if ((this.channel_id === "channel_starred" && !message.is_starred) ||
-            (this.channel_id === "channel_inbox" && !message.is_needaction)) {
-            chat_manager.fetch(this.channel_id, this.domain).then(function (messages) {
-                var options = {display_load_more: !chat_manager.all_history_loaded(self.channel_id)};
+        var current_channel_id = this.channel.id;
+        if ((current_channel_id === "channel_starred" && !message.is_starred) ||
+            (current_channel_id === "channel_inbox" && !message.is_needaction)) {
+            chat_manager.fetch(this.channel, this.domain).then(function (messages) {
+                var options = self.get_thread_rendering_options();
                 self.thread.remove_message_and_render(message.id, messages, options);
             });
-        } else if (_.contains(message.channel_ids, this.channel_id)) {
+        } else if (_.contains(message.channel_ids, current_channel_id)) {
             this.fetch_and_render_thread();
         }
     },
     on_new_channel: function (channel) {
         this.render_sidebar();
         if (channel.autoswitch) {
-            this.set_channel(channel.id);
+            this.set_channel(channel);
         }
     },
     on_update_needaction: function () {
@@ -437,20 +451,19 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     on_click_button_invite: function () {
-        var channel = chat_manager.get_channel(this.channel_id);
-        var title = _.str.sprintf(_t('Invite people to %s'), channel.name);
-        new PartnerInviteDialog(this, title, this.channel_id).open();
+        var title = _.str.sprintf(_t('Invite people to %s'), this.channel.name);
+        new PartnerInviteDialog(this, title, this.channel.id).open();
     },
     on_click_button_detach: function () {
-        chat_manager.detach_channel(this.channel_id);
+        chat_manager.detach_channel(this.channel);
     },
 
     on_click_button_unsubscribe: function () {
         var self = this;
-        var channel = chat_manager.get_channel(this.channel_id);
+        var channel = this.channel;
         chat_manager
-            .unsubscribe(channel.id)
-            .then(this.set_channel.bind(this, "channel_inbox"))
+            .unsubscribe(channel)
+            .then(this.set_channel.bind(this, chat_manager.get_channel("channel_inbox")))
             .then(this.render_sidebar.bind(this))
             .then(function () {
                 var msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), channel.name);
@@ -461,7 +474,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.do_action({
             type: 'ir.actions.act_window',
             res_model: "mail.channel",
-            res_id: this.channel_id,
+            res_id: this.channel.id,
             views: [[false, 'form']],
             target: 'current'
         }, {

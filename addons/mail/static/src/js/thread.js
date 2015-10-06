@@ -108,7 +108,10 @@ var Thread = Widget.extend({
     scroll_to: function (target) {
         target = target || {};
         if (target.id !== undefined) {
-            this.$el.scrollTo(this.$('.o_thread_message[data-message-id=' + target.id + ']'));
+            var $target = this.$('.o_thread_message[data-message-id=' + target.id + ']');
+            if ($target.length) {
+                this.$el.scrollTo($target);
+            }
         } else if (target.offset !== undefined) {
             this.$el.scrollTop(target.offset);
         } else {

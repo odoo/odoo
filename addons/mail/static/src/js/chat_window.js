@@ -27,7 +27,10 @@ return Widget.extend({
         this.$content = this.$('.o_chat_content');
         this.$input = this.$('.o_chat_input input');
 
-        this.thread = new ChatThread(this, {display_avatar: false});
+        this.thread = new ChatThread(this, {
+            display_avatar: false,
+            display_needactions: false,
+        });
         this.thread.on('toggle_star_status', this, function (message_id) {
             this.trigger('toggle_star_status', message_id);
         });

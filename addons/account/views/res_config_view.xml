@@ -154,6 +154,10 @@
                                 <field name="module_account_reports_followup" class="oe_inline" widget="upgrade_boolean"/>
                                 <label for="module_account_reports_followup"/>
                             </div>
+                            <div>
+                                <field name="module_account_batch_deposit" widget="upgrade_boolean"/>
+                                <label for="module_account_batch_deposit"/>
+                            </div>
                         </div>
                     </group>
                     <group attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
@@ -199,26 +203,12 @@
                                 <label for="module_l10n_us_check_printing"/>
                             </div>
                             <div>
-                                <field name="module_account_batch_deposit" widget="upgrade_boolean"/>
-                                <label for="module_account_batch_deposit"/>
-                            </div>
-                            <div>
                                 <field name="module_account_sepa" class="oe_inline" widget="upgrade_boolean"/>
                                 <label for="module_account_sepa"/>
                             </div>
                         </div>
-                    </group>
-                    <group>
                         <label for="id" string="Bank Statements"/>
-                        <div>
-                            <div>
-                                <field name="module_account_yodlee" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_yodlee"/>
-                            </div>
-                            <div>
-                                <field name="module_account_plaid" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_plaid"/>
-                            </div>
+                        <div name="bank_statement_import_options">
                             <div>
                                 <field name="module_account_bank_statement_import_qif" class="oe_inline" widget="upgrade_boolean"/>
                                 <label for="module_account_bank_statement_import_qif"/>
@@ -226,6 +216,14 @@
                             <div>
                                 <field name="module_account_bank_statement_import_ofx" class="oe_inline" widget="upgrade_boolean"/>
                                 <label for="module_account_bank_statement_import_ofx"/>
+                            </div>
+                            <div>
+                                <field name="module_account_yodlee" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_yodlee"/>
+                            </div>
+                            <div>
+                                <field name="module_account_plaid" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_plaid"/>
                             </div>
                         </div>
                     </group>

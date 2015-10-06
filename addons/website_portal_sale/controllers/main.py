@@ -22,7 +22,7 @@ class website_account(website_account):
         ])
         orders = res_sale_order.search([
             ('partner_id.id', '=', partner.id),
-            ('state', 'in', ['progress', 'manual', 'shipping_except', 'invoice_except', 'done'])
+            ('state', 'in', ['sale', 'done'])
         ])
         invoices = res_invoices.search([
             ('partner_id.id', '=', partner.id),
