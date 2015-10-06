@@ -5,7 +5,7 @@ import re
 import string
 
 from lxml.html import parse
-from urllib import urlencode
+from werkzeug import url_encode as urlencode
 from urllib2 import urlopen
 from urlparse import urljoin
 from urlparse import urlparse
