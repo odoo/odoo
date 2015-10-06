@@ -22,5 +22,4 @@ You can add the following additional dates to a sales order:
     'demo': [],
     'test': ['test/requested_date.yml'],
     'installable': True,
-    'auto_install': False,
 }

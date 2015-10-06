@@ -1,21 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-
-from openerp.osv import osv
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from datetime import timedelta
+from odoo import api, fields, models
 
 
-class SaleOrderLine(osv.osv):
+class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    def _prepare_order_line_procurement(self, cr, uid, ids, group_id=False, context=None):
-        vals = super(SaleOrderLine, self)._prepare_order_line_procurement(cr, uid, ids, group_id=group_id, context=context)
-        line = self.browse(cr, uid, ids, context=context)
-        if line.order_id.requested_date:
-            date_planned = datetime.strptime(line.order_id.requested_date, DEFAULT_SERVER_DATETIME_FORMAT) - timedelta(days=line.order_id.company_id.security_lead)
+    @api.multi
+    def _prepare_order_line_procurement(self, group_id):
+        vals = super(SaleOrderLine, self)._prepare_order_line_procurement(group_id=group_id)
+        for line in self.filtered(lambda x: x.order_id.requested_date):
+            date_planned = fields.Datetime.from_string(line.order_id.requested_date) - timedelta(days=line.order_id.company_id.security_lead)
             vals.update({
-                'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                'date_planned': fields.Datetime.to_string(date_planned),
             })
         return vals
