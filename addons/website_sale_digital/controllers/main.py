@@ -17,7 +17,7 @@ class website_sale_digital_confirmation(website_sale):
     def payment_confirmation(self, **post):
         response = super(website_sale_digital_confirmation, self).payment_confirmation(**post)
         order_lines = response.qcontext['order'].order_line
-        digital_content = map(lambda x: x.product_id.type == 'digital', order_lines)
+        digital_content = map(lambda x: x.product_id.product_type == 'digital', order_lines)
         response.qcontext.update(digital=any(digital_content))
         return response
 
@@ -40,7 +40,7 @@ class website_sale_digital(website_account):
         for il in invoiced_lines:
             p_obj = il.product_id
             # Ignore products that do not have digital content
-            if not p_obj.product_tmpl_id.type == 'digital':
+            if not p_obj.product_tmpl_id.product_type == 'digital':
                 continue
 
             # Search for product attachments

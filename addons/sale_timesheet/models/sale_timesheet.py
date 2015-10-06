@@ -28,11 +28,11 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
     track_service = fields.Selection(selection_add=[('timesheet', 'Timesheets on contract')])
 
-    @api.onchange('type', 'invoice_policy')
+    @api.onchange('product_type', 'invoice_policy')
     def onchange_type_timesheet(self):
-        if self.type == 'service' and self.invoice_policy == 'cost':
+        if self.product_type == 'service' and self.invoice_policy == 'cost':
             self.track_service = 'timesheet'
-        if self.type != 'service':
+        if self.product_type != 'service':
             self.track_service = 'manual'
         return {}
 
@@ -49,7 +49,7 @@ class AccountAnalyticLine(models.Model):
                     ('order_id.project_id', '=', self.account_id.id),
                     ('state', '=', 'sale'),
                     ('product_id.track_service', '=', 'timesheet'),
-                    ('product_id.type', '=', 'service')],
+                    ('product_id.product_type', '=', 'service')],
                     limit=1)
             else:
                 sol = self.so_line

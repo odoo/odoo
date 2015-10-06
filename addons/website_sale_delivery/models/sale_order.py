@@ -76,7 +76,7 @@ class SaleOrder(orm.Model):
         # check to add or remove carrier_id
         if not order:
             return False
-        if all(line.product_id.type == "service" for line in order.website_order_line):
+        if all(line.product_id.product_type == "service" for line in order.website_order_line):
             order.write({'carrier_id': None})
             self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, [order.id], context=context)
             return True
@@ -134,7 +134,7 @@ class SaleOrder(orm.Model):
         # We need a delivery only if we have stockable products
         has_stockable_products = False
         for line in order.order_line:
-            if line.product_id.type in ('consu', 'product'):
+            if line.product_id.product_type in ('consu', 'product'):
                 has_stockable_products = True
         if not has_stockable_products:
             return values

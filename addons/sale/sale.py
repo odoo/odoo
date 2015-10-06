@@ -159,7 +159,7 @@ class SaleOrder(models.Model):
 
         addr = self.partner_id.address_get(['delivery', 'invoice'])
         values = {
-            'pricelist_id': self.partner_id.property_product_pricelist and self.partner_id.property_product_pricelist.id or False,
+            'pricelist_id': self.partner_id.property_product_pricelist_id and self.partner_id.property_product_pricelist_id.id or False,
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
@@ -180,7 +180,7 @@ class SaleOrder(models.Model):
             addr = partner.address_get(['delivery', 'invoice'])
             vals['partner_invoice_id'] = vals.setdefault('partner_invoice_id', addr['invoice'])
             vals['partner_shipping_id'] = vals.setdefault('partner_shipping_id', addr['delivery'])
-            vals['pricelist_id'] = vals.setdefault('pricelist_id', partner.property_product_pricelist and partner.property_product_pricelist.id)
+            vals['pricelist_id'] = vals.setdefault('pricelist_id', partner.property_product_pricelist_id and partner.property_product_pricelist_id.id)
         result = super(SaleOrder, self).create(vals)
         return result
 

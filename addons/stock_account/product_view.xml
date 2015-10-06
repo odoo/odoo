@@ -48,7 +48,7 @@
                             groups="stock_account.group_inventory_valuation"/>
                     </div>
                     <group name="accounting" position="inside">
-                        <group name="property_inventory_valuation" groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}">
+                        <group name="property_inventory_valuation" groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('product_type','=','service')]}">
                             <field name="property_valuation" invisible="1"/>
                             <field name="property_stock_account_input"
                                 attrs="{'invisible':[ ('valuation', '!=', 'real_time')]}"

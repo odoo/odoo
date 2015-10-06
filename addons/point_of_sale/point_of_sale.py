@@ -16,7 +16,6 @@ from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
 import openerp.addons.decimal_precision as dp
-import openerp.addons.product.product
 
 _logger = logging.getLogger(__name__)
 
@@ -793,7 +792,7 @@ class pos_order(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         if not part:
             return {'value': {}}
-        pricelist = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_product_pricelist.id
+        pricelist = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_product_pricelist_id.id
         return {'value': {'pricelist_id': pricelist}}
 
     def _amount_all(self, cr, uid, ids, name, args, context=None):
@@ -916,7 +915,7 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
 
         for order in self.browse(cr, uid, ids, context=context):
-            if all(t == 'service' for t in order.lines.mapped('product_id.type')):
+            if all(t == 'service' for t in order.lines.mapped('product_id.product_type')):
                 continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_type = order.picking_type_id
@@ -946,7 +945,7 @@ class pos_order(osv.osv):
 
             move_list = []
             for line in order.lines:
-                if line.product_id and line.product_id.type not in ['product', 'consu']:
+                if line.product_id and line.product_id.product_type not in ['product', 'consu']:
                     continue
 
                 move_list.append(move_obj.create(cr, uid, {

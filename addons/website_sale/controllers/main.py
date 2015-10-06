@@ -1004,6 +1004,6 @@ class website_sale(http.Controller):
         if use_order_pricelist:
             pricelist_id = request.website.get_current_pricelist(context=context).id
         else:
-            pricelist_id = partner.property_product_pricelist.id
+            pricelist_id = partner.property_product_pricelist_id.id
         prices = pool['product.pricelist'].price_rule_get_multi(cr, uid, [], [(product, add_qty, partner) for product in products], context=context)
         return {product_id: prices[product_id][pricelist_id][0] for product_id in product_ids}

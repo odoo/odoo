@@ -37,7 +37,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         def create_product(name, uom_id, route_ids=[]):
             return self.Product.create({
                 'name': name,
-                'type': 'product',
+                'product_type': 'product',
                 'uom_id': uom_id,
                 'uom_po_id': uom_id,
                 'route_ids': route_ids})

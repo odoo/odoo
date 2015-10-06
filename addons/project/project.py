@@ -73,8 +73,8 @@ class project(osv.osv):
         if not part:
             return {'value': val}
         if 'pricelist_id' in self.fields_get(cr, uid, context=context):
-            pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
-            pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
+            pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist_id'], context=context)
+            pricelist_id = pricelist.get('property_product_pricelist_id', False) and pricelist.get('property_product_pricelist_id')[0] or False
             val['pricelist_id'] = pricelist_id
         return {'value': val}
 

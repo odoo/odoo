@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <menuitem id="base.menu_product" name="Product Variants" parent="base.menu_base_partner" sequence="9" groups="product.group_product_variant"/>
 
         <!-- Variants -->
@@ -36,8 +35,8 @@
                 <search string="Product">
                     <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
                     <separator/>
-                    <filter string="Services" name="services" domain="[('type','=','service')]"/>
-                    <filter string="Products" name="consumable" domain="[('type','=','consu')]" help="Products your store in the inventory"/>
+                    <filter string="Services" name="services" domain="[('product_type','=','service')]"/>
+                    <filter string="Products" name="consumable" domain="[('product_type','=','consu')]" help="Products your store in the inventory"/>
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',1)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
@@ -57,7 +56,7 @@
                     <field name="volume"/>
                     <field name="weight"/>
                     <field name="categ_id"/>
-                    <field name="type"/>
+                    <field name="product_type"/>
                     <field name="state"/>
                     <field name="uom_id" invisible="1"/>
                 </tree>
@@ -103,7 +102,7 @@
                             <page string="General Information">
                                 <group>
                                     <group name="group_general">
-                                        <field name="type" on_change="onchange_type(type, context)"/>
+                                        <field name="product_type"/>
                                     </group>
                                     <group name="group_standard_price">
                                         <field name="list_price"/>
@@ -111,7 +110,7 @@
                                         <div name="standard_price_uom" groups="base.group_user">
                                             <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_inline"/>
                                         </div>
-                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
+                                        <field name="uom_id" groups="product.group_uom"/>
                                         <field name="uom_po_id" groups="product.group_uom"/>
                                         <field name="currency_id" invisible="1"/> 
                                     </group>
@@ -125,8 +124,8 @@
                                         <field name="categ_id" string="Internal Category"/>
                                     </group>
                                     <group name="group_lots_and_weight">
-                                        <label for="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
-                                        <div class="o_row" name="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                        <label for="weight" attrs="{'invisible':[('product_type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
+                                        <div class="o_row" name="weight" attrs="{'invisible':[('product_type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
                                             <field name="weight" string="Weight"/>
                                         </div>
                                     </group>
@@ -135,7 +134,7 @@
                                 <field name="seller_ids"/>
                                 <group name="packaging" string="Packaging"
                                     colspan="4"
-                                    attrs="{'invisible':[('type', 'not in', ['product, consu'])]}"
+                                    attrs="{'invisible':[('product_type', 'not in', ['product, consu'])]}"
                                     groups="product.group_stock_packaging">
                                     <field name="packaging_ids" nolabel="1"/>
                                 </group>
@@ -162,7 +161,7 @@
                                         </div>
                                     </group>
                                     <group name="email_template_and_project"
-                                        attrs="{'invisible':[('type', '!=', 'service')]}"/>
+                                        attrs="{'invisible':[('product_type', '!=', 'service')]}"/>
                                 </group>
                             </page>
                             <page string="Notes" name="notes">
@@ -310,7 +309,7 @@
                 <xpath expr="//form" position="attributes">
                     <attribute name="name">Product Template</attribute>
                 </xpath>
-                <field name="type" position="after">
+                <field name="product_type" position="after">
                     <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
                     <field name="barcode" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
                 </field>
@@ -407,7 +406,7 @@
             <field name="res_model">product.template</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_type">form</field>
-            <field name="context">{"search_default_products": 1, 'default_type': 'product'}</field>
+            <field name="context">{"search_default_products": 1, 'default_product_type': 'product'}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to define a new product.
@@ -466,7 +465,7 @@
                     <field name="description_purchase" nolabel="1"
                         placeholder="This note will be displayed on requests for quotation..." readonly="1"/>
                 </field>
-                <field name="type" position="after">
+                <field name="product_type" position="after">
                     <field name="default_code"/>
                     <field name="barcode"/>
                 </field>
@@ -482,10 +481,10 @@
                             widget='monetary' options="{'currency_field': 'currency_id'}"/>
                 </field>
                 <label for="weight" position="attributes">
-                    <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
+                    <attribute name="attrs">{'invisible':[('product_type', 'not in', ['product', 'consu'])]}</attribute>
                 </label>
                 <div name="weight" position="attributes">
-                    <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
+                    <attribute name="attrs">{'invisible':[('product_type', 'not in', ['product', 'consu'])]}</attribute>
                 </div>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
@@ -494,7 +493,7 @@
         </record>
 
         <record id="product_kanban_view" model="ir.ui.view">
-            <field name="name">Product Kanban</field>
+            <field name="name">product.product.kanban.view</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <kanban>
@@ -624,7 +623,7 @@
                     <group name="parent">
                         <group string="Category Type">
                             <field name="parent_id"/>
-                            <field name="type"/>
+                            <field name="category_type"/>
                         </group>
                     </group>
                 </form>
@@ -675,7 +674,7 @@
                         <group>
                             <field name="name"/>
                             <field name="category_id"/>
-                            <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                            <field name="uom_type"/>
                             <field name="factor"
                                 digits="[42,5]"
                                 attrs="{'invisible':[('uom_type','!=','smaller')],
@@ -845,5 +844,4 @@
         <field name="context">{'visible_product_tmpl_id':False}</field>
     </record>
 
-    </data>
-</openerp>
+</odoo>

@@ -17,7 +17,7 @@ class sale_order(osv.Model):
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {
                 'cart_quantity': int(sum(l.product_uom_qty for l in (order.website_order_line or []))),
-                'only_services': all(l.product_id and l.product_id.type == 'service' for l in order.website_order_line)
+                'only_services': all(l.product_id and l.product_id.product_type == 'service' for l in order.website_order_line)
             }
         return res
 
@@ -114,7 +114,7 @@ class website(orm.Model):
 
     _columns = {
         'pricelist_id': fields.related(
-            'user_id', 'partner_id', 'property_product_pricelist',
+            'user_id', 'partner_id', 'property_product_pricelist_id',
             type='many2one', relation='product.pricelist', string='Default Pricelist'),
         'currency_id': fields.related(
             'pricelist_id', 'currency_id',
@@ -152,8 +152,8 @@ class website(orm.Model):
                    if not show_visible or pll.selectable or pll.pricelist_id.id == current_pl]
 
         partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id
-        if not pcs or partner.property_product_pricelist.id != website_pl:
-            pcs.append(partner.property_product_pricelist)
+        if not pcs or partner.property_product_pricelist_id.id != website_pl:
+            pcs.append(partner.property_product_pricelist_id)
         pcs = list(set(pcs))  # remove duplicate
         pcs.sort(key=lambda x: x.name)  # sort by name
         return pcs
@@ -196,7 +196,7 @@ class website(orm.Model):
         if pl_id:
             return self.pool['product.pricelist'].browse(cr, uid, [pl_id], context=context)[0]
         else:
-            pl = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.property_product_pricelist
+            pl = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.property_product_pricelist_id
             request.session['website_sale_current_pl'] = pl.id
             return pl
 
@@ -258,7 +258,7 @@ class website(orm.Model):
                 return None
 
             # check for change of pricelist with a coupon
-            pricelist_id = pricelist_id or partner.property_product_pricelist.id
+            pricelist_id = pricelist_id or partner.property_product_pricelist_id.id
 
             # check for change of partner_id ie after signup
             if sale_order.partner_id.id != partner.id and request.website.partner_id.id != partner.id:
@@ -294,7 +294,7 @@ class website(orm.Model):
                     request.session['website_sale_current_pl'] = pricelist_id
                     update_pricelist = True
                 elif code == '' and request.session['website_sale_current_pl'] == request.session['sale_order_code_pricelist_id']:
-                    request.session['website_sale_current_pl'] = partner.property_product_pricelist.id
+                    request.session['website_sale_current_pl'] = partner.property_product_pricelist_id.id
                     request.session['sale_order_code_pricelist_id'] = False
                     update_pricelist = True
 
