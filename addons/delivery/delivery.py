@@ -223,6 +223,9 @@ class delivery_grid(osv.osv):
             quantity += q
         total = (order.amount_total or 0.0) - total_delivery
 
+        ctx = context.copy()
+        ctx['date'] = order.date_order
+        total = self.pool['res.currency'].compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, total, context=ctx)
         return self.get_price_from_picking(cr, uid, id, total,weight, volume, quantity, context=context)
 
     def get_price_from_picking(self, cr, uid, id, total, weight, volume, quantity, context=None):

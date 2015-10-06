@@ -8,6 +8,7 @@ import openerp
 from openerp.osv import osv
 from openerp.tools import convert_file
 from openerp.tools.translate import _
+from openerp import tools
 
 _logger = logging.getLogger(__name__)
 
@@ -101,7 +102,7 @@ class view(osv.osv):
                         self.import_module(cr, uid, mod_name, path, force=force, context=context)
                         success.append(mod_name)
                     except Exception, e:
-                        errors[mod_name] = str(e)
+                        errors[mod_name] = tools.ustr(e)
         r = ["Successfully imported module '%s'" % mod for mod in success]
         for mod, error in errors.items():
             r.append("Error while importing module '%s': %r" % (mod, error))

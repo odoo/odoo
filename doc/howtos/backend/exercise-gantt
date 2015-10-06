@@ -1,40 +1,39 @@
 # HG changeset patch
 # Parent dba00a105dd2a82490394b8dec5fea5f1d8847e1
+# Parent  f4374b6e2e661e0782e396b24c57c1eb97d13288
 
-Index: addons/openacademy/models.py
-===================================================================
---- addons.orig/openacademy/models.py	2014-08-28 14:21:46.543015785 +0200
-+++ addons/openacademy/models.py	2014-08-28 14:21:46.539015785 +0200
-@@ -59,6 +59,9 @@
+diff --git a/openacademy/models.py b/openacademy/models.py
+--- a/openacademy/models.py
++++ b/openacademy/models.py
+@@ -59,6 +59,9 @@ class Session(models.Model):
      end_date = fields.Date(string="End Date", store=True,
          compute='_get_end_date', inverse='_set_end_date')
  
 +    hours = fields.Float(string="Duration in hours",
 +                         compute='_get_hours', inverse='_set_hours')
 +
-     @api.one
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-@@ -109,6 +112,15 @@
-         self.duration = (end_date - start_date).days + 1
+         for r in self:
+@@ -108,6 +111,15 @@ class Session(models.Model):
+             end_date = fields.Datetime.from_string(r.end_date)
+             r.duration = (end_date - start_date).days + 1
  
-     @api.one
 +    @api.depends('duration')
 +    def _get_hours(self):
-+        self.hours = self.duration * 24
++        for r in self:
++            r.hours = r.duration * 24
 +
-+    @api.one
 +    def _set_hours(self):
-+        self.duration = self.hours / 24
++        for r in self:
++            r.duration = r.hours / 24
 +
-+    @api.one
      @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
-         if self.instructor_id and self.instructor_id in self.attendee_ids:
-Index: addons/openacademy/views/openacademy.xml
-===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:21:46.543015785 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-28 14:21:46.539015785 +0200
+         for r in self:
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
 @@ -145,11 +145,23 @@
              </field>
          </record>

@@ -1,0 +1,198 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_eu_service
+# 
+# Translators:
+# Clemilton Clementino <clemylton@hotmail.com>, 2015
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-02-17 14:34+0000\n"
+"PO-Revision-Date: 2015-08-03 23:26+0000\n"
+"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.wizard,done_country_ids:0
+msgid "Already Supported"
+msgstr "Já suportado"
+
+#. module: l10n_eu_service
+#: code:addons/l10n_eu_service/wizard/wizard.py:128
+#, python-format
+msgid "Base - VAT for EU Services to %(country_name)s"
+msgstr "Base de dados - de IVA nos serviços da UE %(country_name)s"
+
+#. module: l10n_eu_service
+#: view:l10n_eu_service.wizard:l10n_eu_service.eu_service_view
+msgid ""
+"Based on the options selected below, this wizard will create one\n"
+"                        fiscal position mapping for each EU country to which you are selling\n"
+"                        services.\n"
+"                        Each fiscal position will automatically map your national VAT tax for\n"
+"                        services to the corresponding VAT tax in the country your customer\n"
+"                        belongs to."
+msgstr "Com base nas opções selecionadas abaixo , este assistente irá criar um \nmapeamento de posição fiscal de cada país da UE em que você está vendendo serviços. \nCada posição fiscal irá mapear automaticamente o imposto nacional de IVA para serviços prestados ao imposto IVA correspondente no país de seu cliente pertence."
+
+#. module: l10n_eu_service
+#: view:l10n_eu_service.wizard:l10n_eu_service.eu_service_view
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.wizard,chart_id:0
+msgid "Chart of Accounts"
+msgstr "Plano de Contas"
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.service_tax_rate,country_id:0
+msgid "Country"
+msgstr "País"
+
+#. module: l10n_eu_service
+#: view:l10n_eu_service.wizard:l10n_eu_service.eu_service_view
+msgid "Create Fiscal Positions and Taxes"
+msgstr "Criar Posições Fiscais e Impostos"
+
+#. module: l10n_eu_service
+#: model:ir.model,name:l10n_eu_service.model_l10n_eu_service_wizard
+msgid "Create fiscal positions for EU Service VAT"
+msgstr ""
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.service_tax_rate,create_uid:0
+#: field:l10n_eu_service.wizard,create_uid:0
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.service_tax_rate,create_date:0
+#: field:l10n_eu_service.wizard,create_date:0
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: l10n_eu_service
+#: view:l10n_eu_service.wizard:l10n_eu_service.eu_service_view
+msgid "Current EU B2C Fiscal Position, if any"
+msgstr ""
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.wizard,todo_country_ids:0
+msgid "EU Customers From"
+msgstr "Clientes UE a partir de"
+
+#. module: l10n_eu_service
+#: code:addons/l10n_eu_service/wizard/wizard.py:110
+#, python-format
+msgid "EU MOSS VAT Chart - %(company)s"
+msgstr ""
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.wizard,fiscal_position_id:0
+msgid "Fiscal Position"
+msgstr "Posição Fiscal"
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.service_tax_rate,id:0
+#: field:l10n_eu_service.wizard,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_eu_service
+#: code:addons/l10n_eu_service/wizard/wizard.py:161
+#, python-format
+msgid "Intra-EU B2C in %(country_name)s"
+msgstr ""
+
+#. module: l10n_eu_service
+#: view:l10n_eu_service.wizard:l10n_eu_service.eu_service_view
+msgid "Keep empty to use current Service VAT account"
+msgstr "Mantenha vazio para utilizar o serviço de conta corrente IVA"
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.service_tax_rate,write_uid:0
+#: field:l10n_eu_service.wizard,write_uid:0
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.service_tax_rate,write_date:0
+#: field:l10n_eu_service.wizard,write_date:0
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: l10n_eu_service
+#: help:l10n_eu_service.wizard,account_collected_id:0
+msgid ""
+"Optional account to use for collecting tax amounts when selling services in "
+"each EU country selected below. If not set, the current collecting account "
+"of your Service VAT will be used."
+msgstr ""
+
+#. module: l10n_eu_service
+#: help:l10n_eu_service.wizard,fiscal_position_id:0
+msgid ""
+"Optional fiscal position to use as template for general account mapping. "
+"Should usually be your current Intra-EU B2B fiscal position. If not set, no "
+"general account mapping will be configured for EU fiscal positions."
+msgstr ""
+
+#. module: l10n_eu_service
+#: help:l10n_eu_service.wizard,tax_id:0
+msgid ""
+"Select your current VAT tax for services. This is the tax that will be "
+"mapped to the corresponding VAT tax in each EU country selected below."
+msgstr ""
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.wizard,tax_id:0
+msgid "Service VAT"
+msgstr ""
+
+#. module: l10n_eu_service
+#: view:account.config.settings:l10n_eu_service.view_account_config_settings_inherit
+#: model:ir.actions.act_window,name:l10n_eu_service.action_eu_service
+#: view:l10n_eu_service.wizard:l10n_eu_service.eu_service_view
+msgid "Setup EU MOSS Taxes"
+msgstr "Configuração MOSS UE Impostos"
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.wizard,account_collected_id:0
+msgid "Tax Collection Account"
+msgstr "Conta de cobrança de impostos"
+
+#. module: l10n_eu_service
+#: code:addons/l10n_eu_service/wizard/wizard.py:36
+#, python-format
+msgid ""
+"The Europe country group cannot be found. Please update the base module."
+msgstr "O grupo de países da Europa não pode ser encontrado. Por favor, atualize o módulo de base."
+
+#. module: l10n_eu_service
+#: field:l10n_eu_service.service_tax_rate,rate:0
+msgid "VAT Rate"
+msgstr "IVA Classificação"
+
+#. module: l10n_eu_service
+#: code:addons/l10n_eu_service/wizard/wizard.py:132
+#, python-format
+msgid "VAT for EU Services to %(country_name)s"
+msgstr "IVA nos serviços da UE %(country_name)s"
+
+#. module: l10n_eu_service
+#: view:l10n_eu_service.wizard:l10n_eu_service.eu_service_view
+msgid "You can use the wizard again later to add more countries."
+msgstr "Você pode usar o assistente novamente mais tarde para adicionar mais países."
+
+#. module: l10n_eu_service
+#: view:l10n_eu_service.wizard:l10n_eu_service.eu_service_view
+msgid "or"
+msgstr "ou"

@@ -1,0 +1,691 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-07-17 08:06+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-8/language/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_tree
+msgid "# of Products"
+msgstr "產品數"
+
+#. module: stock_account
+#: view:product.template:stock_account.view_template_property_form
+msgid "- update"
+msgstr "- 更新"
+
+#. module: stock_account
+#: view:product.category:stock_account.view_category_property_form
+msgid "Account Stock Properties"
+msgstr "存貨科目設定"
+
+#. module: stock_account
+#: view:stock.config.settings:stock_account.view_stock_config_settings_inherit
+msgid "Accounting"
+msgstr "會計"
+
+#. module: stock_account
+#: view:stock.location:stock_account.view_location_form_inherit
+msgid "Accounting Information"
+msgstr "會計資訊"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_change_standard_price.py:76
+#, python-format
+msgid "Active ID is not set in Context."
+msgstr ""
+
+#. module: stock_account
+#: help:stock.config.settings,group_stock_inventory_valuation:0
+msgid ""
+"Allows to configure inventory valuations on products and product categories."
+msgstr "讓您可在產品或者產品分類設定存貨估價。"
+
+#. module: stock_account
+#: selection:product.template,cost_method:0
+msgid "Average Price"
+msgstr "平均價格"
+
+#. module: stock_account
+#: field:stock.config.settings,module_stock_landed_costs:0
+msgid "Calculate landed costs on products"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+#: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid "Cancel"
+msgstr "取消"
+
+#. module: stock_account
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+msgid "Change Price"
+msgstr "變更價目"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_view_change_standard_price
+#: model:ir.model,name:stock_account.model_stock_change_standard_price
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+msgid "Change Standard Price"
+msgstr "變更標準價格"
+
+#. module: stock_account
+#: field:wizard.valuation.history,choose_date:0
+msgid "Choose a Particular Date"
+msgstr ""
+
+#. module: stock_account
+#: help:stock.inventory,period_id:0
+msgid ""
+"Choose the accounting period where you want to value the stock moves created"
+" by the inventory instead of the default one (chosen by the inventory end "
+"date)"
+msgstr ""
+
+#. module: stock_account
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid ""
+"Choose the date for which you want to get the stock valuation of your products.\n"
+"\n"
+"                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
+"                        you had, and gives you the inventory value according to the standard price used at that time."
+msgstr ""
+
+#. module: stock_account
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid "Choose your date"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_search
+#: field:stock.history,company_id:0
+msgid "Company"
+msgstr "公司"
+
+#. module: stock_account
+#: view:product.template:stock_account.view_template_property_form
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+msgid "Cost Price"
+msgstr "成本價"
+
+#. module: stock_account
+#: field:product.template,cost_method:0
+msgid "Costing Method"
+msgstr "成本計算方法"
+
+#. module: stock_account
+#: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
+msgid "Create"
+msgstr "建立"
+
+#. module: stock_account
+#: selection:stock.invoice.onshipping,journal_type:0
+msgid "Create Customer Invoice"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_invoice_onshipping
+msgid "Create Draft Invoices"
+msgstr "建立發票草稿"
+
+#. module: stock_account
+#: view:stock.picking:stock_account.view_picking_inherit_form2
+msgid "Create Invoice"
+msgstr "開立發票"
+
+#. module: stock_account
+#: selection:stock.invoice.onshipping,journal_type:0
+msgid "Create Supplier Invoice"
+msgstr ""
+
+#. module: stock_account
+#: field:stock.config.settings,module_stock_invoice_directly:0
+msgid "Create and open the invoice when the user finish a delivery order"
+msgstr "完成送貨單後，開立並檢視發票"
+
+#. module: stock_account
+#: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
+msgid "Create invoice"
+msgstr "開立發票"
+
+#. module: stock_account
+#: field:stock.change.standard.price,create_uid:0
+#: field:stock.invoice.onshipping,create_uid:0
+#: field:wizard.valuation.history,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: stock_account
+#: field:stock.change.standard.price,create_date:0
+#: field:stock.invoice.onshipping,create_date:0
+#: field:wizard.valuation.history,create_date:0
+msgid "Created on"
+msgstr "建立於"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_history_tree
+#: model:ir.ui.menu,name:stock_account.menu_action_history_tree
+msgid "Current Inventory Valuation"
+msgstr ""
+
+#. module: stock_account
+#: field:wizard.valuation.history,date:0
+msgid "Date"
+msgstr "日期"
+
+#. module: stock_account
+#: field:stock.invoice.onshipping,journal_id:0
+msgid "Destination Journal"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:83
+#: code:addons/stock_account/product.py:116
+#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:91
+#, python-format
+msgid "Error!"
+msgstr "錯誤！"
+
+#. module: stock_account
+#: field:stock.inventory,period_id:0
+msgid "Force Valuation Period"
+msgstr ""
+
+#. module: stock_account
+#: field:stock.config.settings,group_stock_inventory_valuation:0
+msgid "Generate accounting entries per stock movement"
+msgstr "對每項貨物調動建立會計分錄"
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_search
+msgid "Group By"
+msgstr "分組方式"
+
+#. module: stock_account
+#: field:stock.invoice.onshipping,group:0
+msgid "Group by partner"
+msgstr "各伙伴群組"
+
+#. module: stock_account
+#: field:stock.change.standard.price,id:0 field:stock.history,id:0
+#: field:stock.invoice.onshipping,id:0 field:wizard.valuation.history,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_account
+#: help:stock.change.standard.price,new_price:0
+msgid ""
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+msgstr "如果成本價格增加，庫存變動科目為借方，出庫科目為貸方，其值等於 ( 差異金額 * 存貨數量)。\n如果成本價格減少，庫存變動科目為貸方，入庫科目為借方。"
+
+#. module: stock_account
+#: help:product.template,valuation:0
+msgid ""
+"If real-time valuation is enabled for a product, the system will "
+"automatically write journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
+msgstr ""
+
+#. module: stock_account
+#: help:stock.config.settings,module_stock_landed_costs:0
+msgid ""
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_inventory
+msgid "Inventory"
+msgstr "庫存"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_location
+msgid "Inventory Locations"
+msgstr ""
+
+#. module: stock_account
+#: view:product.template:stock_account.view_template_property_form
+#: field:product.template,valuation:0
+msgid "Inventory Valuation"
+msgstr "存貨估價"
+
+#. module: stock_account
+#: field:stock.history,inventory_value:0
+msgid "Inventory Value"
+msgstr ""
+
+#. module: stock_account
+#: field:procurement.order,invoice_state:0 field:stock.move,invoice_state:0
+#: field:stock.picking,invoice_state:0
+msgid "Invoice Control"
+msgstr "發票控制"
+
+#. module: stock_account
+#: field:stock.invoice.onshipping,invoice_date:0
+msgid "Invoice Date"
+msgstr "發票日期"
+
+#. module: stock_account
+#: field:procurement.rule,invoice_state:0
+#: field:stock.location.path,invoice_state:0
+msgid "Invoice Status"
+msgstr "發票狀態"
+
+#. module: stock_account
+#: selection:procurement.order,invoice_state:0
+#: selection:procurement.rule,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+#: selection:stock.move,invoice_state:0
+#: selection:stock.picking,invoice_state:0
+msgid "Invoiced"
+msgstr "已開票"
+
+#. module: stock_account
+#: field:stock.return.picking,invoice_state:0
+msgid "Invoicing"
+msgstr "發票開立"
+
+#. module: stock_account
+#: field:stock.invoice.onshipping,journal_type:0
+msgid "Journal Type"
+msgstr ""
+
+#. module: stock_account
+#: field:stock.change.standard.price,write_uid:0
+#: field:stock.invoice.onshipping,write_uid:0
+#: field:wizard.valuation.history,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: stock_account
+#: field:stock.change.standard.price,write_date:0
+#: field:stock.invoice.onshipping,write_date:0
+#: field:wizard.valuation.history,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_search
+#: field:stock.history,location_id:0
+msgid "Location"
+msgstr "地點"
+
+#. module: stock_account
+#: model:res.groups,name:stock_account.group_inventory_valuation
+msgid "Manage Inventory Valuation and Costing Methods"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_search
+msgid "Move"
+msgstr "調動"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:116
+#, python-format
+msgid "No difference between standard price and new price!"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:91
+#, python-format
+msgid "No invoice created!"
+msgstr ""
+
+#. module: stock_account
+#: selection:stock.return.picking,invoice_state:0
+msgid "No invoicing"
+msgstr "不開立發票"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:82
+#, python-format
+msgid "None of these picking lists require invoicing."
+msgstr "此等提貨皆無須發票"
+
+#. module: stock_account
+#: selection:procurement.order,invoice_state:0
+#: selection:procurement.rule,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+#: selection:stock.move,invoice_state:0
+#: selection:stock.picking,invoice_state:0
+msgid "Not Applicable"
+msgstr "不適用"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:83
+#, python-format
+msgid ""
+"One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:\n"
+"    Product: %s\n"
+"    Stock Input Account: %s\n"
+"    Stock Output Account: %s\n"
+"    Stock Valuation Account: %s\n"
+"    Stock Journal: %s\n"
+"    "
+msgstr ""
+
+#. module: stock_account
+#: field:stock.history,date:0
+msgid "Operation Date"
+msgstr ""
+
+#. module: stock_account
+#: selection:product.template,valuation:0
+msgid "Periodical (manual)"
+msgstr "定期(手動)"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_picking
+msgid "Picking List"
+msgstr "提貨清單"
+
+#. module: stock_account
+#: field:stock.change.standard.price,new_price:0
+msgid "Price"
+msgstr "價格"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_procurement_order
+msgid "Procurement"
+msgstr "採購"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_procurement_rule
+msgid "Procurement Rule"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_search
+#: field:stock.history,product_id:0
+msgid "Product"
+msgstr "產品"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_category
+#: view:stock.history:stock_account.view_stock_history_report_search
+#: field:stock.history,product_categ_id:0
+msgid "Product Category"
+msgstr "產品分類"
+
+#. module: stock_account
+#: field:stock.history,quantity:0
+msgid "Product Quantity"
+msgstr "產品數量"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_template
+msgid "Product Template"
+msgstr "產品範本"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_location_path
+msgid "Pushed Flows"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_quant
+msgid "Quants"
+msgstr ""
+
+#. module: stock_account
+#: selection:product.template,cost_method:0
+msgid "Real Price"
+msgstr ""
+
+#. module: stock_account
+#: selection:product.template,valuation:0
+msgid "Real Time (automated)"
+msgstr "實時（自動）"
+
+#. module: stock_account
+#: selection:stock.invoice.onshipping,journal_type:0
+msgid "Refund Purchase"
+msgstr ""
+
+#. module: stock_account
+#: selection:stock.invoice.onshipping,journal_type:0
+msgid "Refund Sale"
+msgstr ""
+
+#. module: stock_account
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid "Retrieve the Inventory Value"
+msgstr ""
+
+#. module: stock_account
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid "Retrieve the stock valuation of your products at current day"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_return_picking
+msgid "Return Picking"
+msgstr "退貨提貨單"
+
+#. module: stock_account
+#: field:stock.history,source:0
+msgid "Source"
+msgstr "來源"
+
+#. module: stock_account
+#: selection:product.template,cost_method:0
+msgid "Standard Price"
+msgstr "標準價格"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:137
+#: code:addons/stock_account/product.py:144
+#, python-format
+msgid "Standard Price changed"
+msgstr ""
+
+#. module: stock_account
+#: help:product.template,cost_method:0
+msgid ""
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+
+#. module: stock_account
+#: field:product.category,property_stock_account_input_categ:0
+#: field:product.template,property_stock_account_input:0
+msgid "Stock Input Account"
+msgstr "入庫科目"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_invoice_onshipping
+msgid "Stock Invoice Onshipping"
+msgstr ""
+
+#. module: stock_account
+#: field:product.category,property_stock_journal:0
+msgid "Stock Journal"
+msgstr "庫存日記帳"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_move
+#: field:stock.history,move_id:0
+msgid "Stock Move"
+msgstr "庫存調動"
+
+#. module: stock_account
+#: field:product.category,property_stock_account_output_categ:0
+#: field:product.template,property_stock_account_output:0
+msgid "Stock Output Account"
+msgstr "庫存輸出帳戶"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
+#: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
+msgid "Stock Valuation"
+msgstr ""
+
+#. module: stock_account
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
+msgstr "庫存估價科目"
+
+#. module: stock_account
+#: field:stock.location,valuation_in_account_id:0
+msgid "Stock Valuation Account (Incoming)"
+msgstr "庫存估價科目(入庫)"
+
+#. module: stock_account
+#: field:stock.location,valuation_out_account_id:0
+msgid "Stock Valuation Account (Outgoing)"
+msgstr "庫存估價科目（出庫）"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_history.py:30
+#: view:stock.history:stock_account.view_stock_history_report_graph
+#: view:stock.history:stock_account.view_stock_history_report_search
+#: view:stock.history:stock_account.view_stock_history_report_tree
+#, python-format
+msgid "Stock Value At Date"
+msgstr ""
+
+#. module: stock_account
+#: help:stock.config.settings,module_stock_invoice_directly:0
+msgid ""
+"This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
+"-This installs the module stock_invoice_directly."
+msgstr ""
+
+#. module: stock_account
+#: selection:procurement.order,invoice_state:0
+#: selection:procurement.rule,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+#: selection:stock.move,invoice_state:0
+#: selection:stock.picking,invoice_state:0
+msgid "To Be Invoiced"
+msgstr "待開發票"
+
+#. module: stock_account
+#: selection:stock.return.picking,invoice_state:0
+msgid "To be refunded/invoiced"
+msgstr "待退款/開立發票"
+
+#. module: stock_account
+#: view:stock.history:stock_account.view_stock_history_report_tree
+msgid "Total Value"
+msgstr "總值"
+
+#. module: stock_account
+#: help:stock.location,valuation_in_account_id:0
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved from an internal location into this location, instead of the "
+"generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr "用於即時存貨估價。當設於虛擬倉位(非內部倉位)時，此科目記錄由內部倉位移入此倉位的存貨價值，優先於設定在產品上的存貨庫存科目。這對內部庫位沒有任何效果。"
+
+#. module: stock_account
+#: help:stock.location,valuation_out_account_id:0
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved out of this location and into an internal location, instead of "
+"the generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr "用於即時存貨估價。當設於虛擬倉位(非內部倉位)時，此科目記錄由此倉位移入內部倉位的存貨價值，優先於設定在產品上的存貨庫存科目。這對內部庫位沒有任何效果。"
+
+#. module: stock_account
+#: field:stock.history,price_unit_on_quant:0
+msgid "Value"
+msgstr "值"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_invoice_onshipping.py:82
+#, python-format
+msgid "Warning!"
+msgstr "警告！"
+
+#. module: stock_account
+#: help:product.category,property_stock_account_input_categ:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. This is the default "
+"value for all products in this category. It can also directly be set on each"
+" product"
+msgstr "除非來源倉位指定一個估價科目，否則進行即時庫存估價時，所有入庫調動對應的日記帳項目將記入這個科目。這是此產品類別的預設值，也可以直接設定在每個產品上。"
+
+#. module: stock_account
+#: help:product.template,property_stock_account_input:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. When not set on the "
+"product, the one from the product category is used."
+msgstr "使用即時存貨估價時，除非來源倉位已設定庫存估價科目，否則所有入庫調動的相應分錄將自動記錄在此科目。若產品未設定此項設定，則使用產品分類的設定。"
+
+#. module: stock_account
+#: help:product.category,property_stock_account_output_categ:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. This is the "
+"default value for all products in this category. It can also directly be set"
+" on each product"
+msgstr "使用即時存貨估價時，除非目標倉位已設定庫存估價科目，否則所有出庫調動的相應分錄將自動記錄在此科目。這是所有此目錄下產品的預設值，也可直接設定在每一產品上。"
+
+#. module: stock_account
+#: help:product.template,property_stock_account_output:0
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. When not set on "
+"the product, the one from the product category is used."
+msgstr "在執行即時庫存估價時，除非目標倉位已設定估價科目，否則所有出庫調動的相對日記帳分錄將自動紀錄在此科目。當產品未設定估價科目時，使用產品分類的設定。"
+
+#. module: stock_account
+#: help:product.category,property_stock_journal:0
+msgid ""
+"When doing real-time inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr "在執行即時庫存估價時，此會計日記帳簿將自動登記處理庫存調動的會計分錄。"
+
+#. module: stock_account
+#: help:product.category,property_stock_valuation_account_id:0
+msgid ""
+"When real-time inventory valuation is enabled on a product, this account "
+"will hold the current value of the products."
+msgstr "在對產品啟用即時庫存估價時，本科目記錄產品的當前價值。"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_wizard_valuation_history
+msgid "Wizard that opens the stock valuation history table"
+msgstr ""
+
+#. module: stock_account
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+msgid "_Apply"
+msgstr "套用(_A)"
+
+#. module: stock_account
+#: view:stock.change.standard.price:stock_account.view_change_standard_price
+#: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
+#: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
+msgid "or"
+msgstr "或"

@@ -59,7 +59,7 @@ class PaymentAcquirer(osv.Model):
     _provider_selection = lambda self, *args, **kwargs: self._get_providers(*args, **kwargs)
 
     _columns = {
-        'name': fields.char('Name', required=True),
+        'name': fields.char('Name', required=True, translate=True),
         'provider': fields.selection(_provider_selection, string='Provider', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'pre_msg': fields.html('Message', translate=True,
@@ -412,6 +412,32 @@ class PaymentTransaction(osv.Model):
                 values.update(getattr(self, custom_method_name)(cr, uid, values, context=context))
 
         return super(PaymentTransaction, self).create(cr, uid, values, context=context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        Acquirer = self.pool['payment.acquirer']
+        if ('acquirer_id' in values or 'amount' in values) and 'fees' not in values:
+            # The acquirer or the amount has changed, and the fees are not explicitely forced. Fees must be recomputed.
+            if isinstance(ids, (int, long)):
+                ids = [ids]
+            for txn_id in ids:
+                vals = dict(values)
+                vals['fees'] = 0.0
+                transaction = self.browse(cr, uid, txn_id, context=context)
+                if 'acquirer_id' in values:
+                    acquirer = Acquirer.browse(cr, uid, values['acquirer_id'], context=context) if values['acquirer_id'] else None
+                else:
+                    acquirer = transaction.acquirer_id
+                if acquirer:
+                    custom_method_name = '%s_compute_fees' % acquirer.provider
+                    if hasattr(Acquirer, custom_method_name):
+                        amount = (values['amount'] if 'amount' in values else transaction.amount) or 0.0
+                        currency_id = values.get('currency_id') or transaction.currency_id.id
+                        country_id = values.get('partner_country_id') or transaction.partner_country_id.id
+                        fees = getattr(Acquirer, custom_method_name)(cr, uid, acquirer.id, amount, currency_id, country_id, context=None)
+                        vals['fees'] = float_round(fees, 2)
+                res = super(PaymentTransaction, self).write(cr, uid, txn_id, vals, context=context)
+            return res
+        return super(PaymentTransaction, self).write(cr, uid, ids, values, context=context)
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
         partner = None

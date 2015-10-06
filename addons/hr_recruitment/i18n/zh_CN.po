@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-07 12:18+0000\n"
+"PO-Revision-Date: 2015-08-20 10:58+0000\n"
 "Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -80,7 +80,7 @@ msgid ""
 "                Define job position profile and manage recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 点此创建一个新的工作岗位，或移除过滤器中的\"正在招聘\"过滤项，从而为之前招聘过的岗位补充新人。 \n        </p>\n        <p>\n         定义职位简介，管理特殊工作的招聘:打印访谈调查，确定预期的新员工人数，并管理其招聘渠道.\n        </p>\n            "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -93,7 +93,7 @@ msgid ""
 "            hired.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n            击来新建一个招聘阶段。\n          </p><p>\n           这里定义招聘阶段，例如:\n            确认通话、第一次面试、第二次面试、被拒绝、\n           雇用。\n          </p>\n        "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -105,7 +105,7 @@ msgid ""
 "            is different according to the job position.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n           在招聘过程中，添加了一个新的阶段.\n          </p><p>\n            不要忘了指定的部门，如果你的招聘流程\n           是根据不同的职位.\n          </p>\n        "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -119,7 +119,7 @@ msgid ""
 "                so that you can easily search through their content.\n"
 "              </p>\n"
 "         "
-msgstr ""
+msgstr "<p>\n                Odoo 将帮助你跟踪招聘流程中的应聘申请\n                并跟踪后续活动：会议、会面，等等\n              </p><p>\n                应聘申请和它们的附件CV将在邮件发送时被自动创建。\n                如果你安装了文档管理模块，所有这些会被自动索引，\n                所以你可以方便的检索它们的内容。              </p>"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -133,7 +133,7 @@ msgid ""
 "                so that you can easily search through their content.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                Odoo 将帮助你跟踪招聘流程中的应聘申请\n                并跟踪后续活动：会议、会面，等等\n              </p><p>\n                应聘申请和它们的附件CV将在邮件发送时被自动创建。\n                如果你安装了文档管理模块，所有这些会被自动索引，\n                所以你可以方便的检索它们的内容。              </p>"
 
 #. module: hr_recruitment
 #: model:survey.page,description:hr_recruitment.recruitment_1
@@ -154,7 +154,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id.signature | safe}"
-msgstr ""
+msgstr "<p>${object.partner_name or 'applicant'} 您好,</p>        <p> 非常高兴收到您的简历!        我们将尽快和您电话沟通并预约初试时间.</p>        <p>如果我们无法联系到您或者您错过接听电话,请在方便的时间联系我 XXX-XXXX(公司电话或者个人电话,译者注)         如果我没有接听到您的电话,请短信或者邮件告诉我一个合适的时间,我再与您联系</p>        <p>致敬,</p>        <br>         ${object.user_id.signature}"
 
 #. module: hr_recruitment
 #: model:email.template,body_html:hr_recruitment.applicant_refuse
@@ -216,7 +216,7 @@ msgstr "别名域"
 #. module: hr_recruitment
 #: field:hr.config.settings,module_document:0
 msgid "Allow the automatic indexation of resumes"
-msgstr ""
+msgstr "允许对简历进行索引"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
@@ -306,7 +306,7 @@ msgstr "评价"
 #. module: hr_recruitment
 #: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
 msgid "Are you sure you want to create a contact based on this job request ?"
-msgstr ""
+msgstr "您确定基于此工作职责来新建一位员工吗？"
 
 #. module: hr_recruitment
 #: field:hr.applicant,date_open:0
@@ -332,12 +332,12 @@ msgstr "平均耗用天数"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp_avg:0
 msgid "Avg. Expected Salary"
-msgstr ""
+msgstr "平均.期望月薪"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
 msgid "Avg. Proposed Salary"
-msgstr ""
+msgstr "平均.建议薪水"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
@@ -374,7 +374,7 @@ msgstr "按“工作”过虑"
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_recruiter
 msgid "By Recruiter"
-msgstr ""
+msgstr "被招聘人"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
@@ -519,7 +519,7 @@ msgstr "创建日期"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 msgid "Creation Week"
-msgstr ""
+msgstr "创建周"
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_last_post:0
@@ -544,12 +544,12 @@ msgstr "开启天数"
 #. module: hr_recruitment
 #: field:hr.config.settings,alias_prefix:0
 msgid "Default Alias Name for Jobs"
-msgstr ""
+msgstr "默认的工作别名"
 
 #. module: hr_recruitment
 #: view:hr.config.settings:hr_recruitment.view_hr_apll_config_settings
 msgid "Default job email address"
-msgstr ""
+msgstr "默认招聘电子邮件地址"
 
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.hr_job_survey
@@ -557,7 +557,7 @@ msgid ""
 "Define a specific contact address for this job position. If you keep it "
 "empty, the default email address will be used which is in human resources "
 "settings"
-msgstr ""
+msgstr "为这个职位定义一个特定的联系地址。如果为空，将默认使用人事部门预设的电子邮件"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
@@ -672,7 +672,7 @@ msgstr "邮箱别名"
 msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
-msgstr ""
+msgstr "这个职位的电子邮件别名。新邮件会自动创建新的申请这个职位。"
 
 #. module: hr_recruitment
 #: field:hr.applicant,emp_id:0
@@ -760,7 +760,7 @@ msgstr "免费的东西，例如茶、咖啡和文具"
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_1
 msgid "From which university will you graduate?"
-msgstr ""
+msgstr "从该大学将毕业了吗？"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_2
@@ -849,14 +849,14 @@ msgstr "如果勾选此项，需要你关注新消息。"
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_4
 #: model:survey.question,comments_message:hr_recruitment.recruitment_3_1
 msgid "If other, precise:"
-msgstr ""
+msgstr "如其他的，精确的："
 
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,template_id:0
 msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
-msgstr ""
+msgstr "如果设置,当应聘者设置此场景时,将通过这个模板推送消息给相关应聘者"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -988,7 +988,7 @@ msgstr "男性"
 msgid ""
 "Manage your CV's and motivation letter related to all applicants.\n"
 "-This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"
-msgstr ""
+msgstr "管理您的简历和求职信与所有申请人。\n                安装模块document_ftp。为了让您通过使用特定的关键字的所有文件的内容进行搜索，这将安装知识管理模块（PDF，DOCX...）"
 
 #. module: hr_recruitment
 #: model:hr.applicant_category,name:hr_recruitment.tag_applicant_manager
@@ -1072,7 +1072,7 @@ msgstr "新邮件"
 #: code:addons/hr_recruitment/hr_recruitment.py:453
 #, python-format
 msgid "New application from %s"
-msgstr ""
+msgstr "来自%s的新申请"
 
 #. module: hr_recruitment
 #: field:hr.applicant,title_action:0
@@ -1098,7 +1098,7 @@ msgstr "无主题"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_10
 msgid "No out of hours working"
-msgstr ""
+msgstr "并未兼职"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_1
@@ -1174,7 +1174,7 @@ msgstr "薪酬标准"
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_3_1
 msgid "Rate the Importance"
-msgstr ""
+msgstr "评价的重要性"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_recruitment
@@ -1207,7 +1207,7 @@ msgstr "招聘表格"
 #. module: hr_recruitment
 #: field:hr.job,user_id:0
 msgid "Recruitment Responsible"
-msgstr ""
+msgstr "招聘负责人"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
@@ -1227,7 +1227,7 @@ msgstr "已拒绝"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_12
 msgid "Regular meetings"
-msgstr ""
+msgstr "定期会议"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
@@ -1238,7 +1238,7 @@ msgstr "必备条件"
 #. module: hr_recruitment
 #: model:hr.applicant_category,name:hr_recruitment.tag_applicant_reserve
 msgid "Reserve"
-msgstr ""
+msgstr "延期"
 
 #. module: hr_recruitment
 #: field:hr.applicant,response_id:0
@@ -1300,17 +1300,17 @@ msgstr "时间表"
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
-msgstr ""
+msgstr "预约面谈"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
 msgid "Schedule interview with this applicant"
-msgstr ""
+msgstr "为这个申请人计划面谈"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
 msgid "Search Applicants"
-msgstr ""
+msgstr "搜索申请人"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -1326,7 +1326,7 @@ msgstr "序列"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_2
 msgid "Somewhat important"
-msgstr ""
+msgstr "有些重要的"
 
 #. module: hr_recruitment
 #: field:hr.applicant,source_id:0
@@ -1354,7 +1354,7 @@ msgstr "应聘者来源"
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.hr_job_survey
 msgid "Specific Email Address"
-msgstr ""
+msgstr "指定的电子邮件"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,department_id:0
@@ -1395,7 +1395,7 @@ msgstr "招聘阶段"
 msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
-msgstr ""
+msgstr "当前阶段前的申请人阶段.用于招聘失败分析."
 
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_tree
@@ -1409,7 +1409,7 @@ msgstr "阶段"
 msgid ""
 "Stages of the recruitment process may be different per department. If this "
 "stage is common to all departments, keep this field empty."
-msgstr ""
+msgstr "每个部门的招聘阶段可能会有不同。如果这个阶段是各部门共有的，保持该字段为空。"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
@@ -1419,7 +1419,7 @@ msgstr "开始"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_5
 msgid "State of the art technology"
-msgstr ""
+msgstr "最先进的技术状态"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
@@ -1429,7 +1429,7 @@ msgstr "专业"
 #. module: hr_recruitment
 #: field:hr.applicant,name:0
 msgid "Subject / Application Name"
-msgstr ""
+msgstr "主题/应用 名称"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_summary:0
@@ -1456,7 +1456,7 @@ msgstr "标签"
 #: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_4
 #: model:survey.question,validation_error_msg:hr_recruitment.recruitment_3_1
 msgid "The answer you entered has an invalid format."
-msgstr ""
+msgstr "您输入的答案的格式无效。"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
@@ -1467,7 +1467,7 @@ msgstr "应聘者学历的名称必须唯一"
 #: help:hr.applicant,availability:0
 msgid ""
 "The number of days in which the applicant will be available to start working"
-msgstr ""
+msgstr "到岗天数"
 
 #. module: hr_recruitment
 #: help:hr.applicant,email_cc:0
@@ -1497,14 +1497,14 @@ msgstr "本年度"
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_4
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_3_1
 msgid "This question requires an answer."
-msgstr ""
+msgstr "这个问题需要回答。"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,fold:0
 msgid ""
 "This stage is folded in the kanban view whenthere are no records in that "
 "stage to display."
-msgstr ""
+msgstr "例如，如果没有任何记录可显示在该阶段，在状态栏或看板，该阶段不可见。"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
@@ -1567,7 +1567,7 @@ msgstr "网站沟通记录"
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_3
 msgid "What age group do you belong to?"
-msgstr ""
+msgstr "你属于哪个年龄段？"
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_2
@@ -1583,7 +1583,7 @@ msgstr "口头"
 #: code:addons/hr_recruitment/hr_recruitment.py:511
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
-msgstr ""
+msgstr "你必须指定应聘者应聘的岗位和姓名"
 
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.view_hr_job_kanban

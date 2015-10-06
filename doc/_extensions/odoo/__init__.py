@@ -2,13 +2,15 @@
 
 from . import pygments_override
 from . import switcher
-from . import translator
 
 import sphinx.environment
 import sphinx.builders.html
 from docutils import nodes
 def setup(app):
-    app.set_translator('html', translator.BootstrapTranslator)
+    if getattr(app.config, 'html_translator_class', None):
+        app.warn("Overriding the explicitly set  html_translator_class setting",
+                 location="odoo extension")
+    app.config.html_translator_class = 'odoo.translator.BootstrapTranslator'
 
     switcher.setup(app)
     app.add_config_value('odoo_cover_default', None, 'env')

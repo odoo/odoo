@@ -4,13 +4,16 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2015
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
 # Miku Laitinen <miku.laitinen@gmail.com>, 2015
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-04 10:16+0000\n"
+"PO-Revision-Date: 2015-09-16 11:54+0000\n"
 "Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -50,14 +53,14 @@ msgstr "(ei sähköpostiosoitetta)"
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
-msgstr ""
+msgstr "<div><p>Hei,</p><p>%s kutsui sinut seuraamaan %s -dokumenttia: %s.<p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr ""
+msgstr "<div><p>Hei,</p><p>%s kutsui sinut seuraamaan uutta dokumenttia</p></div>"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:134
@@ -67,7 +70,7 @@ msgid ""
 "                            Click here to add new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>\n"
 "                        </p>\n"
 "                        %(static_help)s"
-msgstr ""
+msgstr "<p class='oe_view_nocontent_create'>\nLisää uusi %(document)s klikkaamalla tästä tai lähetä sähköpostia osoitteeseen: <a href='mailto:%(email)s'>%(email)s</a>\n</p>\n%(static_help)s"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:145
@@ -132,7 +135,7 @@ msgid ""
 "                    No message in this group.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nTässä ryhmässä ei ole viestejä.\n</p>"
 
 #. module: mail
 #: help:mail.alias,alias_defaults:0
@@ -177,7 +180,7 @@ msgstr "Lisää seuraajat"
 #: code:addons/mail/static/src/xml/mail.xml:161
 #, python-format
 msgid "Add an internal note that will not be sent to the followers"
-msgstr ""
+msgstr "Lisää sisäinen viesti, jota ei lähetetä seuraajille"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -195,7 +198,7 @@ msgstr "Lisää seuraajia"
 #. module: mail
 #: field:mail.compose.message,partner_ids:0
 msgid "Additional Contacts"
-msgstr ""
+msgstr "Lisäkontaktit"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -212,7 +215,7 @@ msgstr "Alias"
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
 msgid "Alias Accepts Emails From"
-msgstr ""
+msgstr "Aliaksen sallitut lähettäjät"
 
 #. module: mail
 #: field:mail.alias,alias_contact:0
@@ -227,7 +230,7 @@ msgstr "Alias Domain"
 #. module: mail
 #: field:mail.alias,alias_name:0
 msgid "Alias Name"
-msgstr ""
+msgstr "Aliaksen nimi"
 
 #. module: mail
 #: field:mail.alias,alias_domain:0
@@ -248,14 +251,14 @@ msgstr "Aliakset"
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "All Messages"
-msgstr ""
+msgstr "Kaikki viestit"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid ""
 "All records matching your current search filter will be mailed,\n"
 "                                    not only the ids selected in the list view."
-msgstr ""
+msgstr "Kaikki nykyistä hakuasi vastaavat tietueet lähetetään sähköpostilla,\nei pelkästään id:itä jotka ovat valittuna listanäkymässä."
 
 #. module: mail
 #. openerp-web
@@ -295,7 +298,7 @@ msgstr "Liitä tiedosto"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Attach a file"
-msgstr ""
+msgstr "Liitä tiedosto"
 
 #. module: mail
 #: field:mail.compose.message,attachment_ids:0
@@ -400,7 +403,7 @@ msgstr "Kopio"
 #. module: mail
 #: field:mail.compose.message,child_ids:0 field:mail.message,child_ids:0
 msgid "Child Messages"
-msgstr ""
+msgstr "Aliviestit"
 
 #. module: mail
 #: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
@@ -488,7 +491,7 @@ msgstr "Päiväys"
 #: help:mail.group,message_last_post:0 help:mail.thread,message_last_post:0
 #: help:res.partner,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Viimeisen viestin päivämäärä"
 
 #. module: mail
 #: field:mail.message.subtype,default:0
@@ -618,7 +621,7 @@ msgstr ""
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
-msgstr ""
+msgstr "Lähettäjän sähköpostiosoite. Tämä kenttä asetetaan kun tuleville viesteille ei löydy vastaavaa kumppania."
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -939,7 +942,7 @@ msgstr "Liity ryhmään"
 #: field:mail.group,message_last_post:0 field:mail.thread,message_last_post:0
 #: field:res.partner,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Viimeinen viestipvm"
 
 #. module: mail
 #: field:mail.alias,write_uid:0 field:mail.compose.message,write_uid:0
@@ -968,12 +971,12 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log a note for this document. No notification will be sent"
-msgstr ""
+msgstr "Kirjaa sisäinen muistiinpano tähän dokumenttiin. Seuraajille ei lähetetä siitä viestiä."
 
 #. module: mail
 #: field:mail.compose.message,is_log:0
 msgid "Log an Internal Note"
-msgstr ""
+msgstr "Kirjaa sisäinen muistiinpano"
 
 #. module: mail
 #. openerp-web
@@ -981,13 +984,13 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log an internal note"
-msgstr ""
+msgstr "Kirjaa sisäinen muistiinpano"
 
 #. module: mail
 #: code:addons/mail/mail_mail.py:340
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr ""
+msgstr "Sähköpostin lähetys epäonnistui"
 
 #. module: mail
 #: field:ir.ui.menu,mail_group_id:0
@@ -1161,7 +1164,7 @@ msgstr "Siirrä saapuneisiin"
 #: code:addons/mail/static/src/xml/mail.xml:130
 #, python-format
 msgid "My Followers"
-msgstr ""
+msgstr "Minua seuraavat"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_group_root
@@ -1252,7 +1255,7 @@ msgstr "Yksi seuraaja"
 msgid ""
 "Only the invited followers can read the\n"
 "                                discussions on this group."
-msgstr ""
+msgstr "Vain kutsutut seuraajat voivat lukea tämän ryhmän keskusteluja."
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
@@ -1894,7 +1897,7 @@ msgstr ""
 #: field:mail.compose.message,vote_user_ids:0
 #: field:mail.message,vote_user_ids:0
 msgid "Votes"
-msgstr ""
+msgstr "Ääniä"
 
 #. module: mail
 #: code:addons/mail/mail_group.py:174

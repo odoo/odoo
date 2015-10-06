@@ -1,0 +1,1799 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_forum
+# 
+# Translators:
+# 珠海-老天 <liangjia@qq.com>, 2015
+# mrshelly <mrshelly@hotmail.com>, 2015
+# SHOM <shanmuxin@yeah.net>, 2015
+# THL <wt39181819@gmail.com>, 2015
+# waveyeung <waveyeung@qq.com>, 2015
+# SHOM <shanmuxin@yeah.net>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-08-21 08:56+0000\n"
+"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_forum
+#: model:email.template,body_html:website_forum.validation_email
+msgid ""
+"\n"
+"<p>\n"
+"    Hello ${object.name},\n"
+"</p>\n"
+"<p>\n"
+"    You have been invited to validate your email in order to get access to \"${object.company_id.name}\" Q/A Forums.\n"
+"</p>\n"
+"<p>\n"
+"    To validate your email, please click on the following link:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for \"${object.company_id.name}\" Q/A Forums</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"    Thanks,\n"
+"</p>\n"
+"<pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"</pre>"
+msgstr "\n<p>\n     ${object.name},你好\n</p>\n<p>\n    为了访问 \"${object.company_id.name}\" Q/A 论坛，你现在被邀请验证你的邮件\n</p>\n<p>\n    请点击下面的链接来验证你的邮件:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">验证我的 \"${object.company_id.name}\" Q/A论坛账户</a></li>\n</ul>\n<p>\n    谢谢,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
+
+#. module: website_forum
+#: model:email.template,subject:website_forum.validation_email
+msgid "${object.company_id.name} Forums validation"
+msgstr "${object.company_id.name} 论坛验证"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "&times;"
+msgstr "&times;"
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "(only one answer per question is allowed)"
+msgstr "（每个问题只允许有一个答案）"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "- it really helps to select the best questions and answers!"
+msgstr "-它确实有助于选择最佳的问题和答案！"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "- no need to answer the same question twice. Also, please"
+msgstr "- 另外没有必要对同一个问题回答两次。"
+
+#. module: website_forum
+#: selection:forum.post.vote,vote:0
+msgid "-1"
+msgstr "-1"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:374
+#, python-format
+msgid ""
+"<p>A new answer for <i>%s</i> has been posted. <a "
+"href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
+msgstr "<p>关于<i>%s</i>又有了新的回复 。 <a href=\"%s/forum/%s/question/%s\">点击这里查看发布的信息。</a></p>"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:380
+#, python-format
+msgid ""
+"<p>A new question <i>%s</i> has been asked on %s. <a "
+"href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
+msgstr "<p>关于%s又有了一个新的问题<i>%s</i> 。<a href=\"%s/forum/%s/question/%s\">点击这里查看提问。</a></p>"
+
+#. module: website_forum
+#: model:forum.forum,description:website_forum.forum_help
+msgid ""
+"<p>This community is for professionals and enthusiasts of our products and "
+"services.</p>"
+msgstr "<p>这个社区是面向致力于我们产品和服务的专业人士和爱好者。</p>"
+
+#. module: website_forum
+#: view:website:website_forum.tag
+msgid ""
+"A tag is a label that categorizes your question with other,\n"
+"            similar questions. Using the right tags makes it easier for\n"
+"            others to find and answer your question."
+msgstr "标签的作用就是把你的问题与其他类似的问题归为一类。\n使用正确的标签可以让别人更容易发现和回答你的问题。"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "About This Forum"
+msgstr "关于本论坛"
+
+#. module: website_forum
+#: field:forum.forum,karma_answer_accept_own:0
+msgid "Accept an answer on its own questions"
+msgstr "允许接受自己所提问题的答案"
+
+#. module: website_forum
+#: field:forum.forum,karma_answer_accept_all:0
+msgid "Accept an answer to all questions"
+msgstr "可接受对所有提问的统一回答"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_accept:0
+msgid "Accepting an answer"
+msgstr "接受一个答案"
+
+#. module: website_forum
+#: field:forum.post,active:0 selection:forum.post,state:0
+msgid "Active"
+msgstr "有效"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "Activity"
+msgstr "活动"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "All"
+msgstr "全部"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+msgid "Answer"
+msgstr "答案"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:411
+#: model:mail.message.subtype,description:website_forum.mt_answer_edit
+#: model:mail.message.subtype,name:website_forum.mt_answer_edit
+#, python-format
+msgid "Answer Edited"
+msgstr "答案已编辑"
+
+#. module: website_forum
+#: field:forum.forum,karma_answer:0
+msgid "Answer a question"
+msgstr "回答问题"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_accepted:0
+msgid "Answer accepted"
+msgstr "已采纳的答案"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_downvote:0
+msgid "Answer downvoted"
+msgstr "答案被投反对票"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_flagged:0
+msgid "Answer flagged"
+msgstr "标记的答案"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_upvote:0
+msgid "Answer upvoted"
+msgstr "答案被投赞成票"
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "Answered on"
+msgstr "回答关于"
+
+#. module: website_forum
+#: field:forum.post,child_count:0 field:forum.post,child_ids:0
+#: view:website:website_forum.display_post
+#: view:website:website_forum.user_detail_full
+msgid "Answers"
+msgstr "答案"
+
+#. module: website_forum
+#: view:website:website_forum.header field:forum.forum,karma_ask:0
+msgid "Ask a Question"
+msgstr "提问"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "Ask your Question"
+msgstr "提出你的问题"
+
+#. module: website_forum
+#: field:forum.post,create_date:0
+#: view:website:website_forum.post_description_full
+msgid "Asked on"
+msgstr "问"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Asked:"
+msgstr "问:"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_question_new:0
+msgid "Asking a question"
+msgstr "提问"
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_search
+msgid "Author"
+msgstr "作者"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_1
+msgid "Autobiographer"
+msgstr "自传作家"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Back to"
+msgstr "返回"
+
+#. module: website_forum
+#: view:website:website_forum.badge_user
+msgid "Badge \""
+msgstr "勋章 \""
+
+#. module: website_forum
+#: field:res.users,badge_ids:0 view:website:website_forum.badge
+#: view:website:website_forum.header
+#: view:website:website_forum.user_detail_full
+msgid "Badges"
+msgstr "勋章"
+
+#. module: website_forum
+#: view:website:website_forum.badge
+msgid ""
+"Besides gaining reputation with your questions and answers,\n"
+"            you receive badges for being especially helpful. Badges\n"
+"            appear on your profile page, and your posts."
+msgstr "通过你的问题和答案，你可以赢得声誉，,\n            另外，如果特别有帮助，你会获得勋章。勋章\n            勋章会显示在你的模板页，和你发的帖子上。"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Biography"
+msgstr "传记"
+
+#. module: website_forum
+#: field:forum.post,can_accept:0
+msgid "Can Accept"
+msgstr "可以采纳"
+
+#. module: website_forum
+#: field:forum.post,can_answer:0
+msgid "Can Answer"
+msgstr "可回答的"
+
+#. module: website_forum
+#: field:forum.post,can_ask:0
+msgid "Can Ask"
+msgstr "可以提问"
+
+#. module: website_forum
+#: field:forum.post,can_close:0
+msgid "Can Close"
+msgstr "可关闭的"
+
+#. module: website_forum
+#: field:forum.post,can_comment:0
+msgid "Can Comment"
+msgstr "可评论的"
+
+#. module: website_forum
+#: field:forum.post,can_comment_convert:0
+msgid "Can Convert to Comment"
+msgstr "可以转变为评论"
+
+#. module: website_forum
+#: field:forum.post,can_downvote:0
+msgid "Can Downvote"
+msgstr "可以投票反对"
+
+#. module: website_forum
+#: field:forum.post,can_edit:0
+msgid "Can Edit"
+msgstr "可编辑的"
+
+#. module: website_forum
+#: field:forum.post,can_unlink:0
+msgid "Can Unlink"
+msgstr "可删除"
+
+#. module: website_forum
+#: field:forum.post,can_upvote:0
+msgid "Can Upvote"
+msgstr "可以投票支持"
+
+#. module: website_forum
+#: field:forum.forum,karma_retag:0
+msgid "Change question tags"
+msgstr "改变问题标签"
+
+#. module: website_forum
+#: view:website:website_forum.user_badges
+msgid "Check available badges"
+msgstr "查看可用的勋章"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_4
+#: model:gamification.challenge,name:website_forum.challenge_chief_commentator
+msgid "Chief Commentator"
+msgstr "首席评论员"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "City"
+msgstr "城市"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid ""
+"Click here to send a verification email allowing you to participate to the "
+"forum."
+msgstr "点击这里发送一封验证邮件以便允许你加入论坛。"
+
+#. module: website_forum
+#: field:forum.forum,karma_editor_clickable_link:0
+msgid "Clickable links (Editor)"
+msgstr "可点击的链接（编辑器）"
+
+#. module: website_forum
+#: selection:forum.post,state:0
+msgid "Close"
+msgstr "关闭"
+
+#. module: website_forum
+#: field:forum.forum,karma_close_all:0
+msgid "Close all posts"
+msgstr "关闭所有的帖子"
+
+#. module: website_forum
+#: field:forum.forum,karma_close_own:0
+msgid "Close its own posts"
+msgstr "关闭所属的帖子"
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid "Close question"
+msgstr "关闭问题"
+
+#. module: website_forum
+#: field:forum.post,closed_uid:0
+msgid "Closed by"
+msgstr "关闭者为"
+
+#. module: website_forum
+#: field:forum.post,closed_date:0
+msgid "Closed on"
+msgstr "关闭于"
+
+#. module: website_forum
+#: view:website:website_forum.display_post_answer
+#: view:website:website_forum.post_description_full
+msgid "Comment"
+msgstr "备注"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_all:0
+msgid "Comment all posts"
+msgstr "评论所有的帖子"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_own:0
+msgid "Comment its own posts"
+msgstr "仅评论所属的帖子"
+
+#. module: website_forum
+#: view:website:website_forum.post_comment
+msgid "Comment this post..."
+msgstr "评论此帖......"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_2
+#: model:gamification.challenge,name:website_forum.challenge_commentator
+#: model:gamification.goal.definition,name:website_forum.definition_commentator
+msgid "Commentator"
+msgstr "评论员"
+
+#. module: website_forum
+#: view:website:website_forum.display_post_answer
+msgid "Comments"
+msgstr "评论"
+
+#. module: website_forum
+#: help:forum.post,website_message_ids:0
+msgid "Comments on forum post"
+msgstr "在论坛上发帖评论"
+
+#. module: website_forum
+#: model:gamification.challenge,name:website_forum.challenge_configure_profile
+msgid "Complete own biography"
+msgstr "完成自己的传记"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_configure_profile
+msgid "Completed own biography"
+msgstr "完成自己的传记"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid ""
+"Congratulations! Your email has just been validated. You may now participate"
+" to our forums."
+msgstr "恭喜！你的邮件已经被激活了。现在你已经加入了我们的论坛。"
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_search
+#: field:forum.post,content:0
+msgid "Content"
+msgstr "内容"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_convert_all:0
+msgid "Convert all answers to comments and vice versa"
+msgstr "转换所有的答案为评论，或者相反"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_convert_own:0
+msgid "Convert its own answers to comments and vice versa"
+msgstr "转换自己的答案为评论，或者相反"
+
+#. module: website_forum
+#: help:forum.post,is_correct:0
+msgid "Correct Answer or Answer on this question accepted."
+msgstr "答案修正或这个问题的答案被接受了。"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Country"
+msgstr "国家"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Country..."
+msgstr "国家..."
+
+#. module: website_forum
+#: field:forum.post.vote,create_date:0
+msgid "Create Date"
+msgstr "创建日期"
+
+#. module: website_forum
+#: field:forum.forum,create_uid:0 field:forum.post,create_uid:0
+#: field:forum.post.reason,create_uid:0 field:forum.post.vote,create_uid:0
+#: field:forum.tag,create_uid:0
+msgid "Created by"
+msgstr "创建者"
+
+#. module: website_forum
+#: field:forum.forum,create_date:0 field:forum.post.reason,create_date:0
+#: field:forum.tag,create_date:0
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_4
+#: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
+msgid "Credible Question"
+msgstr "可靠的问题"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_5
+#: model:gamification.challenge,name:website_forum.challenge_critic
+#: model:gamification.goal.definition,name:website_forum.definition_critic
+msgid "Critic"
+msgstr "批判家"
+
+#. module: website_forum
+#: help:forum.forum,message_last_post:0 help:forum.post,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "记录上发布的最后信息的日期"
+
+#. module: website_forum
+#: field:forum.forum,karma_unlink_all:0
+msgid "Delete all posts"
+msgstr "删除所有帖子"
+
+#. module: website_forum
+#: field:forum.forum,karma_unlink_own:0
+msgid "Delete its own posts"
+msgstr "删除所属帖子"
+
+#. module: website_forum
+#: field:forum.forum,description:0
+msgid "Description"
+msgstr "说明"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_6
+#: model:gamification.challenge,name:website_forum.challenge_disciplined
+#: model:gamification.goal.definition,name:website_forum.definition_disciplined
+msgid "Disciplined"
+msgstr "纪律"
+
+#. module: website_forum
+#: field:forum.forum,karma_downvote:0
+msgid "Downvote"
+msgstr "反对"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Edit Profile"
+msgstr "编辑个人资料"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "Edit Your Bio"
+msgstr "编辑您的简历"
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "Edit Your Previous Answer"
+msgstr "编辑你以前的回答"
+
+#. module: website_forum
+#: field:forum.forum,karma_edit_all:0
+msgid "Edit all posts"
+msgstr "编辑所有的帖子"
+
+#. module: website_forum
+#: view:website:website_forum.edit_post
+msgid "Edit answer"
+msgstr "编辑回答"
+
+#. module: website_forum
+#: field:forum.forum,karma_edit_own:0
+msgid "Edit its own posts"
+msgstr "编辑所属帖子"
+
+#. module: website_forum
+#: view:website:website_forum.edit_post
+msgid "Edit question"
+msgstr "编辑问题"
+
+#. module: website_forum
+#: view:website:website_forum.edit_post
+msgid "Edit your Question"
+msgstr "编辑你的问题"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_7
+#: model:gamification.challenge,name:website_forum.challenge_editor
+#: model:gamification.goal.definition,name:website_forum.definition_editor
+msgid "Editor"
+msgstr "编辑"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Email"
+msgstr "电子邮件"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_5
+#: model:gamification.challenge,name:website_forum.challenge_enlightened
+#: model:gamification.goal.definition,name:website_forum.definition_enlightened
+msgid "Enlightened"
+msgstr "开明的"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "Enter your Question"
+msgstr "输入你的问题标题"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_3
+#: model:gamification.challenge,name:website_forum.challenge_famous_question
+msgid "Famous Question"
+msgstr "热门问题"
+
+#. module: website_forum
+#: field:forum.post,favourite_count:0
+msgid "Favorite Count"
+msgstr "收藏夹计数"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_5
+#: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
+msgid "Favorite Question"
+msgstr "收藏的问题"
+
+#. module: website_forum
+#: field:forum.post,favourite_ids:0
+msgid "Favourite"
+msgstr "收藏"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
+msgid "Favourite Question (1)"
+msgstr "收藏的问题(1)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
+msgid "Favourite Question (25)"
+msgstr "收藏的问题（25）"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
+msgid "Favourite Question (5)"
+msgstr "收藏的问题(5)"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "Favourite Questions"
+msgstr "收藏的问题"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Filter on"
+msgstr "过滤器"
+
+#. module: website_forum
+#: field:forum.forum,karma_flag:0
+msgid "Flag a post as offensive"
+msgstr "标记无礼的帖子"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Followed"
+msgstr "跟进"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "Followed Questions"
+msgstr "跟进问题"
+
+#. module: website_forum
+#: field:forum.forum,message_follower_ids:0
+#: field:forum.post,message_follower_ids:0
+msgid "Followers"
+msgstr "关注者"
+
+#. module: website_forum
+#: view:forum.forum:website_forum.view_forum_forum_form
+#: view:forum.post:website_forum.view_forum_post_search
+#: field:forum.post,forum_id:0 field:forum.post.vote,forum_id:0
+#: field:forum.tag,forum_id:0
+#: model:ir.actions.act_url,name:website_forum.action_open_forum
+#: model:ir.ui.menu,name:website_forum.menu_website_forum
+#: model:website.menu,name:website_forum.menu_questions
+msgid "Forum"
+msgstr "论坛"
+
+#. module: website_forum
+#: field:gamification.badge,level:0
+msgid "Forum Badge Level"
+msgstr "论坛勋章等级"
+
+#. module: website_forum
+#: view:res.users:website_forum.view_users_form_forum
+msgid "Forum Karma"
+msgstr "论坛贡献"
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_form
+#: model:ir.model,name:website_forum.model_forum_post
+msgid "Forum Post"
+msgstr "论坛发表"
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_list
+#: model:ir.actions.act_window,name:website_forum.action_forum_post
+msgid "Forum Posts"
+msgstr "论坛发表"
+
+#. module: website_forum
+#: view:forum.forum:website_forum.view_forum_forum_list
+#: model:ir.actions.act_window,name:website_forum.action_forum_forum
+#: model:ir.model,name:website_forum.model_forum_forum
+#: model:ir.ui.menu,name:website_forum.menu_forum view:website:website.layout
+msgid "Forums"
+msgstr "论坛"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_gamification_badge
+msgid "Gamification badge"
+msgstr "游戏化勋章"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr "游戏化的挑战"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_3
+#: model:gamification.challenge,name:website_forum.challenge_good_answer
+msgid "Good Answer"
+msgstr "满意答案"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_good_answer
+msgid "Good Answer (6)"
+msgstr "满意答案 (6)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_9
+#: model:gamification.challenge,name:website_forum.challenge_good_question
+msgid "Good Question"
+msgstr "好问题"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_4
+#: model:gamification.challenge,name:website_forum.challenge_great_answer
+msgid "Great Answer"
+msgstr "给力的答案"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_great_answer
+msgid "Great Answer (15)"
+msgstr "伟大的回答(15)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_10
+#: model:gamification.challenge,name:website_forum.challenge_great_question
+msgid "Great Question"
+msgstr "经典问题"
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_search
+msgid "Group By"
+msgstr "分组"
+
+#. module: website_forum
+#: field:forum.forum,faq:0
+msgid "Guidelines"
+msgstr "方针"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_6
+#: model:gamification.challenge,name:website_forum.challenge_guru
+msgid "Guru"
+msgstr "专家"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_guru
+msgid "Guru (15)"
+msgstr "专家（15）"
+
+#. module: website_forum
+#: field:forum.post,uid_has_answered:0
+msgid "Has Answered"
+msgstr "已回答"
+
+#. module: website_forum
+#: field:forum.post,has_validated_answer:0
+msgid "Has a Validated Answered"
+msgstr "有一个有效的回答"
+
+#. module: website_forum
+#: model:forum.forum,name:website_forum.forum_help
+msgid "Help"
+msgstr "帮助"
+
+#. module: website_forum
+#: help:forum.forum,message_summary:0 help:forum.post,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "保存复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
+
+#. module: website_forum
+#: field:forum.forum,id:0 field:forum.post,id:0 field:forum.post.reason,id:0
+#: field:forum.post.vote,id:0 field:forum.tag,id:0
+msgid "ID"
+msgstr "标识"
+
+#. module: website_forum
+#: help:forum.forum,message_unread:0 help:forum.post,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "如果要求你关注新消息，勾选此项"
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid ""
+"If you close this question, it will be hidden for most users. Only\n"
+"            users having a high karma can see closed questions to moderate\n"
+"            them."
+msgstr "如果你关闭这个问题,对于大多数用户来说它将被隐藏。\n只有具有较高贡献值的用户才可以在关闭的问题中看到它们。"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "If you wanted to comment on the question or answer, just"
+msgstr "如果你想对这个问题的回答或评论，只是"
+
+#. module: website_forum
+#: field:forum.forum,message_is_follower:0
+#: field:forum.post,message_is_follower:0
+msgid "Is a Follower"
+msgstr "是一个关注者"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "It appears your email has not been verified."
+msgstr "您的邮件没有验证。"
+
+#. module: website_forum
+#: field:res.users,karma:0 view:website:website_forum.user_detail_full
+msgid "Karma"
+msgstr "贡献值"
+
+#. module: website_forum
+#: view:forum.forum:website_forum.view_forum_forum_form
+msgid "Karma Gains"
+msgstr "获得贡献值"
+
+#. module: website_forum
+#: view:forum.forum:website_forum.view_forum_forum_form
+msgid "Karma Requirements"
+msgstr "贡献值要求"
+
+#. module: website_forum
+#: field:forum.post,karma_accept:0
+msgid "Karma to accept this answer"
+msgstr "获赞加贡献"
+
+#. module: website_forum
+#: field:forum.post,karma_answer:0
+msgid "Karma to answer"
+msgstr "解答加贡献"
+
+#. module: website_forum
+#: field:forum.post,karma_ask:0
+msgid "Karma to ask"
+msgstr "提问贡献值"
+
+#. module: website_forum
+#: field:forum.post,karma_close:0
+msgid "Karma to close"
+msgstr "停贡献值"
+
+#. module: website_forum
+#: field:forum.post,karma_comment:0
+msgid "Karma to comment"
+msgstr "评论需贡献值"
+
+#. module: website_forum
+#: field:forum.post,karma_downvote:0
+msgid "Karma to downvote"
+msgstr "拍砖减贡献"
+
+#. module: website_forum
+#: field:forum.post,karma_edit:0
+msgid "Karma to edit"
+msgstr "修改贡献值"
+
+#. module: website_forum
+#: field:forum.post,karma_unlink:0
+msgid "Karma to unlink"
+msgstr "剥离贡献"
+
+#. module: website_forum
+#: field:forum.post,karma_upvote:0
+msgid "Karma to upvote"
+msgstr "点赞贡献"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Keep Informed"
+msgstr "随时了解"
+
+#. module: website_forum
+#: field:forum.forum,message_last_post:0 field:forum.post,message_last_post:0
+msgid "Last Message Date"
+msgstr "最新消息日期"
+
+#. module: website_forum
+#: field:forum.forum,write_uid:0 field:forum.post.reason,write_uid:0
+#: field:forum.post.vote,write_uid:0 field:forum.tag,write_uid:0
+msgid "Last Updated by"
+msgstr "最后更新者"
+
+#. module: website_forum
+#: field:forum.forum,write_date:0 field:forum.post.reason,write_date:0
+#: field:forum.post.vote,write_date:0 field:forum.tag,write_date:0
+msgid "Last Updated on"
+msgstr "最后更新日期"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Last activity date"
+msgstr "上次活动日期"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Last updated:"
+msgstr "最后更新："
+
+#. module: website_forum
+#: field:forum.forum,karma_editor_link_files:0
+msgid "Linking files (Editor)"
+msgstr "链接文件（编辑器）"
+
+#. module: website_forum
+#: field:forum.forum,message_ids:0 field:forum.post,message_ids:0
+msgid "Messages"
+msgstr "消息"
+
+#. module: website_forum
+#: help:forum.forum,message_ids:0 help:forum.post,message_ids:0
+msgid "Messages and communication history"
+msgstr "消息和通信历史"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Most answered"
+msgstr "最多回复"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Most voted"
+msgstr "大多数评价"
+
+#. module: website_forum
+#: field:forum.post,user_favourite:0
+msgid "My Favourite"
+msgstr "我的最爱"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "My Profile"
+msgstr "我的个人资料"
+
+#. module: website_forum
+#: field:forum.post,user_vote:0
+msgid "My Vote"
+msgstr "我的投票"
+
+#. module: website_forum
+#: field:forum.forum,name:0 view:forum.post:website_forum.view_forum_post_form
+#: field:forum.tag,name:0
+msgid "Name"
+msgstr "名称"
+
+#. module: website_forum
+#: model:mail.message.subtype,description:website_forum.mt_answer_new
+#: model:mail.message.subtype,name:website_forum.mt_answer_new
+#: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
+msgid "New Answer"
+msgstr "新的答案"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:11
+#: view:website:website.layout
+#, python-format
+msgid "New Forum"
+msgstr "论坛新贴"
+
+#. module: website_forum
+#: model:mail.message.subtype,description:website_forum.mt_question_new
+#: model:mail.message.subtype,name:website_forum.mt_forum_question_new
+#: model:mail.message.subtype,name:website_forum.mt_question_new
+msgid "New Question"
+msgstr "新问题"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Newest"
+msgstr "最新"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_2
+#: model:gamification.challenge,name:website_forum.challenge_nice_answer
+msgid "Nice Answer"
+msgstr "很赞的回答"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_nice_answer
+msgid "Nice Answer (4)"
+msgstr "很赞的回答(4)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_8
+msgid "Nice Quesiotn"
+msgstr "很赞的问题"
+
+#. module: website_forum
+#: model:gamification.challenge,name:website_forum.challenge_nice_question
+msgid "Nice Question"
+msgstr "不错的问题"
+
+#. module: website_forum
+#: view:website:website_forum.user_badges
+msgid "No badge yet!"
+msgstr "没有勋章!"
+
+#. module: website_forum
+#: view:website:website_forum.user_votes
+msgid "No vote given by you yet!"
+msgstr "没有评价给你!"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_2
+#: model:gamification.challenge,name:website_forum.challenge_notable_question
+msgid "Notable Question"
+msgstr "值得注意的问题"
+
+#. module: website_forum
+#: field:forum.tag,posts_count:0
+msgid "Number of Posts"
+msgstr "帖子数量"
+
+#. module: website_forum
+#: field:forum.post,views:0
+msgid "Number of Views"
+msgstr "点阅数量"
+
+#. module: website_forum
+#: field:res.users,bronze_badge:0
+msgid "Number of bronze badges"
+msgstr "青铜勋章数量"
+
+#. module: website_forum
+#: field:res.users,gold_badge:0
+msgid "Number of gold badges"
+msgstr "金勋章数量"
+
+#. module: website_forum
+#: field:res.users,silver_badge:0
+msgid "Number of silver badges"
+msgstr "银色勋章数量"
+
+#. module: website_forum
+#: selection:forum.post,state:0
+msgid "Offensive"
+msgstr "无礼"
+
+#. module: website_forum
+#: view:website:website_forum.forum_all
+msgid "Our forums"
+msgstr "我们的论坛"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_23
+#: model:gamification.challenge,name:website_forum.challenge_peer_pressure
+#: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
+msgid "Peer Pressure"
+msgstr "同伴的压力"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "People"
+msgstr "用户"
+
+#. module: website_forum
+#: view:website:website_forum.edit_post
+msgid "Please enter a descriptive question (should finish by a '?')"
+msgstr "请输入问题的描述（应该用“？”来结尾）"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "Please enter a descriptive question (should finish with a '?')"
+msgstr "请输入一个描述性的问题（应该以一个‘？’结束）"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid ""
+"Please enter a valid email address in order to receive notifications from "
+"answers or comments."
+msgstr "为了接收回复通知，请输入正确的邮箱地址"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "Please remember that you can always"
+msgstr "请记住你是可以的"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "Please try to give a substantial answer."
+msgstr "请尽量给出一个实质性的答案。"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_1
+#: model:gamification.challenge,name:website_forum.challenge_popular_question
+msgid "Popular Question"
+msgstr "热门问题"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_popular_question
+msgid "Popular Question (150)"
+msgstr "热门问题(150)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_notable_question
+msgid "Popular Question (250)"
+msgstr "热门问题(250)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_famous_question
+msgid "Popular Question (500)"
+msgstr "热门问题(500)"
+
+#. module: website_forum
+#: field:forum.post.vote,post_id:0 view:website:website_forum.post_comment
+msgid "Post"
+msgstr "过账"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_reason
+msgid "Post Closing Reason"
+msgstr "封帖的原因"
+
+#. module: website_forum
+#: field:forum.post,website_message_ids:0
+msgid "Post Messages"
+msgstr "发布帖子"
+
+#. module: website_forum
+#: field:forum.post.reason,name:0
+msgid "Post Reason"
+msgstr "发表原因"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "Post Your Answer"
+msgstr "发表你的答案"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "Post Your Question"
+msgstr "提交你的问题"
+
+#. module: website_forum
+#: field:forum.tag,post_ids:0
+#: model:ir.ui.menu,name:website_forum.menu_forum_posts
+msgid "Posts"
+msgstr "帖子"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Public profile"
+msgstr "公用模板"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_25
+#: model:gamification.challenge,name:website_forum.challenge_pundit
+#: model:gamification.goal.definition,name:website_forum.definition_pundit
+msgid "Pundit"
+msgstr "权威人士"
+
+#. module: website_forum
+#: view:website:website.layout
+msgid "Q&A"
+msgstr "Q&A"
+
+#. module: website_forum
+#: field:forum.post,parent_id:0
+msgid "Question"
+msgstr "问题"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:414
+#: model:mail.message.subtype,description:website_forum.mt_question_edit
+#: model:mail.message.subtype,name:website_forum.mt_question_edit
+#, python-format
+msgid "Question Edited"
+msgstr "问题编辑"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_question_downvote:0
+msgid "Question downvoted"
+msgstr "投反对票的问题"
+
+#. module: website_forum
+#: view:website:website_forum.404
+msgid "Question not found!"
+msgstr "没有发现问题!"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Question tools"
+msgstr "问题工具"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_question_upvote:0
+msgid "Question upvoted"
+msgstr "对问题投赞成票"
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid "Question:"
+msgstr "问题:"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index view:website:website_forum.header
+#: view:website:website_forum.user_detail_full
+msgid "Questions"
+msgstr "问题"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:376
+#, python-format
+msgid "Re: %s"
+msgstr "回复: %s"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Read Guidelines"
+msgstr "阅读指南"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Real name"
+msgstr "真实姓名"
+
+#. module: website_forum
+#: field:forum.post,closed_reason_id:0
+msgid "Reason"
+msgstr "原因"
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid "Reason:"
+msgstr "原因："
+
+#. module: website_forum
+#: view:website:website_forum.404 view:website:website_forum.private_profile
+msgid "Return to the question list."
+msgstr "返回问题列表。"
+
+#. module: website_forum
+#: view:website:website_forum.edit_post
+msgid "Save"
+msgstr "保存"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_26
+#: model:gamification.challenge,name:website_forum.challenge_scholar
+#: model:gamification.goal.definition,name:website_forum.definition_scholar
+msgid "Scholar"
+msgstr "学者"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Search"
+msgstr "搜索"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Search a question..."
+msgstr "问题搜索..."
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_search
+msgid "Search in Post"
+msgstr "搜索帖子"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Seen:"
+msgstr "看到:"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_8
+#: model:gamification.challenge,name:website_forum.challenge_self_learner
+#: model:gamification.goal.definition,name:website_forum.definition_self_learner
+msgid "Self-Learner"
+msgstr "其中"
+
+#. module: website_forum
+#: view:forum.forum:website_forum.view_forum_forum_form
+#: view:forum.post:website_forum.view_forum_post_form
+msgid "Send a message to the group"
+msgstr "发送信息到该组"
+
+#. module: website_forum
+#: view:website:website_forum.404
+msgid "Sorry, this question is not available anymore."
+msgstr "对不起,这个问题失效了。"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Sort by"
+msgstr "排序"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Stats"
+msgstr "统计数据"
+
+#. module: website_forum
+#: field:forum.post,state:0
+msgid "Status"
+msgstr "状态"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_6
+#: model:gamification.challenge,name:website_forum.challenge_stellar_question_25
+msgid "Stellar Question"
+msgstr "主要的问题"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_7
+#: model:gamification.challenge,name:website_forum.challenge_student
+msgid "Student"
+msgstr "学生"
+
+#. module: website_forum
+#: field:forum.forum,message_summary:0 field:forum.post,message_summary:0
+msgid "Summary"
+msgstr "摘要"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_31
+#: model:gamification.challenge,name:website_forum.challenge_supporter
+#: model:gamification.goal.definition,name:website_forum.definition_supporter
+msgid "Supporter"
+msgstr "支持者"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_tag
+msgid "Tag"
+msgstr "标签"
+
+#. module: website_forum
+#: field:forum.post,tag_ids:0 view:website:website_forum.ask_question
+#: view:website:website_forum.edit_post view:website:website_forum.forum_index
+#: view:website:website_forum.header view:website:website_forum.tag
+msgid "Tags"
+msgstr "标签"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_32
+#: model:gamification.challenge,name:website_forum.challenge_taxonomist
+#: model:gamification.goal.definition,name:website_forum.definition_taxonomist
+msgid "Taxonomist"
+msgstr "分类学者"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_1
+#: model:gamification.challenge,name:website_forum.challenge_teacher
+#: model:gamification.goal.definition,name:website_forum.definition_teacher
+msgid "Teacher"
+msgstr "老师"
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "The question has been closed"
+msgstr "这个问题已被关闭"
+
+#. module: website_forum
+#: help:forum.post.vote,recipient_id:0
+msgid "The user receiving the vote"
+msgstr "接受评价的用户"
+
+#. module: website_forum
+#: view:website:website_forum.private_profile
+msgid "This profile is private!"
+msgstr "这个资料属于个人隐私"
+
+#. module: website_forum
+#: field:forum.post,name:0
+msgid "Title"
+msgstr "称谓"
+
+#. module: website_forum
+#: field:forum.post.vote,recipient_id:0
+msgid "To"
+msgstr "到"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Toggle navigation"
+msgstr "切换导航"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Unanswered"
+msgstr "未回答"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_unlink_all:0
+msgid "Unlink all comments"
+msgstr "删除所有评论"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_unlink_own:0
+msgid "Unlink its own comments"
+msgstr "删除所属评论"
+
+#. module: website_forum
+#: field:forum.forum,message_unread:0 field:forum.post,message_unread:0
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Update"
+msgstr "更新"
+
+#. module: website_forum
+#: field:forum.post,write_date:0
+msgid "Update on"
+msgstr "更新"
+
+#. module: website_forum
+#: field:forum.post,write_uid:0
+msgid "Updated by"
+msgstr "更新"
+
+#. module: website_forum
+#: field:forum.forum,karma_upvote:0
+msgid "Upvote"
+msgstr "投票"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_student
+msgid "Upvoted question (1)"
+msgstr "评价问题（1）"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_great_question
+msgid "Upvoted question (15)"
+msgstr "评价问题（15）"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_nice_question
+msgid "Upvoted question (4)"
+msgstr "评价问题（4）"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_good_question
+msgid "Upvoted question (6)"
+msgstr "评价问题（6）"
+
+#. module: website_forum
+#: field:forum.post.vote,user_id:0
+msgid "User"
+msgstr "用户"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_res_users
+msgid "Users"
+msgstr "用户"
+
+#. module: website_forum
+#: field:forum.post,is_correct:0
+msgid "Valid Answer"
+msgstr "有效的答案"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "View Your Badges"
+msgstr "查看您的勋章"
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "Views"
+msgstr "视图"
+
+#. module: website_forum
+#: field:forum.post.vote,vote:0
+#: model:ir.model,name:website_forum.model_forum_post_vote
+msgid "Vote"
+msgstr "评价"
+
+#. module: website_forum
+#: field:forum.post,vote_count:0 field:forum.post,vote_ids:0
+#: view:website:website_forum.user_detail_full
+msgid "Votes"
+msgstr "投票"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Website"
+msgstr "网站"
+
+#. module: website_forum
+#: field:forum.forum,website_message_ids:0
+msgid "Website Messages"
+msgstr "网站消息"
+
+#. module: website_forum
+#: help:forum.forum,website_message_ids:0
+msgid "Website communication history"
+msgstr "网站沟通记录"
+
+#. module: website_forum
+#: field:forum.forum,website_meta_description:0
+#: field:forum.post,website_meta_description:0
+#: field:forum.tag,website_meta_description:0
+msgid "Website meta description"
+msgstr "网站meta描述"
+
+#. module: website_forum
+#: field:forum.forum,website_meta_keywords:0
+#: field:forum.post,website_meta_keywords:0
+#: field:forum.tag,website_meta_keywords:0
+msgid "Website meta keywords"
+msgstr "网站meta关键字"
+
+#. module: website_forum
+#: field:forum.forum,website_meta_title:0
+#: field:forum.post,website_meta_title:0 field:forum.tag,website_meta_title:0
+msgid "Website meta title"
+msgstr "网站meta标题"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "Your answer"
+msgstr "你的答案"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.post_description_full
+msgid "[Closed]"
+msgstr "[关闭]"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.post_description_full
+msgid "[Deleted]"
+msgstr "[删除]"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+msgid "and"
+msgstr "and"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+msgid "answers"
+msgstr "响应"
+
+#. module: website_forum
+#: view:website:website_forum.badge view:website:website_forum.user_badges
+msgid "awarded users"
+msgstr "授予用户"
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid "back to question"
+msgstr "回到问题"
+
+#. module: website_forum
+#: view:website:website_forum.users
+msgid "badges:"
+msgstr "勋章："
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid ""
+"be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...)"
+msgstr "简洁明了，避免不必要的语言（如：嗨，...谢谢...）"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "bio"
+msgstr "个人简历"
+
+#. module: website_forum
+#: selection:gamification.badge,level:0
+msgid "bronze"
+msgstr "青铜"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.post_description_full
+msgid "by"
+msgstr "作者"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "by activity date"
+msgstr "通过活动日期"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "by creation date"
+msgstr "通过创建日期"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "by most answered"
+msgstr "大多数回答"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "by most voted"
+msgstr "大多数评价"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_7
+msgid "contains offensive or malicious remarks"
+msgstr "包含攻击或恶意的言论"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "contributions"
+msgstr "捐款"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "don't forget to vote"
+msgstr "不要忘记评价"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_1
+msgid "duplicate question"
+msgstr "重复的问题"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "follower(s)"
+msgstr "粉丝(s)"
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "for reason:"
+msgstr "原由"
+
+#. module: website_forum
+#: selection:gamification.badge,level:0
+msgid "gold"
+msgstr "黄金"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "karma"
+msgstr "贡献值"
+
+#. module: website_forum
+#: field:forum.post,karma_comment_convert:0
+msgid "karma to convert as a comment"
+msgstr "贡献值转换为评论"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "last connection"
+msgstr "最后的联系"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "location"
+msgstr "位置"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "member since"
+msgstr "成员自"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_4
+msgid "not a real question"
+msgstr "不是一个真正的问题"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_6
+msgid "not relevant or out dated"
+msgstr "不相关或过时了"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_2
+msgid "off-topic or not relevant"
+msgstr "偏离主题或不相关"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.post_comment
+#: view:website:website_forum.post_description_full
+msgid "on"
+msgstr "在"
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid "or"
+msgstr "or"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "please, try to make your question interesting to others"
+msgstr "请试着让你的问题有趣"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "profile"
+msgstr "个人资料"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "provide enough details and, if possible, give an example"
+msgstr "提供足够的细节，如果可能的话，举个例子"
+
+#. module: website_forum
+#: view:website:website_forum.badge_user
+msgid "received this badge:"
+msgstr "收到此勋章："
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "revise your answers"
+msgstr "修改你的答案"
+
+#. module: website_forum
+#: selection:gamification.badge,level:0
+msgid "silver"
+msgstr "银"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_8
+msgid "spam or advertising"
+msgstr "垃圾邮件或广告"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "stats"
+msgstr "统计"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "time"
+msgstr "时间"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "times"
+msgstr "时间"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_9
+msgid "too localized"
+msgstr "太本地化"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_3
+msgid "too subjective and argumentative"
+msgstr "过于主观和争论"
+
+#. module: website_forum
+#: field:forum.post,self_reply:0
+msgid "unknown"
+msgstr "未知"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "use the commenting tool."
+msgstr "使用注释工具。"
+
+#. module: website_forum
+#: view:website:website_forum.badge_user
+msgid "user"
+msgstr "用户"
+
+#. module: website_forum
+#: view:website:website_forum.badge_user
+msgid "users"
+msgstr "用户"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+msgid "views"
+msgstr "浏览次数"
+
+#. module: website_forum
+#: view:website:website_forum.display_post view:website:website_forum.vote
+msgid "vote"
+msgstr "评价"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.user_detail_full view:website:website_forum.vote
+msgid "votes"
+msgstr "评价"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "website"
+msgstr "网站"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+msgid "with"
+msgstr "一致"

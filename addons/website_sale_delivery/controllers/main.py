@@ -26,3 +26,11 @@ class website_sale(openerp.addons.website_sale.controllers.main.website_sale):
         """ Transforms a list of order lines into a dict for google analytics """
         order_lines_not_delivery = [line for line in order_lines if not line.is_delivery]
         return super(website_sale, self).order_lines_2_google_api(order_lines_not_delivery)
+
+    def order_2_return_dict(self, order):
+        """ Returns the tracking_cart dict of the order for Google analytics """
+        ret = super(website_sale, self).order_2_return_dict(order)
+        for line in order.order_line:
+            if line.is_delivery:
+                ret['transaction']['shipping'] = line.price_unit
+        return ret

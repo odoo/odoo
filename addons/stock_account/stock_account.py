@@ -285,7 +285,7 @@ class stock_move(osv.osv):
             average_valuation_price += q.qty * q.cost
         average_valuation_price = average_valuation_price / move.product_qty
         # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-        ctx = dict(context, force_company=move.company_id.id)
+        ctx = dict(context or {}, force_company=move.company_id.id)
         product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=ctx)
         self.write(cr, uid, [move.id], {'price_unit': average_valuation_price}, context=context)
 

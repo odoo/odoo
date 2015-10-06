@@ -58,7 +58,7 @@ class Usb(Escpos):
                     return True
             except usb.core.USBError as e:
                 i += 1
-                if i > 100:
+                if i > 10:
                     return False
         
             sleep(0.1)

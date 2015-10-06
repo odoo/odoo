@@ -1247,7 +1247,8 @@ class BaseModel(object):
         for fun, msg, names in self._constraints:
             try:
                 # validation must be context-independent; call ``fun`` without context
-                valid = not (set(names) & field_names) or fun(self._model, cr, uid, ids)
+                valid = names and not (set(names) & field_names)
+                valid = valid or fun(self._model, cr, uid, ids)
                 extra_error = None
             except Exception, e:
                 _logger.debug('Exception while validating constraint', exc_info=True)
@@ -3213,6 +3214,14 @@ class BaseModel(object):
                 if fcolumn._prefetch
                 if not fcolumn.groups or self.user_has_groups(fcolumn.groups)
             }
+        elif self._columns[field.name]._multi:
+            # prefetch all function fields with the same value for 'multi'
+            multi = self._columns[field.name]._multi
+            fnames = {fname
+                for fname, fcolumn in self._columns.iteritems()
+                if fcolumn._multi == multi
+                if not fcolumn.groups or self.user_has_groups(fcolumn.groups)
+            }
         else:
             fnames = {field.name}
 
@@ -3923,8 +3932,8 @@ class BaseModel(object):
         # for recomputing new-style fields
         recs.modified(upd_todo)
 
-        unknown_fields = updend[:]
-        for table in self._inherits:
+        unknown_fields = set(updend)
+        for table, inherit_field in self._inherits.iteritems():
             col = self._inherits[table]
             nids = []
             for sub_ids in cr.split_for_in_conditions(ids):
@@ -3933,10 +3942,11 @@ class BaseModel(object):
                 nids.extend([x[0] for x in cr.fetchall()])
 
             v = {}
-            for val in updend:
-                if self._inherit_fields[val][0] == table:
-                    v[val] = vals[val]
-                    unknown_fields.remove(val)
+            for fname in updend:
+                field = self._fields[fname]
+                if field.inherited and field.related[0] == inherit_field:
+                    v[fname] = vals[fname]
+                    unknown_fields.discard(fname)
             if v:
                 self.pool[table].write(cr, user, nids, v, context)
 
@@ -4007,18 +4017,22 @@ class BaseModel(object):
 
         done = {}
         recs.env.recompute_old.extend(result)
-        for order, model_name, ids_to_update, fields_to_recompute in sorted(recs.env.recompute_old):
-            key = (model_name, tuple(fields_to_recompute))
-            done.setdefault(key, {})
-            # avoid to do several times the same computation
-            todo = []
-            for id in ids_to_update:
-                if id not in done[key]:
-                    done[key][id] = True
-                    if id not in deleted_related[model_name]:
-                        todo.append(id)
-            self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
-        recs.env.clear_recompute_old()
+        while recs.env.recompute_old:
+            sorted_recompute_old = sorted(recs.env.recompute_old)
+            recs.env.clear_recompute_old()
+            for __, model_name, ids_to_update, fields_to_recompute in \
+                    sorted_recompute_old:
+                key = (model_name, tuple(fields_to_recompute))
+                done.setdefault(key, {})
+                # avoid to do several times the same computation
+                todo = []
+                for id in ids_to_update:
+                    if id not in done[key]:
+                        done[key][id] = True
+                        if id not in deleted_related[model_name]:
+                            todo.append(id)
+                self.pool[model_name]._store_set_values(
+                    cr, user, todo, fields_to_recompute, context)
 
         # recompute new-style fields
         if recs.env.recompute and context.get('recompute', True):
@@ -4275,11 +4289,15 @@ class BaseModel(object):
 
         if recs.env.recompute and context.get('recompute', True):
             done = []
-            for order, model_name, ids, fields2 in sorted(recs.env.recompute_old):
-                if not (model_name, ids, fields2) in done:
-                    self.pool[model_name]._store_set_values(cr, user, ids, fields2, context)
-                    done.append((model_name, ids, fields2))
-            recs.env.clear_recompute_old()
+            while recs.env.recompute_old:
+                sorted_recompute_old = sorted(recs.env.recompute_old)
+                recs.env.clear_recompute_old()
+                for __, model_name, ids, fields2 in sorted_recompute_old:
+                    if not (model_name, ids, fields2) in done:
+                        self.pool[model_name]._store_set_values(
+                            cr, user, ids, fields2, context)
+                        done.append((model_name, ids, fields2))
+
             # recompute new-style fields
             recs.recompute()
 
@@ -4526,7 +4544,7 @@ class BaseModel(object):
             apply_rule(rule_where_clause, rule_where_clause_params, rule_tables,
                        parent_model=inherited_model)
 
-    def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction):
+    def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction, seen):
         """
         Add possibly missing JOIN to ``query`` and generate the ORDER BY clause for m2o fields,
         either native m2o fields or function/related fields that are stored, including
@@ -4536,18 +4554,18 @@ class BaseModel(object):
         """
         if order_field not in self._columns and order_field in self._inherit_fields:
             # also add missing joins for reaching the table containing the m2o field
-            qualified_field = self._inherits_join_calc(alias, order_field, query)
             order_field_column = self._inherit_fields[order_field][2]
+            qualified_field = self._inherits_join_calc(alias, order_field, query)
+            alias, order_field = qualified_field.replace('"', '').split('.', 1)
         else:
-            qualified_field = '"%s"."%s"' % (alias, order_field)
             order_field_column = self._columns[order_field]
 
         assert order_field_column._type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
         if not order_field_column._classic_write and not getattr(order_field_column, 'store', False):
-            _logger.debug("Many2one function/related fields must be stored " \
-                "to be used as ordering fields! Ignoring sorting for %s.%s",
-                self._name, order_field)
-            return
+            _logger.debug("Many2one function/related fields must be stored "
+                          "to be used as ordering fields! Ignoring sorting for %s.%s",
+                          self._name, order_field)
+            return []
 
         # figure out the applicable order_by for the m2o
         dest_model = self.pool[order_field_column._obj]
@@ -4558,12 +4576,14 @@ class BaseModel(object):
 
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
-        src_table, src_field = qualified_field.replace('"', '').split('.', 1)
-        dst_alias, dst_alias_statement = query.add_join((src_table, dest_model._table, src_field, 'id', src_field), implicit=False, outer=True)
+        join = (alias, dest_model._table, order_field, 'id', order_field)
+        dst_alias, dst_alias_statement = query.add_join(join, implicit=False, outer=True)
         return dest_model._generate_order_by_inner(dst_alias, m2o_order, query,
-                                                   reverse_direction=reverse_direction)
+                                                   reverse_direction=reverse_direction, seen=seen)
 
-    def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False):
+    def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False, seen=None):
+        if seen is None:
+            seen = set()
         order_by_elements = []
         self._check_qorder(order_spec)
         for order_part in order_spec.split(','):
@@ -4584,7 +4604,10 @@ class BaseModel(object):
                     inner_clauses = ['"%s"."%s"' % (alias, order_field)]
                     add_dir = True
                 elif order_column._type == 'many2one':
-                    inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse)
+                    key = (self._name, order_column._obj, order_field)
+                    if key not in seen:
+                        seen.add(key)
+                        inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
                 else:
                     continue  # ignore non-readable or "non-joinable" fields
             elif order_field in self._inherit_fields:
@@ -4594,7 +4617,10 @@ class BaseModel(object):
                     inner_clauses = [self._inherits_join_calc(alias, order_field, query)]
                     add_dir = True
                 elif order_column._type == 'many2one':
-                    inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse)
+                    key = (parent_obj._name, order_column._obj, order_field)
+                    if key not in seen:
+                        seen.add(key)
+                        inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
                 else:
                     continue  # ignore non-readable or "non-joinable" fields
             else:
@@ -4702,8 +4728,10 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_data_seen', {})
-        if id in seen_map.setdefault(self._name, []):
+        if '__copy_data_seen' not in context:
+            context = dict(context, __copy_data_seen=defaultdict(list))
+        seen_map = context['__copy_data_seen']
+        if id in seen_map[self._name]:
             return
         seen_map[self._name].append(id)
 
@@ -4773,8 +4801,10 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_translations_seen',{})
-        if old_id in seen_map.setdefault(self._name,[]):
+        if '__copy_translations_seen' not in context:
+            context = dict(context, __copy_translations_seen=defaultdict(list))
+        seen_map = context['__copy_translations_seen']
+        if old_id in seen_map[self._name]:
             return
         seen_map[self._name].append(old_id)
 
@@ -5343,7 +5373,11 @@ class BaseModel(object):
         """
         if self:
             vals = [func(rec) for rec in self]
-            return reduce(operator.or_, vals) if isinstance(vals[0], BaseModel) else vals
+            if isinstance(vals[0], BaseModel):
+                # return the union of all recordsets in O(n)
+                ids = set(itertools.chain(*[rec._ids for rec in vals]))
+                return vals[0].browse(ids)
+            return vals
         else:
             vals = func(self)
             return vals if isinstance(vals, BaseModel) else []
@@ -5756,7 +5790,19 @@ class BaseModel(object):
                 if 'domain' in method_res:
                     result.setdefault('domain', {}).update(method_res['domain'])
                 if 'warning' in method_res:
-                    result['warning'] = method_res['warning']
+                    if result.get('warning'):
+                        if method_res['warning']:
+                            # Concatenate multiple warnings
+                            warning = result['warning']
+                            warning['message'] = '\n\n'.join(filter(None, [
+                                warning.get('title'),
+                                warning.get('message'),
+                                method_res['warning'].get('title'),
+                                method_res['warning'].get('message')
+                            ]))
+                            warning['title'] = _('Warnings')
+                    else:
+                        result['warning'] = method_res['warning']
             return
 
         # onchange V7
@@ -5797,8 +5843,19 @@ class BaseModel(object):
             if 'domain' in method_res:
                 result.setdefault('domain', {}).update(method_res['domain'])
             if 'warning' in method_res:
-                result['warning'] = method_res['warning']
-
+                if result.get('warning'):
+                    if method_res['warning']:
+                        # Concatenate multiple warnings
+                        warning = result['warning']
+                        warning['message'] = '\n\n'.join(filter(None, [
+                            warning.get('title'),
+                            warning.get('message'),
+                            method_res['warning'].get('title'),
+                            method_res['warning'].get('message')
+                        ]))
+                        warning['title'] = _('Warnings')
+                else:
+                    result['warning'] = method_res['warning']
     @api.multi
     def onchange(self, values, field_name, field_onchange):
         """ Perform an onchange on the given field.

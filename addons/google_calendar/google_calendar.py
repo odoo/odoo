@@ -206,7 +206,7 @@ class google_calendar(osv.AbstractModel):
             context = {}
         if event.allday:
             start_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.start, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context).isoformat('T').split('T')[0]
-            final_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.start, tools.DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=event.duration) + timedelta(days=isCreating and 1 or 0), context=context).isoformat('T').split('T')[0]
+            final_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.stop, tools.DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=1), context=context).isoformat('T').split('T')[0]
             type = 'date'
             vstype = 'dateTime'
         else:
@@ -259,6 +259,10 @@ class google_calendar(osv.AbstractModel):
 
         if not self.get_need_synchro_attendee(cr, uid, context=context):
             data.pop("attendees")
+        if isCreating:
+            other_google_ids = [other_att.google_internal_event_id for other_att in event.attendee_ids if other_att.google_internal_event_id]
+            if other_google_ids:
+                data["id"] = other_google_ids[0]
         return data
 
     def create_an_event(self, cr, uid, event, context=None):
@@ -428,7 +432,7 @@ class google_calendar(osv.AbstractModel):
                 if type == "write":
                     for oe_attendee in event['attendee_ids']:
                         if oe_attendee.email == partner_email:
-                            calendar_attendee_obj.write(cr, uid, [oe_attendee.id], {'state': google_attendee['responseStatus'], 'google_internal_event_id': single_event_dict.get('id')}, context=context)
+                            calendar_attendee_obj.write(cr, uid, [oe_attendee.id], {'state': google_attendee['responseStatus']}, context=context)
                             google_attendee['found'] = True
                             continue
 
@@ -447,7 +451,6 @@ class google_calendar(osv.AbstractModel):
                 partner_record.append((4, attendee.get('id')))
                 attendee['partner_id'] = attendee.pop('id')
                 attendee['state'] = google_attendee['responseStatus']
-                attendee['google_internal_event_id'] = single_event_dict.get('id')
                 attendee_record.append((0, 0, attendee))
         for google_alarm in single_event_dict.get('reminders', {}).get('overrides', []):
             alarm_id = calendar_alarm_obj.search(
@@ -626,17 +629,23 @@ class google_calendar(osv.AbstractModel):
                                     ('event_id.final_date', '>', self.get_minTime(cr, uid, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
                                     ], context=context_norecurrent)
         for att in att_obj.browse(cr, uid, my_att_ids, context=context):
-            if not att.event_id.recurrent_id or att.event_id.recurrent_id == 0:
-                st, response, ask_time = self.create_an_event(cr, uid, att.event_id, context=context)
-                if status_response(st):
-                    update_date = datetime.strptime(response['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
-                    ev_obj.write(cr, uid, att.event_id.id, {'oe_update_date': update_date})
-                    new_ids.append(response['id'])
-                    att_obj.write(cr, uid, [att.id for att in att.event_id.attendee_ids], {'google_internal_event_id': response['id'], 'oe_synchro_date': update_date})
-                    cr.commit()
-                else:
-                    _logger.warning("Impossible to create event %s. [%s]" % (att.event_id.id, st))
-                    _logger.warning("Response : %s" % response)
+            other_google_ids = [other_att.google_internal_event_id for other_att in att.event_id.attendee_ids if other_att.google_internal_event_id and other_att.id != att.id]
+            for other_google_id in other_google_ids:
+                if self.get_one_event_synchro(cr, uid, other_google_id, context=context):
+                    att_obj.write(cr, uid, [att.id], {'google_internal_event_id': other_google_id})
+                    break
+            else:
+                if not att.event_id.recurrent_id or att.event_id.recurrent_id == 0:
+                    st, response, ask_time = self.create_an_event(cr, uid, att.event_id, context=context)
+                    if status_response(st):
+                        update_date = datetime.strptime(response['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
+                        ev_obj.write(cr, uid, att.event_id.id, {'oe_update_date': update_date})
+                        new_ids.append(response['id'])
+                        att_obj.write(cr, uid, [att.id], {'google_internal_event_id': response['id'], 'oe_synchro_date': update_date})
+                        cr.commit()
+                    else:
+                        _logger.warning("Impossible to create event %s. [%s]" % (att.event_id.id, st))
+                        _logger.warning("Response : %s" % response)
         return new_ids
 
     def get_context_no_virtual(self, context):

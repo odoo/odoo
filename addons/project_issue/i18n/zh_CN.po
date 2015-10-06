@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-07 12:18+0000\n"
-"Last-Translator: mrshelly <mrshelly@hotmail.com>\n"
+"PO-Revision-Date: 2015-08-20 10:58+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +62,7 @@ msgid ""
 "                    complaints, project troubles, material breakdowns, etc.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n            Odoo的问题跟踪机制让你能够有效地管理\n            诸如内部请求、软件开发Bug、客户抱怨、\n            项目问题或材料失效等事务。\n          </p>"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
@@ -82,7 +82,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
 " * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr ""
+msgstr "问题的看板状态显示了影响它的特殊状况:\n * 正常状态是默认的状态\n * 等待状态显示有事情阻止问题的进一步发展\n * 预备好下一步状态显示问题已经做好准备进入到下一个阶段"
 
 #. module: project_issue
 #: field:project.issue,active:0 field:project.issue.version,active:0
@@ -147,7 +147,7 @@ msgstr "已封锁"
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "被负责人"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
@@ -223,7 +223,7 @@ msgstr "创建日期"
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
 msgid "Create issues from an incoming email account "
-msgstr ""
+msgstr "从邮件中创建反馈"
 
 #. module: project_issue
 #: field:project.issue,create_uid:0 field:project.issue.version,create_uid:0
@@ -285,7 +285,7 @@ msgstr "上个动作后的天数"
 #. module: project_issue
 #: field:project.issue,day_open:0
 msgid "Days to Assign"
-msgstr ""
+msgstr "距开始日期"
 
 #. module: project_issue
 #: field:project.issue,day_close:0
@@ -420,25 +420,25 @@ msgstr "问题"
 #: model:mail.message.subtype,name:project_issue.mt_issue_assigned
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_assigned
 msgid "Issue Assigned"
-msgstr ""
+msgstr "已分配问题"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "等待"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Created"
-msgstr ""
+msgstr "新建"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 msgid "Issue Ready for Next Stage"
-msgstr ""
+msgstr "准备进入下一阶段的问题"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -464,17 +464,17 @@ msgstr "问题版本"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_assigned
 msgid "Issue assigned"
-msgstr ""
+msgstr "已分配问题"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "等待"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue created"
-msgstr ""
+msgstr "新建"
 
 #. module: project_issue
 #: field:account.analytic.account,use_issues:0
@@ -521,7 +521,7 @@ msgstr "最后信息日期"
 #: field:project.issue,date_last_stage_update:0
 #: field:project.issue.report,date_last_stage_update:0
 msgid "Last Stage Update"
-msgstr ""
+msgstr "最近更新"
 
 #. module: project_issue
 #: field:project.issue,write_uid:0 field:project.issue.version,write_uid:0
@@ -596,7 +596,7 @@ msgstr "剩余天数"
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "问题开始的天数"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
@@ -651,7 +651,7 @@ msgstr "项目问题"
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_graph_view
 msgid "Project Issues"
-msgstr ""
+msgstr "项目Issue"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
@@ -810,12 +810,12 @@ msgstr "关注者的电子邮件"
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
 msgid "Working Hours to assign the Issue"
-msgstr ""
+msgstr "距开始处理小时数"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
 msgid "Working Hours to close the Issue"
-msgstr ""
+msgstr "离关闭剩余小时数"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:397
@@ -829,7 +829,7 @@ msgstr "不能升级此缺陷。\n所属项目没有配置相关项目。"
 #: code:addons/project_issue/project_issue.py:348
 #, python-format
 msgid "issues"
-msgstr ""
+msgstr "问题"
 
 #. module: project_issue
 #: field:project.project,issue_ids:0
@@ -839,7 +839,7 @@ msgstr "未知"
 #. module: project_issue
 #: view:project.project:project_issue.view_project_form_inherited
 msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-msgstr ""
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 
 #. module: project_issue
 #: view:project.project:project_issue.view_project_form_inherited
