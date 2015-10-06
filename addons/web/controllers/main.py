@@ -647,10 +647,11 @@ class WebClient(http.Controller):
         if lang is None:
             lang = request.context["lang"]
         res_lang = request.registry.get('res.lang')
+        multi_lang = True if res_lang.search_count(request.cr, uid, []) > 1 else False
         ids = res_lang.search(request.cr, uid, [("code", "=", lang)])
         lang_params = None
         if ids:
-            lang_params = res_lang.read(request.cr, uid, ids[0], ["direction", "date_format", "time_format",
+            lang_params = res_lang.read(request.cr, uid, ids[0], ["name", "direction", "date_format", "time_format",
                                                 "grouping", "decimal_point", "thousands_sep"])
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
@@ -667,7 +668,8 @@ class WebClient(http.Controller):
                                                              'string': m['value']} \
                                                                 for m in msg_group)
         return {"modules": translations_per_module,
-                "lang_parameters": lang_params}
+                "lang_parameters": lang_params,
+                "multi_lang": multi_lang}
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):

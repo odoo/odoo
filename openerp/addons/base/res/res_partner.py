@@ -324,9 +324,14 @@ class res_partner(osv.Model, format_address):
     def _default_company(self):
         return self.env['res.company']._company_default_get('res.partner')
 
+    @api.model
+    def _default_lang(self):
+        lang = self.env['res.lang'].search([('code', '=', self.env.lang)])
+        return lang and lang.code or False
+
     _defaults = {
         'active': True,
-        'lang': api.model(lambda self: self.env.lang),
+        'lang': _default_lang,
         'tz': api.model(lambda self: self.env.context.get('tz', False)),
         'customer': True,
         'category_id': _default_category,

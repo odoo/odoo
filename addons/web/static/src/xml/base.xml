@@ -370,12 +370,20 @@
     </tfoot>
 </table>
 <t t-name="ListView.buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-    <div class="oe_list_buttons">
-        <button type="button" class="btn btn-sm btn-primary o_list_button_add">
-            <t t-esc="widget.options.addable"/>
-        </button>
-    </div>
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
+        <div class="oe_list_buttons">
+            <t t-if="widget.options.addable and widget.is_action_enabled('create')">
+                <button type="button" class="btn btn-sm btn-primary o_list_button_add">
+                    <t t-esc="widget.options.addable"/>
+                </button>
+            </t>
+            <button type="button" class="btn btn-primary btn-sm o_list_button_save">
+                Save
+            </button>
+            <button type="button" class="btn btn-default btn-sm o_list_button_discard">
+                Discard
+            </button>
+        </div>
     </t>
 </t>
 <t t-name="ListView.pager" t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
@@ -411,16 +419,6 @@
         <span name="delete" class="fa fa-trash-o"/>
     </td>
 </tr>
-<t t-extend="ListView.buttons">
-    <t t-jquery="button.o_list_button_add" t-operation="after">
-        <button type="button" class="btn btn-primary btn-sm o_list_button_save">
-            Save
-        </button>
-        <button type="button" class="btn btn-default btn-sm o_list_button_discard">
-            Discard
-        </button>
-    </t>
-</t>
 <button t-name="ListView.row.text_button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
         t-att-class="disabled ? 'oe_list_button_disabled btn_txt oe_link' : 'btn_txt oe_link'"
@@ -672,7 +670,7 @@
                 t-att-autofocus="widget.node.attrs.autofocus"
                 t-att-placeholder="widget.node.attrs.placeholder"
                 t-att-maxlength="widget.field.size"
-            /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+            /><img class="oe_field_translate oe_input_icon" t-if="_t.database.multi_lang and widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </t>
         <t t-if="widget.get('effective_readonly')">
             <span class="oe_form_char_content"></span>
@@ -737,7 +735,7 @@
                 t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
                 t-att-maxlength="widget.field.size"
             ></textarea><img class="oe_field_translate oe_input_icon"
-                            t-if="widget.field.translate and !widget.get('effective_readonly')"
+                            t-if="_t.database.multi_lang and widget.field.translate and !widget.get('effective_readonly')"
                             t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
             />
         </t>
@@ -1462,4 +1460,15 @@
     </t>
 </t>
 
+<t t-name="translation-alert">
+    <div class="alert alert-warning">
+        <a class="close" data-dismiss="alert" href="#" aria-hidden="true" style=" line-height: 0px;">x</a>
+        <t t-foreach="fields" t-as="field">
+            <div>You have updated the <b><t t-esc="field.string"/></b> for <b>
+                <t t-esc="field.get_value()"/></b> in <b> <t t-esc="lang"/></b>.
+                <a class="oe_field_translate" t-att-name="field.name" href="#">Update translations</a>
+            </div>
+        </t>
+    </div>
+</t>
 </templates>

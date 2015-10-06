@@ -188,8 +188,12 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             ver = adapt_version(package.data['version'])
             # Set new modules and dependencies
             modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
-            # Update translations for all installed languages
-            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
+
+            # Update translations for specified languages
+            langs = None
+            if tools.config['load_language']:
+                langs = tools.config['load_language'].split(',')
+            modobj.update_translations(cr, SUPERUSER_ID, [module_id], langs, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
@@ -276,16 +280,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         report = registry._assertion_report
         loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=update_module, report=report)
 
-        if tools.config['load_language'] or update_module:
-            # some base models are used below, so make sure they are set up
-            registry.setup_models(cr, partial=True)
-
-        if tools.config['load_language']:
-            for lang in tools.config['load_language'].split(','):
-                tools.load_language(cr, lang)
-
         # STEP 2: Mark other modules to be loaded/updated
         if update_module:
+            registry.setup_models(cr, partial=True)
             modobj = registry['ir.module.module']
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
                 _logger.info('updating modules list')
@@ -333,7 +330,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 processed_modules += load_marked_modules(cr, graph,
                     ['to install'], force, status, report,
                     loaded_modules, update_module)
-
         registry.setup_models(cr)
 
         # STEP 4: Finish and cleanup installations
@@ -412,6 +408,16 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         t0 = time.time()
         t0_sql = openerp.sql_db.sql_counter
+
+        # if update_module specified transation load after each module update
+        if openerp.tools.config['load_language'] and not update_module:
+            langs = tools.config['load_language'].split(',')
+            modobj = registry['ir.module.module']
+            modules = modobj.search(cr, SUPERUSER_ID, [('state', '=', 'installed')])
+            modobj.update_translations(cr, SUPERUSER_ID, modules, langs, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
+            cr.commit()
+            _logger.info('Transation loaded.')
+
         if openerp.tools.config['test_enable']:
             cr.execute("SELECT name FROM ir_module_module WHERE state='installed'")
             for module_name in cr.fetchall():

@@ -792,13 +792,16 @@ class module(osv.osv):
             mod_browse.write({'category_id': cat_id})
 
     def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
+        res_lang = self.pool.get('res.lang')
         if not filter_lang:
-            res_lang = self.pool.get('res.lang')
             lang_ids = res_lang.search(cr, uid, [('translatable', '=', True)])
             filter_lang = [lang.code for lang in res_lang.browse(cr, uid, lang_ids)]
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
         modules = [m.name for m in self.browse(cr, uid, ids) if m.state == 'installed']
+        # before load translation term load languages, fallback to en_US
+        filter_lang = filter_lang or ['en_US']
+        res_lang.load_language(cr, uid, filter_lang)
         self.pool.get('ir.translation').load_module_terms(cr, modules, filter_lang, context=context)
 
     def check(self, cr, uid, ids, context=None):
