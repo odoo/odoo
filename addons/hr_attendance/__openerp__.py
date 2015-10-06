@@ -26,12 +26,7 @@ actions(Sign in/Sign out) performed by them.
         'wizard/hr_attendance_error_view.xml',
     ],
     'demo': ['demo/hr_attendance_demo.xml'],
-    'test': [
-        'test/attendance_process.yml',
-        'test/hr_attendance_report.yml',
-    ],
     'installable': True,
-    'auto_install': False,
     #web
     'qweb': ["static/src/xml/attendance.xml"],
 }
