@@ -1285,7 +1285,7 @@ class AssetsBundle(object):
             page_selectors = 0
             for rule in re.findall(re_rules, css):
                 selectors = len(re.findall(re_selectors, rule))
-                if page_selectors + selectors < self.max_css_rules:
+                if page_selectors + selectors <= self.max_css_rules:
                     page_selectors += selectors
                     page.append(rule)
                 else:
