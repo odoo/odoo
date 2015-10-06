@@ -59,7 +59,10 @@ Dashboard / Reports for Inventory Management will include:
         'report/report_stock_forecast.xml',
         'stock_incoterms.xml',
         'stock_report.xml',
+
+        'views/stock_move_views.xml',
         'stock_view.xml',
+
         'stock_sequence.xml',
         'product_view.xml',
         'partner_view.xml',
