@@ -1,8 +1,7 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <record id="view_account_journal_form_inherit" model="ir.ui.view">
-            <field name="name">account.journal.form</field>
+            <field name="name">account.journal.form.inherit</field>
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
@@ -34,13 +33,13 @@
             </field>
         </record>
 
-        <record id="bank_statement_draft_form_inherit" model="ir.ui.view">
-            <field name="name">bank.statement.draft.form.inherit</field>
+        <record id="bank_statement_open_form_inherit" model="ir.ui.view">
+            <field name="name">bank.statement.open.form.inherit</field>
             <field name="model">account.bank.statement</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='button_cancel']" position="after">
-                    <button name="button_draft" states="confirm" string="Reset to New" type="object"/>
+                    <button name="button_open" states="confirm" string="Reset to New" type="object"/>
                 </xpath>
             </field>
         </record>
@@ -69,6 +68,4 @@
                 </xpath>
             </field>
         </record>
-
-    </data>
-</openerp>
+</odoo>
