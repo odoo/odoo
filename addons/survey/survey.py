@@ -183,7 +183,8 @@ class survey_survey(osv.Model):
             'Email Template', ondelete='set null'),
         'thank_you_message': fields.html('Thank you message', translate=True,
             help="This message will be displayed when survey is completed"),
-        'quizz_mode': fields.boolean(string='Quiz mode')
+        'quizz_mode': fields.boolean(string='Quiz mode'),
+        'active': fields.boolean(string="Active"),
     }
 
     def _default_stage(self, cr, uid, context=None):
@@ -194,7 +195,8 @@ class survey_survey(osv.Model):
 
     _defaults = {
         'color': 0,
-        'stage_id': lambda self, *a, **kw: self._default_stage(*a, **kw)
+        'stage_id': lambda self, *a, **kw: self._default_stage(*a, **kw),
+        'active': True,
     }
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
