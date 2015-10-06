@@ -29,8 +29,8 @@ Tour.register({
             wait: 250
         },
         {
-            title:     "click on 'Product Attribute's Filters'",
-            element:   "#customize-menu a:contains(Product Attribute's Filters)",
+            title:     "click on 'Product(s) Attribute's Filters'",
+            element:   "#customize-menu a:contains(Product(s) Attribute's Filters)",
         },
         {
             title:     "select product attribute memory 16 GB",
@@ -87,8 +87,8 @@ Tour.register({
             wait: 250
         },
         {
-            title:     "remove 'Product Attribute's Filters'",
-            element:   "#customize-menu a:contains(Product Attribute's Filters):has(.fa-check-square-o)",
+            title:     "remove 'Product(s) Attribute's Filters'",
+            element:   '#customize-menu a:contains("Product(s) Attribute\'s Filters"):has(.fa-check-square-o)',
         },
         {
             title:     "finish",
