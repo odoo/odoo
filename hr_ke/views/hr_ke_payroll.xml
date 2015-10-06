@@ -1,0 +1,41 @@
+<openerp>
+    <data>
+<!--add remuneration type field in the salary structure  form -->
+<record id="hr_ke_structure_inherit" model="ir.ui.view">
+    <field name="model">hr.payroll.structure</field>
+    <field name="inherit_id" ref="hr_payroll.view_hr_employee_grade_form"/>
+    <field name="arch" type="xml">
+        <data>
+        <xpath expr="//field[@name = 'company_id']" position="after">
+                <field name="rem_type"/>
+        </xpath>
+        </data>
+    </field>
+</record>
+<!--add remuneration type field in the salary structure tree  -->
+<record id="hr_ke_structure_inherit_tree" model="ir.ui.view">
+    <field name="model">hr.payroll.structure</field>
+    <field name="inherit_id" ref="hr_payroll.view_hr_payroll_structure_list_view"/>
+    <field name="arch" type="xml">
+        <data>
+        <xpath expr="//field[@name = 'company_id']" position="after">
+                <field name="rem_type"/>
+        </xpath>
+        </data>
+    </field>
+</record>
+<!--add payslip number  field in the hr timesheet form  -->
+<record id="hr_ke_timesheet_inherit_form" model="ir.ui.view">
+    <field name="model">hr_timesheet_sheet.sheet</field>
+    <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_form"/>
+    <field name="arch" type="xml">
+        <data>
+        <xpath expr="//field[@name = 'name']" position="after">
+                <field name="slip_ref" attrs="{'invisible': [('slip_ref', '=', False)]}"/>
+        </xpath>
+        </data>
+    </field>
+</record>
+    </data>
+</openerp>
+

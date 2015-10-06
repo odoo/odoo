@@ -8,3 +8,5 @@ import report
 import hr_ke_epay
 import hr_ke_nhif
 import hr_ke_nssf
+import hr_ke_contract
+import hr_ke_payroll

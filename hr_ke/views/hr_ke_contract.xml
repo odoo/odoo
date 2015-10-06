@@ -1,0 +1,41 @@
+<openerp>
+    <data>
+<!--add remuneration type field in the hr contract types -->
+<record id="hr_ke_contract_type_inherit" model="ir.ui.view">
+    <field name="model">hr.contract.type</field>
+    <field name="inherit_id" ref="hr_contract.hr_contract_type_view_form"/>
+    <field name="arch" type="xml">
+        <data>
+        <xpath expr="//field[@name = 'name']" position="after">
+                <field name="rem_type" colspan="4"/>
+        </xpath>
+        </data>
+    </field>
+</record>
+<!--add remuneration type field in the hr contract types tree -->
+<record id="hr_ke_contract_type_inherit_tree" model="ir.ui.view">
+    <field name="model">hr.contract.type</field>
+    <field name="inherit_id" ref="hr_contract.hr_contract_type_view_tree"/>
+    <field name="arch" type="xml">
+        <data>
+        <xpath expr="//field[@name = 'name']" position="after">
+                <field name="rem_type"/>
+        </xpath>
+        </data>
+    </field>
+</record>
+<!--add remuneration type field in the hr contract -->
+<record id="hr_ke_contract_inherit" model="ir.ui.view">
+    <field name="model">hr.contract</field>
+    <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+    <field name="arch" type="xml">
+        <data>
+        <xpath expr="//field[@name = 'type_id']" position="after">
+                <field name="rem_type"/>
+        </xpath>
+        </data>
+    </field>
+</record>
+    </data>
+</openerp>
+

@@ -152,6 +152,17 @@
     <field name="condition">True</field>
  <field name="group_id" ref="base.group_user"/> 
 </record>
+
+<!-- activity for timesheet workflow inherited -->
+        <record id="hr_timesheet_sheet.act_done" model="workflow.activity">
+            <field name="wkf_id" ref="hr_timesheet_sheet.wkf_timesheet"/>
+            <field name="name">done</field>
+            <field name="kind">function</field>
+            <field name="action">approve_timesheet()</field>
+            <field name="flow_stop">True</field>
+        </record>
+
+
 </data>
 </openerp>
 

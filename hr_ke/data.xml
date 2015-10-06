@@ -1,9 +1,10 @@
 <openerp>
     <data noupdate="1">
+    <!--<data> -->
 <!-- These are the original salary rule categories which we are modify to suite our purpose -->
         <record id="category1" model="hr.salary.rule.category">
-            <field name="name">Basic Salary</field>
-            <field name="code">BASIC_SAL</field>
+            <field name="name">Basic pay</field>
+            <field name="code">BASIC_PAY</field>
         </record>
 
         <record id="category2" model="hr.salary.rule.category">
@@ -31,11 +32,11 @@
             <field name="code">COMP</field>
         </record>
 
-<!-- These are the original salary rules  which we are modify to suite our purpose -->
+<!-- salary rules  which we are adding to suite our purpose -->
         <record id="ke_rule1" model="hr.salary.rule">
-            <field name="name">Basic Salary</field>
+            <field name="name">Basic Pay</field>
             <field name="sequence" eval="1"/>
-            <field name="code">BASIC_SAL</field>
+            <field name="code">BASIC_PAY</field>
             <field name="category_id" ref="category1"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
@@ -49,7 +50,7 @@
             <field name="category_id" ref="category3"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = categories.BASIC_SAL + categories.CASH_ALW</field>
+            <field name="amount_python_compute">result = categories.BASIC_PAY + categories.CASH_ALW</field>
         </record>
 
         <record id="ke_rule3" model="hr.salary.rule">
@@ -64,7 +65,7 @@
 	</record>
 
 
-<!--Salary Rule categorie -->
+<!--Salary Rule categories -->
 	<record id="category7" model="hr.salary.rule.category">
 	   <field name="name">Benefits (non-cash)</field>
 	   <field name="code">BENEFITS</field>
@@ -247,7 +248,7 @@ result = nhif</field>
 	</record>
 <!-- Net Tax Rule-->
 	<record id="ke_rule22" model="hr.salary.rule">
-	   <field name="name">Net Tax (PAYE)</field>
+	   <field name="name">Net Tax</field>
 	   <field name="category_id" ref="hr_ke.category15"/>
 	   <field name="code">NET_TAX</field>
 	   <field name="sequence">70</field>
@@ -257,12 +258,57 @@ result = nhif</field>
 	   <field name="amount_select">code</field>
 	   <field name="amount_python_compute">result = categories.TAX - categories.TAX_RELIEF</field>
 	</record>
+<!-- Witholding Tax Rule -->
+	<record id="ke_rule23" model="hr.salary.rule">
+	   <field name="name">Withholding Tax</field>
+	   <field name="category_id" ref="hr_ke.category12"/>
+	   <field name="code">WHT</field>
+	   <field name="sequence">60</field>
+	   <field name="active">True</field>
+	   <field name="appears_on_payslip">True</field>
+	   <field name="condition_select">none</field>
+	   <field name="amount_select">code</field>
+	   <field name="amount_python_compute">
+WHT_RATE = 0.05
+MIN_LIMIT = 24000
+round_up = lambda x: int(x + 1) if int(x) != x else int(x)
+if  categories.NET_TAXABLE > MIN_LIMIT:
+    result = round_up(WHT_RATE * categories.NET_TAXABLE)
+else:
+    result = 0
+</field>
+	</record>
 
-
-
-
-
-
+<!--  Casuals PH Basic Salary  Rule -->
+	<record id="ke_rule24" model="hr.salary.rule">
+	   <field name="name">Basic Wage - PH</field>
+	   <field name="category_id" ref="hr_ke.category1"/>
+	   <field name="code">CS_PH</field>
+	   <field name="sequence">1</field>
+	   <field name="active">True</field>
+	   <field name="appears_on_payslip">True</field>
+	   <field name="condition_select">none</field>
+	   <field name="amount_select">code</field>
+	   <field name="amount_python_compute">
+PH_RATE = contract.wage
+result = worked_days.PH.number_of_hours * PH_RATE
+</field>
+	</record>
+<!--  Casuals PD Basic Salary  Rule -->
+	<record id="ke_rule25" model="hr.salary.rule">
+	   <field name="name">Basic Wage - PD</field>
+	   <field name="category_id" ref="hr_ke.category1"/>
+	   <field name="code">CS_PD</field>
+	   <field name="sequence">1</field>
+	   <field name="active">True</field>
+	   <field name="appears_on_payslip">True</field>
+	   <field name="condition_select">none</field>
+	   <field name="amount_select">code</field>
+	   <field name="amount_python_compute">
+PD_RATE = contract.wage
+result = worked_days.PD.number_of_days * PD_RATE
+</field>
+	</record>
 
 <!--Benefits -->
 	<record id="benefit1" model="ke.benefit.type">
@@ -276,7 +322,7 @@ result = nhif</field>
 # contract: hr.contract object
 # benefit: this benefit(housing)
 # Note: returned value have to be set in the variable 'result'
-#[BASIC SALARY + TOTAL BENEFITS+ TOTAL EARNINGS] * 0.15
+#[BASIC PAY + TOTAL BENEFITS+ TOTAL EARNINGS] * 0.15
 
 ### INITIALIZE VARAIBLES###
 BASIC_SALARY = contract.wage
@@ -567,13 +613,46 @@ COMPUTED_RELIEF = PERCENTAGE * relief.base
 result = min(PRESCRIBED_LIMIT, COMPUTED_RELIEF)
 	   </field>
 	</record>
-        <!-- Default Salary Structure -->
 
+        <!-- Default Salary Structure for normal Employee -->
          <record id="structure_standard" model="hr.payroll.structure">
-            <field name="code">DEFAULT</field>
+            <field name="code">NORMAL_EMPLOYEE</field>
+            <field name="rem_type">monthly</field>
             <field name="name">Standard Salary Structure</field>
             <field eval="[(6, 0, [ref('ke_rule1'), ref('ke_rule2'),ref('ke_rule3'),ref('ke_rule16'), ref('ke_rule17'), ref('ke_rule18'),ref('ke_rule19'), 
 		ref('ke_rule20'), ref('ke_rule21'),ref('ke_rule22'),])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
+	    <field name="parent_id"></field>
+        </record>
+
+        <!-- Salary Structure for consultants -->
+         <record id="structure_consultants" model="hr.payroll.structure">
+            <field name="code">CONSULTANT</field>
+            <field name="rem_type">monthly</field>
+            <field name="name">Monthly wage - Consultants Salary Structure</field>
+            <field eval="[(6, 0, [ref('ke_rule1'), ref('ke_rule2'),ref('ke_rule3'), ref('ke_rule17'), ref('ke_rule18'),ref('ke_rule19'), 
+		ref('ke_rule20'), ref('ke_rule21'),ref('ke_rule22'),ref('ke_rule23'),])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
+	    <field name="parent_id"></field>
+        </record>
+
+        <!-- Salary Structure for PH casuals/Freelancers -->
+         <record id="structure_ph_casuals" model="hr.payroll.structure">
+            <field name="code">PH_CASUAL</field>
+            <field name="rem_type">hourly</field>
+            <field name="name">Per Hour - Salary Structure</field>
+            <field eval="[(6, 0, [ref('ke_rule2'), ref('ke_rule3'), ref('ke_rule17'), ref('ke_rule18'), ref('ke_rule22'),
+		ref('ke_rule23'), ref('ke_rule24'),])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
+	    <field name="parent_id"></field>
+        </record>
+        <!-- Salary Structure for PD casuals/Freelancers -->
+         <record id="structure_pd_casuals" model="hr.payroll.structure">
+            <field name="code">PD_CASUAL</field>
+            <field name="rem_type">daily</field>
+            <field name="name">Per Day - Salary Structure</field>
+            <field eval="[(6, 0, [ref('ke_rule2'), ref('ke_rule3'), ref('ke_rule17'), ref('ke_rule18'), ref('ke_rule22'),
+		ref('ke_rule23'), ref('ke_rule25'),])]" name="rule_ids"/>
             <field name="company_id" ref="base.main_company"/>
 	    <field name="parent_id"></field>
         </record>
