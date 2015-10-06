@@ -4015,27 +4015,26 @@ class BaseModel(object):
 
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
 
-        done = {}
-        recs.env.recompute_old.extend(result)
-        while recs.env.recompute_old:
-            sorted_recompute_old = sorted(recs.env.recompute_old)
-            recs.env.clear_recompute_old()
-            for __, model_name, ids_to_update, fields_to_recompute in \
-                    sorted_recompute_old:
-                key = (model_name, tuple(fields_to_recompute))
-                done.setdefault(key, {})
-                # avoid to do several times the same computation
-                todo = []
-                for id in ids_to_update:
-                    if id not in done[key]:
-                        done[key][id] = True
-                        if id not in deleted_related[model_name]:
-                            todo.append(id)
-                self.pool[model_name]._store_set_values(
-                    cr, user, todo, fields_to_recompute, context)
-
         # recompute new-style fields
         if recs.env.recompute and context.get('recompute', True):
+            done = {}
+            recs.env.recompute_old.extend(result)
+            while recs.env.recompute_old:
+                sorted_recompute_old = sorted(recs.env.recompute_old)
+                recs.env.clear_recompute_old()
+                for __, model_name, ids_to_update, fields_to_recompute in \
+                        sorted_recompute_old:
+                    key = (model_name, tuple(fields_to_recompute))
+                    done.setdefault(key, {})
+                    # avoid to do several times the same computation
+                    todo = []
+                    for id in ids_to_update:
+                        if id not in done[key]:
+                            done[key][id] = True
+                            if id not in deleted_related[model_name]:
+                                todo.append(id)
+                    self.pool[model_name]._store_set_values(
+                        cr, user, todo, fields_to_recompute, context)
             recs.recompute()
 
         self.step_workflow(cr, user, ids, context=context)
@@ -4285,10 +4284,10 @@ class BaseModel(object):
         result += self._store_get_values(cr, user, [id_new],
                 list(set(vals.keys() + self._inherits.values())),
                 context)
-        recs.env.recompute_old.extend(result)
 
         if recs.env.recompute and context.get('recompute', True):
             done = []
+            recs.env.recompute_old.extend(result)
             while recs.env.recompute_old:
                 sorted_recompute_old = sorted(recs.env.recompute_old)
                 recs.env.clear_recompute_old()
