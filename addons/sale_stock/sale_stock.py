@@ -450,9 +450,26 @@ class sale_order(osv.osv):
         order.write(val)
         return True
 
+    def qty_picking(self, cr, uid, order, context=None):
+        qty_order = {}
+        qty_picking = {}
+        for line in order.order_line:
+            qty_order[line.product_id.id] = line.procurement_id.product_qty
+        for picking in order.picking_ids:
+            qty_picking[picking.product_id.id] = 0
+            for move in picking.move_lines:
+                if move.state != 'cancel':
+                    qty_picking[picking.product_id.id] += move.product_qty
+        for key in qty_order.keys():
+            if qty_order[key] > qty_picking.get(key, 0):
+                return False
+        return True
+
+
     def action_ship_create(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids, context=context):
-            self._create_pickings_and_procurements(cr, uid, order, order.order_line, None, context=context)
+            if not self.qty_picking(cr, uid, order, context=None):
+                self._create_pickings_and_procurements(cr, uid, order, order.order_line, None, context=context)
         return True
 
     def action_ship_end(self, cr, uid, ids, context=None):
