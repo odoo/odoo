@@ -1181,8 +1181,15 @@ class AssetsBundle(object):
         else:
             url_for = self.context.get('url_for', lambda url: url)
             if css and self.stylesheets:
-                for attachment in self.css():
-                    response.append('<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+                css_attachments = self.css()
+                if not self.css_errors:
+                    for attachment in css_attachments:
+                        response.append('<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+                else:
+                    msg = '\n'.join(self.css_errors)
+                    self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
+                    for style in self.stylesheets:
+                        response.append(style.to_html())
             if js and self.javascripts:
                 response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(self.js().url)))
         response.extend(self.remains)
@@ -1268,8 +1275,7 @@ class AssetsBundle(object):
             # get css content
             css = self.preprocess_css()
             if self.css_errors:
-                msg = '\n'.join(self.css_errors)
-                css += self.css_message(msg)
+                return
 
             # move up all @import rules to the top
             matches = []
