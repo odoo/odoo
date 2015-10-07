@@ -86,17 +86,20 @@ class account_voucher(osv.osv):
         )
 
     def create(self, cr, uid, vals, context=None):
-        if vals.get('amount') and vals.get('journal_id') and 'amount_in_word' not in vals:
+        if vals.get('amount') and vals.get('journal_id') and vals.get('company_id') and 'amount_in_word' not in vals:
             vals['amount_in_word'] = self._amount_to_text(cr, uid, vals['amount'], vals.get('currency_id') or \
                 self.pool['account.journal'].browse(cr, uid, vals['journal_id'], context=context).currency.id or \
                 self.pool['res.company'].browse(cr, uid, vals['company_id']).currency_id.id, context=context)
         return super(account_voucher, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        if vals.get('amount') and vals.get('journal_id') and 'amount_in_word' not in vals:
+        if vals.get('amount') and 'amount_in_word' not in vals:
+            voucher = self.browse(cr, uid, ids, context=context)
+            journal_id = vals.get('journal_id', voucher.journal_id.id)
+            company_id = vals.get('company_id', voucher.company_id.id)
             vals['amount_in_word'] = self._amount_to_text(cr, uid, vals['amount'], vals.get('currency_id') or \
-                self.pool['account.journal'].browse(cr, uid, vals['journal_id'], context=context).currency.id or \
-                self.pool['res.company'].browse(cr, uid, vals['company_id']).currency_id.id, context=context)
+                self.pool['account.journal'].browse(cr, uid, journal_id, context=context).currency.id or \
+                self.pool['res.company'].browse(cr, uid, company_id).currency_id.id, context=context)
         return super(account_voucher, self).write(cr, uid, ids, vals, context=context)
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
