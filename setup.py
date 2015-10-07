@@ -147,7 +147,7 @@ setup(
         'psycopg2 >= 2.2',
         'python-chart',
         'pydot',
-        'pyparsing < 2',
+        'pyparsing',
         'pypdf',
         'pyserial',
         'python-dateutil',
