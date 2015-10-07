@@ -7,7 +7,7 @@
 # Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
 
 {
-    'name': '中国会计科目表',
+    'name': '中国小企业会计科目表',
     'version': '1.8',
     'category': 'Localization/Account Charts',
     'author': 'www.openerp-china.org',
@@ -22,10 +22,10 @@
     增加小企业会计科目表
 
     """,
-    'depends': ['base', 'account'],
+    'depends': ['l10n_cn'],
     'data': [
-        'base_data.xml',
-        'account_chart_type.xml',
+        'account_chart_template.xml',
+        'account_chart_template.yml',
     ],
     'license': 'GPL-3',
     'installable': True,

@@ -22,11 +22,11 @@
     增加小企业会计科目表
 
     """,
-    'depends': ['base', 'account'],
+    'depends': ['l10n_cn'],
+    'demo': [],
     'data': [
-        'base_data.xml',
-        'account_chart_type.xml',
     ],
     'license': 'GPL-3',
+    'auto_install': False,
     'installable': True,
 }
