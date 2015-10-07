@@ -40,7 +40,10 @@
                             <action name="%(my_open_tasks_action)d" string="My Tasks"/>
                         </column>
                         <column>
-                            <action name="%(action_view_task_history_cumulative)d" string="Open Tasks"/>
+                            <action
+                                groups="project.group_project_user"
+                                name="%(action_view_task_history_cumulative)d"
+                                string="Open Tasks"/>
                         </column>
                     </board>
                 </form>
