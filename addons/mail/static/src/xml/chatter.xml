@@ -19,7 +19,7 @@
                     <label>Activity</label>
                     <select class="o_chatter_composer_subtype_select">
                         <t t-foreach="widget.options.internal_subtypes" t-as="subtype">
-                            <option t-att-value="subtype['id']"><t t-raw="subtype['name']"/></option>
+                            <option t-att-value="subtype['id']"><t t-esc="subtype['name']"/></option>
                         </t>
                     </select>
                 </div>
@@ -30,7 +30,7 @@
                 <span class="o_chatter_composer_info">
                     To: Followers of
                     <t t-if="widget.options.record_name">
-                        <t t-raw="'&quot;' + widget.options.record_name + '&quot;'"/>
+                        &quot;<t t-esc="widget.options.record_name"/>&quot;
                     </t>
                     <t t-if="!widget.options.record_name">
                         this document
@@ -157,7 +157,7 @@
                    t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')"
                    t-att-data-id="record.id" t-att-name="record.name" class="o_subtype_checkbox"/>
             <span t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')">
-                <t t-raw="record.name"/>
+                <t t-esc="record.name"/>
             </span>
         </li>
     </t>

@@ -505,7 +505,6 @@ var ChatterComposer = ChatComposer.extend({
                     // update context
                     message.context = _.defaults(self.context, {
                         mail_post_autofollow: true,
-                        mail_post_autofollow_partner_ids: partner_ids,
                     });
                     def.resolve(message);
                 });
@@ -617,6 +616,7 @@ var ChatterComposer = ChatComposer.extend({
                         default_email: parsed_email[1],
                     },
                     title: _t("Please complete partner's informations"),
+                    disable_multiple_selection: true,
                 }).open();
                 dialog.on('closed', self, function () {
                     deferred.resolve();
@@ -672,7 +672,6 @@ var ChatterComposer = ChatComposer.extend({
                 default_partner_ids: partner_ids,
                 default_is_log: self.options.is_log,
                 mail_post_autofollow: true,
-                mail_post_autofollow_partner_ids: partner_ids,
             };
 
             if (self.context.default_model && self.context.default_res_id) {
@@ -723,14 +722,15 @@ var Chatter = form_common.AbstractField.extend({
         var self = this;
 
         // Move the follower's widget (if any) inside the chatter
-        var followers = this.field_manager.fields.message_follower_ids;
-        if (followers) {
-            this.$('.o_chatter_topbar').append(followers.$el);
+        this.followers = this.field_manager.fields.message_follower_ids;
+        if (this.followers) {
+            this.$('.o_chatter_topbar').append(this.followers.$el);
         }
 
         this.thread = new ChatThread(this, {
             display_order: ChatThread.ORDER.DESC,
             display_document_link: false,
+            display_needactions: false,
         });
         this.thread.on('load_more_messages', this, this.load_more_messages);
         this.thread.on('toggle_star_status', this, function (message_id) {
@@ -759,6 +759,9 @@ var Chatter = form_common.AbstractField.extend({
             .post_message_in_document(this.model, this.res_id, message)
             .then(function () {
                 self.close_composer();
+                if (message.partner_ids.length) {
+                    self.refresh_followers(); // refresh followers' list
+                }
             })
             .fail(function () {
                 // todo: display notification
@@ -823,6 +826,11 @@ var Chatter = form_common.AbstractField.extend({
         // fetch and render messages of current document
         return this.fetch_and_render_thread(this.msg_ids);
     },
+    refresh_followers: function () {
+        if (this.followers) {
+            this.followers.read_value();
+        }
+    },
     // composer toggle
     on_open_composer_new_message: function () {
         this.open_composer();
@@ -846,6 +854,7 @@ var Chatter = form_common.AbstractField.extend({
                 old_composer.destroy();
             }
             self.composer.on('post_message', self, self.on_post_message);
+            self.composer.on('need_refresh', self, self.refresh_followers);
         });
 
     },

@@ -140,6 +140,7 @@ function post_document_message (model_name, res_id, data) {
         attachment_ids: data.attachment_ids,
         body: _.str.trim(data.content),
         content_subtype: data.content_subtype,
+        context: data.context,
         message_type: data.message_type,
         partner_ids: data.partner_ids,
         subtype: data.subtype,
