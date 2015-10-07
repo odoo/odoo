@@ -605,7 +605,7 @@ class SaleOrderLine(models.Model):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True)
 
     price_reduce = fields.Monetary(compute='_get_price_reduce', string='Price Reduce', readonly=True, store=True)
-    tax_id = fields.Many2many('account.tax', string='Taxes', readonly=True, states={'draft': [('readonly', False)]})
+    tax_id = fields.Many2many('account.tax', string='Taxes')
 
     discount = fields.Float(string='Discount (%)', digits_compute=dp.get_precision('Discount'), default=0.0)
 
