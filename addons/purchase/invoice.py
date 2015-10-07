@@ -8,7 +8,8 @@ from openerp.tools.float_utils import float_compare
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    purchase_id = fields.Many2one('purchase.order', string='Purchase Order', domain=[('invoice_status', '=', 'to invoice')])
+    purchase_id = fields.Many2one('purchase.order', string='Add Purchase Order', domain=[('invoice_status', '=', 'to invoice')],
+        help='Encoding help. When selected, the associated purchase order lines are added to the vendor bill. Several PO can be selected.')
 
     # Load all unsold PO lines
     @api.onchange('purchase_id')
@@ -61,7 +62,10 @@ class AccountInvoice(models.Model):
             if account:
                 data['account_id'] = account.id
             result.append(data)
+
+        self.invoice_line_ids = False # To avoid duplicates
         self.invoice_line_ids = result
+        self.purchase_id = False
         return {}
 
     @api.model
@@ -138,4 +142,7 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
     _inherit = 'account.invoice.line'
+
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', select=True, readonly=True)
+    purchase_id = fields.Many2one('purchase.order', related='purchase_line_id.order_id', string='Purchase Order', store=False, readonly=True,
+        help='Associated Purchase Order. Filled in automatically when a PO is chosen on the vendor bill.')
