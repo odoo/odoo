@@ -768,8 +768,7 @@ class ProcurementOrder(models.Model):
         res = []
         for procurement in self:
             if not procurement.product_id.seller_ids:
-                self.message_post([procurement.id],\
-                    _('No vendor associated to product %s. Please set one to fix this procurement.') % (procurement.product_id.name))
+                procurement.message_post(body=_('No vendor associated to product %s. Please set one to fix this procurement.') % (procurement.product_id.name))
                 continue
             supplier = procurement.product_id.seller_ids[0]
             partner = supplier.name
