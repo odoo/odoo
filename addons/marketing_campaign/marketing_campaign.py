@@ -32,13 +32,9 @@ class marketing_campaign(osv.osv):
     _description = "Marketing Campaign"
 
     def _count_segments(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        try:
-            for segments in self.browse(cr, uid, ids, context=context):
-                res[segments.id] = len(segments.segment_ids)
-        except:
-            pass
-        return res
+        segment_data = self.pool['marketing.campaign.segment'].read_group(cr, uid, [('campaign_id', 'in', ids)], ['campaign_id'], ['campaign_id'], context=context)
+        segment_dict = { data['campaign_id'][0]: data['campaign_id_count'] for data in segment_data }
+        return { campaign_id: segment_dict.get(campaign_id) for campaign_id in ids }
 
     _columns = {
         'name': fields.char('Name', required=True),

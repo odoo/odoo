@@ -6,14 +6,13 @@ from openerp.osv import fields, osv
 
 class product_template(osv.osv):
     _inherit = "product.template"
+
     def _bom_orders_count(self, cr, uid, ids, field_name, arg, context=None):
-        Bom = self.pool('mrp.bom')
-        res = {}
-        for product_tmpl_id in ids:
-            nb = Bom.search_count(cr, uid, [('product_tmpl_id', '=', product_tmpl_id)], context=context)
-            res[product_tmpl_id] = {
-                'bom_count': nb,
-            }
+        res = { product_tmpl_id: {'bom_count': 0} for product_tmpl_id in ids }
+        bom_data = self.pool['mrp.bom'].read_group(cr, uid, [('product_tmpl_id', 'in', ids)], ['product_tmpl_id'], ['product_tmpl_id'], context=context)
+        for bom in bom_data:
+            product_tmpl_id = bom['product_tmpl_id'][0]
+            res[product_tmpl_id]['bom_count'] = bom['product_tmpl_id_count']
         return res
 
     def _bom_orders_count_mo(self, cr, uid, ids, name, arg, context=None):
@@ -47,12 +46,11 @@ class product_template(osv.osv):
 
 class product_product(osv.osv):
     _inherit = "product.product"
+
     def _bom_orders_count(self, cr, uid, ids, field_name, arg, context=None):
-        Production = self.pool('mrp.production')
-        res = {}
-        for product_id in ids:
-            res[product_id] = Production.search_count(cr,uid, [('product_id', '=', product_id)], context=context)
-        return res
+        production_data = self.pool['mrp.production'].read_group(cr, uid, [('product_id', 'in', ids)], ['product_id'], ['product_id'], context=context)
+        production_dict = { data['product_id'][0]: data['product_id_count'] for data in production_data }
+        return { product_id: production_dict.get(product_id) for product_id in ids }
 
     _columns = {
         'mo_count': fields.function(_bom_orders_count, string='# Manufacturing Orders', type='integer'),

@@ -331,10 +331,18 @@ class ResPartner(models.Model):
             partner.total_invoiced = self.env.cr.fetchone()[0]
 
     @api.multi
-    def _journal_item_count(self):
+    def _contracts_count(self):
+        contract_data = self.env['account.analytic.account'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        contract_dict = { data['partner_id'][0]: data['partner_id_count'] for data in contract_data }
         for partner in self:
-            partner.journal_item_count = self.env['account.move.line'].search_count([('partner_id', '=', partner.id)])
-            partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
+            partner.contracts_count = contract_dict.get(partner.id)
+
+    @api.multi
+    def _journal_item_count(self):
+        journal_data = self.env['account.move.line'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        journal_dict = { data['partner_id'][0]: data['partner_id_count'] for data in journal_data }
+        for partner in self:
+            partner.journal_item_count = journal_dict.get(partner.id)
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
         domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
@@ -416,7 +424,7 @@ class ResPartner(models.Model):
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         help='Utility field to express amount currency')
 
-    contracts_count = fields.Integer(compute='_journal_item_count', string="Contracts", type='integer')
+    contracts_count = fields.Integer(compute='_contracts_count', string="Contracts", type='integer')
     journal_item_count = fields.Integer(compute='_journal_item_count', string="Journal Items", type="integer")
     issued_total = fields.Monetary(compute='_compute_issued_total', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
