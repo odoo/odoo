@@ -1,6 +1,9 @@
-odoo.define('website.ace_call', ['website.ace_mode_xml', 'website.ace_theme_monokai'], function (require) {
+odoo.define('website.ace_call', ['website.ace_mode_xml','website.ace_mode_css','website.ace_mode_less', 'website.ace_theme_monokai','website.ace_search'], function (require) {
 
 var mode_xml = require('website.ace_mode_xml');
+var mode_css = require('website.ace_mode_css');
+var mode_less = require('website.ace_mode_less');
+var search = require('website.ace_search');
 var theme_monokai = require('website.ace_theme_monokai');
 
 function load() {
@@ -12,11 +15,16 @@ function load() {
                     if (!window.ace)
                         window.ace = {};
                     for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
+                        {ace[key] = a[key];}
+                    var path = "/website/static/lib/ace/";
+                    ace.config.set("workerPath", path);
                 });
             })();
     mode_xml.load();
+    mode_css.load();
+    mode_less.load();
     theme_monokai.load();
+    search.load();
 }
 
 return {

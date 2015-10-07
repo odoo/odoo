@@ -92,12 +92,12 @@
     </script>
 
     <!--link rel="stylesheet" href="/web_editor/static/lib/summernote/src/less/summernote.less"/-->
-    <link rel="stylesheet" href="/web_editor/static/lib/summernote/summernote.css"/>
+    <link rel="stylesheet" href="/web_editor/static/lib/summernote/summernote.css" editable="False"/>
 </template>
 
 <template id="editor" name="Editor">
-    <link rel='stylesheet' href='/web_editor/static/src/css/snippets.css'/>
-    <link rel="stylesheet" href='/web_editor/static/src/css/editor.css'/>
+    <link rel='stylesheet' href='/web_editor/static/src/css/snippets.css' editable="False"/>
+    <link rel="stylesheet" href='/web_editor/static/src/css/editor.css' editable="False"/>
     <script type="text/javascript" src='/web_editor/static/lib/nearest/jquery.nearest.js' />
     <script type="text/javascript" src="/web_editor/static/src/js/editor.js" />
     <script type="text/javascript" src="/web_editor/static/src/js/rte.js" />
@@ -112,8 +112,8 @@
 
 <template id="assets_common" inherit_id="web.assets_common" name="web_editor base assets_common">
     <xpath expr="." position="inside">
-        <link rel="stylesheet" href='/web_editor/static/src/css/web_editor.css'/>
-        <link rel="stylesheet" href='/web_editor/static/src/less/web_editor.less'/>
+        <link rel="stylesheet" href='/web_editor/static/src/css/web_editor.css' editable="False"/>
+        <link rel="stylesheet" href='/web_editor/static/src/less/web_editor.less' editable="False"/>
         <script type="text/javascript" src="/web_editor/static/src/js/base.js" />
         <script type="text/javascript" src="/web_editor/static/src/js/snippets.animation.js" />
     </xpath>

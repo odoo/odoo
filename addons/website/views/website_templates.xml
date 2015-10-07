@@ -11,7 +11,7 @@
 </template>
 
 <template id="assets_frontend" name="Website assets">
-    <link id="bootstrap_css" rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
+    <link id="bootstrap_css" rel="stylesheet" href='/website/static/src/less/import_bootstrap.less' editable="False"/>
 
     <link rel="stylesheet" href="/web/static/src/css/mimetypes.css"/>
     <link rel="stylesheet" href='/website/static/src/css/website.css'/>
@@ -27,7 +27,7 @@
 
 <template id="assets_backend" name="website assets for backend" inherit_id="web.assets_backend">
     <xpath expr="." position="inside">
-        <link rel="stylesheet" href="/website/static/src/css/website.backend.css"/>
+        <link rel="stylesheet" href="/website/static/src/css/website.backend.css" editable="False"/>
         <script type="text/javascript" src="/website/static/src/js/website.backend.js"></script>
     </xpath>
 </template>
@@ -38,6 +38,9 @@
     <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/theme-monokai.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/mode-xml.js"></script>
+    <script type="text/javascript" src="/website/static/lib/ace/mode-less.js"></script>
+    <script type="text/javascript" src="/website/static/lib/ace/mode-css.js"></script>
+    <script type="text/javascript" src="/website/static/lib/ace/ext-searchbox.js"></script>
     <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
     <script type="text/javascript" src="/website/static/lib/jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
@@ -49,9 +52,9 @@
     <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
     <script type="text/javascript" src="/website/static/src/js/web_planner_website.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.contentMenu.js"></script>
-    <link rel='stylesheet' href='/web_editor/static/src/css/web_editor.css'/>
-    <link rel='stylesheet' href='/web_editor/static/src/less/web_editor.less'/>
-    <link rel="stylesheet" href="/website/static/src/css/website.editor.css"/>
+    <link rel='stylesheet' href='/web_editor/static/src/css/web_editor.css' editable="False"/>
+    <link rel='stylesheet' href='/web_editor/static/src/less/web_editor.less' editable="False"/>
+    <link rel="stylesheet" href="/website/static/src/css/website.editor.css" editable="False"/>
     <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js"></script>
 </template>
@@ -869,6 +872,25 @@
             </div>
         </body>
     </html>
+</template>
+
+<template id="reset_style">
+    <t t-call="website.layout">
+        <t t-set="head">
+            <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css' editable="False"/>
+            <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' editable="False"/>
+            <link rel='stylesheet' href='/website/static/src/css/website.css'/>
+            <link rel='stylesheet' href='/website/static/src/css/reset_style.css' editable="False"/>
+        </t>
+            <div class="alert alert-danger reset_style_alert">
+                <i class="fa fa-warning"/> 
+                This page is loaded with basic bootstrap. You can edit or reset assets.
+                For checking whether your change is applied or not redirect to home page after edit.
+                <br/>
+                <a href="/">Go to Home page <i class="fa fa-arrow-right"/></a>
+            </div>
+    </t>
+
 </template>
 
 <template id="robots">

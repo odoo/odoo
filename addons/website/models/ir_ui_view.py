@@ -3,13 +3,42 @@ import copy
 import logging
 
 from lxml import etree, html
+from HTMLParser import HTMLParser
 
 from openerp import SUPERUSER_ID, api, tools
 from openerp.addons.website.models import website
 from openerp.http import request
 from openerp.osv import osv, fields
+from openerp.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
+
+
+class AssetsExtractor(HTMLParser):
+    def __init__(self, customized_urls, custom=True):
+        self.customized_urls = customized_urls
+        self.custom = custom
+        self.js = []
+        self.css = []
+        self.less = []
+        HTMLParser.__init__(self)
+
+    def get_asset_url(self, href):
+        if self.custom and self.customized_urls.get(href):
+            href = self.customized_urls.get(href)
+        return href
+
+    def handle_starttag(self, tag, attrs):
+        attr_dict = dict(attrs)
+        if safe_eval(attr_dict.get('editable', 'True')):
+            if tag == 'link' and attr_dict.get('rel') == 'stylesheet' and attr_dict.get('href'):
+                href = self.get_asset_url(attr_dict.get('href'))
+                if attr_dict.get('type') == 'text/less' or attr_dict.get('href', '').endswith('.less'):
+                    self.less.append(href)
+                else:
+                    self.css.append(href)
+            elif tag == 'script' and attr_dict.get('src'):
+                self.js.append(attr_dict.get('src'))
 
 
 class view(osv.osv):
@@ -101,6 +130,29 @@ class view(osv.osv):
                 if r not in result:
                     result.append(r)
         return result
+
+    def _get_assets_urls(self, cr, uid, view_id, options=True, context=None):
+        """ For a given view ``view_id``, should return:
+
+        * Path of JS files used in view
+        * Path of CSS files used in view
+        * Path of LESS files used in view
+        """
+        assets = []
+        views = self._views_get(cr, uid, view_id, options, context)
+        attachments = request.registry['ir.attachment'].search_read(request.cr, SUPERUSER_ID, [('url', '=like', '/custom/%')], ['url', 'name'], context=request.context)
+        customized_urls = {a['name']: a['url'] for a in attachments}
+        parser = AssetsExtractor(customized_urls, custom=True)
+        for view in views:
+            node = etree.fromstring(view.arch)
+            for child in node.xpath("//t[@t-call-assets]"):
+                called_asset = self._view_obj(cr, uid, child.get('t-call-assets'), context=context)
+                if called_asset not in assets:
+                    assets.append(called_asset)
+        views.extend(assets)
+        for v in views:
+            parser.feed(v.arch)
+        return {'css': list(set(parser.css)), 'js': list(set(parser.js)), 'less': list(set(parser.less))}
 
     @tools.ormcache_context('uid', 'xml_id', keys=('website_id',))
     def get_view_id(self, cr, uid, xml_id, context=None):

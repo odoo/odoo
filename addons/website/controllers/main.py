@@ -222,6 +222,13 @@ class Website(openerp.addons.web.controllers.main.Home):
                 modules.button_immediate_upgrade()
         return request.redirect(redirect)
 
+    @http.route('/website/get_editor_resources', type='json', auth='user', website=True)
+    def get_editor_resources(self, key, full=False, bundles=False):
+        res = request.registry["ir.ui.view"]._get_assets_urls(request.cr, request.uid, key, context=request.context)
+        del res['js']
+        res['html'] = self.customize_template_get(key, full, bundles)
+        return res
+
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
     def customize_template_get(self, key, full=False, bundles=False):
         """ Get inherit view's informations of the template ``key``. By default, only
@@ -232,6 +239,36 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.registry["ir.ui.view"].customize_template_get(
             request.cr, request.uid, key, full=full, bundles=bundles,
             context=request.context)
+
+    @http.route('/website/save_asset', type='json', auth='user', website=True)
+    def save_asset(self, css):
+        ir_att = request.registry['ir.attachment']
+        file_name = css['id'][7:] if css['id'].startswith('/custom') else css['id']
+        css_file = ir_att.search(request.cr, request.uid, [('url', "=", '/custom' + file_name)])
+        ir_att.invalidate_bundle(request.cr, request.uid, type='css', context=request.context)
+        if css_file:
+            ir_att.write(request.cr, request.uid, css_file, {'datas': css['text'].encode('utf-8').encode('base64')}, context=request.context)
+        else:
+            ir_att.create(request.cr, request.uid, dict(
+                datas=css['text'].encode('utf-8').encode('base64'),
+                mimetype='text/css',
+                type='binary',
+                name=file_name,
+                datas_fname=css['id'].split('/')[-1],
+                url='/custom'+css['id'],
+            ), context=request.context)
+        return True
+
+    @http.route('/website/remove_asset', type='json', auth='user', website=True)
+    def remove_asset(self, file_path):
+        ir_att = request.env['ir.attachment']
+        ir_att.search([('url', "=", file_path)]).unlink()
+        ir_att.invalidate_bundle(type='css')
+        return True
+
+    @http.route('/reset_style', type='http', auth="user", website=True)
+    def reset_style(self, **opt):
+        return request.render('website.reset_style', {})
 
     @http.route('/website/translations', type='json', auth="public", website=True)
     def get_website_translations(self, lang, mods=None):
