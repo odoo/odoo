@@ -82,12 +82,6 @@ class MailMail(models.Model):
     def cancel(self):
         return self.write({'state': 'cancel'})
 
-    def prepare_filtered_mails(self):
-        """Filter hook that it is possible to prepare further filter steps
-           easily by inheritance before processing the email queue pending.
-        """
-        return self
-
     @api.model
     def process_email_queue(self, ids=None):
         """Send immediately queued messages, committing after each
@@ -108,13 +102,12 @@ class MailMail(models.Model):
             if 'filters' in self._context:
                 filters.extend(self._context['filters'])
             ids = self.search(filters).ids
-        filtered_mails = self.browse(ids).prepare_filtered_mails()
         res = None
         try:
             # Force auto-commit - this is meant to be called by
             # the scheduler, and we can't allow rolling back the status
             # of previously sent emails!
-            res = filtered_mails.send(auto_commit=True)
+            res = self.browse(ids).send(auto_commit=True)
         except Exception:
             _logger.exception("Failed processing mail queue")
         return res
