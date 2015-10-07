@@ -41,7 +41,6 @@ odoo.py" | tee --append .git/info/sparse-checkout > /dev/null
 git read-tree -mu HEAD
 cd "${__dir}"
 
-# rc.local
 LOOP_MAPPER_PATH=$(kpartx -av posbox.img | tail -n 1 | cut -d ' ' -f 3)
 LOOP_MAPPER_PATH="/dev/mapper/${LOOP_MAPPER_PATH}"
 mkdir "${MOUNT_POINT}"

@@ -2,6 +2,8 @@
 import logging
 import os
 import time
+import werkzeug
+import subprocess
 from os import listdir
 
 import openerp
@@ -43,6 +45,9 @@ index_template = """
         to the <a href='/hw_proxy/status'>hardware status page</a>.
         </p>
         <p>
+        Wi-Fi can be configured by visiting the <a href='/wifi'>Wi-Fi configuration page</a>.
+        </p>
+        <p>
         The PosBox software installed on this posbox is <b>version 13</b>,
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>.
@@ -60,4 +65,100 @@ class PosboxHomepage(openerp.addons.web.controllers.main.Home):
     def index(self):
         #return request.render('hw_posbox_homepage.index',mimetype='text/html')
         return index_template
-        
+
+    @http.route('/wifi', type='http', auth='none', website=True)
+    def wifi(self):
+        wifi_template = """
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Wifi configuration</title>
+        <style>
+        body {
+            width: 480px;
+            margin: 60px auto;
+            font-family: sans-serif;
+            text-align: justify;
+            color: #6B6B6B;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>Configure wifi</h1>
+        <p>
+        Here you can configure how the posbox should connect to wireless networks.
+        Currently only Open and WPA networks are supported. When enabling the persistent checkbox,
+        the chosen network will be saved and the posbox will attempt to connect to it every time it boots.
+        </p>
+        <form action='/wifi_connect' method='POST'>
+            <table>
+                <tr>
+                    <td>
+                        ESSID:
+                    </td>
+                    <td>
+                        <select name="essid">
+"""
+        try:
+            f = open('/tmp/scanned_networks.txt', 'r')
+            for line in f:
+                line = line.rstrip()
+                line = werkzeug.utils.escape(line)
+                wifi_template += '<option value="' + line + '">' + line + '</option>\n'
+            f.close()
+        except IOError:
+            _logger.warning("No /tmp/scanned_networks.txt")
+        wifi_template += """
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Password:
+                    </td>
+                    <td>
+                        <input type="password" name="password" placeholder="optional"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Persistent:
+                    </td>
+                    <td>
+                        <input type="checkbox" name="persistent"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td/>
+                    <td>
+                        <input type="submit" value="connect"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <p>
+                You can clear the persistent configuration by clicking below:
+                <form action='/wifi_clear'>
+                        <input type="submit" value="Clear persistent network configuration"/>
+                </form>
+        </p>
+        <form>
+    </body>
+</html>
+"""
+        return wifi_template
+
+    @http.route('/wifi_connect', type='http', auth='none', cors='*')
+    def connect_to_wifi(self, essid, password, persistent=False):
+        if persistent:
+                persistent = "1"
+        else:
+                persistent = ""
+
+        subprocess.call(['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_wifi.sh', essid, password, persistent])
+        return "connecting to " + essid
+
+    @http.route('/wifi_clear', type='http', auth='none', cors='*')
+    def clear_wifi_configuration(self):
+        os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/clear_wifi_configuration.sh')
+        return "configuration cleared"
