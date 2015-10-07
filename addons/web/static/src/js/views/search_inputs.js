@@ -682,7 +682,7 @@ var GroupbyGroup = FilterGroup.extend({
     },
     make_facet: function (values) {
         return {
-            category: _t("GroupBy"),
+            category: _t("Group By"),
             icon: this.icon,
             values: values,
             field: this.searchview._s_groupby

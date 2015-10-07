@@ -32,25 +32,14 @@ import openerp
 import openerp.tools as tools
 from openerp.tools.translate import _
 from openerp.tools import float_repr, float_round, frozendict, html_sanitize
-import simplejson
+import json
 from openerp import SUPERUSER_ID, registry
 
 @contextmanager
 def _get_cursor():
     # yield a valid cursor from any environment or create a new one if none found
-    from openerp.api import Environment
-    from openerp.http import request
-    try:
-        request.env     # force request's env to be computed
-    except RuntimeError:
-        pass    # ignore if not in a request
-    for env in Environment.envs:
-        if not env.cr.closed:
-            yield env.cr
-            break
-    else:
-        with registry().cursor() as cr:
-            yield cr
+    with registry().cursor() as cr:
+        yield cr
 
 EMPTY_DICT = frozendict()
 
@@ -367,6 +356,7 @@ class html(text):
     def to_field_args(self):
         args = super(html, self).to_field_args()
         args['sanitize'] = self._sanitize
+        args['strip_style'] = self._strip_style
         return args
 
 import __builtin__
@@ -582,6 +572,7 @@ class datetime(_column):
 class binary(_column):
     _type = 'binary'
     _classic_read = False
+    _classic_write = property(lambda self: not self.attachment)
 
     # Binary values may be byte strings (python 2.6 byte array), but
     # the legacy OpenERP convention is to transfer and store binaries
@@ -594,35 +585,69 @@ class binary(_column):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self, x: x and str(x)
 
-    __slots__ = ['filters']
+    __slots__ = ['attachment', 'filters']
 
     def __init__(self, string='unknown', filters=None, **args):
         args['_prefetch'] = args.get('_prefetch', False)
+        args['attachment'] = args.get('attachment', False)
         _column.__init__(self, string=string, filters=filters, **args)
 
-    def get(self, cr, obj, ids, name, user=None, context=None, values=None):
-        if not context:
-            context = {}
-        if not values:
-            values = []
-        res = {}
-        for i in ids:
-            val = None
-            for v in values:
-                if v['id'] == i:
-                    val = v[name]
-                    break
+    def to_field_args(self):
+        args = super(binary, self).to_field_args()
+        args['attachment'] = self.attachment
+        return args
 
-            # If client is requesting only the size of the field, we return it instead
-            # of the content. Presumably a separate request will be done to read the actual
-            # content if it's needed at some point.
-            # TODO: after 6.0 we should consider returning a dict with size and content instead of
-            #       having an implicit convention for the value
-            if val and context.get('bin_size_%s' % name, context.get('bin_size')):
-                res[i] = tools.human_size(long(val))
+    def get(self, cr, obj, ids, name, user=None, context=None, values=None):
+        result = dict.fromkeys(ids, False)
+
+        if self.attachment:
+            # values are stored in attachments, retrieve them
+            atts = obj.pool['ir.attachment'].browse(cr, SUPERUSER_ID, [], context)
+            domain = [
+                ('res_model', '=', obj._name),
+                ('res_field', '=', name),
+                ('res_id', 'in', ids),
+            ]
+            for att in atts.search(domain):
+                # the 'bin_size' flag is handled by the field 'datas' itself
+                result[att.res_id] = att.datas
+        else:
+            # If client is requesting only the size of the field, we return it
+            # instead of the content. Presumably a separate request will be done
+            # to read the actual content if it's needed at some point.
+            context = context or {}
+            if context.get('bin_size') or context.get('bin_size_%s' % name):
+                postprocess = lambda val: tools.human_size(long(val))
             else:
-                res[i] = val
-        return res
+                postprocess = lambda val: val
+            for val in (values or []):
+                result[val['id']] = postprocess(val[name])
+
+        return result
+
+    def set(self, cr, obj, id, name, value, user=None, context=None):
+        assert self.attachment
+        # retrieve the attachment that stores the value, and adapt it
+        att = obj.pool['ir.attachment'].browse(cr, SUPERUSER_ID, [], context).search([
+            ('res_model', '=', obj._name),
+            ('res_field', '=', name),
+            ('res_id', '=', id),
+        ])
+        if value:
+            if att:
+                att.write({'datas': value})
+            else:
+                att.create({
+                    'name': name,
+                    'res_model': obj._name,
+                    'res_field': name,
+                    'res_id': id,
+                    'type': 'binary',
+                    'datas': value,
+                })
+        else:
+            att.unlink()
+        return []
 
 class selection(_column):
     _type = 'selection'
@@ -814,12 +839,9 @@ class one2many(_column):
                     else:
                         cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
                 elif act[0] == 4:
-                    # table of the field (parent_model in case of inherit)
-                    field = obj.pool[self._obj]._fields[self._fields_id]
-                    field_model = field.base_field.model_name
-                    field_table = obj.pool[field_model]._table
-                    cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
-                    if not cr.fetchone():
+                    # check whether the given record is already linked
+                    rec = obj.browse(cr, SUPERUSER_ID, act[1], {'prefetch_fields': False})
+                    if int(rec[self._fields_id]) != id:
                         # Must use write() to recompute parent_store structure if needed and check access rules
                         obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
                 elif act[0] == 5:
@@ -1410,6 +1432,9 @@ class function(_column):
         args['store'] = bool(self.store)
         if self._type in ('float',):
             args['digits'] = self._digits_compute or self._digits
+        elif self._type in ('binary',):
+            # limitation: binary function fields cannot be stored in attachments
+            args['attachment'] = False
         elif self._type in ('selection', 'reference'):
             args['selection'] = self.selection
         elif self._type in ('many2one', 'one2many', 'many2many'):
@@ -1687,10 +1712,10 @@ class serialized(_column):
     __slots__ = []
 
     def _symbol_set_struct(val):
-        return simplejson.dumps(val)
+        return json.dumps(val)
 
     def _symbol_get_struct(self, val):
-        return simplejson.loads(val or '{}')
+        return json.loads(val or '{}')
 
     _symbol_c = '%s'
     _symbol_f = _symbol_set_struct

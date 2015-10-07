@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <menuitem id="account_reports_ch_statements_menu" name="Swiss Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
+    
     <data noupdate="1">
         <record id="action_client_l10n_ch_menu" model="ir.actions.client">
             <field name="name">Open Account Dashboard Menu</field>
@@ -25,6 +27,7 @@
             <field name="cash_account_code_prefix">1000</field>
             <field name="currency_id" ref="base.CHF"/>
             <field name="transfer_account_id" ref="transfer_account_id"/>
+            <field name="spoken_languages" eval="'it_IT;de_DE'"/>
         </record>
         <record id="transfer_account_id" model="account.account.template">
             <field name="chart_template_id" ref="l10nch_chart_template"/>

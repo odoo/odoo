@@ -5,40 +5,43 @@
     <template id="crm_planner">
         <t t-call="web_planner.pages">
             <t t-call="web_planner.page">
-                <t t-set="page_title" t-value="'Welcome'"/>
+                <t t-set="page_title">Welcome</t>
                 <t t-set="hide_mark_as_done" t-value="True"/>
-                <i><p>
-                  This guide will help you setup your sales funnel. You'll get
-                  best practices to bring your sales vision to life with Odoo CRM.
-                </p><p>
-                  The whole process may take a few hours. But if you follow all the
-                  steps, you can expect a real boost in your sales team performance.
-                  You can return to this tool at any time.
-                </p><p>
-                  Even if you are the only user of Odoo, you should fill in the different
-                  steps of this guide. The data you will provide are used by our support
-                  team and project managers to better guide you based on your objectives.
-                </p><p>
-                  We are here to help you. If you get stuck, do not hesitate to
-                  reach our CRM experts.
-                </p><p>
-                  Have fun deploying your sales strategy,
-                </p>
-                </i>
-                <div class="mt32">
-                    <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
-                    <address>
-                        For the Odoo Team,<br/>
-                        Fabien Pinckaers, Founder
-                    </address>
+                <div class="o_planner_intro">
+                  <p>
+                      We designed Odoo to help you grow your business. Odoo CRM
+                      is not just a tool, we want it to have a major impact on your
+                      sales performance. That's our mission, and we are serious about it.
+                  </p><p>
+                      Setting up your sales funnel is just the first step. To achieve a
+                      significant boost, we will help you get the most out of
+                      Odoo CRM to transform how your salespeople work.
+                      That's the purpose of this guide.
+                  </p><p>
+                      The whole process may take a few hours. But it's worth doing
+                      it.
+                  </p><p>
+                      We are here to help you. If you get stuck, do not hesitate to
+                      reach our <a href="mailto:help@odoo.com">support team</a> or
+                      <a href="https://www.odoo.com/documentation/user/">browse the documentation</a>.
+                  </p><p>
+                      Have fun deploying your sales strategy,
+                  </p>
+                  <div class="mt32">
+                      <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
+                      <address>
+                          From the Odoo Team,<br/>
+                          Fabien Pinckaers, Founder
+                      </address>
+                  </div>
                 </div>
             </t>
 
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Goals'"/>
+                <t t-set="menu_categorytitle">KPIs</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-trophy'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your expectations'"/>
+                    <t t-set="page_title">Your Expectations</t>
                     <p class="text-muted">
                         What are your sales objectives? What challenges are you
                         dealing with? Being clear on your expectations is the first step
@@ -77,12 +80,12 @@
                         <span class="fa fa-lightbulb-o fa-lg"/>
                         <p>At the end of the deployment process, your expectations should be reached.
                         <br />
-                        If not, our CRM experts are available to help you achieve your goals.</p>
+                        If not, our CRM experts are available to help you achieve your KPIs.</p>
                     </div>
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your KPIs'"/>
+                    <t t-set="page_title">Your KPIs</t>
                     <p class="text-muted">
                         What are the main KPIs you need to track for your the sales actities?
                     </p>
@@ -118,10 +121,10 @@
             </t>
 
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Sale Flow'"/>
+                <t t-set="menu_categorytitle">Your Pipeline</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-tag'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your pipeline'"/>
+                    <t t-set="page_title">Your Pipeline</t>
                     <p class="text-muted">
                         Systematic organization is what makes the difference
                         between good and great salespeople! Setup a pipeline
@@ -257,7 +260,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your customizations'"/>
+                    <t t-set="page_title">Your Customizations</t>
                     <p class="text-muted">
                         <strong>Every business is different.</strong> Odoo allows to
                         customize every application and it's usually a good
@@ -325,7 +328,7 @@
                             <div class="col-md-8">
                                 <div class="well well-lg">
                                     <span><strong>Contact us to customize your application:</strong><br/>
-                                    We have special options for unlimited number of customizations !
+                                    We have special options for unlimited number of customizations!
                                     </span>
                                 </div>
                             </div>
@@ -334,7 +337,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your proposal'"/>
+                    <t t-set="page_title">Your Proposal</t>
                     <p class="text-muted">
                         Odoo will help you create polished, professional quotations and contracts in minutes.
                         Tell us how you sell and we will tell you what
@@ -409,7 +412,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Customers'"/>
+                    <t t-set="page_title">Your Customers</t>
                     <p class="text-muted">
                         Unless you are starting a new business, you probably have a list of customers and vendors you'd like to import.
                     </p>
@@ -473,7 +476,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Products'"/>
+                    <t t-set="page_title">Your Products</t>
                     <p>A product in Odoo is something you sell or buy. It could
                     be a goods, consumable or services. Choose how you want to
                     create your products:
@@ -530,7 +533,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Your Prices'"/>
+                    <t t-set="page_title">Your Prices</t>
                     <p class="text-muted">
                     In Odoo, there are 3 different ways to manage your products prices.<br/>
                     </p>
@@ -610,10 +613,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Deployment'"/>
+                <t t-set="menu_categorytitle">Deployment</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-magic'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Incoming emails'"/>
+                    <t t-set="page_title">Incoming Emails</t>
                     <p class="text-muted">
                         Incoming email create leads automatically when a new prospect contacts you.
                         That's the easiest way to integrate Odoo with third party apps.
@@ -663,7 +666,7 @@
                     </div>
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Reporting'"/>
+                    <t t-set="page_title">Reporting</t>
                     <h4><strong>Click on 'Reporting' in the main menu </strong>and browse statistics:</h4>
                     <div class="row">
                         <div class="col-md-4">
@@ -732,10 +735,10 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle" t-value="'Grow revenues'"/>
+                <t t-set="menu_categorytitle">Grow revenues</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-bolt'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Weekly meetings'"/>
+                    <t t-set="page_title">Weekly Meetings</t>
                     <p class="text-muted">
                         Once you’ve deployed your CRM, it’s time to grow your revenues. Start by setting up a continuous improvement approach.We recommend you to organize weekly sales meeting with the team during which you will do a pipeline review.
                      </p>
@@ -780,7 +783,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Sales Tools'"/>
+                    <t t-set="page_title">Sales Tools</t>
                     <p>
                         The three main practices to develop a sales force are
                         <strong>methodical organization</strong>, <strong>trainings</strong> and
@@ -860,7 +863,7 @@
                 </t>
 
                 <t t-call="web_planner.page">
-                    <t t-set="page_title" t-value="'Add Features'"/>
+                    <t t-set="page_title">Add Features</t>
                     <p class="text-muted">
                         Odoo is the world's only software to have a full integration of Marketing Apps for your sales channel: insight sales, point of sale, ecommerce.
                     </p>
@@ -922,15 +925,15 @@
                 </t>
             </t>
             <t t-call="web_planner.page">
-                <t t-set="page_title" t-value="'End'"/>
+                <t t-set="page_title">End</t>
                 <t t-set="hide_title" t-value="True"/>
                 <t t-set="hide_from_menu" t-value="True"/>
                 <t t-set="hide_mark_as_done" t-value="True"/>
                 <h1 class="text-center o_planner_trophy" data-icon="&#xe006;" />
                 <div class="text-center">
-                    <h1>Congratulations, you're done !</h1>
-                    <h3>We hope this process helped you improve your sales strategy.</h3>
-                    <h4>Don't hesitate to <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank">send us an email</a> to describe<br/> your experience or to suggest improvements !</h4>
+                    <h1>Congratulations, you're done!</h1>
+                    <h3>We hope this process helped you bring your sales vision to life.</h3>
+                    <h4>Don't hesitate to <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank">send us an email</a> to describe<br/> your experience or to suggest improvements!</h4>
 
                     <p>Happy Selling!<br/>- The Odoo Team</p>
                     <img src="/web_planner/static/src/img/odoo_logo.png"/>

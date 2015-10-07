@@ -1,79 +1,59 @@
-# Greek translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * board
+# 
+# Translators:
+# Giorgos Diamantis <diamantis.g1@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-10-23 22:08+0000\n"
-"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
-"Language-Team: Greek <el@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 16:41+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-24 07:05+0000\n"
-"X-Generator: Launchpad (build 17203)\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:28
+#: code:addons/board/static/src/xml/board.xml:24
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
 
 #. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:406
+#, python-format
+msgid "'%s' added to dashboard"
+msgstr "'%s' προστέθηκε  στο Ταμπλώ"
+
+#. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Your personal dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-msgstr ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"<p>\n"
-"<b>Το προσωπικό σας Ταμπλώ είναι άδειο.</b>\n"
-"</p><p>\n"
-"Για να προσθέστε την πρώτη έκθεση σε αυτό το ταμπλώ, πηγαίνετε σε\n"
-"οποιοδήποτε μενού, αλλάξτε την λίστα σε γραφική οθόνη, και επιλέξτε "
-"<i>'Προσθήκη στο\n"
-"Ταμπλώ'</i> στις επεκτεινόμενες δυνατότητες αναζήτησης .\n"
-"</p><p>\n"
-"Μπορείτε να φιλτάρετε και να ομοδοποιήσετε τα δεδομένα πριν τα εισάγετε στο\n"
-"ταμπλώ χρησιμοποιώντας τις δυνατότητες αναζήτησης.\n"
-"</p>\n"
-"</div>\n"
-"            "
+msgid "<b>Your personal dashboard is empty.</b>"
+msgstr "Το Ταμπλώ σας είναι άδειο."
 
 #. module: board
 #. openerp-web
 #: code:addons/board/static/src/xml/board.xml:70
 #, python-format
 msgid "Add"
-msgstr "Πρόσθεση"
+msgstr "Πρόσθηκη"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
+#: code:addons/board/static/src/xml/board.xml:64
 #, python-format
-msgid "Add to Dashboard"
+msgid "Add to my Dashboard"
 msgstr "Πρόσθεση στο Ταμπλώ"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:136
+#: code:addons/board/static/src/js/dashboard.js:139
 #, python-format
 msgid "Are you sure you want to remove this item ?"
 msgstr "Είστε σίγουροι ότι θέλετε να αφαιρέστε αυτό το είδος?"
@@ -81,7 +61,7 @@ msgstr "Είστε σίγουροι ότι θέλετε να αφαιρέστε 
 #. module: board
 #: model:ir.model,name:board.model_board_board
 msgid "Board"
-msgstr "Πινακίδα"
+msgstr "Ταμπλό"
 
 #. module: board
 #: model:ir.model,name:board.model_board_create
@@ -89,52 +69,45 @@ msgid "Board Creation"
 msgstr "Δημιουργία Πινακίδας"
 
 #. module: board
-#: field:board.create,name:0
+#: model:ir.model.fields,field_description:board.field_board_create_name
 msgid "Board Name"
 msgstr "Όνομα Πινακίδας"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:374
-#, python-format
-msgid "Can't find dashboard action"
-msgstr ""
-
-#. module: board
-#: view:board.create:board.view_board_create
+#: model:ir.ui.view,arch_db:board.view_board_create
 msgid "Cancel"
-msgstr "Άκυρο"
+msgstr "Ακύρωση"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
+#: code:addons/board/static/src/xml/board.xml:6
 #, python-format
 msgid "Change Layout"
 msgstr "Αλλαγή Εμφάνισης"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:8
+#: code:addons/board/static/src/xml/board.xml:4
 #, python-format
 msgid "Change Layout.."
 msgstr "Αλλαγή Εμφάνισης.."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
+#: code:addons/board/static/src/xml/board.xml:36
 #, python-format
 msgid "Choose dashboard layout"
 msgstr "Επιλογή Εμφάνισης Ταμπλώ"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:406
+#: code:addons/board/static/src/js/dashboard.js:408
 #, python-format
 msgid "Could not add filter to dashboard"
-msgstr ""
+msgstr "Δεν μπορεί να προστεθεί φίλτρο στο Ταμπλώ"
 
 #. module: board
-#: view:board.create:board.view_board_create
+#: model:ir.ui.view,arch_db:board.view_board_create
 msgid "Create"
 msgstr "Δημιουργία"
 
@@ -145,79 +118,78 @@ msgid "Create Board"
 msgstr "Δημιουργία Πινακίδας"
 
 #. module: board
-#: view:board.create:board.view_board_create
+#: model:ir.ui.view,arch_db:board.view_board_create
 msgid "Create New Dashboard"
 msgstr "Δημιουργία Νέου Ταμπλώ"
 
 #. module: board
-#: field:board.create,create_uid:0
+#: model:ir.model.fields,field_description:board.field_board_create_create_uid
 msgid "Created by"
 msgstr "Δημιουργήθηκε από"
 
 #. module: board
-#: field:board.create,create_date:0
+#: model:ir.model.fields,field_description:board.field_board_create_create_date
 msgid "Created on"
 msgstr "Δημιουργήθηκε στις"
 
 #. module: board
+#: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_create_display_name
+msgid "Display Name"
+msgstr "Όνομα εμφάνισης"
+
+#. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:92
+#: code:addons/board/static/src/js/dashboard.js:94
 #, python-format
 msgid "Edit Layout"
 msgstr "Επεξεργασία Εμφάνισης"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:409
-#, python-format
-msgid "Filter added to dashboard"
-msgstr ""
-
-#. module: board
-#: field:board.board,id:0
-#: field:board.create,id:0
+#: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_create_id
 msgid "ID"
-msgstr "Κωδικός"
+msgstr "ID"
 
 #. module: board
-#: field:board.create,write_uid:0
+#: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_create___last_update
+msgid "Last Modified on"
+msgstr "Τελευταία ενημέρωση στις"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_write_uid
 msgid "Last Updated by"
 msgstr "Τελευταία ενημέρωση από"
 
 #. module: board
-#: field:board.create,write_date:0
+#: model:ir.model.fields,field_description:board.field_board_create_write_date
 msgid "Last Updated on"
 msgstr "Τελευταία ενημέρωση στις"
 
 #. module: board
-#: view:board.board:board.board_my_dash_view
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
+#: model:ir.ui.view,arch_db:board.board_my_dash_view
 msgid "My Dashboard"
 msgstr "Το Ταμπλώ μου"
 
 #. module: board
-#: field:board.create,menu_parent_id:0
+#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
 msgid "Parent Menu"
-msgstr "Γονικό Μενού"
+msgstr "Επάνω Μενού"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
-#, python-format
-msgid "Reset"
-msgstr "Επαναφορά"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
+"                    Dashboard'</i> in the extended search options."
+msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
-#, python-format
-msgid "Reset Layout.."
-msgstr "Επαναφορά Εμφάνισης"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
-#, python-format
-msgid "Title of new dashboard item"
-msgstr "Τίτλος του νέου είδος του Ταμπλώ"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"You can filter and group data before inserting into the\n"
+"                    dashboard using the search options."
+msgstr ""

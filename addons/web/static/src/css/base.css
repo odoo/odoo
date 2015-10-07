@@ -779,6 +779,7 @@
 }
 .openerp .oe_application .oe_client_action {
   height: 100%;
+  overflow: auto;
   position: relative;
 }
 .openerp .oe-view-manager {
@@ -1168,14 +1169,14 @@
   width: -webkit-calc(100% - 20px);
   width: calc(100% - 20px);
 }
-.openerp .oe-search-options .searchview_extended_prop_value .oe_datepicker_main {
+.openerp .oe-search-options .searchview_extended_prop_value .o_datepicker {
   width: -webkit-calc(100% - 20px);
   width: calc(100% - 20px);
 }
-.openerp .oe-search-options .searchview_extended_prop_value .oe_datepicker_master {
+.openerp .oe-search-options .searchview_extended_prop_value .o_datepicker .o_datepicker_input {
   width: 100%;
 }
-.openerp .oe-search-options .searchview_extended_prop_value .fa-calendar {
+.openerp .oe-search-options .searchview_extended_prop_value .o_datepicker .o_datepicker_button {
   margin-left: -21px;
   cursor: pointer;
 }
@@ -1886,6 +1887,7 @@
   padding-left: 4px;
   padding-right: 4px;
   overflow: hidden;
+  position: relative;
 }
 .openerp .oe_fileupload .oe_attachments .oe_attachment a {
   display: block;
@@ -2158,6 +2160,10 @@
 .openerp .oe_list_editable .oe_list_content td.oe_list_field_cell {
   padding: 4px 6px 3px;
 }
+.openerp .oe_list_editable .o_temp_visible {
+  opacity: 0;
+  display: block !important;
+}
 .openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell {
   color: transparent;
   text-shadow: none;
@@ -2207,10 +2213,10 @@
   width: 100% !important;
   text-align: right;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime input.oe_datepicker_master, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date input.oe_datepicker_master {
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime input.o_datepicker_input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date input.o_datepicker_input {
   width: 100% !important;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime .oe_datepicker_main, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date .oe_datepicker_main {
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime .o_datepicker, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date .o_datepicker {
   width: -webkit-calc(100% - 20px);
   width: calc(100% - 20px);
 }

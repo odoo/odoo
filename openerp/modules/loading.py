@@ -162,12 +162,16 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             migrations.migrate_module(package, 'post')
 
+            # Update translations for all installed languages
+            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
+
+            registry._init_modules.add(package.name)
+
             if new_install:
                 post_init = package.info.get('post_init_hook')
                 if post_init:
                     getattr(py_module, post_init)(cr, registry)
 
-            registry._init_modules.add(package.name)
             # validate all the views at a whole
             registry['ir.ui.view']._validate_module_views(cr, SUPERUSER_ID, module_name)
 
@@ -188,8 +192,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             ver = adapt_version(package.data['version'])
             # Set new modules and dependencies
             modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
-            # Update translations for all installed languages
-            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):

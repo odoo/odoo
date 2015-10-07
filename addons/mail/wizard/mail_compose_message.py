@@ -368,11 +368,9 @@ class MailComposer(models.TransientModel):
 
         # This onchange should return command instead of ids for x2many field.
         # ORM handle the assignation of command list on new onchange (api.v8),
-        # this force the complete replacement of x2many field with the (6, 0, ids)
+        # this force the complete replacement of x2many field with
         # command and is compatible with onchange api.v7
-        for field_name in values.keys():
-            if self._fields[field_name].type == 'many2many' or self._fields[field_name].type == 'one2many':
-                values[field_name] = [(6, 0, values[field_name])]
+        values = self._convert_to_write(self._convert_to_cache(values))
 
         return {'value': values}
 

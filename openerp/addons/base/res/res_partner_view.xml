@@ -74,11 +74,12 @@
             <field name="arch" type="xml">
                 <form string="Contact">
                     <field name="is_company" invisible="1"/>
+                    <field name="type" invisible="1"/>
                     <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Name" />
+                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                         </h1>
                         <field name="parent_id"
                             placeholder="Company"
@@ -157,7 +158,7 @@
                             on_change="on_change_company_type(company_type)"
                             options="{'horizontal': true}"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Name" required="1"/>
+                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
@@ -210,7 +211,7 @@
 
                     <notebook colspan="4">
                         <page string="Contacts &amp; Addresses" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer,}">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_lang': lang,}">
                                 <kanban>
                                     <field name="color"/>
                                     <field name="name"/>
@@ -230,6 +231,7 @@
                                     <field name="fax"/>
                                     <field name="state_id"/>
                                     <field name="image"/>
+                                    <field name="lang"/>
                                     <templates>
                                         <t t-name="kanban-box">
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
@@ -285,7 +287,7 @@
                                                 </div>
                                             </group>
                                             <group>
-                                                <field name="name" attrs="{'required': [('type','=', 'contact')]}" string="Contact Name"/>
+                                                <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                                                 <field name="title" placeholder="e.g. Mr."
                                                     attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
@@ -298,6 +300,7 @@
                                         </group>
                                         <field name="supplier" invisible="True"/>
                                         <field name="customer" invisible="True"/>
+                                        <field name="lang" invisible="True"/>
                                     </sheet>
                                 </form>
                             </field>

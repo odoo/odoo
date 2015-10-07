@@ -18,8 +18,7 @@
 .oe_tip_helper {
     position: absolute;
     z-index: 1008;
-    background-color: @odoo-view-background-color;
-    border: 1px solid @odoo-brand-secondary;
+    border: 5px solid @odoo-view-background-color;
     border-radius: @border-radius-base;
     box-shadow: 0 2px 15px rgba(0,0,0,.4);
     .o-transition(all, 300ms, ease-out);
@@ -39,7 +38,8 @@
 
 .oe_tip_show_element {
     z-index: 1011 !important;
-    position: relative;
+    position: relative !important;
+    border: none !important;
 }
 
 .oe_breathing {

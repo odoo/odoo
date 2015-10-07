@@ -15,6 +15,6 @@ class ValidateAccountMove(models.TransientModel):
             if move.state == 'draft':
                 move_to_post += move
         if not move_to_post:
-            raise UserError(_('There is no account move entries in draft state to post.'))
+            raise UserError(_('There is no journal items in draft state to post.'))
         move_to_post.post()
         return {'type': 'ir.actions.act_window_close'}

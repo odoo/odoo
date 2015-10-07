@@ -144,7 +144,9 @@ var History = function History ($editable) {
     this.recordUndo = function ($editable, event, internal_history) {
         var self = this;
         if (!$editable) {
-            $editable = $(range.create().sc).closest(".o_editable");
+            var rng = range.create();
+            if(!rng) return;
+            $editable = $(rng.sc).closest(".o_editable");
         }
 
         if (aUndo[pos] && (event === "applySnap" || event === "activate")) {
@@ -316,16 +318,15 @@ var RTE = Widget.extend({
                 $node.addClass('o_is_inline_editable');
             }
 
-            // start element observation
-            $node.one('content_changed', function () {
-                $(this).addClass('o_dirty');
-            });
-
             $node.data('initInnerHTML', $node.html());
         });
 
-        $(document).on('content_changed', '.o_editable', function () {
+        // start element observation
+        $(document).on('content_changed', '.o_editable', function (event) {
             self.trigger('change', this);
+            if(!$(this).hasClass('o_dirty')) {
+                $(this).addClass('o_dirty');
+            }
         });
 
         $('#wrapwrap, .o_editable').on('click', '*', this, this.onClick);
@@ -428,9 +429,11 @@ var RTE = Widget.extend({
         }
         // escape text nodes for xml saving
         var escaped_el = $el.clone();
-        escaped_el.find('*').addBack().not('script,style').contents().each(function(){
+        var to_escape = escaped_el.find('*').addBack();
+        to_escape = to_escape.not(to_escape.filter('object,iframe,script,style,[data-oe-model][data-oe-model!="ir.ui.view"]').find('*').addBack());
+        to_escape.contents().each(function(){
             if(this.nodeType == 3) {
-                this.nodeValue = _.escape(this.nodeValue);
+                this.nodeValue = $('<div />').text(this.nodeValue).html();
             }
         });
         var markup = escaped_el.prop('outerHTML');
@@ -442,7 +445,7 @@ var RTE = Widget.extend({
                 $el.data('oe-id'),
                 markup,
                 $el.data('oe-xpath') || null,
-                context || base.get_context()
+                _.omit(context || base.get_context(), 'lang')
             ],
         });
     },

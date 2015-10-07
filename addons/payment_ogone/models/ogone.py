@@ -225,7 +225,7 @@ class PaymentTxOgone(osv.Model):
         transaction record. Create a payment method if an alias is returned."""
         reference, pay_id, shasign, alias = data.get('orderID'), data.get('PAYID'), data.get('SHASIGN'), data.get('ALIAS')
         if not reference or not pay_id or not shasign:
-            error_msg = _('Ogone: received data with missing reference (%s) or pay_id (%s) or shashign (%s)') % (reference, pay_id, shasign)
+            error_msg = _('Ogone: received data with missing reference (%s) or pay_id (%s) or shasign (%s)') % (reference, pay_id, shasign)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
 
@@ -310,7 +310,7 @@ class PaymentTxOgone(osv.Model):
                 'state': 'cancel',
                 'acquirer_reference': data.get('PAYID'),
             })
-        elif status in self._ogone_pending_tx_status:
+        elif status in self._ogone_pending_tx_status or status in self._ogone_wait_tx_status:
             tx.write({
                 'state': 'pending',
                 'acquirer_reference': data.get('PAYID'),

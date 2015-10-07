@@ -7,20 +7,18 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
-                <data>
-                    <group name="parent" position="inside">
-                        <group name="account_stock_property" string="Account Stock Properties">
-                            <field name="property_stock_account_input_categ_id" domain="[('deprecated', '=', False)]"/>
-                            <field name="property_stock_account_output_categ_id" domain="[('deprecated', '=', False)]"/>
-                            <field name="property_stock_valuation_account_id" domain="[('deprecated', '=', False)]"/>
-                            <field name="property_stock_journal"/>
-                        </group>
-                        <group string="Inventory Valuation">
-                            <field name="property_cost_method" groups="stock_account.group_inventory_valuation" />
-                            <field name="property_valuation"/>
-                        </group>
+                <group name="account_property" position="after">
+                    <group name="account_stock_property" string="Account Stock Properties">
+                        <field name="property_stock_account_input_categ_id" domain="[('deprecated', '=', False)]"/>
+                        <field name="property_stock_account_output_categ_id" domain="[('deprecated', '=', False)]"/>
+                        <field name="property_stock_valuation_account_id" domain="[('deprecated', '=', False)]"/>
+                        <field name="property_stock_journal"/>
                     </group>
-                </data>
+                    <group string="Inventory Valuation">
+                        <field name="property_cost_method" groups="stock_account.group_inventory_valuation"/>
+                        <field name="property_valuation"/>
+                    </group>
+                </group>
             </field>
         </record>
 

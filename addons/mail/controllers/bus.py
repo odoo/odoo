@@ -25,8 +25,9 @@ class MailChatController(openerp.addons.bus.controllers.main.BusController):
             if partner_id:
                 for mail_channel in request.env['mail.channel'].search([('channel_partner_ids', 'in', [partner_id])]):
                     channels.append((request.db, 'mail.channel', mail_channel.id))
-                # personal channel
+                # personal and needaction channel
                 channels.append((request.db, 'res.partner', partner_id))
+                channels.append((request.db, 'ir.needaction', partner_id))
         return super(MailChatController, self)._poll(dbname, channels, last, options)
 
     # --------------------------

@@ -156,7 +156,7 @@ class wizard_user(osv.osv_memory):
             @param wizard_user: browse record of model portal.wizard.user
             @return: browse record of model res.users
         """
-        wizard_user = self.browse(cr, uid, ids[0], context=context)
+        wizard_user = self.browse(cr, uid, ids, context=context)
         res_users = self.pool.get('res.users')
         create_context = dict(context or {}, noshortcut=True, no_reset_password=True)       # to prevent shortcut creation
         values = {
@@ -172,7 +172,7 @@ class wizard_user(osv.osv_memory):
             @param wizard_user: browse record of model portal.wizard.user
             @return: the id of the created mail.mail record
         """
-        wizard_user = self.browse(cr, uid, ids[0], context=context)
+        wizard_user = self.browse(cr, uid, ids, context=context)
         res_partner = self.pool['res.partner']
         this_user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context)
         if not this_user.email:

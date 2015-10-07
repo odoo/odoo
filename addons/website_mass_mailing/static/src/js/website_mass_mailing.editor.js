@@ -18,16 +18,18 @@ var mass_mailing_common = options.Class.extend({
     select_mailing_list: function (type, value) {
         var self = this;
         if (type !== "click") return;
-        return website.prompt({
+        var def = website.prompt({
             'id': this.popup_template_id,
             'window_title': this.popup_title,
             'select': _t("Newsletter"),
             'init': function (field) {
                 return new Model('mail.mass_mailing.list').call('name_search', ['', []], { context: base.get_context() });
             },
-        }).then(function (mailing_list_id) {
+        });
+        def.then(function (mailing_list_id) {
             self.$target.attr("data-list-id", mailing_list_id);
         });
+        return def;
     },
     drop_and_build_snippet: function() {
         var self = this;
@@ -48,6 +50,8 @@ options.registry.newsletter_popup = mass_mailing_common.extend({
     popup_template_id: "editor_new_mailing_list_subscribe_popup",
     popup_title: _t("Add a Newsletter Subscribe Popup"),
     select_mailing_list: function (type, value) {
+        var self = this;
+        if (type !== "click") return;
         return this._super(type, value).then(function (mailing_list_id) {
                 ajax.jsonRpc('/web/dataset/call', 'call', {
                     model: 'mail.mass_mailing.list',

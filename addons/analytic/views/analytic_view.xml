@@ -82,13 +82,13 @@
                         <div class="oe_title">
                             <label for="name"/>
                             <h1>
-                                <field name="name" class="oe_inline"/>
+                                <field name="name" class="oe_inline" placeholder="e.g. Project XYZ"/>
                             </h1>
                         </div>
                         <div name="project"/>
                         <group name="main">
                             <group>
-                                <field name="account_type" widget="radio"/>
+                                <field name="account_type" invisible="1"/>
                                 <field name="partner_id"/>
                             </group>
                             <group>

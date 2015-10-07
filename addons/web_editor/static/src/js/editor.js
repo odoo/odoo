@@ -78,7 +78,6 @@ editor.Class = Widget.extend({
     start: function() {
         var self = this;
 
-        this.$('button[data-action=save]').prop('disabled', true);
         $('.dropdown-toggle').dropdown();
 
         this.display_placeholder();
@@ -98,8 +97,8 @@ editor.Class = Widget.extend({
     },
     display_placeholder: function () {
         var $area = $("#wrapwrap").find("[data-oe-model] .oe_structure.oe_empty, [data-oe-model].oe_structure.oe_empty, [data-oe-type=html]")
-            .addClass("oe_empty")
-            .attr("data-oe-placeholder", _t("Press The Top-Left Edit Button"));
+            .filter(".oe_not_editable")
+            .filter(".oe_no_empty");
 
         this.on('rte:start', this, function () {
             $area.attr("data-oe-placeholder", _t("Write Your Text Here"));

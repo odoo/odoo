@@ -21,5 +21,3 @@ class report_project_task_user(osv.Model):
 
     def _group_by(self):
         return super(report_project_task_user, self)._group_by() + ", remaining_hours, t.effective_hours, progress, total_hours, planned_hours, hours_delay"
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

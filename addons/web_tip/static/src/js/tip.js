@@ -207,6 +207,14 @@ var Tip = Class.extend({
         this._set_helper_position();
         this.scroll_to_tip();
 
+        var $bgElem = this.$element;
+        var bgColor = $bgElem.css('background-color');
+        while($bgElem.length > 0 && (bgColor === 'transparent' || bgColor === 'rgba(0, 0, 0, 0)')) {
+            $bgElem = $bgElem.parent();
+            bgColor = $bgElem.css('background-color');
+        }
+        this.$helper.css('background-color', bgColor || "white");
+
         $('body').append(this.$overlay);
         this.$element.addClass('oe_tip_show_element');
 
@@ -302,8 +310,8 @@ var Tip = Class.extend({
         var _height = this.$element.outerHeight() + 10;
 
         this.$helper.offset({top: _top, left: _left});
-        this.$helper.width(_width);
-        this.$helper.height(_height);
+        this.$helper.css('width', _width);
+        this.$helper.css('height', _height);
     },
 
     _set_popover_position: function() {

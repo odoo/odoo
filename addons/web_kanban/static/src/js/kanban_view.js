@@ -219,7 +219,7 @@ var KanbanView = View.extend({
                     group.id = value instanceof Array ? value[0] : value;
                     var field = self.fields_view.fields[self.group_by_field];
                     if (field && field.type === "selection") {
-                        value= _.find(field.selection, function (s) { return s[0] === group.attributes.value; });
+                        value= _.find(field.selection, function (s) { return s[0] === group.id; });
                     }
                     group.title = (value instanceof Array ? value[1] : value) || _t("Undefined");
                     group.values = {};
@@ -250,7 +250,7 @@ var KanbanView = View.extend({
                     def = dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit });
                 }
                 return def.then(function (records) {
-                    self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
+                    self.dataset.ids.push.apply(self.dataset.ids, _.difference(dataset.ids, self.dataset.ids));
                     group.records = records;
                     group.dataset = dataset;
                     is_empty = is_empty && !records.length;
@@ -544,7 +544,7 @@ var KanbanView = View.extend({
                     }
                 });
                 // we use boostrap tooltips for better and faster display
-                self.$('span.o_tag').tooltip();
+                self.$('span.o_tag').tooltip({delay: {'show': 50}});
             });
         });
     },

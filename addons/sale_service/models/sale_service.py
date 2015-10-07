@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
+from openerp.exceptions import UserError
 from openerp.tools.translate import _
 
 
@@ -133,5 +134,11 @@ class project_task(osv.osv):
                 self._validate_subflows(cr, uid, ids, context=context)
         return res
 
-
-
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for task in self.browse(cr, uid, ids, context=context):
+            if task.sale_line_id:
+                raise UserError(_('You cannot delete a task related to a Sale Order. You can only archive this task.'))
+        res = super(project_task, self).unlink(cr, uid, ids, context)
+        return res

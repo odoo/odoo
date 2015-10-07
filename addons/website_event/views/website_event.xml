@@ -165,10 +165,10 @@
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types" t-as="type">
-                <li t-if="type['type']"
-                    t-att-class="searches.get('type') == str(type['type'] and type['type'][0]) and 'active' or ''">
-                    <a t-attf-href="/event?{{ keep_query('country', 'date', type=type['type'][0]) }}"><t t-esc="type['type'][1]"/>
-                        <span class="badge pull-right"><t t-esc="type['type_count']"/></span>
+                <li t-if="type['event_type_id']"
+                    t-att-class="searches.get('type') == str(type['event_type_id'] and type['event_type_id'][0]) and 'active' or ''">
+                    <a t-attf-href="/event?{{ keep_query('country', 'date', type=type['event_type_id'][0]) }}"><t t-esc="type['event_type_id'][1]"/>
+                        <span class="badge pull-right"><t t-esc="type['event_type_id_count']"/></span>
                     </a>
                 </li>
             </t>
@@ -379,6 +379,7 @@
 <!-- Registration Templates -->
 <template id="registration_template">
     <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post">
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <table itemprop="offers" class="table table-striped">
             <thead>
                 <tr>
@@ -428,6 +429,7 @@
     <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg">
             <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>

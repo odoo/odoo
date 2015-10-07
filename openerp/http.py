@@ -6,9 +6,9 @@ import ast
 import collections
 import contextlib
 import datetime
-import errno
 import functools
-import getpass
+import hashlib
+import hmac
 import inspect
 import logging
 import mimetypes
@@ -17,7 +17,6 @@ import pprint
 import random
 import re
 import sys
-import tempfile
 import threading
 import time
 import traceback
@@ -26,8 +25,9 @@ import warnings
 from zlib import adler32
 
 import babel.core
+import passlib.utils
 import psycopg2
-import simplejson
+import json
 import werkzeug.contrib.sessions
 import werkzeug.datastructures
 import werkzeug.exceptions
@@ -43,11 +43,10 @@ except ImportError:
     psutil = None
 
 import openerp
-from openerp import SUPERUSER_ID
 from openerp.service.server import memory_info
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
-from openerp.tools import ustr
+from openerp.tools import ustr, consteq
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -306,7 +305,11 @@ class WebRequest(object):
             # case, the request cursor is unusable. Rollback transaction to create a new one.
             if self._cr:
                 self._cr.rollback()
-            return self.endpoint(*a, **kw)
+            result = self.endpoint(*a, **kw)
+            if isinstance(result, Response) and result.is_qweb:
+                # Early rendering of lazy responses to benefit from @service_model.check protection
+                result.flatten()
+            return result
 
         if self.db:
             return checked_call(self.db, *args, **kwargs)
@@ -368,6 +371,48 @@ class WebRequest(object):
         """
         return self.session
 
+    def csrf_token(self, time_limit=3600):
+        """ Generates and returns a CSRF token for the current session
+
+        :param time_limit: the CSRF token should only be valid for the
+                           specified duration (in second), by default 1h,
+                           ``None`` for the token to be valid as long as the
+                           current user's session is.
+        :type time_limit: int | None
+        :returns: ASCII token string
+        """
+        token = self.session.sid
+        max_ts = '' if not time_limit else int(time.time() + time_limit)
+        msg = '%s%s' % (token, max_ts)
+        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        assert secret, "CSRF protection requires a configured database secret"
+        hm = hmac.new(str(secret), msg, hashlib.sha1).hexdigest()
+        return '%so%s' % (hm, max_ts)
+
+    def validate_csrf(self, csrf):
+        if not csrf:
+            return False
+
+        try:
+            hm, _, max_ts = str(csrf).rpartition('o')
+        except UnicodeEncodeError:
+            return False
+
+        if max_ts:
+            try:
+                if int(max_ts) < int(time.time()):
+                    return False
+            except ValueError:
+                return False
+
+        token = self.session.sid
+
+        msg = '%s%s' % (token, max_ts)
+        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        assert secret, "CSRF protection requires a configured database secret"
+        hm_expected = hmac.new(str(secret), msg, hashlib.sha1).hexdigest()
+        return consteq(hm, hm_expected)
+
 def route(route=None, **kw):
     """
     Decorator marking the decorated method as being a handler for
@@ -393,9 +438,21 @@ def route(route=None, **kw):
     :param methods: A sequence of http methods this route applies to. If not
                     specified, all methods are allowed.
     :param cors: The Access-Control-Allow-Origin cors directive value.
+    :param bool csrf: Whether CSRF protection should be enabled for the route.
+
+                      Defaults to ``True``.
+
+                      CSRF protection only applies to *UNSAFE* methods as
+                      defined by :rfc:`7231`: GET, HEAD, TRACE and OPTIONS are
+                      safe, all other methods are unsafe.
+
+                      CSRF protection requires a csrf token to be sent as part
+                      of the request's form data, it can be obtained via
+                      :meth:`request.csrf_token()
+                      <openerp.http.WebRequest.csrf_token>`
     """
     routing = kw.copy()
-    assert not 'type' in routing or routing['type'] in ("http", "json")
+    assert 'type' not in routing or routing['type'] in ("http", "json")
     def decorator(f):
         if route:
             if isinstance(route, list):
@@ -500,8 +557,8 @@ class JsonRequest(WebRequest):
 
         # Read POST content or POST Form Data named "request"
         try:
-            self.jsonrequest = simplejson.loads(request)
-        except simplejson.JSONDecodeError:
+            self.jsonrequest = json.loads(request)
+        except ValueError:
             msg = 'Invalid JSON data: %r' % (request,)
             _logger.info('%s: %s', self.httprequest.path, msg)
             raise werkzeug.exceptions.BadRequest(msg)
@@ -525,10 +582,10 @@ class JsonRequest(WebRequest):
             # We need then to manage http sessions manually.
             response['session_id'] = self.session_id
             mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, simplejson.dumps(response),)
+            body = "%s(%s);" % (self.jsonp, json.dumps(response),)
         else:
             mime = 'application/json'
-            body = simplejson.dumps(response)
+            body = json.dumps(response)
 
         return Response(
                     body, headers=[('Content-Type', mime),
@@ -701,6 +758,12 @@ class HttpRequest(WebRequest):
                 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
             }
             return Response(status=200, headers=headers)
+
+        if request.httprequest.method not in ('GET', 'HEAD', 'OPTIONS', 'TRACE') \
+                and request.endpoint.routing.get('csrf', True): # csrf checked by default
+            token = self.params.pop('csrf_token', None)
+            if not self.validate_csrf(token):
+                raise werkzeug.exceptions.BadRequest('Invalid CSRF Token')
 
         r = self._call_function(**self.params)
         if not r:
@@ -1291,6 +1354,7 @@ class Response(werkzeug.wrappers.Response):
         """
         view_obj = request.registry["ir.ui.view"]
         uid = self.uid or request.uid or openerp.SUPERUSER_ID
+        self.qcontext['request'] = request
         return view_obj.render(
             request.cr, uid, self.template, self.qcontext,
             context=request.context)
@@ -1299,8 +1363,9 @@ class Response(werkzeug.wrappers.Response):
         """ Forces the rendering of the response's template, sets the result
         as response body and unsets :attr:`.template`
         """
-        self.response.append(self.render())
-        self.template = None
+        if self.template:
+            self.response.append(self.render())
+            self.template = None
 
 class DisableCacheMiddleware(object):
     def __init__(self, app):
@@ -1363,6 +1428,8 @@ class Root(object):
                     path_static = os.path.join(addons_path, module, 'static')
                     if os.path.isfile(manifest_path) and os.path.isdir(path_static):
                         manifest = ast.literal_eval(open(manifest_path).read())
+                        if not manifest.get('installable', True):
+                            continue
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
                         if 'openerp.addons' in sys.modules:

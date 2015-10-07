@@ -13,6 +13,11 @@
         <menuitem id="menu_procurement_management" name="Purchase"
             parent="base.menu_purchase_root" sequence="1" />
 
+        <!--Supplier menu-->
+        <menuitem id="base.menu_procurement_management_supplier_name" name="Vendors"
+            parent="menu_procurement_management"
+            action="base.action_partner_supplier_form" sequence="15"/>
+
         <menuitem id="menu_purchase_config" name="Configuration" parent="base.menu_purchase_root" sequence="100" groups="group_purchase_manager,base.group_configuration"/>
 
         <menuitem
@@ -21,7 +26,7 @@
 
         <menuitem
            action="product.product_supplierinfo_type_action" id="menu_product_pricelist_action2_purchase"
-           parent="menu_purchase_config_pricelist" sequence="1" groups="base.group_no_one"/>
+           parent="menu_procurement_management" sequence="16" groups="purchase.group_manage_vendor_price"/>
 
         <menuitem
             id="menu_product_in_config_purchase" name="Products"
@@ -43,10 +48,6 @@
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
               parent="purchase.menu_product_in_config_purchase" sequence="5"/>
 
-    <!--Supplier menu-->
-    <menuitem id="base.menu_procurement_management_supplier_name" name="Vendors"
-        parent="menu_procurement_management"
-        action="base.action_partner_supplier_form" sequence="15"/>
 
     <!-- Purchase Control Menu -->
     <menuitem id="menu_purchase_control" name="Control" parent="base.menu_purchase_root" sequence="4"/>
@@ -145,22 +146,22 @@
                     <button name="button_confirm" type="object" states="sent" string="Confirm Order" class="oe_highlight" id="bid_confirm"/>
                     <button name="button_approve" type="object" states='to approve' string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
                     <button name="action_rfq_send" states="approved" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
-                    <button name="%(purchase_open_picking)d" string="Receive Products" type="action" attrs="{'invisible': [('state','not in', ('purchase','done'))]}"/>
+                    <button name="action_view_picking" string="Receive Products" type="object" attrs="{'invisible': [('state','not in', ('purchase','done'))]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                     <button name="button_done" type="object" string="Set to Done" states="purchase"
-                        help="If a purchase order is done, you can not modify it manually anymore. But you will still be able to bill or receive."/>
+                        help="If a purchase order is done, you cannot modify it manually anymore. You will not be able to receive invoices anymore for this purchase order."/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1" />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box" attrs="{'invisible': [('state', 'not in', ('purchase', 'done', 'cancel'))]}">
-                        <button type="action"
-                            name="%(purchase_open_picking)d"
+                        <button type="object"
+                            name="action_view_picking"
                             class="oe_stat_button"
                             icon="fa-truck">
                             <field name="picking_count" widget="statinfo" string="Shipment" help="Incoming Shipments"/>
                         </button>
-                        <button type="action"  name="%(purchase_open_invoice)d"
+                        <button type="object"  name="action_view_invoice"
                             class="oe_stat_button"
                             icon="fa-pencil-square-o">
                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
@@ -193,7 +194,7 @@
                                     <field name="name"/>
                                     <field name="date_planned"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                    <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting" domain="[('type','not in',('view','template'))]"/>
+                                    <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting"/>
                                     <field name="product_qty"/>
                                     <field name="qty_received" invisible="not context.get('show_purchase', False)"/>
                                     <field name="qty_invoiced" invisible="not context.get('show_purchase', False)"/>
@@ -525,11 +526,9 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='property_account_income_categ_id']" position="before">
-                        <field name="property_account_creditor_price_difference_categ" domain="[('deprecated','=',False)]"/>
-                    </xpath>
-                </data>
+                <field name="property_account_income_categ_id" position="before">
+                    <field name="property_account_creditor_price_difference_categ" domain="[('deprecated','=',False)]"/>
+                </field>
             </field>
         </record>
 

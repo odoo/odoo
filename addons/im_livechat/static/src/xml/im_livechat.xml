@@ -2,13 +2,7 @@
 
 <templates xml:space="preserve">
 
-    <t t-name="im_livechat.LivechatButton">
-        <div class="openerp o_livechat_button hidden-print" t-att-data-livechat-channel-id="widget.options.channel_id">
-                <t t-esc="widget.options.button_text"/>
-        </div>
-    </t>
-
-    <t t-name="im_livechat.feedback">
+    <t t-name="im_livechat.FeedBack">
         <div class="o_livechat_rating">
             <div class="o_livechat_rating_feedback_text">
                 Did we correctly answer your question ?
@@ -21,7 +15,7 @@
             <div class="o_livechat_rating_reason">
                 <textarea id="reason" placeholder="Explain your note"></textarea>
                 <div class="o_livechat_rating_reason_button">
-                    <input type="button" id="rating_submit" value="Send" />
+                    <input type="button" class="o_rating_submit_button" value="Send" />
                 </div>
             </div>
         </div>

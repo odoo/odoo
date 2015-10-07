@@ -185,8 +185,6 @@ class Message(models.Model):
             :param list messages: list of message, as get_dict result
             :param dict message_tree: {[msg.id]: msg browse record}
         """
-        pid = self.env.user.partner_id.id
-
         # 1. Aggregate partners (author_id and partner_ids), attachments and tracking values
         partners = self.env['res.partner']
         attachments = self.env['ir.attachment']
@@ -248,13 +246,13 @@ class Message(models.Model):
                     tracking_value_ids.append(tracking_tree[tracking_value.id])
 
             message_dict.update({
-                #'is_author': pid == author[0],
                 'author_id': author,
                 'partner_ids': partner_ids,
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
-                #'user_pid': pid
-                })
+            })
+            body_short = tools.html_email_clean(message_dict['body'], remove=True)
+            message_dict['body_short'] = body_short != message_dict['body'] and body_short or False
 
         return True
 
@@ -326,6 +324,7 @@ class Message(models.Model):
                 - int: number of messages read (status 'unread' to 'read')
                 - list: list of threads [[messages_of_thread1], [messages_of_thread2]]
         """
+        # TDE note: seems deprecated, not used but however still kept - why ?
         assert thread_level in [0, 1], 'message_read() thread_level should be 0 (flat) or 1 (1 level of thread); given %s.' % thread_level
 
         domain = domain if domain is not None else []
@@ -608,6 +607,7 @@ class Message(models.Model):
                 - otherwise: raise
             - write: if
                 - author_id == pid, uid is the author, OR
+                - uid is in the recipients (partner_ids) OR
                 - uid has write or create access on the related document if model, res_id
                 - otherwise: raise
             - unlink: if
@@ -645,7 +645,7 @@ class Message(models.Model):
         # Read mail_message.ids to have their values
         message_values = dict((res_id, {}) for res_id in self.ids)
 
-        if operation == 'read':
+        if operation in ['read', 'write']:
             self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id, partner_rel.res_partner_id, channel_partner.channel_id as channel_id
                 FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
@@ -693,10 +693,10 @@ class Message(models.Model):
             notified_ids += [mid for mid, message in message_values.iteritems()
                              if message.get('parent_id') in not_parent_ids]
 
-        # Notification condition, for read (check for received notifications and create (in message_follower_ids)) -> could become an ir.rule, but not till we do not have a many2one variable field
+        # Recipients condition, for read and write (partner_ids) and create (message_follower_ids)
         other_ids = set(self.ids).difference(set(author_ids), set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
-        if operation == 'read':
+        if operation in ['read', 'write']:
             notified_ids = [mid for mid, message in message_values.iteritems() if message.get('partner_id') or message.get('channel_id')]
         elif operation == 'create':
             for doc_model, doc_ids in model_record_ids.items():
@@ -836,23 +836,14 @@ class Message(models.Model):
             partners = self_sudo.partner_ids
 
         # remove author from notified partners
-        if self_sudo.author_id:
+        if not self._context.get('mail_notify_author', False) and self_sudo.author_id:
             partners = partners - self_sudo.author_id
 
         # update message
         self.write({'channel_ids': [(6, 0, channels.ids)], 'needaction_partner_ids': [(6, 0, partners.ids)]})
 
-        # notify partners
-        # TDE TODO: model-dependant ? (like customer -> always email ?)
-        email_channels = channels.filtered(lambda channel: channel.email_send)
-        self.env['res.partner'].sudo().search([
-            '|',
-            ('id', 'in', partners.ids),
-            ('channel_ids', 'in', email_channels.ids),
-            ('email', '!=', self_sudo.author_id and self_sudo.author_id.email or self.email_from),
-            ('notify_email', '!=', 'none')]
-        )._notify(self, force_send=force_send, user_signature=user_signature)
         # notify partners and channels
+        partners._notify(self, force_send=force_send, user_signature=user_signature)
         channels._notify(self)
 
         # Discard cache, because child / parent allow reading and therefore

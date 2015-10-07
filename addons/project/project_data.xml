@@ -99,11 +99,18 @@
     </data>
 
     <data noupdate="1">
+
         <record id="project_project_data" model="project.project">
             <field name="name">Start here to discover Odoo</field>
             <field name="privacy_visibility">followers</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="alias_model">project.task</field>
+            <field name="alias_name">discover</field>
+            <field name="alias_model_id" ref="model_project_task"/>
+            <field name="alias_contact">everyone</field>
+            <field name="alias_defaults">{'project_id': 1}</field>
+            <field name="alias_force_thread_id">0</field>
+            <field name="alias_parent_model_id" ref="model_project_project"/>
         </record>
 
         <record id="project_stage_data_0" model="project.task.type">
@@ -135,7 +142,7 @@
             <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
-        <record id="project_stage_data_1" model="project.task">
+        <record id="project_task_data_1" model="project.task">
             <field name="sequence">2</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
@@ -179,7 +186,7 @@
             <field name="model">project.task</field>
             <field name="author_id" ref="base.user_root"/>
             <field name="res_id" ref="project_task_data_4"/>
-            <field name="body">Use this chatter to send emails.\n Add new people in the followers list, to make them aware about the main changes about this task!</field>
+            <field name="body">Use this chatter to send emails. Add new people in the followers list, to make them aware about the main changes about this task!</field>
             <field name="message_type">email</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
         </record>

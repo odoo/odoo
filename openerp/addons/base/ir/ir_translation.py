@@ -56,7 +56,10 @@ class ir_translation_import_cursor(object):
     def push(self, trans_dict):
         """Feed a translation, as a dictionary, into the cursor
         """
-        params = dict(trans_dict, state="translated" if trans_dict['value'] else "to_translate")
+        if not trans_dict['value']:
+            return
+
+        params = dict(trans_dict, state="translated")
 
         if params['type'] == 'view':
             # ugly hack for QWeb views - pending refactoring of translations in master
@@ -216,13 +219,21 @@ class ir_translation(osv.osv):
                 model.write(cr, uid, [record.res_id], {field_name: value}, context=context_wo_lang)
         return self.write(cr, uid, id, {'src': value}, context=context)
 
+    def _search_src(self, cr, uid, obj, name, args, context):
+        ''' the source term is stored on 'src' field '''
+        res = []
+        for field, operator, value in args:
+            res.append(('src', operator, value))
+        return res
+
     _columns = {
         'name': fields.char('Translated field', required=True),
         'res_id': fields.integer('Record ID', select=True),
         'lang': fields.selection(_get_language, string='Language'),
         'type': fields.selection(TRANSLATION_TYPE, string='Type', select=True),
-        'src': fields.text('Old source'),
-        'source': fields.function(_get_src, fnct_inv=_set_src, type='text', string='Source'),
+        'src': fields.text('Internal Source'),  # stored in database, kept for backward compatibility
+        'source': fields.function(_get_src, fnct_inv=_set_src, fnct_search=_search_src,
+            type='text', string='Source term'),
         'value': fields.text('Translation Value'),
         'module': fields.char('Module', help="Module this term belongs to", select=True),
 
@@ -275,7 +286,6 @@ class ir_translation(osv.osv):
             return
         return super(ir_translation, self)._check_selection_field_value(cr, uid, field, value, context=context)
 
-    @tools.ormcache_multi('name', 'tt', 'lang', multi='ids')
     def _get_ids(self, cr, uid, name, tt, lang, ids):
         translations = dict.fromkeys(ids, False)
         if ids:
@@ -529,7 +539,7 @@ class ir_translation(osv.osv):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
                         FROM res_lang l
-                        WHERE l.code != 'en_US' AND NOT EXISTS (
+                        WHERE NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
                         );

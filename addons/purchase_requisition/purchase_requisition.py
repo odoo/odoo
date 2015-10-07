@@ -144,27 +144,38 @@ class purchase_requisition(osv.osv):
 
         taxes = product.supplier_taxes_id
         fpos = supplier.property_account_position_id.id
-        taxes_id = fpos.map_tax(taxes) if fpos else []
+        taxes_id = fpos.map_tax(taxes).ids if fpos else []
 
         po = po_obj.browse(cr, uid, [purchase_id], context=context)
-        res = po_line_obj._get_name_price_quantity_date(cr, uid,
+        seller = requisition_line.product_id._select_seller(
             requisition_line.product_id,
-            supplier,
-            date_order and date_order[:10],
-            qty,
-            product.uom_po_id,
-            po.currency_id,
-            order_id=po,
-            context=context)
+            partner_id=supplier,
+            quantity=qty,
+            date=date_order and date_order[:10],
+            uom_id=product.uom_po_id)
+
+        price_unit = seller.price if seller else 0.0
+        if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
+            price_unit = seller.currency_id.compute(price_unit, po.currency_id)
+
+        date_planned = po_line_obj._get_date_planned(cr, uid, seller, po=po, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
+        product_lang = requisition_line.product_id.with_context({
+            'lang': supplier.lang,
+            'partner_id': supplier.id,
+        })
+        name = product_lang.display_name
+        if product_lang.description_purchase:
+            name += '\n' + product_lang.description_purchase
 
         vals = {
-            'name': res['name'],
+            'name': name,
             'order_id': purchase_id,
-            'product_qty': res['quantity'],
+            'product_qty': qty,
             'product_id': product.id,
             'product_uom': default_uom_po_id,
-            'price_unit': res['price_unit'],
-            'date_planned': res['date_planned'],
+            'price_unit': price_unit,
+            'date_planned': date_planned,
             'taxes_id': [(6, 0, taxes_id)],
             'account_analytic_id': requisition_line.account_analytic_id.id,
         }
@@ -237,14 +248,14 @@ class purchase_requisition(osv.osv):
             if tender.state == 'done':
                 raise UserError(_('You have already generate the purchase order(s).'))
 
-            # confirm = False
-            # #check that we have at least confirm one line
-            # for po_line in tender.po_line_ids:
-            #     if po_line.state == 'confirmed':
-            #         confirm = True
-            #         break
-            # if not confirm:
-            #     raise UserError(_('You have no line selected for buying.'))
+            confirm = False
+            #check that we have at least confirm one line
+            for po_line in tender.po_line_ids:
+                if po_line.quantity_tendered > 0:
+                    confirm = True
+                    break
+            if not confirm:
+                raise UserError(_('You have no line selected for buying.'))
 
             #check for complete RFQ
             for quotation in tender.purchase_ids:
@@ -255,7 +266,7 @@ class purchase_requisition(osv.osv):
             #get other confirmed lines per supplier
             for po_line in tender.po_line_ids:
                 #only take into account confirmed line that does not belong to already confirmed purchase order
-                if po_line.order_id.state in ['draft', 'sent', 'to approve']:
+                if po_line.quantity_tendered > 0 and po_line.order_id.state in ['draft', 'sent', 'to approve']:
                     if id_per_supplier.get(po_line.partner_id.id):
                         id_per_supplier[po_line.partner_id.id].append(po_line)
                     else:
@@ -362,6 +373,15 @@ class purchase_order_line(osv.osv):
     def generate_po(self, cr, uid, tender_id, context=None):
         #call generate_po from tender with active_id. Called from js widget
         return self.pool.get('purchase.requisition').generate_po(cr, uid, [tender_id], context=context)
+
+    def button_confirm(self, cr, uid, ids, context=None):
+        for element in self.browse(cr, uid, ids, context=context):
+            self.write(cr, uid, element.id, {'quantity_tendered': element.product_qty}, context=context)
+        return True
+
+    def button_cancel(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'quantity_tendered': 0}, context=context)
+        return True
 
 
 class product_template(osv.osv):

@@ -1,4 +1,4 @@
-import simplejson
+import json
 import openerp
 import openerp.http as http
 from openerp.http import request

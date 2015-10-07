@@ -142,16 +142,23 @@ var error = function(data, url) {
     $error.modal('show');
 };
 
+function _add_input(form, name, value) {
+    var param = document.createElement('input');
+    param.setAttribute('type', 'hidden');
+    param.setAttribute('name', name);
+    param.setAttribute('value', value);
+    form.appendChild(param);
+}
 var form = function (url, method, params) {
     var form = document.createElement('form');
     form.setAttribute('action', url);
     form.setAttribute('method', method);
+
+    if (core.csrf_token) {
+        _add_input(form, 'csrf_token', core.csrf_token);
+    }
     _.each(params, function (v, k) {
-        var param = document.createElement('input');
-        param.setAttribute('type', 'hidden');
-        param.setAttribute('name', k);
-        param.setAttribute('value', v);
-        form.appendChild(param);
+        _add_input(form, k, v);
     });
     document.body.appendChild(form);
     form.submit();

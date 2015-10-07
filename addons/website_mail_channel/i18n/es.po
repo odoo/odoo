@@ -1,189 +1,230 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_mail_channel
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-19 23:01+0000\n"
-"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 10:36+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-20 06:28+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: website_mail_group
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "<span class=\"oe_snippet_thumbnail_title\">Discussion Group</span>"
+msgstr ""
+
+#. module: website_mail_channel
 #. openerp-web
-#: code:addons/website_mail_group/static/src/js/website_mail_group.editor.js:12
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:19
 #, python-format
 msgid "Add a Subscribe Button"
 msgstr "Añadir un botón de suscripción"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.mail_groups
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Alone we can do so little, together we can do so much"
 msgstr "Solos podemos hacer poco, pero juntos podemos hacer mucho"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.group_messages
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "Archives"
 msgstr "Archivados"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.group_message
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Browse archives"
 msgstr "Examinar archivados"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.group_message
-#: view:website:website_mail_group.group_messages
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "By date"
 msgstr "Por fecha"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.group_message
-#: view:website:website_mail_group.group_messages
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "By thread"
 msgstr "Por hilo"
 
-#. module: website_mail_group
-#: view:website:website.snippets
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "Change Discussion List"
 msgstr "Cambiar lista de discusión"
 
-#. module: website_mail_group
-#: view:website:website.snippets
-msgid "Discussion Group"
-msgstr "Grupo de discusión"
-
-#. module: website_mail_group
+#. module: website_mail_channel
 #. openerp-web
-#: code:addons/website_mail_group/static/src/js/website_mail_group.editor.js:13
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:20
 #, python-format
 msgid "Discussion List"
 msgstr "Lista de discusión"
 
-#. module: website_mail_group
-#: model:ir.model,name:website_mail_group.model_mail_group
-msgid "Discussion group"
-msgstr "Grupo de discusión"
+#. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_path
+msgid "Discussion Path"
+msgstr "Ruta de discusión"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.group_message
+#. module: website_mail_channel
+#: model:ir.model,name:website_mail_channel.model_mail_channel
+msgid "Discussion channel"
+msgstr ""
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Follow-Ups"
 msgstr "Seguimientos"
 
-#. module: website_mail_group
-#: view:website:website.layout
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.footer_mailing_list
 msgid "Mailing List"
 msgstr "Lista de correo"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.group_message
-#: view:website:website_mail_group.group_messages
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "Mailing Lists"
 msgstr "Listas de correo"
 
-#. module: website_mail_group
-#: code:addons/website_mail_group/models/mail_group.py:43
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/mail_mail.py:23
 #, python-format
 msgid "Mailing-List"
 msgstr "Lista de correo"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.mail_groups
-msgid "Need to unsubscribe? It's right here!"
-msgstr "¿Necesita desuscribirse? ¡Es justo aquí!"
+#. module: website_mail_channel
+#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_description
+msgid "Message description: either the subject, or the beginning of the body"
+msgstr "Descripción del mensaje: o bien el asunto, o el comienzo del cuerpo del mensaje"
 
-#. module: website_mail_group
-#: model:ir.model,name:website_mail_group.model_mail_mail
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+msgid ""
+"Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
+"pull-right\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model:ir.model,name:website_mail_channel.model_mail_mail
 msgid "Outgoing Mails"
 msgstr "Correos salientes"
 
-#. module: website_mail_group
-#: code:addons/website_mail_group/models/mail_group.py:44
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/mail_mail.py:24
 #, python-format
 msgid "Post to"
 msgstr "Enviar a"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.group_message
+#. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_website_published
+msgid "Published"
+msgstr "Publicado"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Reference"
 msgstr "Referencia"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.mail_groups
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Stay in touch with our Community"
 msgstr "Permanecer en contacto con nuestra comunidad"
 
-#. module: website_mail_group
-#: view:website:website.snippets
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "Subscribe"
-msgstr "Suscribirse"
+msgstr "Suscribir"
 
-#. module: website_mail_group
-#: code:addons/website_mail_group/models/mail_group.py:45
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/mail_mail.py:25
 #, python-format
 msgid "Unsubscribe"
-msgstr "Darse de baja"
+msgstr "Anular subscripción"
 
-#. module: website_mail_group
-#: view:website:website.snippets
+#. module: website_mail_channel
+#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_path
+msgid ""
+"Used to display messages in a paragraph-based chatter using a unique path;"
+msgstr "Usado para mostrar mensajes en una sala de conversación basada en párrafos usando una única ruta;"
+
+#. module: website_mail_channel
+#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
+msgid "Visible on the website as a comment"
+msgstr "Visible en el sitio web como un comentario"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "archives"
 msgstr "archivos"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.group_message
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "attachments"
 msgstr "archivos adjuntos"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.group_message
-#: view:website:website_mail_group.group_messages
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid "by"
+msgstr "por"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "mailing list archives"
 msgstr "archivos de la lista de correo"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.mail_groups
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+msgid ""
+"members<br/>\n"
+"                    <i class=\"fa fa-fw fa-envelope-o\"/>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "messages / month"
 msgstr "mensajes / mes"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.messages_short
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "more replies"
 msgstr "más respuestas"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.mail_groups
-msgid "participants"
-msgstr "participantes"
-
-#. module: website_mail_group
-#: view:website:website_mail_group.messages_short
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "replies"
 msgstr "respuestas"
 
-#. module: website_mail_group
-#: view:website:website.snippets
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "send mail"
 msgstr "enviar correo"
 
-#. module: website_mail_group
-#: view:website:website_mail_group.messages_short
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "show"
 msgstr "mostrar"
 
-#. module: website_mail_group
-#: view:website:website.snippets
+#. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
+msgid "unknown"
+msgstr "desconocido"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "unsubscribe"
 msgstr "anular suscripción"
 
-#. module: website_mail_group
-#: view:website:website.snippets
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "your email..."
 msgstr "su correo electrónico..."

@@ -1,55 +1,62 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"PO-Revision-Date: 2015-09-30 09:24+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:57+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:278
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (copie)"
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "(Keep empty to open the current situation)"
+msgstr "(Lasati necompletat pentru a deschide situatia curenta)"
 
 #. module: analytic
-#: field:account.analytic.account,child_complete_ids:0
-msgid "Account Hierarchy"
-msgstr "Ierarhie Cont"
+#: model:ir.model,name:analytic.model_account_analytic_chart
+msgid "Account Analytic Chart"
+msgstr "Plan Analitic de Conturi"
 
 #. module: analytic
-#: field:account.analytic.account,manager_id:0
-msgid "Account Manager"
-msgstr "Manager cont"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
+msgid "Account Currency"
+msgstr "Valuta Contului"
 
 #. module: analytic
-#: field:account.analytic.account,name:0
-msgid "Account/Contract Name"
-msgstr "Nume Cont/Contract"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
+msgid "Action Needed"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.line,amount:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
-msgstr "Sumă"
+msgstr "Suma"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-#: selection:account.analytic.account,type:0
-#: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_account_id
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
-msgstr "Cont Analitic"
+msgstr "Cont analitic"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Analytic Account Charts"
+msgstr "Planuri de Conturi Analitice"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -57,9 +64,23 @@ msgid "Analytic Accounting"
 msgstr "Contabilitate Analitica"
 
 #. module: analytic
-#: field:account.analytic.account,line_ids:0
+#: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Analytic Accounts"
+msgstr "Conturi Analitice"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Entries"
 msgstr "Înregistrări analitice"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+msgid "Analytic Entry"
+msgstr "Inregistrare Analitica"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -67,401 +88,349 @@ msgid "Analytic Line"
 msgstr "Linie analitica"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
+msgid "Analytic Lines"
+msgstr "Linii Analitice"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
+msgid "Analytic Tag"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_tag
+msgid "Analytic Tags"
+msgstr ""
+
+#. module: analytic
+#: selection:account.analytic.account,account_type:0
 msgid "Analytic View"
 msgstr "Vizualizare Analitica"
 
 #. module: analytic
-#: field:account.analytic.account,balance:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Associated Partner"
+msgstr "Partener Asociat"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
 msgid "Balance"
 msgstr "Sold"
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price. Always expressed in the company main currency."
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Cancel"
+msgstr "Anulează"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
+#: model:ir.actions.act_window,name:analytic.action_analytic_account_form
+msgid "Chart of Analytic Accounts"
+msgstr "Plan de Conturi Analitice"
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.action_analytic_account_form
+msgid "Click to add an analytic account."
 msgstr ""
-"Calculat prin inmultirea cantitatii cu pretul dat in pretul de cost al "
-"Produsului. Exprimat intotdeauna in moneda principala a companiei."
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Cancelled"
-msgstr "Anulat"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
+msgid "Color Index"
+msgstr "Index Culori"
 
 #. module: analytic
-#: field:account.analytic.account,child_ids:0
-msgid "Child Accounts"
-msgstr "Sub-conturi"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Closed"
-msgstr "Inchis"
-
-#. module: analytic
-#: field:account.analytic.account,company_id:0
-#: field:account.analytic.line,company_id:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_company_id
 msgid "Company"
 msgstr "Companie"
 
 #. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_closed
-msgid "Contract Finished"
-msgstr "Contract Finalizat"
-
-#. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-msgid "Contract Information"
-msgstr "Informatii Contract"
-
-#. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_opened
-msgid "Contract Opened"
-msgstr "Contract Deschis"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_closed
-msgid "Contract closed"
-msgstr "Contract inchis"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_opened
-msgid "Contract opened"
-msgstr "Contract deschis"
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Contract or Project"
-msgstr "Contract sau Proiect"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_pending
-msgid "Contract pending"
-msgstr "Contract în așteptare"
-
-#. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_pending
-msgid "Contract to Renew"
-msgstr "Contract de Reinnoit"
-
-#. module: analytic
-#: code:addons/analytic/analytic.py:238
-#, python-format
-msgid "Contract: "
-msgstr "Contract: "
-
-#. module: analytic
-#: field:account.analytic.line,create_date:0
-msgid "Create Date"
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "Cost/Revenue"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,create_uid:0
-#: field:account.analytic.line,create_uid:0
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Costs & Revenues"
+msgstr "Costuri & Venituri"
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid ""
+"Costs will be created automatically when you register supplier\n"
+"                invoices, expenses or timesheets."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creat de"
 
 #. module: analytic
-#: field:account.analytic.account,create_date:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creat în"
 
 #. module: analytic
-#: field:account.analytic.account,credit:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
 msgid "Credit"
 msgstr "Credit"
 
 #. module: analytic
-#: field:account.analytic.account,currency_id:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_currency_id
 msgid "Currency"
-msgstr "Moneda"
+msgstr "Valuta"
 
 #. module: analytic
-#: field:account.analytic.account,partner_id:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_partner_id
 msgid "Customer"
 msgstr "Client"
 
 #. module: analytic
-#: field:account.analytic.line,date:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_date
 msgid "Date"
-msgstr "Dată"
+msgstr "Data"
 
 #. module: analytic
-#: help:account.analytic.account,message_last_post:0
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Data ultimului mesaj postat pe înregistrare."
 
 #. module: analytic
-#: field:account.analytic.account,debit:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
 msgid "Debit"
 msgstr "Debit"
 
 #. module: analytic
-#: field:account.analytic.account,description:0
-#: field:account.analytic.line,name:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_name
 msgid "Description"
 msgstr "Descriere"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-msgid "End Date"
-msgstr "Dată de sfârșit"
-
-#. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid "Error!"
-msgstr "Eroare!"
-
-#. module: analytic
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
-msgstr "Eroare! Nu puteti crea conturi analitice recursive."
-
-#. module: analytic
-#: field:account.analytic.account,date:0
-msgid "Expiration Date"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,message_follower_ids:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_follower_ids
 msgid "Followers"
-msgstr "Persoane interesate"
+msgstr "Urmări"
 
 #. module: analytic
-#: field:account.analytic.account,complete_name:0
-msgid "Full Name"
-msgstr "Numele Complet"
-
-#. module: analytic
-#: help:account.analytic.account,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_channel_ids
+msgid "Followers (Channels)"
 msgstr ""
-"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
-"in format HTML, icu scopul de a se introduce in vizualizari kanban."
 
 #. module: analytic
-#: field:account.analytic.account,id:0
-#: field:account.analytic.line,id:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
+msgid "From"
+msgstr "De la"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Group By..."
+msgstr "Grupeaza dupa..."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: analytic
-#: help:account.analytic.account,message_unread:0
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Daca este selectat, mesajele noi necesita atentia dumneavoastra."
+msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
 
 #. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
-"Daca selectati Tipul Vizualizare, inseamna ca nu veti permite crearea "
-"inregistrarilor in registru folosind acel cont.\n"
-"Tipul 'Cont analitic' reprezinta conturile obisnuite pen care le folositi "
-"doar in contabilitate.\n"
-"Daca selectati Contract sau Proiect, va ofera posibilitatea de a gestiona "
-"valabilitatea si optiunile de facturare pentru acest cont.\n"
-"Tipul special 'Sablon al Contractului' va permite sa definiti un sablon cu "
-"date implicite pe care le puteti refolosi cu usurinta."
-
-#. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really useful for consolidation "
-"purposes of several companies charts with different currencies, for example."
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction
+msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "In Progress"
-msgstr "În desfășurare"
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid ""
+"In Odoo, sale orders and projects are implemented using\n"
+"                analytic accounts. You can track costs and revenues to analyse\n"
+"                your margins easily."
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Este un adept"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_is_follower
+msgid "Is Follower"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,message_last_post:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_last_post
 msgid "Last Message Date"
+msgstr "Data ultimului mesaj"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
+msgid "Last Modified on"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,write_uid:0
-#: field:account.analytic.line,write_uid:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualizare făcută de"
 
 #. module: analytic
-#: field:account.analytic.account,write_date:0
-#: field:account.analytic.line,write_date:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualizare în"
 
 #. module: analytic
-#: field:account.analytic.account,message_ids:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_ids
 msgid "Messages"
 msgstr "Mesaje"
 
 #. module: analytic
-#: help:account.analytic.account,message_ids:0
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_ids
 msgid "Messages and communication history"
-msgstr "Istoric mesaje si conversatii"
+msgstr "Istoric mesaje și conversații"
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "New"
-msgstr "Nou(a)"
-
-#. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-msgid ""
-"Once the end date of the contract is\n"
-"                                        passed or the maximum number of "
-"service\n"
-"                                        units (e.g. support contract) is\n"
-"                                        reached, the account manager is "
-"notified \n"
-"                                        by email to renew the contract with "
-"the\n"
-"                                        customer."
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+msgid "No activity yet on this account."
 msgstr ""
-"Odata ce data de sfarsit a contractului a\n"
-"                                        trecut sau numarul maxim de unitati "
-"de\n"
-"                                        servicii (de exemplu contractul de "
-"asistenta) este\n"
-"                                        atins, managerul contului este "
-"instiintat \n"
-"                                        prin email sa reinnoiasca contractul "
-"cu\n"
-"                                        clientul."
 
 #. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Cont Analitic Părinte"
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid "No activity yet."
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Prepaid Service Units"
-msgstr "Unitati Servicii Preplatite"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,user_id:0
-msgid "Project Manager"
-msgstr "Managerul de proiect"
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Open Charts"
+msgstr "Planuri deschise"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
+msgid "Partner"
+msgstr "Partener"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_unit_amount
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
 msgstr "Cantitate"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:272
-#, python-format
-msgid "Quick account creation disallowed."
-msgstr "Nu e permisa crearea unui cont rapid."
-
-#. module: analytic
-#: field:account.analytic.account,code:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_code
 msgid "Reference"
-msgstr "Referinta"
+msgstr "Referință"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-msgid "Renewal"
-msgstr "Reinnoire"
-
-#. module: analytic
-#: help:account.analytic.account,quantity_max:0
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
-"Sets the higher limit of time to work on the contract, based on the "
-"timesheet. (for instance, number of hours in a limited support contract.)"
+"Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
-"Seteaza limita superioara a orelor de lucru la un contract, pe baza fiselor "
-"de pontaj. (de exemplu, numarul de ore intr-un contract de sprijin limitat.)"
 
 #. module: analytic
-#: help:account.analytic.line,unit_amount:0
-msgid "Specifies the amount of quantity to count."
-msgstr "Specifica suma de numarat"
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Search Analytic Lines"
+msgstr "Cautati Liniile Analitice"
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Start Date"
-msgstr "Data de Inceput"
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Select the Period for Analysis"
+msgstr "Selectati Perioada pentru Analiza"
 
 #. module: analytic
-#: field:account.analytic.account,state:0
-msgid "Status"
-msgstr "Stare"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
+msgid "Tags"
+msgstr "Etichete"
 
 #. module: analytic
-#: field:account.analytic.account,message_summary:0
-msgid "Summary"
-msgstr "Continut"
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Tasks Month"
+msgstr "Sarcini lunare"
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Șablon"
+#: model:ir.model.fields,help:analytic.field_account_analytic_line_currency_id
+msgid "The related account currency if not equal to the company one."
+msgstr "Valuta asociata contului daca nu este aceeasi ca si cea a companiei."
 
 #. module: analytic
-#: field:account.analytic.account,template_id:0
-#: selection:account.analytic.account,type:0
-msgid "Template of Contract"
-msgstr "Sablon Contract"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
+msgid "To"
+msgstr "Destinatar"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-msgid "Terms and Conditions"
-msgstr "Termeni si Conditii"
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+msgid "Total"
+msgstr "Total"
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "To Renew"
-msgstr "De Reinnoit"
-
-#. module: analytic
-#: field:account.analytic.account,type:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
 msgid "Type of Account"
 msgstr "Tip de Cont"
 
 #. module: analytic
-#: field:account.analytic.account,message_unread:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread
 msgid "Unread Messages"
 msgstr "Mesaje necitite"
 
 #. module: analytic
-#: field:account.analytic.line,user_id:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
 msgid "User"
 msgstr "Utilizator"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:272
-#, python-format
-msgid "Warning"
-msgstr "Avertisment"
-
-#. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr "Nu puteti crea linii analitice in vizualizarea contului."
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "e.g. Project XYZ"
+msgstr ""

@@ -1,37 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_iban
+# 
+# Translators:
+# Eric Geens <ericgeens@yahoo.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-08-30 11:50+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:57+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
-
-#. module: base_iban
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"Definieer een BIC/Swift code voor banksoort IBAN rekeningen om geldige "
-"betalingen te maken"
-
-#. module: base_iban
-#: model:res.partner.bank.type,format_layout:base_iban.bank_iban
-msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -39,54 +24,41 @@ msgid "Bank Accounts"
 msgstr "Bankrekeningen"
 
 #. module: base_iban
-#: field:res.partner.bank,iban:0
-msgid "IBAN"
-msgstr "IBAN"
+#: code:addons/base_iban/base_iban.py:57
+#, python-format
+msgid "Cannot compute the BBAN because the account number is not an IBAN."
+msgstr "BBAN kan niet berekend worden omdat het rekeningnummer geen IBAN-nummer is."
 
 #. module: base_iban
-#: model:res.partner.bank.type,name:base_iban.bank_iban
-msgid "IBAN Account"
-msgstr "IBAN-rekening"
+#: code:addons/base_iban/base_iban.py:26
+#, python-format
+msgid "No IBAN !"
+msgstr "Geen IBAN-nummer!"
 
 #. module: base_iban
-#: help:res.partner.bank,iban:0
-msgid "International Bank Account Number"
-msgstr "Internationaal bankrekeningnummer"
-
-#. module: base_iban
-#: code:addons/base_iban/base_iban.py:138
+#: code:addons/base_iban/base_iban.py:82
 #, python-format
 msgid ""
-"The IBAN does not seem to be correct. You should have entered something like "
-"this %s"
-msgstr ""
-"De IBAN lijkt niet juist te zijn. U zou iets moeten ingeven in de trant van "
-"%s"
+"Please define BIC/Swift code on bank for bank type IBAN Account to make "
+"valid payments."
+msgstr "Gelieve de BIC/Swift code van de bank toe te voegen aan het rekeningnummer zodat er geldige betalingen kunnen uitgevoerd worden."
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:142
+#: code:addons/base_iban/base_iban.py:34
+#, python-format
+msgid ""
+"The IBAN does not seem to be correct. You should have entered something like this %s\n"
+"Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
+msgstr "Het IBAN-nummer lijkt onjuist te zijn. Het nummer zou er ongeveer als volgt moeten uitzien %s\nwaarbij B = nationale bankcode, S = branchcode, C = rekeningnummer, k = controlecijfer"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:30
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr "De IBAN  is ongeldig. Het zou moeten beginnen met de landcode"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:141
+#: code:addons/base_iban/base_iban.py:40
 #, python-format
-msgid "This IBAN does not pass the validation check, please verify it"
-msgstr ""
-"Deze IBAN komt niet door de validatie controle. Controleer deze a.u.b."
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
-msgid "bank_bic"
-msgstr "bank_bic"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_country_field
-msgid "country_id"
-msgstr "Landcode"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
-msgid "zip"
-msgstr "postcode"
+msgid "This IBAN does not pass the validation check, please verify it."
+msgstr "Dit IBAN-nummer kon niet gevalideerd worden, gelieve het na te zien."

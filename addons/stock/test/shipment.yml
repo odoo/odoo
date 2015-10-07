@@ -14,11 +14,12 @@
 -
   !python {model: stock.picking}: |
     pick = self.browse(cr, uid, ref("incomming_shipment"), context=context)
-    self.pool.get('stock.pack.operation').create(cr, uid, {
+    newid = self.pool.get('stock.pack.operation').create(cr, uid, {
         'picking_id': pick.id,
         'product_id': ref('product_icecream'),
         'product_uom_id': ref('product.product_uom_kgm'),
         'product_qty': 40,
+        'qty_done': 40,
         'location_id': ref('stock.stock_location_suppliers'),
         'location_dest_id': ref('stock.stock_location_14')
     })
@@ -50,6 +51,7 @@
         'product_id': ref('product_icecream'),
         'product_uom_id': ref('product.product_uom_kgm'),
         'product_qty': 10,
+        'qty_done': 10,
         'location_id': ref('stock.stock_location_suppliers'),
         'location_dest_id': ref('stock.stock_location_14')
     })

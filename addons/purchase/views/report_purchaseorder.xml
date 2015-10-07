@@ -27,8 +27,8 @@
                 </div>
             </div>
 
-            <h2 t-if="o.state != 'draft'">Purchase Order Confirmation N°<span t-field="o.name"/></h2>
-            <h2 t-if="o.state == 'draft'">Request for Quotation N°<span t-field="o.name"/></h2>
+            <h2 t-if="o.state != 'draft'">Purchase Order Confirmation #<span t-field="o.name"/></h2>
+            <h2 t-if="o.state == 'draft'">Request for Quotation #<span t-field="o.name"/></h2>
 
             <div class="row mt32 mb32">
                 <div t-if="o.name" class="col-xs-3">

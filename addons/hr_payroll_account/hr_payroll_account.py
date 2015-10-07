@@ -46,10 +46,10 @@ class hr_payslip(osv.osv):
     }
 
     def _get_default_journal(self, cr, uid, context=None):
-        model_data = self.pool.get('ir.model.data')
-        res = model_data.search(cr, uid, [('name', '=', 'expenses_journal')])
+        journal_obj = self.pool.get('account.journal')
+        res = journal_obj.search(cr, uid, [('type', '=', 'general')])
         if res:
-            return model_data.browse(cr, uid, res[0]).res_id
+            return res[0]
         return False
 
     _defaults = {
@@ -204,10 +204,10 @@ class hr_payslip_run(osv.osv):
     }
 
     def _get_default_journal(self, cr, uid, context=None):
-        model_data = self.pool.get('ir.model.data')
-        res = model_data.search(cr, uid, [('name', '=', 'expenses_journal')])
+        journal_obj = self.pool.get('account.journal')
+        res = journal_obj.search(cr, uid, [('type', '=', 'general')])
         if res:
-            return model_data.browse(cr, uid, res[0]).res_id
+            return res[0]
         return False
 
     _defaults = {

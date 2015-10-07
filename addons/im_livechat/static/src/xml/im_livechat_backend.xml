@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
 
-    <t t-extend="mail.chat.ChatMailThread.channels">
-        <t t-jquery="li > a" t-operation="append">
-            <t t-if="channel.channel_type === 'livechat'">
-                <span class="fa fa-times pull-right o_mail_chat_channel_unpin" t-att-title="_t('Close')" t-att-data-channel-id="channel.id"/>
-            </t>
-        </t>
-    </t>
-
-    <t t-extend="mail.chat.ChatMailThread">
+    <t t-extend="mail.chat.Sidebar">
         <t t-jquery=".o_mail_chat_sidebar" t-operation="append">
-            <!-- Livechat list -->
-            <h4 class="o_mail_chat_sidebar_title"><t t-esc="_t('Livechat')"/></h4>
-            <t t-call="mail.chat.ChatMailThread.channels">
-                <t t-set="channel_slot" t-value="'channel_livechat'"/>
+            <t t-set="channel_type">livechat</t>
+            <t t-call="mail.chat.SidebarTitle">
+                <t t-set="channel_title">Livechat</t>
+                <t t-set="disable_add_channel">true</t>
+            </t>
+            <t t-call="mail.chat.SidebarItems">
+                <t t-set="display_close_button">true</t>
             </t>
         </t>
     </t>

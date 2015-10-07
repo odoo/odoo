@@ -9,7 +9,7 @@
 # This assume an existing database.
 import psycopg2
 import psycopg2.errorcodes
-import unittest2
+import unittest
 
 import openerp
 from openerp.tests import common
@@ -31,7 +31,7 @@ def drop_sequence(code):
     cr.commit()
     cr.close()
 
-class test_ir_sequence_standard(unittest2.TestCase):
+class test_ir_sequence_standard(unittest.TestCase):
     """ A few tests for a 'Standard' (i.e. PostgreSQL) sequence. """
 
     def test_ir_sequence_create(self):
@@ -76,7 +76,7 @@ class test_ir_sequence_standard(unittest2.TestCase):
     def tearDownClass(cls):
         drop_sequence('test_sequence_type')
 
-class test_ir_sequence_no_gap(unittest2.TestCase):
+class test_ir_sequence_no_gap(unittest.TestCase):
     """ Copy of the previous tests for a 'No gap' sequence. """
 
     def test_ir_sequence_create_no_gap(self):
@@ -116,7 +116,7 @@ class test_ir_sequence_no_gap(unittest2.TestCase):
     def tearDownClass(cls):
         drop_sequence('test_sequence_type_2')
 
-class test_ir_sequence_change_implementation(unittest2.TestCase):
+class test_ir_sequence_change_implementation(unittest.TestCase):
     """ Create sequence objects and change their ``implementation`` field. """
 
     def test_ir_sequence_1_create(self):
@@ -156,7 +156,7 @@ class test_ir_sequence_change_implementation(unittest2.TestCase):
         drop_sequence('test_sequence_type_3')
         drop_sequence('test_sequence_type_4')
 
-class test_ir_sequence_generate(unittest2.TestCase):
+class test_ir_sequence_generate(unittest.TestCase):
     """ Create sequence objects and generate some values. """
 
     def test_ir_sequence_create(self):
@@ -224,4 +224,4 @@ class Test_ir_sequence_init(common.TransactionCase):
         assert read_sequence == "0001", 'The actual sequence value must be 1. reading : %s' % read_sequence
 
 if __name__ == "__main__":
-    unittest2.main()
+    unittest.main()

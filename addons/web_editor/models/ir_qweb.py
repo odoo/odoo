@@ -9,12 +9,12 @@ Also, adds methods to convert values back to openerp models.
 import cStringIO
 import datetime
 import itertools
+import json
 import logging
 import os
 import urllib2
 import urlparse
 import re
-import simplejson
 import hashlib
 
 import pytz
@@ -165,7 +165,7 @@ class Contact(orm.AbstractModel):
             cr, uid, field_name, record, options, source_element, g_att, t_att,
             qweb_context, context=context)
         if getattr(record, field_name):
-            return itertools.chain(attrs, [('data-oe-contact-options', simplejson.dumps(options))])
+            return itertools.chain(attrs, [('data-oe-contact-options', json.dumps(options))])
         else:
             return attrs
 
@@ -241,7 +241,7 @@ class DateTime(orm.AbstractModel):
             return False
 
         # parse from string to datetime
-        dt = datetime.datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)
+        dt = parser.parse(value)
 
         # convert back from user's timezone to UTC
         tz_name = context.get('tz') \
@@ -361,9 +361,14 @@ class Image(orm.AbstractModel):
             # url might be /web/image/<model>/<id>[_<checksum>]/<field>[/<width>x<height>]
             fragments = url_object.path.split('/')
             query = dict(urlparse.parse_qsl(url_object.query))
-            model = query.get('model', fragments[3])
-            oid = query.get('id', fragments[4].split('_')[0])
-            field = query.get('field', fragments[5])
+            if fragments[3].isdigit():
+                model = 'ir.attachment'
+                oid = fragments[3]
+                field = 'datas'
+            else:
+                model = query.get('model', fragments[3])
+                oid = query.get('id', fragments[4].split('_')[0])
+                field = query.get('field', fragments[5])
             item = self.pool[model].browse(cr, uid, int(oid), context=context)
             return item[field]
 

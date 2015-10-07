@@ -1,37 +1,34 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_attendance
+# 
+# Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-10-19 22:51+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-19 16:50+0000\n"
+"Last-Translator: Kris Krnacs\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-20 07:19+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_attendance
-#: view:website:hr_attendance.report_attendanceerrors
+#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid ""
+"(*) A positive delay means that the employee worked less than recorded.<br/>\n"
 "(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) Egy negatív késleltetés azt jelenti, hogy az alkalmazott többet "
-"dolgozott mint ami rögzítve lett."
+msgstr "(*) Egy pozitív késleltetés azt jelenti, hogy az alkalmazott kevesebbet dolgozott mint ami rögzítve van.\n(*) Egy negatív késleltetés azt jelenti, hogy az alkalmazott többet dolgozott mint ami rögzítve lett."
 
 #. module: hr_attendance
-#: view:website:hr_attendance.report_attendanceerrors
-msgid ""
-"(*) A positive delay means that the employee worked less than recorded."
-msgstr ""
-"(*) Egy pozitív késleltetés azt jelenti, hogy az alkalamazott kevesebbet "
-"dolgozott mint ami rögzítve van."
+#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
+msgid "<strong>Total period</strong>"
+msgstr "<strong>Teljes periódus</strong>"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -39,48 +36,51 @@ msgid "Absent"
 msgstr "Távol lévő"
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
 #: selection:hr.attendance,action:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_action
 msgid "Action"
 msgstr "Művelet"
 
 #. module: hr_attendance
-#: field:hr.attendance,action_desc:0
 #: model:ir.model,name:hr_attendance.model_hr_action_reason
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_action_desc
 msgid "Action Reason"
 msgstr "Művelet oka"
 
 #. module: hr_attendance
-#: field:hr.action.reason,action_type:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_action_type
 msgid "Action Type"
-msgstr "Művelet típusa"
+msgstr "Művelet típus"
 
 #. module: hr_attendance
-#: help:hr.config.settings,group_hr_attendance:0
-msgid "Allocates attendance group to all users."
-msgstr "Jelenléti csoportok hozzárendelése csoportokhoz."
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_error_max_delay
+msgid ""
+"Allowed difference in minutes between the signin/signout and the timesheet "
+"computation for one sheet. Set this to 0 for no tolerance."
+msgstr "A bejelentkezés/kijelentkezés és a munkaidő-kimutatás számítása között megengedett eltérés percekben egy lapon. Állítsa be 0-ra, ha nincs tűrés."
 
 #. module: hr_attendance
-#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
 msgid "Analysis Information"
 msgstr "Elemzési információ"
 
 #. module: hr_attendance
-#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
-#: view:hr.attendance:hr_attendance.view_hr_attendance_graph
-#: field:hr.employee,state:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_state
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_graph
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_pivot
 msgid "Attendance"
 msgstr "Jelenlét"
 
 #. module: hr_attendance
-#: field:hr.employee,attendance_access:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_access
 msgid "Attendance Access"
 msgstr "Hozzáférések a jelenlétekhez"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_graph
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph_filtered
 msgid "Attendance Analysis"
 msgstr "Részvételi elemzés"
 
@@ -91,194 +91,214 @@ msgid "Attendance Error Report"
 msgstr "Jelenlétek hiba lista nyomtatása"
 
 #. module: hr_attendance
-#: view:website:hr_attendance.report_attendanceerrors
+#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Attendance Errors:"
 msgstr "Részvételi hibák:"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
 msgid "Attendance Reasons"
 msgstr "Jelenléti indokok"
 
 #. module: hr_attendance
-#: view:hr.action.reason:hr_attendance.view_attendance_reason
+#: model:ir.ui.view,arch_db:hr_attendance.view_attendance_reason
 msgid "Attendance reasons"
 msgstr "Jelenléti indokok"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
 msgid "Attendances"
 msgstr "Jelenlétek"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
-msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr "Itt az alábbi késleltetés, a hiba megfontolt szándékra utal"
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
+msgid ""
+"Below the maximum tolerance, the attendance error will not be taken into "
+"account. Above the maximum tolerance, the error is considered to be "
+"voluntary and will be taken into account."
+msgstr "Maximum tűrés alatt, a jelenléti hiba figyelmen kívül hagyva. Maximum tűrés felett, a hiba szándékosnak értékelve és figyelembe véve."
 
 #. module: hr_attendance
-#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Megszakítás"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:35
+#: code:addons/hr_attendance/static/src/js/attendance.js:41
 #, python-format
 msgid "Click to Sign In at %s."
 msgstr "Kattintson, hogy Belépjen ekkor %s."
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_uid:0
-#: field:hr.attendance,create_uid:0
-#: field:hr.attendance.error,create_uid:0
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_config
+msgid "Configuration"
+msgstr "Beállítások"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_create_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_create_uid
 msgid "Created by"
 msgstr "Készítette"
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_date:0
-#: field:hr.attendance,create_date:0
-#: field:hr.attendance.error,create_date:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_create_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: hr_attendance
-#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "Current Month"
 msgstr "Jelenlegi hónap"
 
 #. module: hr_attendance
-#: field:hr.attendance,name:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_name
 msgid "Date"
 msgstr "Dátum"
 
 #. module: hr_attendance
-#: view:website:hr_attendance.report_attendanceerrors
+#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Date Recorded"
 msgstr "Rögzítés dátuma"
 
 #. module: hr_attendance
-#: view:website:hr_attendance.report_attendanceerrors
+#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Date Signed"
 msgstr "Aláírás dátuma"
 
 #. module: hr_attendance
-#: view:hr.action.reason:hr_attendance.edit_attendance_reason
+#: model:ir.ui.view,arch_db:hr_attendance.edit_attendance_reason
 msgid "Define attendance reason"
 msgstr "Jelenléti indok meghatározása"
 
 #. module: hr_attendance
-#: view:website:hr_attendance.report_attendanceerrors
+#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Delay"
-msgstr "Késés"
+msgstr "Késleltetés"
 
 #. module: hr_attendance
-#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
-#: field:hr.attendance,employee_id:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_department_id
+msgid "Department"
+msgstr "Osztály, részleg"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_report_hr_attendance_report_attendanceerrors_display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_employee_id
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "Employee"
 msgstr "Alkalmazott"
 
 #. module: hr_attendance
-#: view:hr.attendance:hr_attendance.view_attendance_form
-#: view:hr.attendance:hr_attendance.view_attendance_tree
-#: view:hr.attendance:hr_attendance.view_attendance_who
+#: model:ir.ui.view,arch_db:hr_attendance.view_attendance_form
+#: model:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+#: model:ir.ui.view,arch_db:hr_attendance.view_attendance_who
 msgid "Employee attendances"
 msgstr "Alkalmazotti jelenlétek"
 
 #. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_end_date
 msgid "Ending Date"
-msgstr "Befejező dátum"
+msgstr "Befejezési dátum"
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Hiba! Bejelentkezést (v. Kijelentkezést) egy Kijelentkezésnek (v. "
-"Bejelentkezésnek)kell követnie."
+msgstr "Hiba! Bejelentkezést (v. Kijelentkezést) egy Kijelentkezésnek (v. Bejelentkezésnek)kell követnie."
 
 #. module: hr_attendance
-#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "Group By"
-msgstr "Csoportosítás"
+msgstr "Csoportosítás..."
 
 #. module: hr_attendance
-#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "Hr Attendance Search"
 msgstr "Emberi erőforrás jelenlét keresés"
 
 #. module: hr_attendance
-#: field:hr.action.reason,id:0
-#: field:hr.attendance,id:0
-#: field:hr.attendance.error,id:0
-#: field:report.hr_attendance.report_attendanceerrors,id:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_id
+#: model:ir.model.fields,field_description:hr_attendance.field_report_hr_attendance_report_attendanceerrors_id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr "ID"
 
 #. module: hr_attendance
-#: field:hr.employee,last_sign:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason___last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error___last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_report_hr_attendance_report_attendanceerrors___last_update
+msgid "Last Modified on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_sign
 msgid "Last Sign"
 msgstr "Utoljára bejelentkezve"
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_uid:0
-#: field:hr.attendance,write_uid:0
-#: field:hr.attendance.error,write_uid:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_write_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_write_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_uid
 msgid "Last Updated by"
 msgstr "Utoljára frissítve, által"
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_date:0
-#: field:hr.attendance,write_date:0
-#: field:hr.attendance.error,write_date:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_write_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_write_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve ekkor"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:33
+#: code:addons/hr_attendance/static/src/js/attendance.js:39
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
-"Utoljára bejelentkezve ebbe: %s,<br />%s.<br />Kattintson kijelentkezéshez."
+msgstr "Utoljára bejelentkezve ebbe: %s,<br />%s.<br />Kattintson kijelentkezéshez."
 
 #. module: hr_attendance
-#: field:hr.attendance.error,max_delay:0
-msgid "Max. Delay (Min)"
-msgstr "Max. késés (perc)"
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_max_delay
+msgid "Maximum Tolerance (in minutes)"
+msgstr "Maximum tűrés (percekben)"
 
 #. module: hr_attendance
-#: view:website:hr_attendance.report_attendanceerrors
+#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Min Delay"
 msgstr "Min. késés"
 
 #. module: hr_attendance
-#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "Month"
 msgstr "Hónap"
 
 #. module: hr_attendance
-#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "My Attendance"
 msgstr "Jelenléti ívem"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
-#, python-format
-msgid "No Data Available!"
-msgstr "Nincs elérhető adat!"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:34
 #, python-format
 msgid "No records are found for your selection!"
 msgstr "Nem találhatók rekordok a lekérdezéséhez!"
 
 #. module: hr_attendance
-#: view:website:hr_attendance.report_attendanceerrors
+#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Operation"
 msgstr "Művelet"
 
@@ -288,12 +308,12 @@ msgid "Present"
 msgstr "Jelen van"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
 msgid "Print"
 msgstr "Nyomtatás"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
 msgid "Print Attendance Report Error"
 msgstr "Jelenléti ív napló hiba nyomtatás"
 
@@ -303,22 +323,25 @@ msgid "Print Error Attendance Report"
 msgstr "Jelenléti ív napló nyomtatási hiba"
 
 #. module: hr_attendance
-#: field:hr.action.reason,name:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_name
 msgid "Reason"
 msgstr "Ok"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:175
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
+msgid "Reports"
+msgstr "Kimutatások"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:156
 #: selection:hr.attendance,action:0
-#: view:hr.employee:hr_attendance.hr_attendance_employee
 #, python-format
 msgid "Sign In"
 msgstr "Bejelentkezés"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:175
+#: code:addons/hr_attendance/hr_attendance.py:156
 #: selection:hr.attendance,action:0
-#: view:hr.employee:hr_attendance.hr_attendance_employee
 #, python-format
 msgid "Sign Out"
 msgstr "Kijelentkezés"
@@ -334,20 +357,20 @@ msgid "Sign out"
 msgstr "Kijelentkezés"
 
 #. module: hr_attendance
-#: help:hr.attendance,action_desc:0
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_action_desc
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
 msgstr "Meghatározza az extra órákra való Belépés/Kilépés okát."
 
 #. module: hr_attendance
-#: help:hr.action.reason,name:0
+#: model:ir.model.fields,help:hr_attendance.field_hr_action_reason_name
 msgid "Specifies the reason for Signing In/Signing Out."
 msgstr "Meghatározza a Bejelentkezés/Kijelentkezés okát."
 
 #. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_init_date
 msgid "Starting Date"
-msgstr "Indulás dátuma"
+msgstr "Kezdési dátum"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
@@ -355,10 +378,7 @@ msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
-msgstr ""
-"Az idő követő funkció arra szolgál, hogy kezelje a munkavállaló részvételét "
-"a Belépés/Kilépés műveletek közt. Ezt a tulajdonságot hozzákapcsolhatja egy "
-"részvét figyelő egységgel az Odoo rendszer web szolgáltatásán keresztül."
+msgstr "Az idő követő funkció arra szolgál, hogy kezelje a munkavállaló részvételét a Belépés/Kilépés műveletek közt. Ezt a tulajdonságot hozzákapcsolhatja egy részvét figyelő egységgel az Odoo rendszer web szolgáltatásán keresztül."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -366,37 +386,29 @@ msgid "Time Tracking"
 msgstr "Idő követés"
 
 #. module: hr_attendance
-#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: model:ir.ui.menu,name:hr_attendance.timesheet_menu_root
+msgid "Timesheets"
+msgstr "Munkaidő-kimutatások"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "Today"
 msgstr "Ma"
 
 #. module: hr_attendance
-#: view:website:hr_attendance.report_attendanceerrors
-msgid "Total period"
-msgstr "Teljes időtartam"
-
-#. module: hr_attendance
-#: field:hr.config.settings,group_hr_attendance:0
-msgid "Track attendances for all employees"
-msgstr "Minden alkalamzott jelenléti ívének követése"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:182
-#, python-format
-msgid "Warning"
-msgstr "Figyelmeztetés"
-
-#. module: hr_attendance
-#: field:hr.attendance,worked_hours:0
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
 msgid "Worked Hours"
 msgstr "Ledolgozott órák"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:182
+#: code:addons/hr_attendance/hr_attendance.py:163
 #, python-format
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
-msgstr ""
-"Próbált erre %s egy korábbi dátummal egy másik eseményre !\n"
-"Vegye fel a kapcsolatot egy HE vezetővel a jelenlét kijavításához."
+msgstr "Próbált erre %s egy korábbi dátummal egy másik eseményre !\nVegye fel a kapcsolatot egy HE vezetővel a jelenlét kijavításához."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_report_hr_attendance_report_attendanceerrors
+msgid "report.hr_attendance.report_attendanceerrors"
+msgstr "report.hr_attendance.report_attendanceerrors"

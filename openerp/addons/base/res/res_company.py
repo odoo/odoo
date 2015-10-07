@@ -68,6 +68,8 @@ class res_company(osv.osv):
         'font': fields.many2one('res.font', string="Font", domain=[('mode', 'in', ('Normal', 'Regular', 'all', 'Book'))],
             help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
+        # logo_web: do not store in attachments, since the image is retrieved in SQL for
+        # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
         'logo_web': fields.function(_get_logo_web, string="Logo Web", type="binary", store={
             'res.company': (lambda s, c, u, i, x: i, ['partner_id'], 10),
             'res.partner': (_get_companies_from_partner, ['image'], 10),

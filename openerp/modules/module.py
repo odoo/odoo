@@ -356,6 +356,8 @@ def init_module_models(cr, module_name, obj_list):
     todo.sort(key=lambda x: x[0])
     for t in todo:
         t[1](cr, *t[2])
+    if obj_list:
+        obj_list[0].recompute(cr, openerp.SUPERUSER_ID, {})
     cr.commit()
 
 def load_openerp_module(module_name):
@@ -431,7 +433,7 @@ def adapt_version(version):
 
 def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
-    feed unittest2.TestLoader.loadTestsFromModule() """
+    feed unittest.TestLoader.loadTestsFromModule() """
     # Try to import the module
     modpath = 'openerp.addons.' + module
     try:
@@ -525,8 +527,8 @@ def unwrap_suite(test):
     test suites). These can then be checked for run/skip attributes
     individually.
 
-    An alternative would be to use a variant of @unittest2.skipIf with a state
-    flag of some sort e.g. @unittest2.skipIf(common.runstate != 'at_install'),
+    An alternative would be to use a variant of @unittest.skipIf with a state
+    flag of some sort e.g. @unittest.skipIf(common.runstate != 'at_install'),
     but then things become weird with post_install as tests should *not* run
     by default there
     """

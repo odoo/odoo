@@ -31,6 +31,8 @@ var options = $.summernote.options;
 
 var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
+var tplIconButton = renderer.getTemplate().iconButton;
+var tplDropdown = renderer.getTemplate().dropdown;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* update and change the popovers content, and add history button */
@@ -83,16 +85,17 @@ renderer.tplPopovers = function (lang, options) {
     // padding button
     var $padding = $('<div class="btn-group"/>');
     $padding.insertBefore($imagePopover.find('.btn-group:first'));
+    var dropdown_content = [
+        '<li><a data-event="padding" href="#" data-value="">'+_t('None')+'</a></li>',
+        '<li><a data-event="padding" href="#" data-value="small">'+_t('Small')+'</a></li>',
+        '<li><a data-event="padding" href="#" data-value="medium">'+_t('Medium')+'</a></li>',
+        '<li><a data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>',
+        '<li><a data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>',
+    ];
     var $button = $(tplIconButton('fa fa-plus-square-o', {
             title: _t('Padding'),
-            dropdown: true
+            dropdown: tplDropdown(dropdown_content)
         })).appendTo($padding);
-    var $ul = $('<ul class="dropdown-menu"/>').insertAfter($button);
-    $ul.append('<li><a data-event="padding" href="#" data-value="">'+_t('None')+'</a></li>');
-    $ul.append('<li><a data-event="padding" href="#" data-value="small">'+_t('Small')+'</a></li>');
-    $ul.append('<li><a data-event="padding" href="#" data-value="medium">'+_t('Medium')+'</a></li>');
-    $ul.append('<li><a data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>');
-    $ul.append('<li><a data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>');
 
     // circle, boxed... options became toggled
     $imagePopover.find('[data-event="imageShape"]:not([data-value])').remove();
@@ -178,8 +181,8 @@ renderer.tplPopovers = function (lang, options) {
     return $popover;
 };
 
-var fn_boutton_update = eventHandler.popover.button.update;
-eventHandler.popover.button.update = function ($container, oStyle) {
+var fn_boutton_update = eventHandler.modules.popover.button.update;
+eventHandler.modules.popover.button.update = function ($container, oStyle) {
     // stop animation when edit content
     var previous = $(".note-control-selection").data('target');
     if (previous) {
@@ -247,15 +250,15 @@ eventHandler.popover.button.update = function ($container, oStyle) {
     }
 };
 
-var fn_popover_update = eventHandler.popover.update;
-eventHandler.popover.update = function ($popover, oStyle, isAirMode) {
+var fn_popover_update = eventHandler.modules.popover.update;
+eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
     var $imagePopover = $popover.find('.note-image-popover');
     var $linkPopover = $popover.find('.note-link-popover');
     var $airPopover = $popover.find('.note-air-popover');
 
     fn_popover_update.call(this, $popover, oStyle, isAirMode);
 
-    if (!isAirMode || $(oStyle.range.sc).closest('[data-oe-model]:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"])').length) {
+    if (!isAirMode || (oStyle.range && $(oStyle.range.sc).closest('[data-oe-model]:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"])').length)) {
         $imagePopover.hide();
         $linkPopover.hide();
         $airPopover.hide();
@@ -276,19 +279,22 @@ eventHandler.popover.update = function ($popover, oStyle, isAirMode) {
         $(".note-control-selection").hide();
     }
 
-    if (oStyle.image || (!oStyle.range.isCollapsed() || (oStyle.range.sc.tagName && !dom.isAnchor(oStyle.range.sc)) || (oStyle.image && !$(oStyle.image).closest('a').length))) {
+    if (oStyle.image || (oStyle.range && (!oStyle.range.isCollapsed() || (oStyle.range.sc.tagName && !dom.isAnchor(oStyle.range.sc)))) || (oStyle.image && !$(oStyle.image).closest('a').length)) {
         $linkPopover.hide();
         oStyle.anchor = false;
     }
 
-    if (oStyle.image || oStyle.anchor || !$(oStyle.range.sc).closest('.note-editable').length) {
+    if (oStyle.image || oStyle.anchor || (oStyle.range && !$(oStyle.range.sc).closest('.note-editable').length)) {
         $airPopover.hide();
     } else {
         $airPopover.show();
     }
 };
 
-eventHandler.handle.update = function ($handle, oStyle, isAirMode) {
+/* TODO: remove (original method seems enough now (only border-top,left is not done) */
+/*
+eventHandler.modules.handle.update = function ($handle, oStyle, isAirMode) {
+
     $handle.toggle(!!oStyle.image);
     if (oStyle.image) {
         var $selection = $handle.find('.note-control-selection');
@@ -307,6 +313,7 @@ eventHandler.handle.update = function ($handle, oStyle, isAirMode) {
             });
     }
 };
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* hack for image and link editor */
@@ -314,7 +321,7 @@ eventHandler.handle.update = function ($handle, oStyle, isAirMode) {
 function getImgTarget () {
   return $(".note-control-selection").data('target');
 }
-eventHandler.editor.padding = function ($editable, sValue) {
+eventHandler.modules.editor.padding = function ($editable, sValue) {
     var $target = $(getImgTarget());
     var paddings = "small medium large xl".split(/\s+/);
     $editable.data('NoteHistory').recordUndo();
@@ -324,7 +331,7 @@ eventHandler.editor.padding = function ($editable, sValue) {
     }
     $target.removeClass("padding-" + paddings.join(" padding-"));
 };
-eventHandler.editor.resize = function ($editable, sValue) {
+eventHandler.modules.editor.resize = function ($editable, sValue) {
     var $target = $(getImgTarget());
     $editable.data('NoteHistory').recordUndo();
     var width = ($target.attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+)%/);
@@ -333,7 +340,7 @@ eventHandler.editor.resize = function ($editable, sValue) {
     }
     $(getImgTarget()).css('width', width != sValue ? (sValue * 100) + '%' : '');
 };
-eventHandler.editor.resizefa = function ($editable, sValue) {
+eventHandler.modules.editor.resizefa = function ($editable, sValue) {
     var $target = $(getImgTarget());
     $editable.data('NoteHistory').recordUndo();
     $target.attr('class', $target.attr('class').replace(/\s*fa-[0-9]+x/g, ''));
@@ -341,7 +348,7 @@ eventHandler.editor.resizefa = function ($editable, sValue) {
         $target.addClass('fa-'+sValue+'x');
     }
 };
-eventHandler.editor.floatMe = function ($editable, sValue) {
+eventHandler.modules.editor.floatMe = function ($editable, sValue) {
     var $target = $(getImgTarget());
     $editable.data('NoteHistory').recordUndo();
     switch (sValue) {
@@ -350,13 +357,13 @@ eventHandler.editor.floatMe = function ($editable, sValue) {
         case 'right': $target.toggleClass('pull-right').removeClass('pull-left center-block'); break;
     }
 };
-eventHandler.editor.imageShape = function ($editable, sValue) {
+eventHandler.modules.editor.imageShape = function ($editable, sValue) {
     var $target = $(getImgTarget());
     $editable.data('NoteHistory').recordUndo();
     $target.toggleClass(sValue);
 };
 
-eventHandler.dialog.showLinkDialog = function ($editable, $dialog, linkInfo) {
+eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, linkInfo) {
     $editable.data('range').select();
     $editable.data('NoteHistory').recordUndo();
     
@@ -376,7 +383,7 @@ eventHandler.dialog.showLinkDialog = function ($editable, $dialog, linkInfo) {
     });
     return def;
 };
-eventHandler.dialog.showImageDialog = function ($editable) {
+eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     var r = $editable.data('range');
     if (r.sc.tagName && r.sc.childNodes.length) {
         r.sc = r.sc.childNodes[r.so];
@@ -394,8 +401,9 @@ $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+var fn_is_void = dom.isVoid;
 dom.isVoid = function (node) {
-    return node && /^BR|^IMG|^HR/.test(node.nodeName.toUpperCase()) || dom.isImg(node);
+    return fn_is_void(node) || dom.isImgFont(node) || (node && node.className && node.className.match(/(^|\s)media_iframe_video(\s|$)/i));
 };
 dom.isImg = function (node) {
     return dom.isImgFont(node) || (node && (node.nodeName === "IMG" || (node.className && node.className.match(/(^|\s)(media_iframe_video|o_image)(\s|$)/i)) ));
@@ -428,7 +436,9 @@ dom.isFont = function (node) {
 var fn_visible = $.summernote.pluginEvents.visible;
 $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     var res = fn_visible.call(this, event, editor, layoutInfo);
-    var $node = $(dom.node(range.create().sc));
+    var rng = range.create();
+    if(!rng) return res;
+    var $node = $(dom.node(rng.sc));
     if (($node.is('[data-oe-type="html"]') || $node.is('[data-oe-field="arch"]')) &&
         $node.hasClass("o_editable") &&
         !$node[0].children.length &&
@@ -517,11 +527,11 @@ function summernote_mousedown (event) {
     // remember_selection when click on non editable area
     var r = range.create();
     if ($(r ? dom.node(r.sc) : event.srcElement || event.target).closest('#web_editor-top-navbar, #oe_main_menu_navbar, .note-popover, .note-toolbar, .modal').length) {
-        if (!$(event.target).is('input, select, label, button, a')) {
+        if (!$(event.target).is('input, select, label, button:not(.note-color-btn), a')) {
             if (!remember_selection && $editable[0]) {
                 remember_selection = range.create(dom.firstChild($editable[0]), 0);
             }
-            if (!remember_selection && $editable[0]) {
+            if (remember_selection) {
                 try {
                     remember_selection.select();
                 } catch (e) {
@@ -605,19 +615,23 @@ function summernote_ie_fix (event, pred) {
 var fn_attach = eventHandler.attach;
 eventHandler.attach = function (oLayoutInfo, options) {
     fn_attach.call(this, oLayoutInfo, options);
-    oLayoutInfo.editor.on('dragstart', 'img', function (e) { e.preventDefault(); });
+    oLayoutInfo.editor().on('dragstart', 'img', function (e) { e.preventDefault(); });
     $(document).on('mousedown', summernote_mousedown);
     $(document).on('mouseup', summernote_mouseup);
-    oLayoutInfo.editor.off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
-    oLayoutInfo.editor.on('dblclick', 'img, .media_iframe_video, span.fa, i.fa, span.fa, a.o_image', function (event) {
+    oLayoutInfo.editor().off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
+    oLayoutInfo.editor().on('dblclick', 'img, .media_iframe_video, span.fa, i.fa, span.fa, a.o_image', function (event) {
         if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
-            new widgets.MediaDialog(oLayoutInfo.editor, event.target).appendTo(document.body);
+            new widgets.MediaDialog(oLayoutInfo.editor(), event.target).appendTo(document.body);
+        }
+    });
+    oLayoutInfo.editable().on('mousedown', function(e) {
+        if(dom.isImg(e.target)) {
+            range.createFromNode(e.target).select();
         }
     });
     $(document).on("keyup", reRangeSelectKey);
-    
     var clone_data = false;
-    var $node = oLayoutInfo.editor;
+    var $node = oLayoutInfo.editor();
     if ($node.data('oe-model') || $node.data('oe-translation-id')) {
         $node.on('content_changed', function () {
             var $nodes = $('[data-oe-model], [data-oe-translation-id]')
@@ -658,25 +672,26 @@ eventHandler.attach = function (oLayoutInfo, options) {
         });
     }
 
-    var $toolbar = $(oLayoutInfo.popover).add(oLayoutInfo.toolbar);
+    var custom_toolbar = oLayoutInfo.toolbar ? oLayoutInfo.toolbar() : undefined;
+    var $toolbar = $(oLayoutInfo.popover()).add(custom_toolbar);
     $('button[data-event="undo"], button[data-event="redo"]', $toolbar).attr('disabled', true);
 
-    $(oLayoutInfo.editor)
-        .add(oLayoutInfo.handle)
-        .add(oLayoutInfo.popover)
-        .add(oLayoutInfo.toolbar)
+    $(oLayoutInfo.editor())
+        .add(oLayoutInfo.handle())
+        .add(oLayoutInfo.popover())
+        .add(custom_toolbar)
         .on('click keyup', function () {
-            $('button[data-event="undo"]', $toolbar).attr('disabled', !oLayoutInfo.editable.data('NoteHistory').hasUndo());
-            $('button[data-event="redo"]', $toolbar).attr('disabled', !oLayoutInfo.editable.data('NoteHistory').hasRedo());
+            $('button[data-event="undo"]', $toolbar).attr('disabled', !oLayoutInfo.editable().data('NoteHistory').hasUndo());
+            $('button[data-event="redo"]', $toolbar).attr('disabled', !oLayoutInfo.editable().data('NoteHistory').hasRedo());
         });
 };
 var fn_detach = eventHandler.detach;
-eventHandler.dettach = function (oLayoutInfo, options) {
+eventHandler.detach = function (oLayoutInfo, options) {
     fn_detach.call(this, oLayoutInfo, options);
-    oLayoutInfo.editor.off("dragstart");
+    oLayoutInfo.editor().off("dragstart");
     $(document).off('mousedown', summernote_mousedown);
     $(document).off('mouseup', summernote_mouseup);
-    oLayoutInfo.editor.off("dblclick");
+    oLayoutInfo.editor().off("dblclick");
     $(document).off("keyup", reRangeSelectKey);
 };
 

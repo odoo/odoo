@@ -29,6 +29,7 @@
                         <field name="date_order"/>
                         <field name="session_id" />
                         <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
+                        <field name="fiscal_position_id" options="{'no_create': True}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
@@ -38,7 +39,7 @@
                                     <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)"/>
                                     <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
                                     <field name="discount"  on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
-                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                     <field name="price_subtotal_incl" widget="monetary"/>
                                 </tree>
@@ -50,6 +51,7 @@
                                         <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
                                         <field name="price_subtotal" invisible="1" widget="monetary"/>
                                         <field name="price_subtotal_incl" invisible="1" widget="monetary"/>
+                                        <field name="tax_ids" widget="many2many_tags"/>
                                         <field name="notice"/>
                                     </group>
                                 </form>
@@ -84,13 +86,17 @@
                                 <field name="pos_reference"/>
                             </group>
                             <group string="Accounting Information">
-                                <field name="sale_journal" domain="[('type','=','sale')]"/>
-                                <field name="invoice_id" readonly="1"
-                                    attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
-                                <button name="%(pos_invoice_report)d" string="Re-Print"
-                                    icon="gtk-print" type="action" attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
-                                <field name="account_move" readonly="1"
-                                    attrs="{'invisible':[('state','&lt;&gt;','done')]}"/>
+                                <group>
+                                    <field name="sale_journal" domain="[('type','=','sale')]"/>
+                                    <field name="invoice_id" readonly="1"
+                                        attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
+                                    <field name="account_move" readonly="1"
+                                        attrs="{'invisible':[('state','&lt;&gt;','done')]}"/>
+                                </group>
+                                <group>
+                                    <button name="%(pos_invoice_report)d" string="Re-Print"
+                                        icon="gtk-print" type="action" attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Notes" >
@@ -661,6 +667,7 @@
                             <field name="group_by" groups="account.group_account_user"/>
                             <field name="barcode_nomenclature_id" />
                             <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
+                            <field name="fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
@@ -686,6 +693,7 @@
                                 <field name="iface_print_auto" />
                                 <field name="iface_display_categ_images" />
                                 <field name="iface_print_skip_screen"  attrs="{'invisible' : [('iface_print_auto', '=', False)]}" />
+                                <field name="cash_control" />
                             </group>
                         </group>
                         <group string="Hardware Proxy / PosBox" >
@@ -769,7 +777,9 @@
             <field name="arch" type="xml">
                 <form string="Point of Sale Session">
                     <header>
-                        <button name="open_cb" type="object" string="Validate &amp; Open Session" states="opening_control" class="oe_highlight"/>
+                        <button name="open" type="workflow" string="Open Session"
+                                attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}"
+                                class="oe_highlight"/>
                         <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
                             class="oe_highlight"/>
                         <button name="cashbox_control" type="workflow" string="End of Session"
@@ -785,20 +795,37 @@
                         
                     </header>
                     <sheet>
+                        <field name="cash_register_id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="%(action_pos_box_in)d"
-                                type="action" states="opened,closing_control" icon="fa-level-down">
+                                    type="action" icon="fa-level-down"
+                                    attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', 'not in', ['opened', 'closing_control'])]}">
                                 <div class="o_form_field o_stat_info">
                                     <span class="o_stat_text">Put</span>
                                     <span class="o_stat_text">Money In</span>
                                 </div>
                             </button>
                             <button class="oe_stat_button" name="%(action_pos_box_out)d"
-                                type="action" states="opened,closing_control" icon="fa-level-up">
+                                    type="action" icon="fa-level-up"
+                                    attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', 'not in', ['opened', 'closing_control'])]}">
                                 <div class="o_form_field o_stat_info">
                                     <span class="o_stat_text">Take</span>
                                     <span class="o_stat_text">Money Out</span>
                                 </div>
+                            </button>
+                            <button name="%(account.action_view_account_bnk_stmt_cashbox)d"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible':['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}"
+                                    icon="fa-money"
+                                    type="action" context="{'balance': 'start', 'bank_statement_id': cash_register_id}">
+                                <span class="o_stat_text">Set Opening Balance</span>
+                            </button>
+                            <button name="%(account.action_view_account_bnk_stmt_cashbox)d"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible':['|', '|', ('cash_control', '=', False), ('state', '=', 'opening_control'), ('state', '=', 'closed')]}"
+                                    icon="fa-money"
+                                    type="action" context="{'balance': 'end', 'bank_statement_id': cash_register_id}">
+                                <span class="o_stat_text">Set Closing Balance</span>
                             </button>
                         </div>
                         <h1 class="oe_title">

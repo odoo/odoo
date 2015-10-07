@@ -20,7 +20,7 @@
                     </header>
                     <div>
                         <label string="You will find more options in your company details: address for the header and footer, overdue payments texts, etc."/>
-                        <button type="object" name="open_company" string="Configure your company data" icon="gtk-execute" class="oe_inline oe_link"/>
+                        <button type="object" name="open_company" string="Configure your company data" icon="fa-cogs" class="oe_inline oe_link"/>
                     </div>
                     <field name="has_default_company" invisible="1" />
                     <field name="has_chart_of_accounts" invisible="1"/>
@@ -83,8 +83,9 @@
                     <group string="Fiscal Year">
                         <label for="id" string="Fiscal Year Last Day"/>
                         <div>
-                            <field name="fiscalyear_last_day" class="oe_inline"/>
                             <field name="fiscalyear_last_month" class="oe_inline"/>
+                            <span style="margin-right:5px;"></span>
+                            <field name="fiscalyear_last_day" class="oe_inline oe_text_right"/>
                         </div>
                         <label for="id" string="Lock Entries"/>
                         <div>
@@ -108,6 +109,10 @@
                         </div>
                         <label for="id" string="Features"/>
                         <div>
+                            <div>
+                                <field name="module_account_reports" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_reports"/>
+                            </div>
                             <div name="group_multi_currency">
                                 <field name="group_multi_currency" class="oe_inline"/>
                                 <label for="group_multi_currency"/>
@@ -137,30 +142,47 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="eInvoicing &amp; Payments"/>
+                    <separator string="Invoicing &amp; Payments"/>
                     <group>
                         <label for="id" string="Customer"/>
                         <div name="customer_payments">
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                            <div>
+                                <field name="group_proforma_invoices" class="oe_inline"/>
+                                <label for="group_proforma_invoices"/>
+                            </div>
+                            <div>
+                                <field name="module_account_reports_followup" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_reports_followup"/>
+                            </div>
+                            <div>
+                                <field name="module_account_batch_deposit" widget="upgrade_boolean"/>
+                                <label for="module_account_batch_deposit"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                        <label for="id" string="Taxes"/>
+                        <div name="invoice_taxes">
+                            <div>
                                 <label for="default_sale_tax_id"/>
                                 <field name="default_sale_tax_id"
                                     domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"
                                     class="oe_inline"/>
                             </div>
                             <div>
-                                <field name="group_proforma_invoices" class="oe_inline"/>
-                                <label for="group_proforma_invoices"/>
-                            </div>
-                        </div>
-                    </group>
-                    <group>
-                        <label for="id" string="Vendor"/>
-                        <div name="other_cofing">
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
                                 <label for="default_purchase_tax_id"/>
                                 <field name="default_purchase_tax_id"
                                     domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"
                                     class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Payments"/>
+                        <div name="customer_payments">
+                            <div name='payment_acquirer'>
+                                <label for="paypal_account"/>
+                                <field name="paypal_account" placeholder="e.g. sales@odoo.com" class="oe_inline"/>
                             </div>
                         </div>
                     </group>
@@ -176,9 +198,32 @@
                                 <label for="transfer_account_id"/>
                                 <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('has_chart_of_accounts','!=',False)]}"/>
                             </div>
-                            <div name='payment_acquirer'>
-                                <label for="paypal_account"/>
-                                <field name="paypal_account" placeholder="e.g. sales@odoo.com" class="oe_inline"/>
+                            <div>
+                                <field name="module_l10n_us_check_printing" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_l10n_us_check_printing"/>
+                            </div>
+                            <div>
+                                <field name="module_account_sepa" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_sepa"/>
+                            </div>
+                        </div>
+                        <label for="id" string="Bank Statements"/>
+                        <div name="bank_statement_import_options">
+                            <div>
+                                <field name="module_account_bank_statement_import_qif" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_qif"/>
+                            </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_ofx" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_ofx"/>
+                            </div>
+                            <div>
+                                <field name="module_account_yodlee" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_yodlee"/>
+                            </div>
+                            <div>
+                                <field name="module_account_plaid" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_plaid"/>
                             </div>
                         </div>
                     </group>

@@ -9,9 +9,9 @@
                 <div id="main" position="inside">
                     <group string="Products">
                         <field name="group_product_variant" widget="radio"/>
-                        <field name="module_website_sale_digital" widget="radio"/>
                         <field name="group_uom" widget="radio"/>
                         <field name="default_invoice_policy" widget="radio"/>
+                        <field name="deposit_product_id_setting" class="oe_inline"/>
                     </group>
                     <group string="Quotations &amp; Sales" id="sale">
                         <field name="group_sale_delivery_address" widget="radio"/>
@@ -19,8 +19,7 @@
                         <field name="group_discount_per_so_line" widget="radio"/>
                         <field name="module_website_quote" widget="radio"/>
                         <field name="module_sale_margin" widget="radio"/>
-                    </group>
-                    <group name="manage_price">
+                        <field name="auto_done_setting" widget="radio"/>
                         <label for="sale_pricelist_setting" string="Sale Price"/>
                         <div>
                             <field name="sale_pricelist_setting" class="oe_inline" widget="radio" on_change="onchange_sale_price(sale_pricelist_setting)"/>
@@ -28,12 +27,22 @@
                             <field name="group_pricelist_item" class="oe_inline" invisible="1"/>
                             <field name="group_product_pricelist" class="oe_inline" invisible="1"/>
                         </div>
-                    </group>
-                    <group string="Deposit" name="deposit" id="deposit">
-                        <group>
-                            <field name="deposit_property_account_income_id"/>
-                            <field name="deposit_taxes_ids" widget="many2many_tags"/>
-                        </group>
+                        <label for="id" string="Subscriptions"/>
+                        <div>
+                            <field name="module_sale_contract" class="oe_inline" widget="upgrade_boolean"/>
+                            <label for="module_sale_contract"/>
+                        </div>
+                        <label for="id" string="Customer portal"/>
+                        <div>
+                            <div>
+                                <field name="module_website_portal" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_website_portal"/>
+                            </div>
+                            <div>
+                                <field name="module_website_sale_digital" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_website_sale_digital"/>
+                            </div>
+                        </div>
                     </group>
                 </div>
             </field>

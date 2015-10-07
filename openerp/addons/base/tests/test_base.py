@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 import openerp.tests.common as common
 from openerp.exceptions import ValidationError
@@ -474,7 +474,7 @@ def tearDownModule():
     global test_state
     test_state = None
 
-class TestPhaseInstall00(unittest2.TestCase):
+class TestPhaseInstall00(unittest.TestCase):
     """
     WARNING: Relies on tests being run in alphabetical order
     """
@@ -494,7 +494,7 @@ class TestPhaseInstall00(unittest2.TestCase):
             self.state, 'init',
             "Testcase state should not have been transitioned from 00")
 
-class TestPhaseInstall01(unittest2.TestCase):
+class TestPhaseInstall01(unittest.TestCase):
     at_install = False
 
     def test_default_norun(self):
@@ -504,7 +504,7 @@ class TestPhaseInstall01(unittest2.TestCase):
     def test_set_run(self):
         test_state['set_at_install'] = True
 
-class TestPhaseInstall02(unittest2.TestCase):
+class TestPhaseInstall02(unittest.TestCase):
     """
     Can't put the check for test_set_run in the same class: if
     @common.at_install does not work for test_set_run, it won't work for
@@ -520,4 +520,4 @@ class TestPhaseInstall02(unittest2.TestCase):
             "The flag should be set if local overriding of runstate")
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

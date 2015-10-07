@@ -12,13 +12,14 @@ from contextlib import contextmanager
 import subprocess
 import logging
 import os
+import passlib.utils
 import socket
 import sys
 import threading
 import time
 import werkzeug.utils
 import zipfile
-from collections import defaultdict, Mapping, OrderedDict
+from collections import defaultdict, Hashable, Iterable, Mapping, OrderedDict
 from itertools import islice, izip, groupby
 from lxml import etree
 from which import which
@@ -471,6 +472,7 @@ ALL_LANGUAGES = {
         'es_UY': u'Spanish (UY) / Español (UY)',
         'es_VE': u'Spanish (VE) / Español (VE)',
         'et_EE': u'Estonian / Eesti keel',
+        'eu_ES': u'Basque / Euskara',
         'fa_IR': u'Persian / فارس',
         'fi_FI': u'Finnish / Suomi',
         'fr_BE': u'French (BE) / Français (BE)',
@@ -1047,6 +1049,16 @@ def dumpstacks(sig=None, frame=None):
 
     _logger.info("\n".join(code))
 
+def freehash(arg):
+    if isinstance(arg, Mapping):
+        return hash(frozendict(arg))
+    elif isinstance(arg, Iterable):
+        return hash(frozenset(arg))
+    elif isinstance(arg, Hashable):
+        return hash(arg)
+    else:
+        return id(arg)
+
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
     def __delitem__(self, key):
@@ -1063,6 +1075,8 @@ class frozendict(dict):
         raise NotImplementedError("'setdefault' not supported on frozendict")
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
+    def __hash__(self):
+        return hash(frozenset((key, freehash(val)) for key, val in self.iteritems()))
 
 class Collector(Mapping):
     """ A mapping from keys to lists. This is essentially a space optimization
@@ -1144,3 +1158,10 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         elif currency_obj and currency_obj.position == 'before':
             res = '%s %s' % (currency_obj.symbol, res)
     return res
+
+def _consteq(str1, str2):
+    """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
+        known length only, because length difference is optimized. """
+    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
+
+consteq = getattr(passlib.utils, 'consteq', _consteq)

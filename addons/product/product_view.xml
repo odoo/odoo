@@ -40,6 +40,7 @@
                     <filter string="Products" name="consumable" domain="[('type','=','consu')]" help="Products your store in the inventory"/>
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',1)]"/>
+                    <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field string="Attributes" name="attribute_line_ids"/>
                     <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
@@ -82,7 +83,7 @@
                         <field name='product_variant_count' invisible='1'/>
                         <field name="id" invisible="True"/>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object"
+                            <button name="toggle_active" type="object" groups="base.group_no_one"
                                     class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button"
                                     options='{"terminology": "archive"}'/>
@@ -132,10 +133,10 @@
                                     </group>
                                 </group>
                                 <separator string="Vendors"/>
-                                <field name="seller_ids"/>
+                                <field name="seller_ids" context="{'default_product_tmpl_id': active_id}"/>
                                 <group name="packaging" string="Packaging"
                                     colspan="4"
-                                    attrs="{'invisible':[('type', 'not in', ['product, consu'])]}"
+                                    attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                                     groups="product.group_stock_packaging">
                                     <field name="packaging_ids" nolabel="1"/>
                                 </group>
@@ -231,7 +232,7 @@
                         <field name="image_medium" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Product Name"/>
-                            <h1><field name="name"/></h1>
+                            <h1><field name="name" placeholder="e.g. Odoo Enterprise Susbcription"/></h1>
                         </div>
                         <group>
                             <p>All general settings about this product are managed on <button name="open_product_template" type="object" string="the product template" class="oe_link"/></p>
@@ -246,6 +247,7 @@
                             </group>
                             <group>
                                 <field name="active"/>
+                                <field name="type" invisible="1"/>
                             </group>
                         </group>
                         <group>
@@ -454,18 +456,6 @@
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
                 </form>
-                <notebook position="before">
-                    <group>
-                        <p>All general settings about this product are managed on <button name="open_product_template" type="object" string="the product template" class="oe_link"/></p>
-                    </group>
-                </notebook>
-                <field name="seller_ids" position="replace">
-                    <field name="seller_ids" readonly="1"/>
-                </field>
-                <field name="description_purchase" position="replace">
-                    <field name="description_purchase" nolabel="1"
-                        placeholder="This note will be displayed on requests for quotation..." readonly="1"/>
-                </field>
                 <field name="type" position="after">
                     <field name="default_code"/>
                     <field name="barcode"/>
@@ -473,20 +463,9 @@
                 <field name="list_price" position="attributes">
                    <attribute name="name">lst_price</attribute>
                 </field>
-                <field name="name" position="replace">
-                    <field name="name" attrs="{'invisible': [('id', '!=', False)]}"/>
-                    <field name="product_tmpl_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)], 'required': [('id', '!=', False)]}"/>
+                <field name="name" position="after">
+                    <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>
                 </field>
-                <field name="standard_price" position="replace">
-                    <field name="standard_price" attrs="{'invisible':[('product_variant_count','=', 1)]}"
-                            widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                </field>
-                <label for="weight" position="attributes">
-                    <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
-                </label>
-                <div name="weight" position="attributes">
-                    <attribute name="attrs">{'invisible':[('type', 'not in', ['product', 'consu'])]}</attribute>
-                </div>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                 </xpath>
@@ -614,18 +593,14 @@
             <field name="name">product.category.form</field>
             <field name="model">product.category</field>
             <field name="arch" type="xml">
-                <form string="Product Categories">
+                <form class="oe_form_configuration">
                     <div class="oe_title">
-                        <label for="name" string="Category Name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
+                        <label for="name" string="Category name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. Lamps"/></h1>
                     </div>
-                    <group name="parent">
-                        <group string="Category Type">
-                            <field name="parent_id"/>
-                            <field name="type"/>
-                        </group>
+                    <group name="first" col="4" string="Category Type">
+                        <field name="parent_id"/>
+                        <field name="type"/>
                     </group>
                 </form>
             </field>
@@ -794,6 +769,7 @@
                             <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                             <field name="product_name"/>
                             <field name="product_code"/>
+                            <field name="product_id" domain="[('product_tmpl_id', '=', product_tmpl_id)]" invisible="1"/>
                             <label for="delay"/>
                             <div>
                                 <field name="delay" class="oe_inline"/> days

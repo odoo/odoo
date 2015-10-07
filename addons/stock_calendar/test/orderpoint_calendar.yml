@@ -17,7 +17,7 @@
 - 
   Create a product A with orderpoint with a calendar
 - 
-  !record {model: product.product, id: product_calendar}:
+  !record {model: product.product, id: product_calendar, view: False}:
     name: Calendar Product
     seller_ids:
       - name: res_partner_cal
@@ -96,4 +96,3 @@
     assert datetime.datetime.strptime(procurement.next_delivery_date, DEFAULT_SERVER_DATETIME_FORMAT).weekday() == 3, 'The next delivery date should be on a Thursday'
     purchase_line_id_date_planned = datetime.datetime.strptime(procurement.purchase_line_id.date_planned, DEFAULT_SERVER_DATETIME_FORMAT).weekday()
     assert purchase_line_id_date_planned == 3, 'Check it has been put on the purchase line also, got %d' %purchase_line_id_date_planned
-

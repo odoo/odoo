@@ -1,114 +1,86 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-13 04:57+0000\n"
-"Last-Translator: Borja López Soilán (NeoPolus) <borjalopezsoilan@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"PO-Revision-Date: 2015-09-30 09:24+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Venezuela) (http://www.transifex.com/odoo/odoo-9/language/es_VE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:47+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_VE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
-#: field:account.analytic.account,child_ids:0
-msgid "Child Accounts"
-msgstr "Cuentas hijas"
-
-#. module: analytic
-#: field:account.analytic.account,name:0
-msgid "Account Name"
-msgstr "Nombre cuenta"
-
-#. module: analytic
-#: help:account.analytic.line,unit_amount:0
-msgid "Specifies the amount of quantity to count."
-msgstr "Especifica el valor de las cantidades a contar."
-
-#. module: analytic
-#: model:ir.module.module,description:analytic.module_meta_information
-msgid ""
-"Module for defining analytic accounting object.\n"
-"    "
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "(Keep empty to open the current situation)"
 msgstr ""
-"Módulo para definir objetos contables analíticos.\n"
-"    "
 
 #. module: analytic
-#: field:account.analytic.account,state:0
-msgid "State"
-msgstr "Estado"
-
-#. module: analytic
-#: field:account.analytic.account,user_id:0
-msgid "Account Manager"
-msgstr "Gestor contable"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Draft"
-msgstr "Borrador"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Closed"
-msgstr "Cerrado"
-
-#. module: analytic
-#: field:account.analytic.account,debit:0
-msgid "Debit"
-msgstr "Debe"
-
-#. module: analytic
-#: help:account.analytic.account,state:0
-msgid ""
-"* When an account is created its in 'Draft' state.                           "
-"       \n"
-"* If any associated partner is there, it can be in 'Open' state.             "
-"                     \n"
-"* If any pending balance is there it can be in 'Pending'.                    "
-"               \n"
-"* And finally when all the transactions are over, it can be in 'Close' "
-"state.                                   \n"
-"* The project can be in either if the states 'Template' and 'Running'.\n"
-" If it is template then we can make projects based on the template projects. "
-"If its in 'Running' state it is a normal project.                            "
-"     \n"
-" If it is to be reviewed then the state is 'Pending'.\n"
-" When the project is completed the state is set to 'Done'."
+#: model:ir.model,name:analytic.model_account_analytic_chart
+msgid "Account Analytic Chart"
 msgstr ""
-"* Cuando se crea una cuenta, está en estado 'Borrador'.\n"
-"* Si se asocia a cualquier empresa, puede estar en estado 'Abierta'.\n"
-"* Si existe un saldo pendiente, puede estar en 'Pendiente'.\n"
-"* Y finalmente, cuando todas las transacciones están realizadas, puede estar "
-"en estado de 'Cerrada'.\n"
-"* El proyecto puede estar en los estados 'Plantilla' y 'En proceso.\n"
-"Si es una plantilla, podemos hacer proyectos basados en los proyectos "
-"plantilla. Si está en estado 'En proceso', es un proyecto normal.\n"
-"Si se debe examinar, el estado es 'Pendiente'.\n"
-"Cuando el proyecto se ha completado, el estado se establece en 'Realizado'."
 
 #. module: analytic
-#: field:account.analytic.account,type:0
-msgid "Account Type"
-msgstr "Tipo cuenta"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
+msgid "Account Currency"
+msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Plantilla"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
+msgid "Action Needed"
+msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Pending"
-msgstr "Pendiente"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+msgid "Amount"
+msgstr "Importe"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_account
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_account_id
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Analytic Account"
+msgstr "Cuenta analítica"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Analytic Account Charts"
+msgstr ""
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Analytic Accounts"
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+msgid "Analytic Entries"
+msgstr "Entradas analíticas"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+msgid "Analytic Entry"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -116,158 +88,349 @@ msgid "Analytic Line"
 msgstr "Línea analítica"
 
 #. module: analytic
-#: field:account.analytic.account,description:0
-#: field:account.analytic.line,name:0
-msgid "Description"
-msgstr "Descripción"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
+msgid "Analytic Lines"
+msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Normal"
-msgstr "Normal"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
+msgid "Analytic Tag"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,company_id:0
-#: field:account.analytic.line,company_id:0
+#: model:ir.model,name:analytic.model_account_analytic_tag
+msgid "Analytic Tags"
+msgstr ""
+
+#. module: analytic
+#: selection:account.analytic.account,account_type:0
+msgid "Analytic View"
+msgstr ""
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Associated Partner"
+msgstr "Empresa asociada"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
+msgid "Balance"
+msgstr "Saldo pendiente"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
+#: model:ir.actions.act_window,name:analytic.action_analytic_account_form
+msgid "Chart of Analytic Accounts"
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.action_analytic_account_form
+msgid "Click to add an analytic account."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
+msgid "Color Index"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_company_id
 msgid "Company"
 msgstr "Compañía"
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Maximum Quantity"
-msgstr "Cantidad máxima"
-
-#. module: analytic
-#: field:account.analytic.line,user_id:0
-msgid "User"
-msgstr "Usuario"
-
-#. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Cuenta analítica padre"
-
-#. module: analytic
-#: field:account.analytic.line,date:0
-msgid "Date"
-msgstr "Fecha"
-
-#. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Account currency"
-msgstr "Moneda contable"
-
-#. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
-msgstr "Cantidad"
-
-#. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price. Always expressed in the company main currency."
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "Cost/Revenue"
 msgstr ""
-"Calculado multiplicando la cantidad y el precio obtenido del precio de coste "
-"del producto. Siempre se expresa en la moneda principal de la compañía."
 
 #. module: analytic
-#: help:account.analytic.account,quantity_max:0
-msgid "Sets the higher limit of quantity of hours."
-msgstr "Fija el límite superior de cantidad de horas."
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Costs & Revenues"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,credit:0
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid ""
+"Costs will be created automatically when you register supplier\n"
+"                invoices, expenses or timesheets."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
 msgid "Credit"
 msgstr "Haber"
 
 #. module: analytic
-#: field:account.analytic.line,amount:0
-msgid "Amount"
-msgstr "Importe"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_currency_id
+msgid "Currency"
+msgstr "Moneda"
 
 #. module: analytic
-#: field:account.analytic.account,contact_id:0
-msgid "Contact"
-msgstr "Contacto"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_partner_id
+msgid "Customer"
+msgstr "Cliente"
 
 #. module: analytic
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_date
+msgid "Date"
+msgstr "Fecha"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_last_post
+msgid "Date of the last message posted on the record."
 msgstr ""
-"¡Error! La divisa tiene que ser la misma que la establecida en la compañía "
-"seleccionada"
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Cancelled"
-msgstr "Cancelado"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
+msgid "Debit"
+msgstr "Debe"
 
 #. module: analytic
-#: field:account.analytic.account,balance:0
-msgid "Balance"
-msgstr "Balance"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_name
+msgid "Description"
+msgstr "Descripción"
 
 #. module: analytic
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "¡Error! No puede crear cuentas analíticas recursivas."
-
-#. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account."
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
+msgid "Display Name"
 msgstr ""
-"Si selecciona el tipo de vista, significa que no permitirá la creación de "
-"asientos de diario con esa cuenta."
 
 #. module: analytic
-#: field:account.analytic.account,date:0
-msgid "Date End"
-msgstr "Fecha final"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_follower_ids
+msgid "Followers"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Account Code"
-msgstr "Código cuenta"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,complete_name:0
-msgid "Full Account Name"
-msgstr "Nombre cuenta completo"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.line,account_id:0
-#: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.module.module,shortdesc:analytic.module_meta_information
-msgid "Analytic Account"
-msgstr "Cuenta analítica"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
+msgid "From"
+msgstr "Desde"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "View"
-msgstr "Vista"
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Group By..."
+msgstr "Agrupar por..."
 
 #. module: analytic
-#: field:account.analytic.account,partner_id:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
+msgid "ID"
+msgstr "ID"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid ""
+"In Odoo, sale orders and projects are implemented using\n"
+"                analytic accounts. You can track costs and revenues to analyse\n"
+"                your margins easily."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_last_post
+msgid "Last Message Date"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_ids
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_ids
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+msgid "No activity yet on this account."
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid "No activity yet."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Open Charts"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
 msgid "Partner"
 msgstr "Empresa"
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Date Start"
-msgstr "Fecha inicial"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_unit_amount
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+msgid "Quantity"
+msgstr "Cantidad"
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Open"
-msgstr "Abrir"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_code
+msgid "Reference"
+msgstr "Referencia"
 
 #. module: analytic
-#: field:account.analytic.account,line_ids:0
-msgid "Analytic Entries"
-msgstr "Entradas analíticas"
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid ""
+"Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                on expenses (e.g. reinvoicing of travel costs)."
+msgstr ""
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Search Analytic Lines"
+msgstr ""
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Select the Period for Analysis"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
+msgid "Tags"
+msgstr ""
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Tasks Month"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_line_currency_id
+msgid "The related account currency if not equal to the company one."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
+msgid "To"
+msgstr "Hasta"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+msgid "Total"
+msgstr "Total"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "Type of Account"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
+msgid "User"
+msgstr "Usuario"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "e.g. Project XYZ"
+msgstr ""

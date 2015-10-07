@@ -55,9 +55,6 @@ var SystrayMenu = Widget.extend({
         };
         this.update_promise = this.update_promise.then(fct, fct);
     },
-    on_menu_help: function() {
-        window.open('http://help.odoo.com', '_blank');
-    },
     on_menu_logout: function() {
         this.trigger('user_logout');
     },
@@ -89,22 +86,6 @@ var SystrayMenu = Widget.extend({
                 ev.preventDefault();
                 framework.redirect('https://accounts.odoo.com/account');
             });
-        });
-    },
-    on_menu_about: function() {
-        var self = this;
-        self.rpc("/web/webclient/version_info", {}).done(function(res) {
-            var $help = $(QWeb.render("UserMenu.about", {version_info: res}));
-            $help.find('a.oe_activate_debug_mode').click(function (e) {
-                e.preventDefault();
-                window.location = $.param.querystring( window.location.href, 'debug');
-            });
-            new Dialog(this, {
-                size: 'medium',
-                dialogClass: 'o_act_window',
-                title: _t("About"),
-                $content: $help
-            }).open();
         });
     },
 });

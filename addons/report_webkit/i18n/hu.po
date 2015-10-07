@@ -1,21 +1,22 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * report_webkit
+# 
+# Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-11-17 16:09+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-10 10:23+0000\n"
+"Last-Translator: Kris Krnacs\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-18 07:28+0000\n"
-"X-Generator: Launchpad (build 17241)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -74,22 +75,22 @@ msgstr "A9  13  37 x 52 mm"
 
 #. module: report_webkit
 #: model:ir.actions.act_window,name:report_webkit.wizard_ofdo_report_actions
-#: view:report.webkit.actions:report_webkit.view_report_webkit_actions
+#: model:ir.ui.view,arch_db:report_webkit.view_report_webkit_actions
 msgid "Add Print Buttons"
-msgstr "Nyomtatási gomb hozzáadása"
+msgstr "Nyomtatási gombok hozzáadása"
 
 #. module: report_webkit
-#: field:report.webkit.actions,print_button:0
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_print_button
 msgid "Add print button"
 msgstr "Nyomtatási gomb hozzáadása"
 
 #. module: report_webkit
-#: field:res.company,header_image:0
+#: model:ir.model.fields,field_description:report_webkit.field_res_company_header_image
 msgid "Available Images"
 msgstr "Rendelkezésre álló képek"
 
 #. module: report_webkit
-#: field:res.company,header_webkit:0
+#: model:ir.model.fields,field_description:report_webkit.field_res_company_header_webkit
 msgid "Available html"
 msgstr "Érvényes html"
 
@@ -144,7 +145,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9  23  33 x 62 mm"
 
 #. module: report_webkit
-#: field:ir.header_webkit,margin_bottom:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_margin_bottom
 msgid "Bottom Margin (mm)"
 msgstr "Alsó margó (mm)"
 
@@ -154,30 +155,26 @@ msgid "C5E 24  163 x 229 mm"
 msgstr "C5E 24  163 x 229 mm"
 
 #. module: report_webkit
-#: view:report.webkit.actions:report_webkit.view_report_webkit_actions
+#: model:ir.ui.view,arch_db:report_webkit.view_report_webkit_actions
 msgid "Cancel"
-msgstr "Megszakítás"
+msgstr "Mégsem"
 
 #. module: report_webkit
-#: help:report.webkit.actions,print_button:0
+#: model:ir.model.fields,help:report_webkit.field_report_webkit_actions_print_button
 msgid ""
 "Check this to add a Print action for this Report in the sidebar of the "
 "corresponding document types"
-msgstr ""
-"Jelölje ki ezt ahhoz, hogy hozzáadjon az ide vonatkozó dokumentum típusok "
-"jelentés oldalmezőjéhez egy nyomtatási műveletet"
+msgstr "Jelölje ki ezt, hogy hozzáadjon az ide vonatkozó dokumentum típusok jelentés oldalmezőjéhez egy nyomtatási műveletet"
 
 #. module: report_webkit
-#: help:report.webkit.actions,open_action:0
+#: model:ir.model.fields,help:report_webkit.field_report_webkit_actions_open_action
 msgid ""
 "Check this to view the newly added internal print action after creating it "
 "(technical view) "
-msgstr ""
-"Jelölje ki ahhoz, hogy lássa az újonnan hozzáadott belső nyomtatási "
-"műveletet a létrehozása után (műszaki nézet) "
+msgstr "Jelölje ki ahhoz, hogy lássa az újonnan hozzáadott belső nyomtatási műveletet a létrehozása után (műszaki nézet) "
 
 #. module: report_webkit
-#: code:addons/report_webkit/wizard/report_webkit_actions.py:132
+#: code:addons/report_webkit/wizard/report_webkit_actions.py:107
 #, python-format
 msgid "Client Actions Connections"
 msgstr "Kliens műveleti kapcsolatok"
@@ -193,27 +190,27 @@ msgid "Companies"
 msgstr "Vállalatok"
 
 #. module: report_webkit
-#: field:ir.header_img,company_id:0
-#: field:ir.header_webkit,company_id:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_company_id
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_company_id
 msgid "Company"
 msgstr "Vállalat"
 
 #. module: report_webkit
-#: view:res.company:report_webkit.currency_del_img
+#: model:ir.ui.view,arch_db:report_webkit.currency_del_img
 msgid "Configuration (Webkit)"
 msgstr "Konfiguráció (Webkit)"
 
 #. module: report_webkit
-#: field:ir.header_img,create_uid:0
-#: field:ir.header_webkit,create_uid:0
-#: field:report.webkit.actions,create_uid:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_create_uid
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_create_uid
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_create_uid
 msgid "Created by"
 msgstr "Készítette"
 
 #. module: report_webkit
-#: field:ir.header_img,create_date:0
-#: field:ir.header_webkit,create_date:0
-#: field:report.webkit.actions,create_date:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_create_date
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_create_date
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
 
@@ -223,15 +220,16 @@ msgid "DLE 26 110 x 220 mm"
 msgstr "DLE 26 110 x 220 mm"
 
 #. module: report_webkit
-#: help:ir.actions.report.xml,webkit_debug:0
-msgid "Enable the webkit engine debugger"
-msgstr "Webkit hibajavító motor bekapcsolás"
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_display_name
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_display_name
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_display_name
+msgid "Display Name"
+msgstr "Nevek megjelenítése"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:285
-#, python-format
-msgid "Error!"
-msgstr "Hiba!"
+#: model:ir.model.fields,help:report_webkit.field_ir_act_report_xml_webkit_debug
+msgid "Enable the webkit engine debugger"
+msgstr "Webkit hibajavító motor bekapcsolás"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -244,34 +242,34 @@ msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27  210 x 330 mm"
 
 #. module: report_webkit
-#: view:ir.header_webkit:report_webkit.header_webkit
+#: model:ir.ui.view,arch_db:report_webkit.header_webkit
 msgid "HTML Header"
 msgstr "HTML fejléc"
 
 #. module: report_webkit
-#: field:ir.header_webkit,css:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_css
 msgid "Header CSS"
 msgstr "Fejléc CSS"
 
 #. module: report_webkit
-#: view:ir.header_img:report_webkit.header_img
+#: model:ir.ui.view,arch_db:report_webkit.header_img
 msgid "Header Image"
 msgstr "Fejléc kép"
 
 #. module: report_webkit
-#: field:ir.header_img,id:0
-#: field:ir.header_webkit,id:0
-#: field:report.webkit.actions,id:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_id
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_id
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_id
 msgid "ID"
 msgstr "Azonosító ID"
 
 #. module: report_webkit
-#: field:ir.header_img,img:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_img
 msgid "Image"
 msgstr "Kép"
 
 #. module: report_webkit
-#: help:ir.header_img,type:0
+#: model:ir.model.fields,help:report_webkit.field_ir_header_img_type
 msgid "Image type(png,gif,jpeg)"
 msgstr "Kép típusa (png,gif,jpeg)"
 
@@ -281,16 +279,23 @@ msgid "Landscape"
 msgstr "Fekvő"
 
 #. module: report_webkit
-#: field:ir.header_img,write_uid:0
-#: field:ir.header_webkit,write_uid:0
-#: field:report.webkit.actions,write_uid:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img___last_update
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit___last_update
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions___last_update
+msgid "Last Modified on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: report_webkit
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_write_uid
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_write_uid
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_write_uid
 msgid "Last Updated by"
 msgstr "Utoljára frissítve, által"
 
 #. module: report_webkit
-#: field:ir.header_img,write_date:0
-#: field:ir.header_webkit,write_date:0
-#: field:report.webkit.actions,write_date:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_write_date
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_write_date
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve ekkor"
 
@@ -300,7 +305,7 @@ msgid "Ledger  28  431.8 x 279.4 mm"
 msgstr "Ledger  28  431.8 x 279.4 mm"
 
 #. module: report_webkit
-#: field:ir.header_webkit,margin_left:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_margin_left
 msgid "Left Margin (mm)"
 msgstr "Bal margó (mm)"
 
@@ -312,63 +317,58 @@ msgstr "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
-msgstr "Letter 2 8.5 x 11 inch, 215.9 x 279.4 mm"
+msgstr "Levél 2 8.5 x 11 inch, 215.9 x 279.4 mm"
 
 #. module: report_webkit
-#: field:ir.header_img,name:0
-#: field:ir.header_webkit,name:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_name
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_name
 msgid "Name"
 msgstr "Név"
 
 #. module: report_webkit
-#: help:ir.header_img,name:0
+#: model:ir.model.fields,help:report_webkit.field_ir_header_img_name
 msgid "Name of Image"
 msgstr "Kép megnevezése"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:214
+#: code:addons/report_webkit/webkit_report.py:187
 #, python-format
 msgid "No diagnosis message was provided"
 msgstr "Nincs diagnosztikai üzenet"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:290
+#: code:addons/report_webkit/webkit_report.py:261
 #, python-format
 msgid "No header defined for this Webkit report!"
 msgstr "Nem lett fejléc definiálva ehhez a Webkit jelentéshez!"
 
 #. module: report_webkit
-#: field:report.webkit.actions,open_action:0
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_open_action
 msgid "Open added action"
 msgstr "Hozzáadott művelet megnyitása"
 
 #. module: report_webkit
-#: field:ir.header_webkit,orientation:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_orientation
 msgid "Orientation"
 msgstr "Tájolás"
 
 #. module: report_webkit
-#: field:ir.header_webkit,format:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_format
 msgid "Paper size"
 msgstr "Papírméret"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:148
+#: code:addons/report_webkit/webkit_report.py:122
 #, python-format
 msgid ""
 "Please install executable on your system (sudo apt-get install wkhtmltopdf) "
 "or download it from here: "
 "http://code.google.com/p/wkhtmltopdf/downloads/list and set the path in the "
 "ir.config_parameter with the webkit_path key.Minimal version is 0.9.9"
-msgstr ""
-"Kérem  telepítse a futtatható fájlt a rendeszerében (sudo apt-get install "
-"wkhtmltopdf) vagy töltse le innen: "
-"http://code.google.com/p/wkhtmltopdf/downloads/list és állítsa be az elérési "
-"utat ebben ir.config_parameter ezzel webkit_path a kulcsal. Minimum verzió "
-"0.9.9"
+msgstr "Kérem  telepítse a futtatható fájlt a rendeszerében (sudo apt-get install wkhtmltopdf) vagy töltse le innen: http://code.google.com/p/wkhtmltopdf/downloads/list és állítsa be az elérési utat ebben ir.config_parameter ezzel webkit_path a kulcsal. Minimum verzió 0.9.9"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:291
+#: code:addons/report_webkit/webkit_report.py:261
 #, python-format
 msgid "Please set a header in company settings."
 msgstr "Kérem állítsa be a fejlécet a vállalat beállításainál."
@@ -379,32 +379,32 @@ msgid "Portrait"
 msgstr "Álló"
 
 #. module: report_webkit
-#: field:ir.actions.report.xml,precise_mode:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_act_report_xml_precise_mode
 msgid "Precise Mode"
 msgstr "Precíz mód"
 
 #. module: report_webkit
 #: model:ir.actions.report.xml,name:report_webkit.webkit_demo_report
 msgid "Report on reports"
-msgstr "Jelentés a jelentéseken"
+msgstr "Kimutatás a jelentéseken"
 
 #. module: report_webkit
-#: field:ir.header_webkit,margin_right:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_margin_right
 msgid "Right Margin (mm)"
 msgstr "Jobb margó (mm)"
 
 #. module: report_webkit
-#: help:ir.header_webkit,format:0
+#: model:ir.model.fields,help:report_webkit.field_ir_header_webkit_format
 msgid "Select Proper Paper size"
 msgstr "Válassza ki a helyes papírméretet"
 
 #. module: report_webkit
-#: help:ir.header_webkit,footer_html:0
+#: model:ir.model.fields,help:report_webkit.field_ir_header_webkit_footer_html
 msgid "Set Webkit Report Footer."
 msgstr "WebKit jelentés láblécének beállítása"
 
 #. module: report_webkit
-#: help:ir.header_webkit,html:0
+#: model:ir.model.fields,help:report_webkit.field_ir_header_webkit_html
 msgid "Set Webkit Report Header"
 msgstr "WebKit jelentés fejlécének beállítása"
 
@@ -414,50 +414,47 @@ msgid "Tabloid 29 279.4 x 431.8 mm"
 msgstr "Tabloid 29 279.4 x 431.8 mm"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:219
+#: code:addons/report_webkit/webkit_report.py:191
 #, python-format
 msgid "The command 'wkhtmltopdf' failed with error code = %s. Message: %s"
 msgstr "A 'wkhtmltopdf' parancs hibakóddal tért vissza = %s. Üzenet: %s"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:216
+#: code:addons/report_webkit/webkit_report.py:189
 #, python-format
 msgid "The following diagnosis message was provided:\n"
 msgstr "a következő diagnosztikai üzenet elérhető:\n"
 
 #. module: report_webkit
-#: help:ir.actions.report.xml,webkit_header:0
+#: model:ir.model.fields,help:report_webkit.field_ir_act_report_xml_webkit_header
 msgid "The header linked to the report"
 msgstr "A fejléc kapcsolódik a jelentéshez"
 
 #. module: report_webkit
-#: help:ir.actions.report.xml,precise_mode:0
+#: model:ir.model.fields,help:report_webkit.field_ir_act_report_xml_precise_mode
 msgid ""
-"This mode allow more precise element position as each object is printed on a "
-"separate HTML but memory and disk usage are wider."
-msgstr ""
-"Ez a mód sokkal pontosabb elem pozicionálást tesz lehetővé, mivel minden "
-"objektum egy külön HTML oldalra lesz nyomtatva, de a memória és a háttér "
-"tároló használati ideje megnövekszik."
+"This mode allow more precise element position as each object is printed on a"
+" separate HTML but memory and disk usage are wider."
+msgstr "Ez a mód sokkal pontosabb elem pozicionálást tesz lehetővé, mivel minden objektum egy külön HTML oldalra lesz nyomtatva, de a memória és a háttér tároló használati ideje megnövekszik."
 
 #. module: report_webkit
-#: help:ir.actions.report.xml,report_webkit_data:0
+#: model:ir.model.fields,help:report_webkit.field_ir_act_report_xml_report_webkit_data
 msgid "This template will be used if the main report file is not found"
 msgstr "Ezt a sablont fogja használni, ha a fő jelentésfájl nem található"
 
 #. module: report_webkit
-#: field:ir.header_webkit,margin_top:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_margin_top
 msgid "Top Margin (mm)"
 msgstr "Felső margó (mm)"
 
 #. module: report_webkit
-#: field:ir.header_img,type:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_type
 msgid "Type"
 msgstr "Típus"
 
 #. module: report_webkit
-#: view:ir.actions.report.xml:report_webkit.act_report_xml_view
 #: model:ir.ui.menu,name:report_webkit.menu_webkit
+#: model:ir.ui.view,arch_db:report_webkit.act_report_xml_view
 msgid "Webkit"
 msgstr "Webkit"
 
@@ -467,7 +464,7 @@ msgid "Webkit Actions"
 msgstr "WebKit műveletek"
 
 #. module: report_webkit
-#: field:ir.actions.report.xml,webkit_header:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_act_report_xml_webkit_header
 msgid "Webkit Header"
 msgstr "Webkit fejlác"
 
@@ -484,59 +481,58 @@ msgid "Webkit Logos"
 msgstr "Webkit Logók"
 
 #. module: report_webkit
-#: field:ir.actions.report.xml,report_webkit_data:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_act_report_xml_report_webkit_data
 msgid "Webkit Template"
 msgstr "WebKit sablon"
 
 #. module: report_webkit
-#: view:ir.actions.report.xml:report_webkit.act_report_xml_view
+#: model:ir.ui.view,arch_db:report_webkit.act_report_xml_view
 msgid "Webkit Template (used if Report File is not found)"
 msgstr "WebKit sablon (használja ezt, ha jelentésfájl nem található)"
 
 #. module: report_webkit
-#: field:ir.actions.report.xml,webkit_debug:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_act_report_xml_webkit_debug
 msgid "Webkit debug"
 msgstr "Webkit hibakereső"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:218
-#, python-format
-msgid "Webkit error"
-msgstr "Webkit hiba"
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:325
-#: code:addons/report_webkit/webkit_report.py:333
-#: code:addons/report_webkit/webkit_report.py:338
-#: code:addons/report_webkit/webkit_report.py:347
-#: code:addons/report_webkit/webkit_report.py:354
-#, python-format
-msgid "Webkit render!"
-msgstr "Webkit fordít!"
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:285
+#: code:addons/report_webkit/webkit_report.py:257
 #, python-format
 msgid "Webkit report template not found!"
 msgstr "Webkit jelentés sablon nem található!"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:147
+#: code:addons/report_webkit/webkit_report.py:121
 #, python-format
 msgid "Wkhtmltopdf library path is not set"
 msgstr "Wkhtmltopdf könyvtár elérés nincs beállítva"
 
 #. module: report_webkit
-#: view:report.webkit.actions:report_webkit.view_report_webkit_actions
+#: model:ir.ui.view,arch_db:report_webkit.view_report_webkit_actions
 msgid "_Ok"
 msgstr "_Ok"
 
 #. module: report_webkit
-#: field:ir.header_webkit,footer_html:0
+#: model:ir.model,name:report_webkit.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"
+
+#. module: report_webkit
+#: model:ir.model,name:report_webkit.model_ir_header_img
+msgid "ir.header_img"
+msgstr "ir.header_img"
+
+#. module: report_webkit
+#: model:ir.model,name:report_webkit.model_ir_header_webkit
+msgid "ir.header_webkit"
+msgstr "ir.header_webkit"
+
+#. module: report_webkit
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_footer_html
 msgid "webkit footer"
 msgstr "webkit lábléc"
 
 #. module: report_webkit
-#: field:ir.header_webkit,html:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_html
 msgid "webkit header"
 msgstr "WebKit fejléc"

@@ -1,3 +1,4 @@
+import base64
 from operator import itemgetter
 import psycopg2
 import werkzeug
@@ -8,6 +9,8 @@ from openerp import SUPERUSER_ID
 from openerp import http
 from openerp.exceptions import AccessError
 from openerp.http import request
+
+from openerp.addons.web.controllers.main import binary_content
 
 
 class MailController(http.Controller):
@@ -49,16 +52,20 @@ class MailController(http.Controller):
         return result
 
     @http.route('/mail/read_subscription_data', type='json', auth='user')
-    def read_subscription_data(self, res_model, res_id):
+    def read_subscription_data(self, res_model, res_id, follower_id=None):
         """ Computes:
             - message_subtype_data: data about document subtypes: which are
                 available, which are followed if any """
         # find the document followers, update the data
-        followers = request.env['mail.followers'].search([
-            ('partner_id', '=', request.env.user.partner_id.id),
-            ('res_id', '=', res_id),
-            ('res_model', '=', res_model),
-        ])
+        followers = request.env['mail.followers']
+        if not follower_id:
+            followers = followers.search([
+                ('partner_id', '=', request.env.user.partner_id.id),
+                ('res_id', '=', res_id),
+                ('res_model', '=', res_model),
+            ])
+        else:
+            followers = followers.browse(follower_id)
 
         # find current model subtypes, add them to a dictionary
         subtypes = request.env['mail.message.subtype'].search(['&', ('hidden', '=', False), '|', ('res_model', '=', res_model), ('res_model', '=', False)])
@@ -73,7 +80,6 @@ class MailController(http.Controller):
             'id': subtype.id
         } for subtype in subtypes]
         subtypes_list = sorted(subtypes_list, key=itemgetter('parent_model', 'res_model', 'internal', 'sequence'))
-
         return subtypes_list
 
     @http.route('/mail/view', type='http', auth='none')
@@ -167,8 +173,8 @@ class MailController(http.Controller):
         if model not in request.env:
             return self._redirect_to_messaging()
         params = {'view_type': 'form', 'model': model}
-        if kwargs.get('view_id'):
-            params['action'] = kwargs['view_id']
+        if kwargs.get('action_id'):
+            params['action'] = kwargs['action_id']
         return werkzeug.utils.redirect('/web?#%s' % url_encode(params))
 
     @http.route('/mail/method', type='http', auth='user')
@@ -179,7 +185,7 @@ class MailController(http.Controller):
         Model = request.env[model]
         try:
             record = Model.browse(int(res_id)).exists()
-            getattr(record, method)
+            getattr(record, method)()
         except:
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
@@ -205,6 +211,26 @@ class MailController(http.Controller):
         except:
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
+
+    @http.route('/mail/<string:res_model>/<int:res_id>/avatar/<int:partner_id>', type='http', auth='public')
+    def avatar(self, res_model, res_id, partner_id):
+        headers = [[('Content-Type', 'image/png')]]
+        content = 'R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='  # default image is one white pixel
+        if res_model in request.env:
+            try:
+                # if the current user has access to the document, get the partner avatar as sudo()
+                request.env[res_model].browse(res_id).check_access_rule('read')
+                if partner_id in request.env[res_model].browse(res_id).sudo().exists().message_ids.mapped('author_id').ids:
+                    status, headers, content = binary_content(model='res.partner', id=partner_id, field='image_medium', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+                    if status == 304:
+                        return werkzeug.wrappers.Response(status=304)
+            except AccessError:
+                pass
+        image_base64 = base64.b64decode(content)
+        headers.append(('Content-Length', len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status = str(status)
+        return response
 
     @http.route('/mail/needaction', type='json', auth='user')
     def needaction(self):

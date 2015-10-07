@@ -38,6 +38,7 @@
         <template id="auth_signup.signup" name="Sign up login">
             <t t-call="web.login_layout">
                 <form class="oe_signup_form" role="form" method="post" t-if="not message">
+                  <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                     <t t-call="auth_signup.fields">
                         <t t-set="only_passwords" t-value="bool(token)"/>
@@ -67,6 +68,7 @@
                 </div>
 
                 <form class="oe_reset_password_form" role="form" method="post" t-if="not message">
+                  <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                     <t t-if="token">
                         <t t-call="auth_signup.fields">

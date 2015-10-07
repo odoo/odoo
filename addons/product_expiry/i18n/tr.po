@@ -1,59 +1,62 @@
-# Turkish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product_expiry
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-11-15 17:37+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 07:21+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-16 06:20+0000\n"
-"X-Generator: Launchpad (build 17241)\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: product_expiry
-#: field:stock.production.lot,alert_date:0
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
 msgid "Alert Date"
 msgstr "Uyarı Tarihi"
 
 #. module: product_expiry
-#: field:stock.production.lot,use_date:0
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_use_date
 msgid "Best before Date"
 msgstr "Son Kullanım Tarihi"
 
 #. module: product_expiry
+#: model:product.product,name:product_expiry.product_product_pain
 #: model:product.template,name:product_expiry.product_product_pain_product_template
 msgid "Bread"
 msgstr "Ekmek"
 
 #. module: product_expiry
+#: model:product.product,name:product_expiry.product_product_lait
 #: model:product.template,name:product_expiry.product_product_lait_product_template
 msgid "Cow milk"
 msgstr "İnek Sütü"
 
 #. module: product_expiry
-#: view:product.template:product_expiry.view_product_form_expiry
-#: view:stock.production.lot:product_expiry.view_move_form_expiry
+#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Dates"
 msgstr "Tarihler"
 
 #. module: product_expiry
-#: field:stock.production.lot,life_date:0
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_life_date
 msgid "End of Life Date"
 msgstr "Sonlanma Tarihi"
 
 #. module: product_expiry
+#: model:product.product,name:product_expiry.product_product_jambon
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
 msgid "French cheese Camembert"
 msgstr "Fransız peyniri Camembert"
 
 #. module: product_expiry
+#: model:product.product,name:product_expiry.product_product_from
 #: model:product.template,name:product_expiry.product_product_from_product_template
 msgid "Ham"
 msgstr "Jambon"
@@ -61,20 +64,20 @@ msgstr "Jambon"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "Parti/Seri"
+msgstr "Lot/Seri"
 
 #. module: product_expiry
-#: field:product.template,alert_time:0
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
 msgid "Product Alert Time"
 msgstr "Ürün Uyarı Zamanı"
 
 #. module: product_expiry
-#: field:product.template,life_time:0
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
 msgid "Product Life Time"
 msgstr "Ürünün Kulanım Tarihi"
 
 #. module: product_expiry
-#: field:product.template,removal_time:0
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_removal_time
 msgid "Product Removal Time"
 msgstr "Ürün Kaldırma Süresi"
 
@@ -84,85 +87,73 @@ msgid "Product Template"
 msgstr "Ürün Şablonu"
 
 #. module: product_expiry
-#: field:product.template,use_time:0
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_use_time
 msgid "Product Use Time"
 msgstr "Ürün Kullanım Süresi"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quants"
-msgstr "Miktarlar"
+msgstr "Stoklar"
 
 #. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-#: field:stock.quant,removal_date:0
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant_removal_date
 msgid "Removal Date"
 msgstr "Kaldırma Tarihi"
 
 #. module: product_expiry
-#: help:stock.production.lot,alert_date:0
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
 msgid ""
 "This is the date on which an alert should be notified about the goods with "
 "this Serial Number."
 msgstr "Bu Seri Numaralı mallar için uyarı verilmesi gereken tarihtir."
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
-msgstr ""
-"Bu Seri Numaralı malların tehlikeli olacağı ve tüketilmemesi gereken "
-"durumdaki tarihtir."
+msgstr "Bu Seri Numaralı malların tehlikeli olacağı ve tüketilmemesi gereken durumdaki tarihtir."
 
 #. module: product_expiry
-#: help:stock.production.lot,removal_date:0
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
 msgstr "Bu Seri Numaralı malların stoktan kaldırılması gereken tarihtir."
 
 #. module: product_expiry
-#: help:stock.production.lot,use_date:0
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_use_date
 msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
-msgstr ""
-"Bu Seri Numaralı malların bozulmaya başlamasından önceki, henüz tehlikeli "
-"değilken, gerekli tarihtir."
+msgstr "Bu Seri Numaralı malların bozulmaya başlamasından önceki, henüz tehlikeli değilken, gerekli tarihtir."
 
 #. module: product_expiry
-#: help:product.template,alert_time:0
+#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr ""
-"Yeni bir seri Numarası verildiğinde bir uyarı verilmeden önceki gün "
-"sayısıdır."
+msgstr "Yeni bir seri Numarası verildiğinde bir uyarı verilmeden önceki gün sayısıdır."
 
 #. module: product_expiry
-#: help:product.template,life_time:0
+#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr ""
-"Yeni bir seri Numarası verildiğinde malların tehlikeli olacağı ve "
-"tüketilmemesi gereken duruma gelmeden önceki gün sayısıdır."
+msgstr "Yeni bir seri Numarası verildiğinde malların tehlikeli olacağı ve tüketilmemesi gereken duruma gelmeden önceki gün sayısıdır."
 
 #. module: product_expiry
-#: help:product.template,removal_time:0
+#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr ""
-"Yeni bir seri Numarası verildiğinde malların stoktan kaldırılmadan önceki "
-"gerekli gün sayısıdır."
+msgstr "Yeni bir seri Numarası verildiğinde malların stoktan kaldırılmadan önceki gerekli gün sayısıdır."
 
 #. module: product_expiry
-#: help:product.template,use_time:0
+#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Yeni bir Seri Numarası verildiğinde malların bozulmaya başlamasından önceki, "
-"henüz tehlikeli değilken, gerekli gün sayısıdır."
+msgstr "Yeni bir Seri Numarası verildiğinde malların bozulmaya başlamasından önceki, henüz tehlikeli değilken, gerekli gün sayısıdır."

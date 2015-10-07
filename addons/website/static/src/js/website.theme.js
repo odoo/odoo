@@ -32,7 +32,8 @@ var Theme = Widget.extend({
         'mousedown label:has(input[data-xmlid],input[data-enable],input[data-disable])': function (event) {
             var self = this;
             this.time_select = _.defer(function () {
-                self.on_select($(event.target).find('input'), event);
+                var input = $(event.target).find('input').length ? $(event.target).find('input') : $(event.target).parent().find('input');
+                self.on_select(input, event);
             });
         },
         'click .close': 'close',

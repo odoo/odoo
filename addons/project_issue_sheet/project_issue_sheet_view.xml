@@ -14,8 +14,7 @@
                 </field>
                 <field name="active" position="after">
                     <field name="analytic_account_id"
-                        domain="[('parent_id','!=',False),('partner_id', '=', partner_id)]"
-                        on_change='on_change_account_id(analytic_account_id)'/>
+                        domain="[('parent_id','!=',False),('partner_id', '=', partner_id)]"/>
                 </field>
                 <xpath expr="//notebook/page[@name='extra_info']" position="before">
                     <page string="Timesheets" groups="project.group_tasks_work_on_tasks,project.group_time_work_estimation_tasks">
@@ -25,7 +24,7 @@
                                 <field name="date"/>
                                 <field name="user_id" required="1"/>
                                 <field name="name"/>
-                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id, user_id, is_timesheet, context)" options="{'no_open': True, 'no_create': True}" groups="analytic.group_analytic_accounting"/>
+                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" options="{'no_open': True, 'no_create': True}" groups="analytic.group_analytic_accounting"/>
                                 <field name="unit_amount" string="Duration" widget="float_time"/>
                                 <field name="is_timesheet" invisible="1"/>
                             </tree>

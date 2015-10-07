@@ -7,6 +7,7 @@
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
             <field name="email_to" >${object.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="subject">Your badge for ${object.event_id.name}</field>
             <field name="auto_delete" eval="True"/>
             <field name="report_template" ref="report_event_registration_badge"/>
@@ -23,6 +24,7 @@ Please, Find your <b>Event Badge</b> attached with this mail.</p>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
             <field name="email_to" >${object.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="reply_to">${object.event_id.reply_to|safe}</field>
             <field name="subject">Your subscription at ${object.event_id.name}</field>
             <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>
@@ -37,6 +39,7 @@ You will automatically receive an email providing you more practical information
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
             <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="reply_to">${object.event_id.reply_to|safe}</field>
             <field name="subject">Reminder of event ${object.event_id.name}</field>
             <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>
@@ -51,6 +54,7 @@ For any further information please contact our event department.</p>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
             <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="reply_to">${object.event_id.reply_to|safe}</field>
             <field name="subject">Thanks for attending ${object.event_id.name}</field>
             <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>

@@ -1,124 +1,68 @@
-# Greek translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_claim
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-10-31 23:20+0000\n"
-"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
-"Language-Team: Greek <el@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-09-19 08:21+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-01 07:13+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm_claim
-#: field:res.partner,claim_count:0
+#: model:ir.model.fields,field_description:crm_claim.field_res_partner_claim_count
 msgid "# Claims"
 msgstr ""
 
 #. module: crm_claim
-#: field:crm.claim.report,email:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_email
 msgid "# Emails"
-msgstr ""
+msgstr "#  Emails"
 
 #. module: crm_claim
-#: field:crm.claim.report,nbr:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_nbr
 msgid "# of Claims"
 msgstr ""
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:167
+#: code:addons/crm_claim/crm_claim.py:142
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (αντίγραφο)"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Record and track your customers' claims. Claims may be "
-"linked to a sales order or a lot.You can send emails with attachments and "
-"keep the full history for a claim (emails sent, intervention type and so "
-"on).Claims may automatically be linked to an email address using the mail "
-"gateway module.\n"
-"                </p>\n"
-"            "
-msgstr ""
-
-#. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a claim category.\n"
-"              </p><p>\n"
-"                Create claim categories to better manage and classify your\n"
-"                claims. Some example of claims can be: preventive action,\n"
-"                corrective action.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Επιλέξτε για να δημιουργήσετε μία κατηγορία απαιτήσεων.\n"
-"</p><p>\n"
-"Δημιουργήστε κατηγορίες απαιτήσεων για καλύτερη διαχείριση και ταξινόμιση "
-"των\n"
-"απαιτήσεων. Μερικά παραδείγματα των απαιτήσεων μπορούν να είναι: προληπτική "
-"δράση,\n"
-"διορθωτική δράση.\n"
-"</p>\n"
-"            "
-
-#. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to setup a new stage in the processing of the claims. "
-"\n"
-"              </p><p>\n"
-"                You can create claim stages to categorize the status of "
-"every\n"
-"                claim entered in the system. The stages define all the "
-"steps\n"
-"                required for the resolution of a claim.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Επιλέξτε για να ρυθμίσετε ένα νέο στάδιο στην επεξεργασία των απαιτήσεων. \n"
-"</p><p>\n"
-"Μπορείτε να δημιουργήσετε στάδια απαιτήσεων για να κατηγοριοποιήσετε το "
-"καθεστώς της κάθε\n"
-"απαιτήσης που εισέρχεται στο σύστημα. Τα στάδια καθορίζουν όλα τα βήματα\n"
-"που απαιτούνται για την λύση της διαφωνίας μίας απαίτησης.\n"
-"</p>\n"
-"            "
-
-#. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
 msgid "Action Description..."
 msgstr ""
 
 #. module: crm_claim
-#: field:crm.claim,type_action:0
-#: field:crm.claim.report,type_action:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_type_action
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_type_action
 msgid "Action Type"
 msgstr "Τύπος Ενέργειας"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
 msgid "Actions"
 msgstr "Ενέργειες"
 
 #. module: crm_claim
-#: field:crm.claim,active:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_active
 msgid "Active"
-msgstr "Ενεργή"
+msgstr "Ενεργό"
 
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_report
@@ -131,65 +75,71 @@ msgid "Categories"
 msgstr "Κατηγορίες"
 
 #. module: crm_claim
-#: field:crm.claim,categ_id:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
-#: field:crm.claim.report,categ_id:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_categ_id
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_categ_id
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "Category"
 msgstr "Κατηγορία"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.model,name:crm_claim.model_crm_claim_category
+msgid "Category of claim"
+msgstr ""
+
+#. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_config_claim
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
 msgid "Claim"
 msgstr "Απαίτηση"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
+#: model:ir.ui.view,arch_db:crm_claim.crm_claim_category_form
+#: model:ir.ui.view,arch_db:crm_claim.crm_claim_category_tree
 msgid "Claim Categories"
 msgstr "Κατηγορίες Απαιτήσεων"
 
 #. module: crm_claim
-#: field:crm.claim,date:0
-#: field:crm.claim.report,claim_date:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_date
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_claim_date
 msgid "Claim Date"
 msgstr "Ημερομηνία Απαίτησης"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
 msgid "Claim Date by Month"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
 msgid "Claim Description"
-msgstr "Περιγραφή Απαίτησης"
+msgstr "Περιγραφή Αξίωσης"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
 msgid "Claim Month"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
 msgid "Claim Reporter"
 msgstr "Αυτός που ανέφερε την Απαίτηση"
 
 #. module: crm_claim
-#: view:crm.claim.stage:crm_claim.crm_claim_stage_form
+#: model:ir.ui.view,arch_db:crm_claim.crm_claim_stage_form
 msgid "Claim Stage"
 msgstr "Στάδιο Απαίτησης"
 
 #. module: crm_claim
-#: view:crm.claim.stage:crm_claim.crm_claim_stage_tree
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_stage_act
+#: model:ir.ui.view,arch_db:crm_claim.crm_claim_stage_tree
 msgid "Claim Stages"
 msgstr "Στάδια Απαιτήσεων"
 
 #. module: crm_claim
-#: field:crm.claim,name:0
-#: field:crm.claim.report,subject:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_name
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_subject
 msgid "Claim Subject"
 msgstr "Θέμα Απαίτησης"
 
@@ -199,201 +149,234 @@ msgid "Claim stages"
 msgstr "Στάδια Απαιτήσεων"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
 msgid "Claim/Action Description"
-msgstr "Περιγραφή Απαίτησης/Ενέργειας"
+msgstr "Περιγραφή Απαίτησης/Δράσης"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_calendar_view
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
-#: view:crm.claim:crm_claim.crm_case_claims_tree_view
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_graph
-#: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
+#: model:ir.actions.act_window,name:crm_claim.crm_claim_category_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
-#: view:res.partner:crm_claim.view_claim_res_partner_info_form
+#: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_calendar_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_tree_view
+#: model:ir.ui.view,arch_db:crm_claim.view_claim_res_partner_info_form
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_graph
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_pivot
 msgid "Claims"
 msgstr "Απαιτήσεις"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
-#: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
 msgid "Claims Analysis"
 msgstr "Ανάλυση Απαιτήσεων"
 
 #. module: crm_claim
-#: field:crm.claim.report,date_closed:0
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
+msgid "Click to create a claim category."
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
+msgid "Click to setup a new stage in the processing of the claims."
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_date_closed
 msgid "Close Date"
-msgstr "Μέρα Κλεισίματος"
+msgstr "Ημερομηνία Ολοκλήρωσης"
 
 #. module: crm_claim
-#: field:crm.claim,date_closed:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_date_closed
 msgid "Closed"
-msgstr "Έκλεισε"
+msgstr "Κλεισμένα"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
 msgid "Closure"
 msgstr "Κλεισμένη"
 
 #. module: crm_claim
-#: field:crm.claim.stage,case_default:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage_case_default
 msgid "Common to All Teams"
 msgstr "Κοινή σε Όλες τις Ομάδες"
 
 #. module: crm_claim
-#: field:crm.claim,company_id:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
-#: field:crm.claim.report,company_id:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_company_id
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_company_id
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "Company"
-msgstr "Εταιρία"
+msgstr "Εταιρεία"
 
 #. module: crm_claim
-#: model:crm.tracking.campaign,name:crm_claim.claim_source1
+#: model:utm.campaign,name:crm_claim.claim_source1
 msgid "Corrective"
 msgstr "Διορθωτική"
 
 #. module: crm_claim
-#: selection:crm.claim,type_action:0
-#: selection:crm.claim.report,type_action:0
+#: selection:crm.claim,type_action:0 selection:crm.claim.report,type_action:0
 msgid "Corrective Action"
 msgstr "Διορθωτική Ενέργεια"
 
 #. module: crm_claim
-#: field:crm.claim.report,create_date:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_create_date
 msgid "Create Date"
 msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: crm_claim
-#: field:crm.claim,create_uid:0
-#: field:crm.claim.stage,create_uid:0
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
+msgid ""
+"Create claim categories to better manage and classify your\n"
+"                claims. Some example of claims can be: preventive action,\n"
+"                corrective action."
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_category_create_uid
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_create_uid
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage_create_uid
 msgid "Created by"
 msgstr "Δημιουργήθηκε από"
 
 #. module: crm_claim
-#: field:crm.claim.stage,create_date:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_category_create_date
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage_create_date
 msgid "Created on"
 msgstr "Δημιουργήθηκε στις"
 
 #. module: crm_claim
-#: field:crm.claim,create_date:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_create_date
 msgid "Creation Date"
 msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
+msgid "Creation Month"
+msgstr "Μήνας Δημιουργίας"
+
+#. module: crm_claim
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
 msgid "Date Closed"
 msgstr "Ημερομηνία Κλεισίματος"
 
 #. module: crm_claim
-#: help:crm.claim,message_last_post:0
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_message_last_post
 msgid "Date of the last message posted on the record."
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
 msgid "Dates"
 msgstr "Ημερομηνίες"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
-#: field:crm.claim,date_deadline:0
-#: field:crm.claim.report,date_deadline:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_date_deadline
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_date_deadline
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
 msgid "Deadline"
-msgstr "Προσθεσμία"
+msgstr "Χρονικό Όριο"
 
 #. module: crm_claim
-#: field:crm.claim.report,delay_close:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_delay_close
 msgid "Delay to close"
-msgstr "Καθυστέρηση για κλείσιμο"
+msgstr "Καθηστέρηση για κλείσιμο"
 
 #. module: crm_claim
-#: field:crm.claim,description:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_description
 msgid "Description"
 msgstr "Περιγραφή"
 
 #. module: crm_claim
-#: help:crm.claim,email_from:0
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_email_from
 msgid "Destination email for email gateway."
 msgstr ""
 
 #. module: crm_claim
-#: field:crm.claim,email_from:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_category_display_name
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_display_name
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_display_name
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_email_from
 msgid "Email"
 msgstr "Email"
 
 #. module: crm_claim
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "Extended Filters..."
 msgstr "Εκτεταμένα Φίλτρα..."
 
 #. module: crm_claim
-#: model:crm.case.categ,name:crm_claim.categ_claim1
+#: model:crm.claim.category,name:crm_claim.categ_claim1
 msgid "Factual Claims"
-msgstr "Πραγματκές Απαιτήσεις"
+msgstr "Πραγματκές Αξιώσεις"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
 msgid "Follow Up"
 msgstr "Παρακολούθηση"
 
 #. module: crm_claim
-#: field:crm.claim,message_follower_ids:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_message_follower_ids
 msgid "Followers"
 msgstr "Ακόλουθοι"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "Group By"
-msgstr "Ομαδοποίηση Κατά"
+msgstr "Ομαδοποίηση Ανά"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
 msgid ""
 "Have a general overview of all claims processed in the system by sorting "
 "them with specific criteria."
-msgstr ""
-"Έχετε μια γενική ιδέα από όλες τις απαιτήσεις που προτάθηκαν στο σύστημα "
-"ταξινομόντας αυτές με συγκεκριμένα κριτήρια."
+msgstr "Έχετε μια γενική ιδέα από όλες τις απαιτήσεις που προτάθηκαν στο σύστημα ταξινομόντας αυτές με συγκεκριμένα κριτήρια."
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
+#: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
 msgid "High"
 msgstr "Υψηλή"
 
 #. module: crm_claim
-#: help:crm.claim,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Κρατά την συγκεντρωτική σύνοψη (αριθμός των μυνημάτων, ...). Αυτή η σύνοψη "
-"είναι κατευθείαν σε html format για να μπορέσει να ενσωματωθεί σε kanban "
-"εμφανίσεις."
-
-#. module: crm_claim
-#: field:crm.claim,id:0
-#: field:crm.claim.report,id:0
-#: field:crm.claim.stage,id:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_category_id
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_id
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_id
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage_id
 msgid "ID"
-msgstr "Κωδικός"
+msgstr "ID"
 
 #. module: crm_claim
-#: help:crm.claim,message_unread:0
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
 
 #. module: crm_claim
-#: help:crm.claim.stage,case_default:0
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_stage_case_default
 msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
-msgstr ""
-"Εάν επιλέξετε αυτό το πεδίο, αυτό το στάδιο θα προτείνεται προρυθμισμένο σε "
-"κάθε ομάδα πωλήσεων. Δεν θα ανατεθεί αυτό το στάδιο όμως σε υφιστάμενες "
-"ομάδες."
+msgstr "Εάν επιλέξετε αυτό το πεδίο, αυτό το στάδιο θα προτείνεται προρυθμισμένο σε κάθε ομάδα πωλήσεων. Δεν θα ανατεθεί αυτό το στάδιο όμως σε υφιστάμενες ομάδες."
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim5
@@ -401,149 +384,178 @@ msgid "In Progress"
 msgstr "Σε Εξέλιξη"
 
 #. module: crm_claim
-#: field:crm.claim,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Είναι Ακόλουθος"
-
-#. module: crm_claim
-#: field:crm.claim,message_last_post:0
-msgid "Last Message Date"
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_message_is_follower
+msgid "Is Follower"
 msgstr ""
 
 #. module: crm_claim
-#: field:crm.claim,write_uid:0
-#: field:crm.claim.stage,write_uid:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_message_last_post
+msgid "Last Message Date"
+msgstr "Τελευταία ημερομηνία μηνύματος"
+
+#. module: crm_claim
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim___last_update
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_category___last_update
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report___last_update
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_category_write_uid
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage_write_uid
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_write_uid
 msgid "Last Updated by"
 msgstr "Τελευταία ενημέρωση από"
 
 #. module: crm_claim
-#: field:crm.claim.stage,write_date:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_category_write_date
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage_write_date
 msgid "Last Updated on"
 msgstr "Τελευταία ενημέρωση στις"
 
 #. module: crm_claim
-#: help:crm.claim.stage,section_ids:0
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_stage_team_ids
 msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
-msgstr ""
-"Σύνδεσμος μεταξύ σταδίων και ομάδων πώλησης. Όταν ρυθμιστεί, αυτό περιορίζει "
-"το τρέχον στάδιο στις επιλεγμένες ομάδες πώλησης."
+msgstr "Σύνδεσμος μεταξύ σταδίων και ομάδων πώλησης. Όταν ρυθμιστεί, αυτό περιορίζει το τρέχον στάδιο στις επιλεγμένες ομάδες πώλησης."
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
+#: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
 msgid "Low"
 msgstr "Χαμηλή"
 
 #. module: crm_claim
-#: field:crm.claim,message_ids:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_message_ids
 msgid "Messages"
-msgstr "Μυνήματα"
+msgstr "Μηνύματα"
 
 #. module: crm_claim
-#: help:crm.claim,message_ids:0
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_message_ids
 msgid "Messages and communication history"
 msgstr "Μηνύματα και ιστορικό επικοινωνίας"
 
 #. module: crm_claim
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "Month of claim"
 msgstr "Μήνας της απαίτησης"
 
 #. module: crm_claim
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
-msgid "My Case(s)"
-msgstr "Οι Υποθέσεις μου"
-
-#. module: crm_claim
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "My Company"
 msgstr "Η Εταιρία μου"
 
 #. module: crm_claim
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "My Sales Team(s)"
-msgstr "Οι Δικές μου Ομάδες Πωλήσεων"
+msgstr "Οι δικές μου Ομάδες Πώλησεων"
+
+#. module: crm_claim
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_category_name
+msgid "Name"
+msgstr "Όνομα"
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim1
 msgid "New"
-msgstr "Νέα"
+msgstr "Νέο"
 
 #. module: crm_claim
-#: field:crm.claim,action_next:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_action_next
 msgid "Next Action"
 msgstr "Επόμενη Ενέργεια"
 
 #. module: crm_claim
-#: field:crm.claim,date_action_next:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_date_action_next
 msgid "Next Action Date"
 msgstr "Επόμενη Ημερομηνία Ενέργειας"
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:183
+#: code:addons/crm_claim/crm_claim.py:158
 #, python-format
 msgid "No Subject"
 msgstr "Χωρίς Θέμα"
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
+#: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
 msgid "Normal"
-msgstr "Κανονική"
+msgstr "Κανονικό"
 
 #. module: crm_claim
-#: help:crm.claim.report,delay_close:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_report_delay_close
 msgid "Number of Days to close the case"
 msgstr "Αριθμός Ημερών για κλείσιμο της υπόθεσης"
 
 #. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Εκπρόθεσμη Προθεσμία"
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
-#: field:crm.claim,partner_id:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
-#: field:crm.claim.report,partner_id:0
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_delay_expected
+msgid "Overpassed Deadline"
+msgstr "Περασμένη Προθεσμία"
+
+#. module: crm_claim
 #: model:ir.model,name:crm_claim.model_res_partner
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_partner_id
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_partner_id
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "Partner"
 msgstr "Συνεργάτης"
 
 #. module: crm_claim
-#: field:crm.claim,partner_phone:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_partner_phone
 msgid "Phone"
 msgstr "Τηλέφωνο"
 
 #. module: crm_claim
-#: model:crm.case.categ,name:crm_claim.categ_claim3
+#: model:crm.claim.category,name:crm_claim.categ_claim3
 msgid "Policy Claims"
-msgstr "Πολιτικές Απαιτήσεων"
+msgstr "Αξιώσεις (Πολιτική Εταιρείας)"
 
 #. module: crm_claim
-#: model:crm.tracking.campaign,name:crm_claim.claim_source2
+#: model:utm.campaign,name:crm_claim.claim_source2
 msgid "Preventive"
 msgstr "Προληπτικά"
 
 #. module: crm_claim
-#: selection:crm.claim,type_action:0
-#: selection:crm.claim.report,type_action:0
+#: selection:crm.claim,type_action:0 selection:crm.claim.report,type_action:0
 msgid "Preventive Action"
 msgstr "Προληπτική Δράση"
 
 #. module: crm_claim
-#: field:crm.claim,priority:0
-#: field:crm.claim.report,priority:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_priority
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_priority
 msgid "Priority"
 msgstr "Προτεραιότητα"
 
 #. module: crm_claim
-#: field:crm.claim,ref:0
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_category_claim0
+msgid ""
+"Record and track your customers' claims. Claims may be linked to a sales "
+"order or a lot.You can send emails with attachments and keep the full "
+"history for a claim (emails sent, intervention type and so on).Claims may "
+"automatically be linked to an email address using the mail gateway module."
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_ref
 msgid "Reference"
-msgstr "Παραπομπή"
+msgstr "Αναφορά"
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim3
@@ -551,85 +563,74 @@ msgid "Rejected"
 msgstr "Απορίφθηκε"
 
 #. module: crm_claim
-#: field:crm.claim,resolution:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_resolution
 msgid "Resolution"
 msgstr "Λύση"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
 msgid "Resolution Actions"
 msgstr "Ενέργειες Λύσης Διαφορών"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
 msgid "Responsibilities"
 msgstr "Αρμοδιότητες"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
-#: field:crm.claim,user_id:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_user_id
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
 msgid "Responsible"
 msgstr "Υπεύθυνος"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
 msgid "Responsible User"
 msgstr "Υπεύθυνος Χρήστης"
 
 #. module: crm_claim
-#: help:crm.claim,section_id:0
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_team_id
 msgid ""
 "Responsible sales team. Define Responsible user and Email account for mail "
 "gateway."
-msgstr ""
-"Υπεύθυνη ομάδα πωλήσεων. Καθορίστε Υπεύθυνο χρήστη και Email λογαριασμό για "
-"mail gateway."
+msgstr "Υπεύθυνη ομάδα πώλησης. Καθορίστε Υπεύθυνο χρήστη και Email λογαριασμό για mail gateway."
 
 #. module: crm_claim
-#: field:crm.claim,cause:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_cause
 msgid "Root Cause"
 msgstr "Βασική Αιτία"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_form_view
 msgid "Root Causes"
 msgstr "Βασικές Αιτίες"
 
 #. module: crm_claim
-#: field:crm.claim,section_id:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_category_team_id
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_team_id
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "Sales Team"
 msgstr "Ομάδα Πώλησης"
 
 #. module: crm_claim
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "Salesperson"
 msgstr "Πωλητής"
 
 #. module: crm_claim
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "Search"
 msgstr "Αναζήτηση"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
 msgid "Search Claims"
 msgstr "Αναζήτηση Απαιτήσεων"
 
 #. module: crm_claim
-#: field:crm.claim.report,section_id:0
-msgid "Section"
-msgstr "Τομέας"
-
-#. module: crm_claim
-#: field:crm.claim.stage,section_ids:0
-msgid "Sections"
-msgstr "Τομείς"
-
-#. module: crm_claim
-#: field:crm.claim.stage,sequence:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage_sequence
 msgid "Sequence"
-msgstr "Ακολουθία"
+msgstr "Ιεράρχηση"
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim2
@@ -637,15 +638,15 @@ msgid "Settled"
 msgstr "Διευθετήθηκε"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
-#: field:crm.claim,stage_id:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
-#: field:crm.claim.report,stage_id:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_stage_id
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage_id_8819
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_report_crm_claim_filter
 msgid "Stage"
 msgstr "Στάδιο"
 
 #. module: crm_claim
-#: field:crm.claim.stage,name:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage_name
 msgid "Stage Name"
 msgstr "Όνομα Σταδίου"
 
@@ -655,75 +656,81 @@ msgid "Stages"
 msgstr "Στάδια"
 
 #. module: crm_claim
-#: field:crm.claim,message_summary:0
-msgid "Summary"
-msgstr "Σύνοψη"
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_team_id
+msgid "Team"
+msgstr "Ομάδα"
 
 #. module: crm_claim
-#: help:crm.claim,email_cc:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_stage_team_ids
+msgid "Teams"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_email_cc
 msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr ""
-"Αυτές οι διευθύνσεις email θα προστεθούν στο CC πεδίο όλων των εισερχμένων "
-"και εξερχομένων emails για αυτή την εγγραφή πριν αποσταλλούν. Διαφορετικές ή "
-"πολλαπλές email διευθύνσεις με ελληνικό ερωτηματικό"
+msgstr "Αυτές οι email διευθύνσεις θα προστεθούν στο CC πεδίο όλων των εισερχόμενων και εξερχόμενων emails για αυτή την εγγραφή πριν αποσταλεί. Διαφορετικές πολλαπλάσιες email διευθύνσεις με ένα ερωτηματικό"
 
 #. module: crm_claim
-#: field:crm.claim,user_fault:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_user_fault
 msgid "Trouble Responsible"
 msgstr "Υπεύθυνος Προβλήματος"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.crm_case_claims_tree_view
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: model:ir.ui.view,arch_db:crm_claim.crm_case_claims_tree_view
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
 msgid "Type"
 msgstr "Τύπος"
 
 #. module: crm_claim
-#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: model:ir.ui.view,arch_db:crm_claim.view_crm_case_claims_filter
 msgid "Unassigned Claims"
 msgstr "Μη Ανατεθιμένες Απαιτήσεις"
 
 #. module: crm_claim
-#: field:crm.claim,message_unread:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_message_unread
 msgid "Unread Messages"
 msgstr "Αδιάβαστα Μυνήματα"
 
 #. module: crm_claim
-#: field:crm.claim,write_date:0
-msgid "Update Date"
-msgstr "Ημερομηνία Ενημέρωσης"
-
-#. module: crm_claim
-#: help:crm.claim.stage,sequence:0
-msgid "Used to order stages. Lower is better."
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_message_unread_counter
+msgid "Unread Messages Counter"
 msgstr ""
-"Χρησιμοποιείται για να ιεραρχήσει στάδια. Χαμηλότερο είναι το καλύτερο"
 
 #. module: crm_claim
-#: field:crm.claim.report,user_id:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_write_date
+msgid "Update Date"
+msgstr "Ανανέωση Ημερ/νίας"
+
+#. module: crm_claim
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_stage_sequence
+msgid "Used to order stages. Lower is better."
+msgstr "Χρησιμοποιείται για να ιεραρχήσει στάδια. Χαμηλότερο είναι το καλύτερο"
+
+#. module: crm_claim
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_report_user_id
 msgid "User"
 msgstr "Χρήστης"
 
 #. module: crm_claim
-#: model:crm.case.categ,name:crm_claim.categ_claim2
+#: model:crm.claim.category,name:crm_claim.categ_claim2
 msgid "Value Claims"
-msgstr "Αξία Αξιώσεων"
+msgstr "Αξιώσεις Αξίας"
 
 #. module: crm_claim
-#: field:crm.claim,email_cc:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_email_cc
 msgid "Watchers Emails"
 msgstr "Emails Αναγνωστών"
 
 #. module: crm_claim
-#: field:crm.claim,website_message_ids:0
+#: model:ir.model.fields,field_description:crm_claim.field_crm_claim_website_message_ids
 msgid "Website Messages"
 msgstr ""
 
 #. module: crm_claim
-#: help:crm.claim,website_message_ids:0
+#: model:ir.model.fields,help:crm_claim.field_crm_claim_website_message_ids
 msgid "Website communication history"
 msgstr ""
 
@@ -732,5 +739,10 @@ msgstr ""
 msgid "Workload"
 msgstr ""
 
-#~ msgid "# of Cases"
-#~ msgstr "# από Υποθέσεις"
+#. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
+msgid ""
+"You can create claim stages to categorize the status of every\n"
+"                claim entered in the system. The stages define all the steps\n"
+"                required for the resolution of a claim."
+msgstr ""

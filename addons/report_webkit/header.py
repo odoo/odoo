@@ -68,7 +68,7 @@ class HeaderImage(osv.osv):
     _name = "ir.header_img"
     _columns = {
         'company_id' : fields.many2one('res.company', 'Company'),
-        'img' : fields.binary('Image'),
+        'img' : fields.binary('Image', attachment=True),
         'name' : fields.char('Name', required =True, help="Name of Image"),
         'type' : fields.char('Type', required =True, help="Image type(png,gif,jpeg)")
     }

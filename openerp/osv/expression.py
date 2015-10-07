@@ -117,9 +117,11 @@ import collections
 
 import logging
 import traceback
+from zlib import crc32
 
 import openerp.modules
 from . import fields
+from .. import SUPERUSER_ID
 from ..models import MAGIC_COLUMNS, BaseModel
 import openerp.tools as tools
 
@@ -139,7 +141,7 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
-                  'child_of')
+                  'child_of', 'parent_of')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
@@ -324,7 +326,16 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
         return '%s' % alias, '%s' % _quote(alias)
     for link in joined_tables:
         alias += '__' + link[1]
-    assert len(alias) < 64, 'Table alias name %s is longer than the 64 characters size accepted by default in postgresql.' % alias
+    # Use an alternate alias scheme if length exceeds the PostgreSQL limit
+    # of 63 characters.
+    if len(alias) >= 64:
+        # We have to fit a crc32 hash and one underscore
+        # into a 63 character alias. The remaining space we can use to add
+        # a human readable prefix.
+        alias_hash = hex(crc32(alias))[2:]
+        ALIAS_PREFIX_LENGTH = 63 - len(alias_hash) - 1
+        alias = "%s_%s" % (
+            alias[:ALIAS_PREFIX_LENGTH], alias_hash)
     return '%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias))
 
 
@@ -714,6 +725,34 @@ class expression(object):
                     return ids + recursive_children(ids2, model, parent_field)
                 return [(left, 'in', recursive_children(ids, left_model, parent or left_model._parent_name))]
 
+        def parent_of_domain(left, ids, left_model, parent=None, prefix='', context=None):
+            """ Return a domain implementing the parent_of operator for [(left,parent_of,ids)],
+                either as a range using the parent_left/right tree lookup fields
+                (when available), or as an expanded [(left,in,parent_ids)] """
+            if left_model._parent_store and (not left_model.pool._init):
+                doms = []
+                for node in left_model.browse(cr, uid, ids, context=context):
+                    if doms:
+                        doms.insert(0, OR_OPERATOR)
+                    doms += [AND_OPERATOR, ('parent_right', '>', node.parent_left), ('parent_left', '<=',  node.parent_left)]
+                if prefix:
+                    return [(left, 'in', left_model.search(cr, uid, doms, context=context))]
+                return doms
+            else:
+                def get_parent_ids(record, parent_field):
+                    ids = set([record.id])
+                    while record[parent_field]:
+                        record = record[parent_field]
+                        ids.add(record.id)
+                    return ids
+                parent_ids = set()
+                for node in left_model.browse(cr, uid, ids, context=context):
+                    parent_ids |= get_parent_ids(node, parent or left_model._parent_name)
+                return [(left, 'in', list(parent_ids))]
+
+        HIERARCHY_FUNCS = {'child_of': child_of_domain,
+                           'parent_of': parent_of_domain}
+
         def pop():
             """ Pop a leaf to process. """
             return self.stack.pop()
@@ -780,9 +819,9 @@ class expression(object):
                 leaf.add_join_context(next_model, model._inherits[next_model._name], 'id', model._inherits[next_model._name])
                 push(leaf)
 
-            elif left == 'id' and operator == 'child_of':
+            elif left == 'id' and operator in HIERARCHY_FUNCS:
                 ids2 = to_ids(right, model, context)
-                dom = child_of_domain(left, ids2, model)
+                dom = HIERARCHY_FUNCS[operator](left, ids2, model)
                 for dom_leaf in reversed(dom):
                     new_leaf = create_substitution_leaf(leaf, dom_leaf, model)
                     push(new_leaf)
@@ -895,12 +934,12 @@ class expression(object):
             # -------------------------------------------------
 
             # Applying recursivity on field(one2many)
-            elif column._type == 'one2many' and operator == 'child_of':
+            elif column._type == 'one2many' and operator in HIERARCHY_FUNCS:
                 ids2 = to_ids(right, comodel, context)
                 if column._obj != model._name:
-                    dom = child_of_domain(left, ids2, comodel, prefix=column._obj)
+                    dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=column._obj)
                 else:
-                    dom = child_of_domain('id', ids2, model, parent=left)
+                    dom = HIERARCHY_FUNCS[operator]('id', ids2, model, parent=left)
                 for dom_leaf in reversed(dom):
                     push(create_substitution_leaf(leaf, dom_leaf, model))
 
@@ -924,11 +963,16 @@ class expression(object):
                             call_null = False
                             push(create_substitution_leaf(leaf, FALSE_LEAF, model))
                     else:
-                        ids2 = select_from_where(cr, column._fields_id, comodel._table, 'id', ids2, operator)
-                        if ids2:
+                        # determine ids1 <-- column._fields_id --- ids2
+                        if comodel._fields[column._fields_id].store:
+                            ids1 = select_from_where(cr, column._fields_id, comodel._table, 'id', ids2, operator)
+                        else:
+                            recs = comodel.browse(cr, SUPERUSER_ID, ids2, {'prefetch_fields': False})
+                            ids1 = recs.mapped(column._fields_id).ids
+                        if ids1:
                             call_null = False
                             o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            push(create_substitution_leaf(leaf, ('id', o2m_op, ids2), model))
+                            push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
 
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
@@ -936,14 +980,15 @@ class expression(object):
 
             elif column._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = column._sql_names(model)
-                if operator == 'child_of':
+
+                if operator in HIERARCHY_FUNCS:
                     def _rec_convert(ids):
                         if comodel == model:
                             return ids
                         return select_from_where(cr, rel_id1, rel_table, rel_id2, ids, operator)
 
                     ids2 = to_ids(right, comodel, context)
-                    dom = child_of_domain('id', ids2, comodel)
+                    dom = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
                     ids2 = comodel.search(cr, uid, dom, context=context)
                     push(create_substitution_leaf(leaf, ('id', 'in', _rec_convert(ids2)), model))
                 else:
@@ -976,12 +1021,12 @@ class expression(object):
                         push(create_substitution_leaf(leaf, ('id', m2m_op, select_distinct_from_where_not_null(cr, rel_id1, rel_table)), model))
 
             elif column._type == 'many2one':
-                if operator == 'child_of':
+                if operator in HIERARCHY_FUNCS:
                     ids2 = to_ids(right, comodel, context)
                     if column._obj != model._name:
-                        dom = child_of_domain(left, ids2, comodel, prefix=column._obj)
+                        dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=column._obj)
                     else:
-                        dom = child_of_domain('id', ids2, model, parent=left)
+                        dom = HIERARCHY_FUNCS[operator]('id', ids2, model, parent=left)
                     for dom_leaf in reversed(dom):
                         push(create_substitution_leaf(leaf, dom_leaf, model))
                 else:
@@ -1011,6 +1056,23 @@ class expression(object):
                     else:
                         # right == [] or right == False and all other cases are handled by __leaf_to_sql()
                         push_result(leaf)
+
+            # -------------------------------------------------
+            # BINARY FIELDS STORED IN ATTACHMENT
+            # -> check for null only
+            # -------------------------------------------------
+
+            elif column._type == 'binary' and column.attachment:
+                if operator in ('=', '!=') and not right:
+                    inselect_operator = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
+                    subselect = "SELECT res_id FROM ir_attachment WHERE res_model=%s AND res_field=%s"
+                    params = (model._name, left)
+                    push(create_substitution_leaf(leaf, ('id', inselect_operator, (subselect, params)), model, internal=True))
+                else:
+                    _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
+                                  column.string, left, operator, right)
+                    leaf.leaf = TRUE_LEAF
+                    push(leaf)
 
             # -------------------------------------------------
             # OTHER FIELDS

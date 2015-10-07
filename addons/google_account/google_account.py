@@ -10,7 +10,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 import werkzeug.urls
 import urllib2
-import simplejson
+import json
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ class google_service(osv.osv_memory):
             error_msg = "Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired"
             raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
 
-        content = simplejson.loads(content)
+        content = json.loads(content)
         return content.get('refresh_token')
 
     def _get_google_token_uri(self, cr, uid, service, scope, context=None):
@@ -63,7 +63,7 @@ class google_service(osv.osv_memory):
         params = {
             'response_type': 'code',
             'client_id': client_id,
-            'state': simplejson.dumps(state_obj),
+            'state': json.dumps(state_obj),
             'scope': scope or 'https://www.googleapis.com/auth/%s' % (service,),
             'redirect_uri': base_url + '/google_account/authentication',
             'approval_prompt': 'force',
@@ -123,7 +123,7 @@ class google_service(osv.osv_memory):
                 registry = openerp.modules.registry.RegistryManager.get(request.session.db)
                 with registry.cursor() as cur:
                     self.pool['res.users'].write(cur, uid, [uid], {'google_%s_rtoken' % service: False}, context=context)
-            error_key = simplejson.loads(e.read()).get("error", "nc")
+            error_key = json.loads(e.read()).get("error", "nc")
             _logger.exception("Bad google request : %s !" % error_key)
             error_msg = "Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]" % error_key
             raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
@@ -156,7 +156,7 @@ class google_service(osv.osv_memory):
                 response = False
             else:
                 content = request.read()
-                response = simplejson.loads(content)
+                response = json.loads(content)
 
             try:
                 ask_time = datetime.strptime(request.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")

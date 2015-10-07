@@ -37,6 +37,7 @@
 
         > div {
             display: inline-block;
+            vertical-align: top;
             @media (min-width: @screen-sm-min) {
                 width: 50%;
             }
@@ -53,12 +54,10 @@
                     border-top: 1px solid @odoo-view-background-color;
                     width: 25%;
 
+                    height: 33px;
+
                     span {
                         display: inline;
-                    }
-
-                    .o_target_reached {
-                        color: green;
                     }
 
                     a:hover {

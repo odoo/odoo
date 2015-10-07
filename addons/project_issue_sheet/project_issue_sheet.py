@@ -44,18 +44,6 @@ class project_issue(osv.osv):
 
         return result
 
-    def on_change_account_id(self, cr, uid, ids, account_id, context=None):
-        if not account_id:
-            return {}
-
-        account = self.pool.get('account.analytic.account').browse(cr, uid, account_id, context=context)
-        result = {}
-
-        if account and account.state == 'pending':
-            result = {'warning' : {'title' : _('Analytic Account'), 'message' : _('The Analytic Account is pending !')}}
-            
-        return result
-
 
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'

@@ -1,136 +1,85 @@
-# Turkish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * procurement
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-11-15 09:38+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-09-19 08:25+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-16 06:20+0000\n"
-"X-Generator: Launchpad (build 17241)\n"
+"Content-Transfer-Encoding: \n"
 "Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_exceptions
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                 Click to create a Procurement.\n"
-"              </p>\n"
-"              <p>\n"
-"                <b>Procurement Orders</b> represent the need for a certain "
-"quantity of products, at a given time, in a given location.\n"
-"              </p>\n"
-"              <p>\n"
-"                <b>Sales Orders</b> are one typical source of Procurement "
-"Orders (but these are distinct documents). \n"
-"                <br/>Depending on the procurement parameters and the product "
-"configuration, the procurement engine will attempt to satisfy the need by "
-"reserving products from stock, ordering products from a supplier, or passing "
-"a manufacturing order, etc...\n"
-"              </p>\n"
-"              <p>\n"
-"                A <b>Procurement Exception</b> occurs when the system cannot "
-"find a way to fulfill a procurement. Some exceptions will resolve themselves "
-"automatically, but others require manual intervention (those are identified "
-"by a specific error message in the chatter).\n"
-"              </p>\n"
-"            "
+"<b>Procurement Orders</b> represent the need for a certain quantity of "
+"products, at a given time, in a given location."
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                 Bir Tedarik oluşturmak için tıklayın.\n"
-"              </p>\n"
-"              <p>\n"
-"                <b>Tedarik Siparişleri</b> belirli miktarda ürünün, verilen "
-"zamanda, verilen konumdaki ihtiyacını yansıtır.\n"
-"              </p>\n"
-"              <p>\n"
-"                <b>Satış Siparişleri</b> tipik bir Tedarik Siparişi "
-"kaynağıdır (ancak bunlar farklı belgelerdir). \n"
-"                <br/>Tedarik parametrelerine ve ürün yapısına bağlı olarak, "
-"tedarik motoru ürün gereksinimini stoktan ayırarak, bir tedarikçiye sipariş "
-"vererek veya bir üretim emri geçerek, vb  karşılamaya çalışır...\n"
-"              </p>\n"
-"              <p>\n"
-"                A <b>Tedarik İstisnası</b> sistem bir tedariği yerine "
-"getiremezse oluşur. Bazı istisnalar otomatik olarak kendi kendine çözüm "
-"sağlayabilir, ancak diğerleri elle müdahale gerektirir (bunlar sohbetçide "
-"özel bir hata mesajı ile belirlenir).\n"
-"              </p>\n"
-"            "
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
+"                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"A <b>Procurement Exception</b> occurs when the system cannot find a way to "
+"fulfill a procurement. Some exceptions will resolve themselves "
+"automatically, but others require manual intervention (those are identified "
+"by a specific error message in the chatter)."
+msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                 Click to create a procurement order.  \n"
-"              </p>\n"
-"              <p>\n"
-"                A <b>procurement order</b> is used to record a need for a "
-"specific\n"
-"                product at a specific location. Procurement orders are "
-"usually\n"
-"                created automatically from <i>sales orders, pull logistic "
-"rules or\n"
-"                minimum stock rules.</i>\n"
-"              </p>\n"
-"              <p>\n"
-"                When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: "
-"purchase\n"
-"                order proposition, manufacturing order, etc.\n"
-"              </p>\n"
-"            "
+"A <b>procurement order</b> is used to record a need for a specific\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
+"                minimum stock rules.</i>"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                 Bir tedarik siparişi oluşturmak için tıklayın.  \n"
-"              </p>\n"
-"              <p>\n"
-"                A <b>Tedarik Siparişi</b> bir ürünün belirli bir konumdaki \n"
-"                gereksinimini kayıt için kullanılır. Tedarik sioarişleri "
-"genellikle\n"
-"                <i>satış siparişlerinden, çekme lojistik kurallarından veya "
-"enaz\n"
-"                stok kurallarından otomatik olarak oluşturulur.</i>\n"
-"              </p>\n"
-"              <p>\n"
-"                Tedarik siparişi onayladığında gereksinimi karşılamak\n"
-"                üzere otomatik olarak gerekli işlemleri başlatır: satınalma\n"
-"                siparişi teklifi, üretim emri, vb.\n"
-"              </p>\n"
-"            "
 
 #. module: procurement
-#: field:procurement.rule,action:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
 msgid "Action"
 msgstr "İşlem"
 
 #. module: procurement
-#: field:procurement.rule,active:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
 msgid "Active"
 msgstr "Etkin"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "All at once"
-msgstr "Hepsi birden"
+msgstr "Tümünü birden"
 
 #. module: procurement
-#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
-msgstr "İptal"
+msgstr "Vazgeç"
 
 #. module: procurement
-#: view:procurement.order:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Cancel Procurement"
-msgstr "Tedariği İptal Et"
+msgstr "Tedarik İptal Et"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -138,34 +87,46 @@ msgid "Cancelled"
 msgstr "İptal Edildi"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:156
+#: code:addons/procurement/procurement.py:139
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr "%s durumundaki Tedarik Emir(ler)i silinemiyor."
 
 #. module: procurement
-#: view:procurement.order:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Check Procurement"
 msgstr "Tedarik Kontrolu"
 
 #. module: procurement
-#: help:procurement.order,rule_id:0
+#: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but "
-"can be manually set by the procurement manager to force an unusual behavior."
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
+msgstr "Tedarik çözümü için seçilen kural. Genellikle sistem tarafından seçilir, ancak; alışılmadık bir davranışı zorlamak için tedarik yöneticisi tarafından elle de ayarlanabilir."
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Click to create a Procurement order in exception state, or remove the filter"
+" on the search bar to display all the procurements."
 msgstr ""
-"Tedarik çözümü için seçilen kural. Genellikle sistem tarafından seçilir, "
-"ancak; alışılmadık bir davranışı zorlamak için tedarik yöneticisi tarafından "
-"elle de ayarlanabilir."
 
 #. module: procurement
-#: field:procurement.order,company_id:0
-#: field:procurement.rule,company_id:0
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid "Click to create a procurement order."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_company_id
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
 
 #. module: procurement
-#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
 msgstr "Arka planda tüm Alımlarımızı hesaplayın."
 
@@ -177,38 +138,46 @@ msgstr "Tüm Planlamacıları Hesapla"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Confirmed"
-msgstr "Onaylı"
+msgstr "Onaylanan"
 
 #. module: procurement
-#: field:procurement.group,create_uid:0
-#: field:procurement.order,create_uid:0
-#: field:procurement.order.compute.all,create_uid:0
-#: field:procurement.rule,create_uid:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: procurement
-#: field:procurement.group,create_date:0
-#: field:procurement.order,create_date:0
-#: field:procurement.order.compute.all,create_date:0
-#: field:procurement.rule,create_date:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
 msgid "Created on"
 msgstr "Oluşturuldu"
 
 #. module: procurement
-#: help:procurement.order,message_last_post:0
+#: model:ir.model.fields,help:procurement.field_procurement_order_message_last_post
 msgid "Date of the last message posted on the record."
 msgstr "Kayıta işlenmiş son mesajın tarihi."
 
 #. module: procurement
-#: field:procurement.group,move_type:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
 msgid "Delivery Method"
-msgstr "Teslimat Yöntemi"
+msgstr "Teslim Yöntemi"
 
 #. module: procurement
-#: field:procurement.order,name:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_name
 msgid "Description"
 msgstr "Açıklama"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -221,17 +190,17 @@ msgid "Exception"
 msgstr "İstisna"
 
 #. module: procurement
-#: view:procurement.order:procurement.view_procurement_filter
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Exceptions"
 msgstr "İstisnalar"
 
 #. module: procurement
-#: view:procurement.order:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "External note..."
 msgstr "Dış not..."
 
 #. module: procurement
-#: view:procurement.order:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Extra Information"
 msgstr "Ek Bilgisi"
 
@@ -241,95 +210,107 @@ msgid "Fixed"
 msgstr "Sabit"
 
 #. module: procurement
-#: field:procurement.rule,group_id:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_id
 msgid "Fixed Procurement Group"
 msgstr "Sabit Tedarik Grubu"
 
 #. module: procurement
-#: field:procurement.order,message_follower_ids:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_follower_ids
 msgid "Followers"
 msgstr "İzleyiciler"
 
 #. module: procurement
-#: view:procurement.rule:procurement.view_procurement_rule_form
-msgid "General Information"
-msgstr "Genel Bilgisi"
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
 
 #. module: procurement
-#: view:procurement.order:procurement.view_procurement_filter
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Global"
+msgstr "Evrensel"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Group By"
-msgstr "Gruplandır"
+msgstr "Grupla"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
-#: view:procurement.order:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Group's Procurements"
 msgstr "Tedarik Grubun'ları"
 
 #. module: procurement
-#: help:procurement.order,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sohbetçi özetini tutar (mesajların sayısı, ...). Bu özet kanban ekranlarına "
-"eklenebilmesi için html biçimindedir."
-
-#. module: procurement
-#: field:procurement.group,id:0
-#: field:procurement.order,id:0
-#: field:procurement.order.compute.all,id:0
-#: field:procurement.rule,id:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_id
 msgid "ID"
 msgstr "ID"
 
 #. module: procurement
-#: help:procurement.order,message_unread:0
+#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 
 #. module: procurement
-#: help:procurement.rule,active:0
-msgid "If unchecked, it will allow you to hide the rule without removing it."
+#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction
+msgid "If checked, new messages require your attention."
 msgstr ""
-"İşaretlenmemiş ise, bunu kaldırmadan kuralını gizlemek için izin verecek."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:155
-#, python-format
-msgid "Invalid Action!"
-msgstr "Geçersiz İşlem!"
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "If the route is global"
+msgstr ""
 
 #. module: procurement
-#: field:procurement.order,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
+#: model:ir.model.fields,help:procurement.field_procurement_rule_active
+msgid "If unchecked, it will allow you to hide the rule without removing it."
+msgstr "İşaretlenmemiş ise, bunu kaldırmadan kuralını gizlemek için izin verecek."
 
 #. module: procurement
-#: field:procurement.order,message_last_post:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_last_post
 msgid "Last Message Date"
 msgstr "Son Mesaj Tarihi"
 
 #. module: procurement
-#: field:procurement.group,write_uid:0
-#: field:procurement.order,write_uid:0
-#: field:procurement.order.compute.all,write_uid:0
-#: field:procurement.rule,write_uid:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_order___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule___last_update
+msgid "Last Modified on"
+msgstr "Son değiştirme tarihi"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: procurement
-#: field:procurement.group,write_date:0
-#: field:procurement.order,write_date:0
-#: field:procurement.order.compute.all,write_date:0
-#: field:procurement.rule,write_date:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_date
 msgid "Last Updated on"
-msgstr "Son Güncelleme"
+msgstr "Son Güncellenen"
 
 #. module: procurement
-#: view:procurement.order:procurement.view_procurement_filter
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Late"
-msgstr "Geciken"
+msgstr "Geçikmiş"
 
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
@@ -337,27 +318,27 @@ msgid "Leave Empty"
 msgstr "Boş Bırakın"
 
 #. module: procurement
-#: view:res.company:procurement.mrp_company
+#: model:ir.ui.view,arch_db:procurement.mrp_company
 msgid "Logistics"
 msgstr "Lojistik"
 
 #. module: procurement
-#: field:procurement.order,message_ids:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
 msgid "Messages"
 msgstr "Mesajlar"
 
 #. module: procurement
-#: help:procurement.order,message_ids:0
+#: model:ir.model.fields,help:procurement.field_procurement_order_message_ids
 msgid "Messages and communication history"
 msgstr "Mesajlar ve iletişim geçmişi"
 
 #. module: procurement
-#: field:procurement.rule,name:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
 msgid "Name"
-msgstr "Adı"
+msgstr "Ad"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:213
+#: code:addons/procurement/procurement.py:206
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Bu tedarik eşleşen Hiçbir kural yok"
@@ -370,48 +351,66 @@ msgstr "Normal"
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Not urgent"
-msgstr "Acil değil"
+msgstr "Acil Değil"
 
 #. module: procurement
-#: view:procurement.order:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Notes"
 msgstr "Notlar"
 
 #. module: procurement
-#: selection:procurement.group,move_type:0
-msgid "Partial"
-msgstr "Parsiyel"
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
 
 #. module: procurement
-#: field:procurement.order,priority:0
+#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: procurement
+#: selection:procurement.group,move_type:0
+msgid "Partial"
+msgstr "Parçalı"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_priority
 msgid "Priority"
 msgstr "Öncelik"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
-#: view:procurement.order:procurement.procurement_form_view
-#: view:procurement.order:procurement.view_procurement_filter
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement"
 msgstr "Tedarik"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action5
-#: view:procurement.order:procurement.view_procurement_filter
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_exceptions
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement Exceptions"
 msgstr "Tedarik İstisnaları"
 
 #. module: procurement
-#: field:procurement.order,group_id:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
 msgid "Procurement Group"
 msgstr "Tedarik Grubu"
 
 #. module: procurement
-#: view:procurement.order:procurement.procurement_tree_view
+#: model:ir.ui.view,arch_db:procurement.procurement_tree_view
 msgid "Procurement Lines"
 msgstr "Tedarik Satırları"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_product_template_stat
 msgid "Procurement Orders"
 msgstr "Tedarik Emirleri"
 
@@ -422,41 +421,43 @@ msgstr "Tedarik Talebi"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Procurement Rule"
 msgstr "Tedarik Kuralı"
 
 #. module: procurement
-#: view:procurement.group:procurement.procurement_group_form_view
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
+msgid "Procurement Rules"
+msgstr "Tedarik Kuralları"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
 msgid "Procurement group"
 msgstr "Tedarik grubu"
 
 #. module: procurement
-#: view:procurement.order:procurement.view_procurement_filter
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement started late"
 msgstr "Tedarik geç başladı"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: view:procurement.group:procurement.procurement_group_form_view
-#: field:procurement.group,procurement_ids:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
+#: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
+#: model:ir.ui.view,arch_db:procurement.product_product_view_form_procurement_button
+#: model:ir.ui.view,arch_db:procurement.product_template_view_form_procurement_button
 msgid "Procurements"
 msgstr "Tedarikler"
 
 #. module: procurement
-#: view:procurement.order:procurement.view_procurement_filter
-#: field:procurement.order,product_id:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_id
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Product"
-msgstr "Ürün"
+msgstr "Ürünler"
 
 #. module: procurement
-#: field:procurement.order,product_uom:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_uom
 msgid "Product Unit of Measure"
 msgstr "Ürün Ölçü Birimi"
-
-#. module: procurement
-#: field:procurement.order,product_uos:0
-msgid "Product UoS"
-msgstr "Ürün Satış Ölçü Birimi"
 
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
@@ -464,135 +465,124 @@ msgid "Propagate"
 msgstr "Yayma"
 
 #. module: procurement
-#: view:procurement.rule:procurement.view_procurement_rule_form
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Propagation Options"
 msgstr "Yayma Opsiyonu"
 
 #. module: procurement
-#: field:procurement.rule,group_propagation_option:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_propagation_option
 msgid "Propagation of Procurement Group"
 msgstr "Tedarik Grup Yayılması"
 
 #. module: procurement
-#: view:procurement.rule:procurement.view_procurement_rule_form
-msgid "Pull Rule"
-msgstr "Çekme Kurallı"
-
-#. module: procurement
-#: view:procurement.rule:procurement.view_procurement_rule_tree
-msgid "Pull Rules"
-msgstr "Çekme Kuralları"
-
-#. module: procurement
-#: field:procurement.order,product_qty:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_qty
 msgid "Quantity"
 msgstr "Miktar"
 
 #. module: procurement
-#: view:procurement.order:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
 msgstr "Tedariği Tekrar Yapılandır"
 
 #. module: procurement
-#: field:procurement.group,name:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_name
 msgid "Reference"
-msgstr "Referans"
+msgstr "Kaynak"
 
 #. module: procurement
-#: help:procurement.order,origin:0
+#: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr ""
-"Bu Tedariği oluşturan belgenin referansı.\n"
-"Bu, Odoo tarafından otomatik olarak tamamlanır."
+msgstr "Bu Tedariği oluşturan belgenin referansı.\nBu, Odoo tarafından otomatik olarak tamamlanır."
 
 #. module: procurement
-#: field:procurement.order,rule_id:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
 msgid "Rule"
 msgstr "Kural"
 
 #. module: procurement
-#: view:procurement.order:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Run Procurement"
 msgstr "Tedarik Çalıştır"
 
 #. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Run Procurements"
+msgstr ""
+
+#. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
-#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Run Schedulers"
 msgstr "Planlayıcı Çalıştır"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Running"
-msgstr "Yürütülüyor"
+msgstr "Çalışan"
 
 #. module: procurement
-#: field:procurement.order,date_planned:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_date_planned
 msgid "Scheduled Date"
 msgstr "Planlanan Tarih"
 
 #. module: procurement
-#: view:procurement.order:procurement.view_procurement_filter
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Scheduled Month"
 msgstr "Aylık Planlanan"
 
 #. module: procurement
-#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Scheduler Parameters"
-msgstr "Planlamacı Paremetreleri"
+msgstr "Planlamacı Değişkeleri"
 
 #. module: procurement
-#: view:procurement.order:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Scheduling"
-msgstr "Planlama"
+msgstr "Zamanlama"
 
 #. module: procurement
-#: view:procurement.order:procurement.view_procurement_filter
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Search Procurement"
 msgstr "Tedarik Arama"
 
 #. module: procurement
-#: field:procurement.rule,sequence:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_sequence
 msgid "Sequence"
-msgstr "Sıralama"
+msgstr "Sıra"
 
 #. module: procurement
-#: field:procurement.order,origin:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_origin
 msgid "Source Document"
 msgstr "Kaynak Belge"
 
 #. module: procurement
-#: view:procurement.order:procurement.view_procurement_filter
-#: field:procurement.order,state:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_state
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Status"
 msgstr "Durumu"
 
 #. module: procurement
-#: field:procurement.order,message_summary:0
-msgid "Summary"
-msgstr "Özet"
-
-#. module: procurement
-#: help:procurement.rule,name:0
+#: model:ir.model.fields,help:procurement.field_procurement_rule_name
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr "Bu alan paket orijinini ve onun hareketlerinin adı ile dolduracaktır"
 
 #. module: procurement
-#: view:procurement.order:procurement.procurement_tree_view
+#: model:ir.ui.view,arch_db:procurement.procurement_tree_view
 msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
 
 #. module: procurement
-#: field:procurement.order,message_unread:0
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread
 msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
 
 #. module: procurement
-#: field:procurement.order,product_uos_qty:0
-msgid "UoS Quantity"
-msgstr "Satış Birim Miktarı"
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -605,6 +595,31 @@ msgid "Very Urgent"
 msgstr "Çok Acil"
 
 #. module: procurement
-#: view:procurement.order:procurement.procurement_form_view
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_website_message_ids
+msgid "Website Messages"
+msgstr "Websitesi Mesajları"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_order_website_message_ids
+msgid "Website communication history"
+msgstr "Web Sitesi iletişim geçmişi"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid ""
+"When the procurement order is confirmed, it automatically\n"
+"                creates the necessary operations to fullfil the need: purchase\n"
+"                order proposition, manufacturing order, etc."
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "e.g. Buy"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "örn. SO005"

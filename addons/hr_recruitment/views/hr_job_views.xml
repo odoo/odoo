@@ -19,7 +19,6 @@
                 <field name="department_id"/>
                 <field name="no_of_recruitment"/>
                 <field name="color"/>
-                <field name="application_ids"/>
                 <field name="document_ids"/>
                 <field name="no_of_hired_employee"/>
                 <field name="manager_id"/>
@@ -46,7 +45,7 @@
                                 <t t-if="record.state.raw_value == 'recruit'">
                                     <div class="row">
                                         <div class="col-xs-6 o_kanban_primary_left">
-                                            <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action"><t t-esc="record.application_ids.raw_value.length"/> Application(s)</button>
+                                            <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">Application(s)</button>
                                         </div>
                                         <div class="col-xs-6 o_kanban_primary_right">
                                             <div t-if="record.document_ids.raw_value.length > 0" class="row">

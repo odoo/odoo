@@ -11,9 +11,12 @@ class LivechatController(http.Controller):
     @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='none')
     def livechat_lib(self, ext, **kwargs):
         asset = AssetsBundle("im_livechat.external_lib")
+        mock_attachment = getattr(asset, ext)()
+        if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
+            mock_attachment = mock_attachment[0]
         # can't use /web/content directly because we don't have attachment ids (attachments must be created)
-        status, headers, content = binary_content(id=getattr(asset, ext)().id, unique=asset.checksum)
-        content_base64 = base64.b64decode(content)
+        status, headers, content = binary_content(id=mock_attachment.id, unique=asset.checksum)
+        content_base64 = base64.b64decode(content) if content else ''
         headers.append(('Content-Length', len(content_base64)))
         return request.make_response(content_base64, headers)
 
@@ -27,7 +30,7 @@ class LivechatController(http.Controller):
         username = kwargs.get("username", _("Visitor"))
         channel = request.env['im_livechat.channel'].sudo().browse(channel_id)
         info = request.env['im_livechat.channel'].match_rules(request, channel.id, username=username)
-        return request.render('im_livechat.loader', {'info': info}) if info else False
+        return request.render('im_livechat.loader', {'info': info, 'web_session_required': True}) if info else False
 
     @http.route('/im_livechat/get_session', type="json", auth='public')
     def get_session(self, channel_id, anonymous_name, **kwargs):
@@ -36,7 +39,7 @@ class LivechatController(http.Controller):
             anonymous_name = anonymous_name + " ("+request.session.geoip.get('country_name', "")+")"
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
         if request.session.uid:
-            anonymous_name = False
+            anonymous_name = request.env.user.name
         return request.env["im_livechat.channel"].get_mail_channel(channel_id, anonymous_name)
 
     @http.route('/im_livechat/feedback', type='json', auth='public')

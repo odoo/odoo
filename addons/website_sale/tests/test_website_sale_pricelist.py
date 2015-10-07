@@ -15,14 +15,14 @@ class TestWebsitePriceList(TransactionCase):
         self.mock_get_pricelist_available = self.patcher.start()
 
     def get_pl(self, show, current_pl, country):
-        pls = self.website._get_pl(
+        pl_ids = self.website._get_pl(
             country,
             show,
             self.website.pricelist_id.id,
             current_pl,
             self.website.website_pricelist_ids
         )
-        return pls
+        return self.env['product.pricelist'].browse(pl_ids)
 
     def test_get_pricelist_available_show(self):
         show = True

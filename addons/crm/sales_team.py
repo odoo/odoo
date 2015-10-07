@@ -119,3 +119,45 @@ class crm_team(osv.Model):
         res = super(crm_team, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
+
+    def action_your_pipeline(self, cr, uid, context=None):
+        IrModelData = self.pool['ir.model.data']
+        action = IrModelData.xmlid_to_object(cr, uid, 'crm.crm_lead_opportunities_tree_view').read(['name', 'help', 'res_model', 'target', 'context', 'type'])
+        if not action:
+            action = {}
+        else:
+            action = action[0]
+
+        user_team_id = self.pool['res.users'].browse(cr, uid, uid, context=context).sale_team_id.id
+        if not user_team_id:
+            user_team_id = self.search(cr, uid, [], context=context, limit=1)
+            user_team_id = user_team_id and user_team_id[0] or False
+            action['help'] = """<p class='oe_view_nocontent_create'>Click here to add new opportunities</p><p>
+    Looks like you are not a member of a sales team. You should add yourself
+    as a member of one of the sales team.
+</p>"""
+            if user_team_id:
+                action['help'] += "<p>As you don't belong to any sales team, Odoo opens the first one by default.</p>"
+
+        action_context = eval(action['context'], {'uid': uid})
+        if user_team_id:
+            action_context.update({
+                'default_team_id': user_team_id,
+                'search_default_team_id': user_team_id
+            })
+
+        tree_view_id = IrModelData.xmlid_to_res_id(cr, uid, 'crm.crm_case_tree_view_oppor')
+        form_view_id = IrModelData.xmlid_to_res_id(cr, uid, 'crm.crm_case_form_view_oppor')
+        kanb_view_id = IrModelData.xmlid_to_res_id(cr, uid, 'crm.crm_case_kanban_view_leads')
+        action.update({
+            'views': [
+                [kanb_view_id, 'kanban'],
+                [tree_view_id, 'tree'],
+                [form_view_id, 'form'],
+                [False, 'graph'],
+                [False, 'calendar'],
+                [False, 'pivot']
+            ],
+            'context': action_context,
+        })
+        return action

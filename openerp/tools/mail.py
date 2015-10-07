@@ -36,6 +36,12 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
      ])
 
 
+class _Cleaner(clean.Cleaner):
+    def allow_element(self, el):
+        if el.tag == 'object' and el.get('type') == "image/svg+xml":
+            return True
+        return super(_Cleaner, self).allow_element(el)
+
 def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_classes=False):
     if not src:
         return src
@@ -85,7 +91,7 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_class
 
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
-        cleaner = clean.Cleaner(**kwargs)
+        cleaner = _Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
         # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
         cleaned = cleaned.replace('%24', '$')
@@ -301,13 +307,13 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
 
     # html: ClEditor seems to love using <div><br /><div> -> replace with <br />
     br_div_tags = re.compile(r'(<div>\s*<br\s*\/>\s*<\/div>)', re.IGNORECASE)
-    html = _replace_matching_regex(br_div_tags, html, '<br />')
+    inner_html = _replace_matching_regex(br_div_tags, html, '<br />')
 
     # form a tree
-    root = lxml.html.fromstring(html)
+    root = lxml.html.fromstring(inner_html)
     if not len(root) and root.text is None and root.tail is None:
-        html = '<div>%s</div>' % html
-        root = lxml.html.fromstring(html)
+        inner_html = '<div>%s</div>' % inner_html
+        root = lxml.html.fromstring(inner_html)
 
     quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
     signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)')
@@ -327,6 +333,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
 
     # tree: tag nodes
     # signature_begin = False  # try dynamic signature recognition
+    quoted = False
     quote_begin = False
     overlength = False
     overlength_section_id = None
@@ -375,9 +382,11 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
         if node.tag == 'blockquote' or node.get('text_quote') or node.get('text_signature'):
             # here no quote_begin because we want to be able to remove some quoted
             # text without removing all the remaining context
+            quoted = True
             node.set('in_quote', '1')
         if node.getparent() is not None and node.getparent().get('in_quote'):
             # inside a block of removed text but not in quote_begin (see above)
+            quoted = True
             node.set('in_quote', '1')
 
         # shorten:
@@ -439,12 +448,14 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
                 node_class = node.get('class', '') + ' oe_mail_cleaned'
                 node.set('class', node_class)
 
+    if not overlength and not quote_begin and not quoted:
+        return html
+
     # html: \n that were tail of elements have been encapsulated into <span> -> back to \n
-    html = etree.tostring(root, pretty_print=False)
+    html = etree.tostring(root, pretty_print=False, encoding='UTF-8')
     linebreaks = re.compile(r'<span[^>]*>([\s]*[\r\n]+[\s]*)<\/span>', re.IGNORECASE | re.DOTALL)
     html = _replace_matching_regex(linebreaks, html, '\n')
-
-    return html
+    return ustr(html)
 
 
 #----------------------------------------------------------
@@ -514,29 +525,12 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
-def html_escape_keep_url(self, message):
-    """ Escape the message and transform the url into clickable link
-        :param string message: the message to escape url and transform them into clickable link
-        :returns the escaped message
-        :rtype : string
-    """
-    safe_message = ""
-    first = 0
-    last = 0
-    for m in re.finditer('(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?', message):
-        last = m.start()
-        safe_message += cgi.escape(message[first:last])
-        safe_message += '<a href="%s" target="_blank">%s</a>' % (cgi.escape(m.group(0)), m.group(0))
-        first = m.end()
-        last = m.end()
-    safe_message += cgi.escape(message[last:])
-    return safe_message
-
 def plaintext2html(text, container_tag=False):
     """ Convert plaintext into html. Content of the text is escaped to manage
         html entities, using cgi.escape().
         - all \n,\r are replaced by <br />
         - enclose content into <p>
+        - convert url into clickable link
         - 2 or more consecutive <br /> are considered as paragraph breaks
 
         :param string container_tag: container of the html; by default the
@@ -548,7 +542,18 @@ def plaintext2html(text, container_tag=False):
     text = text.replace('\n', '<br/>')
     text = text.replace('\r', '<br/>')
 
-    # 2-3: form paragraphs
+    # 2. clickable links
+    idx = 0
+    final = ''
+    link_tags = re.compile(r'(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?')
+    for item in re.finditer(link_tags, text):
+        final += text[idx:item.start()]
+        final += '<a href="%s" target="_blank">%s</a>' % (item.group(0), item.group(0))
+        idx = item.end()
+    final += text[idx:]
+    text = final
+
+    # 3-4: form paragraphs
     idx = 0
     final = '<p>'
     br_tags = re.compile(r'(([<]\s*[bB][rR]\s*\/?[>]\s*){2,})')
@@ -557,7 +562,7 @@ def plaintext2html(text, container_tag=False):
         idx = item.end()
     final += text[idx:] + '</p>'
 
-    # 4. container
+    # 5. container
     if container_tag:
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
     return ustr(final)

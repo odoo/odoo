@@ -96,7 +96,6 @@ def py2exe_options():
                         'reportlab',
                         'requests',
                         'select',
-                        'simplejson',
                         'smtplib',
                         'suds',
                         'uuid',
@@ -160,9 +159,7 @@ setup(
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'requests',
-        'simplejson',
         'suds-jurko',
-        'unittest2',
         'vatnumber',
         'vobject',
         'werkzeug',
@@ -172,7 +169,6 @@ setup(
         'SSL': ['pyopenssl'],
     },
     tests_require=[
-        'unittest2',
         'mock',
     ],
     **py2exe_options()

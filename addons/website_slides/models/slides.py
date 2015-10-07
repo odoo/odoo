@@ -231,9 +231,9 @@ class Slide(models.Model):
         [('none', 'No One'), ('user', 'Authentified Users Only'), ('public', 'Everyone')],
         string='Download Security',
         required=True, default='user')
-    image = fields.Binary('Image')
-    image_medium = fields.Binary('Medium', compute="_get_image", store=True)
-    image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True)
+    image = fields.Binary('Image', attachment=True)
+    image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
+    image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
 
     @api.depends('image')
     def _get_image(self):

@@ -1,6 +1,7 @@
 from openerp import tools
 from openerp import models, fields, api
 
+MAGIC_FIELDS = ["id", "create_uid", "create_date", "write_uid", "write_date", "__last_update"]
 
 class website_form_config(models.Model):
     _inherit = 'website'
@@ -23,9 +24,8 @@ class website_form_model(models.Model):
     def get_authorized_fields(self):
         model = self.env[self.model]
         fields_get = model.fields_get()
-        domain = [('model_id', 'in', self.all_inherited_model_ids()), ('website_form_blacklisted', '=', False)]
 
-        for elem in self.env['ir.model.fields'].search(domain):
+        for elem in self.env['ir.model.fields'].search([('model_id', 'in', self.all_inherited_model_ids())]):
             if elem.website_form_blacklisted:
                 fields_get.pop(elem.name, None)
         for key, val in model._inherits.iteritems():
@@ -35,6 +35,11 @@ class website_form_model(models.Model):
         default_values = model.default_get(fields_get.keys())
         for field in [f for f in fields_get if f in default_values]:
             fields_get[field]['required'] = False
+
+        # Remove readonly and magic fields
+        for field in fields_get.keys():
+            if fields_get[field]['readonly'] or field in MAGIC_FIELDS:
+                del fields_get[field]
 
         return fields_get
 

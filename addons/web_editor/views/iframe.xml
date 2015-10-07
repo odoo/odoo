@@ -42,7 +42,7 @@
             </script>
             <t t-raw="head or ''"/>
         </head>
-        <body onload="var fn=window.top.odoo &amp;&amp; window.top.odoo[callback+'_content']; if(fn) {fn();} else {console.warn('Please don\'t open iframe without the odoo backend');}">
+        <body id="web_editor_inside_iframe" onload="var fn=window.top.odoo &amp;&amp; window.top.odoo[callback+'_content']; if(fn) {fn();} else {console.warn('Please don\'t open iframe without the odoo backend');}">
             <div id="wrapwrap">
                 <main>
                     <t t-raw="0"/>

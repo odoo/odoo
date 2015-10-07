@@ -77,7 +77,7 @@ class sale_quote(http.Controller):
                     context=render_ctx)
         return request.website.render('website_quote.so_quotation', values)
 
-    @http.route(['/quote/accept'], type='json', auth="public", website=True)
+    @http.route(['/quote/accept/<int:order_id>'], type='http', auth="public", website=True, methods=['POST'])
     def accept(self, order_id, token=None, signer=None, sign=None, **post):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
@@ -91,7 +91,7 @@ class sale_quote(http.Controller):
         _message_post_helper(message=message, res_id=order_id, res_model='sale.order', attachments=attachments, **({'token': token, 'token_field': 'access_token'} if token else {}))
         return True
 
-    @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", website=True)
+    @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", methods=['POST'], website=True)
     def decline(self, order_id, token, **post):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)

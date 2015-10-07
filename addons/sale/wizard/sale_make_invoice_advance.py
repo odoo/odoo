@@ -23,34 +23,19 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 return 'all'
         return 'delivered'
 
-    @api.model
-    def _get_advance_product(self):
-        try:
-            deposit_product_template = self.env['ir.model.data'].xmlid_to_object('sale.advance_product_1', raise_if_not_found=True)
-            return deposit_product_template.product_variant_ids.ids[0]
-        except ValueError:
-            return False
-
     advance_payment_method = fields.Selection([
-        ('all', 'Invoiceable lines'),
-        ('delivered', 'Invoiceable lines (without refunds)'),
-        ('percentage', 'Deposit (percentage)'),
-        ('fixed', 'Deposit (fixed amount)')
+        ('delivered', 'Invoiceable lines'),
+        ('all', 'Invoiceable lines (deduct down payments)'),
+        ('percentage', 'Down payment (percentage)'),
+        ('fixed', 'Down payment (fixed amount)')
         ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
-    product_id = fields.Many2one('product.product', string='Deposit Product', domain=[('type', '=', 'service')], default=_get_advance_product)
+    product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('type', '=', 'service')],\
+        default=lambda self: self.env['ir.values'].get_default('sale.config.settings', 'deposit_product_id_setting'))
     count = fields.Integer(default=_count, string='# of Orders')
-    amount = fields.Float('Deposit Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
-    deposit_property_account_income_id = fields.Many2one(
-        related="product_id.property_account_income_id",
-        relation="account.account",
-        string="Income Account",
-        domain=[('deprecated', '=', False)],
-        help="This account will be used for invoices instead of the default one to value sales for the deposit.")
-    deposit_taxes_ids = fields.Many2many(
-        related="product_id.taxes_id",
-        string='Customer Taxes',
-        domain=[('type_tax_use', '=', 'sale')])
-
+    amount = fields.Float('Down Payment Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
+    deposit_account_id = fields.Many2one("account.account", string="Income Account", domain=[('deprecated', '=', False)],\
+        help="Account used for deposits")
+    deposit_taxes_id = fields.Many2many("account.tax", string="Customer Taxes", help="Taxes used for deposits")
 
     @api.onchange('advance_payment_method')
     def onchange_advance_payment_method(self):
@@ -76,13 +61,13 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     (self.product_id.name,))
 
         if self.amount <= 0.00:
-            raise UserError(_('The value of Advance Amount must be positive.'))
+            raise UserError(_('The value of the down payment amount must be positive.'))
         if self.advance_payment_method == 'percentage':
             amount = order.amount_untaxed * self.amount / 100
-            name = _("Advance of %s%%") % (self.amount,)
+            name = _("Down payment of %s%%") % (self.amount,)
         else:
             amount = self.amount
-            name = _('Advance')
+            name = _('Down Payment')
 
         invoice = inv_obj.create({
             'name': order.client_order_ref or order.name,
@@ -121,6 +106,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
         elif self.advance_payment_method == 'all':
             sale_orders.action_invoice_create(final=True)
         else:
+            # Create deposit product if necessary
+            if not self.product_id:
+                vals = self._prepare_deposit_product()
+                self.product_id = self.env['product.product'].create(vals)
+                self.env['ir.values'].set_default('sale.config.settings', 'deposit_product_id_setting', self.product_id.id)
+
             sale_line_obj = self.env['sale.order.line']
             for order in sale_orders:
                 if self.advance_payment_method == 'percentage':
@@ -128,9 +119,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 else:
                     amount = self.amount
                 if self.product_id.invoice_policy != 'order':
-                    raise UserError(_('The product used to invoice a deposit should have an invoice policy set to "Ordered quantities". Please update your deposit product to be able to create a deposit invoice.'))
+                    raise UserError(_('The product used to invoice a down payment should have an invoice policy set to "Ordered quantities". Please update your deposit product to be able to create a deposit invoice.'))
                 if self.product_id.type != 'service':
-                    raise UserError(_("The product used to invoice an deposit should be of type 'Service'. Please use another product or update this product."))
+                    raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))
                 so_line = sale_line_obj.create({
                     'name': _('Advance: %s') % (time.strftime('%m %Y'),),
                     'price_unit': amount,
@@ -139,9 +130,18 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     'discount': 0.0,
                     'product_uom': self.product_id.uom_id.id,
                     'product_id': self.product_id.id,
-                    'tax_id': self.product_id.taxes_id,
+                    'tax_id': [(6, 0, self.product_id.taxes_id.ids)],
                 })
                 self._create_invoice(order, so_line, amount)
         if self._context.get('open_invoices', False):
             return sale_orders.action_view_invoice()
         return {'type': 'ir.actions.act_window_close'}
+
+    def _prepare_deposit_product(self):
+        return {
+            'name': 'Down payment',
+            'type': 'service',
+            'invoice_policy': 'order',
+            'property_account_income_id': self.deposit_account_id.id,
+            'taxes_id': [(6, 0, self.deposit_taxes_id.ids)],
+        }

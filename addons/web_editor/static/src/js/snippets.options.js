@@ -255,6 +255,7 @@ var media = Option.extend({
                     self.buildingBlock.make_active($(item));
                 },0);
             }
+            $(item).trigger("content_changed");
         });
     },
     on_focus : function () {

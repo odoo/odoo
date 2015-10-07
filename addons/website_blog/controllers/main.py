@@ -279,15 +279,6 @@ class WebsiteBlog(http.Controller):
             context=context)
         return message_id
 
-    @http.route(['/blog/post_comment/<int:blog_post_id>'], type='http', auth="user", methods=['POST'], website=True)
-    def blog_post_comment(self, blog_post_id=0, **kw):
-        cr, uid, context = request.cr, request.uid, request.context
-        if kw.get('comment'):
-            self._blog_post_message(blog_post_id, kw.get('comment'), **kw)
-        blog_post = request.registry['blog.post'].browse(cr, uid, blog_post_id, context=context)
-        return werkzeug.utils.redirect("/blog/%s/post/%s#comments" % (slug(blog_post.blog_id), slug(blog_post)))
-
-
     def _get_discussion_detail(self, ids, publish=False, **post):
         cr, uid, context = request.cr, request.uid, request.context
         values = []
@@ -323,7 +314,7 @@ class WebsiteBlog(http.Controller):
         new_blog_post = request.registry['blog.post'].browse(cr, uid, new_blog_post_id, context=context)
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
-    @http.route('/blog/post_duplicate', type='http', auth="public", website=True)
+    @http.route('/blog/post_duplicate', type='http', auth="public", website=True, methods=['POST'])
     def blog_post_copy(self, blog_post_id, **post):
         """ Duplicate a blog.
 

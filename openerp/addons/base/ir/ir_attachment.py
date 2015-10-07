@@ -274,6 +274,7 @@ class ir_attachment(osv.osv):
         'description': fields.text('Description'),
         'res_name': fields.function(_name_get_resname, type='char', string='Resource Name', store=True),
         'res_model': fields.char('Resource Model', readonly=True, help="The database object this attachment will be attached to"),
+        'res_field': fields.char('Resource Field', readonly=True),
         'res_id': fields.integer('Resource ID', readonly=True, help="The record id this is attached to"),
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
@@ -352,14 +353,22 @@ class ir_attachment(osv.osv):
                 raise AccessError(_("Sorry, you are not allowed to access this document."))
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        # add res_field=False in domain if not present; the arg[0] trick below
+        # works for domain items and '&'/'|'/'!' operators too
+        if not any(arg[0] in ('id', 'res_field') for arg in args):
+            args.insert(0, ('res_field', '=', False))
+
         ids = super(ir_attachment, self)._search(cr, uid, args, offset=offset,
                                                  limit=limit, order=order,
                                                  context=context, count=False,
                                                  access_rights_uid=access_rights_uid)
+
+        if uid == SUPERUSER_ID:
+            # rules do not apply for the superuser
+            return len(ids) if count else ids
+
         if not ids:
-            if count:
-                return 0
-            return []
+            return 0 if count else []
 
         # Work with a set, as list.remove() is prohibitive for large lists of documents
         # (takes 20+ seconds on a db with 100k docs during search_count()!)

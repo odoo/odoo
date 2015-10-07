@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * report_webkit
+# 
+# Translators:
+# liyes <bodetools@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-10 00:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:46+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -74,22 +75,22 @@ msgstr "A9 13 37 x 52 毫米"
 
 #. module: report_webkit
 #: model:ir.actions.act_window,name:report_webkit.wizard_ofdo_report_actions
-#: view:report.webkit.actions:report_webkit.view_report_webkit_actions
+#: model:ir.ui.view,arch_db:report_webkit.view_report_webkit_actions
 msgid "Add Print Buttons"
 msgstr "添加打印按钮"
 
 #. module: report_webkit
-#: field:report.webkit.actions,print_button:0
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_print_button
 msgid "Add print button"
 msgstr "添加打印按钮"
 
 #. module: report_webkit
-#: field:res.company,header_image:0
+#: model:ir.model.fields,field_description:report_webkit.field_res_company_header_image
 msgid "Available Images"
 msgstr "可用的图像"
 
 #. module: report_webkit
-#: field:res.company,header_webkit:0
+#: model:ir.model.fields,field_description:report_webkit.field_res_company_header_webkit
 msgid "Available html"
 msgstr "可用的HTML"
 
@@ -144,7 +145,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 毫米"
 
 #. module: report_webkit
-#: field:ir.header_webkit,margin_bottom:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_margin_bottom
 msgid "Bottom Margin (mm)"
 msgstr "下边距（毫米）"
 
@@ -154,26 +155,26 @@ msgid "C5E 24  163 x 229 mm"
 msgstr "C5E 24 163 x 229 毫米"
 
 #. module: report_webkit
-#: view:report.webkit.actions:report_webkit.view_report_webkit_actions
+#: model:ir.ui.view,arch_db:report_webkit.view_report_webkit_actions
 msgid "Cancel"
 msgstr "取消"
 
 #. module: report_webkit
-#: help:report.webkit.actions,print_button:0
+#: model:ir.model.fields,help:report_webkit.field_report_webkit_actions_print_button
 msgid ""
 "Check this to add a Print action for this Report in the sidebar of the "
 "corresponding document types"
 msgstr "勾选此添加在相应的文件报告打印动到侧边栏"
 
 #. module: report_webkit
-#: help:report.webkit.actions,open_action:0
+#: model:ir.model.fields,help:report_webkit.field_report_webkit_actions_open_action
 msgid ""
 "Check this to view the newly added internal print action after creating it "
 "(technical view) "
 msgstr "勾选此查看创建后新增的内部打印动作（技术视图） "
 
 #. module: report_webkit
-#: code:addons/report_webkit/wizard/report_webkit_actions.py:132
+#: code:addons/report_webkit/wizard/report_webkit_actions.py:107
 #, python-format
 msgid "Client Actions Connections"
 msgstr "客户端操作连接"
@@ -189,29 +190,29 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: report_webkit
-#: field:ir.header_img,company_id:0
-#: field:ir.header_webkit,company_id:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_company_id
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_company_id
 msgid "Company"
 msgstr "公司"
 
 #. module: report_webkit
-#: view:res.company:report_webkit.currency_del_img
+#: model:ir.ui.view,arch_db:report_webkit.currency_del_img
 msgid "Configuration (Webkit)"
-msgstr ""
+msgstr "设置（Webkit）"
 
 #. module: report_webkit
-#: field:ir.header_img,create_uid:0
-#: field:ir.header_webkit,create_uid:0
-#: field:report.webkit.actions,create_uid:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_create_uid
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_create_uid
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "创建于"
 
 #. module: report_webkit
-#: field:ir.header_img,create_date:0
-#: field:ir.header_webkit,create_date:0
-#: field:report.webkit.actions,create_date:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_create_date
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_create_date
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_create_date
 msgid "Created on"
-msgstr ""
+msgstr "创建于"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -219,15 +220,16 @@ msgid "DLE 26 110 x 220 mm"
 msgstr "DLE 26 110 x 220 毫米"
 
 #. module: report_webkit
-#: help:ir.actions.report.xml,webkit_debug:0
-msgid "Enable the webkit engine debugger"
-msgstr "启用WebKit引擎调试"
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_display_name
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_display_name
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_display_name
+msgid "Display Name"
+msgstr "显示名称"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:285
-#, python-format
-msgid "Error!"
-msgstr "错误！"
+#: model:ir.model.fields,help:report_webkit.field_ir_act_report_xml_webkit_debug
+msgid "Enable the webkit engine debugger"
+msgstr "启用WebKit引擎调试"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -240,34 +242,34 @@ msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27 210 x 330 毫米"
 
 #. module: report_webkit
-#: view:ir.header_webkit:report_webkit.header_webkit
+#: model:ir.ui.view,arch_db:report_webkit.header_webkit
 msgid "HTML Header"
 msgstr "HTML 页眉"
 
 #. module: report_webkit
-#: field:ir.header_webkit,css:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_css
 msgid "Header CSS"
 msgstr "页眉 CSS"
 
 #. module: report_webkit
-#: view:ir.header_img:report_webkit.header_img
+#: model:ir.ui.view,arch_db:report_webkit.header_img
 msgid "Header Image"
 msgstr "页眉图像"
 
 #. module: report_webkit
-#: field:ir.header_img,id:0
-#: field:ir.header_webkit,id:0
-#: field:report.webkit.actions,id:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_id
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_id
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: report_webkit
-#: field:ir.header_img,img:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_img
 msgid "Image"
-msgstr "图片"
+msgstr "图像"
 
 #. module: report_webkit
-#: help:ir.header_img,type:0
+#: model:ir.model.fields,help:report_webkit.field_ir_header_img_type
 msgid "Image type(png,gif,jpeg)"
 msgstr "图片类型(png,gif,jpeg)"
 
@@ -277,18 +279,25 @@ msgid "Landscape"
 msgstr "景观"
 
 #. module: report_webkit
-#: field:ir.header_img,write_uid:0
-#: field:ir.header_webkit,write_uid:0
-#: field:report.webkit.actions,write_uid:0
-msgid "Last Updated by"
-msgstr ""
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img___last_update
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit___last_update
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions___last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
 
 #. module: report_webkit
-#: field:ir.header_img,write_date:0
-#: field:ir.header_webkit,write_date:0
-#: field:report.webkit.actions,write_date:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_write_uid
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_write_uid
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_write_uid
+msgid "Last Updated by"
+msgstr "最后更新"
+
+#. module: report_webkit
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_write_date
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_write_date
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "最后更新"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -296,7 +305,7 @@ msgid "Ledger  28  431.8 x 279.4 mm"
 msgstr "Ledger 28431.8 x 279.4 毫米"
 
 #. module: report_webkit
-#: field:ir.header_webkit,margin_left:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_margin_left
 msgid "Left Margin (mm)"
 msgstr "左边距（毫米）"
 
@@ -311,59 +320,55 @@ msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
 msgstr "Letter 2 8.5 x 11 尺寸, 215.9 x 279.4 毫米"
 
 #. module: report_webkit
-#: field:ir.header_img,name:0
-#: field:ir.header_webkit,name:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_name
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_name
 msgid "Name"
 msgstr "名称"
 
 #. module: report_webkit
-#: help:ir.header_img,name:0
+#: model:ir.model.fields,help:report_webkit.field_ir_header_img_name
 msgid "Name of Image"
 msgstr "图片名"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:214
+#: code:addons/report_webkit/webkit_report.py:187
 #, python-format
 msgid "No diagnosis message was provided"
 msgstr "没有诊断信息提供"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:290
+#: code:addons/report_webkit/webkit_report.py:261
 #, python-format
 msgid "No header defined for this Webkit report!"
 msgstr "这个Webkit报表没定义页眉"
 
 #. module: report_webkit
-#: field:report.webkit.actions,open_action:0
+#: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_open_action
 msgid "Open added action"
 msgstr "打开添加动作"
 
 #. module: report_webkit
-#: field:ir.header_webkit,orientation:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_orientation
 msgid "Orientation"
 msgstr "定位"
 
 #. module: report_webkit
-#: field:ir.header_webkit,format:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_format
 msgid "Paper size"
 msgstr "纸张尺寸"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:148
+#: code:addons/report_webkit/webkit_report.py:122
 #, python-format
 msgid ""
 "Please install executable on your system (sudo apt-get install wkhtmltopdf) "
 "or download it from here: "
 "http://code.google.com/p/wkhtmltopdf/downloads/list and set the path in the "
 "ir.config_parameter with the webkit_path key.Minimal version is 0.9.9"
-msgstr ""
-"请安装执行文件在你的系统中（sudo apt-get install "
-"wkhtmltopd）或者从这里下载http://code.google.com/p/wkhtmltopdf/downloads/list ，并且在  "
-"ir.config_parameter 中用 webkit_path 键值设置路径。\r\n"
-"最低版本是0.9.9."
+msgstr "请安装执行文件在你的系统中（sudo apt-get install wkhtmltopd）或者从这里下载http://code.google.com/p/wkhtmltopdf/downloads/list ，并且在  ir.config_parameter 中用 webkit_path 键值设置路径。\r\n最低版本是0.9.9."
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:291
+#: code:addons/report_webkit/webkit_report.py:261
 #, python-format
 msgid "Please set a header in company settings."
 msgstr "请在公司设置里设定页眉"
@@ -374,32 +379,32 @@ msgid "Portrait"
 msgstr "肖像"
 
 #. module: report_webkit
-#: field:ir.actions.report.xml,precise_mode:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_act_report_xml_precise_mode
 msgid "Precise Mode"
 msgstr "精确模式"
 
 #. module: report_webkit
 #: model:ir.actions.report.xml,name:report_webkit.webkit_demo_report
 msgid "Report on reports"
-msgstr ""
+msgstr "关于报表的报告"
 
 #. module: report_webkit
-#: field:ir.header_webkit,margin_right:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_margin_right
 msgid "Right Margin (mm)"
 msgstr "右边距（毫米）"
 
 #. module: report_webkit
-#: help:ir.header_webkit,format:0
+#: model:ir.model.fields,help:report_webkit.field_ir_header_webkit_format
 msgid "Select Proper Paper size"
 msgstr "选择正确的纸张尺寸"
 
 #. module: report_webkit
-#: help:ir.header_webkit,footer_html:0
+#: model:ir.model.fields,help:report_webkit.field_ir_header_webkit_footer_html
 msgid "Set Webkit Report Footer."
 msgstr "设置Webkit报表页脚"
 
 #. module: report_webkit
-#: help:ir.header_webkit,html:0
+#: model:ir.model.fields,help:report_webkit.field_ir_header_webkit_html
 msgid "Set Webkit Report Header"
 msgstr "设置Webkit报表页眉"
 
@@ -409,47 +414,47 @@ msgid "Tabloid 29 279.4 x 431.8 mm"
 msgstr "Tabloid 29 279.4 x 431.8 毫米"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:219
+#: code:addons/report_webkit/webkit_report.py:191
 #, python-format
 msgid "The command 'wkhtmltopdf' failed with error code = %s. Message: %s"
 msgstr "命令'wkhtmltopdf'失败，错误代码=%s，  消息: %s"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:216
+#: code:addons/report_webkit/webkit_report.py:189
 #, python-format
 msgid "The following diagnosis message was provided:\n"
 msgstr "下面的诊断信息被提供\n"
 
 #. module: report_webkit
-#: help:ir.actions.report.xml,webkit_header:0
+#: model:ir.model.fields,help:report_webkit.field_ir_act_report_xml_webkit_header
 msgid "The header linked to the report"
 msgstr "该报表的页眉"
 
 #. module: report_webkit
-#: help:ir.actions.report.xml,precise_mode:0
+#: model:ir.model.fields,help:report_webkit.field_ir_act_report_xml_precise_mode
 msgid ""
-"This mode allow more precise element position as each object is printed on a "
-"separate HTML but memory and disk usage are wider."
-msgstr ""
+"This mode allow more precise element position as each object is printed on a"
+" separate HTML but memory and disk usage are wider."
+msgstr "这个模式允许HTML中每个独立的对象在打印时更精确的定位，但是内存和硬盘空间占用更多。"
 
 #. module: report_webkit
-#: help:ir.actions.report.xml,report_webkit_data:0
+#: model:ir.model.fields,help:report_webkit.field_ir_act_report_xml_report_webkit_data
 msgid "This template will be used if the main report file is not found"
 msgstr "如果没有找到主报表文件，将使用此模板"
 
 #. module: report_webkit
-#: field:ir.header_webkit,margin_top:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_margin_top
 msgid "Top Margin (mm)"
 msgstr "上边距（毫米）"
 
 #. module: report_webkit
-#: field:ir.header_img,type:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_type
 msgid "Type"
 msgstr "类型"
 
 #. module: report_webkit
-#: view:ir.actions.report.xml:report_webkit.act_report_xml_view
 #: model:ir.ui.menu,name:report_webkit.menu_webkit
+#: model:ir.ui.view,arch_db:report_webkit.act_report_xml_view
 msgid "Webkit"
 msgstr "Webkit"
 
@@ -459,7 +464,7 @@ msgid "Webkit Actions"
 msgstr "Webkit动作"
 
 #. module: report_webkit
-#: field:ir.actions.report.xml,webkit_header:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_act_report_xml_webkit_header
 msgid "Webkit Header"
 msgstr "Webkit 页眉"
 
@@ -476,59 +481,58 @@ msgid "Webkit Logos"
 msgstr "Webkit 标志"
 
 #. module: report_webkit
-#: field:ir.actions.report.xml,report_webkit_data:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_act_report_xml_report_webkit_data
 msgid "Webkit Template"
 msgstr "Webkit 模板"
 
 #. module: report_webkit
-#: view:ir.actions.report.xml:report_webkit.act_report_xml_view
+#: model:ir.ui.view,arch_db:report_webkit.act_report_xml_view
 msgid "Webkit Template (used if Report File is not found)"
 msgstr "Webkit的模板（用于没有找到报表文件）"
 
 #. module: report_webkit
-#: field:ir.actions.report.xml,webkit_debug:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_act_report_xml_webkit_debug
 msgid "Webkit debug"
 msgstr "Webkit调试"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:218
-#, python-format
-msgid "Webkit error"
-msgstr "Webkit 错误"
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:325
-#: code:addons/report_webkit/webkit_report.py:333
-#: code:addons/report_webkit/webkit_report.py:338
-#: code:addons/report_webkit/webkit_report.py:347
-#: code:addons/report_webkit/webkit_report.py:354
-#, python-format
-msgid "Webkit render!"
-msgstr "Webkit 渲染！"
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:285
+#: code:addons/report_webkit/webkit_report.py:257
 #, python-format
 msgid "Webkit report template not found!"
 msgstr "Webkit 报表模版没找到！"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:147
+#: code:addons/report_webkit/webkit_report.py:121
 #, python-format
 msgid "Wkhtmltopdf library path is not set"
 msgstr "Wkhtmltopdf 库的路径没设置"
 
 #. module: report_webkit
-#: view:report.webkit.actions:report_webkit.view_report_webkit_actions
+#: model:ir.ui.view,arch_db:report_webkit.view_report_webkit_actions
 msgid "_Ok"
 msgstr "确定(_O)"
 
 #. module: report_webkit
-#: field:ir.header_webkit,footer_html:0
+#: model:ir.model,name:report_webkit.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"
+
+#. module: report_webkit
+#: model:ir.model,name:report_webkit.model_ir_header_img
+msgid "ir.header_img"
+msgstr "ir.header_img"
+
+#. module: report_webkit
+#: model:ir.model,name:report_webkit.model_ir_header_webkit
+msgid "ir.header_webkit"
+msgstr "ir.header_webkit"
+
+#. module: report_webkit
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_footer_html
 msgid "webkit footer"
 msgstr "webkit页脚"
 
 #. module: report_webkit
-#: field:ir.header_webkit,html:0
+#: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_html
 msgid "webkit header"
 msgstr "webkit 页眉"

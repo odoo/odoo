@@ -13,17 +13,8 @@
                     <separator string="General Settings"/>
                     <div>
                         <label string="You will find more options in your company details: address for the header and footer, overdue payments texts, etc."/>
-                        <button type="object" name="open_company" string="Configure your company data" icon="gtk-execute" class="oe_inline oe_link"/>
+                        <button type="object" name="open_company" string="Configure your company data" icon="fa-cogs" class="oe_inline oe_link"/>
                     </div>
-                    <group>
-                        <label for="id" string="Options"/>
-                        <div>
-                            <div name="group_light_multi_company">
-                                <field name="group_light_multi_company" class="oe_inline"/>
-                                <label for="group_light_multi_company"/>
-                            </div>
-                        </div>
-                    </group>
                     <group>
                         <label for="id" string="Email" name="email_label"/>
                         <div name="email">
@@ -62,13 +53,6 @@
                         <div>
                             <field name="module_base_import" class="oe_inline"/>
                             <label for="module_base_import"/>
-                        </div>
-                    </group>
-                    <group groups="base.group_no_one">
-                        <label for="font" />
-                        <div>
-                            <field name="font" class="oe_inline" />
-                            <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
                         </div>
                     </group>
                     <group>

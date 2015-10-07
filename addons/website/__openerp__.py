@@ -19,7 +19,6 @@ OpenERP Website CMS
         'security/ir.model.access.csv',
         'security/ir_ui_view.xml',
         'views/website_templates.xml',
-        'views/website.backend.xml',
         'views/website_views.xml',
         'views/snippets.xml',
         'views/res_config.xml',

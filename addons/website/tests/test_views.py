@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import itertools
 
-import unittest2
+import unittest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
@@ -61,7 +61,7 @@ class TestViewSaving(common.TransactionCase):
         company = self.registry('res.company').browse(self.cr, self.uid, 1)
         self.assertEqual(company.phone, "+00 00 000 00 0 000")
 
-    @unittest2.skip("save conflict for embedded (saved by third party or previous version in page) not implemented")
+    @unittest.skip("save conflict for embedded (saved by third party or previous version in page) not implemented")
     def test_embedded_conflict(self):
         e1 = h.SPAN("My Company", attrs(model='res.company', id=1, field='name'))
         e2 = h.SPAN("Leeroy Jenkins", attrs(model='res.company', id=1, field='name'))

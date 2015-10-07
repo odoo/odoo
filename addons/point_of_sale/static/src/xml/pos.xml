@@ -100,6 +100,12 @@
         </div>
     </t>
 
+    <t t-name="SetFiscalPositionButton">
+        <div class='control-button'>
+            <i class='fa fa-book' /> Fiscal position
+        </div>
+    </t>
+
     <t t-name="ActionpadWidget">
         <div class="actionpad">
             <button t-attf-class='button set-customer #{ ( widget.pos.get_client() and widget.pos.get_client().name.length > 10) ? "decentered" : "" }' >

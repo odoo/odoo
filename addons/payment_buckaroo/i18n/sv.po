@@ -1,0 +1,115 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_buckaroo
+# 
+# Translators:
+# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-09-19 08:17+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/buckaroo.py:132
+#, python-format
+msgid "; multiple order found"
+msgstr "; flerfaldig beställning funnen"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/buckaroo.py:130
+#, python-format
+msgid "; no order found"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,cancel_msg:payment_buckaroo.payment_acquirer_buckaroo
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,done_msg:payment_buckaroo.payment_acquirer_buckaroo
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,error_msg:payment_buckaroo.payment_acquirer_buckaroo
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,pending_msg:payment_buckaroo.payment_acquirer_buckaroo
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,name:payment_buckaroo.payment_acquirer_buckaroo
+msgid "Buckaroo"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/buckaroo.py:140
+#, python-format
+msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/buckaroo.py:128
+#, python-format
+msgid "Buckaroo: received data for reference %s"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/buckaroo.py:122
+#, python-format
+msgid ""
+"Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
+"shasign (%s)"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
+msgid "How to configure your Buckaroo account?"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Betalväxel"
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Betalningstransaktion"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
+msgid "SecretKey"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
+msgid "WebsiteKey"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,pre_msg:payment_buckaroo.payment_acquirer_buckaroo
+msgid ""
+"You will be redirected to the Buckaroo website after clicking on the payment"
+" button."
+msgstr ""

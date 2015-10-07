@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import urlparse
 import re
 import werkzeug.urls
@@ -66,19 +67,23 @@ class MailMail(osv.Model):
         links_blacklist = ['/unsubscribe_from_list']
 
         if mail.mailing_id and body and mail.statistics_ids:
-            for match in re.findall(URL_REGEX, self.body_html):
+            for match in re.findall(URL_REGEX, mail.body_html):
 
                 href = match[0]
                 url = match[1]
 
                 if not [s for s in links_blacklist if s in href]:
-                    new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
+                    new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
                     body = body.replace(href, new_href)
 
         # prepend <base> tag for images using absolute urls
         domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
         base = "<base href='%s'>" % domain
         body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
+        # resolve relative image url to absolute for outlook.com
+        def _sub_relative2absolute(match):
+            return match.group(1) + urlparse.urljoin(domain, match.group(2)) + '"'
+        body = re.sub('(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)"', _sub_relative2absolute, body)
 
         # generate tracking URL
         if mail.statistics_ids:

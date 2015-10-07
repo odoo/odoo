@@ -53,4 +53,5 @@ https://github.com/OCA/l10n-switzerland
  'test': [],
  'auto_install': False,
  'installable': True,
+ 'post_init_hook': 'load_translations',
  }

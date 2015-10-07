@@ -1,284 +1,236 @@
 odoo.define('im_livechat.im_livechat', function (require) {
 "use strict";
 
-var bus = require('bus.bus');
+var bus = require('bus.bus').bus;
 var core = require('web.core');
-var user_session = require('web.session');
+var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
-var mail_chat_common = require('mail.chat_common');
+
+var ChatWindow = require('mail.ChatWindow');
 
 var _t = core._t;
 var QWeb = core.qweb;
 
-
-/*
- * Conversation Patch
- *
- * The state of anonymous session is hold by the client and not the
- * server. Override the method managing the state of normal conversation.
-*/
-mail_chat_common.Conversation.include({
-    init: function(parent, session, options){
-        this._super.apply(this, arguments);
-        this.shown = true;
-        this.feedback = false;
-        this.options.default_username = session.anonymous_name || this.options.default_username;
-    },
-    show: function(){
-        this._super.apply(this, arguments);
-        this.shown = true;
-    },
-    hide: function(){
-        this._super.apply(this, arguments);
-        this.shown = false;
-    },
-    session_fold: function(state){
-        // set manually the new state
-        if(state === 'closed'){
-            this.destroy();
-        }else{
-            if(state === 'open'){
-                this.show();
-            }else{
-                if(this.shown){
-                    state = 'fold';
-                    this.hide();
-                }else{
-                    state = 'open';
-                    this.show();
-                }
-            }
-            // session and cookie update
-            utils.set_cookie('im_livechat_session', JSON.stringify(this.get('session')), 60*60);
-        }
-        this._super(state);
-    },
-    on_click_close: function(event) {
-        var self = this;
-        event.stopPropagation();
-        if(!this.feedback && (this.get('messages').length > 1)){
-            this.feedback = new Feedback(this);
-            this.$(".o_mail_chat_im_window_content").empty();
-            this.$(".o_mail_chat_im_window_input").prop('disabled', true);
-            this.feedback.appendTo(this.$(".o_mail_chat_im_window_content"));
-            // bind event to close conversation
-            var args = arguments;
-            var _super = this._super;
-            this.feedback.on("feedback_sent", this, function(){
-                _super.apply(self, args);
-            });
-        }else{
-            this._super.apply(this, arguments);
-        }
-    },
-});
-
-/*
- * Livechat Conversation Manager
- *
- * To avoid exeption when the anonymous has close his conversation and when operator send
- * him a message. Extending ConversationManager is better than monkey-patching it.
- */
-var LivechatConversationManager = mail_chat_common.ConversationManager.extend({
-    message_receive: function(message) {
-        try{
-            this._super(message);
-        }catch(e){}
-    }
-});
-
-/**
- * Livechat Button
- *
- * This widget is the Button to start a conversation with an operator on the livechat channel
- * (defined in options.channel_id). This will auto-popup if the rule say so, create the conversation
- * window if a session is saved in a cookie, ...
- */
 var LivechatButton = Widget.extend({
-    template: 'im_livechat.LivechatButton',
+    className:"openerp o_livechat_button hidden-print",
+
     events: {
-        "click": "on_click"
+        "click": "open_chat"
     },
-    init: function(parent, server_url, options, rule) {
-        this._super.apply(this, arguments);
-        this.server_url = server_url;
+
+    init: function (parent, server_url, options) {
+        this._super(parent);
         this.options = _.defaults(options || {}, {
             placeholder: _t('Ask something ...'),
             default_username: _t("Visitor"),
             button_text: _t("Chat with one of our collaborators"),
             default_message: _t("How may I help you?"),
         });
-        this.rule = rule || false;
-        this.mail_channel = false;
+        this.channel = null;
+        this.chat_window = null;
+        this.messages = [];
     },
-    willStart: function(){
-        return $.when(this.load_qweb_template(), this._super());
+
+    willStart: function () {
+        return this.load_qweb_template();
     },
-    start: function(){
-        var self = this;
-        return this._super.apply(this, arguments).then(function(){
-            // set up the manager
-            self.manager = new LivechatConversationManager(self, self.options);
-            self.manager.set("bottom_offset", self.$el.outerHeight());
-            // check if a session already exists in a cookie
-            var cookie = utils.get_cookie('im_livechat_session');
-            if(cookie){
-                self.set_conversation(JSON.parse(cookie), false);
-            }else{ // if not session, apply the rule
-                var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup') ? JSON.parse(utils.get_cookie('im_livechat_auto_popup')) : true;
-                self.auto_popup_cookie = auto_popup_cookie;
-                if (self.rule.action === 'auto_popup' && auto_popup_cookie){
-                    setTimeout(function() {
-                        self.on_click();
-                    }, self.rule.auto_popup_timer*1000);
-                }
-            }
+
+    start: function () {
+        this.$el.text(this.options.button_text);
+        bus.on('notification', this, function (notification) {
+            this.add_message(notification[1]);
+            this.render_messages();
         });
+        return this._super();
     },
-    load_qweb_template: function(){
-        var self = this;
-        var defs = [];
-        var templates = ['/mail/static/src/xml/mail_chat_common.xml', '/im_livechat/static/src/xml/im_livechat.xml'];
-        _.each(templates, function(tmpl){
-            defs.push(user_session.rpc('/web/proxy/load', {path: tmpl}).then(function(xml) {
+
+    load_qweb_template: function () {
+        var xml_files = ['/mail/static/src/xml/chat_window.xml',
+                         '/mail/static/src/xml/thread.xml',
+                         '/im_livechat/static/src/xml/im_livechat.xml'];
+        var defs = _.map(xml_files, function (tmpl) {
+            return session.rpc('/web/proxy/load', {path: tmpl}).then(function (xml) {
                 QWeb.add_template(xml);
-            }));
+            });
         });
         return $.when.apply($, defs);
     },
-    load_mail_channel: function(display_warning){
+
+    open_chat: function () {
         var self = this;
-        return user_session.rpc('/im_livechat/get_session', {
-            "channel_id" : this.options.channel_id,
-            "anonymous_name" : this.options.default_username,
-        }, {shadow: true}).then(function(channel){
-            if(channel){
-                self.set_conversation(channel, true);
-            }else{
-                if(display_warning){
-                    self.alert_available_message();
-                }
-            }
-        });
-    },
-    on_click: function(event){
-        var self = this;
-        if(!this.mail_channel){
-            this.load_mail_channel(event !== undefined);
+        var cookie = utils.get_cookie('im_livechat_session');
+        var def;
+        if (cookie) {
+            def = $.when(JSON.parse(cookie));
+        } else {
+            this.messages = []; // re-initialize messages cache
+            def = session.rpc('/im_livechat/get_session', {
+                channel_id : this.options.channel_id,
+                anonymous_name : this.options.default_username,
+            }, {shadow: true});
         }
-    },
-    set_conversation: function(mail_channel, welcome_message){
-        var self = this;
-        // set the mail_channel and create the Conversation Window
-        this.mail_channel = mail_channel;
-        this.conv = this.manager.session_apply(mail_channel, {
-            'load_history': !welcome_message,
-            'focus': welcome_message
-        });
-        this.conv.on("destroyed", this, function() {
-            bus.bus.stop_polling();
-            delete self.conv;
-            delete self.mail_channel;
-            utils.set_cookie('im_livechat_session', "", -1); // delete the session cookie
-        });
-        // setup complet when the conversation window is appended
-        this.manager._session_defs[mail_channel.id].then(function(){
-            // start the polling
-            bus.bus.add_channel(mail_channel.uuid);
-            bus.bus.start_polling();
-            // add the automatic welcome message
-            if(welcome_message){
+        def.then(function (channel) {
+            if (!channel || !channel.operator_pid) {
+                alert(_t("None of our collaborators seems to be available, please try again later."));
+            } else {
+                self.channel = channel;
+                self.open_chat_window(channel);
                 self.send_welcome_message();
+                self.render_messages();
+
+                bus.add_channel(channel.uuid);
+                bus.restart_poll();
+
+                utils.set_cookie('im_livechat_session', JSON.stringify(channel), 60*60);
             }
-            // create the cookies
-            utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
-            utils.set_cookie('im_livechat_session', JSON.stringify(mail_channel), 60*60);
-        })
+        });
     },
-    send_welcome_message: function(){
+
+    open_chat_window: function (channel) {
         var self = this;
-        if(this.mail_channel.operator_pid && this.options.default_message) {
-            setTimeout(function(){
-                self.conv.message_receive({
-                    id : 1,
-                    message_type: "comment",
-                    model: 'mail.channel',
-                    body: self.options.default_message,
-                    date: time.datetime_to_str(new Date()),
-                    author_id: self.mail_channel.operator_pid,
-                    channel_ids: [self.mail_channel.id],
-                    tracking_value_ids: [],
-                    attachment_ids: [],
-                });
-            }, 1000);
-        }
+        var options = {
+            display_stars: false,
+        };
+        this.chat_window = new ChatWindow(this, channel.id, channel.name, false, options);
+        this.chat_window.appendTo($('body')).then(function () {
+            self.chat_window.$el.css({right: 0, bottom: 0});
+            self.$el.hide();
+        });
+        this.chat_window.on("close_chat_session", this, function () {
+            if (this.messages.length > 1) {
+                this.ask_feedback();
+            } else {
+                this.close_chat();
+            }
+        });
+        this.chat_window.on("post_message", this, function (message) {
+            self.send_message(message).fail(function (error, e) {
+                e.preventDefault();
+                return self.send_message(message); // try again just in case
+            });
+
+        });
     },
-    alert_available_message: function(){
-        alert(_t("None of our collaborators seems to be available, please try again later."));
+
+    close_chat: function () {
+        this.chat_window.destroy();
+        this.$el.show();
+        utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
-})
+
+    send_message: function (message) {
+        return session.rpc("/mail/chat_post", {uuid: this.channel.uuid, message_content: message.content});
+    },
+
+    add_message: function (data) {
+        this.messages.push({
+            id: data.id,
+            attachment_ids: data.attachment_ids,
+            author_id: data.author_id,
+            body: data.body,
+            date: data.date,
+            is_needaction: false,
+            is_note: data.is_note,
+        });
+    },
+
+    render_messages: function () {
+        this.chat_window.render(this.messages);
+        this.chat_window.scrollBottom();
+    },
+
+    send_welcome_message: function () {
+        this.add_message({
+            id: 1,
+            attachment_ids: [],
+            author_id: this.channel.operator_pid,
+            body: this.options.default_message,
+            channel_ids: [this.channel.id],
+            date: time.datetime_to_str(new Date()),
+            tracking_value_ids: [],
+        });
+    },
+
+    ask_feedback: function () {
+        this.chat_window.$(".o_chat_content").empty();
+        this.chat_window.$(".o_chat_input input").prop('disabled', true);
+
+        var feedback = new Feedback(this, this.channel.uuid);
+        feedback.appendTo(this.chat_window.$(".o_chat_content"));
+
+        feedback.on("send_message", this, this.send_message);
+        feedback.on("feedback_sent", this, this.close_chat);
+    }
+});
 
 /*
  * Rating for Livechat
  *
- * This widget display the 3 rating smileys, and a textarea to add a reason (only for red
- * smileys), and sent the user feedback to the server.
+ * This widget displays the 3 rating smileys, and a textarea to add a reason
+ * (only for red smiley), and sends the user feedback to the server.
  */
 var Feedback = Widget.extend({
-    template : "im_livechat.feedback",
-    init: function(parent){
+    template: "im_livechat.FeedBack",
+
+    events: {
+        'click .o_livechat_rating_choices img': 'on_click_smiley',
+        'click .o_rating_submit_button': 'on_click_send',
+    },
+
+    init: function (parent, channel_uuid) {
         this._super(parent);
-        this.conversation = parent;
-        this.reason = false;
-        this.rating = false;
-        this.server_origin = user_session.origin;
+        this.channel_uuid = channel_uuid;
+        this.server_origin = session.origin;
+        this.rating = undefined;
     },
-    start: function(){
-        this._super.apply(this.arguments);
-        // bind events
-        this.$('.o_livechat_rating_choices img').on('click', _.bind(this.click_smiley, this));
-        this.$('#rating_submit').on('click', _.bind(this.click_send, this));
-    },
-    click_smiley: function(ev){
-        var self = this;
+
+    on_click_smiley: function (ev) {
         this.rating = parseInt($(ev.currentTarget).data('value'));
         this.$('.o_livechat_rating_choices img').removeClass('selected');
         this.$('.o_livechat_rating_choices img[data-value="'+this.rating+'"]').addClass('selected');
+
         // only display textearea if bad smiley selected
-        var close_conv = false;
-        if(this.rating === 0){
+        var close_chat = false;
+        if (this.rating === 0) {
             this.$('.o_livechat_rating_reason').show();
-        }else{
+        } else {
             this.$('.o_livechat_rating_reason').hide();
-            close_conv = true;
+            close_chat = true;
         }
-        this._send_feedback(close_conv).then(function(){
-            self.$('textarea').val(''); // empty the reason each time a click on a smiley is done
-        });
+        this._send_feedback({close: close_chat});
     },
-    click_send: function(ev){
-        this.reason = this.$('textarea').val();
-        if(_.contains([0,5,10], this.rating)){ // need to use contains, since the rating can 0, evaluate to false
-            this._send_feedback(true);
+
+    on_click_send: function () {
+        if (_.isNumber(this.rating)) {
+            this._send_feedback({ reason: this.$('textarea').val(), close: true });
         }
     },
-    _send_feedback: function(close){
+
+    _send_feedback: function (options) {
         var self = this;
-        var uuid = this.conversation.get('session').uuid;
-        return user_session.rpc('/im_livechat/feedback', {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
-            if(close){
-                self.trigger("feedback_sent"); // will close the conversation
-                    self.conversation.message_send(_.str.sprintf(_t("I rated you with :rating_%d"), self.rating), "message");
+        var args = {
+            uuid: this.channel_uuid,
+            rate: this.rating,
+            reason : options.reason
+        };
+        return session.rpc('/im_livechat/feedback', args).then(function () {
+            if (options.close) {
+                var content = _.str.sprintf(_t("I rated you with :rating_%d"), self.rating);
+                if (options.reason) {
+                    content += _.str.sprintf(_t(" for the following reason: %s"), options.reason);
+                }
+                self.trigger("send_message", {content: content});
+                self.trigger("feedback_sent"); // will close the chat
             }
         });
     }
 });
 
 return {
-    Feedback: Feedback,
     LivechatButton: LivechatButton,
+    Feedback: Feedback,
 };
 
 });

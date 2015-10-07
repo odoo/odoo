@@ -1,64 +1,77 @@
-# French translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_geolocalize
+# 
+# Translators:
+# Leo Schmitt <lschmitt@yziact.fr>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2015-01-09 07:01+0000\n"
-"Last-Translator: Olivier Lenoir <olivier.lenoir@free.fr>\n"
-"Language-Team: French <fr@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-10-01 22:54+0000\n"
+"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-10 07:25+0000\n"
-"X-Generator: Launchpad (build 17298)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:41
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "<span class=\"oe_inline\"> ( On  </span>"
+msgstr "<span class=\"oe_inline\"> ( Dans </span>"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "<span> : Lat : </span>"
+msgstr "<span> : Lat : </span>"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "<span> ;  Long:  </span>"
+msgstr "<span> ; Long: </span>"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:23
 #, python-format
 msgid ""
 "Cannot contact geolocation servers. Please make sure that your internet "
 "connection is up and running (%s)."
-msgstr ""
-"Serveurs de géolocalisation inaccessibles. Vérifier que la connexion "
-"internet est configurée et active (%s)"
+msgstr "Serveurs de géolocalisation inaccessibles. Vérifier que la connexion internet est configurée et active (%s)"
 
 #. module: base_geolocalize
-#: field:res.partner,partner_latitude:0
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_latitude
 msgid "Geo Latitude"
 msgstr "Latitude"
 
 #. module: base_geolocalize
-#: view:res.partner:base_geolocalize.view_crm_partner_geo_form
-msgid "Geo Localization"
-msgstr "Géo-localisation"
-
-#. module: base_geolocalize
-#: field:res.partner,date_localization:0
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
 msgid "Geo Localization Date"
-msgstr "Date de Géo-localisation"
+msgstr "Date de la géolocalisation"
 
 #. module: base_geolocalize
-#: view:res.partner:base_geolocalize.view_crm_partner_geo_form
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geo Localize"
-msgstr "Géo-localisation"
+msgstr "Géolocalisation"
 
 #. module: base_geolocalize
-#: field:res.partner,partner_longitude:0
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geo Location"
+msgstr "Géolocalisation"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_longitude
 msgid "Geo Longitude"
 msgstr "Longitude"
-
-#. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:40
-#, python-format
-msgid "Network error"
-msgstr "Erreur réseau"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
 msgid "Partner"
 msgstr "Partenaire"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Partner Assignation"
+msgstr "Assignation de partenaire"

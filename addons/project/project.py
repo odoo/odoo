@@ -109,8 +109,7 @@ class project(osv.osv):
             context = {}
         res={}
         for project in self.browse(cr, uid, ids, context=context):
-            tasks_undefined_stage = self.pool['project.task'].search_count(cr, uid, [('stage_id', '=', None), ('project_id', '=', project.id)], context=context)
-            res[project.id] = len(project.task_ids) + int(tasks_undefined_stage) 
+            res[project.id] = len(project.task_ids)
         return res
     def _get_alias_models(self, cr, uid, context=None):
         """ Overriden in project_issue to offer more options """
@@ -164,7 +163,7 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Tasks",),
         'task_ids': fields.one2many('project.task', 'project_id',
-                                    domain=[('stage_id.fold', '=', False)]),
+                                    domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)]),
         'color': fields.integer('Color Index'),
         'user_id': fields.many2one('res.users', 'Project Manager'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
@@ -453,6 +452,9 @@ class task(osv.osv):
         'attachment_ids': fields.one2many('ir.attachment', 'res_id', domain=lambda self: [('res_model', '=', self._name)], auto_join=True, string='Attachments'),
         # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
         'displayed_image_id': fields.many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Displayed Image'),
+        'legend_blocked': fields.related("stage_id", "legend_blocked", type="char", string='Kanban Blocked Explanation'),
+        'legend_done': fields.related("stage_id", "legend_done", type="char", string='Kanban Valid Explanation'),
+        'legend_normal': fields.related("stage_id", "legend_normal", type="char", string='Kanban Ongoing Explanation'),
         }
     _defaults = {
         'stage_id': _get_default_stage_id,
@@ -637,7 +639,6 @@ class task(osv.osv):
         # user_id change: update date_assign
         if vals.get('user_id'):
             vals['date_assign'] = fields.datetime.now()
-
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
         task_id = super(task, self).create(cr, uid, vals, context=create_context)
@@ -750,7 +751,8 @@ class task(osv.osv):
         res = super(task, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
 
         take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
-        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, view_xmlid='project.action_view_task')
+        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project.action_view_task')
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, action_id=new_action_id)
 
         task_record = self.browse(cr, uid, ids[0], context=context)
         actions = []

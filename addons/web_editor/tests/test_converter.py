@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import textwrap
-import unittest2
+import unittest
 
 from lxml import etree, html
 from lxml.builder import E
@@ -10,7 +10,7 @@ from openerp.addons.base.ir import ir_qweb
 from openerp.addons.web_editor.models.ir_qweb import html_to_text
 
 
-class TestHTMLToText(unittest2.TestCase):
+class TestHTMLToText(unittest.TestCase):
     def test_rawstring(self):
         self.assertEqual(
             "foobar",

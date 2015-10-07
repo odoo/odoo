@@ -1,105 +1,116 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_import_module
+# 
+# Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-10-05 22:11+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-19 16:09+0000\n"
+"Last-Translator: Kris Krnacs\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-06 07:55+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Cancel"
-msgstr "Mégsem"
+msgstr "Megszakítás"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
-msgstr "Bezárás"
+msgstr "Bezár"
 
 #. module: base_import_module
-#: field:base.import.module,create_uid:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
 msgid "Created by"
 msgstr "Készítette"
 
 #. module: base_import_module
-#: field:base.import.module,create_date:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:30
-#: code:addons/base_import_module/models/ir_module.py:82
-#: code:addons/base_import_module/models/ir_module.py:91
-#, python-format
-msgid "Error !"
-msgstr "Hiba!"
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_display_name
+msgid "Display Name"
+msgstr "Megjelenített név"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:90
+#: code:addons/base_import_module/models/ir_module.py:94
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "Fájl '%s' túllépte a megengedett maximális fájlméretet"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:82
+#: code:addons/base_import_module/models/ir_module.py:86
 #, python-format
 msgid "File is not a zip file!"
 msgstr "A fájl nem zip fájl!"
 
 #. module: base_import_module
-#: field:base.import.module,force:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_force
 msgid "Force init"
 msgstr "Eröltetett indítás"
 
 #. module: base_import_module
-#: help:base.import.module,force:0
+#: model:ir.model.fields,help:base_import_module.field_base_import_module_force
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr ""
-"Eröltetett indítási mód akkor is ha telepítve van. (frissíteni fogja a "
-"`noupdate='1'` rekordokat)"
+msgstr "Eröltetett indítási mód akkor is ha telepítve van. (frissíteni fogja a `noupdate='1'` rekordokat)"
 
 #. module: base_import_module
-#: field:base.import.module,id:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr "ID"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Import App"
+msgstr "Alk. import"
+
+#. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
 #: model:ir.model,name:base_import_module.model_base_import_module
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
 msgstr "Modul Importálás"
 
 #. module: base_import_module
-#: field:base.import.module,import_message:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
 msgid "Import message"
 msgstr "Üzenet importálás"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import module"
 msgstr "Modul importálás"
 
 #. module: base_import_module
-#: field:base.import.module,write_uid:0
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
+msgid "Imported Module"
+msgstr "Importált modul"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
+msgid "Last Modified on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_uid
 msgid "Last Updated by"
 msgstr "Utoljára frissítve, által"
 
 #. module: base_import_module
-#: field:base.import.module,write_date:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve ekkor"
 
@@ -109,27 +120,27 @@ msgid "Module"
 msgstr "Modul"
 
 #. module: base_import_module
-#: field:base.import.module,module_file:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_module_file
 msgid "Module .ZIP file"
 msgstr "Modul .ZIP fájl"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
 msgstr "Modulok megnyitása"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Select module package to import (.zip file):"
 msgstr "Válasszon egy importálandó modul csomagot (.zip file):"
 
 #. module: base_import_module
-#: field:base.import.module,state:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_state
 msgid "Status"
 msgstr "Állapot"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:29
+#: code:addons/base_import_module/models/ir_module.py:33
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr "Rendszertelen modul függőségek: %s"
@@ -142,4 +153,4 @@ msgstr "kész"
 #. module: base_import_module
 #: selection:base.import.module,state:0
 msgid "init"
-msgstr "indít"
+msgstr "init"

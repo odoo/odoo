@@ -5,6 +5,8 @@ import logging
 from email.utils import formataddr
 from urlparse import urljoin
 
+import psycopg2
+
 from openerp import _, api, fields, models
 from openerp import tools
 from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
@@ -284,6 +286,12 @@ class MailMail(models.Model):
                 _logger.exception(
                     'MemoryError while processing mail with ID %r and Msg-Id %r. Consider raising the --limit-memory-hard startup option',
                     mail.id, mail.message_id)
+                raise
+            except psycopg2.Error:
+                # If an error with the database occurs, chances are that the cursor is unusable.
+                # This will lead to an `psycopg2.InternalError` being raised when trying to write
+                # `state`, shadowing the original exception and forbid a retry on concurrent
+                # update. Let's bubble it.
                 raise
             except Exception as e:
                 failure_reason = tools.ustr(e)

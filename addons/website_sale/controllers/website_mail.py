@@ -44,7 +44,6 @@ class WebsiteMailController(WebsiteMail):
                     'res_id': res_id,
                     'message_id': message_id,
                 })
-                print rating
             except Exception:
                 pass
         return response

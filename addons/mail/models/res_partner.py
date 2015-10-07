@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import logging
 import threading
 
 from openerp import _, api, fields, models, tools
 
+_logger = logging.getLogger(__name__)
 
 class Partner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
@@ -113,18 +115,31 @@ class Partner(models.Model):
 
     @api.multi
     def _notify(self, message, force_send=False, user_signature=True):
+        # TDE TODO: model-dependant ? (like customer -> always email ?)
+        message_sudo = message.sudo()
+        email_channels = message.channel_ids.filtered(lambda channel: channel.email_send)
+        self.sudo().search([
+            '|',
+            ('id', 'in', self.ids),
+            ('channel_ids', 'in', email_channels.ids),
+            ('email', '!=', message_sudo.author_id and message_sudo.author_id.email or message.email_from),
+            ('notify_email', '!=', 'none')])._notify_by_email(message, force_send=force_send, user_signature=user_signature)
+        self._notify_by_chat(message)
+        return True
+
+    @api.multi
+    def _notify_by_email(self, message, force_send=False, user_signature=True):
         """ Method to send email linked to notified messages. The recipients are
         the recordset on which this method is called. """
         if not self.ids:
             return True
 
         # existing custom notification email
+        base_template = None
         if message.model:
             base_template = self.env.ref('mail.mail_template_data_notification_email_%s' % message.model.replace('.', '_'), raise_if_not_found=False)
-            if base_template:
-                # do something custom
-                pass
-        base_template = self.env.ref('mail.mail_template_data_notification_email_default')
+        if not base_template:
+            base_template = self.env.ref('mail.mail_template_data_notification_email_default')
 
         base_template_ctx = self._notify_prepare_template_context(message)
         if not user_signature:
@@ -174,11 +189,23 @@ class Partner(models.Model):
 
         return True
 
+    @api.multi
+    def _notify_by_chat(self, message):
+        """ Broadcast the message to all the partner since """
+        message_values = message.message_format()[0]
+        notifications = []
+        for partner in self:
+            notifications.append([(self._cr.dbname, 'ir.needaction', partner.id), dict(message_values)])
+        self.env['bus.bus'].sendmany(notifications)
+
     @api.model
     def get_needaction_count(self):
         """ compute the number of needaction of the current user """
-        self.env.cr.execute("""
-            SELECT count(*) as needaction_count
-            FROM mail_message_res_partner_needaction_rel R
-            WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
-        return self.env.cr.dictfetchall()[0].get('needaction_count')
+        if self.env.user.partner_id:
+            self.env.cr.execute("""
+                SELECT count(*) as needaction_count
+                FROM mail_message_res_partner_needaction_rel R
+                WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
+            return self.env.cr.dictfetchall()[0].get('needaction_count')
+        _logger.error('Call to needaction_count without partner_id')
+        return 0

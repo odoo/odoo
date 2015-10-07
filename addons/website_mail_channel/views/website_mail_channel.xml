@@ -54,7 +54,30 @@
                     <i class='fa fa-fw fa-envelope-o'/> <t t-raw="group_data[group.id]['monthly_message_nbr']"/> messages / month
                 </div>
                 <div class="col-md-3">
-                    <t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>
+                    <!--<t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>-->
+
+                    <div class="js_follow_alias"
+                              t-att-data-id="group.id"
+                              data-object="mail.channel"
+                              data-follow="off">
+                        <div class="input-group js_mg_follow_form">
+                            <input
+                                  type="email"
+                                  name="email"
+                                  class="js_follow_email form-control"
+                                  placeholder="your email..."/>
+                            <span class="input-group-btn">
+                                <button href="#" class="btn btn-primary js_follow_btn">Subscribe</button>
+                            </span>
+                        </div>
+                        <p class="js_mg_details hidden well well-sm">
+                            <span class="js_mg_email hidden"><i class="fa fa-envelope-o"/><a href="#" class="js_mg_email"> send mail</a> - </span>
+                            <i class="fa fa-file-o"/><a href="#" class="js_mg_link"> archives</a> -
+                            <i class="fa fa-times"/><a href="#" class="js_unfollow_btn"> unsubscribe</a>
+                        </p>
+                    </div>
+
+
                 </div>
             </div>
         </div>

@@ -2,11 +2,14 @@ odoo.define('web.planner.common', function (require) {
 "use strict";
 
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var Model = require('web.Model');
 var Widget = require('web.Widget');
 var utils = require('web.utils');
 
 var QWeb = core.qweb;
+
+var _t = core._t;
 
 var Page = core.Class.extend({
     init: function (dom, page_index) {
@@ -139,6 +142,9 @@ var PlannerDialog = Widget.extend({
             mark_as_done_li.addClass('fa-square-o');
             next_button.removeClass('btn-primary');
             next_button.addClass('btn-default');
+        }
+        if (page.hide_mark_as_done) {
+            next_button.removeClass('btn-default').addClass('btn-primary');
         }
     },
     _show_last_open_page: function () {
@@ -400,8 +406,40 @@ var PlannerDialog = Widget.extend({
     }
 });
 
+var PlannerHelpMixin = {
+
+    on_menu_help: function(ev) {
+        ev.preventDefault();
+
+        var menu = $(ev.currentTarget).data('menu');
+        if (menu === 'about') {
+            var self = this;
+            self.rpc("/web/webclient/version_info", {}).done(function(res) {
+                var $help = $(QWeb.render("PlannerLauncher.about", {version_info: res}));
+                $help.find('a.oe_activate_debug_mode').click(function (e) {
+                    e.preventDefault();
+                    window.location = $.param.querystring( window.location.href, 'debug');
+                });
+                new Dialog(this, {
+                    size: 'medium',
+                    dialogClass: 'o_act_window',
+                    title: _t("About"),
+                    $content: $help
+                }).open();
+            });
+        } else if (menu === 'documentation') {
+            window.open('https://www.odoo.com/documentation/user', '_blank');
+        } else if (menu === 'planner') {
+            if (this.dialog) this.show_dialog();
+        } else if (menu === 'support') {
+            window.open('https://www.odoo.com/pricing?noredirect=1', '_blank');
+        }
+    },
+}
+
 return {
     PlannerDialog: PlannerDialog,
+    PlannerHelpMixin: PlannerHelpMixin,
 };
 
 });

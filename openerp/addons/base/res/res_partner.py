@@ -129,7 +129,7 @@ class res_partner_category(osv.Model):
     }
     _parent_store = True
     _parent_order = 'name'
-    _order = 'parent_left'
+    _order = 'parent_left, name'
 
 
 class res_partner_title(osv.osv):
@@ -165,14 +165,6 @@ class res_partner(osv.Model, format_address):
             (p.id, datetime.datetime.now(pytz.timezone(p.tz or 'GMT')).strftime('%z'))
             for p in self)
 
-    @api.multi
-    def _get_image(self, name, args):
-        return dict((p.id, tools.image_get_resized_images(p.image)) for p in self)
-
-    @api.one
-    def _set_image(self, name, value, args):
-        return self.write({'image': tools.image_resize_image_big(value)})
-
     def _commercial_partner_compute(self, cr, uid, ids, name, args, context=None):
         """ Returns the partner that is considered the commercial
         entity of this partner. The commercial entity holds the master data
@@ -207,7 +199,7 @@ class res_partner(osv.Model, format_address):
 
     _order = "display_name"
     _columns = {
-        'name': fields.char('Name', required=True, select=True),
+        'name': fields.char('Name', select=True),
         'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
@@ -259,32 +251,13 @@ class res_partner(osv.Model, format_address):
             selection=[('person', 'Individual'),
                        ('company', 'Company')],
             string='Company Type',
-            help='Technical field, used only to display a boolean using a radio'
-                 'button. As for Odoo v9 RadioButton cannot be used on boolean'
-                 'fields, this one serves as interface. Due to the old API'
-                 'limitations with interface function field, we implement it'
-                 'by hand instead of a true function field. When migrating to'
+            help='Technical field, used only to display a boolean using a radio '
+                 'button. As for Odoo v9 RadioButton cannot be used on boolean '
+                 'fields, this one serves as interface. Due to the old API '
+                 'limitations with interface function field, we implement it '
+                 'by hand instead of a true function field. When migrating to '
                  'the new API the code should be simplified.'),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
-        # image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Image",
-            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image",
-            store={
-                'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized image of this contact. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Small-sized image", type="binary", multi="_get_image",
-            store={
-                'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized image of this contact. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
@@ -293,6 +266,35 @@ class res_partner(osv.Model, format_address):
         # technical field used for managing commercial fields
         'commercial_partner_id': fields.function(_commercial_partner_id, type='many2one', relation='res.partner', string='Commercial Entity', store=_commercial_partner_store_triggers)
     }
+
+    # image: all image fields are base64 encoded and PIL-supported
+    image = openerp.fields.Binary("Image", attachment=True,
+        help="This field holds the image used as avatar for this contact, limited to 1024x1024px",
+        default=lambda self: self._get_default_image(False, True))
+    image_medium = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+        help="Medium-sized image of this contact. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved. "\
+             "Use this field in form views or some kanban views.")
+    image_small = openerp.fields.Binary("Small-sized image",
+        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+        help="Small-sized image of this contact. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
+
+    @api.depends('image')
+    def _compute_images(self):
+        for rec in self:
+            rec.image_medium = tools.image_resize_image_medium(rec.image)
+            rec.image_small = tools.image_resize_image_small(rec.image)
+
+    def _inverse_image_medium(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_medium)
+
+    def _inverse_image_small(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_small)
 
     @api.model
     def _default_category(self):
@@ -340,6 +342,10 @@ class res_partner(osv.Model, format_address):
 
     _constraints = [
         (osv.osv._check_recursion, 'You cannot create recursive Partner hierarchies.', ['parent_id']),
+    ]
+
+    _sql_constraints = [
+        ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
 
     @api.one
@@ -577,9 +583,12 @@ class res_partner(osv.Model, format_address):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = []
+        types_dict = dict(self.fields_get(cr, uid, context=context)['type']['selection'])
         for record in self.browse(cr, uid, ids, context=context):
-            name = record.name
+            name = record.name or ''
             if record.parent_id and not record.is_company:
+                if not name and record.type in ['invoice', 'delivery', 'other']:
+                    name = types_dict[record.type]
                 name = "%s, %s" % (record.parent_name, name)
             if context.get('show_address_only'):
                 name = self._display_address(cr, uid, record, without_company=True, context=context)
@@ -589,6 +598,8 @@ class res_partner(osv.Model, format_address):
             name = name.replace('\n\n','\n')
             if context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
+            if context.get('html_format'):
+                name = name.replace('\n', '<br/>')
             res.append((record.id, name))
         return res
 

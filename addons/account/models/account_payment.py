@@ -253,21 +253,6 @@ class account_payment(models.Model):
     def _get_invoices(self):
         return self.invoice_ids
 
-    @api.model
-    def create(self, vals):
-        self._check_communication(vals['payment_method_id'], vals.get('communication', ''))
-        return super(account_payment, self).create(vals)
-
-    def _check_communication(self, payment_method_id, communication):
-        """ This method is to be overwritten by payment type modules. The method body would look like :
-            if payment_method_id == self.env.ref('my_module.payment_method_id').id:
-                try:
-                    communication.decode('ascii')
-                except UnicodeError:
-                    raise ValidationError(_("The communication cannot contain any special character"))
-        """
-        pass
-
     @api.multi
     def button_journal_entries(self):
         return {
@@ -326,7 +311,7 @@ class account_payment(models.Model):
                 raise UserError(_("Only a draft payment can be posted. Trying to post a payment in state %s.") % rec.state)
 
             if any(inv.state != 'open' for inv in rec.invoice_ids):
-                raise ValidationError(_("The payment cannot be processed because an invoice of the payment is not open !"))
+                raise ValidationError(_("The payment cannot be processed because the invoice is not open!"))
 
             # Use the right sequence to set the name
             if rec.payment_type == 'transfer':
@@ -440,7 +425,7 @@ class account_payment(models.Model):
         """ Returns values common to both move lines (except for debit, credit and amount_currency which are reversed)
         """
         return {
-            'partner_id': self.payment_type in ('inbound', 'outbound') and self.partner_id.commercial_partner_id.id or False,
+            'partner_id': self.payment_type in ('inbound', 'outbound') and self.env['res.partner']._find_accounting_partner(self.partner_id).id or False,
             'invoice_id': invoice_id and invoice_id.id or False,
             'move_id': move_id,
             'debit': debit,

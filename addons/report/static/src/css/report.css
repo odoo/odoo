@@ -5,6 +5,7 @@ body {
 .border-black td {
     border-top: 1px solid black !important;
 }
+/* See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1524 */
 .table-condensed > tbody > tr {
     page-break-inside: avoid !important;
 }
@@ -24,13 +25,3 @@ body {
     display: none;
 }
 
-.o_editable:not(:empty)[data-oe-model="ir.ui.view"]:hover,
-.o_editable:not(:empty)[data-oe-model="ir.ui.view"] th:hover,
-.o_editable:not(:empty)[data-oe-model="ir.ui.view"] td:hover,
-.o_editable[data-oe-type][data-oe-model="ir.ui.view"]:hover,
-.o_editable[data-oe-type][data-oe-model="ir.ui.view"] th:hover,
-.o_editable[data-oe-type][data-oe-model="ir.ui.view"] td:hover {
-    -moz-box-shadow: #DDCC33 0 0 5px 2px inset;
-    -webkit-box-shadow: #DDCC33 0 0 5px 2px inset;
-    box-shadow: #DDCC33 0 0 5px 2px inset;
-}

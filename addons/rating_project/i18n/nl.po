@@ -1,0 +1,139 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * rating_project
+# 
+# Translators:
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-20 12:58+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: rating_project
+#: model:mail.template,body_html:rating_project.rating_project_request_email_template
+msgid ""
+"\n"
+"<body>\n"
+"    <div style=\"max-width:600px; height:auto; margin-left:30px;\">\n"
+"        <div style=\"margin-left:30px;align=center;\">\n"
+"            Dear ${object.partner_id.name},\n"
+"        </div><br>\n"
+"        <div style=\"margin-left:30px;align=center;\" width=\"60%\">\n"
+"            We hope the services provided have met your expectations.\n"
+"            <br>If you have any more questions or comments, do not hesitate to reply to this e-mail.\n"
+"            <br><br>Please, help us to improve ourself by rating the service we provide.\n"
+"        </div><br>\n"
+"        <table style=\"margin-left:50px;\" width=\"70%\">\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <a href=\"/rating/${object.access_token}/10\">\n"
+"                        <img alt=\"Great\" src=\"rating/static/src/img/rating_10.png\" title=\"It was great\"/>\n"
+"                    </a>\n"
+"                </td>\n"
+"                <td>\n"
+"                    <a href=\"/rating/${object.access_token}/5\">\n"
+"                        <img alt=\"Okay\" src=\"rating/static/src/img/rating_5.png\" title=\"It was okay\"/>\n"
+"                    </a>\n"
+"                </td>\n"
+"                <td>\n"
+"                    <a href=\"/rating/${object.access_token}/0\">\n"
+"                        <img alt=\"Bad\" src=\"rating/static/src/img/rating_0.png\" title=\"It wasn't good\"/>\n"
+"                    </a>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table><br>\n"
+"        <h4 style=\"margin-left:30px;font-weight:normal;\">Thank you </h4>\n"
+"        <h4 style=\"margin-left:30px;font-weight:normal;\">${object.rated_partner_id.name or ''} </h4>\n"
+"    </div>\n"
+"</body>\n"
+"                \n"
+"            "
+msgstr "\n<body>\n    <div style=\"max-width:600px; height:auto; margin-left:30px;\">\n        <div style=\"margin-left:30px;align=center;\">\n            Beste ${object.partner_id.name},\n        </div><br>\n        <div style=\"margin-left:30px;align=center;\" width=\"60%\">\n            We hopen dat onze diensten voldeden aan uw eisen.\n            <br>Aarzel niet om ons via e-mail te contacteren indien u nog vragen heeft.\n            <br><br>Help ons aub onszelf te verbeteren door onze diensten te beoordelen.\n        </div><br>\n        <table style=\"margin-left:50px;\" width=\"70%\">\n            <tr>\n                <td>\n                    <a href=\"/rating/${object.access_token}/10\">\n                        <img alt=\"Geweldig\" src=\"rating/static/src/img/rating_10.png\" title=\"Het was geweldig\"/>\n                    </a>\n                </td>\n                <td>\n                    <a href=\"/rating/${object.access_token}/5\">\n                        <img alt=\"OK\" src=\"rating/static/src/img/rating_5.png\" title=\"Het was OK\"/>\n                    </a>\n                </td>\n                <td>\n                    <a href=\"/rating/${object.access_token}/0\">\n                        <img alt=\"Slecht\" src=\"rating/static/src/img/rating_0.png\" title=\"Het was niet goed\"/>\n                    </a>\n                </td>\n            </tr>\n        </table><br>\n        <h4 style=\"margin-left:30px;font-weight:normal;\">Bedankt </h4>\n        <h4 style=\"margin-left:30px;font-weight:normal;\">${object.rated_partner_id.name or ''} </h4>\n    </div>\n</body>\n                \n            "
+
+#. module: rating_project
+#: model:mail.template,subject:rating_project.rating_project_request_email_template
+msgid "${object.res_name}"
+msgstr "${object.res_name}"
+
+#. module: rating_project
+#: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
+#: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
+msgid "% Happy"
+msgstr "% Blij"
+
+#. module: rating_project
+#: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
+msgid "Auto Kanban state validation"
+msgstr "Auto Kanban status validatie"
+
+#. module: rating_project
+#: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
+msgid ""
+"Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
+" * A great feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
+" * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
+msgstr "Wijzig automatisch de kanban fase wanneer de klant reageert op de feedback van dit stadium.\n* Een geweldige beoordeling van de klant update de kanban fase naar 'Klaar voor nieuw stadium' (groen bolletje).\n* Een gemiddelde of slechte beoordeling zet de kanban fase naar 'geblokkeerd' (rood bolletje).\n"
+
+#. module: rating_project
+#: model:ir.model.fields,field_description:rating_project.field_project_project_is_visible_happy_customer
+msgid "Customer Satisfaction"
+msgstr "Klanttevredenheid"
+
+#. module: rating_project
+#: model:ir.model.fields,help:rating_project.field_project_project_is_visible_happy_customer
+msgid ""
+"Display informations about rating of the project on kanban and form view. "
+"This buttons will only be displayed if at least a rating exists."
+msgstr "Toon informatie over de project beoordeling in de kanban en formulier weergave. Deze knoppen worden enkel getoond als er minstens één rating bestaat."
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
+msgid "On tasks"
+msgstr "Op taken"
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
+msgid "Percentage of happy people about this project"
+msgstr "Percentage van mensen die blij zijn met dit project"
+
+#. module: rating_project
+#: model:ir.model,name:rating_project.model_project_project
+msgid "Project"
+msgstr "Project"
+
+#. module: rating_project
+#: model:ir.model,name:rating_project.model_rating_rating
+#: model:ir.model.fields,field_description:rating_project.field_project_task_rating_ids
+msgid "Rating"
+msgstr "Beoordeling"
+
+#. module: rating_project
+#: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
+msgid "Rating Email Template"
+msgstr "Beoordeling emailsjabloon"
+
+#. module: rating_project
+#: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
+msgid ""
+"Select an email template. An email will be sent to the customer when the "
+"task reach this step."
+msgstr "Selecteer een e-mailsjabloon. Er wordt een e-mail verzonden naar de klant wanneer de taak in de laatste fase komt."
+
+#. module: rating_project
+#: model:ir.model,name:rating_project.model_project_task
+msgid "Task"
+msgstr "Taak"
+
+#. module: rating_project
+#: model:ir.model,name:rating_project.model_project_task_type
+msgid "Task Stage"
+msgstr "Taak status"

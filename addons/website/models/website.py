@@ -212,7 +212,7 @@ class website(osv.osv):
         website_id = context.get('website_id')
         key = template_module+'.'+page_name
         page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': key}, context=context)
-        page = view.browse(cr, uid, page_id, context=context)
+        page = view.browse(cr, uid, page_id, context=dict(context, lang=None))
         page.write({
             'arch': page.arch.replace(template, page_xmlid),
             'name': page_name,
@@ -335,7 +335,7 @@ class website(osv.osv):
 
     def get_cdn_url(self, cr, uid, uri, context=None):
         # Currently only usable in a website_enable request context
-        if request and request.website and not request.debug:
+        if request and request.website and not request.debug and request.website.user_id.id == request.uid:
             cdn_url = request.website.cdn_url
             cdn_filters = (request.website.cdn_filters or '').splitlines()
             for flt in cdn_filters:
@@ -627,7 +627,7 @@ class website_menu(osv.osv):
             self.unlink(cr, uid, to_delete, context=context)
         for menu in data['data']:
             mid = menu['id']
-            if isinstance(mid, str):
+            if isinstance(mid, basestring):
                 new_id = self.create(cr, uid, {'name': menu['name']}, context=context)
                 replace_id(mid, new_id)
         for menu in data['data']:

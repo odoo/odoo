@@ -32,6 +32,8 @@ website.TopBar.include({
         });
 
         $("#wrapwrap").find("[data-oe-model] .oe_structure.oe_empty, [data-oe-model].oe_structure.oe_empty, [data-oe-type=html]:empty")
+            .filter(".oe_not_editable")
+            .filter(".oe_no_empty")
             .addClass("oe_empty")
             .attr("data-oe-placeholder", _t("Press The Top-Left Edit Button"));
 

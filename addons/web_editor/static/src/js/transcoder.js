@@ -95,22 +95,26 @@ var getMatchedCSSRules = function (a) {
 var font_to_img = function ($editable) {
     $(".fa", $editable).each(function () {
         var $font = $(this);
-        var content;
+        var icon, content;
         _.find(widget.fontIcons, function (font) {
             return _.find(widget.getCssSelectors(font.parser), function (css) {
                 if ($font.is(css[0].replace(/::?before$/, ''))) {
+                    icon = css[2].split("-").shift();
                     content = css[1].match(/content:\s*['"]?(.)['"]?/)[1];
                     return true;
                 }
             });
         });
         if (content) {
-            var size = parseInt(parseFloat($font.css("font-size"))/parseFloat($font.parent().css("font-size")),10);
             var color = $font.css("color").replace(/\s/g, '');
-            var src = _.str.sprintf('/web_editor/font_to_img/%s/%s/'+$font.width(), window.encodeURI(content), window.encodeURI(color));
-            var style = $font.attr("style");
-            style = (style ? style.replace(/\s/g, '').replace(/(^|;)height:[^;]*/, '$1').replace(/(^|;)font-size:[^;]*/, '$1') : "") + "height:"+size+"em;";
-            var $img = $("<img/>").attr("src", src).attr("data-class", $font.attr("class")).attr("style", style);
+            var src = _.str.sprintf('/web_editor/font_to_img/%s/%s/'+$font.height(), window.encodeURI(content), window.encodeURI(color));
+            var $img = $("<img/>").attr("src", src)
+                .attr("data-class", $font.attr("class"))
+                .attr("class", $font.attr("class").replace(new RegExp("(^|\\s+)" + icon + "(-[^\\s]+)?", "gi"), '')) // remove inline font-awsome style
+                .attr("style", $font.attr("style"))
+                .attr("height", $font.height())
+                .css("height", "")
+                .css("font-size", "");
             $font.replaceWith($img);
         } else {
             $font.remove();
@@ -121,7 +125,10 @@ var font_to_img = function ($editable) {
 var img_to_font = function ($editable) {
     $("img[src*='/web_editor/font_to_img/']", $editable).each(function () {
         var $img = $(this);
-        var $font = $("<span/>").attr("class", $img.data("class")).attr("style", $img.attr("style")).css("height", "");
+        var $font = $("<span/>")
+            .attr("class", $img.data("class"))
+            .attr("style", $img.attr("style"))
+            .css("height", "");
         $img.replaceWith($font);
     });
 };

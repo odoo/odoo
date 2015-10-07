@@ -957,9 +957,7 @@ class calendar_event(osv.Model):
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
-            if event.start_datetime and event.stop_datetime < event.start_datetime:
-                return False
-            if event.start_date and event.stop_date < event.start_date:
+            if event.stop < event.start:
                 return False
         return True
 
@@ -1005,6 +1003,16 @@ class calendar_event(osv.Model):
             elif end:
                 value['stop_datetime'] = end
 
+        return {'value': value}
+
+    def onchange_duration(self, cr, uid, ids, start=False, duration=False, context=None):
+        value = {}
+        if not (start and duration):
+            return value
+        start = datetime.strptime(start, DEFAULT_SERVER_DATETIME_FORMAT)
+        value['stop_date'] = (start + timedelta(hours=duration)).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        value['stop_datetime'] = (start + timedelta(hours=duration)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        value['start_date'] = start.strftime(DEFAULT_SERVER_DATE_FORMAT)
         return {'value': value}
 
     def onchange_dates(self, cr, uid, ids, fromtype, start=False, end=False, checkallday=False, allday=False, context=None):
@@ -1749,8 +1757,11 @@ class mail_message(osv.Model):
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
         for index in range(len(args)):
-            if args[index][0] == "res_id" and isinstance(args[index][2], basestring):
-                args[index][2] = get_real_ids(args[index][2])
+            if args[index][0] == "res_id":
+                if isinstance(args[index][2], basestring):
+                    args[index][2] = get_real_ids(args[index][2])
+                elif isinstance(args[index][2], list):
+                    args[index] = (args[index][0], args[index][1], map(lambda x: get_real_ids(x), args[index][2]))
         return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):

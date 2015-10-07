@@ -5,6 +5,7 @@ from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.exceptions import AccessError
 from openerp.osv import osv, fields
+from openerp.sql_db import TestCursor
 from openerp.tools import config
 from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
@@ -143,6 +144,13 @@ class Report(osv.Model):
         if html is None:
             html = self.get_html(cr, uid, ids, report_name, data=data, context=context)
 
+        # The test cursor prevents the use of another environnment while the current
+        # transaction is not finished, leading to a deadlock when the report requests
+        # an asset bundle during the execution of test scenarios. In this case, return
+        # the html version.
+        if isinstance(cr, TestCursor):
+            return html
+
         html = html.decode('utf-8')  # Ensure the current document is utf-8 encoded.
 
         # Get the ir.actions.report.xml record we are working on.
@@ -157,7 +165,6 @@ class Report(osv.Model):
             paperformat = report.paperformat_id
 
         # Preparing the minimal html pages
-        css = ''  # Will contain local css
         headerhtml = []
         contenthtml = []
         footerhtml = []
@@ -174,17 +181,14 @@ class Report(osv.Model):
             root = lxml.html.fromstring(html)
             match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
-            for node in root.xpath("//html/head/style"):
-                css += node.text
-
             for node in root.xpath(match_klass.format('header')):
                 body = lxml.html.tostring(node)
-                header = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
+                header = render_minimal(dict(subst=True, body=body, base_url=base_url))
                 headerhtml.append(header)
 
             for node in root.xpath(match_klass.format('footer')):
                 body = lxml.html.tostring(node)
-                footer = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
+                footer = render_minimal(dict(subst=True, body=body, base_url=base_url))
                 footerhtml.append(footer)
 
             for node in root.xpath(match_klass.format('page')):
@@ -205,7 +209,7 @@ class Report(osv.Model):
 
                 # Extract the body
                 body = lxml.html.tostring(node)
-                reportcontent = render_minimal(dict(css=css, subst=False, body=body, base_url=base_url))
+                reportcontent = render_minimal(dict(subst=False, body=body, base_url=base_url))
 
                 contenthtml.append(tuple([reportid, reportcontent]))
 

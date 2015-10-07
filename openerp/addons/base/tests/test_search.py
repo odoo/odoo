@@ -1,21 +1,9 @@
-import unittest2
+import unittest
 
 import openerp.tests.common as common
 
 
 class test_search(common.TransactionCase):
-
-    def patch_order(self, model, order):
-        m_e = self.env[model]
-        m_r = self.registry(model)
-
-        old_order = m_e._order
-
-        @self.addCleanup
-        def cleanup():
-            m_r._order = type(m_e)._order = old_order
-
-        m_r._order = type(m_e)._order = order
 
     def test_00_search_order(self):
 
@@ -173,4 +161,4 @@ class test_search(common.TransactionCase):
         self.assertEqual(search_result, expected_order)
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

@@ -157,7 +157,7 @@ class WebsiteMail(http.Controller):
                 'body': msg.body,
                 'date': msg.date,
                 'author': msg.author_id.name,
-                'image_url': request.website.image_url(msg.author_id, 'image_small')
+                'image_url': '/mail/%s/%s/avatar/%s' % (msg.model, msg.res_id, msg.author_id.id)
             }
             return data
         except Exception:
@@ -166,5 +166,8 @@ class WebsiteMail(http.Controller):
     @http.route(['/website_mail/post/post'], type='http', method=['POST'], auth='public', website=True)
     def chatter_post(self, res_model='', res_id=None, message='', redirect=None, **kw):
         res_id = int(res_id)
-        message = _message_post_helper(res_model, res_id, message, **kw)
-        return request.redirect(request.httprequest.referrer + "#message-%s" % (message.id,))
+        url = request.httprequest.referrer
+        if message:
+            message = _message_post_helper(res_model, res_id, message, **kw)
+            url = url + "#message-%s" % (message.id,)
+        return request.redirect(url)

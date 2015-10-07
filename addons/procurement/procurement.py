@@ -139,6 +139,13 @@ class procurement_order(osv.osv):
                 raise UserError(_('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
+    def create(self, cr, uid, vals, context=None):
+        context = context or {}
+        procurement_id = super(procurement_order, self).create(cr, uid, vals, context=context)
+        if not context.get('procurement_autorun_defer'):
+            self.run(cr, uid, [procurement_id], context=context)
+        return procurement_id
+
     def do_view_procurements(self, cr, uid, ids, context=None):
         '''
         This function returns an action that display existing procurement orders
@@ -248,7 +255,7 @@ class procurement_order(osv.osv):
         #if the procurement already has a rule assigned, we keep it (it has a higher priority as it may have been chosen manually)
         if procurement.rule_id:
             return True
-        elif procurement.product_id.type != 'service':
+        elif procurement.product_id.type not in ('service', 'digital'):
             rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
             if rule_id:
                 self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)

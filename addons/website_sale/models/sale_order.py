@@ -17,7 +17,7 @@ class sale_order(osv.Model):
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {
                 'cart_quantity': int(sum(l.product_uom_qty for l in (order.website_order_line or []))),
-                'only_services': all(l.product_id and l.product_id.type == 'service' for l in order.website_order_line)
+                'only_services': all(l.product_id and l.product_id.type in ('service', 'digital') for l in order.website_order_line)
             }
         return res
 
@@ -136,7 +136,7 @@ class website(orm.Model):
                                (If not selectable but the current pricelist we had this pricelist anyway)
         :param list all_pl: List of all pricelist available for this website
 
-        :returns: list of pricelist
+        :returns: list of pricelist ids
         """
         pcs = []
 
@@ -154,9 +154,9 @@ class website(orm.Model):
         partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id
         if not pcs or partner.property_product_pricelist.id != website_pl:
             pcs.append(partner.property_product_pricelist)
-        pcs = list(set(pcs))  # remove duplicate
-        pcs.sort(key=lambda x: x.name)  # sort by name
-        return pcs
+        # remove duplicates and sort by name
+        pcs = sorted(set(pcs), key=lambda pl: pl.name)
+        return [pl.id for pl in pcs]
 
     def get_pricelist_available(self, cr, uid, show_visible=False, context=None):
         """ Return the list of pricelists that can be used on website for the current user.
@@ -165,18 +165,14 @@ class website(orm.Model):
         :param str country_code: code iso or False, If set, we search only price list available for this country
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
 
-        :returns: list of pricelist
+        :returns: pricelist recordset
         """
         isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
-        return self._get_pl(
-                cr,
-                uid,
-                isocountry,
-                show_visible,
-                request.website.pricelist_id.id,
-                request.session.get('website_sale_current_pl'),
-                request.website.website_pricelist_ids
-        )
+        pl_ids = self._get_pl(cr, uid, isocountry, show_visible,
+                              request.website.pricelist_id.id,
+                              request.session.get('website_sale_current_pl'),
+                              request.website.website_pricelist_ids)
+        return self.pool['product.pricelist'].browse(cr, uid, pl_ids, context=context)
 
     def is_pricelist_available(self, cr, uid, pl_id, context=None):
         """ Return a boolean to specify if a specific pricelist can be manually set on the website.
@@ -267,22 +263,28 @@ class website(orm.Model):
                     flag_pricelist = True
                 fiscal_position = sale_order.fiscal_position_id and sale_order.fiscal_position_id.id or False
 
-                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], context=context).get('value', {})
-                if values.get('pricelist_id'):
-                    if values['pricelist_id'] != pricelist_id:
+                # change the partner, and trigger the onchange
+                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], {'partner_id': partner.id}, context=context)
+                sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], context=context)
+
+                # check the pricelist : update it if the pricelist is not the 'forced' one
+                values = {}
+                if sale_order.pricelist_id:
+                    if sale_order.pricelist_id.id != pricelist_id:
                         values['pricelist_id'] = pricelist_id
                         update_pricelist = True
 
-                if values.get('fiscal_position_id'):
-                    order_lines = map(int, sale_order.order_line)
-                    values.update(sale_order_obj.onchange_fiscal_position(
-                        cr, SUPERUSER_ID, [],
-                        values['fiscal_position_id'], [[6, 0, order_lines]], context=context)['value'])
+                # if fiscal position, update the order lines taxes
+                if sale_order.fiscal_position_id:
+                    sale_order._compute_tax_id()
 
-                values['partner_id'] = partner.id
-                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
+                # if values, then make the SO update
+                if values:
+                    sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
 
-                if flag_pricelist or values.get('fiscal_position_id', False) != fiscal_position:
+                # check if the fiscal position has changed with the partner_id update
+                recent_fiscal_position = sale_order.fiscal_position_id and sale_order.fiscal_position_id.id or False
+                if flag_pricelist or recent_fiscal_position != fiscal_position:
                     update_pricelist = True
 
             if (code and code != sale_order.pricelist_id.code) or \

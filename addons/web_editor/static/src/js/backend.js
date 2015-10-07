@@ -47,6 +47,12 @@ var FieldTextHtmlSimple = widget.extend({
             }
         };
     },
+    start: function() {
+        var def = this._super.apply(this, arguments);
+        this.$translate.remove();
+        this.$translate = $();
+        return def;
+    },
     initialize_content: function() {
         var self = this;
         this.$textarea = this.$("textarea").val(this.get('value') || "<p><br/></p>");
@@ -167,7 +173,10 @@ var FieldTextHtml = widget.extend({
         };
         $(window).on('resize', self.resize);
 
-        return this._super();
+        var def = this._super.apply(this, arguments);
+        this.$translate.remove();
+        this.$translate = $();
+        return def;
     },
     get_url: function (_attr) {
         var src = this.options.editor_url ? this.options.editor_url+"?" : "/web_editor/field/html?";
@@ -295,7 +304,9 @@ var FieldTextHtml = widget.extend({
             }
         } else {
             this.$content.html(value);
-            this.$iframe.css("height", (this.$body.height()+20) + "px");
+            if (this.$iframe[0].contentWindow) {
+                this.$iframe.css("height", (this.$body.height()+20) + "px");
+            }
         }
     },
     is_false: function() {

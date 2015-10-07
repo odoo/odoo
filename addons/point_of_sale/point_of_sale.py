@@ -9,14 +9,13 @@ import sets
 
 from functools import partial
 
+import openerp
 from openerp import tools, models, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import float_is_zero
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
-import openerp.addons.decimal_precision as dp
-import openerp.addons.product.product
 
 _logger = logging.getLogger(__name__)
 
@@ -105,6 +104,7 @@ class pos_config(osv.osv):
         'iface_tax_included':   fields.boolean('Include Taxes in Prices', help='The displayed prices will always include all taxes, even if the taxes have been setup differently'),
         'iface_start_categ_id': fields.many2one('pos.category','Start Category', help='The point of sale will display this product category by default. If no category is specified, all available products will be shown'),
         'iface_display_categ_images': fields.boolean('Display Category Pictures', help="The product categories will be displayed with pictures."),
+        'cash_control': fields.boolean('Cash Control', help="Check the amount of the cashbox at opening and closing."),
         'receipt_header': fields.text('Receipt Header',help="A short text that will be inserted as a header in the printed receipt"),
         'receipt_footer': fields.text('Receipt Footer',help="A short text that will be inserted as a footer in the printed receipt"),
         'proxy_ip':       fields.char('IP Address', help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty', size=45),
@@ -127,6 +127,7 @@ class pos_config(osv.osv):
         'group_pos_manager_id': fields.many2one('res.groups','Point of Sale Manager Group', help='This field is there to pass the id of the pos manager group to the point of sale client'),
         'group_pos_user_id':    fields.many2one('res.groups','Point of Sale User Group', help='This field is there to pass the id of the pos user group to the point of sale client'),
         'tip_product_id':       fields.many2one('product.product','Tip Product', help="The product used to encode the customer tip. Leave empty if you do not accept tips."),
+        'fiscal_position_ids': fields.many2many('account.fiscal.position', string='Fiscal Positions')
     }
 
     def _check_company_location(self, cr, uid, ids, context=None):
@@ -351,12 +352,16 @@ class pos_session(osv.osv):
                 'cash_register_id' : False,
                 'cash_control' : False,
             }
-            # TODO: cash_control field is removed.
-            # for st in record.statement_ids:
-            #     if st.journal_id.cash_control == True:
-            #         result[record.id]['cash_control'] = True
-            #         result[record.id]['cash_journal_id'] = st.journal_id.id
-            #         result[record.id]['cash_register_id'] = st.id
+
+            if record.config_id.cash_control:
+                for st in record.statement_ids:
+                    if st.journal_id.type == 'cash':
+                        result[record.id]['cash_control'] = True
+                        result[record.id]['cash_journal_id'] = st.journal_id.id
+                        result[record.id]['cash_register_id'] = st.id
+
+                if not result[record.id]['cash_control']:
+                    raise UserError(_("Cash control can only be applied to cash journals."))
 
         return result
 
@@ -526,34 +531,20 @@ class pos_session(osv.osv):
             'config_id': config_id
         })
 
+        # set the journal_id which should be used by
+        # account.bank.statement to set the opening balance of the
+        # newly created bank statement
+        if pos_config.cash_control:
+            for journal in pos_config.journal_ids:
+                if journal.type == 'cash':
+                    context.update({'journal_id': journal.id})
+
         return super(pos_session, self).create(cr, uid, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            for statement in obj.statement_ids:
-                statement.unlink(context=context)
+            self.pool.get('account.bank.statement').unlink(cr, uid, obj.statement_ids.ids, context=context)
         return super(pos_session, self).unlink(cr, uid, ids, context=context)
-
-    def open_cb(self, cr, uid, ids, context=None):
-        """
-        call the Point Of Sale interface and set the pos.session to 'opened' (in progress)
-        """
-        if context is None:
-            context = dict()
-
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
-        this_record = self.browse(cr, uid, ids[0], context=context)
-        this_record.signal_workflow('open')
-
-        context.update(active_id=this_record.id)
-
-        return {
-            'type' : 'ir.actions.act_url',
-            'url'  : '/pos/web/',
-            'target': 'self',
-        }
 
     def login(self, cr, uid, ids, context=None):
         this_record = self.browse(cr, uid, ids[0], context=context)
@@ -572,7 +563,7 @@ class pos_session(osv.osv):
             for st in record.statement_ids:
                 st.button_open()
 
-        return self.open_frontend_cb(cr, uid, ids, context=context)
+        return True
 
     def wkf_action_opening_control(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state' : 'opening_control'}, context=context)
@@ -651,8 +642,10 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "id desc"
 
-    def _amount_line_tax(self, cr, uid, line, context=None):
+    def _amount_line_tax(self, cr, uid, line, fiscal_position_id, context=None):
         taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
+        if fiscal_position_id:
+            taxes = fiscal_position_id.map_tax(taxes)
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
         cur = line.order_id.pricelist_id.currency_id
         taxes = taxes.compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
@@ -670,7 +663,8 @@ class pos_order(osv.osv):
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
             'pos_reference':ui_order['name'],
             'partner_id':   ui_order['partner_id'] or False,
-            'date_order':   ui_order['creation_date']
+            'date_order':   ui_order['creation_date'],
+            'fiscal_position_id': ui_order['fiscal_position_id']
         }
 
     def _payment_fields(self, cr, uid, ui_paymentline, context=None):
@@ -811,7 +805,7 @@ class pos_order(osv.osv):
                 res[order.id]['amount_paid'] +=  payment.amount
                 res[order.id]['amount_return'] += (payment.amount < 0 and payment.amount or 0)
             for line in order.lines:
-                val1 += self._amount_line_tax(cr, uid, line, context=context)
+                val1 += self._amount_line_tax(cr, uid, line, order.fiscal_position_id, context=context)
                 val2 += line.price_subtotal
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val1)
             amount_untaxed = cur_obj.round(cr, uid, cur, val2)
@@ -856,6 +850,7 @@ class pos_order(osv.osv):
         'nb_print': fields.integer('Number of Print', readonly=True, copy=False),
         'pos_reference': fields.char('Receipt Ref', readonly=True, copy=False),
         'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='account.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
+        'fiscal_position_id': fields.many2one('account.fiscal.position', 'Fiscal Position')
     }
 
     def _default_session(self, cr, uid, context=None):
@@ -924,13 +919,17 @@ class pos_order(osv.osv):
             location_id = order.location_id.id
             if order.partner_id:
                 destination_id = order.partner_id.property_stock_customer.id
-            elif picking_type:
-                if not picking_type.default_location_dest_id:
-                    raise UserError(_('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
-                destination_id = picking_type.default_location_dest_id.id
             else:
-                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
+                if (not picking_type) or (not picking_type.default_location_dest_id):
+                    customerloc, supplierloc = self.pool['stock.warehouse']._get_partner_locations(cr, uid, [], context=context)
+                    destination_id = customerloc.id
+                else:
+                    destination_id = picking_type.default_location_dest_id.id
+
+            #All qties negative => Create negative
             if picking_type:
+                pos_qty = all([x.qty >= 0 for x in order.lines])
+                #Check negative quantities
                 picking_id = picking_obj.create(cr, uid, {
                     'origin': order.name,
                     'partner_id': addr.get('delivery',False),
@@ -939,8 +938,8 @@ class pos_order(osv.osv):
                     'company_id': order.company_id.id,
                     'move_type': 'direct',
                     'note': order.note or "",
-                    'location_id': location_id,
-                    'location_dest_id': destination_id,
+                    'location_id': location_id if pos_qty else destination_id,
+                    'location_dest_id': destination_id if pos_qty else location_id,
                 }, context=context)
                 self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
 
@@ -964,6 +963,10 @@ class pos_order(osv.osv):
             if picking_id:
                 picking_obj.action_confirm(cr, uid, [picking_id], context=context)
                 picking_obj.force_assign(cr, uid, [picking_id], context=context)
+                # Mark pack operations as done
+                pick = picking_obj.browse(cr, uid, picking_id, context=context)
+                for pack in pick.pack_operation_ids:
+                    self.pool['stock.pack.operation'].write(cr, uid, [pack.id], {'qty_done': pack.product_qty}, context=context)
                 picking_obj.action_done(cr, uid, [picking_id], context=context)
             elif move_list:
                 move_obj.action_confirm(cr, uid, move_list, context=context)
@@ -1138,6 +1141,10 @@ class pos_order(osv.osv):
                 invoice_line = inv_line_ref.new(cr, SUPERUSER_ID, inv_line, context=local_context)
                 invoice_line._onchange_product_id()
                 invoice_line.invoice_line_tax_ids = [tax.id for tax in invoice_line.invoice_line_tax_ids if tax.company_id.id == company_id]
+                fiscal_position_id = line.order_id.fiscal_position_id
+                if fiscal_position_id:
+                    invoice_line.invoice_line_tax_ids = fiscal_position_id.map_tax(invoice_line.invoice_line_tax_ids)
+                invoice_line.invoice_line_tax_ids = [tax.id for tax in invoice_line.invoice_line_tax_ids]
                 # We convert a new id object back to a dictionary to write to bridge between old and new api
                 inv_line = invoice_line._convert_to_write(invoice_line._cache)
                 inv_line.update(price_unit=line.price_unit, discount=line.discount)
@@ -1356,15 +1363,6 @@ class pos_order(osv.osv):
         self.create_account_move(cr, uid, ids, context=context)
         return True
 
-class account_bank_statement(osv.osv):
-    _inherit = 'account.bank.statement'
-    _columns= {
-        'user_id': fields.many2one('res.users', 'User', readonly=True),
-    }
-    _defaults = {
-        'user_id': lambda self,cr,uid,c={}: uid
-    }
-
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
     _columns= {
@@ -1387,7 +1385,11 @@ class pos_order_line(osv.osv):
         account_tax_obj = self.pool.get('account.tax')
         for line in self.browse(cr, uid, ids, context=context):
             cur = line.order_id.pricelist_id.currency_id
-            taxes_ids = [ tax.id for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id ]
+            taxes = [ tax for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id ]
+            fiscal_position_id = line.order_id.fiscal_position_id
+            if fiscal_position_id:
+                taxes = fiscal_position_id.map_tax(taxes)
+            taxes_ids = [ tax.id for tax in taxes ]
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             res[line.id]['price_subtotal'] = res[line.id]['price_subtotal_incl'] = price * line.qty
             if taxes_ids:
@@ -1410,6 +1412,10 @@ class pos_order_line(osv.osv):
 
         result = self.onchange_qty(cr, uid, ids, pricelist, product_id, 0.0, qty, price, context=context)
         result['value']['price_unit'] = price
+
+        prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+        result['value']['tax_ids'] = prod.taxes_id.ids
+
         return result
 
     def onchange_qty(self, cr, uid, ids, pricelist, product, discount, qty, price_unit, context=None):
@@ -1432,6 +1438,12 @@ class pos_order_line(osv.osv):
             result['price_subtotal_incl'] = taxes['total_included']
         return {'value': result}
 
+    def _get_tax_ids_after_fiscal_position(self, cr, uid, ids, field_name, args, context=None):
+        res = dict.fromkeys(ids, False)
+        for line in self.browse(cr, uid, ids, context=context):
+            res[line.id] = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
+        return res
+
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'name': fields.char('Line No', required=True, copy=False),
@@ -1439,16 +1451,17 @@ class pos_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
         'price_unit': fields.float(string='Unit Price', digits=0),
         'qty': fields.float('Quantity', digits=0),
-        'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal w/o Tax', store=True),
-        'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal', store=True),
+        'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal w/o Tax'),
+        'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal'),
         'discount': fields.float('Discount (%)', digits=0),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'tax_ids': fields.many2many('account.tax', string='Taxes', readonly=True),
+        'tax_ids': fields.many2many('account.tax', string='Taxes'),
+        'tax_ids_after_fiscal_position': fields.function(_get_tax_ids_after_fiscal_position, type='many2many', relation='account.tax', string='Taxes')
     }
 
     _defaults = {
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'pos.order.line'),
+        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'pos.order.line', context=context),
         'qty': lambda *a: 1,
         'discount': lambda *a: 0.0,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
@@ -1478,15 +1491,6 @@ class pos_category(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
-    
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
@@ -1494,29 +1498,39 @@ class pos_category(osv.osv):
         'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         
-        # NOTE: there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
-        # for at least one category, then we display a default image on the other, so that the buttons have consistent styling.
-        # In this case, the default image is set by the js code.
-        # NOTE2: image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Image",
-            help="This field holds the image used as image for the cateogry, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image",
-            store={
-                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized image of the category. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized image", type="binary", multi="_get_image",
-            store={
-                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized image of the category. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
     }
+
+    # NOTE: there is no 'default image', because by default we don't show
+    # thumbnails for categories. However if we have a thumbnail for at least one
+    # category, then we display a default image on the other, so that the
+    # buttons have consistent styling.
+    # In this case, the default image is set by the js code.
+    image = openerp.fields.Binary("Image", attachment=True,
+        help="This field holds the image used as image for the cateogry, limited to 1024x1024px.")
+    image_medium = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+        help="Medium-sized image of the category. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved. "\
+             "Use this field in form views or some kanban views.")
+    image_small = openerp.fields.Binary("Small-sized image",
+        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+        help="Small-sized image of the category. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
+
+    @openerp.api.depends('image')
+    def _compute_images(self):
+        for rec in self:
+            rec.image_medium = tools.image_resize_image_medium(rec.image)
+            rec.image_small = tools.image_resize_image_small(rec.image)
+
+    def _inverse_image_medium(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_medium)
+
+    def _inverse_image_small(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_small)
 
 class product_template(osv.osv):
     _inherit = 'product.template'

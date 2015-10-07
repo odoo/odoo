@@ -35,7 +35,7 @@ class event(models.Model):
 
     show_menu = fields.Boolean('Dedicated Menu', compute='_get_show_menu', inverse='_set_show_menu',
                                help="Creates menus Introduction, Location and Register on the page "
-                                    " of the event on the website.")
+                                    " of the event on the website.", store=True)
     menu_id = fields.Many2one('website.menu', 'Event Menu')
 
     @api.one
@@ -103,5 +103,5 @@ class event(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'new',
-            'url': '/report/html/%s/%s' % ('event.event_event_report_template_badge', self.id),
+            'url': '/report/html/%s/%s?enable_editor' % ('event.event_event_report_template_badge', self.id),
         }

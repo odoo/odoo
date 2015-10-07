@@ -44,18 +44,14 @@ class sale_configuration(osv.TransientModel):
             (0, 'Salespeople do not need to view margins when quoting'),
             (1, 'Display margins on quotations and sales orders')
             ], "Margins"),
-        'module_website_sale_digital': fields.selection([
-            (0, 'No digital products'),
-            (1, 'Allows to sell downloadable content from the portal')
-            ], "Digital Products"),
         'module_website_quote': fields.selection([
             (0, 'Print quotes or send by email'),
             (1, 'Send online quotations based on templates (advanced)')
             ], "Online Quotations"),
         'group_sale_delivery_address': fields.selection([
             (0, "Invoicing and shipping addresses are always the same (Example: services companies)"),
-            (1, 'Have 3 fields on sales orders: customer, invoice address, delivery address')
-            ], "Customer Addresses", implied_group='sale.group_delivery_invoice_address'),
+            (1, 'Display 3 fields on sales orders: customer, invoice address, delivery address')
+            ], "Addresses", implied_group='sale.group_delivery_invoice_address'),
         'sale_pricelist_setting': fields.selection([('fixed', 'A single sale price per product'), ('percentage', 'Different prices per customer segment'), ('formula', 'Advanced pricing based on formula')], required=True,
         help='Fix Price: all price manage from products sale price.\n'
              'Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n'
@@ -65,14 +61,16 @@ class sale_configuration(osv.TransientModel):
             ('delivery', 'Invoice delivered quantities'),
             ('cost', 'Invoice based on costs (time and material, expenses)')
             ], 'Default Invoicing', default_model='product.template'),
-        'deposit_property_account_income_id': fields.property(
-            type="many2one",
-            relation="account.account",
-            string="Income Account",
-            domain=[('deprecated', '=', False)],
-            help="This account will be used for invoices instead of the default one to value sales for the deposit."),
-        'deposit_taxes_ids': fields.many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', string='Customer Taxes',
-        domain=[('type_tax_use', '=', 'sale')]),
+        'deposit_product_id_setting': fields.many2one('product.product', 'Deposit Product',\
+            domain="[('type', '=', 'service')]",\
+            help='Default product used for payment advances'),
+        'auto_done_setting': fields.selection([
+            (0, "Allow to edit sales order from the 'Sales Order' menu (not from the Quotation menu)"),
+            (1, "Never allow to modify a confirmed sale order")
+            ], "Sale Order Modification"),
+        'module_sale_contract': fields.boolean("Enable subscriptions and recurring revenue management"),
+        'module_website_sale_digital': fields.boolean("Sell digital products - provide downloadable content on your customer portal"),
+        'module_website_portal': fields.boolean("Enable customer portal"),
     }
 
     _defaults = {
@@ -85,6 +83,16 @@ class sale_configuration(osv.TransientModel):
         res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'sale_pricelist_setting', sale_price)
         return res
 
+    def set_deposit_product_id_defaults(self, cr, uid, ids, context=None):
+        deposit_product_id = self.browse(cr, uid, ids, context=context).deposit_product_id_setting
+        res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'deposit_product_id_setting', deposit_product_id.id)
+        return res
+
+    def set_auto_done_defaults(self, cr, uid, ids, context=None):
+        auto_done = self.browse(cr, uid, ids, context=context).auto_done_setting
+        res = self.pool.get('ir.values').set_default(cr, uid, 'sale.config.settings', 'auto_done_setting', auto_done)
+        return res
+
     def onchange_sale_price(self, cr, uid, ids, sale_pricelist_setting, context=None):
         if sale_pricelist_setting == 'percentage':
             return {'value': {'group_product_pricelist': True, 'group_sale_pricelist': True, 'group_pricelist_item': False}}
@@ -92,22 +100,6 @@ class sale_configuration(osv.TransientModel):
             return {'value': {'group_pricelist_item': True, 'group_sale_pricelist': True, 'group_product_pricelist': False}}
         return {'value': {'group_pricelist_item': False, 'group_sale_pricelist': False, 'group_product_pricelist': False}}
 
-    def get_default_deposit_values(self, cr, uid, fields, context=None):
-        deposit_product_template = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'sale.advance_product_1', context=context)
-        return {
-            'deposit_property_account_income_id': deposit_product_template.product_variant_ids.property_account_income_id.id,
-            'deposit_taxes_ids': deposit_product_template.product_variant_ids.taxes_id.ids
-            }
-
-    def set_deposit_values(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        config_value = self.browse(cr, uid, ids, context=context)
-        deposit_product_template = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'sale.advance_product_1', context=context)
-        deposit_product_template.product_variant_ids.write({
-            'property_account_income_id': config_value.deposit_property_account_income_id.id,
-            'taxes_id': [(6, 0, config_value.deposit_taxes_ids.ids)],
-            })
 
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'

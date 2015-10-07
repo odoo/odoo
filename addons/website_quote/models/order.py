@@ -138,7 +138,7 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             total = 0.0
             for line in order.order_line:
-                total += (line.product_uom_qty * line.price_unit)
+                total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty
             res[order.id] = total
         return res
 
@@ -178,7 +178,7 @@ class sale_order(osv.osv):
 
     def onchange_template_id(self, cr, uid, ids, template_id, partner=False, fiscal_position_id=False, pricelist_id=False, context=None):
         if not template_id:
-            return True
+            return {}
 
         if partner:
             context = dict(context or {})
@@ -217,7 +217,9 @@ class sale_order(osv.osv):
         options = []
         for option in quote_template.options:
             if pricelist_id:
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], option.product_id.id, 1, context=context)[pricelist_id]
+                uom_context = context.copy()
+                uom_context['uom'] = option.uom_id.id
+                price = pricelist_obj.price_get(cr, uid, [pricelist_id], option.product_id.id, 1, context=uom_context)[pricelist_id]
             else:
                 price = option.price_unit
             options.append((0, 0, {
@@ -292,6 +294,13 @@ class sale_order(osv.osv):
             self.message_post(cr, uid, order_id, body=message, type='comment', subtype='mt_comment', context=context)
             return True
         return False
+
+    def create(self, cr, uid, values, context=None):
+        if not values.get('template_id'):
+            defaults = self.default_get(cr, uid, ['template_id'], context=context)
+            template_values = self.onchange_template_id(cr, uid, [], defaults.get('template_id'), partner=values.get('partner_id'), fiscal_position_id=values.get('fiscal_position'), context=context).get('value', {})
+            values = dict(template_values, **values)
+        return super(sale_order, self).create(cr, uid, values, context=context)
 
 
 class sale_quote_option(osv.osv):
@@ -398,6 +407,10 @@ class sale_order_option(osv.osv):
         if product.description_sale:
             self.name += '\n' + product.description_sale
         self.uom_id = product.product_tmpl_id.uom_id
+        if product and self.order_id.pricelist_id:
+            partner_id = self.order_id.partner_id.id
+            pricelist = self.order_id.pricelist_id.id
+            self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
 
 
 class product_template(osv.Model):

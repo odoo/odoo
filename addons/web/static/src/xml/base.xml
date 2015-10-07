@@ -35,6 +35,36 @@
     </div>
 </t>
 
+<t t-name="ChangePassword">
+    <form name="change_password_form" method="POST">
+      <div class="oe_form">
+        <table align="center">
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="old_pwd" class="oe_form_label">Old Password:</label></td>
+                <td class="oe_form_group_cell"><input type="password" name="old_pwd"
+                           minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label for="new_password" class="oe_form_label">New Password:</label></td>
+            <td class="oe_form_group_cell"><input type="password" name="new_password"
+                       minlength="1"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="confirm_pwd" class="oe_form_label">Confirm New Password:</label></td>
+                <td class="oe_form_group_cell"><input type="password" name="confirm_pwd"
+                             minlength="1"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right">
+                    <button class='oe_button oe_form_button'>Change Password</button>
+                    <button type="button" class="oe_button oe_form_button_cancel oe_form_button oe_link" href="javascript:void(0)"><span>Cancel</span></button>
+                </td>
+            </tr>
+        </table>
+      </div>
+    </form>
+</t>
+
 <t t-name="Menu.needaction_counter">
     <div id="menu_counter" class="badge pull-right">
         <t t-if="widget.needaction_counter &gt; 99"> 99+ </t>
@@ -51,50 +81,9 @@
             <ul class="dropdown-menu">
                 <li><a href="#" data-menu="settings">Preferences</a></li>
                 <li><a href="#" data-menu="account">My Odoo.com account</a></li>
-                <li><a href="#" data-menu="about">About Odoo</a></li>
-                <li><a href="#" data-menu="help">Help</a></li>
                 <li><a href="#" data-menu="logout">Log out</a></li>
             </ul>
         </li>
-</t>
-<t t-name="UserMenu.about">
-
-    <div class="oe_about">
-
-        <div class="container-fluid">
-            <div class="row">
-                <a class="oe_activate_debug_mode oe_right label label-primary" href="?debug" >Activate the developer mode</a>
-            </div>
-            <div class="row">
-                <div class="col-sm-offset-2 col-md-offset-2 col-sm-8 col-md-8 user-details">
-                    <div class="user-image">
-                        <img src="/web/static/src/img/logo2.png" alt="Odoo (Formerly OpenERP)" title="Odoo (Formerly OpenERP)" class="img-circle"/>
-                    </div>
-                    <div class="user-info-block">
-                        <div class="user-heading">
-                            <h3>Version <t t-esc="version_info.server_version"/></h3>
-                        </div>
-                        <div class="user-body">
-                            <div class="tab-content">
-                                <div id="settings" class="tab-pane active">
-                                    <h4>Copyright © 2004-2015 Odoo S.A.</h4>
-                                    <p>Odoo is a trademark of <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a></p>
-                                    <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU Lesser General Public License</a></p>
-                                    <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
-                                    <p>
-                                      <a href="https://www.odoo.com/web/about/facebook"><i class="fa fa-facebook-square fa-3x social-fb"></i></a>
-                                      <a href="https://www.odoo.com/web/about/twitter"><i class="fa fa-twitter-square fa-3x social-tw"></i></a>
-                                      <a href="https://www.odoo.com/web/about/googleplus"><i class="fa fa-google-plus-square fa-3x social-gp"></i></a>
-                                      <a href="https://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin-square fa-3x social-lk"></i></a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </t>
 
 <t t-name="WebClient.timezone_warning">
@@ -679,27 +668,20 @@
         </t>
     </span>
 </t>
-<t t-name="KanbanSelection">
-    <div class="btn-group kanban_state">
-        <t t-foreach="widget.states" t-as="rec">
-            <a t-if="widget.get('value') === rec.name">
-                <a class="dropdown-toggle" data-toggle="dropdown">
-                    <span t-att-class="rec.state_class" t-if="widget.get('value') === rec.name" t-att-title="rec.tooltip"/>
-                    <span class="sr-only">Toggle Dropdown</span>
-                </a>
-            </a>
-        </t>
+<t t-name="FormSelection">
+    <div class="btn-group o_kanban_selection">
+        <a href="#" data-toggle="dropdown"><span class="oe_kanban_status"/></a>
         <ul class="dropdown-menu state" role="menu">
-            <t t-foreach="widget.states" t-as="rec">
-                <t t-if="widget.get('value') !== rec.name">
-                    <li t-att-data-value="rec.name" ><a href="#">
-                        <span t-att-class="rec.state_class" t-att-title="rec.tooltip"/>
-                        <t t-raw="rec.state_name" /></a>
-                    </li>
-                </t>
-            </t>
         </ul>
     </div>
+</t>
+<t t-name="FormSelection.items">
+    <li t-foreach="states" t-as="rec" t-att-data-value="rec.name">
+        <a href="#">
+            <span t-att-class="'oe_kanban_status ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
+            <t t-raw="rec.state_name"/>
+        </a>
+    </li>
 </t>
 <div t-name="Priority" class="o_priority">
     <a t-if="!widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" href="#" t-att-data-value="v[0]" t-att-title="v[1]" class="o_priority_star fa"/>
@@ -763,16 +745,14 @@
     </div>
 </t>
 <t t-name="web.datepicker">
-    <span>
-        <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
-        <div class="oe_datepicker_main input-group">
-            <input type="text"
-                t-att-name="widget.name"
-                t-att-placeholder="placeholder"
-                class="oe_datepicker_master"
-            /><span class="fa fa-calendar datepickerbutton"/>
-        </div>
-    </span>
+    <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
+    <div class="o_datepicker">
+        <input type="text"
+            class="o_datepicker_input"
+            t-att-name="widget.name"
+            t-att-placeholder="placeholder"/>
+        <span class="fa fa-calendar o_datepicker_button"/>
+    </div>
 </t>
 <t t-name="FieldDate">
     <span class="oe_form_field oe_datepicker_root oe_form_field_date" t-att-style="widget.node.attrs.style"/>
@@ -856,7 +836,7 @@
             <span t-att-data-id="tag_id" t-att-data-color="0" class="o_tag_color_0"/>
         </li>
         <li>
-            No color (hidden in kanban)
+            Not shown in kanban
         </li>
     </ul>
 </t>
@@ -882,6 +862,9 @@
             class="field_boolean"/>
     </span>
 </t>
+<div t-name="FieldUpgradeBoolean" class="oe_form_field oe_form_field_boolean">
+  <t t-call="FieldBoolean"/>
+</div>
 <t t-name="ProgressBar">
     <div class="o_progressbar">
         <div t-if="widget.title" class="o_progressbar_title"><t t-esc="widget.title"/></div><div class="o_progress">
@@ -1008,7 +991,8 @@
 <t t-name="HiddenInputFile">
     <div t-attf-class="oe_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
         <form class="o_form_binary_form" t-att-target="fileupload_id"
-            method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
+              method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
+            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
             <input type="hidden" name="session_id" value="" t-if="widget.session.override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <t t-raw="0"/>

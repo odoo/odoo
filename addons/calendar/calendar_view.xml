@@ -79,11 +79,12 @@
                             <label for="name"/>
                         </div>
                         <h1>
-                            <field name="name"/>
+                            <field name="name" placeholder="e.g. Business Lunch"/>
                         </h1>
                         <label for="partner_ids" string="Attendees" class="oe_edit_only"/>
                         <h2>
                             <field name="partner_ids" widget="many2manyattendee"
+                                placeholder="Select attendees..."
                                 context="{'force_email':True}"
                                 on_change="onchange_partner_ids(partner_ids)"
                                 class="oe_inline"/>
@@ -104,13 +105,14 @@
                                     <field name="start_date" string="Starting at" on_change="onchange_dates('start', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
                                     <field name="stop_date" string="Ending at" on_change="onchange_dates('stop', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
 
-                                    <field name="start_datetime" string="Starting at" on_change="onchange_dates('start', start_datetime, stop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
-                                    <field name="stop_datetime" string="Ending at" on_change="onchange_dates('stop', start_datetime, stop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
-                                    <label for="allday"/>
-                                    <div>
-                                        <field name="allday"  class="oe_inline" on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)"/>
+                                    <field name="start_datetime" string="Starting at" on_change="onchange_duration(start_datetime, duration)" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <field name="stop_datetime" invisible="1"/>
+                                    <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <div attrs="{'invisible': [('allday','=',True)]}">
+                                        <field name="duration" widget="float_time" string="Duration" on_change="onchange_duration(start_datetime, duration)" class="oe_inline"/>
+                                        <span> hours</span>
                                     </div>
-                                    <field name="duration" widget="float_time" class="oe_inline" attrs="{ 'invisible': True }"/>
+                                    <field name="allday"  on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)"/>
                                 </group>
                                 <group>
                                     <field name="categ_ids" widget="many2many_tags" />
@@ -220,17 +222,20 @@
                     <group>
                         <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)]}"/>
                         <field name="start_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)]}"/>
-        
-                        <field name="duration" string="Duration" widget="float_time" attrs="{'invisible': [('allday','=',True)]}"/>
+                        <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
+                        <div attrs="{'invisible': [('allday','=',True)]}">
+                            <field name="duration" widget="float_time" class="oe_inline"/>
+                            <span> hours</span>
+                        </div>
                         <field name="allday" class="oe_inline" attrs="{'invisible': [('allday','=',False)]}"/>
                         <field name="partner_ids" widget="many2manyattendee" string="Attendees"/>
                     </group>
                     <group>
+                        <field name="location"/>
                         <field name="categ_ids" widget="many2many_tags"/>
                         <field name="alarm_ids" widget="many2many_tags" />
-                        <field name="location"/>
                     </group>
-                </group>       
+                </group>
             </form>
         </field>
     </record>

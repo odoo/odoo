@@ -36,12 +36,12 @@ class Job(models.Model):
     color = fields.Integer("Color Index")
 
     def _compute_document_ids(self):
-        applicants = self.mapped('application_ids')
+        applicants = self.mapped('application_ids').filtered(lambda self: not self.emp_id)
         app_to_job = dict((applicant.id, applicant.job_id.id) for applicant in applicants)
         attachments = self.env['ir.attachment'].search([
             '|',
             '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids),
-            '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.mapped('application_ids').ids)])
+            '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicants.ids)])
         result = dict.fromkeys(self.ids, self.env['ir.attachment'])
         for attachment in attachments:
             if attachment.res_model == 'hr.applicant':
@@ -100,7 +100,7 @@ class Job(models.Model):
             'default_res_model': self._name,
             'default_res_id': self.ids[0]
         }
-        action['domain'] = '%s' % ['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids), '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.mapped('application_ids'))]
+        action['domain'] = ['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids), '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.mapped('application_ids').ids)]
         return action
 
     @api.multi

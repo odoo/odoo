@@ -3,7 +3,7 @@ from datetime import datetime
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
-import simplejson
+import json
 import lxml
 from urllib2 import urlopen, URLError
 import base64
@@ -177,7 +177,7 @@ class WebsiteForum(http.Controller):
             fields=['id', 'name'],
             limit=int(l),
         )
-        return simplejson.dumps(data)
+        return json.dumps(data)
 
     @http.route(['/forum/<model("forum.forum"):forum>/tag', '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>'], type='http', auth="public", website=True)
     def tags(self, forum, tag_char=None, **post):
@@ -367,7 +367,7 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edit', type='http', auth="user", website=True)
     def post_edit(self, forum, post, **kwargs):
         tags = [dict(id=tag.id, name=tag.name) for tag in post.tag_ids]
-        tags = simplejson.dumps(tags)
+        tags = json.dumps(tags)
         values = self._prepare_forum_values(forum=forum)
         values.update({
             'tags': tags,

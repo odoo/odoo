@@ -20,9 +20,7 @@ odoo.define('website_form.animation', function (require) {
 
             // Initialize datetimepickers
             var l10n = _t.database.parameters;
-            this.$target.find('.o_website_form_datetime').datetimepicker({
-                pickTime: true,
-                useSeconds: true,
+            var datepickers_options = {
                 startDate: moment({ y: 1900 }),
                 endDate: moment().add(200, "y"),
                 calendarWeeks: true,
@@ -34,7 +32,13 @@ odoo.define('website_form.animation', function (require) {
                    },
                 language : moment.locale(),
                 format : time.strftime_to_moment_format(l10n.date_format +' '+ l10n.time_format),
-            });
+            }
+            this.$target.find('.o_website_form_datetime').datetimepicker(datepickers_options);
+
+            // Adapt options to date-only pickers
+            datepickers_options.pickTime = false;
+            datepickers_options.format = time.strftime_to_moment_format(l10n.date_format);
+            this.$target.find('.o_website_form_date').datetimepicker(datepickers_options);
         },
 
         stop: function() {
@@ -114,6 +118,9 @@ odoo.define('website_form.animation', function (require) {
                     else {
                         self.update_status('success');
                     }
+
+                    // Reset the form
+                    self.$target[0].reset();
                 }
             })
             .fail(function(result_data){
@@ -122,6 +129,7 @@ odoo.define('website_form.animation', function (require) {
         },
 
         check_error_fields: function(error_fields) {
+            var self = this;
             var form_valid = true;
             // Loop on all fields
             this.$target.find('.form-field').each(function(k, field){
@@ -146,6 +154,13 @@ odoo.define('website_form.animation', function (require) {
                             return input.required && input.type == 'checkbox'
                         })
                         return !_.any(checkboxes, function(checkbox){return checkbox.checked})
+
+                    // Special cases for dates and datetimes
+                    } else if ($(input).hasClass('o_website_form_date')) {
+                        return !self.is_datetime_valid(input.value, 'date');
+                    } else if ($(input).hasClass('o_website_form_datetime')) {
+                        return !self.is_datetime_valid(input.value, 'datetime');
+
                     } else {
                         return !input.checkValidity();
                     }
@@ -159,6 +174,40 @@ odoo.define('website_form.animation', function (require) {
                 }
             });
             return form_valid;
+        },
+
+        is_datetime_valid: function(value, type_of_date) {
+            if (value === "") {
+                return true;
+            } else {
+                try {
+                    this.parse_date(value, type_of_date);
+                    return true;
+                } catch(e) {
+                    return false;
+                }
+            }
+        },
+
+        // This is a stripped down version of format.js parse_value function
+        parse_date: function (value, type_of_date, value_if_empty) {
+            var date_pattern = time.strftime_to_moment_format(_t.database.parameters.date_format),
+                time_pattern = time.strftime_to_moment_format(_t.database.parameters.time_format);
+            var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D'),
+                time_pattern_wo_zero = time_pattern.replace('HH','H').replace('mm','m').replace('ss','s');
+            switch (type_of_date) {
+                case 'datetime':
+                    var datetime = moment(value, [date_pattern + ' ' + time_pattern, date_pattern_wo_zero + ' ' + time_pattern_wo_zero], true);
+                    if (datetime.isValid())
+                        return time.datetime_to_str(datetime.toDate());
+                    throw new Error(_.str.sprintf(_t("'%s' is not a correct datetime"), value));
+                case 'date':
+                    var date = moment(value, [date_pattern, date_pattern_wo_zero], true);
+                    if (date.isValid())
+                        return time.date_to_str(date.toDate());
+                    throw new Error(_.str.sprintf(_t("'%s' is not a correct date"), value));
+            }
+            return value;
         },
 
         update_status: function(status) {

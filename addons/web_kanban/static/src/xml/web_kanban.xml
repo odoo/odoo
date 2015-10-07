@@ -84,4 +84,21 @@
         <img t-att-src="'/web/image/' + widget.field.raw_value[0] + '?unique=1'"/>
     </div>
 </t>
+
+<t t-name="KanbanSelection">
+    <div class="btn-group o_kanban_selection">
+        <a href="#" data-toggle="dropdown">
+            <span t-att-class="'oe_kanban_status ' + (current_state_class &amp;&amp; current_state_class || '')"/>
+        </a>
+        <ul class="dropdown-menu state" role="menu">
+            <li t-foreach="states" t-as="rec" t-att-data-value="rec.name">
+                <a href="#">
+                    <span t-att-class="'oe_kanban_status ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
+                    <t t-raw="rec.state_name"/>
+                </a>
+            </li>
+        </ul>
+    </div>
+</t>
+
 </template>

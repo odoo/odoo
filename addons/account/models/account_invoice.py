@@ -81,7 +81,6 @@ class AccountInvoice(models.Model):
         'move_id.line_ids.currency_id')
     def _compute_residual(self):
         residual = 0.0
-        residual_signed = 0.0
         residual_company_signed = 0.0
         sign = self.type in ['in_refund', 'in_invoice'] and -1 or 1
         for line in self.sudo().move_id.line_ids:
@@ -103,7 +102,7 @@ class AccountInvoice(models.Model):
     def _get_outstanding_info_JSON(self):
         self.outstanding_credits_debits_widget = json.dumps(False)
         if self.state == 'open':
-            domain = [('journal_id.type', 'in', ('bank', 'cash')), ('account_id', '=', self.account_id.id), ('partner_id', '=', self.partner_id.id), ('reconciled', '=', False), ('amount_residual', '!=', 0.0)]
+            domain = [('journal_id.type', 'in', ('bank', 'cash')), ('account_id', '=', self.account_id.id), ('partner_id', '=', self.env['res.partner']._find_accounting_partner(self.partner_id).id), ('reconciled', '=', False), ('amount_residual', '!=', 0.0)]
             if self.type in ('out_invoice', 'in_refund'):
                 domain.extend([('credit', '>', 0), ('debit', '=', 0)])
                 type_payment = _('Outstanding credits')
@@ -751,6 +750,12 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def invoice_validate(self):
+        for invoice in self:
+            #refuse to validate a vendor bill/refund if there already exists one with the same reference for the same partner,
+            #because it's probably a double encoding of the same bill/refund
+            if invoice.type in ('in_invoice', 'in_refund') and invoice.reference:
+                if self.search([('type', '=', invoice.type), ('reference', '=', invoice.reference), ('company_id', '=', invoice.company_id.id), ('commercial_partner_id', '=', invoice.commercial_partner_id.id), ('id', '!=', invoice.id)]):
+                    raise UserError(_("Duplicated vendor reference detected. You probably encoded twice the same vendor bill/refund."))
         return self.write({'state': 'open'})
 
     @api.model
@@ -1016,7 +1021,7 @@ class AccountInvoiceLine(models.Model):
     invoice_id = fields.Many2one('account.invoice', string='Invoice Reference',
         ondelete='cascade', index=True)
     uom_id = fields.Many2one('product.uom', string='Unit of Measure',
-        ondelete='set null', index=True)
+        ondelete='set null', index=True, oldname='uos_id')
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
     account_id = fields.Many2one('account.account', string='Account',
@@ -1082,7 +1087,7 @@ class AccountInvoiceLine(models.Model):
 
         part = self.invoice_id.partner_id
         fpos = self.invoice_id.fiscal_position_id
-        company = self.company_id
+        company = self.invoice_id.company_id
         currency = self.invoice_id.currency_id
         type = self.invoice_id.type
 
@@ -1105,7 +1110,8 @@ class AccountInvoiceLine(models.Model):
 
             self.name = product.partner_ref
             account = self.get_invoice_line_account(type, product, fpos, company)
-            self.account_id = account.id
+            if account:
+                self.account_id = account.id
             self._set_taxes()
 
             if type in ('in_invoice', 'in_refund'):
@@ -1275,12 +1281,12 @@ class MailComposeMessage(models.Model):
     _inherit = 'mail.compose.message'
 
     @api.multi
-    def send_mail(self):
+    def send_mail(self, auto_commit=False):
         context = self._context
         if context.get('default_model') == 'account.invoice' and \
                 context.get('default_res_id') and context.get('mark_invoice_as_sent'):
             invoice = self.env['account.invoice'].browse(context['default_res_id'])
             invoice = invoice.with_context(mail_post_autofollow=True)
-            invoice.write({'sent': True})
+            invoice.sent = True
             invoice.message_post(body=_("Invoice sent"))
-        return super(MailComposeMessage, self).send_mail()
+        return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)

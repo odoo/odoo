@@ -16,6 +16,7 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         // Hardcoded barcode actions
         this.map_barcode_method = {
             'O-CMD.NEW': _.bind(this.form_view.on_button_new, this.form_view),
+            'O-CMD.EDIT': _.bind(this.form_view.on_button_edit, this.form_view),
             'O-CMD.CANCEL': _.bind(this.form_view.on_button_cancel, this.form_view),
             // FIXME: on_button_save shouldn't mix view and model concerns (it expects to be used as onclick handler)
             'O-CMD.SAVE': _.bind(this.form_view.on_button_save, this.form_view, {target: $('.o_cp_buttons .o_form_button_save')}),
@@ -31,10 +32,10 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         }
     },
     
-    // Let subclasses add custom behaviour before onchange
-    // Return false in order to proceed with the onchange, anything else to prevent it.
+    // Let subclasses add custom behaviour before onchange. Must return a deferred.
+    // Resolve the deferred with true proceed with the onchange, false to prevent it.
     pre_onchange_hook: function(barcode) {
-        return false;
+        return $.Deferred().resolve(true);
     },
 
     on_barcode_scanned: function(barcode) {
@@ -50,10 +51,8 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
             this.do_warn(_t('Error : Document not editable'), _t('To modify this document, please first start edition.'));
         else {
             // Call hook method possibly implemented by subclass
-            $.when(this.pre_onchange_hook(barcode)).then(function(result) {
-                if (result !== false) {
-                    return result;
-                } else {
+            this.pre_onchange_hook(barcode).then(function(proceed) {
+                if (proceed === true) {
                     // Wait for hypothetical ongoing onchange to finish
                     self.form_view.onchanges_mutex.exec(function() {
                         // A real onchange is triggered when a value actually changes (which can correspond
