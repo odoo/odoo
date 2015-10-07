@@ -1,4 +1,4 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * crm_partner_assign
 # 
@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2015-08-14 05:58+0000\n"
-"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"POT-Creation-Date: 2015-09-08 15:14+0000\n"
+"PO-Revision-Date: 2015-09-11 08:34+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,26 +19,41 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,delay_close:0
-msgid "Delay to Close"
-msgstr "마감까지의 지연"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,author_id:0
-msgid "Author"
-msgstr "작성자"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,planned_revenue:0
-msgid "Planned Revenue"
-msgstr "계획된 수익"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,type:0
+#: model:email.template,body_html:crm_partner_assign.email_template_lead_forward_mail
 msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
-msgstr "메시지 유형: 이메일 메시지를 위한 이메일, 시스템 메시지를 위한 알림, 사용자 댓글과 같은 기타 메시지에 대한 의견"
+"\n"
+"            \n"
+"<p>Hello,</p>\n"
+"\n"
+"\n"
+"<p>We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:</p>\n"
+"\n"
+"<ol>\n"
+"% for lead in ctx['partner_leads']:\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"% endfor\n"
+"</ol>\n"
+"\n"
+"% if ctx.get('partner_in_portal'):\n"
+"<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" & \"I'm not interested\".</p>\n"
+"% else:\n"
+"<p>\n"
+"    You do not have yet a portal access to our database. Please contact \n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
+"</p>\n"
+"% endif\n"
+"<p>The lead will be sent to another partner if you do not contact the lead before 20 days.</p>\n"
+"\n"
+"<p>Thanks,</p>\n"
+"\n"
+"<pre>\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
+"</pre>\n"
+"% if not ctx['partner_id'].user_id:\n"
+"PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
+"% endif\n"
+"            "
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
@@ -46,9 +61,89 @@ msgid "# of Cases"
 msgstr "# 사례"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 view:crm.partner.report.assign:0
-msgid "Group By..."
-msgstr "그룹화..."
+#: field:crm.partner.report.assign,opp:0
+msgid "# of Opportunity"
+msgstr "# 기회"
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:48
+#, python-format
+msgid "<p>I am interested by this lead.</p>"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:53
+#, python-format
+msgid "<p>I am not interested by this lead. I %scontacted the lead.</p>"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:55
+#, python-format
+msgid ""
+"<p>I am not interested by this lead. I have not contacted the lead.</p>"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,activation:0
+#: view:res.partner:crm_partner_assign.view_res_partner_filter_assign
+#: field:res.partner,activation:0
+#: view:res.partner.activation:crm_partner_assign.res_partner_activation_form
+#: view:res.partner.activation:crm_partner_assign.res_partner_activation_tree
+msgid "Activation"
+msgstr "활성화"
+
+#. module: crm_partner_assign
+#: field:res.partner.grade,active:0
+msgid "Active"
+msgstr "활성"
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,date_assign:0
+msgid "Assign Date"
+msgstr "할당 날짜"
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Assign Month"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.server,name:crm_partner_assign.action_assign_salesman_according_assigned_partner
+msgid "Assign salesman of assigned partner"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead,date_assign:0
+msgid "Assignation Date"
+msgstr "할당일"
+
+#. module: crm_partner_assign
+#: model:crm.case.stage,name:crm_partner_assign.stage_portal_lead_assigned
+msgid "Assigned"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+#: field:res.partner,opportunity_assigned_ids:0
+msgid "Assigned Opportunities"
+msgstr "할당된 기회"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
+#: view:crm.lead:crm_partner_assign.crm_opportunity_partner_filter
+#: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
+#: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
+#: field:crm.lead,partner_assigned_id:0
+#: field:crm.lead.assignation,partner_assigned_id:0
+msgid "Assigned Partner"
+msgstr "할당된 파트너"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
+#: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Automatic Assignation"
+msgstr ""
 
 #. module: crm_partner_assign
 #: help:crm.lead.forward.to.partner,body:0
@@ -56,122 +151,30 @@ msgid "Automatically sanitized HTML contents"
 msgstr "HTML 내용 중 불건전한 내용을 자동으로 제거함"
 
 #. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Forward"
-msgstr "전달"
+#: field:crm.lead.report.assign,probability:0
+msgid "Avg Probability"
+msgstr "평균 확률"
 
 #. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Geo Localize"
-msgstr "지리적 지역화"
+#: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
+msgid "CRM Lead Report"
+msgstr "고객관계관리 개척 보고서"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,starred:0
-msgid "Starred"
-msgstr "할 일로 표시"
+#: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
+msgid "CRM Partner Report"
+msgstr "고객관계관리 파트너 보고서"
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "Body"
-msgstr "본문"
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+#: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Cancel"
+msgstr "취소"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,email_from:0
-msgid ""
-"Email address of the sender. This field is set when no matching partner is "
-"found for incoming emails."
-msgstr "보낸 사람의 이메일 주소. 이 필드는 수신 메일에서 일치하는 파트너를 찾을 수 없을 때 설정합니다."
-
-#. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "Date Partnership"
-msgstr "협력관계 협약일"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,type:0
-msgid "Lead"
-msgstr "개척"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Delay to close"
-msgstr "마감까지의 지연"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history_mode:0
-msgid "Whole Story"
-msgstr "전체 이야기"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 field:crm.lead.report.assign,company_id:0
-msgid "Company"
-msgstr "회사"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,notification_ids:0
-msgid "Notifications"
-msgstr "알림"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,date_assign:0
-msgid "Partner Date"
-msgstr "파트너 날짜"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 view:crm.partner.report.assign:0
-#: view:res.partner:0
-msgid "Salesperson"
-msgstr "영업사원"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,priority:0
-msgid "Highest"
-msgstr "가장 높음"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 field:crm.lead.report.assign,day:0
-msgid "Day"
-msgstr "일"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,message_id:0
-msgid "Message unique identifier"
-msgstr "메시지 고유 식별자"
-
-#. module: crm_partner_assign
-#: field:res.partner,date_review_next:0
-msgid "Next Partner Review"
-msgstr "다음 파트너 검토"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history_mode:0
-msgid "Latest email"
-msgstr "최근 이메일"
-
-#. module: crm_partner_assign
-#: field:crm.lead,partner_latitude:0 field:res.partner,partner_latitude:0
-msgid "Geo Latitude"
-msgstr "지리적 위도"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-msgid "Cancelled"
-msgstr "취소됨"
-
-#. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Geo Assignation"
-msgstr "지리적 할당"
-
-#. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
-msgid "Email composition wizard"
-msgstr "이메일 작성 마법사"
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,turnover:0
-msgid "Turnover"
-msgstr "회전율"
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+msgid "Categorization"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,date_closed:0
@@ -179,275 +182,302 @@ msgid "Close Date"
 msgstr "마감일"
 
 #. module: crm_partner_assign
-#: help:res.partner,partner_weight:0
+#: field:crm.lead.channel.interested,comment:0
+msgid "Comment"
+msgstr "의견"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+msgid "Communication"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: field:crm.lead.report.assign,company_id:0
+msgid "Company"
+msgstr "회사"
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Confirm"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+msgid "Contact"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,body:0
+msgid "Contents"
+msgstr "내용"
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Convert to Opportunity"
+msgstr "기회로 전환"
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: field:crm.lead.report.assign,country_id:0
+#: field:crm.partner.report.assign,country_id:0
+msgid "Country"
+msgstr "국가"
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,create_date:0
+msgid "Create Date"
+msgstr "작성일자"
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,create_uid:0
+#: field:crm.lead.channel.interested,create_uid:0
+#: field:crm.lead.forward.to.partner,create_uid:0
+#: field:res.partner.activation,create_uid:0
+#: field:res.partner.grade,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,create_date:0
+#: field:crm.lead.channel.interested,create_date:0
+#: field:crm.lead.forward.to.partner,create_date:0
+#: field:res.partner.activation,create_date:0
+#: field:res.partner.grade,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_tree
+#: field:crm.lead.report.assign,partner_id:0
+msgid "Customer"
+msgstr "고객"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+msgid "Customer Name"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Date Partnership"
+msgstr "협력관계 협약일"
+
+#. module: crm_partner_assign
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Date Review"
+msgstr "검토 날짜"
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,delay_open:0
+msgid "Delay to Assign"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,delay_close:0
+msgid "Delay to Close"
+msgstr "마감까지의 지연"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+msgid "Details"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.channel.interested,contacted:0
+msgid "Did you contact the lead?"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Do you have contacted the customer?"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:102
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:105
+#, python-format
+msgid "Email Error"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Email Template"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:87
+#, python-format
+msgid "Email Template Error"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/crm_lead.py:34
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:44
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Escalate"
+msgstr "승급"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_tree
+msgid "Expected Revenues"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Extended Filters..."
+msgstr "확장 필터..."
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,partner_id:0
+msgid "Forward Leads To"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,forward_type:0
+msgid "Forward selected leads to"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
+#: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_forward_to_partner_act
+msgid "Forward to Partner"
+msgstr "파트너에 전달"
+
+#. module: crm_partner_assign
+#: model:email.template,subject:crm_partner_assign.email_template_lead_forward_mail
+msgid "Fwd: Lead: ${ctx['partner_id'].name}"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead,partner_latitude:0
+msgid "Geo Latitude"
+msgstr "지리적 위도"
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Geo Localization"
+msgstr "지리적 지역화"
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Geo Localize"
+msgstr "지리적 지역화"
+
+#. module: crm_partner_assign
+#: field:crm.lead,partner_longitude:0
+msgid "Geo Longitude"
+msgstr "지리적 경도"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
+#: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Geolocation"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:res.partner,partner_weight:0 help:res.partner.grade,partner_weight:0
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
 msgstr "이 파트너에게 개척을 할당할 수 있는 가능성을 제공합니다.(0은 할당 없음)"
 
 #. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Partner Activation"
-msgstr "파트너 활성화"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,type:0
-msgid "System notification"
-msgstr "시스템 알림"
-
-#. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:77
-#, python-format
-msgid "Lead forward"
-msgstr "개척 전달"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,probability:0
-msgid "Avg Probability"
-msgstr "평균 확률"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Previous"
-msgstr "이전"
-
-#. module: crm_partner_assign
-#: code:addons/crm_partner_assign/partner_geo_assign.py:36
-#, python-format
-msgid "Network error"
-msgstr "네트워크 오류"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,email_from:0
-msgid "From"
-msgstr "보낸 사람"
-
-#. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
-#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: view:res.partner.grade:0
-msgid "Partner Grade"
-msgstr "파트너 등급"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 view:crm.partner.report.assign:0
-msgid "Section"
-msgstr "부서"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "Send"
-msgstr "보내기"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Next"
-msgstr "다음"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 field:crm.lead.report.assign,priority:0
-msgid "Priority"
-msgstr "우선 순위"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "과거 만기일"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,type:0
-#: field:crm.lead.report.assign,type:0
-msgid "Type"
-msgstr "유형"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,type:0
-msgid "Email"
-msgstr "이메일"
-
-#. module: crm_partner_assign
-#: help:crm.lead,partner_assigned_id:0
-msgid "Partner this case has been forwarded/assigned to."
-msgstr "이 사례가 전달/할당된 파트너"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,priority:0
-msgid "Lowest"
-msgstr "가장 낮음"
-
-#. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "Date Invoice"
-msgstr "송장 발행일"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,template_id:0
-msgid "Template"
-msgstr "서식"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Assign Date"
-msgstr "할당 날짜"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Leads Analysis"
-msgstr "개척 분석"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,creation_date:0
-msgid "Creation Date"
-msgstr "작성일"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,parent_id:0
-msgid "Parent Message"
-msgstr "상위 메시지"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,res_id:0
-msgid "Related Document ID"
-msgstr "관련 문서 ID"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-msgid "Pending"
-msgstr "보류 중"
-
-#. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Partner Assignation"
-msgstr "파트너 할당"
-
-#. module: crm_partner_assign
-#: help:crm.lead.report.assign,type:0
-msgid "Type is used to separate Leads and Opportunities"
-msgstr "유형은 개척과 기회를 구분하기 위해 사용됩니다"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "July"
-msgstr "7월"
-
-#. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "Date Review"
-msgstr "검토 날짜"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 field:crm.lead.report.assign,stage_id:0
-msgid "Stage"
-msgstr "단계"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 field:crm.lead.report.assign,state:0
-msgid "Status"
-msgstr "상태"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,to_read:0
-msgid "To read"
-msgstr "읽기 대상"
-
-#. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:77
-#, python-format
-msgid "Fwd"
-msgstr "전달"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Geo Localization"
-msgstr "지리적 지역화"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 view:crm.partner.report.assign:0
-msgid "Opportunities Assignment Analysis"
-msgstr "기회 할당 분석"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0 view:res.partner:0
-msgid "Cancel"
-msgstr "취소"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,history_mode:0
-msgid "Send history"
-msgstr "전송 이력"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Close"
-msgstr "닫기"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "March"
-msgstr "3월"
-
-#. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
-#: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_opportunities_assign_tree
-msgid "Opp. Assignment Analysis"
-msgstr "OPP. 할당 분석"
-
-#. module: crm_partner_assign
-#: help:crm.lead.report.assign,delay_close:0
-msgid "Number of Days to close the case"
-msgstr "사례를 마감하기까지의 잔여일수"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,notified_partner_ids:0
-msgid ""
-"Partners that have a notification pushing this message in their mailboxes"
-msgstr "편지함에 이 메시지가 푸시될 때 알림을 받는 파트너"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,type:0
-msgid "Comment"
-msgstr "의견"
-
-#. module: crm_partner_assign
-#: field:res.partner,partner_weight:0
-msgid "Weight"
-msgstr "무게"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "April"
-msgstr "4월"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 field:crm.lead.report.assign,grade_id:0
-#: view:crm.partner.report.assign:0 field:crm.partner.report.assign,grade_id:0
+#: field:crm.lead.report.assign,grade_id:0
+#: field:crm.partner.report.assign,grade_id:0 field:res.partner,grade_id:0
 msgid "Grade"
 msgstr "등급"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "December"
-msgstr "12월"
+#: field:res.partner.grade,name:0
+msgid "Grade Name"
+msgstr "등급명"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,vote_user_ids:0
-msgid "Users that voted for this message"
-msgstr "이 메시지에 투표한 사용자"
+#: field:res.partner,partner_weight:0 field:res.partner.grade,partner_weight:0
+msgid "Grade Weight"
+msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 field:crm.lead.report.assign,month:0
-msgid "Month"
-msgstr "월"
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Group By"
+msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,opening_date:0
-msgid "Opening Date"
-msgstr "개시일"
+#: selection:crm.lead.report.assign,priority:0
+msgid "High"
+msgstr "높음"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,child_ids:0
-msgid "Child Messages"
-msgstr "하위 메시지"
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_form
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
+msgid "I'm interested"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_form
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
+msgid "I'm not interested"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,id:0 field:crm.lead.channel.interested,id:0
+#: field:crm.lead.forward.to.partner,id:0 field:crm.lead.report.assign,id:0
+#: field:crm.partner.report.assign,id:0 field:res.partner.activation,id:0
+#: field:res.partner.grade,id:0
+msgid "ID"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:res.partner,implemented_partner_ids:0
+msgid "Implementation References"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:res.partner,assigned_partner_id:0
+msgid "Implemented by"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.channel.interested,interested:0
+msgid "Interested by this lead"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,period_id:0
+msgid "Invoice Period"
+msgstr "송장 발행 주기"
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,write_uid:0
+#: field:crm.lead.channel.interested,write_uid:0
+#: field:crm.lead.forward.to.partner,write_uid:0
+#: field:res.partner.activation,write_uid:0
+#: field:res.partner.grade,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,write_date:0
+#: field:crm.lead.channel.interested,write_date:0
+#: field:crm.lead.forward.to.partner,write_date:0
+#: field:res.partner.activation,write_date:0
+#: field:res.partner.grade,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead,date_assign:0
+msgid "Last date this case was forwarded/assigned to a partner"
+msgstr "이 사례가 파트너로 전달/할당된 최근 날짜"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,date_review:0
@@ -456,260 +486,30 @@ msgid "Latest Partner Review"
 msgstr "최신 파트너 검토"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,subject:0
-msgid "Subject"
-msgstr "제목"
+#: field:crm.lead.assignation,lead_id:0
+#: selection:crm.lead.report.assign,type:0
+msgid "Lead"
+msgstr "개척"
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "or"
-msgstr "또는"
+#: field:crm.lead.assignation,lead_link:0
+msgid "Lead  Single Links"
+msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,body:0
-msgid "Contents"
-msgstr "내용"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,vote_user_ids:0
-msgid "Votes"
-msgstr "투표수"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "#Opportunities"
-msgstr "#기회"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,starred:0
-msgid "Current user has a starred notification linked to this message"
-msgstr "현재 사용자에게 이 메시지와 연결된 별표 표시된 알림이 있습니다."
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,date_partnership:0
-#: field:res.partner,date_partnership:0
-msgid "Partnership Date"
-msgstr "협력관계 협약일"
-
-#. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Team"
-msgstr "팀"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-msgid "Draft"
-msgstr "기안"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,priority:0
-msgid "Low"
-msgstr "낮음"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 selection:crm.lead.report.assign,state:0
-msgid "Closed"
-msgstr "마감됨"
-
-#. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
-msgid "Mass forward to partner"
-msgstr "파트너에게 대량 전달"
-
-#. module: crm_partner_assign
-#: view:res.partner:0 field:res.partner,opportunity_assigned_ids:0
-msgid "Assigned Opportunities"
-msgstr "할당된 기회"
-
-#. module: crm_partner_assign
-#: field:crm.lead,date_assign:0
-msgid "Assignation Date"
-msgstr "할당일"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,probability_max:0
-msgid "Max Probability"
-msgstr "최대 확률"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "August"
-msgstr "8월"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,record_name:0
-msgid "Name get of the related document."
-msgstr "관련 문서의 이름 가져오기"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,priority:0
-msgid "Normal"
-msgstr "보통"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Escalate"
-msgstr "승급"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "June"
-msgstr "6월"
-
-#. module: crm_partner_assign
-#: help:crm.lead.report.assign,delay_open:0
-msgid "Number of Days to open the case"
-msgstr "사례 개시까지의 소요일수"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,delay_open:0
-msgid "Delay to Open"
-msgstr "개시까지의 지연"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,user_id:0
-#: field:crm.partner.report.assign,user_id:0
-msgid "User"
-msgstr "사용자"
-
-#. module: crm_partner_assign
-#: field:res.partner.grade,active:0
-msgid "Active"
-msgstr "활성"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "November"
-msgstr "11월"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Extended Filters..."
-msgstr "확장 필터..."
-
-#. module: crm_partner_assign
-#: field:crm.lead,partner_longitude:0 field:res.partner,partner_longitude:0
-msgid "Geo Longitude"
-msgstr "지리적 경도"
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,opp:0
-msgid "# of Opportunity"
-msgstr "# 기회"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_graph
 msgid "Lead Assign"
 msgstr "개척 할당"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "October"
-msgstr "10월"
+#: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
+msgid "Lead Feedback"
+msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Assignation"
-msgstr "할당"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "January"
-msgstr "1월"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "Send Mail"
-msgstr "메일 보내기"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,date:0
-msgid "Date"
-msgstr "날짜"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Planned Revenues"
-msgstr "계획된 수익"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Partner Review"
-msgstr "파트너 검토"
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,period_id:0
-msgid "Invoice Period"
-msgstr "송장 발행 주기"
-
-#. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_res_partner_grade
-msgid "res.partner.grade"
-msgstr "res.partner.grade"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,message_id:0
-msgid "Message-Id"
-msgstr "Message-Id"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-#: field:crm.lead.forward.to.partner,attachment_ids:0
-msgid "Attachments"
-msgstr "첨부 파일"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,record_name:0
-msgid "Message Record Name"
-msgstr "메시지 기록명"
-
-#. module: crm_partner_assign
-#: field:res.partner.activation,sequence:0 field:res.partner.grade,sequence:0
-msgid "Sequence"
-msgstr "순서"
-
-#. module: crm_partner_assign
-#: code:addons/crm_partner_assign/partner_geo_assign.py:37
-#, python-format
-msgid ""
-"Cannot contact geolocation servers. Please make sure that your internet "
-"connection is up and running (%s)."
-msgstr "위치 서버에 연결할 수 없습니다. 인터넷 연결이 존재하고 실행 중인지 확인하십시오(%s)."
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "September"
-msgstr "9월"
-
-#. module: crm_partner_assign
-#: field:res.partner.grade,name:0
-msgid "Grade Name"
-msgstr "등급명"
-
-#. module: crm_partner_assign
-#: help:crm.lead,date_assign:0
-msgid "Last date this case was forwarded/assigned to a partner"
-msgstr "이 사례가 파트너로 전달/할당된 최근 날짜"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0 view:res.partner:0
-msgid "Open"
-msgstr "열기"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,subtype_id:0
-msgid "Subtype"
-msgstr "하위형식"
-
-#. module: crm_partner_assign
-#: field:res.partner,date_localization:0
-msgid "Geo Localization Date"
-msgstr "현지 날짜"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Current"
-msgstr "현재"
+#: field:crm.lead.assignation,lead_location:0
+msgid "Lead Location"
+msgstr ""
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead
@@ -717,73 +517,117 @@ msgid "Lead/Opportunity"
 msgstr "개척/기회"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,notified_partner_ids:0
-msgid "Notified partners"
-msgstr "통보한 파트너"
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_form
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_tree
+#: model:ir.actions.act_window,name:crm_partner_assign.action_portal_leads
+#: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current
+msgid "Leads"
+msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-#: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_forward_to_partner_act
-msgid "Forward to Partner"
-msgstr "파트너에 전달"
+#: model:ir.ui.menu,name:crm_partner_assign.portal_leads
+msgid "Leads & Opportunities"
+msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,section_id:0
-#: field:crm.partner.report.assign,section_id:0
-msgid "Sales Team"
-msgstr "영업팀"
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Leads Analysis"
+msgstr "개척 분석"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "May"
-msgstr "5월"
+#: selection:crm.lead.report.assign,priority:0
+msgid "Low"
+msgstr "낮음"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,probable_revenue:0
-msgid "Probable Revenue"
-msgstr "예상 수익"
+#: field:crm.lead.report.assign,probability_max:0
+msgid "Max Probability"
+msgstr "최대 확률"
 
 #. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-#: field:crm.partner.report.assign,activation:0 view:res.partner:0
-#: field:res.partner,activation:0 view:res.partner.activation:0
-msgid "Activation"
-msgstr "활성화"
-
-#. module: crm_partner_assign
-#: view:crm.lead:0 field:crm.lead,partner_assigned_id:0
-msgid "Assigned Partner"
-msgstr "할당된 파트너"
-
-#. module: crm_partner_assign
-#: field:res.partner,grade_id:0
-msgid "Partner Level"
-msgstr "파트너 수준"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,to_read:0
-msgid "Current user has an unread notification linked to this message"
-msgstr "현재 사용자에게 이 메시지와 연결된 읽지 않은 알림이 있습니다."
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,type:0
-msgid "Opportunity"
-msgstr "기회"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,partner_id:0
-msgid "Customer"
-msgstr "고객"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "February"
-msgstr "2월"
+#: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
+#: view:crm.lead:crm_partner_assign.crm_opportunity_partner_filter
+msgid "My Assigned Partners"
+msgstr ""
 
 #. module: crm_partner_assign
 #: field:res.partner.activation,name:0
 msgid "Name"
 msgstr "이름"
+
+#. module: crm_partner_assign
+#: field:res.partner,date_review_next:0
+msgid "Next Partner Review"
+msgstr "다음 파트너 검토"
+
+#. module: crm_partner_assign
+#: selection:crm.lead.report.assign,priority:0
+msgid "Normal"
+msgstr "보통"
+
+#. module: crm_partner_assign
+#: help:crm.lead.report.assign,delay_close:0
+msgid "Number of Days to close the case"
+msgstr "사례를 마감하기까지의 잔여일수"
+
+#. module: crm_partner_assign
+#: help:crm.lead.report.assign,delay_open:0
+msgid "Number of Days to open the case"
+msgstr "사례 개시까지의 소요일수"
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,opening_date:0
+msgid "Opening Date"
+msgstr "개시일"
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
+#: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_opportunities_assign_tree
+msgid "Opp. Assignment Analysis"
+msgstr "OPP. 할당 분석"
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.action_portal_opportunities
+#: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current1
+msgid "Opportunities"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_graph
+msgid "Opportunities Assignment Analysis"
+msgstr "기회 할당 분석"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_tree
+#: selection:crm.lead.report.assign,type:0
+msgid "Opportunity"
+msgstr "기회"
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "과거 만기일"
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,partner_assigned_id:0
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+#: field:crm.partner.report.assign,partner_id:0
+#: model:ir.model,name:crm_partner_assign.model_res_partner
+msgid "Partner"
+msgstr "파트너"
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Partner Activation"
+msgstr "파트너 활성화"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_activation_act
@@ -792,31 +636,45 @@ msgid "Partner Activations"
 msgstr "파트너 활성화"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 field:crm.lead.report.assign,country_id:0
-#: view:crm.partner.report.assign:0
-#: field:crm.partner.report.assign,country_id:0
-msgid "Country"
-msgstr "국가"
+#: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
+#: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
+#: field:crm.lead.assignation,forward_id:0
+#: field:crm.lead.forward.to.partner,assignation_lines:0
+msgid "Partner Assignation"
+msgstr "파트너 할당"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0 field:crm.lead.report.assign,year:0
-msgid "Year"
-msgstr "연도"
+#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
+#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
+#: view:res.partner.grade:crm_partner_assign.view_partner_grade_form
+#: view:res.partner.grade:crm_partner_assign.view_partner_grade_tree
+msgid "Partner Grade"
+msgstr "파트너 등급"
 
 #. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Convert to Opportunity"
-msgstr "기회로 전환"
+#: field:crm.lead.assignation,partner_location:0
+msgid "Partner Location"
+msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Geo Assign"
-msgstr "지역적 할당"
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_form
+msgid "Partner Name"
+msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Delay to open"
-msgstr "개시까지의 지연"
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Partner Review"
+msgstr "파트너 검토"
+
+#. module: crm_partner_assign
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Partner assigned Analysis"
+msgstr "할당된 파트너 분석"
+
+#. module: crm_partner_assign
+#: help:crm.lead,partner_assigned_id:0
+msgid "Partner this case has been forwarded/assigned to."
+msgstr "이 사례가 전달/할당된 파트너"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_partner_assign
@@ -825,79 +683,176 @@ msgid "Partnership Analysis"
 msgstr "협력관계 분석"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,notification_ids:0
-msgid ""
-"Technical field holding the message notifications. Use notified_partner_ids "
-"to access notified partners."
-msgstr "메시지 알림을 포함한 기술적 필드. notified_partner_id를 이용하여 통보된 파트너에게 접근하십시오."
+#: field:crm.partner.report.assign,date_partnership:0
+#: field:res.partner,date_partnership:0
+msgid "Partnership Date"
+msgstr "협력관계 협약일"
 
 #. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "Partner assigned Analysis"
-msgstr "할당된 파트너 분석"
+#: field:crm.lead.report.assign,planned_revenue:0
+msgid "Planned Revenue"
+msgstr "계획된 수익"
 
 #. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
-msgid "CRM Lead Report"
-msgstr "고객관계관리 개척 보고서"
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:92
+#, python-format
+msgid "Portal Group Error"
+msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,composition_mode:0
-msgid "Composition mode"
-msgstr "작성 모드"
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+#: field:crm.lead.report.assign,priority:0
+msgid "Priority"
+msgstr "우선 순위"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,model:0
-msgid "Related Document Model"
-msgstr "관련된 문서 모델"
+#: field:crm.lead.report.assign,probable_revenue:0
+msgid "Probable Revenue"
+msgstr "예상 수익"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history_mode:0
-msgid "Case Information"
-msgstr "사례 정보"
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: field:crm.lead.report.assign,section_id:0
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+#: field:crm.partner.report.assign,section_id:0
+msgid "Sales Team"
+msgstr "영업팀"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,author_id:0
-msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
-msgstr "메시지의 작성자. 설정되지 않았을 경우 email_from에 모든 파트너와 일치하지 않은 이메일 주소를 포함할 수 있습니다."
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+#: view:res.partner:crm_partner_assign.view_res_partner_filter_assign
+msgid "Salesperson"
+msgstr "영업사원"
 
 #. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
-msgid "CRM Partner Report"
-msgstr "고객관계관리 파트너 보고서"
+#: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Send"
+msgstr "보내기"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
+#: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Send Email"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+#: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Send Mail"
+msgstr "메일 보내기"
+
+#. module: crm_partner_assign
+#: field:res.partner.activation,sequence:0 field:res.partner.grade,sequence:0
+msgid "Sequence"
+msgstr "순서"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_partner_filter
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: field:crm.lead.report.assign,stage_id:0
+msgid "Stage"
+msgstr "단계"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
+msgid "Subject"
+msgstr "제목"
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/crm_lead.py:34
+#, python-format
+msgid "The CRM Channel Interested Action is missing"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:88
+#, python-format
+msgid "The Forward Email Template is not in the database"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:93
+#, python-format
+msgid "The Portal group cannot be found"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead.channel.interested,contacted:0
+msgid "The lead has been contacted"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:crm.case.stage,name:crm_partner_assign.stage_portal_lead_recycle
+msgid "To Recycle"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,turnover:0
+msgid "Turnover"
+msgstr "회전율"
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,type:0
+msgid "Type"
+msgstr "유형"
+
+#. module: crm_partner_assign
+#: help:crm.lead.report.assign,type:0
+msgid "Type is used to separate Leads and Opportunities"
+msgstr "유형은 개척과 기회를 구분하기 위해 사용됩니다"
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,user_id:0
+#: field:crm.partner.report.assign,user_id:0
+msgid "User"
+msgstr "사용자"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
-msgid "High"
-msgstr "높음"
+msgid "Very High"
+msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,partner_ids:0
-msgid "Additional contacts"
-msgstr "추가 연락처"
+#: selection:crm.lead.report.assign,priority:0
+msgid "Very Low"
+msgstr ""
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,parent_id:0
-msgid "Initial thread message."
-msgstr "초기 스레드 메시지."
+#: help:crm.lead.channel.interested,comment:0
+msgid "What are the elements that have led to this decision?"
+msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,create_date:0
-msgid "Create Date"
-msgstr "작성일자"
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+msgid "What is the next action? When? What is the expected revenue?"
+msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,filter_id:0
-msgid "Filters"
-msgstr "필터"
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Why aren't you interested by this lead?"
+msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,partner_assigned_id:0
-#: view:crm.partner.report.assign:0
-#: field:crm.partner.report.assign,partner_id:0
-#: model:ir.model,name:crm_partner_assign.model_res_partner
-msgid "Partner"
-msgstr "파트너"
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:44
+#, python-format
+msgid "You must contact the lead before saying that you are interested"
+msgstr ""
+
+#. module: crm_partner_assign
+#: selection:crm.lead.forward.to.partner,forward_type:0
+msgid "a single partner: manual selection of partner"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+#: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "or"
+msgstr "또는"
+
+#. module: crm_partner_assign
+#: selection:crm.lead.forward.to.partner,forward_type:0
+msgid ""
+"several partners: automatic assignation, using GPS coordinates and partner's"
+" grades"
+msgstr ""

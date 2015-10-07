@@ -1060,6 +1060,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.selectLine(this.getLastOrderline());
         },
         addProduct: function(product, options){
+            if(this._printed){
+                this.destroy();
+                return this.pos.get('selectedOrder').addProduct(product, options);
+            }
             options = options || {};
             var attr = JSON.parse(JSON.stringify(product));
             attr.pos = this.pos;

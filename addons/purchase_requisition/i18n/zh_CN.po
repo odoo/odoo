@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-12 18:49+0000\n"
-"Last-Translator: mrshelly <mrshelly@hotmail.com>\n"
+"PO-Revision-Date: 2015-08-20 10:58+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +65,7 @@ msgstr "招标"
 #. module: purchase_requisition
 #: field:purchase.requisition,exclusive:0
 msgid "Bid Selection Type"
-msgstr ""
+msgstr "招标类型"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
@@ -87,17 +87,17 @@ msgstr "招标"
 #. module: purchase_requisition
 #: field:purchase.requisition,name:0
 msgid "Call for Bids Reference"
-msgstr ""
+msgstr "投标单号"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids in negotiation"
-msgstr ""
+msgstr "谈判投标报价"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids where bids are closed"
-msgstr ""
+msgstr "出价结束的招标"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -108,7 +108,7 @@ msgstr "投标单号："
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Calls for Bids"
-msgstr ""
+msgstr "招标"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
@@ -141,18 +141,18 @@ msgstr "已取消"
 #, python-format
 msgid ""
 "Cancelled by the call for bids associated to this request for quotation."
-msgstr ""
+msgstr "与这个询价单相关的投标被取消"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:85
 #, python-format
 msgid "Cancelled by the tender associated to this quotation."
-msgstr ""
+msgstr "与这个询价单相关的投标被取消。"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_bid_line_qty
 msgid "Change Bid line quantity"
-msgstr ""
+msgstr "改变出价数量"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
@@ -165,7 +165,7 @@ msgstr "修改数量"
 msgid ""
 "Check this box to generate Call for Bids instead of generating requests for "
 "quotation from procurement."
-msgstr ""
+msgstr "选中此项来生成招标单，而不是生成采购询价单"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -186,7 +186,7 @@ msgstr "关闭投标"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Closed Bids"
-msgstr ""
+msgstr "关闭的投标"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,company_id:0
@@ -218,7 +218,7 @@ msgstr "已确认"
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
 msgid "Create Request for Quotation"
-msgstr ""
+msgstr "创建询价请求"
 
 #. module: purchase_requisition
 #: field:bid.line.qty,create_uid:0 field:purchase.requisition,create_uid:0
@@ -248,7 +248,7 @@ msgstr "发布到记录上的最后信息的日期"
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
 #, python-format
 msgid "Define product(s) you want to include in the call for bids."
-msgstr ""
+msgstr "定义你想包含在投标中的产品"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,description:0
@@ -353,7 +353,7 @@ msgstr "消息和通信历史"
 #. module: purchase_requisition
 #: field:purchase.requisition,multiple_rfq_per_supplier:0
 msgid "Multiple RFQ per supplier"
-msgstr ""
+msgstr "每个供应商允许多个询价单"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -368,7 +368,7 @@ msgstr "新建"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Bids"
-msgstr ""
+msgstr "新招标"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -378,12 +378,12 @@ msgstr "订单日期"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
-msgstr ""
+msgstr "订购日期"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "PO Created"
-msgstr ""
+msgstr "采购订单已创建"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,picking_type_id:0
@@ -425,7 +425,7 @@ msgstr "产品"
 #. module: purchase_requisition
 #: field:purchase.requisition,po_line_ids:0
 msgid "Products by supplier"
-msgstr ""
+msgstr "供应商分类产品"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,line_ids:0
@@ -478,12 +478,12 @@ msgstr "采购申请业务伙伴"
 #: code:addons/purchase_requisition/purchase_requisition.py:416
 #, python-format
 msgid "Purchase Requisition created"
-msgstr ""
+msgstr "采购请购单已建立"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Purchase Requisitions (exclusive)"
-msgstr ""
+msgstr "采购请购单(排它的)"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -564,7 +564,7 @@ msgstr "计划下单日期"
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Scheduled Ordering Date:"
-msgstr ""
+msgstr "计划下单时间："
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -586,12 +586,12 @@ msgstr "选择唯一的询价单（专属）"
 msgid ""
 "Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
 "Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
-msgstr ""
+msgstr "采购招标(排它的)：确认一个采购单，它会取消剩下的采购单。\n采购招标(复合的)：它允许有多个采购单，确认采购单时不会取消剩下的采购单。"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Selection Type:"
-msgstr ""
+msgstr "招标类型"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -636,7 +636,7 @@ msgstr "供应商"
 msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the bid"
-msgstr ""
+msgstr "防止丢失投标中提议数量的初始信息的技术字段"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -646,7 +646,7 @@ msgstr "条款和条件"
 #. module: purchase_requisition
 #: help:purchase.requisition,schedule_date:0
 msgid "The expected and scheduled date where all the products are received"
-msgstr ""
+msgstr "所有产品被接收的期望和计划时间"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -719,7 +719,7 @@ msgstr "你对这个供应商已经有个一个 %s 采购单 ,  你必须取消�
 #: code:addons/purchase_requisition/purchase_requisition.py:249
 #, python-format
 msgid "You have no line selected for buying."
-msgstr ""
+msgstr "你还没有选择要购买的。"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form

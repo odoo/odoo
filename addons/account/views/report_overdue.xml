@@ -20,7 +20,7 @@
 
             <p t-if="getLines(o)">
                 <t t-foreach="message(o, res_company)" t-as="messageline">
-                    <span t-esc="messageline"/>
+                    <p t-esc="messageline"/>
                 </t>
             </p>
 

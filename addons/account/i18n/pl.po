@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-04 09:27+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-08-20 09:19+0000\n"
+"Last-Translator: Dariusz Żbikowski <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -465,7 +465,7 @@ msgid ""
 "                refunds and reconcile them directly from the related supplier invoice.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknij, aby zarejestrować korektę od dostawcy.\n              </p><p>\n                Zamiast wprowadzać ją ręcznie, możesz ją utworzyć od razu\n                w oryginalnej fakturze.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKliknij, aby zarejestrować korektę od dostawcy.\n</p><p>\nZamiast wprowadzać ją ręcznie, możesz ją utworzyć od razu\nw oryginalnej fakturze.\n</p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear
@@ -2185,7 +2185,7 @@ msgstr "Nie można tworzyć pozycji z różnych firm."
 msgid ""
 "Cannot create the invoice.\n"
 "The related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."
-msgstr "Nie można utworzyć faktury.\nWybrane warunki płatności sa prawdopodobnie źle skonfigurowane i dają niepoprawne wartości (większe niż wartość faktury). Aby zapobiec problemom zaokrągleń ostatnia pozycja warunków powinna być typu 'saldo'."
+msgstr "Nie można utworzyć faktury.\nWybrane warunki płatności są prawdopodobnie źle skonfigurowane i dają niepoprawne wartości (większe niż wartość faktury). Aby zapobiec problemom zaokrągleń ostatnia pozycja warunków powinna być typu 'saldo'."
 
 #. module: account
 #: code:addons/account/account_invoice.py:453
@@ -2872,7 +2872,7 @@ msgstr ""
 msgid ""
 "Configuration error!\n"
 "The currency chosen should be shared by the default accounts too."
-msgstr ""
+msgstr "Błąd konfiguracji! \nWybrana waluta powinna być współdzielona również przez konta domyślne."
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -3549,7 +3549,7 @@ msgid ""
 "Day of the month, set -1 for the last day of the current month. If it's "
 "positive, it gives the day of the next month. Set 0 for net days (otherwise "
 "it's based on the beginning of the month)."
-msgstr "Dzień miesiąca. Ustaw -1 dla ostatniego dnia bieżącego miesiąca. Jeśli dodatnie, to oznacza dzień w następnym miesiącu. Ustaw 0 dla dni od dzisiaj (Inaczej data będzie liczona od początku bieżąceho miesiąca)."
+msgstr "Dzień miesiąca. Ustaw -1 dla ostatniego dnia bieżącego miesiąca. Jeśli dodatnie, to oznacza dzień w następnym miesiącu. Ustaw 0 dla dni od dzisiaj (Inaczej data będzie liczona od początku bieżącego miesiąca)."
 
 #. module: account
 #: field:account.account,debit:0 field:account.entries.report,debit:0
@@ -5177,7 +5177,7 @@ msgstr "Sporne"
 #, python-format
 msgid ""
 "In order to close a fiscalyear, you must first post related journal entries."
-msgstr ""
+msgstr "Przed zamknięciem roku podatkowego musisz zaksięgować wszystkie zapisy."
 
 #. module: account
 #: code:addons/account/wizard/account_period_close.py:52
@@ -6785,7 +6785,7 @@ msgid ""
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
-msgstr "Kiedy projekt faktury zostanie zatwierdzony, to nie\n                        będziesz mógł go modyfikować. Faktura otrzyma\n                        unikalny numer i zostanie utworzony zapis\n                        księgowy."
+msgstr "Kiedy projekt faktury zostanie zatwierdzony, to nie\nbędziesz mógł go modyfikować. Faktura otrzyma\nunikalny numer i zostanie utworzony zapis księgowy."
 
 #. module: account
 #: field:account.partner.ledger,page_split:0
@@ -10267,7 +10267,7 @@ msgid ""
 "software systems are able to manage this. So if you import from another "
 "software system you may have to use the rate at date. Incoming transactions "
 "always use the rate at date."
-msgstr "To pozwala wybrać sposób wyliczania kursu waluty dla transakcji wyjściowych. W wielu krajach dozwolona jest metoda \"średnia\", ale niewiele programów potrafi ją obsługiwać. Jesli importujesz z innego oprogramowania, to możliwe, że będziesz musiał(a) stosować kurs dnia. Transakcje wchodzące zawsze stosują kurs dnia."
+msgstr "To pozwala wybrać sposób wyliczania kursu waluty dla transakcji wyjściowych. W wielu krajach dozwolona jest metoda \"średnia\", ale niewiele programów potrafi ją obsługiwać. Jeśli importujesz z innego oprogramowania, to możliwe, że będziesz musiał(a) stosować kurs dnia. Transakcje wchodzące zawsze stosują kurs dnia."
 
 #. module: account
 #: view:account.change.currency:account.view_account_change_currency
@@ -10749,7 +10749,7 @@ msgid ""
 "                                    one. The credit note will be created, validated and reconciled\n"
 "                                    with the current invoice. A new, draft, invoice will be created \n"
 "                                    so that you can edit it."
-msgstr "Stosuj tę opcję, aby anulować należności i utworzyć nową\n                                    fakturę. Korekta do zera zostanie utworzona i zatwierdzona.\n                                    oraz uzgodniona z pierwotnymi należnościami. Poz czym \n                                    zostanie utworzony projekt nowej faktury na podstawie\n                                    pierwotnej."
+msgstr "Stosuj tę opcję, aby anulować należności i utworzyć nową\nfakturę. Korekta do zera zostanie utworzona i zatwierdzona\noraz uzgodniona z pierwotnymi należnościami. Po czym \nzostanie utworzony projekt nowej faktury na podstawie\npierwotnej."
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
@@ -10757,7 +10757,7 @@ msgid ""
 "Use this option if you want to cancel an invoice you should not\n"
 "                                    have issued. The credit note will be created, validated and reconciled\n"
 "                                    with the invoice. You will not be able to modify the credit note."
-msgstr "Stosuj tę opcję, jeśli chcesz anulować obciążenie siebie lub klienta.\n                                    Zostanie utworzona faktura korygująca, która będzie uzgodniona\n                                    z faktura pierwotną. Nie będzie można modyfikować korekty."
+msgstr "Stosuj tę opcję, jeśli chcesz anulować obciążenie siebie lub klienta.\nZostanie utworzona faktura korygująca, która będzie uzgodniona\nz faktura pierwotną. Nie będzie można modyfikować korekty."
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -11489,7 +11489,7 @@ msgid ""
 "                                    credit note directly or keep it draft,\n"
 "                                    waiting for the document to be issued by\n"
 "                                    your supplier/customer."
-msgstr "Będziesz mógł edytować i zatwierdzić\n                                    tę korektę od razu lub trzymac ją w \n                                    stanie Projekt do czasu otrzymania\n                                    dokumentu od partnera."
+msgstr "Będziesz mógł edytować i zatwierdzić\ntę korektę od razu lub trzymać ją w stanie \nProjekt do czasu otrzymania dokumentu \nod partnera."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_line_extended_form
@@ -11660,3 +11660,16 @@ msgstr "stosowane w uzgadnianiu wyciągów, ale nie powinno być stosowane poza 
 #: selection:account.subscription,period_type:0
 msgid "year"
 msgstr "rok"
+
+#. module: account
+#: model:res.company,overdue_msg:stock.res_company_1
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""

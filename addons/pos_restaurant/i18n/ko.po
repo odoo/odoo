@@ -1,0 +1,249 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_restaurant
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-08-18 08:38+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:44
+#, python-format
+msgid "--------------------------------"
+msgstr "--------------------------------"
+
+#. module: pos_restaurant
+#: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a Restaurant Order Printer.\n"
+"              </p><p>\n"
+"                Order Printers are used by restaurants and bars to print the\n"
+"                order updates in the kitchen/bar when the waiter updates the order.\n"
+"              </p><p>\n"
+"                Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
+"                Proxy where the printer can be found, and a list of product categories.\n"
+"                An Order Printer will only print updates for prodcuts belonging to one of\n"
+"                its categories.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                음식점 주문용 프린터를 추가합니다.\n              </p><p>\n                주문용 프린터는 종업원이 주문을 변경할 때 주방/바에서 \n                 변경된 주문을 인쇄하는 음식점이나 술집에서 사용됩니다.\n              </p><p>\n                각 주문용 프린터는 프린터를 찾을 수 있는 PosBox/하드웨어 프록시를\n                정의하는 IP 주소를 가집니다. 그리고 상품 분류 목록을 가지고 있습니다.\n                주문용 프린터는 그 분류 중 하나에 속하는 상품에 대한 변경 사항을\n                인쇄 할 수 있습니다.\n              </p>\n            "
+
+#. module: pos_restaurant
+#: help:pos.config,iface_printbill:0
+msgid "Allows to print the Bill before payment"
+msgstr "지불 전에 계산서 발행을 허용합니다"
+
+#. module: pos_restaurant
+#: help:restaurant.printer,name:0
+msgid "An internal identification of the printer"
+msgstr "프린터의 내부 식별"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:61
+#, python-format
+msgid "Back"
+msgstr "뒤로"
+
+#. module: pos_restaurant
+#: view:pos.config:pos_restaurant.view_pos_config_form
+msgid "Bar & Restaurant"
+msgstr "바 및 레스토랑"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:6
+#, python-format
+msgid "Bill"
+msgstr "계산서"
+
+#. module: pos_restaurant
+#: field:pos.config,iface_printbill:0
+msgid "Bill Printing"
+msgstr "계산서 발행"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:64
+#: field:pos.config,iface_splitbill:0
+#, python-format
+msgid "Bill Splitting"
+msgstr "계산서 분리"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:26
+#, python-format
+msgid "CANCELLED"
+msgstr "취소됨"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,create_uid:0
+msgid "Created by"
+msgstr "작성자"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,create_date:0
+msgid "Created on"
+msgstr "작성일"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:64
+#, python-format
+msgid "Discount:"
+msgstr "할인 :"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:113
+#, python-format
+msgid "Discounts"
+msgstr "할인"
+
+#. module: pos_restaurant
+#: help:pos.config,iface_splitbill:0
+msgid "Enables Bill Splitting in the Point of Sale"
+msgstr "판매 시점에서 할부가 가능합니다"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,write_uid:0
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,write_date:0
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:40
+#, python-format
+msgid "NEW"
+msgstr "신규"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:6
+#, python-format
+msgid "Order"
+msgstr "주문"
+
+#. module: pos_restaurant
+#: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_printer_form
+#: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_printer_all
+#: field:pos.config,printer_ids:0
+msgid "Order Printers"
+msgstr "주문용 프린터"
+
+#. module: pos_restaurant
+#: view:restaurant.printer:pos_restaurant.view_restaurant_printer_form
+msgid "POS Printer"
+msgstr "POS 프린터"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,product_categories_ids:0
+msgid "Printed Product Categories"
+msgstr "인쇄된 상품 분류"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,name:0
+msgid "Printer Name"
+msgstr "프린터 이름"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,proxy_ip:0
+msgid "Proxy IP Address"
+msgstr "프록시 IP 주소"
+
+#. module: pos_restaurant
+#: view:restaurant.printer:pos_restaurant.view_restaurant_printer
+msgid "Restaurant Order Printers"
+msgstr "식당 주문용 프린터"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:45
+#, python-format
+msgid "Served by"
+msgstr "제공자"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:6
+#, python-format
+msgid "Split"
+msgstr "분할"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:91
+#, python-format
+msgid "Subtotal"
+msgstr "소계"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:104
+#, python-format
+msgid "TOTAL"
+msgstr "합계"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:29
+#, python-format
+msgid "Tel:"
+msgstr "전화 :"
+
+#. module: pos_restaurant
+#: help:restaurant.printer,proxy_ip:0
+msgid "The IP Address or hostname of the Printer's hardware proxy"
+msgstr "프린터의 하드웨어 프록시 호스트 이름 또는 IP 주소"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:32
+#, python-format
+msgid "VAT:"
+msgstr "VAT:"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:44
+#, python-format
+msgid "With a"
+msgstr "추가"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:36
+#, python-format
+msgid "at"
+msgstr "에"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:46
+#, python-format
+msgid "discount"
+msgstr "할인"

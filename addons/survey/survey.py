@@ -848,7 +848,7 @@ class survey_user_input(osv.Model):
         'survey_id': fields.many2one('survey.survey', 'Survey', required=True,
                                      readonly=1, ondelete='restrict'),
         'date_create': fields.datetime('Creation Date', required=True,
-                                       readonly=1),
+                                       readonly=1, copy=False),
         'deadline': fields.datetime("Deadline",
                                 help="Date by which the person can open the survey and submit answers",
                                 oldname="date_deadline"),
@@ -861,7 +861,7 @@ class survey_user_input(osv.Model):
                                   'Status',
                                   readonly=True),
         'test_entry': fields.boolean('Test entry', readonly=1),
-        'token': fields.char("Identification token", readonly=1, required=1),
+        'token': fields.char("Identification token", readonly=1, required=1, copy=False),
 
         # Optional Identification data
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=1),
@@ -872,7 +872,7 @@ class survey_user_input(osv.Model):
                                               'Last displayed page'),
         # The answers !
         'user_input_line_ids': fields.one2many('survey.user_input_line',
-                                               'user_input_id', 'Answers'),
+                                               'user_input_id', 'Answers', copy=True),
 
         # URLs used to display the answers
         'result_url': fields.related('survey_id', 'result_url', type='char',
@@ -894,10 +894,6 @@ class survey_user_input(osv.Model):
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!'),
         ('deadline_in_the_past', 'CHECK (deadline >= date_create)', 'The deadline cannot be in the past')
     ]
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
-            element!'))
 
     def do_clean_emptys(self, cr, uid, automatic=False, context=None):
         ''' Remove empty user inputs that have been created manually
@@ -1026,10 +1022,6 @@ class survey_user_input_line(osv.Model):
         if value_suggested:
             vals.update({'quizz_mark': self.__get_mark(cr, uid, value_suggested)})
         return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
-            element!'))
 
     def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
                    context=None):

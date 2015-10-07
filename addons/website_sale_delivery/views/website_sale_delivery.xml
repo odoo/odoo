@@ -9,7 +9,7 @@
                 <td class="text-right">
                     <span t-field="website_sale_order.amount_delivery" t-field-options='{
                         "widget": "monetary",
-                        "display_currency": "website.pricelist_id.currency_id"
+                        "display_currency": "website_sale_order.currency_id"
                     }'/>
                 </td>
             </tr>
@@ -37,7 +37,8 @@
                                     <span class="badge" t-field="delivery.price"
                                         t-field-options='{
                                             "widget": "monetary",
-                                            "display_currency": "website.pricelist_id.currency_id"
+                                            "from_currency": "website.currency_id",
+                                            "display_currency": "website_sale_order.currency_id"
                                         }'/>
                                     <div t-field="delivery.website_description" class="text-muted"/>
                                 </label>

@@ -1518,7 +1518,7 @@ class stock_picking(osv.osv):
                     op = operation
                     if (operation.qty_done < operation.product_qty):
                         new_operation = stock_operation_obj.copy(cr, uid, operation.id, {'product_qty': operation.qty_done,'qty_done': operation.qty_done}, context=context)
-                        stock_operation_obj.write(cr, uid, operation.id, {'product_qty': operation.product_qty - operation.qty_done,'qty_done': 0, 'lot_id': False}, context=context)
+                        stock_operation_obj.write(cr, uid, operation.id, {'product_qty': operation.product_qty - operation.qty_done,'qty_done': 0}, context=context)
                         op = stock_operation_obj.browse(cr, uid, new_operation, context=context)
                     pack_operation_ids.append(op.id)
                     if op.product_id and op.location_id and op.location_dest_id:
@@ -2653,9 +2653,9 @@ class stock_inventory(osv.osv):
         if stock_settings.group_stock_tracking_owner:
             res_filter.append(('owner', _('One owner only')))
             res_filter.append(('product_owner', _('One product for a specific owner')))
-        if stock_settings.group_stock_tracking_lot:
+        if stock_settings.group_stock_production_lot:
             res_filter.append(('lot', _('One Lot/Serial Number')))
-        if stock_settings.group_stock_packaging:
+        if stock_settings.group_stock_tracking_lot:
             res_filter.append(('pack', _('A Pack')))
         return res_filter
 
@@ -3650,9 +3650,13 @@ class stock_warehouse(osv.osv):
                 self._handle_renaming(cr, uid, warehouse, name, vals.get('code', warehouse.code), context=context_with_inactive)
                 if warehouse.in_type_id:
                     seq_obj.write(cr, uid, warehouse.in_type_id.sequence_id.id, {'name': name + _(' Sequence in'), 'prefix': vals.get('code', warehouse.code) + '\IN\\'}, context=context)
+                if warehouse.out_type_id:
                     seq_obj.write(cr, uid, warehouse.out_type_id.sequence_id.id, {'name': name + _(' Sequence out'), 'prefix': vals.get('code', warehouse.code) + '\OUT\\'}, context=context)
+                if warehouse.pack_type_id:
                     seq_obj.write(cr, uid, warehouse.pack_type_id.sequence_id.id, {'name': name + _(' Sequence packing'), 'prefix': vals.get('code', warehouse.code) + '\PACK\\'}, context=context)
+                if warehouse.pick_type_id:
                     seq_obj.write(cr, uid, warehouse.pick_type_id.sequence_id.id, {'name': name + _(' Sequence picking'), 'prefix': vals.get('code', warehouse.code) + '\PICK\\'}, context=context)
+                if warehouse.int_type_id:
                     seq_obj.write(cr, uid, warehouse.int_type_id.sequence_id.id, {'name': name + _(' Sequence internal'), 'prefix': vals.get('code', warehouse.code) + '\INT\\'}, context=context)
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
             for cmd in vals.get('resupply_wh_ids'):
@@ -4093,7 +4097,7 @@ class stock_pack_operation(osv.osv):
             if pack_op.qty_done < pack_op.product_qty:
                 # we split the operation in two
                 op = self.copy(cr, uid, pack_op.id, {'product_qty': pack_op.qty_done, 'qty_done': pack_op.qty_done}, context=context)
-                self.write(cr, uid, [pack_op.id], {'product_qty': pack_op.product_qty - pack_op.qty_done, 'qty_done': 0, 'lot_id': False}, context=context)
+                self.write(cr, uid, [pack_op.id], {'product_qty': pack_op.product_qty - pack_op.qty_done, 'qty_done': 0}, context=context)
             processed_ids.append(op)
         self.write(cr, uid, processed_ids, {'processed': 'true'}, context=context)
 

@@ -44,6 +44,17 @@
                 </xpath>
             </field>
         </record>
+        
+        <record id="bank_statement_draft_form_inherit2" model="ir.ui.view">
+            <field name="name">bank.statement.draft.form.inherit2</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <button name="button_draft" states="confirm" string="Reset to New" type="object"/>
+                </xpath>
+            </field>
+        </record>
 
         <record id="bank_statement_cancel_form_inherit" model="ir.ui.view">
             <field name="name">bank.statement.cancel.form.inherit</field>
@@ -59,5 +70,19 @@
             </field>
         </record>
 
+        <record id="bank_statement_cancel_form_inherit2" model="ir.ui.view">
+            <field name="name">bank.statement.cancel.form.inherit2</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form2"/>
+            <field name="arch" type="xml">
+                <field name="line_ids" position="attributes">
+                    <attribute name="options">{'reload_on_button': true}</attribute>
+                </field>
+                <xpath expr="//field[@name='amount']" position="after">
+                    <field name="journal_entry_id" invisible="1"/>
+                    <button name="cancel" attrs="{'invisible': [('journal_entry_id', '=', False)]}" string="Cancel" type="object" icon="gtk-undo"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

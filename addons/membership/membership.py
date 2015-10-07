@@ -231,7 +231,7 @@ class Partner(osv.osv):
             s = 4
             if partner_data.member_lines:
                 for mline in partner_data.member_lines:
-                    if mline.date_to >= today:
+                    if mline.date_to >= today and mline.date_from <= today:
                         if mline.account_invoice_line and mline.account_invoice_line.invoice_id:
                             mstate = mline.account_invoice_line.invoice_id.state
                             if mstate == 'paid':
@@ -346,7 +346,7 @@ class Partner(osv.osv):
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10, ),
-                        'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
+                        'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="Date from which membership becomes active."),
         'membership_stop': fields.function(
                     _membership_date,
@@ -354,7 +354,7 @@ class Partner(osv.osv):
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
-                        'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
+                        'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="Date until which membership remains active."),
         'membership_cancel': fields.function(
                     _membership_date,
@@ -362,7 +362,7 @@ class Partner(osv.osv):
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 11),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
-                        'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
+                        'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="Date on which membership has been cancelled"),
     }
     _defaults = {
@@ -428,8 +428,7 @@ class Partner(osv.osv):
                 'fiscal_position': fpos_id or False
                 }, context=context)
             line_value['invoice_id'] = invoice_id
-            invoice_line_id = invoice_line_obj.create(cr, uid, line_value, context=context)
-            invoice_obj.write(cr, uid, invoice_id, {'invoice_line': [(6, 0, [invoice_line_id])]}, context=context)
+            invoice_line_obj.create(cr, uid, line_value, context=context)
             invoice_list.append(invoice_id)
             if line_value['invoice_line_tax_id']:
                 tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()
@@ -457,7 +456,7 @@ class Product(osv.osv):
                 view_id = dict_model['membership_products_form']
             else:
                 view_id = dict_model['membership_products_tree']
-        return super(Product,self).fields_view_get(cr, user, view_id, view_type, context, toolbar, submenu)
+        return super(Product,self).fields_view_get(cr, user, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
 
     '''Product'''
     _inherit = 'product.template'

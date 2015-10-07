@@ -22,6 +22,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         this.measures = options.measures || [];
         this.rows = { groupby: options.row_groupby, headers: null };
         this.cols = { groupby: options.col_groupby, headers: null };
+        this.numbering = {};
 	},
 
 	// ----------------------------------------------------------------------
@@ -434,10 +435,10 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
                         if (attrs.value[i] === false) {
                             return _t('Undefined');
                         } else if (attrs.value[i] instanceof Array) {
-                            return attrs.value[i][1];
+                            return self.get_numbered_value(attrs.value[i], grp);
                         } else if (field && field.type === 'selection') {
                             var selected = _.where(field.selection, {0: attrs.value[i]})[0];
-                            return selected ? selected[1] : attrs.value[i];
+                            return selected ? self.get_numbered_value(selected, grp) : attrs.value[i];
                         }
                         return attrs.value[i];
                     });
@@ -446,6 +447,16 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
                     return group;
                 });
             });
+    },
+
+    get_numbered_value: function(value, grp) {
+        var id = value[0];
+        var name = value[1]
+        this.numbering[grp] = this.numbering[grp] || {};
+        this.numbering[grp][name] = this.numbering[grp][name] || {};
+        var numbers = this.numbering[grp][name];
+        numbers[id] = numbers[id] || _.size(numbers) + 1;
+        return name + (numbers[id] > 1 ? "  (" + numbers[id] + ")" : "");
     },
 
     // if field is a fieldname, returns field, if field is field_id:interval, retuns field_id

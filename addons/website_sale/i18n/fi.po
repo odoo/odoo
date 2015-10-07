@@ -4,6 +4,7 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2015
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2015
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
 # Mikko Salmela <salmemik@gmail.com>, 2015
 msgid ""
@@ -11,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2015-08-04 10:26+0000\n"
+"PO-Revision-Date: 2015-09-05 07:49+0000\n"
 "Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -54,7 +55,7 @@ msgid ""
 "            a photo on categories for small (1024x768) screens.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa lisätäksesi uuden kategorian.\n</p><p>\nKategorioita käytetään tuotteiden selaamiseen kosketusnäyttörajapinnan kautta.\n</p><p>\nJos lisäät kuvan kategorialle, kosketusnäyttörajapinnan ulkoasu skaalautuu automaattisesti. Suosittelemme ettei kuvia käytetä pienillä (1024x768) näyttöruuduilla.\n</p>"
 
 #. module: website_sale
 #: field:product.template,accessory_product_ids:0
@@ -79,12 +80,12 @@ msgstr "Vaihtoehtoiset tuotteet"
 #. module: website_sale
 #: help:product.template,alternative_product_ids:0
 msgid "Appear on the product page"
-msgstr ""
+msgstr "Näytetään tuotesivulla"
 
 #. module: website_sale
 #: help:product.template,accessory_product_ids:0
 msgid "Appear on the shopping cart"
-msgstr ""
+msgstr "Näytä ostoskorissa"
 
 #. module: website_sale
 #: view:website:website_sale.cart
@@ -114,7 +115,7 @@ msgstr "Osta nyt, vastaanota 2:ssa päivässä"
 #. module: website_sale
 #: field:sale.order,cart_quantity:0
 msgid "Cart Quantity"
-msgstr ""
+msgstr "Määrä ostoskorissa"
 
 #. module: website_sale
 #: view:website:website_sale.payment
@@ -164,21 +165,21 @@ msgstr "Klikkaa tästä lisätäksesi uuden tuotteen."
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:62
 #, python-format
 msgid "Click here to set an image describing your product."
-msgstr ""
+msgstr "Klikkaa tästä asettaaksesi tuotekuvan"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:75
 #, python-format
 msgid "Click on save to add the image to the product decsription."
-msgstr ""
+msgstr "Klikkaa \"tallenna\" lisätäksesi kuvan tuotekuvaukseen."
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:104
 #, python-format
 msgid "Click to publish your product so your customers can see it."
-msgstr ""
+msgstr "Klikkaa tästä julkaistaksesi tuotteesi niin, että asiakkaat voivat nähdä sen."
 
 #. module: website_sale
 #. openerp-web
@@ -225,7 +226,7 @@ msgstr "Onnittelut"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:109
 #, python-format
 msgid "Congratulations! You just created and published your first product."
-msgstr ""
+msgstr "Onnittelut! Olet juuri luonut ja julkaissut ensimmäisen tuotteesi."
 
 #. module: website_sale
 #. openerp-web
@@ -252,7 +253,7 @@ msgstr "Maa..."
 #. module: website_sale
 #: view:website:website_sale.cart
 msgid "Coupon Code"
-msgstr ""
+msgstr "Kuponkikoodi"
 
 #. module: website_sale
 #. openerp-web
@@ -313,28 +314,28 @@ msgstr "Kuvaile tuotetta"
 #. module: website_sale
 #: help:product.template,website_sequence:0
 msgid "Determine the display order in the Website E-commerce"
-msgstr ""
+msgstr "Määritä verkkokauppasivuston esitysjärjestys"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:88
 #, python-format
 msgid "Drag & Drop a block"
-msgstr ""
+msgstr "Raahaa ja pudota lohko"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:89
 #, python-format
 msgid "Drag the 'Big Picture' block and drop it in your page."
-msgstr ""
+msgstr "Raahaa 'Suuri kuva'-lohko ja pudota se sivulle."
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:54
 #, python-format
 msgid "Edit the price of this product by clicking on the amount."
-msgstr ""
+msgstr "Muokkaa tämän tuotteen hintaa klikkaamalla määrää."
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -346,7 +347,7 @@ msgstr "Sähköposti"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:34
 #, python-format
 msgid "Enter a name for your new product then click 'Continue'."
-msgstr ""
+msgstr "Lisää nimi uudelle tuotteellesi ja paina 'Jatka'."
 
 #. module: website_sale
 #: constraint:product.public.category:0
@@ -356,7 +357,7 @@ msgstr "Virhe! Et voi luoda rekursiivisia ryhmiä."
 #. module: website_sale
 #: view:website:website_sale.product
 msgid "Free Shipping in U.S."
-msgstr ""
+msgstr "Ilmainen toimitus Yhdysvalloissa"
 
 #. module: website_sale
 #: help:product.public.category,sequence:0
@@ -366,24 +367,24 @@ msgstr "Antaa järjestyksen näytettäessä tuoteryhmäluettelon."
 #. module: website_sale
 #: field:product.style,html_class:0
 msgid "HTML Classes"
-msgstr ""
+msgstr "HTML luokat"
 
 #. module: website_sale
 #: field:product.attribute.value,color:0
 msgid "HTML Color Index"
-msgstr ""
+msgstr "HTML väri-indeksi"
 
 #. module: website_sale
 #: view:website:website_sale.cart
 msgid "Have a coupon code? Fill in this field and apply."
-msgstr ""
+msgstr "Onko sinulla kuponkikoodi? Täytä tämä kenttä ja käytä."
 
 #. module: website_sale
 #: help:product.attribute.value,color:0
 msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color on the website if the attibute type is 'Color'."
-msgstr ""
+msgstr "Täällä voit asettaa tietyn HTML-värikoodin (esim. #ff0000) näyttääksesi värin verkkosivuilla, jos ominaisuuden tyyppi on \"väri\"."
 
 #. module: website_sale
 #: selection:product.attribute,type:0
@@ -406,7 +407,7 @@ msgstr "Kuva"
 #, python-format
 msgid ""
 "Insert blocks like text-image, or gallery to fully describe the product."
-msgstr ""
+msgstr "Lisää lohkoja, kuten teksti-kuva, tai galleria kuvataksesi tuotteen täysin."
 
 #. module: website_sale
 #: field:product.public.category,write_uid:0 field:product.style,write_uid:0
@@ -423,7 +424,7 @@ msgstr "Viimeksi päivitetty"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:68
 #, python-format
 msgid "Let's select an ipad image."
-msgstr ""
+msgstr "Valitaan iPad kuva."
 
 #. module: website_sale
 #: field:product.public.category,image_medium:0
@@ -436,7 +437,7 @@ msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "Keskikokoinen kuva tälle kategorialle. Kuvan koko muutetaan automaattisesti kokoon 128x128px, säilyttäen kuvan mittasuhteet. Käytä tätä kenttää lomakenäkymissä ja tietyissä Kanban -näkymissä."
 
 #. module: website_sale
 #: view:website:website.layout
@@ -473,14 +474,14 @@ msgstr "Uusi tuote luotu"
 #. module: website_sale
 #: view:website:website_sale.products
 msgid "No product defined."
-msgstr ""
+msgstr "Tuotetta ei ole määritelty."
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:96
 #, python-format
 msgid "Once you click on save, your product is updated."
-msgstr ""
+msgstr "Kun klikkaat \"tallenna\", tuote päivitetään."
 
 #. module: website_sale
 #: view:website:website_sale.products
@@ -495,14 +496,14 @@ msgstr "Tilaus"
 #. module: website_sale
 #: field:sale.order,website_order_line:0
 msgid "Order Lines displayed on Website"
-msgstr ""
+msgstr "Tilausrivit jotka näytetään verkkosivuilla"
 
 #. module: website_sale
 #: help:sale.order,website_order_line:0
 msgid ""
 "Order Lines to be displayed on the website. They should not be used for "
 "computation purpose."
-msgstr ""
+msgstr "Tilausrivit jotka näytetään verkkosivuilla. Näitä ei tule käyttää laskennallisiin tarpeisiin."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.categ_others
@@ -540,7 +541,7 @@ msgstr "Maksutapa"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Maksutapahtuma"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -555,7 +556,7 @@ msgstr "Käytännöt"
 #. module: website_sale
 #: view:website:website_sale.product
 msgid "Post"
-msgstr ""
+msgstr "Julkaise"
 
 #. module: website_sale
 #: view:website:website_sale.cart view:website:website_sale.payment
@@ -581,7 +582,7 @@ msgstr "Tuote"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute
 msgid "Product Attribute"
-msgstr ""
+msgstr "Tuotteen ominaisuus"
 
 #. module: website_sale
 #: view:website:website_sale.product
@@ -591,7 +592,7 @@ msgstr "Tuotteen nimi"
 #. module: website_sale
 #: view:product.public.category:website_sale.product_public_category_tree_view
 msgid "Product Product Categories"
-msgstr ""
+msgstr "Tuotteen tuoteryhmät/kategoriat"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
@@ -606,7 +607,7 @@ msgstr "Tuotetta ei saatavilla"
 #. module: website_sale
 #: view:website:website_sale.404
 msgid "Product not found!"
-msgstr ""
+msgstr "Tuotetta ei löydy!"
 
 #. module: website_sale
 #: view:website:website_sale.product
@@ -621,51 +622,51 @@ msgstr "Paranna näkyvyyttä"
 #. module: website_sale
 #: field:product.pricelist,code:0
 msgid "Promotional Code"
-msgstr ""
+msgstr "Markkinointikoodi"
 
 #. module: website_sale
 #: view:product.public.category:website_sale.product_public_category_form_view
 msgid "Public Categories"
-msgstr ""
+msgstr "Julkiset ryhmät"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
 #: field:product.template,public_categ_ids:0
 msgid "Public Category"
-msgstr ""
+msgstr "Julkinen ryhmä"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.ui.menu,name:website_sale.menu_product_public_category
 msgid "Public Product Categories"
-msgstr ""
+msgstr "Julkiset Tuoteryhmät"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:103
 #, python-format
 msgid "Publish your product"
-msgstr ""
+msgstr "Julkaise tuotteesi"
 
 #. module: website_sale
 #: view:website:website_sale.products
 msgid "Push down"
-msgstr ""
+msgstr "Työnnä alas"
 
 #. module: website_sale
 #: view:website:website_sale.products
 msgid "Push to bottom"
-msgstr ""
+msgstr "Työnnä pohjalle"
 
 #. module: website_sale
 #: view:website:website_sale.products
 msgid "Push to top"
-msgstr ""
+msgstr "Työnnä pinnalle"
 
 #. module: website_sale
 #: view:website:website_sale.products
 msgid "Push up"
-msgstr ""
+msgstr "Työnnä ylös"
 
 #. module: website_sale
 #: view:website:website_sale.cart view:website:website_sale.payment
@@ -675,7 +676,7 @@ msgstr "Määrä"
 #. module: website_sale
 #: selection:product.attribute,type:0
 msgid "Radio"
-msgstr ""
+msgstr "Radio"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -685,7 +686,7 @@ msgstr "Palaa ostoskoriin"
 #. module: website_sale
 #: view:website:website_sale.404
 msgid "Return to the product list."
-msgstr ""
+msgstr "Palaa tuotelistaukseen."
 
 #. module: website_sale
 #: view:website:website_sale.cart view:website:website_sale.checkout
@@ -713,14 +714,14 @@ msgstr "Myyntitilaus"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:74
 #, python-format
 msgid "Save this Image"
-msgstr ""
+msgstr "Tallenna tämä kuva"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:95
 #, python-format
 msgid "Save your modifications"
-msgstr ""
+msgstr "Tallenna muutokset"
 
 #. module: website_sale
 #: view:website:website_sale.search
@@ -744,14 +745,14 @@ msgstr "Valitse"
 msgid ""
 "Select 'New Product' to create it and manage its properties to boost your "
 "sales."
-msgstr ""
+msgstr "Valitse \"Uusi tuote\" luodaksesi uuden tuotteen ja hallitaksesi sen ominaisuuksia lisätäksesi myyntiäsi"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:67
 #, python-format
 msgid "Select an Image"
-msgstr ""
+msgstr "Valitse kuva"
 
 #. module: website_sale
 #: field:product.public.category,sequence:0
@@ -800,12 +801,12 @@ msgstr "Kauppa - Kassa"
 #. module: website_sale
 #: view:website:website_sale.confirmation
 msgid "Shop - Confirmed"
-msgstr ""
+msgstr "Kauppa - Vahvistettu"
 
 #. module: website_sale
 #: view:website:website_sale.payment
 msgid "Shop - Select Payment Mode"
-msgstr ""
+msgstr "Kauppa - Valitse maksutapa"
 
 #. module: website_sale
 #: view:website:website_sale.cart
@@ -825,12 +826,12 @@ msgstr "Koko"
 #. module: website_sale
 #: field:product.template,website_size_x:0
 msgid "Size X"
-msgstr ""
+msgstr "Koko X"
 
 #. module: website_sale
 #: field:product.template,website_size_y:0
 msgid "Size Y"
-msgstr ""
+msgstr "Koko Y"
 
 #. module: website_sale
 #. openerp-web
@@ -842,7 +843,7 @@ msgstr "Ohita"
 #. module: website_sale
 #: field:product.public.category,image_small:0
 msgid "Smal-sized image"
-msgstr ""
+msgstr "Pienikokoinen kuva"
 
 #. module: website_sale
 #: help:product.public.category,image_small:0
@@ -855,7 +856,7 @@ msgstr ""
 #. module: website_sale
 #: view:website:website_sale.404
 msgid "Sorry, this product is not available anymore."
-msgstr ""
+msgstr "Pahoittelemme. Tätä tuotetta ei ole enää saatavilla."
 
 #. module: website_sale
 #. openerp-web
@@ -867,12 +868,12 @@ msgstr "Käynnistä ohjattu opastus"
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "State / Province"
-msgstr ""
+msgstr "Osavaltio / provinssi"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "State / Province..."
-msgstr ""
+msgstr "Osavaltio / provinssi..."
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -882,13 +883,13 @@ msgstr "Katuosoite"
 #. module: website_sale
 #: field:product.style,name:0
 msgid "Style Name"
-msgstr ""
+msgstr "Tyylin nimi"
 
 #. module: website_sale
 #: field:product.template,website_style_ids:0
 #: view:website:website_sale.products
 msgid "Styles"
-msgstr ""
+msgstr "Tyylit"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -898,17 +899,17 @@ msgstr "Välisumma"
 #. module: website_sale
 #: view:website:website_sale.product
 msgid "Suggested alternatives:"
-msgstr ""
+msgstr "Ehdotetut vaihtoehdot:"
 
 #. module: website_sale
 #: view:website:website_sale.cart
 msgid "Suggested products:"
-msgstr ""
+msgstr "Ehdotetut tuotteet:"
 
 #. module: website_sale
 #: view:website:website_sale.total
 msgid "Taxes may be updated after providing shipping address"
-msgstr ""
+msgstr "Verojen määrä saatetaan päivittää toimitusosoitteen lisäämisen jälkeen"
 
 #. module: website_sale
 #: view:website:website_sale.checkout view:website:website_sale.total
@@ -924,33 +925,33 @@ msgstr "Kiitos tilauksestasi."
 #: code:addons/website_sale/controllers/main.py:752
 #, python-format
 msgid "The payment seems to have been canceled."
-msgstr ""
+msgstr "Maksu näyttää olevan peruttu."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:728
 #: code:addons/website_sale/controllers/main.py:740
 #, python-format
 msgid "There seems to be an error with your request."
-msgstr ""
+msgstr "Pyynnössäsi on virhe."
 
 #. module: website_sale
 #: help:product.public.category,image:0
 msgid ""
 "This field holds the image used as image for the category, limited to "
 "1024x1024px."
-msgstr ""
+msgstr "Tähän kenttäään saa kuvan tälle kategorialle. Kuva on rajoitettu kokoon 1024x1024px"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:46
 #, python-format
 msgid "This page contains all the information related to the new product."
-msgstr ""
+msgstr "Tämä sivu sisältää kaiken uuteen tuotteeseen liittyvän tiedon."
 
 #. module: website_sale
 #: help:product.template,public_categ_ids:0
 msgid "Those categories are used to group similar products for e-commerce."
-msgstr ""
+msgstr "Näitä kategorioita käytetään samankaltaisten tuotteiden ryhmittelyyn verkkokaupassa."
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -977,12 +978,12 @@ msgstr "Tyyppi"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:61
 #, python-format
 msgid "Update image"
-msgstr ""
+msgstr "Päivitä kuva"
 
 #. module: website_sale
 #: view:website:website_sale.products
 msgid "Use the"
-msgstr ""
+msgstr "Käytä"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -1003,12 +1004,12 @@ msgstr "Web-sivusto"
 #. module: website_sale
 #: field:product.template,website_message_ids:0
 msgid "Website Comments"
-msgstr ""
+msgstr "Verkkosivun kommentit"
 
 #. module: website_sale
 #: model:ir.actions.act_url,name:website_sale.action_open_website
 msgid "Website Shop"
-msgstr ""
+msgstr "Verkkosivun kauppa"
 
 #. module: website_sale
 #: field:product.template,website_meta_description:0
@@ -1028,19 +1029,19 @@ msgstr "Verkkosivuston metaotsikko"
 #. module: website_sale
 #: field:product.product,website_url:0 field:product.template,website_url:0
 msgid "Website url"
-msgstr ""
+msgstr "Verkkosivun osoite"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:11
 #, python-format
 msgid "Welcome to your shop"
-msgstr ""
+msgstr "Tervetuloa kauppaasi"
 
 #. module: website_sale
 #: view:website:website_sale.product
 msgid "Write a comment..."
-msgstr ""
+msgstr "Kirjoita kommentti..."
 
 #. module: website_sale
 #. openerp-web
@@ -1049,7 +1050,7 @@ msgstr ""
 msgid ""
 "You successfully installed the e-commerce. This guide will help you to "
 "create your product and promote your sales."
-msgstr ""
+msgstr "Olet onnistuneesti asentanut verkkokauppamoduulin. Tämä ohje auttaa sinua luomaan tuotteesi ja edistämään myyntiäsi."
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -1075,7 +1076,7 @@ msgstr "Ostoskorisi on tyhjä!"
 #: code:addons/website_sale/controllers/main.py:750
 #, python-format
 msgid "Your payment has been received."
-msgstr ""
+msgstr "Maksu on vastaanotettu."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:754
@@ -1097,17 +1098,17 @@ msgstr "muuta"
 #. module: website_sale
 #: view:website:website_sale.cart
 msgid "code..."
-msgstr ""
+msgstr "koodi..."
 
 #. module: website_sale
 #: view:website:website_sale.product
 msgid "comment"
-msgstr ""
+msgstr "kommentti"
 
 #. module: website_sale
 #: view:website:website_sale.product
 msgid "comments"
-msgstr ""
+msgstr "kommentit"
 
 #. module: website_sale
 #: view:website:website_sale.product
@@ -1122,12 +1123,12 @@ msgstr "tai"
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "select..."
-msgstr ""
+msgstr "valitse..."
 
 #. module: website_sale
 #: view:website:website_sale.products
 msgid "top menu to create a new product."
-msgstr ""
+msgstr "ylävalikko uuden tuotteen luontiin."
 
 #. module: website_sale
 #: view:website:website_sale.cart
@@ -1147,4 +1148,4 @@ msgstr "Laskun lähetys sähköpostitse"
 #. module: website_sale
 #: view:website:website_sale.cart
 msgid "☑ Processed by Ogone"
-msgstr ""
+msgstr "☑ Ogonen prosessoima"

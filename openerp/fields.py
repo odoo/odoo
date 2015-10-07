@@ -548,13 +548,15 @@ class Field(object):
 
     def _inverse_related(self, records):
         """ Inverse the related field ``self`` on ``records``. """
+        # store record values, otherwise they may be lost by cache invalidation!
+        record_value = {record: record[self.name] for record in records}
         for record in records:
             other = record
             # traverse the intermediate fields, and keep at most one record
             for name in self.related[:-1]:
                 other = other[name][:1]
             if other:
-                other[self.related[-1]] = record[self.name]
+                other[self.related[-1]] = record_value[record]
 
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field ``self``. """
@@ -1202,13 +1204,15 @@ class Date(Field):
     @staticmethod
     def from_string(value):
         """ Convert an ORM ``value`` into a :class:`date` value. """
+        if not value:
+            return None
         value = value[:DATE_LENGTH]
         return datetime.strptime(value, DATE_FORMAT).date()
 
     @staticmethod
     def to_string(value):
         """ Convert a :class:`date` value into the format expected by the ORM. """
-        return value.strftime(DATE_FORMAT)
+        return value.strftime(DATE_FORMAT) if value else False
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
@@ -1266,6 +1270,8 @@ class Datetime(Field):
     @staticmethod
     def from_string(value):
         """ Convert an ORM ``value`` into a :class:`datetime` value. """
+        if not value:
+            return None
         value = value[:DATETIME_LENGTH]
         if len(value) == DATE_LENGTH:
             value += " 00:00:00"
@@ -1274,7 +1280,7 @@ class Datetime(Field):
     @staticmethod
     def to_string(value):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
-        return value.strftime(DATETIME_FORMAT)
+        return value.strftime(DATETIME_FORMAT) if value else False
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:

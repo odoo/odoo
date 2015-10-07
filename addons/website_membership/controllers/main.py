@@ -3,8 +3,10 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models.website import unslug
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 
+import time
 import werkzeug.urls
 
 
@@ -40,7 +42,11 @@ class WebsiteMembership(http.Controller):
         base_line_domain = [("partner.website_published", "=", True), ('state', 'in', ['free', 'paid'])]
         if membership_id and membership_id != 'free':
             membership_id = int(membership_id)
-            base_line_domain.append(('membership_id', '=', membership_id))
+            today = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
+            base_line_domain += [
+                    ('membership_id', '=', membership_id), ('date_to', '>=', today),
+                    ('date_from', '<=', today), ('state', '=', 'paid')
+            ]
             membership = product_obj.browse(cr, uid, membership_id, context=context)
         else:
             membership = None

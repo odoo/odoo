@@ -35,6 +35,7 @@ git config core.sparsecheckout true
 echo "addons/web
 addons/web_kanban
 addons/hw_*
+addons/point_of_sale/tools/posbox/configuration
 openerp/
 odoo.py" | tee --append .git/info/sparse-checkout > /dev/null
 git read-tree -mu HEAD

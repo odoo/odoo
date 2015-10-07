@@ -1302,6 +1302,8 @@ class Root(object):
                     path_static = os.path.join(addons_path, module, 'static')
                     if os.path.isfile(manifest_path) and os.path.isdir(path_static):
                         manifest = ast.literal_eval(open(manifest_path).read())
+                        if not manifest.get('installable', True):
+                            continue
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
                         if 'openerp.addons' in sys.modules:

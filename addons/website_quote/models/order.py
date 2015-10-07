@@ -132,7 +132,7 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             total = 0.0
             for line in order.order_line:
-                total += (line.product_uom_qty * line.price_unit)
+                total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty
             res[order.id] = total
         return res
 
@@ -317,6 +317,10 @@ class sale_order_option(osv.osv):
         if product.description_sale:
             self.name += '\n' + product.description_sale
         self.uom_id = product.product_tmpl_id.uom_id
+        if product and self.order_id.pricelist_id:
+            partner_id = self.order_id.partner_id.id
+            pricelist = self.order_id.pricelist_id.id
+            self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
 
 
 class product_template(osv.Model):

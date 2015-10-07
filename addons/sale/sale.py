@@ -47,7 +47,12 @@ class sale_order(osv.osv):
 
     def _amount_line_tax(self, cr, uid, line, context=None):
         val = 0.0
-        for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.product_id, line.order_id.partner_id)['taxes']:
+        line_obj = self.pool['sale.order.line']
+        price = line_obj._calc_line_base_price(cr, uid, line, context=context)
+        qty = line_obj._calc_line_quantity(cr, uid, line, context=context)
+        for c in self.pool['account.tax'].compute_all(
+                cr, uid, line.tax_id, price, qty, line.product_id,
+                line.order_id.partner_id)['taxes']:
             val += c.get('amount', 0.0)
         return val
 
@@ -386,10 +391,8 @@ class sale_order(osv.osv):
         """
         if context is None:
             context = {}
-        journal_ids = self.pool.get('account.journal').search(cr, uid,
-            [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
-            limit=1)
-        if not journal_ids:
+        journal_id = self.pool['account.invoice'].default_get(cr, uid, ['journal_id'], context=context)['journal_id']
+        if not journal_id:
             raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
         invoice_vals = {
@@ -399,7 +402,7 @@ class sale_order(osv.osv):
             'reference': order.client_order_ref or order.name,
             'account_id': order.partner_invoice_id.property_account_receivable.id,
             'partner_id': order.partner_invoice_id.id,
-            'journal_id': journal_ids[0],
+            'journal_id': journal_id,
             'invoice_line': [(6, 0, lines)],
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
@@ -852,6 +855,12 @@ class sale_order_line(osv.osv):
                 return True
         return False
 
+    def _calc_line_base_price(self, cr, uid, line, context=None):
+        return line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+
+    def _calc_line_quantity(self, cr, uid, line, context=None):
+        return line.product_uom_qty
+
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
@@ -859,8 +868,11 @@ class sale_order_line(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
+            price = self._calc_line_base_price(cr, uid, line, context=context)
+            qty = self._calc_line_quantity(cr, uid, line, context=context)
+            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, qty,
+                                        line.product_id,
+                                        line.order_id.partner_id)
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
@@ -1066,7 +1078,7 @@ class sale_order_line(osv.osv):
         return {'value': value}
 
     def create(self, cr, uid, values, context=None):
-        if values.get('order_id') and values.get('product_id') and  any(f not in values for f in ['name', 'price_unit', 'type', 'product_uom_qty', 'product_uom']):
+        if values.get('order_id') and values.get('product_id') and  any(f not in values for f in ['name', 'price_unit', 'product_uom_qty', 'product_uom']):
             order = self.pool['sale.order'].read(cr, uid, values['order_id'], ['pricelist_id', 'partner_id', 'date_order', 'fiscal_position'], context=context)
             defaults = self.product_id_change(cr, uid, [], order['pricelist_id'][0], values['product_id'],
                 qty=float(values.get('product_uom_qty', False)),
@@ -1078,7 +1090,7 @@ class sale_order_line(osv.osv):
                 date_order=order['date_order'],
                 fiscal_position=order['fiscal_position'][0] if order['fiscal_position'] else False,
                 flag=False,  # Force name update
-                context=context
+                context=dict(context or {}, company_id=values.get('company_id'))
             )['value']
             if defaults.get('tax_id'):
                 defaults['tax_id'] = [[6, 0, defaults['tax_id']]]
@@ -1134,8 +1146,8 @@ class sale_order_line(osv.osv):
             # The superuser is used by website_sale in order to create a sale order. We need to make
             # sure we only select the taxes related to the company of the partner. This should only
             # apply if the partner is linked to a company.
-            if uid == SUPERUSER_ID and partner.company_id:
-                taxes = product_obj.taxes_id.filtered(lambda r: r.company_id == partner.company_id)
+            if uid == SUPERUSER_ID and context.get('company_id'):
+                taxes = product_obj.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
             else:
                 taxes = product_obj.taxes_id
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
@@ -1197,9 +1209,14 @@ class sale_order_line(osv.osv):
 
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
+                if update_tax:
+                    price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, taxes, result['tax_id'])
                 result.update({'price_unit': price})
                 if context.get('uom_qty_change', False):
-                    return {'value': {'price_unit': price}, 'domain': {}, 'warning': False}
+                    values = {'price_unit': price}
+                    if result.get('product_uos_qty'):
+                        values['product_uos_qty'] = result['product_uos_qty']
+                    return {'value': values, 'domain': {}, 'warning': False}
         if warning_msgs:
             warning = {
                        'title': _('Configuration Error!'),

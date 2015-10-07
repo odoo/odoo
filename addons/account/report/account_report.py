@@ -94,7 +94,7 @@ class report_aged_receivable(osv.osv):
             self._init(cr, user)
         self.called = True # To make sure that init doesn't get called multiple times
 
-        res = super(report_aged_receivable, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        res = super(report_aged_receivable, self).fields_view_get(cr, user, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
         return res
 
     def _calc_bal(self, cr, uid, ids, name, args, context=None):

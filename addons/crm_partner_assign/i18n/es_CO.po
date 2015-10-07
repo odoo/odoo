@@ -1,0 +1,857 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_partner_assign
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-08 15:14+0000\n"
+"PO-Revision-Date: 2015-09-11 08:34+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-8/language/es_CO/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_CO\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: crm_partner_assign
+#: model:email.template,body_html:crm_partner_assign.email_template_lead_forward_mail
+msgid ""
+"\n"
+"            \n"
+"<p>Hello,</p>\n"
+"\n"
+"\n"
+"<p>We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:</p>\n"
+"\n"
+"<ol>\n"
+"% for lead in ctx['partner_leads']:\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"% endfor\n"
+"</ol>\n"
+"\n"
+"% if ctx.get('partner_in_portal'):\n"
+"<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" & \"I'm not interested\".</p>\n"
+"% else:\n"
+"<p>\n"
+"    You do not have yet a portal access to our database. Please contact \n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
+"</p>\n"
+"% endif\n"
+"<p>The lead will be sent to another partner if you do not contact the lead before 20 days.</p>\n"
+"\n"
+"<p>Thanks,</p>\n"
+"\n"
+"<pre>\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
+"</pre>\n"
+"% if not ctx['partner_id'].user_id:\n"
+"PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
+"% endif\n"
+"            "
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,nbr:0
+msgid "# of Cases"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,opp:0
+msgid "# of Opportunity"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:48
+#, python-format
+msgid "<p>I am interested by this lead.</p>"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:53
+#, python-format
+msgid "<p>I am not interested by this lead. I %scontacted the lead.</p>"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:55
+#, python-format
+msgid ""
+"<p>I am not interested by this lead. I have not contacted the lead.</p>"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,activation:0
+#: view:res.partner:crm_partner_assign.view_res_partner_filter_assign
+#: field:res.partner,activation:0
+#: view:res.partner.activation:crm_partner_assign.res_partner_activation_form
+#: view:res.partner.activation:crm_partner_assign.res_partner_activation_tree
+msgid "Activation"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:res.partner.grade,active:0
+msgid "Active"
+msgstr "Activo(a)"
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,date_assign:0
+msgid "Assign Date"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Assign Month"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.server,name:crm_partner_assign.action_assign_salesman_according_assigned_partner
+msgid "Assign salesman of assigned partner"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead,date_assign:0
+msgid "Assignation Date"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:crm.case.stage,name:crm_partner_assign.stage_portal_lead_assigned
+msgid "Assigned"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+#: field:res.partner,opportunity_assigned_ids:0
+msgid "Assigned Opportunities"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
+#: view:crm.lead:crm_partner_assign.crm_opportunity_partner_filter
+#: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
+#: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
+#: field:crm.lead,partner_assigned_id:0
+#: field:crm.lead.assignation,partner_assigned_id:0
+msgid "Assigned Partner"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
+#: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Automatic Assignation"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead.forward.to.partner,body:0
+msgid "Automatically sanitized HTML contents"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,probability:0
+msgid "Avg Probability"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
+msgid "CRM Lead Report"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
+msgid "CRM Partner Report"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+#: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+msgid "Categorization"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,date_closed:0
+msgid "Close Date"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.channel.interested,comment:0
+msgid "Comment"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+msgid "Communication"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: field:crm.lead.report.assign,company_id:0
+msgid "Company"
+msgstr "Compañía"
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Confirm"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+msgid "Contact"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,body:0
+msgid "Contents"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Convert to Opportunity"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: field:crm.lead.report.assign,country_id:0
+#: field:crm.partner.report.assign,country_id:0
+msgid "Country"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,create_date:0
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,create_uid:0
+#: field:crm.lead.channel.interested,create_uid:0
+#: field:crm.lead.forward.to.partner,create_uid:0
+#: field:res.partner.activation,create_uid:0
+#: field:res.partner.grade,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,create_date:0
+#: field:crm.lead.channel.interested,create_date:0
+#: field:crm.lead.forward.to.partner,create_date:0
+#: field:res.partner.activation,create_date:0
+#: field:res.partner.grade,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_tree
+#: field:crm.lead.report.assign,partner_id:0
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+msgid "Customer Name"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Date Partnership"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Date Review"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,delay_open:0
+msgid "Delay to Assign"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,delay_close:0
+msgid "Delay to Close"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+msgid "Details"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.channel.interested,contacted:0
+msgid "Did you contact the lead?"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Do you have contacted the customer?"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:102
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:105
+#, python-format
+msgid "Email Error"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Email Template"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:87
+#, python-format
+msgid "Email Template Error"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/crm_lead.py:34
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:44
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Escalate"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_tree
+msgid "Expected Revenues"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Extended Filters..."
+msgstr "Filtros Extendidos..."
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,partner_id:0
+msgid "Forward Leads To"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,forward_type:0
+msgid "Forward selected leads to"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
+#: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_forward_to_partner_act
+msgid "Forward to Partner"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:email.template,subject:crm_partner_assign.email_template_lead_forward_mail
+msgid "Fwd: Lead: ${ctx['partner_id'].name}"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead,partner_latitude:0
+msgid "Geo Latitude"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Geo Localization"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Geo Localize"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead,partner_longitude:0
+msgid "Geo Longitude"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
+#: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Geolocation"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:res.partner,partner_weight:0 help:res.partner.grade,partner_weight:0
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,grade_id:0
+#: field:crm.partner.report.assign,grade_id:0 field:res.partner,grade_id:0
+msgid "Grade"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:res.partner.grade,name:0
+msgid "Grade Name"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:res.partner,partner_weight:0 field:res.partner.grade,partner_weight:0
+msgid "Grade Weight"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Group By"
+msgstr ""
+
+#. module: crm_partner_assign
+#: selection:crm.lead.report.assign,priority:0
+msgid "High"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_form
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
+msgid "I'm interested"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_form
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
+msgid "I'm not interested"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,id:0 field:crm.lead.channel.interested,id:0
+#: field:crm.lead.forward.to.partner,id:0 field:crm.lead.report.assign,id:0
+#: field:crm.partner.report.assign,id:0 field:res.partner.activation,id:0
+#: field:res.partner.grade,id:0
+msgid "ID"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:res.partner,implemented_partner_ids:0
+msgid "Implementation References"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:res.partner,assigned_partner_id:0
+msgid "Implemented by"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.channel.interested,interested:0
+msgid "Interested by this lead"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,period_id:0
+msgid "Invoice Period"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,write_uid:0
+#: field:crm.lead.channel.interested,write_uid:0
+#: field:crm.lead.forward.to.partner,write_uid:0
+#: field:res.partner.activation,write_uid:0
+#: field:res.partner.grade,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,write_date:0
+#: field:crm.lead.channel.interested,write_date:0
+#: field:crm.lead.forward.to.partner,write_date:0
+#: field:res.partner.activation,write_date:0
+#: field:res.partner.grade,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead,date_assign:0
+msgid "Last date this case was forwarded/assigned to a partner"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,date_review:0
+#: field:res.partner,date_review:0
+msgid "Latest Partner Review"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,lead_id:0
+#: selection:crm.lead.report.assign,type:0
+msgid "Lead"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,lead_link:0
+msgid "Lead  Single Links"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_graph
+msgid "Lead Assign"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
+msgid "Lead Feedback"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,lead_location:0
+msgid "Lead Location"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_form
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_tree
+#: model:ir.actions.act_window,name:crm_partner_assign.action_portal_leads
+#: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current
+msgid "Leads"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.ui.menu,name:crm_partner_assign.portal_leads
+msgid "Leads & Opportunities"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Leads Analysis"
+msgstr ""
+
+#. module: crm_partner_assign
+#: selection:crm.lead.report.assign,priority:0
+msgid "Low"
+msgstr "Bajo(a)"
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,probability_max:0
+msgid "Max Probability"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
+#: view:crm.lead:crm_partner_assign.crm_opportunity_partner_filter
+msgid "My Assigned Partners"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:res.partner.activation,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: crm_partner_assign
+#: field:res.partner,date_review_next:0
+msgid "Next Partner Review"
+msgstr ""
+
+#. module: crm_partner_assign
+#: selection:crm.lead.report.assign,priority:0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: crm_partner_assign
+#: help:crm.lead.report.assign,delay_close:0
+msgid "Number of Days to close the case"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead.report.assign,delay_open:0
+msgid "Number of Days to open the case"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,opening_date:0
+msgid "Opening Date"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
+#: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_opportunities_assign_tree
+msgid "Opp. Assignment Analysis"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.action_portal_opportunities
+#: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current1
+msgid "Opportunities"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_graph
+msgid "Opportunities Assignment Analysis"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_tree
+#: selection:crm.lead.report.assign,type:0
+msgid "Opportunity"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Fecha Límite Excedida"
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,partner_assigned_id:0
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+#: field:crm.partner.report.assign,partner_id:0
+#: model:ir.model,name:crm_partner_assign.model_res_partner
+msgid "Partner"
+msgstr "Empresa/Cliente"
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Partner Activation"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_activation_act
+#: model:ir.ui.menu,name:crm_partner_assign.res_partner_activation_config_mi
+msgid "Partner Activations"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
+#: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
+#: field:crm.lead.assignation,forward_id:0
+#: field:crm.lead.forward.to.partner,assignation_lines:0
+msgid "Partner Assignation"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
+#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
+#: view:res.partner.grade:crm_partner_assign.view_partner_grade_form
+#: view:res.partner.grade:crm_partner_assign.view_partner_grade_tree
+msgid "Partner Grade"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.assignation,partner_location:0
+msgid "Partner Location"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_form
+msgid "Partner Name"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
+msgid "Partner Review"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Partner assigned Analysis"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead,partner_assigned_id:0
+msgid "Partner this case has been forwarded/assigned to."
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_partner_assign
+#: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_partner_assign_tree
+msgid "Partnership Analysis"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,date_partnership:0
+#: field:res.partner,date_partnership:0
+msgid "Partnership Date"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,planned_revenue:0
+msgid "Planned Revenue"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:92
+#, python-format
+msgid "Portal Group Error"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
+#: field:crm.lead.report.assign,priority:0
+msgid "Priority"
+msgstr "Prioridad"
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,probable_revenue:0
+msgid "Probable Revenue"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: field:crm.lead.report.assign,section_id:0
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+#: field:crm.partner.report.assign,section_id:0
+msgid "Sales Team"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
+#: view:res.partner:crm_partner_assign.view_res_partner_filter_assign
+msgid "Salesperson"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Send"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
+#: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Send Email"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+#: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Send Mail"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:res.partner.activation,sequence:0 field:res.partner.grade,sequence:0
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_opportunity_partner_filter
+#: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
+#: field:crm.lead.report.assign,stage_id:0
+msgid "Stage"
+msgstr "Fase"
+
+#. module: crm_partner_assign
+#: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
+msgid "Subject"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/crm_lead.py:34
+#, python-format
+msgid "The CRM Channel Interested Action is missing"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:88
+#, python-format
+msgid "The Forward Email Template is not in the database"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:93
+#, python-format
+msgid "The Portal group cannot be found"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead.channel.interested,contacted:0
+msgid "The lead has been contacted"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:crm.case.stage,name:crm_partner_assign.stage_portal_lead_recycle
+msgid "To Recycle"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.partner.report.assign,turnover:0
+msgid "Turnover"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,type:0
+msgid "Type"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead.report.assign,type:0
+msgid "Type is used to separate Leads and Opportunities"
+msgstr ""
+
+#. module: crm_partner_assign
+#: field:crm.lead.report.assign,user_id:0
+#: field:crm.partner.report.assign,user_id:0
+msgid "User"
+msgstr "Usuario"
+
+#. module: crm_partner_assign
+#: selection:crm.lead.report.assign,priority:0
+msgid "Very High"
+msgstr ""
+
+#. module: crm_partner_assign
+#: selection:crm.lead.report.assign,priority:0
+msgid "Very Low"
+msgstr ""
+
+#. module: crm_partner_assign
+#: help:crm.lead.channel.interested,comment:0
+msgid "What are the elements that have led to this decision?"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+msgid "What is the next action? When? What is the expected revenue?"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Why aren't you interested by this lead?"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:44
+#, python-format
+msgid "You must contact the lead before saying that you are interested"
+msgstr ""
+
+#. module: crm_partner_assign
+#: selection:crm.lead.forward.to.partner,forward_type:0
+msgid "a single partner: manual selection of partner"
+msgstr ""
+
+#. module: crm_partner_assign
+#: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
+#: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "or"
+msgstr "o"
+
+#. module: crm_partner_assign
+#: selection:crm.lead.forward.to.partner,forward_type:0
+msgid ""
+"several partners: automatic assignation, using GPS coordinates and partner's"
+" grades"
+msgstr ""
