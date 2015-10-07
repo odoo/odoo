@@ -306,8 +306,10 @@ class AccountAssetAsset(models.Model):
     @api.multi
     @api.depends('account_move_ids')
     def _entry_count(self):
+        move_data = self.env['account.move'].read_group([('asset_id', 'in', self.ids)], ['asset_id'], ['asset_id'])
+        mapped_data = dict([(m['asset_id'][0], m['asset_id_count']) for m in move_data])
         for asset in self:
-            asset.entry_count = self.env['account.move'].search_count([('asset_id', '=', asset.id)])
+            asset.entry_count = mapped_data.get(asset.id, 0)
 
     @api.one
     @api.constrains('prorata', 'method_time')

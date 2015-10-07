@@ -61,6 +61,15 @@ class AccountInvoice(models.Model):
         self.invoice_line_ids = result
         return {}
 
+    @api.multi
+    def action_view_purchase_order(self):
+        self.ensure_one()
+        result = self.env['ir.actions.act_window'].for_xml_id('purchase', 'purchase_form_action')
+        form_view_id = self.env.ref('purchase.purchase_order_form').id
+        result['views'] = [(form_view_id, 'form')]
+        result['res_id'] = self.purchase_id.id
+        return result
+
 
 class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""

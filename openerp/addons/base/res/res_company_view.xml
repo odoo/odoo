@@ -9,7 +9,12 @@
                 <form string="Company">
                   <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(preview_report)d" string="Preview Header/Footer" type="action"/>
+                        <button name="%(preview_report)d" class="oe_stat_button" icon="fa-eye" type="action" help="Preview Header/Footer">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Preview</span>
+                                <span class="o_stat_text">Header/Footer</span>
+                            </div>
+                        </button>
                     </div>
                     <field name="logo" widget="image"  class="oe_avatar"/>
                     <div class="oe_title">

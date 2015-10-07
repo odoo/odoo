@@ -192,6 +192,21 @@ class StockLocationRoute(models.Model):
     sale_selectable = fields.Boolean(string="Selectable on Sales Order Line")
 
 
+class StockPicking(models.Model):
+    _inherit = "stock.picking"
+
+    @api.multi
+    def action_view_sale_order(self):
+        self.ensure_one()
+        result = self.env['ir.actions.act_window'].for_xml_id('sale', 'action_orders')
+        sale_orders = self.env['sale.order'].search([('procurement_group_id', '=', self.group_id.id)])
+        if sale_orders:
+            form_view_id = self.env.ref('sale.view_order_form').id
+            result['views'] = [(form_view_id, 'form')]
+            result['res_id'] = sale_orders.id
+        return result
+
+
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 

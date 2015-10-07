@@ -427,11 +427,9 @@ class project(osv.Model):
         return [('project.task', "Tasks"), ("project.issue", "Issues")]
 
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
-        Issue = self.pool['project.issue']
-        return {
-            project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
-            for project_id in ids
-        }
+        issue_data = self.pool['project.issue'].read_group(cr, uid, [('project_id', 'in', ids), ('stage_id.fold', '=', False)], ['project_id'], ['project_id'], context=context)
+        mapped_data = dict([(m['project_id'][0], m['project_id_count']) for m in issue_data])
+        return mapped_data
 
     _columns = {
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
@@ -516,11 +514,9 @@ class project_project(osv.Model):
 
 class res_partner(osv.osv):
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
-        Issue = self.pool['project.issue']
-        return {
-            partner_id: Issue.search_count(cr,uid, [('partner_id', '=', partner_id)])
-            for partner_id in ids
-        }
+        issue_data = self.pool['project.issue'].read_group(cr, uid, [('partner_id', 'in', ids)], ['partner_id'], ['partner_id'], context=context)
+        mapped_data = dict([(m['partner_id'][0], m['partner_id_count']) for m in issue_data])
+        return mapped_data
 
     """ Inherits partner and adds Issue information in the partner form """
     _inherit = 'res.partner'

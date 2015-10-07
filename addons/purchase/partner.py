@@ -9,11 +9,13 @@ class res_partner(models.Model):
 
     @api.multi
     def _purchase_invoice_count(self):
-        PurchaseOrder = self.env['purchase.order']
-        Invoice = self.env['account.invoice']
+        purchase_data = self.env['purchase.order'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        invoice_data = self.env['account.invoice'].read_group([('partner_id', 'in', self.ids), ('type', '=', 'in_invoice')], ['partner_id'], ['partner_id'])
+        purchase_mapped_data = dict([(m['partner_id'][0], m['partner_id_count']) for m in purchase_data])
+        invoice_mapped_data = dict([(m['partner_id'][0], m['partner_id_count']) for m in invoice_data])
         for partner in self:
-            partner.purchase_order_count = PurchaseOrder.search_count([('partner_id', 'child_of', partner.id)])
-            partner.supplier_invoice_count = Invoice.search_count([('partner_id', 'child_of', partner.id), ('type', '=', 'in_invoice')])
+            partner.purchase_order_count = purchase_mapped_data.get(partner.id, 0)
+            partner.supplier_invoice_count = invoice_mapped_data.get(partner.id, 0)
 
     @api.model
     def _commercial_fields(self):

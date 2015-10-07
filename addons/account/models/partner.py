@@ -332,9 +332,13 @@ class ResPartner(models.Model):
 
     @api.multi
     def _journal_item_count(self):
+        journal_data = self.env['account.move.line'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        contracts_data = self.env['account.analytic.account'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        journal_mapped_data = dict([(m['partner_id'][0], m['partner_id_count']) for m in journal_data])
+        contracts_mapped_data = dict([(m['partner_id'][0], m['partner_id_count']) for m in contracts_data])
         for partner in self:
-            partner.journal_item_count = self.env['account.move.line'].search_count([('partner_id', '=', partner.id)])
-            partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
+            partner.journal_item_count = journal_mapped_data.get(partner.id, 0)
+            partner.contracts_count = contracts_mapped_data.get(partner.id, 0)
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
         domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]

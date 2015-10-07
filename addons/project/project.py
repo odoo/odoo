@@ -107,11 +107,9 @@ class project(osv.osv):
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         if context is None:
             context = {}
-        res={}
-        for project in self.browse(cr, uid, ids, context=context):
-            tasks_undefined_stage = self.pool['project.task'].search_count(cr, uid, [('stage_id', '=', None), ('project_id', '=', project.id)], context=context)
-            res[project.id] = len(project.task_ids) + int(tasks_undefined_stage) 
-        return res
+        task_data = self.pool['project.task'].read_group(cr, uid, [('stage_id', '=', None), ('project_id', 'in', ids)], ['project_id'], ['project_id'], context=context)
+        mapped_data = dict([(m['project_id'][0], m['project_id_count']) for m in task_data])
+        return mapped_data
     def _get_alias_models(self, cr, uid, context=None):
         """ Overriden in project_issue to offer more options """
         return [('project.task', "Tasks")]

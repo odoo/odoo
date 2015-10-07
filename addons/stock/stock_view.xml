@@ -1792,7 +1792,10 @@
                 <form string="Reordering Rules">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_proc_to_process" type="object" string="Procurement Orders to Process"/>
+                            <button name="action_view_proc_to_process" type="object"
+                                icon="fa-truck" class="oe_stat_button">
+                                <field name="procurement_count" string="Procurement Orders to Process" widget="statinfo"/>
+                            </button>
                         </div>
                         <group>
                             <group>

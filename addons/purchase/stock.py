@@ -13,6 +13,16 @@ class stock_picking(osv.osv):
             readonly=True, relation="many2one"),
     }
 
+    def action_view_purchase_order(self, cr, uid, ids, context=None):
+        picking = self.browse(cr, uid, ids)[0]
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'purchase', 'purchase_form_action', context=context)
+        pur_ids = self.pool['purchase.order'].search(cr, uid, [('group_id', '=', picking.group_id.id)])
+        if pur_ids:
+            form_view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'purchase.purchase_order_form')
+            result['views'] = [(form_view_id, 'form')]
+            result['res_id'] = pur_ids[0] or False
+        return result
+
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'

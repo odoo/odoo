@@ -94,8 +94,10 @@ class ImLivechatChannel(models.Model):
     @api.multi
     @api.depends('channel_ids')
     def _compute_nbr_channel(self):
+        nbr_channel_data = self.env['mail.channel'].read_group([('livechat_channel_id', 'in', self.ids)], ['livechat_channel_id'], ['livechat_channel_id'])
+        mapped_data = dict([(m['livechat_channel_id'][0], m['livechat_channel_id_count']) for m in nbr_channel_data])
         for record in self:
-            record.nbr_channel = len(record.channel_ids)
+            record.nbr_channel = mapped_data.get(record.id, 0)
 
     @api.multi
     @api.depends('channel_ids.rating_ids')

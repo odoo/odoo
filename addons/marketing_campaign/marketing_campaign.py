@@ -34,8 +34,9 @@ class marketing_campaign(osv.osv):
     def _count_segments(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         try:
-            for segments in self.browse(cr, uid, ids, context=context):
-                res[segments.id] = len(segments.segment_ids)
+            segment_data = self.pool['marketing.campaign.segment'].read_group(cr, uid, [('campaign_id', 'in', ids)], ['campaign_id'], ['campaign_id'], context=context)
+            for segment in segment_data:
+                res[segment['campaign_id'][0]] = segment.get('campaign_id_count', 0)
         except:
             pass
         return res
