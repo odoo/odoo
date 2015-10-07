@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Salary structure -->
+        <record id="view_hr_payroll_structure_list_view" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.tree</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Function">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="rule_ids"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_hr_payroll_structure_tree" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.tree</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="field_parent">children_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Salary Structure">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_payroll_structure_filter" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.select</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="arch" type="xml">
+                <search string="Payroll Structures">
+                    <field name="name" string="Payroll Structures" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_hr_employee_grade_form" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.form</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="arch" type="xml">
+                <form string="Employee Function">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="parent_id"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    </group>
+                    <notebook colspan="4">
+                         <page string="Salary Rules">
+                           <field name="rule_ids" domain="[('parent_rule_id','=',False)]">
+                             <tree>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="category_id"/>
+                                <field name="sequence" invisible="1"/>
+                                <field name="register_id"/>
+                             </tree>
+                          </field>
+                         </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_hr_payroll_structure_list_form" model="ir.actions.act_window">
+            <field name="name">Salary Structures</field>
+            <field name="res_model">hr.payroll.structure</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_hr_payroll_structure_list_view"/>
+        </record>
+        <menuitem
+            id="menu_hr_payroll_structure_view"
+            action="action_view_hr_payroll_structure_list_form"
+            parent="menu_hr_payroll_configuration"
+            sequence="2"
+        />
+        <record id="action_view_hr_payroll_structure_tree" model="ir.actions.act_window">
+            <field name="name">Salary Structures Hierarchy</field>
+            <field name="res_model">hr.payroll.structure</field>
+            <field name="view_type">tree</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_id" ref="view_hr_payroll_structure_tree"/>
+        </record>
+        <menuitem
+            id="menu_hr_payroll_structure_tree"
+            action="action_view_hr_payroll_structure_tree"
+            parent="menu_hr_payroll_configuration"
+            sequence="2"
+            icon="STOCK_INDENT"
+        />
+        <!-- End Salary structure -->
+
+    </data>
+</openerp>

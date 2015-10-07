@@ -5,7 +5,7 @@ from openerp.report import report_sxw
 from openerp.osv import osv
 from openerp.addons.hr_payroll import report
 
-class payslip_details_report_in(report.report_payslip_details.payslip_details_report):
+class payslip_details_report_in(report.payslip_details_report.payslip_details_report):
 
     def __init__(self, cr, uid, name, context):
         super(payslip_details_report_in, self).__init__(cr, uid, name, context)
