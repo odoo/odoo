@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="1">
+    <record id="action_client_l10n_au_menu" model="ir.actions.client">
+        <field name="name">Open Account Dashboard Menu</field>
+        <field name="tag">reload</field>
+        <field name="params" eval="{'menu_id': ref('account.menu_board_journal_1')}"/>
+    </record>
+    <record id="base.open_menu" model="ir.actions.todo">
+        <field name="action_id" ref="action_client_l10n_au_menu"/>
+        <field name="state">open</field>
+    </record>
+</data>
+
+<data noupdate="0">
+
+    <record id="au_11170" model="account.account.template">
+        <field name="name">Transfers</field>
+        <field name="code">11170</field>
+        <field name="reconcile" eval="True"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+    </record>
+
+    <record id="l10n_au_chart_template" model="account.chart.template">
+        <field name="name">Australian Tax and Account Chart Template (by Willow IT)</field>
+        <field name="bank_account_code_prefix">1111</field>
+        <field name="cash_account_code_prefix">1113</field>
+        <field name="code_digits">5</field>
+        <field name="currency_id" ref="base.AUD"/>
+        <field name="transfer_account_id" ref="au_11170"/>
+    </record>
+
+    <record id="au_11170" model="account.account.template">
+        <field name="chart_template_id" ref="l10n_au_chart_template"/>
+    </record>
+
+</data>
+</openerp>
