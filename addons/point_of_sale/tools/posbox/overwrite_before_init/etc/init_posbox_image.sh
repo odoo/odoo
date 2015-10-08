@@ -40,6 +40,9 @@ localepurge
 rm -rf /usr/share/doc || true
 rm -rf /home/pi/python_games || true
 
+# remove raspi-config notice, it's not necessary and it's not installed anyway
+rm -f /etc/profile.d/raspi-config.sh || true
+
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
 # this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspbian
