@@ -72,7 +72,7 @@ class AccountConfigSettings(models.TransientModel):
     module_account_accountant = fields.Boolean(string='Full accounting features: journals, legal statements, chart of accounts, etc.',
         help="""If you do not check this box, you will be able to do invoicing & payments,
              but not accounting (Journal Items, Chart of  Accounts, ...)""")
-    module_account_reports = fields.Boolean("Use dynamic reports for the accounting")
+    module_account_reports = fields.Boolean("Get dynamic accounting reports")
     group_multi_currency = fields.Boolean(string='Allow multi currencies',
         implied_group='base.group_multi_currency',
         help="Allows you multi currency environment")
@@ -116,10 +116,10 @@ class AccountConfigSettings(models.TransientModel):
         help='If you check this box, you will be able to register your payment using SEPA.\n'
             '-This installs the module account_sepa.')
 
-    module_account_plaid = fields.Boolean(string="Import from Plaid.com",
+    module_account_plaid = fields.Boolean(string="Plaid Connector",
                                           help='Get your bank statements from you bank and import them through plaid.com.\n'
                                           '-that installs the module account_plaid.')
-    module_account_yodlee = fields.Boolean("Import from Yodlee.com",
+    module_account_yodlee = fields.Boolean("Bank Interface - Sync our bank feeds automatically",
         help='Get your bank statements from you bank and import them through yodlee.com.\n'
                                           '-that installs the module account_yodlee.')
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files",

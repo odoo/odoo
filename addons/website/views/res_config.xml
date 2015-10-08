@@ -83,12 +83,12 @@
                                 </div>
                             </div>
                         </group>
-                        <group string="Menu">
+                        <group string="Menu" groups="base.group_no_one">
                             <button type="action"
                                 name="%(website.action_website_menu)d"
                                 string="Configure website menus" class="oe_link"/>
                         </group>
-                        <group string="Advanced">
+                        <group string="Advanced" name="advanced">
                             <label for="id" string="Extra Features"/>
                             <div>
                                 <div>
@@ -100,7 +100,7 @@
                                     <label for="module_website_version"/>
                                 </div>
                             </div>
-                            <label for="id" string="Advanced options"/>
+                            <label for="id" string="Speed"/>
                             <div>
                                 <div>
                                     <field name="compress_html"/>
@@ -109,9 +109,12 @@
                                 <div>
                                     <field name="cdn_activated"/>
                                     <label for="cdn_activated"/>
+                                </div><div>
+                                    <label for="cdn_url"/>
+                                    <field name="cdn_url" attrs="{'invisible': [('cdn_activated', '=', False)] }"/>
+                                    <label for="cdn_filters"/>
+                                    <field name="cdn_filters" attrs="{'invisible': [('cdn_activated', '=', False)] }"/>
                                 </div>
-                                <field name="cdn_url" attrs="{'invisible': [('cdn_activated', '=', False)] }"/>
-                                <field name="cdn_filters" attrs="{'invisible': [('cdn_activated', '=', False)] }"/>
                             </div>
 
                         </group>

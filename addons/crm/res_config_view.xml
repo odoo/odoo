@@ -22,15 +22,15 @@
                                 <field name="alias_domain"  class="oe_inline" readonly="1"/>
                             </div>
                             <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
-                                <p>
-                                    <button type="action"
-                                        name="base_setup.action_general_configuration"
-                                        string="Setup your domain alias" class="oe_link"/>
-                                </p>
+                                <button type="action"
+                                    name="base_setup.action_general_configuration"
+                                    string="Setup your domain alias" class="oe_link"/>
                             </div>
                         </div>
                         <field name="group_use_lead" widget="radio"/>
                         <field name="module_crm_voip" widget="upgrade_boolean"/>
+                    </group>
+                    <group string="Odoo Sign" name="config_sign">
                         <field name="module_website_sign" widget="upgrade_boolean"/>
                     </group>
                 </div>

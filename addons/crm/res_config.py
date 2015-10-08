@@ -22,7 +22,7 @@ class crm_configuration(osv.TransientModel):
             implied_group='crm.group_use_lead'),
         'module_crm_voip': fields.boolean("VoIP integration",
             help="Integration with Asterisk"),
-        'module_website_sign': fields.boolean("Online document signature"),
+        'module_website_sign': fields.boolean("Odoo Sign"),
     }
 
     _defaults = {

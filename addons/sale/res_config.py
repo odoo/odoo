@@ -68,9 +68,9 @@ class sale_configuration(osv.TransientModel):
             (0, "Allow to edit sales order from the 'Sales Order' menu (not from the Quotation menu)"),
             (1, "Never allow to modify a confirmed sale order")
             ], "Sale Order Modification"),
-        'module_sale_contract': fields.boolean("Enable subscriptions and recurring revenue management"),
+        'module_sale_contract': fields.boolean("Manage subscriptions and recurring invoicing"),
         'module_website_sale_digital': fields.boolean("Sell digital products - provide downloadable content on your customer portal"),
-        'module_website_portal': fields.boolean("Enable customer portal"),
+        'module_website_portal': fields.boolean("Enable customer portal to track orders, delivery and invoices"),
     }
 
     _defaults = {

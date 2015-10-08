@@ -25,12 +25,17 @@
                         <field name="module_product_expiry" widget="radio" attrs="{'invisible': [('group_stock_production_lot','=', 0)]}"/>
                         <field name="group_stock_tracking_lot" widget="radio"/>
                         <field name="group_stock_tracking_owner" widget="radio"/>
-                        <label for="id" string="Extra features"/>
+                        <label for="id" string="Barcode Interface"/>
                         <div>
                             <div>
                                 <field name="module_stock_barcode" widget="upgrade_boolean"/>
                                 <label for="module_stock_barcode"/>
                             </div>
+                        </div>
+                    </group>
+                    <group string="Shipping Connectors" name="shipping">
+                        <label for="id" string="Carriers"/>
+                        <div>
                             <div>
                                 <field name="module_delivery_dhl" widget="upgrade_boolean"/>
                                 <label for="module_delivery_dhl"/>
