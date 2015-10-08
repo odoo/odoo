@@ -4003,10 +4003,8 @@ class stock_location_path(osv.osv):
 # -------------------------
 # Packaging related stuff
 # -------------------------
-
-from openerp.report import report_sxw
-
-class stock_package(osv.osv):
+from openerp import fields, models, api
+class StockPackage(models.Model):
     """
     These are the packages, containing quants and/or other packages
     """
@@ -4017,16 +4015,18 @@ class stock_package(osv.osv):
     _parent_order = 'name'
     _order = 'parent_left'
 
-    def name_get(self, cr, uid, ids, context=None):
-        res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)
+    @api.multi
+    def name_get(self):
+        res = self._complete_name('complete_name', None)
         return res.items()
 
-    def _complete_name(self, cr, uid, ids, name, args, context=None):
+    @api.multi
+    def _complete_name(self, name, args):
         """ Forms complete name of location from parent location to child location.
         @return: Dictionary of values
         """
         res = {}
-        for m in self.browse(cr, uid, ids, context=context):
+        for m in self:
             res[m.id] = m.name
             parent = m.parent_id
             while parent:
@@ -4034,146 +4034,135 @@ class stock_package(osv.osv):
                 parent = parent.parent_id
         return res
 
-    def _get_packages(self, cr, uid, ids, context=None):
+    @api.multi
+    @api.depends('location_id', 'company_id', 'owner_id')
+    def _get_packages(self):
         """Returns packages from quants for store"""
         res = set()
-        for quant in self.browse(cr, uid, ids, context=context):
+        for quant in self:
             pack = quant.package_id
             while pack:
                 res.add(pack.id)
                 pack = pack.parent_id
         return list(res)
 
-    def _get_package_info(self, cr, uid, ids, name, args, context=None):
-        quant_obj = self.pool.get("stock.quant")
-        default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        res = dict((res_id, {'location_id': False, 'company_id': default_company_id, 'owner_id': False}) for res_id in ids)
-        for pack in self.browse(cr, uid, ids, context=context):
-            quants = quant_obj.search(cr, uid, [('package_id', 'child_of', pack.id)], context=context)
+    @api.multi
+    def _get_package_info(self):
+        quant_obj = self.env["stock.quant"]
+        default_company_id = self.env.user.company_id.id
+        res = dict((res_id, {'location_id': False, 'company_id': default_company_id, 'owner_id': False}) for res_id in self.ids)
+        for pack in self:
+            quants = quant_obj.search([('package_id', 'child_of', pack.id)], limit=1)
             if quants:
-                quant = quant_obj.browse(cr, uid, quants[0], context=context)
-                res[pack.id]['location_id'] = quant.location_id.id
-                res[pack.id]['owner_id'] = quant.owner_id.id
-                res[pack.id]['company_id'] = quant.company_id.id
+                pack.location_id = quants.location_id.id
+                pack.owner_id = quants.owner_id.id
+                pack.company_id = quants.company_id.id
             else:
-                res[pack.id]['location_id'] = False
-                res[pack.id]['owner_id'] = False
-                res[pack.id]['company_id'] = False
+                pack.location_id = False
+                pack.owner_id = False
+                pack.company_id = False
         return res
 
-    def _get_packages_to_relocate(self, cr, uid, ids, context=None):
+    @api.multi
+    @api.depends('quant_ids', 'children_ids', 'parent_id')
+    def _get_packages_to_relocate(self):
         res = set()
-        for pack in self.browse(cr, uid, ids, context=context):
+        for pack in self:
             res.add(pack.id)
             if pack.parent_id:
                 res.add(pack.parent_id.id)
         return list(res)
 
-    _columns = {
-        'name': fields.char('Package Reference', select=True, copy=False),
-        'complete_name': fields.function(_complete_name, type='char', string="Package Name",),
-        'parent_left': fields.integer('Left Parent', select=1),
-        'parent_right': fields.integer('Right Parent', select=1),
-        'packaging_id': fields.many2one('product.packaging', 'Packaging', help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense.", select=True),
-        'location_id': fields.function(_get_package_info, type='many2one', relation='stock.location', string='Location', multi="package",
-                                    store={
-                                       'stock.quant': (_get_packages, ['location_id'], 10),
-                                       'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
-                                    }, readonly=True, select=True),
-        'quant_ids': fields.one2many('stock.quant', 'package_id', 'Bulk Content', readonly=True),
-        'parent_id': fields.many2one('stock.quant.package', 'Parent Package', help="The package containing this item", ondelete='restrict', readonly=True),
-        'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Contained Packages', readonly=True),
-        'company_id': fields.function(_get_package_info, type="many2one", relation='res.company', string='Company', multi="package", 
-                                    store={
-                                       'stock.quant': (_get_packages, ['company_id'], 10),
-                                       'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
-                                    }, readonly=True, select=True),
-        'owner_id': fields.function(_get_package_info, type='many2one', relation='res.partner', string='Owner', multi="package",
-                                store={
-                                       'stock.quant': (_get_packages, ['owner_id'], 10),
-                                       'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
-                                    }, readonly=True, select=True),
-    }
-    _defaults = {
-        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').next_by_code(cr, uid, 'stock.quant.package') or _('Unknown Pack')
-    }
+    name = fields.Char('Package Reference', select=True, copy=False, default=lambda self: self.env['ir.sequence'].next_by_code('stock.quant.package') or _('Unknown Pack'))
+    complete_name = fields.Char(compute="_complete_name", type='char', string="Package Name")
+    parent_left = fields.Integer('Left Parent', select=1)
+    parent_right = fields.Integer('Right Parent', select=1)
+    packaging_id = fields.Many2one('product.packaging', 'Packaging', help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense.", select=True)
+    location_id = fields.Many2one(compute="_get_package_info", relation='stock.location', string='Location', multi="package", readonly=True, select=True)
+    quant_ids = fields.One2many('stock.quant', 'package_id', 'Bulk Content', readonly=True)
+    parent_id = fields.Many2one('stock.quant.package', 'Parent Package', help="The package containing this item", ondelete='restrict', readonly=True)
+    children_ids = fields.One2many('stock.quant.package', 'parent_id', 'Contained Packages', readonly=True)
+    company_id = fields.Many2one(compute="_get_package_info", type="many2one", relation='res.company', string='Company', multi="package", readonly=True, select=True)
+    owner_id = fields.Many2one(compute="_get_package_info", type='many2one', relation='res.partner', string='Owner', multi="package", readonly=True, select=True)
 
-    def _check_location_constraint(self, cr, uid, packs, context=None):
+    @api.model
+    def _check_location_constraint(self, packs):
         '''checks that all quants in a package are stored in the same location. This function cannot be used
            as a constraint because it needs to be checked on pack operations (they may not call write on the
            package)
         '''
-        quant_obj = self.pool.get('stock.quant')
         for pack in packs:
             parent = pack
             while parent.parent_id:
                 parent = parent.parent_id
-            quant_ids = self.get_content(cr, uid, [parent.id], context=context)
-            quants = [x for x in quant_obj.browse(cr, uid, quant_ids, context=context) if x.qty > 0]
+            quant_ids = parent.get_content()
+            quants = [x for x in self.env['stock.quant'].browse(quant_ids) if x.qty > 0]
             location_id = quants and quants[0].location_id.id or False
             if not [quant.location_id.id == location_id for quant in quants]:
                 raise UserError(_('Everything inside a package should be in the same location'))
         return True
 
-    def action_print(self, cr, uid, ids, context=None):
-        context = dict(context or {}, active_ids=ids)
-        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_package_barcode_small', context=context)
-    
-    
-    def unpack(self, cr, uid, ids, context=None):
-        quant_obj = self.pool.get('stock.quant')
-        for package in self.browse(cr, uid, ids, context=context):
-            quant_ids = [quant.id for quant in package.quant_ids]
-            quant_obj.write(cr, uid, quant_ids, {'package_id': package.parent_id.id or False}, context=context)
-            children_package_ids = [child_package.id for child_package in package.children_ids]
-            self.write(cr, uid, children_package_ids, {'parent_id': package.parent_id.id or False}, context=context)
+    @api.multi
+    def action_print(self):
+        self.with_context(active_ids=self.ids)
+        return self.env["report"].get_action(self.ids, 'stock.report_package_barcode_small')
+
+    @api.multi
+    def unpack(self):
+        for package in self:
+            package.quant_ids.write({'package_id': package.parent_id.id or False})
+            package.children_ids.write({'parent_id': package.parent_id.id or False})
         #delete current package since it contains nothing anymore
-        self.unlink(cr, uid, ids, context=context)
-        return self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'stock', 'action_package_view', context=context)
+        self.unlink()
+        return self.env['ir.actions.act_window'].for_xml_id('stock', 'action_package_view')
 
-    def get_content(self, cr, uid, ids, context=None):
-        child_package_ids = self.search(cr, uid, [('id', 'child_of', ids)], context=context)
-        return self.pool.get('stock.quant').search(cr, uid, [('package_id', 'in', child_package_ids)], context=context)
+    @api.multi
+    def get_content(self):
+        child_package_ids = self.search([('id', 'child_of', self.ids)])
+        return self.env['stock.quant'].search([('package_id', 'in', child_package_ids.ids)]).ids
 
-    def get_content_package(self, cr, uid, ids, context=None):
-        quants_ids = self.get_content(cr, uid, ids, context=context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'stock', 'quantsact', context=context)
+    @api.multi
+    def get_content_package(self):
+        quants_ids = self.get_content()
+        res = self.env['ir.actions.act_window'].for_xml_id('stock', 'quantsact')
         res['domain'] = [('id', 'in', quants_ids)]
         return res
 
-    def _get_product_total_qty(self, cr, uid, package_record, product_id, context=None):
+    @api.model
+    def _get_product_total_qty(self, package_record, product_id):
         ''' find the total of given product 'product_id' inside the given package 'package_id'''
-        quant_obj = self.pool.get('stock.quant')
-        all_quant_ids = self.get_content(cr, uid, [package_record.id], context=context)
+        quant_obj = self.env['stock.quant']
+        all_quant_ids = package_record.get_content()
         total = 0
-        for quant in quant_obj.browse(cr, uid, all_quant_ids, context=context):
+        for quant in quant_obj.browse(all_quant_ids):
             if quant.product_id.id == product_id:
                 total += quant.qty
         return total
 
+    @api.multi
     def _get_all_products_quantities(self, cr, uid, package_id, context=None):
         '''This function computes the different product quantities for the given package
         '''
-        quant_obj = self.pool.get('stock.quant')
         res = {}
-        for quant in quant_obj.browse(cr, uid, self.get_content(cr, uid, package_id, context=context)):
+        for quant in self.get_content():
             if quant.product_id.id not in res:
                 res[quant.product_id.id] = 0
             res[quant.product_id.id] += quant.qty
         return res
 
     #Remove me?
-    def copy_pack(self, cr, uid, id, default_pack_values=None, default=None, context=None):
-        stock_pack_operation_obj = self.pool.get('stock.pack.operation')
+    @api.multi
+    def copy_pack(self, default_pack_values=None, default=None):
+        stock_pack_operation_obj = self.env['stock.pack.operation']
         if default is None:
             default = {}
-        new_package_id = self.copy(cr, uid, id, default_pack_values, context=context)
+        new_package_id = self.copy(default_pack_values)
         default['result_package_id'] = new_package_id
-        op_ids = stock_pack_operation_obj.search(cr, uid, [('result_package_id', '=', id)], context=context)
+        op_ids = stock_pack_operation_obj.search([('result_package_id', '=', self.ids)])
         for op_id in op_ids:
-            stock_pack_operation_obj.copy(cr, uid, op_id, default, context=context)
+            op_id.copy(default)
 
-from openerp import fields, models, api
+
 class StockPackOperation(models.Model):
     _name = "stock.pack.operation"
     _description = "Packing Operation"
