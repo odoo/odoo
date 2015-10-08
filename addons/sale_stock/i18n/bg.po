@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-30 09:28+0000\n"
+"POT-Creation-Date: 2015-10-01 06:27+0000\n"
+"PO-Revision-Date: 2015-10-01 09:22+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr ""
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
-msgid "Allow setting manufacturing order properties per order line (avanced)"
+msgid "Allow setting manufacturing order properties per order line (advanced)"
 msgstr ""
 
 #. module: sale_stock
@@ -115,6 +115,11 @@ msgid "Invoice"
 msgstr "Фактура"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
@@ -133,7 +138,7 @@ msgid "No shipping costs on sales orders"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:142
+#: code:addons/sale_stock/sale_stock.py:141
 #, python-format
 msgid "Not enough inventory!"
 msgstr ""
@@ -150,7 +155,7 @@ msgid "Order Routing"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:153
+#: code:addons/sale_stock/sale_stock.py:152
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr ""
@@ -189,11 +194,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sale Order"
 msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_procurement_order_so_line_id
-msgid "Sale Order Line"
-msgstr "Ред от поръчка за продажба"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
@@ -257,7 +257,7 @@ msgid "Stock Move"
 msgstr "Движение на наличности"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:195
+#: code:addons/sale_stock/sale_stock.py:194
 #, python-format
 msgid "This product is packaged by %d . You should sell %d ."
 msgstr ""
@@ -274,13 +274,13 @@ msgid "Warehouse"
 msgstr "Склад"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:194
+#: code:addons/sale_stock/sale_stock.py:193
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:154
+#: code:addons/sale_stock/sale_stock.py:153
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -288,7 +288,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:143
+#: code:addons/sale_stock/sale_stock.py:142
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available!\n"

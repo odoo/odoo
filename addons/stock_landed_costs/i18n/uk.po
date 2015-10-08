@@ -3,13 +3,14 @@
 # * stock_landed_costs
 # 
 # Translators:
+# Bogdan, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:26+0000\n"
-"PO-Revision-Date: 2015-09-14 10:52+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"PO-Revision-Date: 2015-10-07 11:23+0000\n"
+"Last-Translator: Bogdan\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,11 @@ msgstr "Account"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_journal_id
 msgid "Account Journal"
 msgstr "Журнал проведень"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction
+msgid "Action Needed"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
@@ -66,12 +72,12 @@ msgstr "За вагою"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "Скасувати"
 
 #. module: stock_landed_costs
 #: selection:stock.landed.cost,state:0
 msgid "Cancelled"
-msgstr "Cancelled"
+msgstr "Скасовано"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
@@ -207,13 +213,17 @@ msgstr "Групувати за"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
@@ -315,18 +325,13 @@ msgid "Name"
 msgstr "Name"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
-msgid "Need Action Counter"
+msgid "Number of Actions"
 msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: stock_landed_costs
@@ -376,7 +381,7 @@ msgstr "Шаблон продукту"
 #: model:ir.actions.act_window,name:stock_landed_costs.stock_landed_cost_type_action
 #: model:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_tree_view
 msgid "Products"
-msgstr "terp-product"
+msgstr "Продукти"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_quantity
@@ -397,7 +402,7 @@ msgstr "Стан"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Status"
-msgstr "Ствтус"
+msgstr "Статус"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
