@@ -93,6 +93,10 @@
                                 string="Configure website menus" class="oe_link"/>
                         </group>
                         <group string="Advanced" name="advanced">
+                            <label for="favicon"/>
+                            <div>
+                                <field name="favicon" widget="image" class="oe_avatar oe_left"/>
+                            </div>
                             <label for="id" string="Extra Features"/>
                             <div>
                                 <div>
@@ -154,7 +158,7 @@
         <menuitem id="menu_website_view" name="View Website" action="website.action_website" parent="website.menu_website"/>
 
         <menuitem id="menu_website_global_configuration" parent="menu_website_configuration"
-            sequence="100" name="Configuration" groups="base.group_no_one"/>
+            sequence="100" name="Configuration" groups="base.group_system"/>
         <menuitem id="menu_website_website_settings" parent="menu_website_global_configuration" name="Settings" action="action_website_configuration"/>
 
     </data>

@@ -180,7 +180,8 @@ class website(osv.osv):
         'cdn_url': fields.char('CDN Base URL'),
         'cdn_filters': fields.text('CDN Filters', help="URL matching those filters will be rewritten using the CDN Base URL"),
         'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
-        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu')
+        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu'),
+        'favicon': fields.binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website."),
     }
     _defaults = {
         'user_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
