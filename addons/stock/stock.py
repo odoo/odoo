@@ -4351,7 +4351,7 @@ class stock_picking_type(osv.osv):
             picking_ids = picking_obj.search(cr, uid, [('picking_type_id', '=', picking_type_id), ('state', '=', 'done')], order='date_done desc', limit=10, context=context)
             tristates = []
             for picking in picking_obj.browse(cr, uid, picking_ids, context=context):
-                if picking.date_done > picking.date:
+                if picking.date_done > picking.min_date:
                     tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('Late'), 'value': -1})
                 elif picking.backorder_id:
                     tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('Backorder exists'), 'value': 0})
