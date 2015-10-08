@@ -37,11 +37,11 @@ apt-get -y install ${PKGS_TO_INSTALL}
 
 apt-get clean
 localepurge
-rm -rf /usr/share/doc || true
-rm -rf /home/pi/python_games || true
+rm -rf /usr/share/doc
+rm -rf /home/pi/python_games
 
 # remove raspi-config notice, it's not necessary and it's not installed anyway
-rm -f /etc/profile.d/raspi-config.sh || true
+rm -f /etc/profile.d/raspi-config.sh
 
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
