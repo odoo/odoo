@@ -115,24 +115,6 @@ class stock_move(osv.osv):
             res[move.id] = sum([quant.qty for quant in move.reserved_quant_ids])
         return res
 
-    def _get_move(self, cr, uid, ids, context=None):
-        res = set()
-        for quant in self.browse(cr, uid, ids, context=context):
-            if quant.reservation_id:
-                res.add(quant.reservation_id.id)
-        return list(res)
-
-    def _get_move_ids(self, cr, uid, ids, context=None):
-        res = []
-        for picking in self.browse(cr, uid, ids, context=context):
-            res += [x.id for x in picking.move_lines]
-        return res
-
-    def _get_moves_from_prod(self, cr, uid, ids, context=None):
-        if ids:
-            return self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', ids)], context=context)
-        return []
-
     def _set_product_qty(self, cr, uid, id, field, value, arg, context=None):
         """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
             in the default product UoM. This code has been added to raise an error if a write is made given a value
