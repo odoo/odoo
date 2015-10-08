@@ -10,7 +10,7 @@
                 <field name="property_account_position_id" position="after">
                     <label for="vat"/>
                     <div name="vat_info" class="o_row">
-                        <field name="vat" placeholder="e.g. BE0477472701"/>
+                        <field name="vat" placeholder="e.g. BE0477472701" on_change="onchange_vat(vat, street, street2, country_id)"/>
                     </div>
                 </field>
             </field>

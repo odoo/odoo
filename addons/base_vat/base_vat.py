@@ -5,6 +5,9 @@ import logging
 import string
 import datetime
 import re
+from urllib2 import URLError
+from suds.client import Client
+
 _logger = logging.getLogger(__name__)
 
 try:
@@ -14,6 +17,7 @@ except ImportError:
                                           "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 
+from openerp.exceptions import UserError, ValidationError
 from openerp.osv import osv
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
@@ -55,11 +59,22 @@ _ref_vat = {
     'tr': 'TR1234567890 (VERGINO) veya TR12345678901 (TCKIMLIKNO)' # Levent Karakas @ Eska Yazilim A.S.
 }
 
+VIES_FAULT_CODE_MSG = {
+    'INVALID_INPUT': _("The provided CountryCode is invalid or the VAT number is empty"),
+    'SERVICE_UNAVAILABLE': _("The SOAP service is unavailable, try again later"),
+    'MS_UNAVAILABLE': _("The Member State service is unavailable, try again later or with another Member State"),
+    'TIMEOUT': _("The Member State service could not be reach in time, try again later or with another Member State"),
+    'SERVER_BUSY': _("The service can't process your request. Try again latter"),
+    'MS_MAX_CONCURRENT_REQ ': _("The service responded with the critical error. This is probably a temporary problem. Please try again later.")
+}
+
+VIES_MEMBER_STATE = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'EL', 'ES', 'FI', 'FR', 'GB', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK']
+
 class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     def _split_vat(self, vat):
-        vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
+        vat_country, vat_number = vat[:2].lower(), re.sub('[.\s]', '', vat[2:])
         return vat_country, vat_number
 
     def simple_vat_check(self, cr, uid, country_code, vat_number, context=None):
@@ -328,3 +343,30 @@ class res_partner(osv.osv):
             return int(vat[9]) == c1 and int(vat[10]) == c2
 
         return False
+
+    def get_vies_address(self, cr, uid, vat, context=None):
+        street = ''
+        country_id = False
+        user_company = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id
+        vat_country, vat_number = self._split_vat(vat)
+        pattern = re.compile(vat_country, re.IGNORECASE)
+        member_state = any(pattern.match(state) for state in VIES_MEMBER_STATE)
+        if user_company.vat_check_vies and (member_state and vat_number):
+            response = None
+            try:
+                client = Client(vatnumber.VIES_URL)
+                response = client.service.checkVat(countryCode=vat_country, vatNumber=vat_number)
+            except URLError:
+                raise UserError(_("VIES VAT validation check failed, Please check your internet connection."))
+            except Exception, e:
+                raise ValidationError(VIES_FAULT_CODE_MSG.get(e.fault.faultstring, _('Something went wrong, Please try again later.')))
+            if response and response['valid']:
+                country_id = self.pool['res.country'].search(cr, uid, [('code', '=ilike', vat_country)], limit=1, context=context)
+                street = response['address']
+                country_id = country_id[0] if country_id else False
+        return street, country_id
+
+    def onchange_vat(self, cr, uid, ids, vat, street, street2, country_id, context=None):
+        if vat and not (street or street2):
+            street, country_id = self.get_vies_address(cr, uid, vat, context=context)
+        return {'value': {'street': street, 'country_id': country_id}}

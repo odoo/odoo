@@ -8,7 +8,9 @@ class res_company_vat (osv.osv):
     _columns = {
         'vat_check_vies': fields.boolean('VIES VAT Check',
                                          help="If checked, Partners VAT numbers will be fully validated against EU's VIES service "
-                                              "rather than via a simple format validation (checksum)."),
+                                              "rather than via a simple format validation (checksum)"
+                                              "Partners address will also be filled(if not already filled)"
+                                              "with that of found by VIES service based on entered VAT number."),
     }
 
     
