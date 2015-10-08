@@ -785,6 +785,13 @@ class AccountInvoice(models.Model):
             order.message_post(body=_("Invoice %s paid") % (name))
         return res
 
+    @api.model
+    def _refund_cleanup_lines(self, lines):
+        result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
+        for index, line in enumerate(lines):
+            result[index][2]['sale_line_ids'] = [(6, 0, line.sale_line_ids.ids)]
+        return result
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
