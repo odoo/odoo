@@ -41,7 +41,7 @@ class account_invoice_line(osv.osv):
 
     def get_invoice_line_account(self, type, product, fpos, company):
         if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund'):
-            accounts = product.product_tmpl_id.get_product_accounts(fpos)
+            accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             if type == 'in_invoice':
                 return accounts['stock_input']
             return accounts['stock_ouput']
@@ -70,12 +70,12 @@ class account_invoice(osv.osv):
         company_currency = inv.company_id.currency_id.id
 
         if i_line.product_id.type in ('product', 'consu') and i_line.product_id.valuation == 'real_time':
-            accounts = i_line.product_id.product_tmpl_id.get_product_accounts()
+            fpos = i_line.invoice_id.fiscal_position_id
+            accounts = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             # debit account dacc will be the output account
             dacc = accounts['stock_output'].id
             # credit account cacc will be the expense account
-            fpos = i_line.invoice_id.fiscal_position_id
-            cacc = fpos.map_account(accounts['expense']).id
+            cacc = accounts['expense'].id
             if dacc and cacc:
                 price_unit = i_line._get_anglo_saxon_price_unit()
                 return [
