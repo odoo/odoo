@@ -20,6 +20,7 @@ import openerp.models
 from openerp import http
 from openerp.http import request
 from openerp.osv import osv, orm
+from openerp.tools import lazy_property
 
 _logger = logging.getLogger(__name__)
 
@@ -62,7 +63,7 @@ class ir_http(osv.AbstractModel):
         return {'model': ModelConverter, 'models': ModelsConverter}
 
     def _find_handler(self, return_rule=False):
-        return self.routing_map().bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
+        return self.routing_map.bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
 
     def _auth_method_user(self):
         request.uid = request.session.uid
@@ -187,16 +188,14 @@ class ir_http(osv.AbstractModel):
                 except openerp.models.MissingError:
                     return self._handle_exception(werkzeug.exceptions.NotFound())
 
+    @lazy_property
     def routing_map(self):
-        if not hasattr(self, '_routing_map'):
-            _logger.info("Generating routing map")
-            installed = request.registry._init_modules - {'web'}
-            if openerp.tools.config['test_enable']:
-                installed.add(openerp.modules.module.current_test)
-            mods = [''] + openerp.conf.server_wide_modules + sorted(installed)
-            self._routing_map = http.routing_map(mods, False, converters=self._get_converters())
-
-        return self._routing_map
+        _logger.info("Generating routing map")
+        installed = request.registry._init_modules - {'web'}
+        if openerp.tools.config['test_enable']:
+            installed.add(openerp.modules.module.current_test)
+        mods = [''] + openerp.conf.server_wide_modules + sorted(installed)
+        return http.routing_map(mods, False, converters=self._get_converters())
 
 def convert_exception_to(to_type, with_message=False):
     """ Should only be called from an exception handler. Fetches the current
