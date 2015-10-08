@@ -348,6 +348,7 @@ class YamlInterpreter(object):
             :return: dictionary mapping the field names and their values, ready to use when calling the create() function
             :rtype: dict
         """
+
         class dotdict(dict):
             """ Dictionary class that allow to access a dictionary value by using '.'. This is needed to eval correctly
                 statements like 'parent.fieldname' in context.
@@ -455,6 +456,7 @@ class YamlInterpreter(object):
 
                     if el.attrib['on_change'] in ('1', 'true'):
                         # New-style on_change
+                        self.context['yaml_onchange'] = True
                         recs = model.browse(self.cr, SUPERUSER_ID, [], self.context)
                         result = recs.onchange(record_dict, field_name, onchange_spec)
 
