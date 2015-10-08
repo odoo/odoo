@@ -649,20 +649,20 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         res = {}
-        account_id = self.product_id.property_account_income_id.id or self.product_id.categ_id.property_account_income_categ_id.id
-        if not account_id:
+        account = self.product_id.property_account_income_id or self.product_id.categ_id.property_account_income_categ_id
+        if not account:
             raise UserError(_('Please define income account for this product: "%s" (id:%d) - or for its category: "%s".') % \
                             (self.product_id.name, self.product_id.id, self.product_id.categ_id.name))
 
         fpos = self.order_id.fiscal_position_id or self.order_id.partner_id.property_account_position_id
         if fpos:
-            account_id = self.order_id.fiscal_position_id.map_account(account_id)
+            account = fpos.map_account(account)
 
         res = {
             'name': self.name,
             'sequence': self.sequence,
             'origin': self.order_id.name,
-            'account_id': account_id,
+            'account_id': account.id,
             'price_unit': self.price_unit,
             'quantity': qty,
             'discount': self.discount,
