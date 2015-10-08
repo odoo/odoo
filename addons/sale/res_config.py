@@ -99,12 +99,3 @@ class sale_configuration(osv.TransientModel):
         if sale_pricelist_setting == 'formula':
             return {'value': {'group_pricelist_item': True, 'group_sale_pricelist': True, 'group_product_pricelist': False}}
         return {'value': {'group_pricelist_item': False, 'group_sale_pricelist': False, 'group_product_pricelist': False}}
-
-
-class account_config_settings(osv.osv_memory):
-    _inherit = 'account.config.settings'
-    _columns = {
-        'group_analytic_account_for_sales': fields.boolean('Analytic accounting for sales',
-            implied_group='sale.group_analytic_accounting',
-            help="Allows you to specify an analytic account on sales orders."),
-    }
