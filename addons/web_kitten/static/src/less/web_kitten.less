@@ -1,9 +1,9 @@
 .o_kitten_mode_activated {
     background-size: cover;
     background-attachment: fixed;
-}
-.o_kitten_mode_activated > * {
-    opacity: 0.8;
+    > *:not(nav) {
+        opacity: 0.8;
+    }
 }
 
 .o-border-radius(@size) {
