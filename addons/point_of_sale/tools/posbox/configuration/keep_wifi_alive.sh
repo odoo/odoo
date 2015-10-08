@@ -8,7 +8,7 @@ while true ; do
 
 		logger -t posbox_keep_wifi_alive "Lost wifi, trying to reconnect to ${ESSID}"
 
-		sudo /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_wifi.sh "${ESSID}" "${PASSWORD}"
+		sudo /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_wifi.sh "${ESSID}" "${PASSWORD}" "" "NO_AP"
 
 		sleep 30
 	fi

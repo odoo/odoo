@@ -10,6 +10,7 @@ function connect () {
 	ESSID="${1}"
 	PASSWORD="${2}"
 	PERSIST="${3}"
+	NO_AP="${4}"
 
 	sleep 3
 
@@ -54,7 +55,7 @@ function connect () {
 	# give dhcp some time
 	timeout 30 sh -c 'until ifconfig wlan0 | grep "inet addr:" ; do sleep 0.1 ; done'
 
-	if [ $? -eq 124 ] ; then
+	if [ $? -eq 124 ] && [ -z "${NO_AP}" ] ; then
 		logger -t posbox_connect_to_wifi "Failed to connect, forcing Posbox AP"
 		sudo /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/wireless_ap.sh "force" &
 	else
@@ -66,4 +67,4 @@ function connect () {
 	fi
 }
 
-connect "${1}" "${2}" "${3}" &
+connect "${1}" "${2}" "${3}" "${4}" &
