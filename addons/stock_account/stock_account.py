@@ -44,7 +44,7 @@ class account_invoice_line(osv.osv):
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             if type == 'in_invoice':
                 return accounts['stock_input']
-            return accounts['stock_ouput']
+            return accounts['stock_output']
         return super(account_invoice_line, self).get_invoice_line_account(type, product, fpos, company)
 
 class account_invoice(osv.osv):
