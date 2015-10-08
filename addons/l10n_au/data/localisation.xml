@@ -2,12 +2,12 @@
 <openerp>
 	<data noupdate="1">
 		<record id="base.AUD" model="res.currency">
-			<field name="position">before</field>
 			<field name="active" eval="True"/>
 		</record>
 
+		<!-- Common trading partner currencies, and especially for NZ, subsidiaries and branches -->
+
 		<record id="base.NZD" model="res.currency">
-			<field name="position">before</field>
 			<field name="active" eval="True"/>
 		</record>
 
@@ -15,25 +15,12 @@
 			<field name="active" eval="True"/>
 		</record>
 
-		<record id="base.CNY" model="res.currency">
-			<field name="active" eval="True"/>
-		</record>
-
-		<record id="base.MYR" model="res.currency">
-			<field name="active" eval="True"/>
-		</record>
-
-		<record id="base.SGD" model="res.currency">
+		<record id="base.INR" model="res.currency">
 			<field name="active" eval="True"/>
 		</record>
 
 		<record id="base.GBP" model="res.currency">
 			<field name="active" eval="True"/>
-		</record>
-
-		<record id="base.lang_en" model="res.lang">
-			<field name="date_format">%d/%m/%Y</field>
-			<field name="time_format">%H:%M</field>
 		</record>
 	</data>
 </openerp>
