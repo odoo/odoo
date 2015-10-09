@@ -20,14 +20,14 @@ If you need to manage your meetings, you should install the CRM module.
     """,
     'category': 'Hidden/Dependency',
     'website': 'https://www.odoo.com/page/crm',
-    'demo': ['calendar_demo.xml'],
+    'demo': ['data/calendar_demo.xml'],
     'data': [
-        'calendar_cron.xml',
+        'data/calendar_cron.xml',
+        'data/calendar_data.xml',
         'security/ir.model.access.csv',
         'security/calendar_security.xml',
-        'calendar_view.xml',
-        'calendar_data.xml',
         'views/calendar.xml',
+        'views/calendar_view.xml'
     ],
     'qweb': ['static/src/xml/*.xml'],
     'test': [
