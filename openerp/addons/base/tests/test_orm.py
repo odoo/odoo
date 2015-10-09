@@ -166,6 +166,22 @@ class TestORM(common.TransactionCase):
                         ['date'], ['date:month', 'date:day'], lazy=False)
         self.assertEqual(len(rg), len(all_partners))
 
+    def test_m2m_store_trigger(self):
+        group_user = self.env.ref('base.group_user')
+
+        user = self.env['res.users'].create({
+            'name': 'test',
+            'login': 'test_m2m_store_trigger',
+            'groups_id': [(6, 0, [])],
+        })
+        self.assertTrue(user.share)
+
+        group_user.write({'users': [(4, user.id)]})
+        self.assertFalse(user.share)
+
+        group_user.write({'users': [(3, user.id)]})
+        self.assertTrue(user.share)
+
 
 class TestInherits(common.TransactionCase):
     """ test the behavior of the orm for models that use _inherits;

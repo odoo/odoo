@@ -162,6 +162,12 @@ class res_users(osv.osv):
             res[user.id] = not self.has_group(cr, user.id, 'base.group_user')
         return res
 
+    def _store_trigger_share_res_groups(self, cr, uid, ids, context=None):
+        group_user = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.group_user', context=context)
+        if group_user and group_user.id in ids:
+            return group_user.users.ids
+        return []
+
     def _get_users_from_group(self, cr, uid, ids, context=None):
         result = set()
         groups = self.pool['res.groups'].browse(cr, uid, ids, context=context)
@@ -197,8 +203,8 @@ class res_users(osv.osv):
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         'share': fields.function(_is_share, string='Share User', type='boolean',
              store={
-                 'res.users': (lambda self, cr, uid, ids, c={}: ids, None, 50),
-                 'res.groups': (_get_users_from_group, None, 50),
+                 'res.users': (lambda self, cr, uid, ids, c={}: ids, ['groups_id'], 50),
+                 'res.groups': (_store_trigger_share_res_groups, ['users'], 50),
              }, help="External user with limited access, created only for the purpose of sharing data."),
     }
 
