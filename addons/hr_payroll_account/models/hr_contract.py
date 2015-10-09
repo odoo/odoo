@@ -1,14 +1,12 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from odoo import fields, models
 
 
-class hr_contract(osv.osv):
+class HrContract(models.Model):
 
     _inherit = 'hr.contract'
-    _description = 'Employee Contract'
-    _columns = {
-        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
-        'journal_id': fields.many2one('account.journal', 'Salary Journal'),
-    }
+
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    journal_id = fields.Many2one('account.journal', string='Salary Journal')

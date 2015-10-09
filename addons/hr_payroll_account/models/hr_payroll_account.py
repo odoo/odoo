@@ -1,112 +1,79 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import time
 
-from openerp import api
-from openerp.osv import fields, osv
-from openerp.tools import float_compare, float_is_zero
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools import float_compare, float_is_zero
 
-class hr_payslip_line(osv.osv):
-    '''
-    Payslip Line
-    '''
+
+class HrPayslipLine(models.Model):
     _inherit = 'hr.payslip.line'
 
+    @api.v7
     def _get_partner_id(self, cr, uid, payslip_line, credit_account, context=None):
         """
         Get partner_id of slip line to use in account_move_line
         """
+        return HrPayslipLine._get_partner_id(payslip_line, credit_account)
+
+    @api.v8
+    def _get_partner_id(self, credit_account):
         # use partner of salary rule or fallback on employee's address
-        partner_id = payslip_line.salary_rule_id.register_id.partner_id.id or \
-            payslip_line.slip_id.employee_id.address_home_id.id
+        registered_partner = self.salary_rule_id.register_id.partner_id
+        partner_id = registered_partner.id or self.slip_id.employee_id.address_home_id.id
         if credit_account:
-            if payslip_line.salary_rule_id.register_id.partner_id or \
-                    payslip_line.salary_rule_id.account_credit.internal_type in ('receivable', 'payable'):
+            if registered_partner or self.salary_rule_id.account_credit.internal_type in ('receivable', 'payable'):
                 return partner_id
         else:
-            if payslip_line.salary_rule_id.register_id.partner_id or \
-                    payslip_line.salary_rule_id.account_debit.internal_type in ('receivable', 'payable'):
+            if registered_partner or self.salary_rule_id.account_debit.internal_type in ('receivable', 'payable'):
                 return partner_id
         return False
 
 
-class hr_payslip(osv.osv):
-    '''
-    Pay Slip
-    '''
+class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
     _description = 'Pay Slip'
 
-    _columns = {
-        'date': fields.date('Date Account', states={'draft': [('readonly', False)]}, readonly=True, help="Keep empty to use the period of the validation(Payslip) date."),
-        'journal_id': fields.many2one('account.journal', 'Salary Journal',states={'draft': [('readonly', False)]}, readonly=True, required=True),
-        'move_id': fields.many2one('account.move', 'Accounting Entry', readonly=True, copy=False),
-    }
+    date = fields.Date(string='Date Account', states={'draft': [('readonly', False)]}, readonly=True,
+         help="Keep empty to use the period of the validation(Payslip) date.")
+    journal_id = fields.Many2one('account.journal', string='Salary Journal',states={'draft': [('readonly', False)]},
+         readonly=True, required=True, default=lambda self: self.env['account.journal'].search([('type', '=', 'general')], limit=1))
+    move_id = fields.Many2one('account.move', string='Accounting Entry', readonly=True, copy=False)
 
-    def _get_default_journal(self, cr, uid, context=None):
-        journal_obj = self.pool.get('account.journal')
-        res = journal_obj.search(cr, uid, [('type', '=', 'general')])
-        if res:
-            return res[0]
-        return False
-
-    _defaults = {
-        'journal_id': _get_default_journal,
-    }
-
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        if 'journal_id' in context:
-            vals.update({'journal_id': context.get('journal_id')})
-        return super(hr_payslip, self).create(cr, uid, vals, context=context)
-
-    def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
-        contract_obj = self.pool.get('hr.contract')
-        res = super(hr_payslip, self).onchange_contract_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
-        journal_id = contract_id and contract_obj.browse(cr, uid, contract_id, context=context).journal_id.id or (not contract_id and self._get_default_journal(cr, uid, context=None))
-        res['value'].update({'journal_id': journal_id})
-        return res
+    @api.model
+    def create(self, vals):
+        if 'journal_id' in self.env.context:
+            vals['journal_id'] = self.env.context['journal_id']
+        return super(HrPayslip, self).create(vals)
 
     @api.onchange('contract_id')
     def onchange_contract(self):
-        super(hr_payslip, self).onchange_contract()
-        self.journal_id = self.contract_id and self.contract_id.journal_id.id or (not self.contract_id and self._get_default_journal())
+        super(HrPayslip, self).onchange_contract()
+        self.journal_id = self.contract_id.journal_id.id or (not self.contract_id and self.default_get(['journal_id'])['journal_id'])
         return
 
-    def cancel_sheet(self, cr, uid, ids, context=None):
-        move_pool = self.pool.get('account.move')
-        move_ids = []
-        move_to_cancel = []
-        for slip in self.browse(cr, uid, ids, context=context):
-            if slip.move_id:
-                move_ids.append(slip.move_id.id)
-                if slip.move_id.state == 'posted':
-                    move_to_cancel.append(slip.move_id.id)
-        move_pool.button_cancel(cr, uid, move_to_cancel, context=context)
-        move_pool.unlink(cr, uid, move_ids, context=context)
-        return super(hr_payslip, self).cancel_sheet(cr, uid, ids, context=context)
+    @api.multi
+    def cancel_sheet(self):
+        moves = self.mapped('move_id')
+        moves.filtered(lambda x: x.state == 'posted').button_cancel()
+        moves.unlink()
+        return super(HrPayslip, self).cancel_sheet()
 
-    def process_sheet(self, cr, uid, ids, context=None):
-        move_pool = self.pool.get('account.move')
-        hr_payslip_line_pool = self.pool['hr.payslip.line']
-        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Payroll')
-        timenow = time.strftime('%Y-%m-%d')
+    @api.multi
+    def process_sheet(self):
+        precision = self.env['decimal.precision'].precision_get('Payroll')
+        date_today = fields.Date.today()
 
-        for slip in self.browse(cr, uid, ids, context=context):
+        for slip in self:
             line_ids = []
-            debit_sum = 0.0
-            credit_sum = 0.0
-            date = timenow
+            credit_sum = debit_sum = 0.0
 
             name = _('Payslip of %s') % (slip.employee_id.name)
-            move = {
+            move_dict = {
                 'narration': name,
                 'ref': slip.number,
                 'journal_id': slip.journal_id.id,
-                'date': date,
+                'date': date_today,
             }
             for line in slip.details_by_salary_rule_category:
                 amt = slip.credit_note and -line.total or line.total
@@ -118,14 +85,14 @@ class hr_payslip(osv.osv):
                 if debit_account_id:
                     debit_line = (0, 0, {
                         'name': line.name,
-                    'partner_id': hr_payslip_line_pool._get_partner_id(cr, uid, line, credit_account=False, context=context),
+                        'partner_id': line._get_partner_id(credit_account=False),
                         'account_id': debit_account_id,
                         'journal_id': slip.journal_id.id,
-                        'date': date,
+                        'date': date_today,
                         'debit': amt > 0.0 and amt or 0.0,
                         'credit': amt < 0.0 and -amt or 0.0,
-                        'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
-                        'tax_line_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
+                        'analytic_account_id': line.salary_rule_id.analytic_account_id.id,
+                        'tax_line_id': line.salary_rule_id.account_tax_id.id,
                     })
                     line_ids.append(debit_line)
                     debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
@@ -133,14 +100,14 @@ class hr_payslip(osv.osv):
                 if credit_account_id:
                     credit_line = (0, 0, {
                         'name': line.name,
-                        'partner_id': hr_payslip_line_pool._get_partner_id(cr, uid, line, credit_account=True, context=context),
+                        'partner_id': line._get_partner_id(credit_account=True),
                         'account_id': credit_account_id,
                         'journal_id': slip.journal_id.id,
-                        'date': date,
+                        'date': date_today,
                         'debit': amt < 0.0 and -amt or 0.0,
                         'credit': amt > 0.0 and amt or 0.0,
-                        'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
-                        'tax_line_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
+                        'analytic_account_id': line.salary_rule_id.analytic_account_id.id,
+                        'tax_line_id': line.salary_rule_id.account_tax_id.id,
                     })
                     line_ids.append(credit_line)
                     credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
@@ -151,11 +118,11 @@ class hr_payslip(osv.osv):
                     raise UserError(_('The Expense Journal "%s" has not properly configured the Credit Account!') % (slip.journal_id.name))
                 adjust_credit = (0, 0, {
                     'name': _('Adjustment Entry'),
-                    'date': timenow,
+                    'date': date_today,
                     'partner_id': False,
                     'account_id': acc_id,
                     'journal_id': slip.journal_id.id,
-                    'date': date,
+                    'date': date_today,
                     'debit': 0.0,
                     'credit': debit_sum - credit_sum,
                 })
@@ -164,39 +131,29 @@ class hr_payslip(osv.osv):
             elif float_compare(debit_sum, credit_sum, precision_digits=precision) == -1:
                 acc_id = slip.journal_id.default_debit_account_id.id
                 if not acc_id:
-                    raise UserError(_('The Expense Journal "%s" has not properly configured the Debit Account!') % (slip.journal_id.name))
+                    raise UserError(_('The Expense Journal "%s" has not properly configured the Debit Account!') % (
+                        slip.journal_id.name))
                 adjust_debit = (0, 0, {
                     'name': _('Adjustment Entry'),
                     'partner_id': False,
                     'account_id': acc_id,
                     'journal_id': slip.journal_id.id,
-                    'date': date,
+                    'date': date_today,
                     'debit': credit_sum - debit_sum,
                     'credit': 0.0,
                 })
                 line_ids.append(adjust_debit)
 
-            move.update({'line_ids': line_ids})
-            move_id = move_pool.create(cr, uid, move, context=context)
-            self.write(cr, uid, [slip.id], {'move_id': move_id, 'date' : date}, context=context)
-            move_pool.post(cr, uid, [move_id], context=context)
-        return super(hr_payslip, self).process_sheet(cr, uid, [slip.id], context=context)
+            move_dict.update({'line_ids': line_ids})
+            move = self.env['account.move'].create(move_dict)
+            slip.write({'move_id': move.id, 'date': date_today})
+            move.post()
+        return super(HrPayslip, self).process_sheet()
 
-class hr_payslip_run(osv.osv):
 
+class HrPayslipRun(models.Model):
     _inherit = 'hr.payslip.run'
     _description = 'Payslip Run'
-    _columns = {
-        'journal_id': fields.many2one('account.journal', 'Salary Journal', states={'draft': [('readonly', False)]}, readonly=True, required=True),
-    }
 
-    def _get_default_journal(self, cr, uid, context=None):
-        journal_obj = self.pool.get('account.journal')
-        res = journal_obj.search(cr, uid, [('type', '=', 'general')])
-        if res:
-            return res[0]
-        return False
-
-    _defaults = {
-        'journal_id': _get_default_journal,
-    }
+    journal_id = fields.Many2one('account.journal', string='Salary Journal', states={'draft': [('readonly', False)]}, readonly=True,
+         required=True, default=lambda self: self.env['account.journal'].search([('type', '=', 'general')], limit=1))
