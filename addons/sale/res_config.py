@@ -104,7 +104,6 @@ class sale_configuration(osv.TransientModel):
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
     _columns = {
-        # TODO: remove in v10
         'group_analytic_account_for_sales': fields.boolean('Analytic accounting for sales',
             implied_group='sale.group_analytic_accounting',
             help="Allows you to specify an analytic account on sales orders."),
