@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <menuitem groups="account.group_account_user"
+        id="account_reports_ua_ias_statements_menu"
+        name="Звіти для України"
+        parent="account.menu_finance_reports"
+        sequence="3"/>
+
+    <data noupdate="1">
+        <record id="action_client_l10n_ua_ias_menu" model="ir.actions.client">
+            <field name="name">Відкрити меню бухобліку на приборній панелі</field>
+            <field name="tag">reload</field>
+            <field eval="{'menu_id': ref('account.menu_board_journal_1')}"
+                name="params"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_l10n_ua_ias_menu"/>
+            <field name="state">open</field>
+        </record>
+    </data>
+    <data noupdate="0">
+
+        <record id="ua_ias_transfer_account" model="account.account.template">
+            <field name="name">Транзитний рахунок</field>
+            <field name="code">1119</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id"
+                ref="account.data_account_type_current_assets"/>
+        </record>
+
+        <!-- Chart template -->
+        <record id="l10n_ua_ias_chart_template" model="account.chart.template">
+            <field name="name">Шаблон плану рахунків для України</field>
+            <field name="bank_account_code_prefix">1112</field>
+            <field name="cash_account_code_prefix">1111</field>
+            <field name="code_digits">6</field>
+            <field name="currency_id" ref="base.UAH"/>
+            <field name="transfer_account_id" ref="ua_ias_transfer_account"/>
+        </record>
+
+        <record id="ua_ias_transfer_account" model="account.account.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+        </record>
+
+    </data>
+</openerp>
