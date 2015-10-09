@@ -8,7 +8,7 @@
     'version': '1.1',
     'category': 'Localization/Account Charts',
     'description': """
-This is the module to manage the accounting chart for France in OpenERP.
+This is the module to manage the accounting chart for France in Odoo.
 ========================================================================
 
 This module applies to companies based in France mainland. It doesn't apply to

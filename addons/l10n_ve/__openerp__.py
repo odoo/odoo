@@ -17,16 +17,16 @@ Chart of Account for Venezuela.
 ===============================
 
 Venezuela doesn't have any chart of account by law, but the default
-proposed in OpenERP should comply with some Accepted best practices in Venezuela, 
+proposed in Odoo should comply with some Accepted best practices in Venezuela, 
 this plan comply with this practices.
 
 This module has been tested as base for more of 1000 companies, because 
 it is based in a mixtures of most common software in the Venezuelan 
 market what will allow for sure to accountants feel them first steps with 
-OpenERP more confortable.
+Odoo more confortable.
 
 This module doesn't pretend be the total localization for Venezuela, 
-but it will help you to start really quickly with OpenERP in this country.
+but it will help you to start really quickly with Odoo in this country.
 
 This module give you.
 ---------------------

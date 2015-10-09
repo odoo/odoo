@@ -2,7 +2,7 @@
     'name': 'View Editor',
     'category': 'Hidden',
     'description': """
-OpenERP Web to edit views.
+Odoo Web to edit views.
 ==========================
 
         """,
