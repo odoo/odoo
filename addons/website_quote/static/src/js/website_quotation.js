@@ -63,8 +63,9 @@ website.if_dom_contains('div.o_website_quote', function () {
             'signer': signer_name,
             'sign': sign?JSON.stringify(sign[1]):false,
         }).then(function (data) {
+            var message_id = (data) ? 3 : 4;
             $('#modelaccept').modal('hide');
-            window.location.href = '/quote/'+order_id[1]+'/'+token+'?message=3';
+            window.location.href = '/quote/'+order_id[1]+'/'+token+'?message='+message_id;
         });
         return false;
     });
