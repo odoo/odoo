@@ -94,6 +94,5 @@ class crm_opportunity_report(osv.Model):
                     (activity.res_id = c.id)
                 LEFT JOIN "crm_stage" stage
                 ON stage.id = c.stage_id
-                WHERE c.active = 'true'
                 GROUP BY c.id, activity.nbr_activities, stage.name
             )""")
