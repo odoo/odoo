@@ -452,7 +452,6 @@ class AccountChartTemplate(models.Model):
                     'company_id': company.id,
                     'fields_id': field.id,
                     'value': value,
-                    'res_id': 'product.category,' + str(self.env['ir.model.data'].xmlid_to_res_id('product.product_category_all')),
                 }
                 properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id)])
                 if properties:
