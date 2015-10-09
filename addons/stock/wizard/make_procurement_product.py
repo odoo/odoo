@@ -8,11 +8,15 @@ class MakeProcurement(models.TransientModel):
     _name = 'make.procurement'
     _description = 'Make Procurements'
 
+    @api.multi
     @api.onchange('product_id')
-    def onchange_product_id(self):
-        self.uom_id = self.product_id.uom_id.id
-        self.product_tmpl_id = self.product_id.product_tmpl_id.id,
-        self.product_variant_count = self.product_id.product_tmpl_id.product_variant_count
+    def onchange_product_id(self, product_id):
+        product = self.env['product.product'].browse(product_id)
+        return {'value': {
+            'uom_id': product.uom_id.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_variant_count': product.product_tmpl_id.product_variant_count
+        }}
 
     qty = fields.Float(string='Quantity', digits=(16, 2), required=True, default=1.0)
     res_model = fields.Char()
@@ -84,5 +88,5 @@ class MakeProcurement(models.TransientModel):
     @api.model
     def create(self, values):
         if values.get('product_id'):
-            values.update(self.onchange_product_id())
+            values.update(self.onchange_product_id(values['product_id'])['value'])
         return super(MakeProcurement, self).create(values)
