@@ -1,10 +1,10 @@
 #-*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from odoo import fields, models
 
 
-class hr_contribution_register(osv.osv):
+class HrContribRegister(models.Model):
     '''
     Contribution Register
     '''
@@ -12,15 +12,8 @@ class hr_contribution_register(osv.osv):
     _name = 'hr.contribution.register'
     _description = 'Contribution Register'
 
-    _columns = {
-        'company_id':fields.many2one('res.company', 'Company'),
-        'partner_id':fields.many2one('res.partner', 'Partner'),
-        'name':fields.char('Name', required=True, readonly=False),
-        'register_line_ids':fields.one2many('hr.payslip.line', 'register_id', 'Register Line', readonly=True),
-        'note': fields.text('Description'),
-    }
-    _defaults = {
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
-    }
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id)
+    partner_id = fields.Many2one('res.partner', 'Partner')
+    name = fields.Char(required=True)
+    register_line_ids = fields.One2many('hr.payslip.line', 'register_id', 'Register Line', readonly=True)
+    note = fields.Text('Description')

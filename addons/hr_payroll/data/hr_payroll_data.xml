@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <record id="contrib_register_employees" model="hr.contribution.register">
             <field name="name">Employees</field>
@@ -70,7 +70,7 @@
 
         <!-- Salary Structure -->
 
-         <record id="structure_base" model="hr.payroll.structure">
+        <record id="structure_base" model="hr.payroll.structure">
             <field name="code">BASE</field>
             <field name="name">Base for new structures</field>
             <field eval="[(6, 0, [ref('hr_rule_basic'), ref('hr_rule_taxable'),ref('hr_rule_net')])]" name="rule_ids"/>
@@ -91,4 +91,4 @@
 
 
     </data>
-</openerp>
+</odoo>

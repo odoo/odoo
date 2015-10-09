@@ -1,22 +1,15 @@
 #-*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
-from openerp.report import report_sxw
+from odoo import api, models
 
 
-class payslip_details_report(report_sxw.rml_parse):
+class PayslipDetailsReport(models.AbstractModel):
+    _name = 'report.hr_payroll.report_payslipdetails'
 
-    def __init__(self, cr, uid, name, context):
-        super(payslip_details_report, self).__init__(cr, uid, name, context)
-        self.localcontext.update({
-            'get_details_by_rule_category': self.get_details_by_rule_category,
-            'get_lines_by_contribution_register': self.get_lines_by_contribution_register,
-        })
-
-    def get_details_by_rule_category(self, obj):
-        payslip_line = self.pool.get('hr.payslip.line')
-        rule_cate_obj = self.pool.get('hr.salary.rule.category')
+    def get_details_by_rule_category(self, payslip_lines):
+        PayslipLine = self.env['hr.payslip.line']
+        SalaryRuleCategory = self.env['hr.salary.rule.category']
 
         def get_recursive_parent(rule_categories):
             if not rule_categories:
@@ -28,24 +21,21 @@ class payslip_details_report(report_sxw.rml_parse):
 
         res = []
         result = {}
-        ids = []
 
-        for id in range(len(obj)):
-            ids.append(obj[id].id)
-        if ids:
-            self.cr.execute('''SELECT pl.id, pl.category_id FROM hr_payslip_line as pl \
+        if payslip_lines.ids:
+            self.env.cr.execute('''SELECT pl.id, pl.category_id FROM hr_payslip_line as pl \
                 LEFT JOIN hr_salary_rule_category AS rc on (pl.category_id = rc.id) \
                 WHERE pl.id in %s \
                 GROUP BY rc.parent_id, pl.sequence, pl.id, pl.category_id \
-                ORDER BY pl.sequence, rc.parent_id''',(tuple(ids),))
-            for x in self.cr.fetchall():
+                ORDER BY pl.sequence, rc.parent_id''', (tuple(payslip_lines.ids),))
+            for x in self.env.cr.fetchall():
                 result.setdefault(x[1], [])
                 result[x[1]].append(x[0])
             for key, value in result.iteritems():
-                rule_categories = rule_cate_obj.browse(self.cr, self.uid, [key])
+                rule_categories = SalaryRuleCategory.browse([key])
                 parents = get_recursive_parent(rule_categories)
                 category_total = 0
-                for line in payslip_line.browse(self.cr, self.uid, value):
+                for line in PayslipLine.browse(value):
                     category_total += line.total
                 level = 0
                 for parent in parents:
@@ -57,7 +47,7 @@ class payslip_details_report(report_sxw.rml_parse):
                         'total': category_total,
                     })
                     level += 1
-                for line in payslip_line.browse(self.cr, self.uid, value):
+                for line in PayslipLine.browse(value):
                     res.append({
                         'rule_category': line.name,
                         'name': line.name,
@@ -67,24 +57,23 @@ class payslip_details_report(report_sxw.rml_parse):
                     })
         return res
 
-    def get_lines_by_contribution_register(self, obj):
-        payslip_line = self.pool.get('hr.payslip.line')
+    def get_lines_by_contribution_register(self, payslip_lines):
+        payslip_line = self.env['hr.payslip.line']
         result = {}
         res = []
 
-        for id in range(len(obj)):
-            if obj[id].register_id:
-                result.setdefault(obj[id].register_id.name, [])
-                result[obj[id].register_id.name].append(obj[id].id)
+        for line in payslip_lines.filtered(lambda x: x.register_id):
+            result.setdefault(line.register_id.name, [])
+            result[line.register_id.name].append(line.id)
         for key, value in result.iteritems():
             register_total = 0
-            for line in payslip_line.browse(self.cr, self.uid, value):
+            for line in payslip_line.browse(value):
                 register_total += line.total
             res.append({
                 'register_name': key,
                 'total': register_total,
             })
-            for line in payslip_line.browse(self.cr, self.uid, value):
+            for line in payslip_line.browse(value):
                 res.append({
                     'name': line.name,
                     'code': line.code,
@@ -94,9 +83,17 @@ class payslip_details_report(report_sxw.rml_parse):
                 })
         return res
 
-
-class wrapped_report_payslipdetails(osv.AbstractModel):
-    _name = 'report.hr_payroll.report_payslipdetails'
-    _inherit = 'report.abstract_report'
-    _template = 'hr_payroll.report_payslipdetails'
-    _wrapped_report_class = payslip_details_report
+    @api.multi
+    def render_html(self, data=None):
+        Report = self.env['report']
+        report = Report._get_report_from_name('hr_payroll.report_payslipdetails')
+        payslip = self.env['hr.payslip'].browse(self.ids)
+        docargs = {
+            'doc_ids': self.ids,
+            'doc_model': report.model,
+            'docs': payslip,
+            'data': data,
+            'get_details_by_rule_category': self.get_details_by_rule_category(payslip.line_ids),
+            'get_lines_by_contribution_register': self.get_lines_by_contribution_register(payslip.line_ids),
+        }
+        return Report.render('hr_payroll.report_payslipdetails', docargs)

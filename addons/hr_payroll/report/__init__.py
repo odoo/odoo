@@ -2,6 +2,6 @@
 
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import payslip_report
-import payslip_details_report
 import contribution_register_report
+import payslip_details_report
+import payslip_report

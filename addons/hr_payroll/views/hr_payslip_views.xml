@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!-- Payslip Line -->
         <record id="view_hr_payslip_line_tree" model="ir.ui.view">
             <field name="name">hr.payslip.line.tree</field>
@@ -83,7 +82,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <act_window name="Payslip Computation Details"
             context="{'default_slip_id': active_id,'search_default_slip_id': active_id}"
             res_model="hr.payslip.line"
@@ -343,5 +342,4 @@
             src_model="hr.contribution.register"
             id="act_contribution_reg_payslip_lines"/>
 
-    </data>
-</openerp>
+</odoo>
