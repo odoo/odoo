@@ -2216,7 +2216,7 @@ the most useful being:
                 }
             });
 
-            instance.web.form.custom_widgets.add('coordinates', 'local.WidgetCoordinates');
+            instance.web.form.custom_widgets.add('coordinates', 'instance.oepetstore.WidgetCoordinates');
 
         .. code-block:: xml
 
@@ -2280,13 +2280,13 @@ the most useful being:
                 },
             });
 
-            instance.web.form.custom_widgets.add('coordinates', 'local.WidgetCoordinates');
+            instance.web.form.custom_widgets.add('coordinates', 'instance.oepetstore.WidgetCoordinates');
 
         .. code-block:: xml
 
             <t t-name="WidgetCoordinates">
                 <iframe width="400" height="300"
-                    t-att-src="https://maps.google.com/?ie=UTF8&amp;ll={{latitude}},{{longitude}}&amp;output=embed">
+                    t-attf-src="https://maps.google.com/?ie=UTF8&amp;ll={{latitude}},{{longitude}}&amp;output=embed">
                 </iframe>
                 <button>Get My Current Coordinate</button>
             </t>

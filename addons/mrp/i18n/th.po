@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 07:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-03 13:38+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-8/language/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,17 +23,17 @@ msgstr ""
 #: code:addons/mrp/stock.py:262
 #, python-format
 msgid " Manufacture"
-msgstr ""
+msgstr "การผลิต"
 
 #. module: mrp
 #: field:product.template,bom_count:0
 msgid "# Bill of Material"
-msgstr ""
+msgstr "# บิลวัตถุดิบ"
 
 #. module: mrp
 #: field:product.product,mo_count:0 field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "คำสั่งผลิต"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:323
@@ -44,7 +45,7 @@ msgstr "%s (สำเนา)"
 #: code:addons/mrp/mrp.py:977
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "ผลิตแล้ว %s"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -237,7 +238,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in hours"
-msgstr ""
+msgstr "จำนวนเป็นชั่วโมง"
 
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
@@ -247,7 +248,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
 msgid "Analytic Journal"
-msgstr ""
+msgstr "สมุดรายวันวิเคราะห์"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
@@ -311,19 +312,19 @@ msgstr ""
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 #: view:website:mrp.report_mrporder
 msgid "Bill Of Material"
-msgstr ""
+msgstr "บิลวัตถุดิบ"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
-msgstr ""
+msgstr "บิลวัตถุดิบ"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
 msgid "Bill of Material Components"
-msgstr ""
+msgstr "บิลชิ้นส่วนวัตถุดิบ"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -335,12 +336,12 @@ msgstr ""
 #: view:product.template:mrp.product_template_form_view_bom_button
 #: field:product.template,bom_ids:0
 msgid "Bill of Materials"
-msgstr ""
+msgstr "บิลวัตถุดิบ"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
-msgstr ""
+msgstr "โครงสร้างบิลวัตถุดิบ"
 
 #. module: mrp
 #: help:mrp.production,bom_id:0
@@ -352,7 +353,7 @@ msgstr ""
 #. module: mrp
 #: field:procurement.order,bom_id:0
 msgid "BoM"
-msgstr ""
+msgstr "BoM"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:289
@@ -458,12 +459,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "เปลี่ยนปริมาณของสินค้า"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Check Availability"
-msgstr ""
+msgstr "ตรวจสอบการมีอยู่"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -512,7 +513,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
 msgid "Configuration"
-msgstr "ตั้งค่า"
+msgstr "การตั้งค่า"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -642,7 +643,7 @@ msgstr ""
 #: help:mrp.bom,message_last_post:0 help:mrp.production,message_last_post:0
 #: help:mrp.production.workcenter.line,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "วันที่ของข้อความสุดท้ายที่ลงบันทึก"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -653,7 +654,7 @@ msgstr ""
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Default Unit of Measure"
-msgstr ""
+msgstr "หน่วยวัดเริ่มต้น"
 
 #. module: mrp
 #: field:mrp.config.settings,module_product_manufacturer:0
@@ -682,7 +683,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Destination Location"
-msgstr ""
+msgstr "ตำแหน่งปลายทาง"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -786,7 +787,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr "จัดกลุ่มโดย"
+msgstr "จัดกลุ่มตาม"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -870,7 +871,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,position:0
 msgid "Internal Reference"
-msgstr ""
+msgstr "อ้างอิงภายใน"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:289 code:addons/mrp/mrp.py:315
@@ -898,7 +899,7 @@ msgstr ""
 #: field:mrp.bom,message_last_post:0 field:mrp.production,message_last_post:0
 #: field:mrp.production.workcenter.line,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "วันที่ของข้อความสุดท้าย"
 
 #. module: mrp
 #: field:change.production.qty,write_uid:0 field:mrp.bom,write_uid:0
@@ -933,7 +934,7 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Late"
-msgstr ""
+msgstr "ล่าช้า"
 
 #. module: mrp
 #: field:stock.move.consume,location_id:0
@@ -954,7 +955,7 @@ msgstr ""
 #: field:mrp.product.produce,lot_id:0 field:mrp.product.produce.line,lot_id:0
 #: field:stock.move.consume,restrict_lot_id:0
 msgid "Lot"
-msgstr ""
+msgstr "ล็อต"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -1009,7 +1010,7 @@ msgstr ""
 #: field:product.template,produce_delay:0
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturing Lead Time"
-msgstr ""
+msgstr "เวลานำการผลิต"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -1018,7 +1019,7 @@ msgstr ""
 #: field:mrp.production.workcenter.line,production_id:0
 #: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "คำสั่งผลิต"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:131
@@ -1143,7 +1144,7 @@ msgstr "ปกติ"
 #. module: mrp
 #: selection:mrp.production,priority:0
 msgid "Not urgent"
-msgstr ""
+msgstr "ไม่เร่งด่วน"
 
 #. module: mrp
 #: help:mrp.property,composition:0
@@ -1166,7 +1167,7 @@ msgstr ""
 #: field:mrp.production.workcenter.line,hour:0
 #: field:mrp.routing.workcenter,hour_nbr:0 field:report.workcenter.load,hour:0
 msgid "Number of Hours"
-msgstr ""
+msgstr "จำนวนชั่วโมง"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
@@ -1220,7 +1221,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Partner Ref:"
-msgstr ""
+msgstr "อ้างอิงคู่ค้า"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1235,7 +1236,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Per week"
-msgstr ""
+msgstr "ต่อสัปดาห์"
 
 #. module: mrp
 #: selection:mrp.bom.line,type:0
@@ -1276,7 +1277,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Printing date:"
-msgstr ""
+msgstr "วันที่พิมพ์:"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1286,12 +1287,12 @@ msgstr "ระดับความสำคัญ"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
-msgstr "จัดซื้อ"
+msgstr "การจัดซื้อ"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "เกณฑ์การจัดซื้อ"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1321,7 +1322,7 @@ msgstr ""
 #: field:mrp.production.product.line,product_id:0
 #: field:stock.move.consume,product_id:0 view:website:mrp.report_mrporder
 msgid "Product"
-msgstr "ผลิตภัณฑ์"
+msgstr "สินค้า"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
@@ -1352,14 +1353,14 @@ msgstr ""
 #. module: mrp
 #: field:change.production.qty,product_qty:0
 msgid "Product Qty"
-msgstr ""
+msgstr "ปริมาณสินค้า"
 
 #. module: mrp
 #: field:mrp.bom,product_qty:0 field:mrp.bom.line,product_qty:0
 #: field:mrp.production,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Quantity"
-msgstr ""
+msgstr "ปริมาณสินค้า"
 
 #. module: mrp
 #: field:mrp.bom,product_rounding:0 field:mrp.bom.line,product_rounding:0
@@ -1375,7 +1376,7 @@ msgstr "รูปแบบสินค้า"
 #: field:mrp.bom.line,product_uos:0
 #: field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
-msgstr ""
+msgstr "หน่วยการขายสินค้า"
 
 #. module: mrp
 #: help:mrp.bom.line,product_uos:0
@@ -1400,7 +1401,7 @@ msgstr ""
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.move.consume,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "หน่วยวัดสินค้า"
 
 #. module: mrp
 #: field:mrp.production,product_uos:0
@@ -1425,13 +1426,13 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Production"
-msgstr ""
+msgstr "การผลิต"
 
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: field:mrp.routing,location_id:0
 msgid "Production Location"
-msgstr ""
+msgstr "ตำแหน่งการผลิต"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_production_order
@@ -1586,7 +1587,7 @@ msgstr "พร้อม"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
-msgstr ""
+msgstr "พร้อมผลิต"
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,code:0
@@ -1685,7 +1686,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "วันที่ถูกกำหนด"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1764,7 +1765,7 @@ msgstr ""
 #: field:mrp.production.workcenter.line,sequence:0
 #: field:mrp.routing.workcenter,sequence:0 view:website:mrp.report_mrporder
 msgid "Sequence"
-msgstr "กำหนดเลขที่เอกสาร"
+msgstr "ลำดับ"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1781,17 +1782,17 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "ต้นฉบับ"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Document:"
-msgstr ""
+msgstr "ต้นฉบับ:"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Location"
-msgstr ""
+msgstr "ตำแหน่งต้นทาง"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
@@ -1862,7 +1863,7 @@ msgstr ""
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "หน่วยวัดสินค้าที่คุณเลือกอยู่คนละหมวดหมู่กับที่อยู่ในแบบฟอร์มสินค้า"
 
 #. module: mrp
 #: help:mrp.production,routing_id:0
@@ -1959,18 +1960,18 @@ msgstr ""
 #: view:mrp.production:mrp.mrp_production_tree_view
 #: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
-msgstr ""
+msgstr "วงจรทั้งหมด"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
 #: field:mrp.production,hour_total:0
 msgid "Total Hours"
-msgstr ""
+msgstr "ชั่วโมงทั้งหมด"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
 msgid "Total Qty"
-msgstr ""
+msgstr "ปริมาณรวม"
 
 #. module: mrp
 #: field:product.template,track_production:0
@@ -1987,7 +1988,7 @@ msgstr ""
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Type"
-msgstr "ชนิด"
+msgstr "ประเภท"
 
 #. module: mrp
 #: field:mrp.workcenter.load,time_unit:0
@@ -1997,7 +1998,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Unit of Measure"
-msgstr "หน่วยของการวัด"
+msgstr "หน่วยวัด"
 
 #. module: mrp
 #: help:mrp.bom,product_uom:0 help:mrp.bom.line,product_uom:0
@@ -2025,7 +2026,7 @@ msgstr "เร่งด่วน"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_user
 msgid "User"
-msgstr "ผู้ใช้งาน"
+msgstr "ผู้ใช้"
 
 #. module: mrp
 #: field:mrp.bom,date_start:0 field:mrp.bom.line,date_start:0
@@ -2072,7 +2073,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,priority:0
 msgid "Very Urgent"
-msgstr ""
+msgstr "ด่วนมาก"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -2097,14 +2098,14 @@ msgstr "คำเตือน!"
 #: field:mrp.production,website_message_ids:0
 #: field:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "ข้อความจากเว็บไซต์"
 
 #. module: mrp
 #: help:mrp.bom,website_message_ids:0
 #: help:mrp.production,website_message_ids:0
 #: help:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "ประวัติการสื่อสารเว็บไซต์"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2266,7 +2267,7 @@ msgstr ""
 #: code:addons/mrp/stock.py:42
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr ""
+msgstr "คุณต้องกำหนดเลขซีเรียลสำหรับสินค้า %s"
 
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited
