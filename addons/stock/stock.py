@@ -258,7 +258,7 @@ class StockQuant(models.Model):
     def _calc_inventory_value(self):
         uid_company_id = self.env.user.company_id.id
         for quant in self:
-            self._context.pop('force_company', None)
+            # self._context.pop('force_company')
             if quant.company_id.id != uid_company_id:
                 #if the company of the quant is different than the current user company, force the company in the context
                 #then re-do a browse to read the property fields for the good company.
