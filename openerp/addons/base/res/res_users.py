@@ -167,8 +167,6 @@ class res_users(osv.osv):
         groups = self.pool['res.groups'].browse(cr, uid, ids, context=context)
         # Clear cache to avoid perf degradation on databases with thousands of users
         groups.invalidate_cache()
-        group_user = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.group_user', context=context)
-        groups = [g for g in groups if g == group_user or group_user in g.trans_implied_ids]
         for group in groups:
             result.update(user.id for user in group.users)
         return list(result)
@@ -199,8 +197,8 @@ class res_users(osv.osv):
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         'share': fields.function(_is_share, string='Share User', type='boolean',
              store={
-                 'res.users': (lambda self, cr, uid, ids, c={}: ids, ['groups_id'], 50),
-                 'res.groups': (_get_users_from_group, ['users'], 50),
+                 'res.users': (lambda self, cr, uid, ids, c={}: ids, None, 50),
+                 'res.groups': (_get_users_from_group, None, 50),
              }, help="External user with limited access, created only for the purpose of sharing data."),
     }
 
