@@ -7,7 +7,7 @@
 # Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
 
 {
-    'name': '中国会计科目表',
+    'name': '中国会计科目表-企业会计准则',
     'version': '1.8',
     'category': 'Localization/Account Charts',
     'author': 'www.openerp-china.org',
@@ -23,10 +23,10 @@
 
     """,
     'depends': ['l10n_cn'],
-    'demo': [],
     'data': [
+        'account_chart_template.xml',
+        'account_chart_template.yml',
     ],
     'license': 'GPL-3',
-    'auto_install': False,
     'installable': True,
 }
