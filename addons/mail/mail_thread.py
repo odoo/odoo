@@ -1312,6 +1312,25 @@ class mail_thread(osv.AbstractModel):
                     else:
                         filename=decode(filename)
                 encoding = part.get_content_charset()  # None if attachment
+
+                # 0) Handle inline attachments:
+                if  part.get('content-id', False):
+                    content_id = str(part.get('Content-ID'))
+                    content_id = email.utils.collapse_rfc2231_value(content_id).strip()
+                    content_type = re.split(r"\s*[,;]\s*", part.get('Content-Type').strip())
+                    try:
+                        doc = etree.HTML(body)
+                        inline_count = 0
+                        for node in doc.xpath("//img[@src='cid:%s']" %(content_id)):
+                            node.set('src', 'data:%s;%s,%s' %(content_type[0], part.get('Content-Transfer-Encoding'), part.get_payload()))
+                            inline_count += 1
+                        if inline_count > 0:
+                            body = etree.tostring(doc)
+                            continue    # skip adding a separate attachment
+                    except Exception:
+                        _logger.warning('Failed to parse HTML body of incoming mail '
+                                        'with message-id %r for inline attachment %s.',
+                                        message['message-id'], content_id)
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
