@@ -38,8 +38,8 @@ class ImLivechatChannel(models.Model):
         help="URL to a static page where you client can discuss with the operator of the channel.")
     are_you_inside = fields.Boolean(string='Are you inside the matrix?',
         compute='_are_you_inside', store=False, readonly=True)
-    script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
-    nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
+    script_external = fields.Text('Script (external)', compute='_compute_script_external', readonly=True)
+    nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', readonly=True)
     rating_percentage_satisfaction = fields.Integer('% Happy', compute='_compute_percentage_satisfaction', store=False, default=-1)
 
     # images fields
@@ -90,10 +90,11 @@ class ImLivechatChannel(models.Model):
             record.web_page = "%s/im_livechat/support/%i" % (base_url, record.id)
 
     @api.multi
-    @api.depends('channel_ids')
     def _compute_nbr_channel(self):
-        for record in self:
-            record.nbr_channel = len(record.channel_ids)
+        channel_data = self.env['mail.channel'].read_group([('livechat_channel_id', 'in', self.ids)], ['livechat_channel_id'], ['livechat_channel_id'])
+        channel_dict = { data['livechat_channel_id'][0]: data['livechat_channel_id_count'] for data in channel_data }
+        for livechat_channel in self:
+            livechat_channel.nbr_channel = channel_dict.get(livechat_channel.id)
 
     @api.multi
     @api.depends('channel_ids.rating_ids')

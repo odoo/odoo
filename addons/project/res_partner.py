@@ -5,11 +5,9 @@ from openerp.osv import fields,osv
 
 class res_partner(osv.osv):
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
-        Task = self.pool['project.task']
-        return {
-            partner_id: Task.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
-            for partner_id in ids
-        }
+        task_data = self.pool['project.task'].read_group(cr, uid, [('partner_id', 'in', ids)], ['partner_id'], ['partner_id'], context=context)
+        task_dict = { data['partner_id'][0]: data['partner_id_count'] for data in task_data }
+        return { partner_id: task_dict.get(partner_id) for partner_id in ids }
     
     """ Inherits partner and adds Tasks information in the partner form """
     _inherit = 'res.partner'

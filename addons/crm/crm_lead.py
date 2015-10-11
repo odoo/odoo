@@ -144,11 +144,9 @@ class crm_lead(format_address, osv.osv):
                 res[lead.id][field] = duration
         return res
     def _meeting_count(self, cr, uid, ids, field_name, arg, context=None):
-        Event = self.pool['calendar.event']
-        return {
-            opp_id: Event.search_count(cr,uid, [('opportunity_id', '=', opp_id)], context=context)
-            for opp_id in ids
-        }
+        event_data = self.pool['calendar.event'].read_group(cr, uid, [('opportunity_id', 'in', ids)], ['opportunity_id'], ['opportunity_id'], context=context)
+        event_dict = { data['opportunity_id'][0]: data['opportunity_id_count'] for data in event_data }
+        return { opportunity_id: event_dict.get(opportunity_id) for opportunity_id in ids }
 
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', track_visibility='onchange',

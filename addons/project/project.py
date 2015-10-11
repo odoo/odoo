@@ -104,13 +104,12 @@ class project(osv.osv):
             task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context, count=True)
             res[id] = (project_attachments or 0) + (task_attachments or 0)
         return res
+
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
-        if context is None:
-            context = {}
-        res={}
-        for project in self.browse(cr, uid, ids, context=context):
-            res[project.id] = len(project.task_ids)
-        return res
+        task_data = self.pool['project.task'].read_group(cr, uid, [('project_id', 'in', ids)], ['project_id'], ['project_id'], context=context)
+        task_dict = { data['project_id'][0]: data['project_id_count'] for data in task_data }
+        return { project_id: task_dict.get(project_id) for project_id in ids }
+
     def _get_alias_models(self, cr, uid, context=None):
         """ Overriden in project_issue to offer more options """
         return [('project.task', "Tasks")]

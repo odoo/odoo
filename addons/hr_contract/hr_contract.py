@@ -23,11 +23,9 @@ class hr_employee(osv.osv):
         return res
 
     def _contracts_count(self, cr, uid, ids, field_name, arg, context=None):
-        Contract = self.pool['hr.contract']
-        return {
-            employee_id: Contract.search_count(cr, SUPERUSER_ID, [('employee_id', '=', employee_id)], context=context)
-            for employee_id in ids
-        }
+        contract_data = self.pool['hr.contract'].read_group(cr, SUPERUSER_ID, [('employee_id', 'in', ids)], ['employee_id'], ['employee_id'], context=context)
+        contract_dict = { data['employee_id'][0]: data['employee_id_count'] for data in contract_data }
+        return { employee_id: contract_dict.get(employee_id) for employee_id in ids }
 
     _columns = {
         'manager': fields.boolean('Is a Manager'),

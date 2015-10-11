@@ -145,15 +145,19 @@ class Forum(models.Model):
         if self.default_post_type == 'link' and not self.allow_link or self.default_post_type == 'question' and not self.allow_question or self.default_post_type == 'discussion' and not self.allow_discussion:
             raise Warning(_('Post type in "Default post" must be activated'))
 
-    @api.one
+    @api.multi
     def _compute_count_posts_waiting_validation(self):
-        domain = [('forum_id', '=', self.id), ('state', '=', 'pending')]
-        self.count_posts_waiting_validation = self.env['forum.post'].search_count(domain)
+        post_data = self.env['forum.post'].read_group([('forum_id', 'in', self.ids), ('state', '=', 'pending')], ['forum_id'], ['forum_id'])
+        post_dict = { data['forum_id'][0]: data['forum_id_count'] for data in post_data }
+        for forum in self:
+            forum.count_posts_waiting_validation = post_dict.get(forum.id)
 
-    @api.one
+    @api.multi
     def _compute_count_flagged_posts(self):
-        domain = [('forum_id', '=', self.id), ('state', '=', 'flagged')]
-        self.count_flagged_posts = self.env['forum.post'].search_count(domain)
+        post_data = self.env['forum.post'].read_group([('forum_id', 'in', self.ids), ('state', '=', 'flagged')], ['forum_id'], ['forum_id'])
+        post_dict = { data['forum_id'][0]: data['forum_id_count'] for data in post_data }
+        for forum in self:
+            forum.count_flagged_posts = post_dict.get(forum.id)
 
     @api.model
     def create(self, values):

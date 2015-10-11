@@ -169,11 +169,9 @@ class crm_claim(osv.osv):
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
-        Claim = self.pool['crm.claim']
-        return {
-            partner_id: Claim.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)  
-            for partner_id in ids
-        }
+        claim_data = self.pool['crm.claim'].read_group(cr, uid, [('partner_id', 'in', ids)], ['partner_id'], ['partner_id'], context=context)
+        claim_dict = { data['partner_id'][0]: data['partner_id_count'] for data in claim_data }
+        return { partner_id: claim_dict.get(partner_id) for partner_id in ids }
 
     _columns = {
         'claim_count': fields.function(_claim_count, string='# Claims', type='integer'),

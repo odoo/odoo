@@ -98,12 +98,12 @@ class sale_order_line(osv.osv):
 
 class product_product(osv.Model):
     _inherit = 'product.product'
+
     def _rules_count(self, cr, uid, ids, field_name, arg, context=None):
-        Analytic = self.pool['account.analytic.default']
-        return {
-            product_id: Analytic.search_count(cr, uid, [('product_id', '=', product_id)], context=context)
-            for product_id in ids
-        }
+        analytic_data = self.pool['account.analytic.default'].read_group(cr, uid, [('product_id', 'in', ids)], ['product_id'], ['product_id'], context=context)
+        analytic_dict = { data['product_id'][0]: data['product_id_count'] for data in analytic_data }
+        return { product_id: analytic_dict.get(product_id) for product_id in ids }
+
     _columns = {
         'rules_count': fields.function(_rules_count, string='# Analytic Rules', type='integer'),
     }
