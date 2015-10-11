@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 06:41+0000\n"
+"POT-Creation-Date: 2015-10-09 09:19+0000\n"
+"PO-Revision-Date: 2015-10-10 09:45+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -68,18 +68,7 @@ msgid ""
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
-"        % endif\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
@@ -154,18 +143,7 @@ msgid ""
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
-"        % endif\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
@@ -222,14 +200,6 @@ msgid "Invoices"
 msgstr "Faturas"
 
 #. module: portal_sale
-#: model:res.groups,comment:portal_sale.group_payment_options
-msgid ""
-"Members of this group see the online payment options\n"
-"on Sale Orders and Customer Invoices. These options are meant for customers who are accessing\n"
-"their documents through the portal."
-msgstr "Os membros deste grupo verão as opções de pagamento online \nnas ordens de venda e faturas de clientes. Estas opções estarão visíveis para clientes que acedam aos \nseus documentos através do portal."
-
-#. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
 msgid "Outgoing Mails"
 msgstr "Mensagens a sair"
@@ -256,23 +226,6 @@ msgid "Sales Orders"
 msgstr "Ordens de Vendas"
 
 #. module: portal_sale
-#: model:ir.model.fields,help:portal_sale.field_account_config_settings_group_payment_options
-msgid ""
-"Show online payment options on Sale Orders and Customer Invoices to "
-"employees. If not checked, these options are only visible to portal users."
-msgstr "Mostrar opções de pagamento online em ordens de venda e faturas de clientes para os funcionários. Se não estiver marcado, essas opções só são visíveis para os utilizadores do portal."
-
-#. module: portal_sale
-#: model:ir.model.fields,field_description:portal_sale.field_account_config_settings_group_payment_options
-msgid "Show payment buttons to employees too"
-msgstr "Mostrar os botões de pagamento aos funcionários"
-
-#. module: portal_sale
-#: model:res.groups,name:portal_sale.group_payment_options
-msgid "View Online Payment Options"
-msgstr "Ver Opções de Pagamento Online"
-
-#. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
 msgid "We haven't sent you any invoice."
 msgstr "Não lhe enviámos qualquer fatura"
@@ -286,8 +239,3 @@ msgstr "Não lhe enviámos qualquer orçamento."
 #: model:ir.actions.act_window,help:portal_sale.action_orders_portal
 msgid "We haven't sent you any sales order."
 msgstr "Nós não te enviamos qualquer encomenda."
-
-#. module: portal_sale
-#: model:ir.model,name:portal_sale.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
