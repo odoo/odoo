@@ -9,17 +9,20 @@
            	<t t-if="not o or not 'company_id' in o">
         	    <t t-set="company" t-value="res_company"></t>
            	</t>
-	        <div class="header col-xs-12 inv-black inv-bg-grey" style="padding-bottom:28px;">
+	        <div class="header col-xs-12 inv-black inv-bg-grey" style="padding-bottom:0px;">
 		  <!--<div class="inv-wrapper"> -->
 		       <div class="col-xs-3">
-			    <img src="/optima_custom_invoice/static/description/logo.png"/> 
+			    <img src="/optima_custom_invoice/static/description/logo.svg"/> 
 		       </div>
 		       <div class="col-xs-4 mb8 inv-black inv-right" >
-		            <h5 class="inv-nomargin inv-green" t-field="company.name"/>
-                            <p class="inv-nomargin"><span class="fa fa-envelope-square fa-lg"/>&#160;
+		            <h4 class="inv-green" t-field="company.name"/>
+                            <p class="inv-nomargin"><span class="fa fa-map-marker fa-lg"/>&#160;&#160;
 					<span t-field="company.street"/>
 			    </p>
-                            <p class="inv-nomargin"><span class="fa fa-map-marker fa-lg"/>&#160;
+                            <p class="inv-nomargin"><span class="fa fa-envelope-square fa-lg"/>&#160;
+					<span t-field="company.street2"/>
+			    </p>
+                            <p class="inv-nomargin"><span class="fa fa-map-marker fa-lg"/> &#160;&#160;
 					<span t-field="company.city"/>,&#160;
 					<span t-field="company.country_id"/>
 			    </p>
@@ -37,15 +40,15 @@
 			    </p>
 		       </div>
 		  <!--</div>--> <!--end of wrapper-->
-		  <div class="col-xs-8 inv-black inv-bg-green">
+		  <div class="col-xs-6 inv-black inv-bg-green">
 			 <span class="inv-social fa fa-twitter fa-lg"/>&#160;<span t-field="company.twitter"/>
 			 <span class="inv-social fa fa-facebook-square fa-lg"/>&#160;<span t-field="company.facebook"/>
 			 <span class="inv-social fa fa-google-plus fa-lg"/>&#160;<span t-field="company.googleplus" />
 		  </div>
                 </div> <!--end of Header-->
                <div class="page col-xs-12 inv-black inv-bg-grey" style="margin-top:0px; padding-top:0px;">  <!--start of PAGE-->
-	         <div class="col-xs-4 mt32 inv-bg-green inv-nofloat" >
-			<h4><span class="fa fa-user fa-lg"/>&#160;Customer</h4>
+	         <div class="col-xs-4 mt32 inv-bg-green inv-nofloat">
+			<h4 style="padding:3px;"><span class="fa fa-user fa-lg"/>&#160;Customer</h4>
 		 </div>
 		 <div><!--start of wrapper -->
 		   <div class="col-xs-4 inv-black">
@@ -72,6 +75,7 @@
 			   <p t-if="o.date_invoice" class="inv-nomargin">Invoice Date: <span t-field="o.date_invoice"/></p>
 			   <p t-if="o.date_due" class="inv-nomargin">Due Date: <span t-field="o.date_due"/></p>
 			   <p t-if="o.origin" class="inv-nomargin">Source Doc: <span t-field="o.origin"/></p>
+			   <p t-if="o.fiscal_position" class="inv-nomargin">Fiscal Position: <span t-field="o.fiscal_position"/></p>
 	     	   </div>
 		 </div> <!--end of wrapper2-->
 		 <div class="col-xs-12 mt8 mb8 inv-bg-grey"> <!--start of DATA-->
@@ -81,10 +85,10 @@
                                 <th>Item#</th>
                                 <th>Description</th>
                                 <th class="text-right">Quantity</th>
-                                <th class="text-right" >Unit Price (<span t-esc="company.currency_id.name"/>)</th>
+                                <th class="text-right" >Unit Price (<span t-esc="company.currency_id.symbol"/>)</th>
                                 <th class="text-right" groups="sale.group_discount_per_so_line">Discount(%)</th>
                                 <th class="text-right">Taxes</th>
-                                <th class="text-right">Amount (<span t-esc="company.currency_id.name"/>)</th>
+                                <th class="text-right">Amount (<span t-esc="company.currency_id.symbol"/>)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -122,19 +126,19 @@
         	   <div class="col-xs-5 pull-right inv-nosplit">
                     <table class="table table-condensed inv-black inv-tr-test"><tbody>
                         <tr class="border-black">
-                            <td><strong>Total Without Taxes (<span t-esc="company.currency_id.name"/>)</strong></td>
+                            <td><strong>Total Without Taxes (<span t-esc="company.currency_id.symbol"/>)</strong></td>
                             <td class="text-right">
                                 <span t-field="o.amount_untaxed"/>
                             </td>
                         </tr>
                         <tr>
-                            <td>Taxes (<span t-esc="company.currency_id.name"/>)</td>
+                            <td>Taxes (<span t-esc="company.currency_id.symbol"/>)</td>
                             <td class="text-right">
                                 <span t-field="o.amount_tax"/>
                             </td>
                         </tr>
                         <tr class="border-black">
-                            <td><strong>Total (<span t-esc="company.currency_id.name"/>)</strong></td>
+                            <td><strong>Total (<span t-esc="company.currency_id.symbol"/>)</strong></td>
                             <td class="text-right">
                                  <strong><span  class="inv-last-True" t-field="o.amount_total"/></strong>
                             </td>
@@ -148,8 +152,8 @@
                         <thead>
                             <tr class="inv-bg-green">
                                 <th>Tax</th>
-                                <th class="text-right">Base (<span t-esc="company.currency_id.name"/>)</th>
-                                <th class="text-right">Amount (<span t-esc="company.currency_id.name"/>)</th>
+                                <th class="text-right">Base (<span t-esc="company.currency_id.symbol"/>)</th>
+                                <th class="text-right">Amount (<span t-esc="company.currency_id.symbol"/>)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -169,7 +173,7 @@
                   </div>
                 </div>
 		<div class="inv-nosplit">
-                <p t-if="o.payment_term.note" class="inv-green">
+                <p t-if="o.payment_term.note">
                   <strong>Payment Terms:</strong>
                   <span t-field="o.payment_term.note"/>
                 </p>
@@ -178,7 +182,7 @@
                   <span t-field="o.fiscal_position.note"/>
                 </p>
                 <p t-if="o.comment">
-                  <strong>Comment:</strong>
+                  <strong>Note:</strong>
                   <span t-field="o.comment"/>
                 </p>
 		</div>
@@ -254,6 +258,7 @@
 		}
 		.inv-nomargin{
 			margin:0px;
+			font-size: 12px;
 		}
 		.inv-green{
 			color:#9ABE00 !important;
