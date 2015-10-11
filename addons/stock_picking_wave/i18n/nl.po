@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 14:13+0000\n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-10-01 12:12+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: stock_picking_wave
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction
+msgid "Action Needed"
+msgstr "Vereist actie"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
@@ -31,12 +36,8 @@ msgstr "Voeg leveringen toe aan een wave"
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.action_picking_to_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.picking_to_wave_act
-msgid "Add to Wave"
-msgstr "Voeg toe aan wave"
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
-msgid "Add to wave"
+msgid "Add to Wave"
 msgstr "Voeg toe aan wave"
 
 #. module: stock_picking_wave
@@ -58,7 +59,7 @@ msgstr "Geannuleerd"
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
 msgid "Click to create a Picking Wave."
-msgstr ""
+msgstr "Klik om een nieuwe picking wave aan te maken."
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -156,10 +157,14 @@ msgid "Ice Cream Vanilla"
 msgstr "Vanilië ijs"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
+
+#. module: stock_picking_wave
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
@@ -215,25 +220,20 @@ msgid "Name of the picking wave"
 msgstr "Naam van de picking wave"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction
-msgid "Need Action"
-msgstr "Vereist actie"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Need Action Counter"
-msgstr "Teller vereiste acties"
-
-#. module: stock_picking_wave
 #: code:addons/stock_picking_wave/stock_picking_wave.py:42
 #, python-format
 msgid "Nothing to print."
 msgstr "Niets om af te drukken."
 
 #. module: stock_picking_wave
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr "Aantel vereiste actie berichten"
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread_counter
@@ -249,7 +249,7 @@ msgstr "Persoon verantwoordelijk voor deze wave"
 #: code:addons/stock_picking_wave/stock_picking_wave.py:60
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9577
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9563
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -272,7 +272,7 @@ msgid "Picking Waves not finished"
 msgstr "Picking waves nog niet gereed"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9577
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9563
 msgid "Picking wave associated to this picking"
 msgstr "Picking wave behorende bij deze levering"
 
@@ -352,7 +352,7 @@ msgid ""
 "                (needs to) be done together in order to increase their efficiency.\n"
 "                It may also be useful to assign jobs (one person = one wave) or\n"
 "                help the timing management of operations (tasks to be done at 1pm)."
-msgstr ""
+msgstr "Het doel van picking waves is om operaties te groeperen die mogelijk samen\n(moeten) gedaan worden om de efficiëntie te verhogen.\nHet kan ook handig zijn om functies toe te wijzen (één persoon = één wave) of\nhelpt het tijdsbeheer van functies (taken die klaar moeten zijn voor 1u)."
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking

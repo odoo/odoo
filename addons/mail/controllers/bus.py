@@ -42,7 +42,7 @@ class MailChatController(openerp.addons.bus.controllers.main.BusController):
             author_id = request.env['res.users'].sudo().browse(request.session.uid).partner_id.id
         # post a message without adding followers to the channel. email_from=False avoid to get author from email data
         mail_channel = request.env["mail.channel"].sudo(request_uid).search([('uuid', '=', uuid)], limit=1)
-        message = mail_channel.sudo(request_uid).with_context(mail_create_nosubscribe=True).message_post(author_id=author_id, email_from=False, body=message_content, message_type='comment', subtype='mail.mt_comment', **kwargs)
+        message = mail_channel.sudo(request_uid).with_context(mail_create_nosubscribe=True).message_post(author_id=author_id, email_from=False, body=message_content, message_type='comment', subtype='mail.mt_comment', content_subtype='plaintext', **kwargs)
         return message and message.id or False
 
     @openerp.http.route(['/mail/chat_history'], type="json", auth="none")

@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models, _
+from openerp import api, fields, models
 from openerp.tools.float_utils import float_compare
 
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    purchase_id = fields.Many2one('purchase.order', string='Purchase Order', domain=[('invoice_status', '=', 'to invoice')])
+    purchase_id = fields.Many2one('purchase.order', string='Add Purchase Order', domain=[('invoice_status', '=', 'to invoice')],
+        help='Encoding help. When selected, the associated purchase order lines are added to the vendor bill. Several PO can be selected.')
 
     # Load all unsold PO lines
     @api.onchange('purchase_id')
@@ -61,7 +62,10 @@ class AccountInvoice(models.Model):
             if account:
                 data['account_id'] = account.id
             result.append(data)
+
+        self.invoice_line_ids = False # To avoid duplicates
         self.invoice_line_ids = result
+        self.purchase_id = False
         return {}
 
     @api.model
@@ -85,27 +89,21 @@ class AccountInvoice(models.Model):
         company_currency = inv.company_id.currency_id
         if i_line.product_id and i_line.product_id.valuation == 'real_time':
             if i_line.product_id.type in ('product', 'consu'):
+                # get the fiscal position
+                fpos = i_line.invoice_id.fiscal_position_id
                 # get the price difference account at the product
-                acc = i_line.product_id.property_account_creditor_price_difference and i_line.product_id.property_account_creditor_price_difference.id
+                acc = i_line.product_id.property_account_creditor_price_difference
                 if not acc:
                     # if not found on the product get the price difference account at the category
-                    acc = i_line.product_id.categ_id.property_account_creditor_price_difference_categ and i_line.product_id.categ_id.property_account_creditor_price_difference_categ.id
-                a = None
-
-                # oa will be the stock input account
-                # first check the product, if empty check the category
-                oa = i_line.product_id.property_stock_account_input and i_line.product_id.property_stock_account_input.id
-                if not oa:
-                    oa = i_line.product_id.categ_id.property_stock_account_input_categ_id and i_line.product_id.categ_id.property_stock_account_input_categ_id.id
-                if oa:
-                    # get the fiscal position
-                    fpos = i_line.invoice_id.fiscal_position_id
-                    a = fpos.map_account(oa)
+                    acc = i_line.product_id.categ_id.property_account_creditor_price_difference_categ
+                acc = fpos.map_account(acc).id
+                # reference_account_id is the stock input account
+                reference_account_id = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)['stock_input'].id
                 diff_res = []
                 account_prec = inv.company_id.currency_id.decimal_places
                 # calculate and write down the possible price difference between invoice price and product price
                 for line in res:
-                    if line.get('invl_id', 0) == i_line.id and a == line['account_id']:
+                    if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
                         uom = i_line.product_id.uom_id
                         valuation_price_unit = uom._compute_price(i_line.product_id.standard_price, i_line.uom_id.id)
                         if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
@@ -144,5 +142,7 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
     _inherit = 'account.invoice.line'
-    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', select=True, readonly=True)
 
+    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', select=True, readonly=True)
+    purchase_id = fields.Many2one('purchase.order', related='purchase_line_id.order_id', string='Purchase Order', store=False, readonly=True,
+        help='Associated Purchase Order. Filled in automatically when a PO is chosen on the vendor bill.')

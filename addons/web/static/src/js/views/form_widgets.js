@@ -1655,7 +1655,7 @@ var AbstractFieldUpgrade = {
     },
     
     open_dialog: function() {
-        var message = _t('You need to upgrade to Odoo Enterprise to activate this feature.');
+        var message = _t('Upgrade to <a href="https://www.odoo.com/editions">Odoo Enterprise</a> to activate this feature.');
         var buttons = [
             {
                 text: _t("Upgrade now"),
@@ -1673,7 +1673,7 @@ var AbstractFieldUpgrade = {
             size: 'medium',
             buttons: buttons,
             $content: $('<div>', {
-                text: message,
+                html: message,
             }),
             title: _t("Odoo Enterprise"),
         }).open();

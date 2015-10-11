@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-09-21 09:18+0000\n"
+"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"PO-Revision-Date: 2015-10-09 09:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr ""
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.gallery.xml:17
-#: code:addons/website/static/src/xml/website.gallery.xml:96
+#: code:addons/website/static/src/xml/website.gallery.xml:97
 #, python-format
 msgid "&times;"
 msgstr ""
@@ -761,6 +761,11 @@ msgid "A/B Testing"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_version
+msgid "A/B testing and versioning"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "A/B testing is the process of testing two versions of a page to see which one performs\n"
 "                        better in reaching your business objectives. For example, imagine you have an existing\n"
@@ -1169,7 +1174,7 @@ msgstr ""
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.ace.xml:14
-#: code:addons/website/static/src/xml/website.gallery.xml:96
+#: code:addons/website/static/src/xml/website.gallery.xml:97
 #: code:addons/website/static/src/xml/website.seo.xml:19
 #: code:addons/website/static/src/xml/website.translator.xml:13
 #: code:addons/website/static/src/xml/website.xml:8
@@ -1233,12 +1238,11 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_compress_html
-#: model:ir.model.fields,field_description:website.field_website_config_settings_compress_html
 msgid "Compress HTML"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
+#: model:ir.model.fields,field_description:website.field_website_config_settings_compress_html
 msgid "Compress rendered HTML for a better Google PageSpeed result"
 msgstr ""
 
@@ -1356,7 +1360,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.editor.js:136
+#: code:addons/website/static/src/js/website.editor.js:138
 #, python-format
 msgid "Create page '%s'"
 msgstr ""
@@ -1701,6 +1705,11 @@ msgid "Explain to them why you launched your new website and ask them for their\
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "Extra Features"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Extra-Large"
 msgstr ""
@@ -1797,6 +1806,17 @@ msgid "For example, you'll want your company name, your country/city and a few\n
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "For the Odoo Team,<br/>\n"
+"                            Fabien Pinckaers, Founder"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_form_editor
+msgid "Form builder: create and customize forms"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.ace.xml:13
 #, python-format
@@ -1806,12 +1826,6 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Form’s length and types of fields,"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "From the Odoo Team,<br/>\n"
-"                            Fabien Pinckaers, Founder"
 msgstr ""
 
 #. module: website
@@ -2000,7 +2014,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_id
 #: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_1969
+#: model:ir.model.fields,field_description:website.field_website_menu_id_1976
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_id
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_id
 msgid "ID"
@@ -2435,7 +2449,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.editor.js:121
+#: code:addons/website/static/src/js/website.editor.js:123
 #, python-format
 msgid "New or existing page"
 msgstr ""
@@ -2730,7 +2744,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.theme.js:292
+#: code:addons/website/static/src/js/website.theme.js:293
 #, python-format
 msgid "Please install or update node-less"
 msgstr ""
@@ -2753,7 +2767,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.editor.js:36
+#: code:addons/website/static/src/js/website.editor.js:38
 #, python-format
 msgid "Press The Top-Left Edit Button"
 msgstr ""
@@ -3134,6 +3148,11 @@ msgid "Special effects and animations"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "Speed"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Square"
 msgstr ""
@@ -3363,7 +3382,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.theme.js:296
+#: code:addons/website/static/src/js/website.theme.js:297
 #, python-format
 msgid "Theme Error"
 msgstr ""
@@ -3546,14 +3565,14 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.gallery.xml:31
+#: code:addons/website/static/src/xml/website.gallery.xml:32
 #, python-format
 msgid "Upload failed, some images might not have been uploaded. Check your network connectivity."
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.gallery.xml:30
+#: code:addons/website/static/src/xml/website.gallery.xml:31
 #, python-format
 msgid "Upload successful."
 msgstr ""
@@ -3564,13 +3583,13 @@ msgid "Url"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_config_settings_cdn_activated
-msgid "Use CDN"
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Use Google Adword"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Use Google Adword"
+#: model:ir.model.fields,field_description:website.field_website_config_settings_cdn_activated
+msgid "Use a Content Delivery Network (CDN)"
 msgstr ""
 
 #. module: website

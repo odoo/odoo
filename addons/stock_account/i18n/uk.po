@@ -3,13 +3,14 @@
 # * stock_account
 # 
 # Translators:
+# Bogdan, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:26+0000\n"
-"PO-Revision-Date: 2015-09-14 10:52+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-10-01 06:26+0000\n"
+"PO-Revision-Date: 2015-10-07 11:23+0000\n"
+"Last-Translator: Bogdan\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Accounting"
-msgstr "Банківські рахунки"
+msgstr "Бухгалтерський облік"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -69,7 +70,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "Скасувати"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -174,7 +175,7 @@ msgstr "Групувати за"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_id
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
@@ -204,13 +205,6 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_account_invoice_line_move_id
-msgid ""
-"If the invoice was generated from a stock transfer, specify the reference to"
-" the related stock move."
 msgstr ""
 
 #. module: stock_account
@@ -305,11 +299,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Move"
 msgstr "перемістити"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_invoice_line_move_id
-msgid "Move line"
-msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:124
@@ -480,10 +469,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
 msgid "Stock Input Account"
-msgstr "Рахунок надходження Готової Продукції"
+msgstr "Рахунок надходження продукції"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:425
+#: code:addons/stock_account/stock_account.py:418
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -500,7 +489,7 @@ msgstr "Переміщення запасів"
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_output
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_output
 msgid "Stock Output Account"
-msgstr "Рахунок списання Готової Продукції"
+msgstr "Рахунок списання продукції"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_valuation_account_id
@@ -518,7 +507,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/stock_valuation_history.py:30
+#: code:addons/stock_account/wizard/stock_valuation_history.py:31
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_graph
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_pivot
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -657,6 +646,14 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
 msgid "Wizard that opens the stock valuation history table"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:275
+#, python-format
+msgid ""
+"You don't have any stock journal defined on your product category, check if "
+"you have installed a chart of accounts"
 msgstr ""
 
 #. module: stock_account

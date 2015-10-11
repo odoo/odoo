@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2015-10-01 06:26+0000\n"
+"POT-Creation-Date: 2015-10-09 09:17+0000\n"
+"PO-Revision-Date: 2015-10-09 09:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgid " (reserved)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3481
+#: code:addons/stock/stock.py:3479
 #, python-format
 msgid " MTO"
 msgstr ""
@@ -65,36 +65,36 @@ msgid " On Hand"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3618
-#: code:addons/stock/stock.py:3911
+#: code:addons/stock/stock.py:3616
+#: code:addons/stock/stock.py:3909
 #, python-format
 msgid " Sequence in"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3622
-#: code:addons/stock/stock.py:3919
+#: code:addons/stock/stock.py:3620
+#: code:addons/stock/stock.py:3917
 #, python-format
 msgid " Sequence internal"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3619
-#: code:addons/stock/stock.py:3913
+#: code:addons/stock/stock.py:3617
+#: code:addons/stock/stock.py:3911
 #, python-format
 msgid " Sequence out"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3620
-#: code:addons/stock/stock.py:3915
+#: code:addons/stock/stock.py:3618
+#: code:addons/stock/stock.py:3913
 #, python-format
 msgid " Sequence packing"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3621
-#: code:addons/stock/stock.py:3917
+#: code:addons/stock/stock.py:3619
+#: code:addons/stock/stock.py:3915
 #, python-format
 msgid " Sequence picking"
 msgstr ""
@@ -105,13 +105,13 @@ msgid "#Products"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2741
+#: code:addons/stock/stock.py:2739
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3298
+#: code:addons/stock/stock.py:3296
 #, python-format
 msgid "%s: Supply Product from %s"
 msgstr ""
@@ -515,7 +515,7 @@ msgid "<strong>When you process an incoming shipment, internal transfer or deliv
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2880
+#: code:addons/stock/stock.py:2878
 #, python-format
 msgid "A Pack"
 msgstr ""
@@ -628,7 +628,7 @@ msgid "All at once"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2866
+#: code:addons/stock/stock.py:2864
 #, python-format
 msgid "All products"
 msgstr ""
@@ -803,7 +803,7 @@ msgid "Backorder creation"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4731
+#: code:addons/stock/stock.py:4729
 #, python-format
 msgid "Backorder exists"
 msgstr ""
@@ -820,6 +820,11 @@ msgid "Barcode"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_stock_config_settings
+msgid "Barcode Interface"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_barcode_nomenclature_id
 msgid "Barcode Nomenclature"
 msgstr ""
@@ -827,6 +832,11 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_barcode
+msgid "Barcode scanner support"
 msgstr ""
 
 #. module: stock
@@ -892,13 +902,13 @@ msgid "Calendar View"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3357
+#: code:addons/stock/stock.py:3355
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3465
+#: code:addons/stock/stock.py:3463
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr ""
@@ -930,6 +940,11 @@ msgstr ""
 #: code:addons/stock/stock.py:2022
 #, python-format
 msgid "Cannot unreserve a done move"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_stock_config_settings
+msgid "Carriers"
 msgstr ""
 
 #. module: stock
@@ -1321,7 +1336,7 @@ msgid "Creation Date, usually the time of the order"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3805
+#: code:addons/stock/stock.py:3803
 #, python-format
 msgid "Cross-Dock"
 msgstr ""
@@ -1352,7 +1367,7 @@ msgid "Current quantity of products.\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4827
+#: code:addons/stock/stock.py:4825
 #: model:ir.ui.view,arch_db:stock.view_location_search
 #, python-format
 msgid "Customer"
@@ -1385,6 +1400,11 @@ msgstr ""
 #: selection:stock.picking,picking_type_code:0
 #: selection:stock.picking.type,code:0
 msgid "Customers"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
+msgid "DHL integration"
 msgstr ""
 
 #. module: stock
@@ -1580,7 +1600,7 @@ msgid "Delivery Method"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3666
+#: code:addons/stock/stock.py:3664
 #: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
@@ -1831,7 +1851,7 @@ msgid "Every stock operation in Odoo moves the products from one\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4185
+#: code:addons/stock/stock.py:4183
 #, python-format
 msgid "Everything inside a package should be in the same location"
 msgstr ""
@@ -1871,6 +1891,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_removal_method
 msgid "FIFO, LIFO..."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
+msgid "Fedex integration"
 msgstr ""
 
 #. module: stock
@@ -1914,6 +1939,12 @@ msgid "For developers, <strong>you can use our\n"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.inventory_planner
+msgid "For the Odoo Team,<br/>\n"
+"                            Fabien Pinckaers, Founder"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Force Availability"
 msgstr ""
@@ -1952,12 +1983,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_from_loc
 msgid "From"
-msgstr ""
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.inventory_planner
-msgid "From the Odoo Team,<br/>\n"
-"                            Fabien Pinckaers, Founder"
 msgstr ""
 
 #. module: stock
@@ -2147,7 +2172,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8171
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8184
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_id
@@ -2156,7 +2181,7 @@ msgid "ID"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3176
+#: code:addons/stock/stock.py:3174
 #, python-format
 msgid "INV:"
 msgstr ""
@@ -2420,7 +2445,7 @@ msgid "Initial Inventory"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3754
+#: code:addons/stock/stock.py:3752
 #: model:stock.location,name:stock.stock_location_company
 #, python-format
 msgid "Input"
@@ -2465,7 +2490,7 @@ msgid "Internal Reference"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3679
+#: code:addons/stock/stock.py:3677
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
@@ -2799,7 +2824,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4729
+#: code:addons/stock/stock.py:4727
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, python-format
@@ -2962,7 +2987,7 @@ msgid "Lot BarCode"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4472
+#: code:addons/stock/stock.py:4470
 #, python-format
 msgid "Lot Details"
 msgstr ""
@@ -3031,7 +3056,7 @@ msgid "Make Procurements"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3462
+#: code:addons/stock/stock.py:3460
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
@@ -3455,7 +3480,7 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4733
+#: code:addons/stock/stock.py:4731
 #, python-format
 msgid "OK"
 msgstr ""
@@ -3503,25 +3528,25 @@ msgid "Once it's fully working, give us some feedback: we love to hear from our 
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2878
+#: code:addons/stock/stock.py:2876
 #, python-format
 msgid "One Lot/Serial Number"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2875
+#: code:addons/stock/stock.py:2873
 #, python-format
 msgid "One owner only"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2876
+#: code:addons/stock/stock.py:2874
 #, python-format
 msgid "One product for a specific owner"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2866
+#: code:addons/stock/stock.py:2864
 #, python-format
 msgid "One product only"
 msgstr ""
@@ -3537,7 +3562,7 @@ msgid "Operation"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4489
+#: code:addons/stock/stock.py:4487
 #, python-format
 msgid "Operation Details"
 msgstr ""
@@ -3638,7 +3663,7 @@ msgid "Outgoing Shippings"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3756
+#: code:addons/stock/stock.py:3754
 #: model:stock.location,name:stock.stock_location_output
 #, python-format
 msgid "Output"
@@ -3682,7 +3707,7 @@ msgid "P&L Qty"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3691
+#: code:addons/stock/stock.py:3689
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_package_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_pack_ids
 #, python-format
@@ -3780,7 +3805,7 @@ msgid "Packing Operation"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3757
+#: code:addons/stock/stock.py:3755
 #: model:stock.location,name:stock.location_pack_zone
 #, python-format
 msgid "Packing Zone"
@@ -3866,19 +3891,19 @@ msgid "Physical Packages"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3703
+#: code:addons/stock/stock.py:3701
 #, python-format
 msgid "Pick"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3808
+#: code:addons/stock/stock.py:3806
 #, python-format
 msgid "Pick + Pack + Ship"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3807
+#: code:addons/stock/stock.py:3805
 #, python-format
 msgid "Pick + Ship"
 msgstr ""
@@ -4006,7 +4031,7 @@ msgid "Please process some quantities to put in the pack first!"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2714
+#: code:addons/stock/stock.py:2712
 #, python-format
 msgid "Please provide a positive quantity to scrap."
 msgstr ""
@@ -4322,7 +4347,7 @@ msgid "Qty Multiple must be greater than or equal to zero."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3755
+#: code:addons/stock/stock.py:3753
 #, python-format
 msgid "Quality Control"
 msgstr ""
@@ -4455,25 +4480,25 @@ msgid "Receipt Route"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3802
+#: code:addons/stock/stock.py:3800
 #, python-format
 msgid "Receipt in 1 step"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3803
+#: code:addons/stock/stock.py:3801
 #, python-format
 msgid "Receipt in 2 steps"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3804
+#: code:addons/stock/stock.py:3802
 #, python-format
 msgid "Receipt in 3 steps"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3655
+#: code:addons/stock/stock.py:3653
 #: model:ir.actions.act_window,name:stock.action_receive_move
 #: model:ir.ui.view,arch_db:stock.product_kanban_stock_view
 #: model:stock.picking.type,name:stock.chi_picking_type_in
@@ -4855,7 +4880,7 @@ msgid "Search Stock Location Paths"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2866
+#: code:addons/stock/stock.py:2864
 #, python-format
 msgid "Select products manually"
 msgstr ""
@@ -4956,7 +4981,7 @@ msgid "Shelves (Y)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3806
+#: code:addons/stock/stock.py:3804
 #, python-format
 msgid "Ship Only"
 msgstr ""
@@ -4964,6 +4989,11 @@ msgstr ""
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Ship directly from stock (Ship only)"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_stock_config_settings
+msgid "Shipping Connectors"
 msgstr ""
 
 #. module: stock
@@ -5079,7 +5109,7 @@ msgid "Status"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3753
+#: code:addons/stock/stock.py:3751
 #: model:stock.location,name:stock.stock_location_shop0
 #: model:stock.location,name:stock.stock_location_stock
 #, python-format
@@ -5289,7 +5319,7 @@ msgid "The barcode for a location must be unique per company !"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4315
+#: code:addons/stock/stock.py:4313
 #, python-format
 msgid "The chosen quantity for product %s is not compatible with the UoM rounding. It will be automatically converted at confirmation"
 msgstr ""
@@ -5315,7 +5345,7 @@ msgid "The date that will be used for the stock level check of the products and 
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3939
+#: code:addons/stock/stock.py:3937
 #, python-format
 msgid "The default resupply warehouse should be different than the warehouse itself!"
 msgstr ""
@@ -5390,7 +5420,7 @@ msgid "The push rule that created this stock move"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4420
+#: code:addons/stock/stock.py:4418
 #, python-format
 msgid "The quantity to split should be smaller than the quantity To Do.  "
 msgstr ""
@@ -5402,13 +5432,13 @@ msgid "The requested operation cannot be processed because of a programming erro
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2643
+#: code:addons/stock/stock.py:2641
 #, python-format
 msgid "The roundings of your Unit of Measures %s on the move vs. %s on the product don't allow to do these operations or you are not transferring the picking at once. "
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4308
+#: code:addons/stock/stock.py:4306
 #, python-format
 msgid "The selected UoM for product %s is not compatible with the UoM set on the product form. \n"
 "Please choose an UoM within the same UoM category."
@@ -5681,7 +5711,7 @@ msgid "Tracking"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2834
+#: code:addons/stock/stock.py:2832
 #: model:ir.model,name:stock.model_stock_picking
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5723,6 +5753,16 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_packaging_type_id
 msgid "Type of packaging"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_ups
+msgid "UPS integration"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_usps
+msgid "USPS integration"
 msgstr ""
 
 #. module: stock
@@ -5782,7 +5822,7 @@ msgid "Units of Measures"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4168
+#: code:addons/stock/stock.py:4166
 #, python-format
 msgid "Unknown Pack"
 msgstr ""
@@ -6038,7 +6078,7 @@ msgid "Warehouse to consider for the route selection"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3976
+#: code:addons/stock/stock.py:3974
 #, python-format
 msgid "Warehouse's Routes"
 msgstr ""
@@ -6059,13 +6099,13 @@ msgid "Warning!"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4307
+#: code:addons/stock/stock.py:4305
 #, python-format
 msgid "Warning: wrong UoM!"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4314
+#: code:addons/stock/stock.py:4312
 #, python-format
 msgid "Warning: wrong quantity!"
 msgstr ""
@@ -6207,7 +6247,7 @@ msgid "You can not change the unit of measure of a product that has already been
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4431
+#: code:addons/stock/stock.py:4429
 #, python-format
 msgid "You can not delete pack operations of a done picking"
 msgstr ""
@@ -6219,7 +6259,7 @@ msgid "You can not reserve a negative quantity or a negative quant."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2698
+#: code:addons/stock/stock.py:2696
 #, python-format
 msgid "You can only delete draft moves."
 msgstr ""
@@ -6237,20 +6277,20 @@ msgid "You cannot move to a location of type view %s."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2945
+#: code:addons/stock/stock.py:2943
 #, python-format
 msgid "You cannot set a negative product quantity in an inventory line:\n"
 "	%s - qty: %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2774
+#: code:addons/stock/stock.py:2772
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2770
+#: code:addons/stock/stock.py:2768
 #, python-format
 msgid "You cannot split a move done"
 msgstr ""
@@ -6262,7 +6302,7 @@ msgid "You do not have any products reserved for this picking.  Please click the
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2596
+#: code:addons/stock/stock.py:2595
 #, python-format
 msgid "You have a difference between the quantity on the operation and the quantities specified for the lots. "
 msgstr ""
@@ -6319,7 +6359,7 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:2320
-#: code:addons/stock/stock.py:4442
+#: code:addons/stock/stock.py:4440
 #, python-format
 msgid "You need to provide a Lot/Serial Number for product %s"
 msgstr ""
@@ -6331,7 +6371,7 @@ msgid "You should only receive by the piece with the same serial number"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:4446
+#: code:addons/stock/stock.py:4444
 #, python-format
 msgid "You should provide a different serial number for each piece"
 msgstr ""

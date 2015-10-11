@@ -58,8 +58,8 @@ class sale_report(osv.osv):
                     sum(l.qty_delivered / u.factor * u2.factor) as qty_delivered,
                     sum(l.qty_invoiced / u.factor * u2.factor) as qty_invoiced,
                     sum(l.qty_to_invoice / u.factor * u2.factor) as qty_to_invoice,
-                    sum(l.price_total * cr.rate) as price_total,
-                    sum(l.price_subtotal * cr.rate) as price_subtotal,
+                    sum(l.price_total * COALESCE(cr.rate, 1.0)) as price_total,
+                    sum(l.price_subtotal * COALESCE(cr.rate, 1.0)) as price_subtotal,
                     count(*) as nbr,
                     s.date_order as date,
                     s.state as state,
@@ -87,7 +87,7 @@ class sale_report(osv.osv):
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
                     left join product_pricelist pp on (s.pricelist_id = pp.id)
-                    join currency_rate cr on (cr.currency_id = pp.currency_id and
+                    left join currency_rate cr on (cr.currency_id = pp.currency_id and
                         cr.date_start <= coalesce(s.date_order, now()) and
                         (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
         """

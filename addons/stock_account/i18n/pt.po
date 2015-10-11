@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:26+0000\n"
-"PO-Revision-Date: 2015-09-15 00:16+0000\n"
+"POT-Creation-Date: 2015-10-01 06:26+0000\n"
+"PO-Revision-Date: 2015-10-01 09:22+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgstr "Permite configurar avaliação de inventário sobre produtos e categoria
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_asset_category_id
 msgid "Asset Type"
-msgstr ""
+msgstr "Tipo de Activo"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -63,7 +63,7 @@ msgstr "Preço médio"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
 msgid "Can be expensed"
-msgstr ""
+msgstr "Pode ser despesa"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -105,7 +105,7 @@ msgstr "Escolha a sua data"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
 "coeff"
-msgstr ""
+msgstr "Coeficiente para converter Unidade de Medida por defeito para Unidade de Venda uos = uom * coef"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
@@ -150,14 +150,14 @@ msgstr "Data"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_deferred_revenue_category_id
 msgid "Deferred Revenue Type"
-msgstr ""
+msgstr "Tipo de Receita Diferida"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_display_name
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome a Mostrar"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
@@ -207,13 +207,6 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_account_invoice_line_move_id
-msgid ""
-"If the invoice was generated from a stock transfer, specify the reference to"
-" the related stock move."
-msgstr ""
-
-#. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "Include landed costs in product costing computation"
 msgstr ""
@@ -228,7 +221,7 @@ msgstr "Instale o módulo que permite a afetar os custos de entrega em recolhas,
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
-msgstr ""
+msgstr "Inventário"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -305,11 +298,6 @@ msgstr "Gerir a avaliação de stock e métodos de custeio"
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Move"
 msgstr "Movimento"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_invoice_line_move_id
-msgid "Move line"
-msgstr "Linha de movimento"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:124
@@ -443,7 +431,7 @@ msgstr "Especificar uma unidade de medida aqui se a faturação é feitoa noutra
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Especifique se o produto pode ser selecionado nas despesas de RH."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -483,7 +471,7 @@ msgid "Stock Input Account"
 msgstr "Conta Stock de Entrada"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:425
+#: code:addons/stock_account/stock_account.py:418
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -518,7 +506,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Conta de avaliação de stock (Outgoing)"
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/stock_valuation_history.py:30
+#: code:addons/stock_account/wizard/stock_valuation_history.py:31
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_graph
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_pivot
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -658,6 +646,14 @@ msgstr "Quando em tempo real a avaliação do stock é habilitado num artigo, es
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
 msgid "Wizard that opens the stock valuation history table"
 msgstr "Assistente que abre a tabela do histórico da avaliação de stock"
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:275
+#, python-format
+msgid ""
+"You don't have any stock journal defined on your product category, check if "
+"you have installed a chart of accounts"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price

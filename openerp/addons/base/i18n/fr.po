@@ -3,6 +3,7 @@
 # * base
 # 
 # Translators:
+# Benjamin Delagoutte <ben@ampletus.fr>, 2015
 # Leandre Berger <leandre.berger@gmail.com>, 2015
 # lucasdeliege <deliegelucas@gmail.com>, 2015
 # Lucas Deliege <lud@odoo.com>, 2015
@@ -14,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2015-10-03 20:03+0000\n"
-"Last-Translator: Olivier Lenoir <olivier.lenoir@free.fr>\n"
+"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"PO-Revision-Date: 2015-10-10 14:44+0000\n"
+"Last-Translator: Benjamin Delagoutte <ben@ampletus.fr>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -287,9 +288,9 @@ msgstr "\nRapports comptables pour l'Uruguay\n"
 #: model:ir.module.module,description:base.module_account_extension
 msgid ""
 "\n"
-"        Add to res_config of account modules the possibility to install extra accounting modules\n"
+"        Adapt base accounting module for Enterprise Edition.\n"
 "\n"
-"        This module will be auto installed if account module and enterprise version are present\n"
+"        This module will be auto installed if account module and enterprise edition are present\n"
 "    "
 msgstr ""
 
@@ -391,14 +392,14 @@ msgid ""
 "\n"
 "        This module adds support for barcodes scanning to the warehouse management system.\n"
 "    "
-msgstr ""
+msgstr "\nModule ajoutant la lecture des codes-barres au système de gestion d'entrepôt."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
 msgid ""
 "\n"
 "        This module is used for Online bank synchronization."
-msgstr ""
+msgstr "\nModule utilisé pour la synchronisation de la banque en ligne."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_online_sync
@@ -406,7 +407,7 @@ msgid ""
 "\n"
 "        This module is used for Online bank synchronization. It provides basic methods to synchronize bank statement.\n"
 "    "
-msgstr ""
+msgstr "\nModule utilisé pour la synchronisation de la banque en ligne. Il fournit des méthodes de base pour synchroniser les relevés bancaires."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_equipment
@@ -920,6 +921,21 @@ msgid ""
 "========================================\n"
 "* Show attachment on the top of the forms\n"
 "* Document Indexation: odt\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_au
+msgid ""
+"\n"
+"Australian Accounting Module\n"
+"============================\n"
+"\n"
+"Australian accounting basic charts and localizations.\n"
+"\n"
+"Also:\n"
+"    - activates a number of regional currencies.\n"
+"    - sets up Australian taxes.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -4303,7 +4319,7 @@ msgid "%s (copy)"
 msgstr "%s (copie)"
 
 #. module: base
-#: code:addons/models.py:6145
+#: code:addons/models.py:6163
 #, python-format
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
@@ -5086,11 +5102,6 @@ msgid "Add or not the corporate RML header"
 msgstr "Ajouter ou non l'en-tête RML de la société"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_account_extension
-msgid "Add some extension to account modules for enterprise version"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,summary:base.module_website_twitter
 msgid "Add twitter scroller snippet in website builder"
 msgstr ""
@@ -5598,6 +5609,11 @@ msgstr "Présences"
 #: model:res.country,name:base.au
 msgid "Australia"
 msgstr "Australie"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_au
+msgid "Australian - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.at
@@ -7550,6 +7566,11 @@ msgid "Czech Republic"
 msgstr "République tchèque"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_dhl
+msgid "DHL Shipping"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Danish / Dansk"
 msgstr "Danish / Dansk"
@@ -7914,6 +7935,12 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_discuss
+#: model:ir.module.module,shortdesc:base.module_mail
+msgid "Discuss"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_mail
 msgid "Discussions, Mailing Lists, News"
 msgstr ""
@@ -8211,7 +8238,7 @@ msgid "El Salvador"
 msgstr "Salvador"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:592
+#: code:addons/base/ir/ir_ui_view.py:585
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr ""
@@ -8280,7 +8307,7 @@ msgstr ""
 #: code:addons/base/res/res_config.py:479
 #, python-format
 msgid ""
-"Enabling this feature you will install following paying application(s) \n"
+"Enabling this feature will install the following paying application(s) : \n"
 "%s"
 msgstr ""
 
@@ -8342,7 +8369,7 @@ msgid "Error ! You can not create recursive tags."
 msgstr "Erreur ! On ne peut pas créer d'étiquettes récursives."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:456
+#: code:addons/base/ir/ir_ui_view.py:449
 #, python-format
 msgid ""
 "Error context:\n"
@@ -8674,7 +8701,7 @@ msgid "Field Type"
 msgstr "Type de Champ"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:916
+#: code:addons/base/ir/ir_ui_view.py:909
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "Le champ `%(field_name)s` n'existe pas"
@@ -10275,7 +10302,7 @@ msgid "Introspection report on objects"
 msgstr "Rapport d'introspection sur les objets"
 
 #. module: base
-#: code:addons/models.py:4521
+#: code:addons/models.py:4516
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -10337,7 +10364,7 @@ msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:584
+#: code:addons/base/ir/ir_ui_view.py:577
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr "Position incorrecte pour l'attribut : '%s'"
@@ -11640,13 +11667,13 @@ msgid "Missing document(s)"
 msgstr "Document(s) manquant(s)"
 
 #. module: base
-#: code:addons/models.py:6130
+#: code:addons/models.py:6148
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "Valeur requise manquante pour le champ '%s' (%s)"
 
 #. module: base
-#: code:addons/models.py:6127
+#: code:addons/models.py:6145
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr "Valeur requise manquante pour le champ '%s'."
@@ -11755,7 +11782,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:692 code:addons/base/ir/ir_ui_view.py:870
+#: code:addons/base/ir/ir_ui_view.py:685 code:addons/base/ir/ir_ui_view.py:863
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "Modèle non trouvé : %(model)s"
@@ -12406,7 +12433,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3919
+#: code:addons/models.py:3915
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -12711,12 +12738,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_params_store
 msgid "Params storage"
-msgstr ""
+msgstr "Paramètre de stockage"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category_parent_id
 msgid "Parent Application"
-msgstr ""
+msgstr "Application parente"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_parent_id
@@ -13268,7 +13295,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_expiry
 msgid "Products Expiration Date"
-msgstr ""
+msgstr "Date de péremption des produits"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_prof
@@ -13533,7 +13560,7 @@ msgid "Record"
 msgstr "Enregistrement"
 
 #. module: base
-#: code:addons/models.py:4832
+#: code:addons/models.py:4827
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr ""
@@ -13568,7 +13595,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:407 code:addons/models.py:4957
+#: code:addons/base/ir/ir_actions.py:407 code:addons/models.py:4952
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr ""
@@ -13601,7 +13628,7 @@ msgid "Recursion found in child server actions"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4031
+#: code:addons/models.py:4026
 #, python-format
 msgid "Recursivity Detected."
 msgstr "Détection de récursivité."
@@ -14346,8 +14373,18 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_dhl
+msgid "Send your shippings through DHL and track them online"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
 msgid "Send your shippings through Fedex and track them online"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_temando
+msgid "Send your shippings through Temando and track them online"
 msgstr ""
 
 #. module: base
@@ -14678,12 +14715,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_social_network
-#: model:ir.module.module,shortdesc:base.module_mail
-msgid "Social Network"
-msgstr "Réseau social"
-
-#. module: base
 #: model:res.country,name:base.sb
 msgid "Solomon Islands"
 msgstr "Îles Salomon"
@@ -14730,7 +14761,7 @@ msgid "Sort"
 msgstr "Trier"
 
 #. module: base
-#: code:addons/models.py:4680
+#: code:addons/models.py:4675
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr ""
@@ -15378,6 +15409,11 @@ msgid "Telugu / తెలుగు"
 msgstr "Telugu / తెలుగు"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_temando
+msgid "Temando Shipping"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_name
 msgid "Template Name"
 msgstr "Nom du modèle"
@@ -15639,45 +15675,45 @@ msgstr "Le modèle auquel ce champ appartient"
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr ""
+msgstr "Le nom du pays doit être unique !"
 
 #. module: base
 #: code:addons/base/res/res_users.py:116
 #, python-format
 msgid "The name of the group can not start with \"-\""
-msgstr ""
+msgstr "Le nom du groupe ne peut pas commencer par \"-\""
 
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique within an application!"
-msgstr ""
+msgstr "Le nom d'un groupe doit être unique à l'intérieur d'une application !"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
-msgstr ""
+msgstr "Le nom de la langue doit être unique !"
 
 #. module: base
 #: code:addons/base/module/module.py:311
 #, python-format
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Le nom du module doit être unique !"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_number_increment
 msgid "The next number of the sequence will be incremented by this number"
-msgstr ""
+msgstr "Le prochain numéro de séquence sera incréménté par ce nombre"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "The next step depends on the file format:"
-msgstr ""
+msgstr "La prochaine étape dépend du format de fichier :"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "The only predefined variables are"
-msgstr ""
+msgstr "Les seules variables prédéfinies sont "
 
 #. module: base
 #: code:addons/model.py:137
@@ -15809,7 +15845,7 @@ msgid "The user will be able to manage equipments."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:6142
+#: code:addons/models.py:6160
 #, python-format
 msgid "The value for the field '%s' already exists."
 msgstr ""
@@ -16129,7 +16165,7 @@ msgid "Translation comments"
 msgstr "Commentaires de traduction"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:580
+#: code:addons/base/ir/ir_translation.py:582
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra translation."
@@ -16948,6 +16984,12 @@ msgid "Warning!"
 msgstr "Avertissement !"
 
 #. module: base
+#: code:addons/models.py:5855 code:addons/models.py:5905
+#, python-format
+msgid "Warnings"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
 msgid ""
 "We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."
@@ -17466,12 +17508,6 @@ msgid "You cannot unactivate the user you're currently logged in as."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3894
-#, python-format
-msgid "You cannot update the translated value of field '%s'"
-msgstr ""
-
-#. module: base
 #: code:addons/base/ir/ir_values.py:428
 #, python-format
 msgid "You do not have the permission to perform this operation!!!"
@@ -17632,7 +17668,7 @@ msgid "cr: database cursor"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4335
+#: code:addons/models.py:4330
 #, python-format
 msgid "created."
 msgstr "créé."
@@ -18010,7 +18046,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:454
+#: code:addons/base/ir/ir_ui_view.py:447
 #, python-format
 msgid "n/a"
 msgstr "n/a"

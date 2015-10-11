@@ -996,12 +996,13 @@ options.keyMap.mac['ESCAPE'] = 'cancel';
 $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
   var $editable = layoutInfo.editable();
   var dimension = sDim.split('x');
-  var rng = range.create();
-  rng = rng.deleteContents();
+  var r = range.create();
+  if (!r) return;
+  r = r.deleteContents();
 
   var isBodyContainer = dom.isBodyContainer;
   dom.isBodyContainer = dom.isNotBreakable;
-  rng.insertNode(editor.table.createTable(dimension[0], dimension[1]));
+  r.insertNode(editor.table.createTable(dimension[0], dimension[1]));
   dom.isBodyContainer = isBodyContainer;
 
   editor.afterCommand($editable);
@@ -1038,7 +1039,12 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
             }
         } else {
             if (!outdent){
-                var next = r.sc.splitText(r.so);
+                if(dom.isText(r.sc)) {
+                    var next = r.sc.splitText(r.so);
+                } else {
+                    var next = document.createTextNode('')
+                    $(r.sc.childNodes[r.so]).before(next);
+                }
                 editor.typing.insertTab($editable, r, options.tabsize);
                 r = range.create(next, 0, next, 0);
                 r = dom.merge(r.sc.parentNode, r.sc, r.so, r.ec, r.eo, null, true);
@@ -1177,9 +1183,9 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     $editable.data('NoteHistory').recordUndo($editable, "visible");
 
     var r = range.create();
-        if (!r) return;
+    if (!r) return;
 
-        if (!r.isCollapsed()) {
+    if (!r.isCollapsed()) {
         r = r.deleteContents(true);
         r.select();
     }
@@ -1278,7 +1284,7 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
     if (dom.isImg(node) || (!contentAfter && dom.isImg(dom.hasContentAfter(node)))) {
         var parent;
         var index;
-        var rng;
+        var r;
         if (!dom.isImg(node)) {
             node = dom.hasContentAfter(node);
         }
@@ -1287,16 +1293,16 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
             index = dom.position(node);
             if (index>0) {
                 var next = node.previousSibling;
-                rng = range.create(next, next.textContent.length);
+                r = range.create(next, next.textContent.length);
             } else {
-                rng = range.create(parent, 0);
+                r = range.create(parent, 0);
             }
             if (!dom.hasContentAfter(node) && !dom.hasContentBefore(node)) {
                 parent.appendChild($('<br/>')[0]);
             }
             parent.removeChild(node);
             node = parent;
-            rng.select();
+            r.select();
         }
     }
     // empty tag
@@ -1433,7 +1439,7 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
                 if (prevTr) {
                     node = (dom.lastElementChild(prevTr).lastChild && dom.lastElementChild(prevTr).lastChild.tagName ? dom.lastElementChild(prevTr).lastChild.previousSibling : dom.lastElementChild(prevTr).lastChild) || dom.lastElementChild(prevTr);
                 } else {
-                    node = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(tr)));
+                    node = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(tr)) || $editable.get(0));
                 }
                 $(tr).empty();
                 if(!$(tr).closest('table').has('td, th').length) {
@@ -1507,10 +1513,10 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
         }
     }
 
-    var rng = range.create();
-    if (rng) {
-        $(dom.node(rng.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
-        dom.scrollIntoViewIfNeeded(rng.sc.parentNode.previousElementSibling || rng.sc);
+    var r = range.create();
+    if (r) {
+        $(dom.node(r.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
+        dom.scrollIntoViewIfNeeded(r.sc.parentNode.previousElementSibling || r.sc);
     }
 
     event.preventDefault();
@@ -1529,8 +1535,9 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
     $editable.data('NoteHistory').recordUndo($editable);
 
     var parent;
-    var rng = range.create();
-    var node = rng.sc;
+    var r = range.create();
+    if (!r) return;
+    var node = r.sc;
     while (node && node !== $editable[0]) {
 
         parent = node.parentNode;
@@ -1543,7 +1550,7 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
                 ul.appendChild(node.firstChild);
             }
             parent.removeChild(node);
-            rng.select();
+            r.select();
             return;
 
         } else if (node.tagName === (sorted ? "OL" : "UL")) {
@@ -1568,19 +1575,19 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
             }
 
             parent.removeChild(node);
-            rng.select();
+            r.select();
             return;
 
         }
         node = parent;
     }
 
-    var p0 = rng.sc;
+    var p0 = r.sc;
     while (p0 && p0.parentNode && p0.parentNode !== $editable[0] && !isFormatNode(p0)) {
         p0 = p0.parentNode;
     }
     if (!p0) return;
-    var p1 = rng.ec;
+    var p1 = r.ec;
     while (p1 && p1.parentNode && p1.parentNode !== $editable[0] && !isFormatNode(p1)) {
         p1 = p1.parentNode;
     }
@@ -1619,7 +1626,7 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
     for (var i=0; i<brs.length; i++) {
         parent.removeChild(brs[i]);
     }
-    rng.clean().select();
+    r.clean().select();
     event.preventDefault();
     return false;
 };
@@ -1630,6 +1637,7 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
     var $editable = layoutInfo.editable();
     $editable.data('NoteHistory').recordUndo($editable);
     var r = range.create();
+    if (!r) return;
 
     var flag = false;
     function indentUL (UL, start, end) {
@@ -1838,10 +1846,13 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
 $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, value) {
     var $editable = layoutInfo.editable();
     $editable.data('NoteHistory').recordUndo($editable);
+    var r = range.create();
+    if(!r) return;
     var node = range.create().sc.parentNode;
     document.execCommand('removeFormat');
     document.execCommand('removeFormat');
     var r = range.create();
+    if (!r) return;
     r = dom.merge(node, r.sc, r.so, r.ec, r.eo, null, true);
     range.create(r.sc, r.so, r.ec, r.eo).select();
     event.preventDefault();
@@ -1895,21 +1906,21 @@ eventHandler.modules.editor.currentStyle = function(target) {
     // with our changes for inline editor, the targeted element could be a button of the editor
     if(!styleInfo.image || !dom.isEditable(styleInfo.image)) {
         styleInfo.image = undefined;
-        var rng = range.create();
-        if(rng)
-            styleInfo.image = rng.isOnImg();
+        var r = range.create();
+        if(r)
+            styleInfo.image = r.isOnImg();
     }
     return styleInfo;
 }
 
 options.fontSizes = [_t('Default'), 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 62];
 $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color, bgcolor, size) {
-    var rng = range.create();
-    if(!rng) return;
-    var startPoint = rng.getStartPoint();
-    var endPoint = rng.getEndPoint();
+    var r = range.create();
+    if(!r) return;
+    var startPoint = r.getStartPoint();
+    var endPoint = r.getEndPoint();
 
-    if (rng.isCollapsed() && !dom.isFont(rng.sc)) {
+    if (r.isCollapsed() && !dom.isFont(r.sc)) {
         return {
             sc: startPoint.node,
             so: startPoint.offset,
@@ -1958,7 +1969,7 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
     nodes = list.unique(nodes);
 
         // If ico fa
-    if (rng.isCollapsed()) {
+    if (r.isCollapsed()) {
         nodes.push(startPoint.node);
     }
 
@@ -2132,6 +2143,7 @@ $.summernote.pluginEvents.foreColor = function (event, editor, layoutInfo, foreC
 $.summernote.pluginEvents.backColor = function (event, editor, layoutInfo, backColor) {
   var $editable = layoutInfo.editable();
   var r = range.create();
+  if (!r) return;
   if (r.isCollapsed() && r.isOnCell()) {
     var cell = dom.ancestor(r.sc, dom.isCell);
     cell.className = cell.className.replace(new RegExp('(^|\\s+)bg-[^\\s]+(\\s+|$)', 'gi'), '');
@@ -2164,7 +2176,8 @@ options.onCreateLink = function (sLinkUrl) {
 /* table */
 
 function summernote_table_scroll (event) {
-    if (range.create().isOnCell()) {
+    var r = range.create();
+    if (r && r.isOnCell()) {
         $('.o_table_handler').remove();
     }
 }

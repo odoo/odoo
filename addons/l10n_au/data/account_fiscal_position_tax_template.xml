@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="fiscal_position_os_partner" model="account.fiscal.position.template">
+            <field name="name">OS Partner</field>
+            <field name="chart_template_id" ref="l10n_au_chart_template"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_os_partner_sale" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_os_partner"/>
+            <field name="tax_src_id" ref="au_tax_sale_10"/>
+            <field name="tax_dest_id" ref="au_tax_sale_0"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_os_partner_purch1" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_os_partner"/>
+            <field name="tax_src_id" ref="au_tax_purchase_10"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_0"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_os_partner_purch2" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_os_partner"/>
+            <field name="tax_src_id" ref="au_tax_purchase_capital"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_0"/>
+        </record>
+
+    </data>
+</openerp>

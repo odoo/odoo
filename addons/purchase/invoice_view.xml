@@ -61,8 +61,20 @@
                  <field name="purchase_id" domain="[('invoice_status', '=', 'to invoice'), ('partner_id', 'child_of', partner_id)]" attrs="{'invisible': [('state', '&lt;&gt;', 'draft')]}" class="oe_edit_only"/>
             </field>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
-                 <field name="purchase_line_id" invisible="1"/>
+                <field name="purchase_line_id" invisible="1"/>
+                <field name="purchase_id"/>
             </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_line_form_inherit_purchase" model="ir.ui.view">
+        <field name="name">account.invoice.line.form.inherit.purchase</field>
+        <field name="model">account.invoice.line</field>
+        <field name="inherit_id" ref="account.view_invoice_line_form"/>
+        <field name="arch" type="xml">
+            <field name="account_id" position="before">
+                <field name="purchase_id"/>
+            </field>
         </field>
     </record>
 </odoo>

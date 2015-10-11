@@ -484,7 +484,7 @@ var ChatterComposer = ChatComposer.extend({
                 subtype_id: false,
                 subtype: 'mail.mt_comment',
                 message_type: 'comment',
-                content_subtype: 'plaintext',
+                content_subtype: 'html',
             });
 
             // Subtype

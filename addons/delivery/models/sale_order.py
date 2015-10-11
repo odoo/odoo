@@ -72,15 +72,10 @@ class SaleOrder(models.Model):
     def _create_delivery_line(self, carrier, price_unit):
         SaleOrderLine = self.env['sale.order.line']
 
-        account_id = carrier.product_id.property_account_income_id.id
-        if not account_id:
-            account_id = carrier.product_id.categ_id.property_account_income_categ_id.id
-
         # Apply fiscal position
         taxes = carrier.product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
         taxes_ids = taxes.ids
         if self.partner_id and self.fiscal_position_id:
-            account_id = self.fiscal_position_id.map_account(account_id)
             taxes_ids = self.fiscal_position_id.map_tax(taxes).ids
 
         # Create the sale order line

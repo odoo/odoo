@@ -3,13 +3,14 @@
 # * sales_team
 # 
 # Translators:
+# Bogdan, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-14 10:51+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-10-07 11:23+0000\n"
+"Last-Translator: Bogdan\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,9 +62,14 @@ msgid "<span>View</span>"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_active
 msgid "Active"
-msgstr "Активовано"
+msgstr "Активний"
 
 #. module: sales_team
 #. openerp-web
@@ -193,13 +199,17 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction
 #: model:ir.model.fields,help:sales_team.field_crm_team_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -285,16 +295,6 @@ msgid "My Salesteams"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:50
 #, python-format
@@ -309,8 +309,13 @@ msgid "Next Actions"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: sales_team
@@ -320,7 +325,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:79
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr ""
@@ -345,7 +350,7 @@ msgstr "Відповісти"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
-msgstr "Прейскурант продажу"
+msgstr "Прайс-лист продажу"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -530,7 +535,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:79
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
 #, python-format
 msgid "Wrong value entered!"
 msgstr ""

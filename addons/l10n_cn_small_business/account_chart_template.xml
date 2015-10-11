@@ -14,10 +14,10 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
 -->
     <data noupdate="True">
 
-        <record id="small_business_chart1003" model="account.account.template">
-            <field name="code">1003</field>
+        <record id="small_business_chart1012" model="account.account.template">
+            <field name="code">1012</field>
             <field eval="True" name="reconcile"/>
-            <field name="name">转让帐户</field>
+            <field name="name">在途资金</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         </record>
         <record id="l10n_chart_china_small_business" model="account.chart.template">
@@ -26,9 +26,9 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field name="currency_id" ref="base.CNY"/>
             <field name="cash_account_code_prefix">1001</field>
             <field name="bank_account_code_prefix">1002</field>
-            <field name="transfer_account_id" ref="small_business_chart1003"/>
+            <field name="transfer_account_id" ref="small_business_chart1012"/>
         </record>
-        <record id="small_business_chart1003" model="account.account.template">
+        <record id="small_business_chart1012" model="account.account.template">
             <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
         </record>
 
@@ -334,7 +334,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field name="code">2401</field>
             <field eval="False" name="reconcile"/>
             <field name="name">递延收益</field>
-            <field name="user_type_id" ref="user_type_all"/>
+            <field name="user_type_id" ref="l10n_cn.user_type_all"/>
             <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
         </record>
         <record id="small_business_chart2501" model="account.account.template">
@@ -396,14 +396,14 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field name="code">4001</field>
             <field eval="False" name="reconcile"/>
             <field name="name">生产成本</field>
-            <field name="user_type_id" ref="user_type_all"/>
+            <field name="user_type_id" ref="l10n_cn.user_type_all"/>
             <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
         </record>
         <record id="small_business_chart4101" model="account.account.template">
             <field name="code">4101</field>
             <field eval="False" name="reconcile"/>
             <field name="name">制造费用</field>
-            <field name="user_type_id" ref="user_type_all"/>
+            <field name="user_type_id" ref="l10n_cn.user_type_all"/>
             <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
         </record>
 
@@ -411,7 +411,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field name="code">4301</field>
             <field eval="False" name="reconcile"/>
             <field name="name">研发支出</field>
-            <field name="user_type_id" ref="user_type_all"/>
+            <field name="user_type_id" ref="l10n_cn.user_type_all"/>
             <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
         </record>
 
@@ -419,7 +419,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field name="code">4401</field>
             <field eval="False" name="reconcile"/>
             <field name="name">工程施工</field>
-            <field name="user_type_id" ref="user_type_all"/>
+            <field name="user_type_id" ref="l10n_cn.user_type_all"/>
             <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
         </record>
 
@@ -427,7 +427,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field name="code">4403</field>
             <field eval="False" name="reconcile"/>
             <field name="name">机械作业</field>
-            <field name="user_type_id" ref="user_type_all"/>
+            <field name="user_type_id" ref="l10n_cn.user_type_all"/>
             <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
         </record>
 
@@ -559,7 +559,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
         <!-- 增值税 -->
         <record id="vats_small_business" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
-            <field name="name">17％的增值税销项税</field>
+            <field name="name">17％的增值税销项税 - 中国小企业会计科目表</field>
             <field name="description">17％的增值税销项税</field>
             <field eval="17" name="amount"/>
             <field name="amount_type">percent</field>
@@ -571,7 +571,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
 
         <record id="vatp_small_business" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
-            <field name="name">增值税17%进项税</field>
+            <field name="name">增值税17%进项税 - 中国小企业会计科目表</field>
             <field name="description">增值税17%进项税</field>
             <field eval="17" name="amount"/>
             <field name="amount_type">percent</field>

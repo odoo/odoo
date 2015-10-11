@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:32+0000\n"
+"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"PO-Revision-Date: 2015-10-10 09:48+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgstr "Дії"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_active
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_active
 msgid "Active"
-msgstr "Активовано"
+msgstr "Активний"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_followers
@@ -83,7 +83,12 @@ msgstr ""
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Cancelled"
-msgstr "Cancelled"
+msgstr "Скасовано"
+
+#. module: base_action_rule
+#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
+msgid "Check this box if this contact is a customer."
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -197,7 +202,7 @@ msgstr "Години"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_id
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_domain
@@ -226,6 +231,11 @@ msgid ""
 "In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
 " the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
+msgid "Is a Customer"
 msgstr ""
 
 #. module: base_action_rule
@@ -362,12 +372,27 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
 msgid "Status"
-msgstr "Ствтус"
+msgstr "Статус"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_name
 msgid "Subject"
 msgstr "Тема"
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_done
+msgid "Test lead in state 'done'"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_draft
+msgid "Test lead in state 'draft'"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_open
+msgid "Test lead in state 'open'"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id

@@ -23,14 +23,10 @@
 
     """,
     'depends': ['base', 'account'],
-    'demo': [],
     'data': [
-        'account_chart_type.xml',
-        'account_chart_template.xml',
-        'account_chart_template.yml',
         'base_data.xml',
+        'account_chart_type.xml',
     ],
     'license': 'GPL-3',
-    'auto_install': False,
     'installable': True,
 }

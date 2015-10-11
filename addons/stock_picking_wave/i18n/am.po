@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-08 09:02+0000\n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-09-19 08:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Amharic (http://www.transifex.com/odoo/odoo-9/language/am/)\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: am\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: stock_picking_wave
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction
+msgid "Action Needed"
+msgstr ""
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
@@ -30,12 +35,8 @@ msgstr ""
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.action_picking_to_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.picking_to_wave_act
-msgid "Add to Wave"
-msgstr ""
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
-msgid "Add to wave"
+msgid "Add to Wave"
 msgstr ""
 
 #. module: stock_picking_wave
@@ -155,10 +156,14 @@ msgid "Ice Cream Vanilla"
 msgstr ""
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread
 msgid "If checked new messages require your attention."
 msgstr "አዳዲስ መልእክቶችን ስናይ አስፈላጊ ትኩረት መስጠት"
+
+#. module: stock_picking_wave
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
@@ -214,24 +219,19 @@ msgid "Name of the picking wave"
 msgstr ""
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: stock_picking_wave
 #: code:addons/stock_picking_wave/stock_picking_wave.py:42
 #, python-format
 msgid "Nothing to print."
 msgstr ""
 
 #. module: stock_picking_wave
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Number of needaction messages"
+msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: stock_picking_wave
@@ -248,7 +248,7 @@ msgstr ""
 #: code:addons/stock_picking_wave/stock_picking_wave.py:60
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9577
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9563
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -271,7 +271,7 @@ msgid "Picking Waves not finished"
 msgstr ""
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9577
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9563
 msgid "Picking wave associated to this picking"
 msgstr ""
 
