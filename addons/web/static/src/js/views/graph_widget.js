@@ -86,8 +86,8 @@ return Widget.extend({
         if (!this.data.length) {
             this.$el.append(QWeb.render('GraphView.error', {
                 title: _t("No data to display"),
-                description: _t("No data available for this chart.  " +
-                    "Try to add some records, or make sure that" +
+                description: _t("No data available for this chart. " +
+                    "Try to add some records, or make sure that " +
                     "there is no active filter in the search bar."),
             }));
         } else {
