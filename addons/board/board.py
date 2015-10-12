@@ -13,6 +13,29 @@ class board_board(osv.osv):
     _auto = False
     _columns = {}
 
+    @tools.cache()
+    def list(self, cr, uid, context=None):
+        Actions = self.pool.get('ir.actions.act_window')
+        Menus = self.pool.get('ir.ui.menu')
+        IrValues = self.pool.get('ir.values')
+
+        act_ids = Actions.search(cr, uid, [('res_model', '=', self._name)], context=context)
+        refs = ['%s,%s' % (Actions._name, act_id) for act_id in act_ids]
+
+        # cannot search "action" field on menu (non stored function field without search_fnct)
+        irv_ids = IrValues.search(cr, uid, [
+            ('model', '=', 'ir.ui.menu'),
+            ('key', '=', 'action'),
+            ('key2', '=', 'tree_but_open'),
+            ('value', 'in', refs),
+        ], context=context)
+        menu_ids = map(itemgetter('res_id'), IrValues.read(cr, uid, irv_ids, ['res_id'], context=context))
+        menu_names = Menus.name_get(cr, uid, menu_ids, context=context)
+        return [dict(id=m[0], name=m[1]) for m in menu_names]
+
+    def _clear_list_cache(self):
+        self.list.clear_cache(self)
+
     def create(self, cr, user, vals, context=None):
         return 0
 
