@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 {
     'name': 'Blogs',
     'category': 'Website',
     'sequence': 140,
     'website': 'https://www.odoo.com/page/blog-engine',
     'summary': 'News, Blogs, Announces, Discussions',
-    'version': '1.0',
+    'version': '2.0',
     'description': """
 Odoo Blog
 ============
@@ -29,7 +28,7 @@ Odoo Blog
         'tests/test_website_blog.yml'
     ],
     'qweb': [
-        'static/src/xml/*.xml'
+        'static/src/xml/website_blog.inline.discussion.xml'
     ],
     'installable': True,
     'application': True,
