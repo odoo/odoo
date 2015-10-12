@@ -252,14 +252,13 @@ var ActionManager = Widget.extend({
      */
     push_action: function(widget, action_descr, options) {
         var self = this;
-        var to_destroy;
         var old_widget = this.inner_widget;
         var old_action = this.inner_action;
+        var old_action_stack = this.action_stack;
         options = options || {};
 
         // Empty action_stack if requested
         if (options.clear_breadcrumbs) {
-            to_destroy = this.action_stack;
             this.action_stack = [];
         }
 
@@ -278,7 +277,8 @@ var ActionManager = Widget.extend({
             old_action.set_on_reverse_breadcrumb(options.on_reverse_breadcrumb);
         }
 
-        // Update action_stack
+        // Update action_stack (must be done before appendTo to properly
+        // compute the breadcrumbs and to perform do_push_state)
         this.action_stack.push(new_action);
         this.inner_action = new_action;
         this.inner_widget = widget;
@@ -311,8 +311,14 @@ var ActionManager = Widget.extend({
                 old_widget.do_hide();
             }
             if (options.clear_breadcrumbs) {
-                self.clear_action_stack(to_destroy);
+                self.clear_action_stack(old_action_stack);
             }
+        }).fail(function () {
+            // Destroy failed action and restore internal state
+            new_action.destroy();
+            self.action_stack = old_action_stack;
+            self.inner_action = old_action;
+            self.inner_widget = old_widget;
         });
     },
     get_breadcrumbs: function () {
