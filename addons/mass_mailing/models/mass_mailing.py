@@ -229,6 +229,7 @@ class MassMailingCampaign(osv.Model):
         return result
 
     _columns = {
+        # TODO: Remove the field name to use the inheritS property from the utm.campaign
         'name': fields.char('Name', required=True),
         'stage_id': fields.many2one('mail.mass_mailing.stage', 'Stage', required=True),
         'user_id': fields.many2one(
@@ -316,6 +317,18 @@ class MassMailingCampaign(osv.Model):
     def _get_medium_id(self, cr, uid, context=None):
         return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'utm.utm_medium_email')
 
+    def create(self, cr, uid, vals, context=None):
+        mass_mailing_campaign_id = super(MassMailingCampaign, self).create(cr, uid, vals, context=context)
+        mass_mailing_campaign = self.pool['mail.mass_mailing.campaign'].browse(cr, uid, mass_mailing_campaign_id, context=context)
+        self.pool['utm.campaign'].write(cr, uid, [mass_mailing_campaign.campaign_id.id], {'name': vals['name']}, context=context)
+        return mass_mailing_campaign_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        mass_mailing_campaign = self.browse(cr, uid, ids, context=context)
+        if ('name' in vals) and mass_mailing_campaign.campaign_id:
+            self.pool['utm.campaign'].write(cr, uid, [mass_mailing_campaign.campaign_id.id], {'name': vals['name']}, context=context)
+        return super(MassMailingCampaign, self).write(cr, uid, ids, vals, context=context)
+
     _defaults = {
         'user_id': lambda self, cr, uid, ctx=None: uid,
         'stage_id': lambda self, *args: self._get_default_stage_id(*args),
@@ -342,15 +355,7 @@ class MassMailingCampaign(osv.Model):
         return res
 
     def on_change_campaign_name(self, cr, uid, ids, name, context=None):
-        if name:
-            mass_mailing_campaign = self.browse(cr, uid, ids, context=context)
-            if mass_mailing_campaign.campaign_id:
-                utm_campaign_id = mass_mailing_campaign.campaign_id.id
-                self.pool['utm.campaign'].write(cr, uid, [utm_campaign_id], {'name': name}, context=context)
-            else:
-                utm_campaign_id = self.pool['utm.campaign'].create(cr, uid, {'name': name}, context=context)
-
-            return {'value': {'campaign_id': utm_campaign_id}}
+        return {'value' : {}}
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         """ Override read_group to always display all states. """
@@ -476,6 +481,16 @@ class MassMailing(osv.Model):
 
     # indirections for inheritance
     _mailing_model = lambda self, *args, **kwargs: self._get_mailing_model(*args, **kwargs)
+
+    def _get_source_id(self, cr, uid, context=None):
+        return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'utm.utm_source_newsletter')
+
+    def _get_medium_id(self, cr, uid, context=None):
+        return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'utm.utm_medium_email')
+
+    def _get_stage_id(self, cr, uid, context=None):
+        stage_id = self.pool['mail.mass_mailing.stage'].search(cr, uid, [], limit=1, context=context)
+        return stage_id and stage_id[0] or False
 
     _columns = {
         'name': fields.char('Subject', required=True),
@@ -609,6 +624,9 @@ class MassMailing(osv.Model):
         'mailing_model': 'mail.mass_mailing.contact',
         'contact_ab_pc': 100,
         'mailing_domain': [],
+        'source_id': lambda self, *args: self._get_source_id(*args),
+        'medium_id': lambda self,*args: self._get_medium_id(*args),
+        'stage_id': lambda self,*args: self._get_stage_id(*args),
     }
 
     def onchange_mass_mailing_campaign_id(self, cr, uid, id, mass_mailing_campaign_ids, context=None):
@@ -619,6 +637,22 @@ class MassMailing(osv.Model):
                    'source_id': mass_mailing_campaign[0].source_id.id, 
                    'medium_id': mass_mailing_campaign[0].medium_id.id}
             return {'value': dic}
+
+    def create(self, cr, uid, vals, context=None):
+        if not vals['mass_mailing_campaign_id']:
+            mass_mailing_campaign_id = self.pool['mail.mass_mailing.campaign'].create(cr, uid, {
+                'name': vals['name'],
+                'user_id': SUPERUSER_ID,
+            }, context=context)
+            vals['mass_mailing_campaign_id'] = mass_mailing_campaign_id
+        return super(MassMailing, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        mass_mailing = self.browse(cr, uid, ids, context=None)
+        if ('name' in vals) and mass_mailing.mass_mailing_campaign_id:
+            if self.pool['mail.mass_mailing'].search_count(cr, uid, [('mass_mailing_campaign_id', '=', mass_mailing.mass_mailing_campaign_id.id)], context=context) == 1:
+                self.pool['mail.mass_mailing.campaign'].write(cr, uid, [mass_mailing.mass_mailing_campaign_id.id], {'name': vals['name']}, context=context)
+        return super(MassMailing, self).write(cr, uid, ids, vals, context=context)
 
     #------------------------------------------------------
     # Technical stuff
