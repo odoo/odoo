@@ -326,6 +326,13 @@ class project(osv.osv):
             tasks.write({'active': vals['active']})
         return res
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        context = dict(context or {})
+        if context.get('message_is_follower', False):
+            res = super(project, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
+            return [proj.id for proj in self.browse(cr, uid, res, context=context) if proj.message_is_follower]
+        return super(project, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
+
 
 class task(osv.osv):
     _name = "project.task"
