@@ -42,12 +42,12 @@ website.if_dom_contains('div.o_website_quote', function () {
     $('form.js_accept_json').submit(function(ev){
         ev.preventDefault();
         var $link = $(ev.currentTarget);
+        var $confirm_btn = $link.find('button[type="submit"]');
         var href = $link.attr("action");
         var order_id = href.match(/accept\/([0-9]+)/);
         var token = href.match(/token=(.*)/);
         if (token)
             token = token[1];
-
         var signer_name = $("#name").val();
         var sign = $("#signature").jSignature("getData",'image');
         var is_empty = sign?empty_sign[1]==sign[1]:false;
@@ -57,6 +57,8 @@ website.if_dom_contains('div.o_website_quote', function () {
         if (is_empty || ! signer_name)
             return false;
 
+        $confirm_btn.prepend('<i class="fa fa-spinner fa-spin"></i> ');
+        $confirm_btn.attr('disabled', true);
         openerp.jsonRpc("/quote/accept", 'call', {
             'order_id': parseInt(order_id[1]),
             'token': token,
