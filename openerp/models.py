@@ -268,7 +268,7 @@ IdType = (int, long, basestring, NewId)
 
 
 # maximum number of prefetched records
-PREFETCH_MAX = 200
+PREFETCH_MAX = 1000
 
 # special columns automatically created by the ORM
 LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
