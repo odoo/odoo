@@ -237,6 +237,33 @@ class ir_model(osv.osv):
 
         CustomModel._build_model(self.pool, cr)
 
+    def load(self, cr, uid, fields, data, context=None):
+        """
+        Load the data matrix, and return a list of ids and a list of messages.
+        Note that the processing of each line commits its result to the database, because this is what this model does.
+        Therefore, one cannot rollback changes if an error occurs.
+        """
+        context = dict(context or {}, manual=True) # this is for forcing state='manual' in methods create and write
+        fields = map(models.fix_import_export_id_paths, fields)
+        ModelData = self.pool['ir.model.data']
+
+        mode = 'init'
+        current_module = ''
+        noupdate = False
+
+        ids = []
+        messages = []
+        for id, xid, record, info in self._convert_records(cr, uid,
+                self._extract_records(cr, uid, fields, data, context=context, log=messages.append),
+                context=context, log=messages.append):
+
+            id = ModelData._update(cr, uid, self._name, current_module, record,
+                       mode=mode, xml_id=xid, noupdate=noupdate, res_id=id, context=context)
+            ids.append(id)
+
+        return {'ids': ids, 'messages': messages}
+
+
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
     _description = "Fields"
@@ -506,6 +533,33 @@ class ir_model_fields(osv.osv):
             RegistryManager.signal_registry_change(cr.dbname)
 
         return res
+
+    def load(self, cr, uid, fields, data, context=None):
+        """
+        Load the data matrix, and return a list of ids and a list of messages.
+        Note that the processing of each line commits its result to the database, because this is what this model does.
+        Therefore, one cannot rollback changes if an error occurs.
+        """
+        context = dict(context or {}, manual=True) # this is for forcing state='manual' in methods create and write
+        fields = map(models.fix_import_export_id_paths, fields)
+        ModelData = self.pool['ir.model.data']
+
+        mode = 'init'
+        current_module = ''
+        noupdate = False
+
+        ids = []
+        messages = []
+        for id, xid, record, info in self._convert_records(cr, uid,
+                self._extract_records(cr, uid, fields, data, context=context, log=messages.append),
+                context=context, log=messages.append):
+
+            id = ModelData._update(cr, uid, self._name, current_module, record,
+                       mode=mode, xml_id=xid, noupdate=noupdate, res_id=id, context=context)
+            ids.append(id)
+
+        return {'ids': ids, 'messages': messages}
+
 
 class ir_model_constraint(Model):
     """

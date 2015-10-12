@@ -12,6 +12,7 @@
                     <input type="hidden" name="import_id"/>
                     <button type="button" disabled="disabled"
                             class="oe_button oe_import_button oe_import_validate oe_highlight"
+                            t-if="widget.res_model !== 'ir.model.fields' and widget.res_model !== 'ir.model'"
                         >Validate</button>
                     <button type="button" disabled="disabled"
                             class="oe_button oe_import_button oe_import_import"
