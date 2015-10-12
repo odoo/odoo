@@ -18,7 +18,7 @@ Adds support for:
 - agenda
 - call for proposals
         """,
-    'depends': ['website_event', 'website_blog'],
+    'depends': ['website_event'],
     'data': [
         'data/event_data.xml',
         'views/website_event.xml',
