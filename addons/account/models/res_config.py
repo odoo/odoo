@@ -119,8 +119,8 @@ class AccountConfigSettings(models.TransientModel):
     module_account_plaid = fields.Boolean(string="Plaid Connector",
                                           help='Get your bank statements from you bank and import them through plaid.com.\n'
                                           '-that installs the module account_plaid.')
-    module_account_yodlee = fields.Boolean("Bank Interface - Sync our bank feeds automatically",
-        help='Get your bank statements from you bank and import them through yodlee.com.\n'
+    module_account_yodlee = fields.Boolean("Bank Interface - Sync your bank feeds automatically",
+        help='Get your bank statements from your bank and import them through yodlee.com.\n'
                                           '-that installs the module account_yodlee.')
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files",
         help='Get your bank statements from your bank and import them in Odoo in the .QIF format.\n'
@@ -218,10 +218,8 @@ class AccountConfigSettings(models.TransientModel):
     def set_product_taxes(self):
         """ Set the product taxes if they have changed """
         ir_values_obj = self.env['ir.values']
-        if self.default_sale_tax_id:
-            ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id], for_all_users=True, company_id=self.company_id.id)
-        if self.default_purchase_tax_id:
-            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
+        ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id] if self.default_sale_tax_id else False, for_all_users=True, company_id=self.company_id.id)
+        ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id] if self.default_purchase_tax_id else False, for_all_users=True, company_id=self.company_id.id)
 
     @api.multi
     def set_chart_of_accounts(self):

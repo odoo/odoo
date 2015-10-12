@@ -402,7 +402,7 @@ def options():
     op.add_option("-b", "--build-dir", default=build_dir, help="build directory (%default)", metavar="DIR")
     op.add_option("-p", "--pub", default=None, help="pub directory (%default)", metavar="DIR")
     op.add_option("", "--no-testing", action="store_true", help="don't test the builded packages")
-    op.add_option("-v", "--version", default='8.0', help="version (%default)")
+    op.add_option("-v", "--version", default='9.0', help="version (%default)")
 
     op.add_option("", "--no-debian", action="store_true", help="don't build the debian package")
     op.add_option("", "--no-rpm", action="store_true", help="don't build the rpm package")

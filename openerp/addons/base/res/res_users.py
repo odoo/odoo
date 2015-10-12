@@ -162,13 +162,17 @@ class res_users(osv.osv):
             res[user.id] = not self.has_group(cr, user.id, 'base.group_user')
         return res
 
+    def _store_trigger_share_res_groups(self, cr, uid, ids, context=None):
+        group_user = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.group_user', context=context)
+        if group_user and group_user.id in ids:
+            return group_user.users.ids
+        return []
+
     def _get_users_from_group(self, cr, uid, ids, context=None):
         result = set()
         groups = self.pool['res.groups'].browse(cr, uid, ids, context=context)
         # Clear cache to avoid perf degradation on databases with thousands of users
         groups.invalidate_cache()
-        group_user = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.group_user', context=context)
-        groups = [g for g in groups if g == group_user or group_user in g.trans_implied_ids]
         for group in groups:
             result.update(user.id for user in group.users)
         return list(result)
@@ -200,7 +204,7 @@ class res_users(osv.osv):
         'share': fields.function(_is_share, string='Share User', type='boolean',
              store={
                  'res.users': (lambda self, cr, uid, ids, c={}: ids, ['groups_id'], 50),
-                 'res.groups': (_get_users_from_group, ['users'], 50),
+                 'res.groups': (_store_trigger_share_res_groups, ['users'], 50),
              }, help="External user with limited access, created only for the purpose of sharing data."),
     }
 
