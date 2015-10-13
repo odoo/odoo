@@ -711,28 +711,35 @@ class crm_lead(format_address, osv.osv):
 
         return True
 
+    @api.multi
+    def _map_values_to_partner(self, name, is_company, parent_id=False):
+        """Values to create or update a ``res.partner`` from this lead."""
+        return {
+            "name": name,
+            "user_id": self.user_id.id,
+            "comment": self.description,
+            "section_id": self.section_id.id or False,
+            "parent_id": parent_id,
+            "phone": self.phone,
+            "mobile": self.mobile,
+            "email": (tools.email_split(self.email_from) and
+                      tools.email_split(self.email_from)[0] or False),
+            "fax": self.fax,
+            "title": self.title and self.title.id or False,
+            "function": self.function,
+            "street": self.street,
+            "street2": self.street2,
+            "zip": self.zip,
+            "city": self.city,
+            "country_id": self.country_id and self.country_id.id or False,
+            "state_id": self.state_id and self.state_id.id or False,
+            "is_company": is_company,
+            "type": "contact",
+        }
+
     def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
         partner = self.pool.get('res.partner')
-        vals = {'name': name,
-            'user_id': lead.user_id.id,
-            'comment': lead.description,
-            'team_id': lead.team_id.id or False,
-            'parent_id': parent_id,
-            'phone': lead.phone,
-            'mobile': lead.mobile,
-            'email': tools.email_split(lead.email_from) and tools.email_split(lead.email_from)[0] or False,
-            'fax': lead.fax,
-            'title': lead.title and lead.title.id or False,
-            'function': lead.function,
-            'street': lead.street,
-            'street2': lead.street2,
-            'zip': lead.zip,
-            'city': lead.city,
-            'country_id': lead.country_id and lead.country_id.id or False,
-            'state_id': lead.state_id and lead.state_id.id or False,
-            'is_company': is_company,
-            'type': 'contact'
-        }
+        vals = lead._map_values_to_partner(name, is_company, parent_id)[0]
         partner = partner.create(cr, uid, vals, context=context)
         return partner
 
