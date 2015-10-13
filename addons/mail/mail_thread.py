@@ -65,7 +65,7 @@ class mail_thread(osv.osv):
         for model_name in self.pool.obj_list():
             model = self.pool.get(model_name)
             if 'mail.thread' in getattr(model, '_inherit', []):
-                ret_dict[model_name] = model._description        
+                ret_dict[model_name] = model._description
         return ret_dict
 
     def message_thread_followers(self, cr, uid, ids, context=None):
@@ -99,7 +99,7 @@ class mail_thread(osv.osv):
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """Called by ``message_process`` when a new message is received
-           for a given thread model, if the message did not belong to 
+           for a given thread model, if the message did not belong to
            an existing thread.
            The default behavior is to create a new record of the corresponding
            model (based on some very basic info extracted from the message),
@@ -165,7 +165,7 @@ class mail_thread(osv.osv):
            message.
            If only the ``threads`` and ``subject`` parameters are provided,
            a *event log* message is created, without the usual envelope
-           attributes (sender, recipients, etc.). 
+           attributes (sender, recipients, etc.).
 
         :param threads: list of thread ids, or list of browse_records representing
                         threads to which a new message should be attached
@@ -374,7 +374,7 @@ class mail_thread(osv.osv):
                     match = tools.reference_re.search(references)
                     if match: res_id = match.group(1)
                 if not res_id:
-                    match = tools.res_re.search(msg['subject'])
+                    match = tools.res_re.search(msg.get('subject', 'No subject')
                     if match: res_id = match.group(1)
                 if res_id:
                     res_id = int(res_id)
@@ -449,7 +449,7 @@ class mail_thread(osv.osv):
            The keys used in the returned dict are meant to map
            to usual names for relationships towards a partner
            and one of its addresses.
-           
+
            :param email: email address for which a partner
                          should be searched for.
            :rtype: dict
