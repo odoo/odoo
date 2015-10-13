@@ -51,6 +51,8 @@ var FieldTextHtmlSimple = widget.extend({
         var def = this._super.apply(this, arguments);
         this.$translate.remove();
         this.$translate = $();
+        // Triggers a mouseup to refresh the editor toolbar
+        this.$content.trigger('mouseup');
         return def;
     },
     initialize_content: function() {
