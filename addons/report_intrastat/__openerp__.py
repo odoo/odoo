@@ -19,5 +19,5 @@ European Union.""",
         'security/report_intrastat_security.xml',
         'views/report_intrastat_views.xml',
     ],
-    'tests': ['../account/test/account_minimal_test.xml', 'test/report_intrastat_report.yml'],
+    'tests': ['../account/test/account_minimal_test.xml'],
 }
