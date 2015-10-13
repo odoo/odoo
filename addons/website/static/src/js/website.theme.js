@@ -325,4 +325,6 @@ website.TopBar.include({
     }
 });
 
+return Theme;
+
 });

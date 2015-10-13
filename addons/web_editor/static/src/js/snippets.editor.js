@@ -1149,8 +1149,9 @@ var Editor = Class.extend({
 });
 
 var data = {
-    'Class': BuildingBlock,
-    'globalSelector': globalSelector,
+    Class: BuildingBlock,
+    Editor: Editor,
+    globalSelector: globalSelector,
 };
 return data;
 
