@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     delivery_price = fields.Float(string='Estimated Delivery Price', compute='_compute_delivery_price', store=True)
-    carrier_id = fields.Many2one("delivery.carrier", string="Delivery Method", help="Fill this field if you plan to invoice the shipping based on picking.")
+    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", help="Fill this field if you plan to invoice the shipping based on picking.")
     invoice_shipping_on_delivery = fields.Boolean(string="Invoice Shipping on Delivery")
 
     @api.depends('carrier_id', 'partner_id', 'order_line')
