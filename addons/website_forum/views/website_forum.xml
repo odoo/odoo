@@ -1261,74 +1261,80 @@
     <t t-call="website_forum.header">
         <h3>Edit Profile</h3>
         <div class="row">
-            <div class="col-md-2">
-                <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
-            </div>
-            <div class="col-md-10">
-            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal js_website_submit_form">
+            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal js_website_submit_form" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <input name="user_id" t-att-value="user.id" type="hidden"/>
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16" for="user_name">Real name</label>
-                    <div class="col-md-8 mb16">
-                        <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
-                    </div>
+                <input type="file" class="hidden o_forum_file_upload" name="ufile" accept="image/*"/>
+                <div class="col-md-2">
+                    <a href="#" class="o_forum_profile_pic_edit">
+                        <i class="fa fa-pencil fa-1g pull-left" title="Edit"></i>
+                    </a>
+                    <a href="#">
+                        <i class="fa fa-trash-o fa-1g pull-right o_forum_profile_pic_clear" title="Clear"></i>
+                    </a>
+                    <img class="img img-responsive img-circle o_forum_avatar_img" t-attf-src="/forum/user/#{user.id}/avatar"/>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
-                    <div class="col-md-8 mb16" t-if="user.id == uid">
-                        <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
-                        <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
+                <div class="col-md-10">
+                    <input name="user_id" t-att-value="user.id" type="hidden"/>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16" for="user_name">Real name</label>
+                        <div class="col-md-8 mb16">
+                            <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16" for="user_website">Website</label>
-                    <div class="col-md-8 mb16">
-                        <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
+                        <div class="col-md-8 mb16" t-if="user.id == uid">
+                            <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
+                            <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div t-if="email_required" class="alert alert-danger alert-dismissable oe_forum_email_required">
-                        <button type="button" class="close" data-dismiss="alert">x</button>
-                        <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16" for="user_website">Website</label>
+                        <div class="col-md-8 mb16">
+                            <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
+                        </div>
                     </div>
-                    <label class="col-md-2 control-label mb16" for="user_email">Email</label>
-                    <div class="col-md-8 mb16">
-                        <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
+                    <div class="form-group">
+                        <div t-if="email_required" class="alert alert-danger alert-dismissable oe_forum_email_required">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
+                        </div>
+                        <label class="col-md-2 control-label mb16" for="user_email">Email</label>
+                        <div class="col-md-8 mb16">
+                            <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16" for="user_city">City</label>
-                    <div class="col-md-8 mb16">
-                        <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16" for="user_city">City</label>
+                        <div class="col-md-8 mb16">
+                            <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16">Country</label>
-                    <div class="col-md-8 mb16">
-                        <select class="form-control" name="country">
-                            <option value="">Country...</option>
-                            <t t-foreach="countries or []" t-as="country">
-                                <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
-                            </t>
-                         </select>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16">Country</label>
+                        <div class="col-md-8 mb16">
+                            <select class="form-control" name="country">
+                                <option value="">Country...</option>
+                                <t t-foreach="countries or []" t-as="country">
+                                    <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
+                                </t>
+                             </select>
+                        </div>
                     </div>
-                </div>
-                <!--Note: using website_description fiels instead of using commnt firld of partner-->
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16" for="description">Biography</label>
-                    <div class="col-md-8 mb16">
-                        <textarea name="description" id="description" style="min-height: 120px" required="True"
-                            class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
+                    <!--Note: using website_description fiels instead of using commnt firld of partner-->
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16" for="description">Biography</label>
+                        <div class="col-md-8 mb16">
+                            <textarea name="description" id="description" style="min-height: 120px" required="True"
+                                class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-offset-2 col-md-2 mb16">
-                    <button type="submit" class="btn btn-primary btn-lg">Update</button>
+                    <div class="col-sm-offset-2 col-md-2 mb16">
+                        <button type="submit" class="btn btn-primary btn-lg">Update</button>
+                    </div>
                 </div>
             </form>
-            </div>
         </div>
-
     </t>
 </template>
 
@@ -1389,10 +1395,12 @@
                 </table>
                 <div class="well well-sm">
                     <div><span t-field="user.partner_id.website_description" class="oe_no_empty"/></div>
-                    <t t-if="uid == user.id">
-                        <a class="fa fa-arrow-right" t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit"> Edit Your Bio</a>
-                    </t>
                 </div>
+                <t t-if="uid == user.id">
+                    <div>
+                        <a class="fa fa-arrow-right" t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit">Edit Your Profile</a>
+                    </div>
+                </t>
             </div>
         </div>
 
