@@ -1667,7 +1667,10 @@ class MailThread(models.AbstractModel):
         new_message = MailMessage.create(values)
 
         # Post-process: subscribe author, update message_last_post
-        if model and model != 'mail.thread' and self.ids and subtype_id:
+        # Note: the message_last_post mechanism is no longer used.  This
+        # will be removed in a later version.
+        if (self._context.get('mail_save_message_last_post') and
+                model and model != 'mail.thread' and self.ids and subtype_id):
             subtype_rec = self.env['mail.message.subtype'].sudo().browse(subtype_id)
             if not subtype_rec.internal:
                 # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
