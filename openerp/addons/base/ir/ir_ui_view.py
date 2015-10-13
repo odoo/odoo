@@ -1062,7 +1062,17 @@ class view(osv.osv):
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
-        return self.pool[engine].render(cr, uid, id_or_xml_id, qcontext, loader=loader, context=context)
+        try:
+            return self.pool[engine].render(cr, uid, id_or_xml_id, qcontext, loader=loader, context=context)
+        except Exception, error:
+            if not context.get('lang'):
+                raise error
+            lang = context.pop('lang')
+            rendering = self.pool[engine].render(cr, uid, id_or_xml_id, qcontext, loader=loader, context=context)
+            if isinstance(id_or_xml_id, int):
+                id_or_xml_id = self.get_view_xmlid(cr, uid, id_or_xml_id)
+            _logger.error('Failed to load ir.ui.view "%s" with the language "%s": %s' % (id_or_xml_id, lang, error.message))
+            return rendering
 
     #------------------------------------------------------
     # Misc
