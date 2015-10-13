@@ -423,7 +423,7 @@ class PurchaseOrderLine(models.Model):
                 qty += inv_line.uom_id._compute_qty_obj(inv_line.uom_id, inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
-    @api.depends('move_ids.state')
+    @api.depends('order_id.state', 'move_ids.state')
     def _compute_qty_received(self):
         for line in self:
             if line.order_id.state not in ['purchase', 'done']:
