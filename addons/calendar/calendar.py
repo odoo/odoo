@@ -97,10 +97,17 @@ class calendar_attendee(osv.Model):
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
         'access_token': fields.char('Invitation Token'),
         'event_id': fields.many2one('calendar.event', 'Meeting linked', ondelete='cascade'),
+        'calendar_last_notif_ack': fields.datetime('Last notification marked as read from base Calendar'),
     }
     _defaults = {
         'state': 'needsAction',
     }
+
+    def _set_calendar_last_notif_ack(self, cr, uid, event_id, context=None):
+        partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id
+        event_attendee_ids = self.search(cr, uid, [('event_id', '=', event_id), ('partner_id', '=', partner.id)])
+        self.write(cr, uid, event_attendee_ids, {'calendar_last_notif_ack': datetime.now()}, context=context)
+        return
 
     def copy(self, cr, uid, id, default=None, context=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
@@ -292,9 +299,6 @@ class calendar_attendee(osv.Model):
 
 class res_partner(osv.Model):
     _inherit = 'res.partner'
-    _columns = {
-        'calendar_last_notif_ack': fields.datetime('Last notification marked as read from base Calendar'),
-    }
 
     def get_attendee_detail(self, cr, uid, ids, meeting_id, context=None):
         """
@@ -314,16 +318,11 @@ class res_partner(osv.Model):
             datas.append(data)
         return datas
 
-    def _set_calendar_last_notif_ack(self, cr, uid, context=None):
-        partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id
-        self.write(cr, uid, partner.id, {'calendar_last_notif_ack': datetime.now()}, context=context)
-        return
-
 
 class calendar_alarm_manager(osv.AbstractModel):
     _name = 'calendar.alarm_manager'
 
-    def get_next_potential_limit_alarm(self, cr, uid, seconds, notif=True, mail=True, partner_id=None, context=None):
+    def get_next_potential_limit_alarm(self, cr, uid, seconds, context=None):
         res = {}
         base_request = """
                     SELECT
@@ -355,24 +354,8 @@ class calendar_alarm_manager(osv.AbstractModel):
                             ) AS calcul_delta ON calcul_delta.calendar_event_id = cal.id
              """
 
-        filter_user = """
-                RIGHT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = cal.id
-                    AND part_rel.res_partner_id = %s
-        """
-
         #Add filter on type
-        type_to_read = ()
-        if notif:
-            type_to_read += ('notification',)
-        if mail:
-            type_to_read += ('email',)
-
-        tuple_params = (type_to_read,)
-
-        # ADD FILTER ON PARTNER_ID
-        if partner_id:
-            base_request += filter_user
-            tuple_params += (partner_id, )
+        tuple_params = (('notification', 'email'),)
 
         #Add filter on hours
         tuple_params += (seconds,)
@@ -397,7 +380,7 @@ class calendar_alarm_manager(osv.AbstractModel):
 
         return res
 
-    def do_check_alarm_for_one_date(self, cr, uid, one_date, event, event_maxdelta, in_the_next_X_seconds, after=False, notif=True, mail=True, missing=False, context=None):
+    def do_check_alarm_for_one_date(self, cr, uid, one_date, event, event_maxdelta, in_the_next_X_seconds, missing=False, context=None):
         # one_date: date of the event to check (not the same that in the event browse if recurrent)
         # event: Event browse record
         # event_maxdelta: biggest duration from alarms for this event
@@ -410,30 +393,39 @@ class calendar_alarm_manager(osv.AbstractModel):
         res = []
 
         # TODO: replace notif and email in master by alarm_type + remove event_maxdelta and if using it
-        alarm_type = []
-        if notif:
-            alarm_type.append('notification')
-        if mail:
-            alarm_type.append('email')
+        alarm_type = ['notification', 'email']
+
+        def append_alarm(alarm, after, partner_id=None):
+            if alarm.type in alarm_type and \
+                one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
+                    (not after or one_date - timedelta(minutes=alarm.duration_minutes) > openerp.fields.Datetime.from_string(after)):
+                    alert = {
+                        'alarm_id': alarm.id,
+                        'event_id': event.id,
+                        'notify_at': one_date - timedelta(minutes=alarm.duration_minutes),
+                        'alarm_type': alarm.type
+                    }
+                    if partner_id:
+                        alert['partner_id'] = partner_id
+                    res.append(alert)
 
         if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
             for alarm in event.alarm_ids:
-                if alarm.type in alarm_type and \
-                    one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
-                        (not after or one_date - timedelta(minutes=alarm.duration_minutes) > openerp.fields.Datetime.from_string(after)):
-                        alert = {
-                            'alarm_id': alarm.id,
-                            'event_id': event.id,
-                            'notify_at': one_date - timedelta(minutes=alarm.duration_minutes),
-                        }
-                        res.append(alert)
+                if alarm.type == 'mail':
+                    icp = self.pool['ir.config_parameter']
+                    now = openerp.fields.Datetime.to_string(datetime.now())
+                    after = icp.get_param(cr, SUPERUSER_ID, 'calendar.last_notif_mail', default=False) or now
+                    append_alarm(alarm, after)
+                else:
+                    for attendee in event.attendee_ids:
+                        after = attendee.calendar_last_notif_ack
+                        append_alarm(alarm, after, attendee.partner_id.id)
         return res
 
-    def get_next_mail(self, cr, uid, context=None):
-        now = openerp.fields.Datetime.to_string(datetime.now())
+    def get_next_notification(self, cr, uid, context=None):
+        all_notif = []
 
         icp = self.pool['ir.config_parameter']
-        last_notif_mail = icp.get_param(cr, SUPERUSER_ID, 'calendar.last_notif_mail', default=False) or now
 
         try:
             cron = self.pool['ir.model.data'].get_object(cr, SUPERUSER_ID, 'calendar', 'ir_cron_scheduler_alarm', context=context)
@@ -455,62 +447,43 @@ class calendar_alarm_manager(osv.AbstractModel):
 
         cron_interval = cron.interval_number * interval_to_second[cron.interval_type]
 
-        all_events = self.get_next_potential_limit_alarm(cr, uid, cron_interval, notif=False, context=context)
+        all_events = self.get_next_potential_limit_alarm(cr, uid, cron_interval, context=context)
 
         for curEvent in self.pool.get('calendar.event').browse(cr, uid, all_events.keys(), context=context):
             max_delta = all_events[curEvent.id]['max_duration']
 
             if curEvent.recurrency:
+                bFound = False
                 at_least_one = False
                 last_found = False
                 for one_date in self.pool.get('calendar.event').get_recurrent_date_by_event(cr, uid, curEvent, context=context):
                     in_date_format = one_date.replace(tzinfo=None)
-                    last_found = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, 0, after=last_notif_mail, notif=False, missing=True, context=context)
-                    for alert in last_found:
-                        self.do_mail_reminder(cr, uid, alert, context=context)
-                        at_least_one = True  # if it's the first alarm for this recurrent event
+                    last_found = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, 0, missing=True, context=context)
+                    if last_found:
+                        for alert in last_found:
+                            if alert['alarm_type'] == 'email':
+                                self.do_mail_reminder(cr, uid, alert, context=context)
+                                at_least_one = True  # if it's the first alarm for this recurrent event
+                            if alert['alarm_type'] == 'notification':
+                                all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
+                        if not bFound and alert['alarm_type'] == 'notification':  # if it's the first alarm for this recurrent event
+                            bFound = True
+                    if bFound and not last_found:  # if the precedent event had alarm but not this one, we can stop the search fot this event
+                        break
                     if at_least_one and not last_found:  # if the precedent event had an alarm but not this one, we can stop the search for this event
                         break
             else:
                 in_date_format = datetime.strptime(curEvent.start, DEFAULT_SERVER_DATETIME_FORMAT)
-                last_found = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, 0, after=last_notif_mail, notif=False, missing=True, context=context)
+                last_found = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, 0, missing=True, context=context)
                 for alert in last_found:
-                    self.do_mail_reminder(cr, uid, alert, context=context)
-        icp.set_param(cr, SUPERUSER_ID, 'calendar.last_notif_mail', now)
-
-    def get_next_notif(self, cr, uid, context=None):
-        ajax_check_every_seconds = 300
-        partner = self.pool['res.users'].read(cr, SUPERUSER_ID, uid, ['partner_id', 'calendar_last_notif_ack'], context=context)
-        all_notif = []
-
-        if not partner:
-            return []
-
-        all_events = self.get_next_potential_limit_alarm(cr, uid, ajax_check_every_seconds, partner_id=partner['partner_id'][0], mail=False, context=context)
-
-        for event in all_events:  # .values()
-            max_delta = all_events[event]['max_duration']
-            curEvent = self.pool.get('calendar.event').browse(cr, uid, event, context=context)
-            if curEvent.recurrency:
-                bFound = False
-                LastFound = False
-                for one_date in self.pool.get("calendar.event").get_recurrent_date_by_event(cr, uid, curEvent, context=context):
-                    in_date_format = one_date.replace(tzinfo=None)
-                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner['calendar_last_notif_ack'], mail=False, context=context)
-                    if LastFound:
-                        for alert in LastFound:
-                            all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
-                        if not bFound:  # if it's the first alarm for this recurrent event
-                            bFound = True
-                    if bFound and not LastFound:  # if the precedent event had alarm but not this one, we can stop the search fot this event
-                        break
-            else:
-                in_date_format = datetime.strptime(curEvent.start, DEFAULT_SERVER_DATETIME_FORMAT)
-                LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner['calendar_last_notif_ack'], mail=False, context=context)
-                if LastFound:
-                    for alert in LastFound:
+                    if alert['alarm_type'] == 'email':
+                        self.do_mail_reminder(cr, uid, alert, context=context)
+                    if alert['alarm_type'] == 'notification':
                         all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
-        return all_notif
+        if all_notif:
+            self.pool['bus.bus'].sendmany(cr, uid, all_notif)
+        now = openerp.fields.Datetime.to_string(datetime.now())
+        icp.set_param(cr, SUPERUSER_ID, 'calendar.last_notif_mail', now)
 
     def do_mail_reminder(self, cr, uid, alert, context=None):
         if context is None:
@@ -543,13 +516,15 @@ class calendar_alarm_manager(osv.AbstractModel):
             delta = alert['notify_at'] - datetime.now()
             delta = delta.seconds + delta.days * 3600 * 24
 
-            return {
+            return [(cr.dbname, 'calendar.alarm', alert['partner_id']), {
                 'event_id': event.id,
+                'user_id': uid,
                 'title': event.name,
                 'message': message,
+                'duration_minutes': alarm.duration_minutes,
                 'timer': delta,
                 'notify_at': alert['notify_at'].strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            }
+            }]
 
 
 class calendar_alarm(osv.Model):
