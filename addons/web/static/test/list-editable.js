@@ -356,3 +356,68 @@ openerp.testing.section('list.edition.onwrite', {
         });
     });
 });
+
+openerp.testing.section('list.edition.focus', {
+    dependencies: ['web.list_editable'],
+    rpc: 'mock',
+    templates: true,
+}, function (test) {
+    test('edition focus char field', {asserts: 2}, function (instance, $fix, mock) {
+        mock('demo:read', function () {
+            return [{ id: 1, a: 'foo', b: 'bar', c: 'baz' }];
+        });
+        mock('demo:fields_view_get', function () {
+            return {
+                type: 'tree',
+                fields: {
+                    a: {type: 'char', string: "A"},
+                    b: {type: 'char', string: "B"},
+                    c: {type: 'char', string: "C"}
+                },
+                arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
+            };
+        });
+        var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
+        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
+        return l.appendTo($fix)
+            .then(l.proxy('reload_content'))
+            .then(function () {
+                l.start_edition(l.records.get(1));
+            })
+            .then(function () {
+                var input =  $fix.find('input')[0];
+                strictEqual(document.activeElement, input);
+                strictEqual(input.value.substring(input.selectionStart,
+                                                  input.selectionEnd),
+                            'foo',
+                            "Text in char field must be selected");
+            });
+    });
+  test('edition focus boolean field', {asserts: 1}, function (instance, $fix, mock) {
+        mock('demo:read', function () {
+            return [{ id: 1, a: true, b: 'bar', c: 'baz' }];
+        });
+        mock('demo:fields_view_get', function () {
+            return {
+                type: 'tree',
+                fields: {
+                    a: {type: 'boolean', string: "A"},
+                    b: {type: 'char', string: "B"},
+                    c: {type: 'char', string: "C"}
+                },
+                arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
+            };
+        });
+        var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
+        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
+        return l.appendTo($fix)
+            .then(l.proxy('reload_content'))
+            .then(function () {
+                l.start_edition(l.records.get(1));
+            })
+            .then(function () {
+                strictEqual(document.activeElement, $fix.find('input')[0]);
+            });
+    });
+
+});
