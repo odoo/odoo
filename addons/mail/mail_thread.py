@@ -1098,8 +1098,9 @@ class mail_thread(osv.AbstractModel):
             )
 
     def message_route_process(self, cr, uid, message, message_dict, routes, context=None):
+        if context is None:
+            context = {}
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
-        context = dict(context or {})
         partner_ids = message_dict.pop('partner_ids', [])
         thread_id = False
         for model, thread_id, custom_values, user_id, alias in routes or ():
