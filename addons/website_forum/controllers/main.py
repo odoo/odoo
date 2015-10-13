@@ -705,6 +705,13 @@ class WebsiteForum(http.Controller):
             'country_id': int(kwargs.get('country')) if kwargs.get('country') else False,
             'website_description': kwargs.get('description'),
         }
+
+        if 'clear_image' in kwargs:
+            values['image'] = False
+        elif kwargs.get('ufile'):
+            image = kwargs.get('ufile').read()
+            values['image'] = image.encode('base64')
+
         if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
             values['website_published'] = kwargs.get('website_published') == 'True'
         user.write(values)
