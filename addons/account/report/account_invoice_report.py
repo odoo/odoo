@@ -68,6 +68,8 @@ class AccountInvoiceReport(models.Model):
     residual = fields.Float(string='Total Residual', readonly=True)
     user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=0)
     country_id = fields.Many2one('res.country', string='Country of the Partner Company')
+    weight = fields.Float(string='Gross Weight', readonly=True)
+    volume = fields.Float(string='Volume', readonly=True)
 
     _order = 'date desc'
 
@@ -94,6 +96,7 @@ class AccountInvoiceReport(models.Model):
             SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id, sub.account_analytic_id,
                 sub.payment_term_id, sub.uom_name, sub.currency_id, sub.journal_id,
                 sub.fiscal_position_id, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
+                sub.weight, sub.volume,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
                 sub.product_qty, sub.price_total as price_total, sub.price_average as price_average,
                 COALESCE(cr.rate, 1) as currency_rate, sub.residual as residual, sub.commercial_partner_id as commercial_partner_id
@@ -110,25 +113,19 @@ class AccountInvoiceReport(models.Model):
                     count(ail.*) AS nbr,
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
-                    SUM(CASE
-                         WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                            THEN (- ail.quantity) / u.factor * u2.factor
-                            ELSE ail.quantity / u.factor * u2.factor
-                        END) AS product_qty,
+                    SUM ((invoice_type.sign * ail.quantity) / (u.factor * u2.factor)) AS product_qty,
                     SUM(ail.price_subtotal_signed) AS price_total,
                     SUM(ail.price_subtotal_signed) / CASE
-                           WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
-                               THEN CASE
-                                     WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                                        THEN SUM((- ail.quantity) / u.factor * u2.factor)
-                                        ELSE SUM(ail.quantity / u.factor * u2.factor)
-                                    END
+                            WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
+                               THEN SUM((invoice_type.sign * ail.quantity) / u.factor * u2.factor)
                                ELSE 1::numeric
-                          END AS price_average,
+                            END AS price_average,
                     ai.residual_company_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
                     count(*) AS residual,
                     ai.commercial_partner_id as commercial_partner_id,
-                    partner.country_id
+                    partner.country_id,
+                    SUM(pr.weight * (invoice_type.sign*ail.quantity) / u.factor * u2.factor) AS weight,
+                    SUM(pr.volume * (invoice_type.sign*ail.quantity) / u.factor * u2.factor) AS volume
         """
         return select_str
 
@@ -141,6 +138,15 @@ class AccountInvoiceReport(models.Model):
                 left JOIN product_template pt ON pt.id = pr.product_tmpl_id
                 LEFT JOIN product_uom u ON u.id = ail.uom_id
                 LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
+                JOIN (
+                    -- Temporary table to decide if the qty should be added or retrieved (Invoice vs Refund) 
+                    SELECT id,(CASE
+                         WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                            THEN -1
+                            ELSE 1
+                        END) AS sign
+                    FROM account_invoice ai
+                ) AS invoice_type ON invoice_type.id = ai.id
         """
         return from_str
 

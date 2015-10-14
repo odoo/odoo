@@ -13,7 +13,7 @@ class purchase_report(osv.osv):
     _description = "Purchases Orders"
     _auto = False
     _columns = {
-        'date': fields.datetime('Order Date', readonly=True, help="Date on which this document has been created"),  # TDE FIXME master: rename into date_order
+        'date_order': fields.datetime('Order Date', readonly=True, help="Date on which this document has been created", oldname='date'),
         'state': fields.selection([('draft', 'Draft RFQ'),
                                    ('sent', 'RFQ Sent'),
                                    ('to approve', 'To Approve'),
@@ -31,20 +31,22 @@ class purchase_report(osv.osv):
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
         'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),
         'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True),
-        'quantity': fields.float('Product Quantity', readonly=True),  # TDE FIXME master: rename into unit_quantity
+        'unit_quantity': fields.float('Product Quantity', readonly=True, oldname='quantity'),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
-        'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
+        'nbr_lines': fields.integer('# of Lines', readonly=True, oldname='nbr'),
         'category_id': fields.many2one('product.category', 'Product Category', readonly=True),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
         'country_id': fields.many2one('res.country', 'Partner Country', readonly=True),
         'fiscal_position_id': fields.many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position', readonly=True),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'commercial_partner_id': fields.many2one('res.partner', 'Commercial Entity', readonly=True),
+        'weight': fields.float('Gross Weight', readonly=True),
+        'volume': fields.float('Volume', readonly=True),
     }
-    _order = 'date desc, price_total desc'
+    _order = 'date_order desc, price_total desc'
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'purchase_report')
         cr.execute("""
@@ -60,7 +62,7 @@ class purchase_report(osv.osv):
                 )
                 select
                     min(l.id) as id,
-                    s.date_order as date,
+                    s.date_order as date_order,
                     s.state,
                     s.date_approve,
                     s.dest_address_id,
@@ -73,17 +75,19 @@ class purchase_report(osv.osv):
                     p.product_tmpl_id,
                     t.categ_id as category_id,
                     t.uom_id as product_uom,
-                    sum(l.product_qty/u.factor*u2.factor) as quantity,
+                    sum(l.product_qty/u.factor*u2.factor) as unit_quantity,
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
-                    count(*) as nbr,
+                    count(*) as nbr_lines,
                     sum(l.price_unit * COALESCE(cr.rate, 1.0) * l.product_qty)::decimal(16,2) as price_total,
                     avg(100.0 * (l.price_unit * COALESCE(cr.rate,1.0) * l.product_qty) / NULLIF(ip.value_float*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
                     sum(ip.value_float*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
                     (sum(l.product_qty * COALESCE(cr.rate, 1.0) * l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id,
-                    analytic_account.id as account_analytic_id
+                    analytic_account.id as account_analytic_id,
+                    sum(p.weight * l.product_qty/u.factor*u2.factor) as weight,
+                    sum(p.volume * l.product_qty/u.factor*u2.factor) as volume
                 from purchase_order_line l
                     join purchase_order s on (l.order_id=s.id)
                     join res_partner partner on s.partner_id = partner.id
