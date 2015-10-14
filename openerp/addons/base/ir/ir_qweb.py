@@ -1242,6 +1242,9 @@ class AssetsBundle(object):
         values["datas"] = content.encode('utf8').encode('base64')
         ira.write(self.cr, openerp.SUPERUSER_ID, attachment_id, values, context=self.context)
 
+        if self.context.get('commit_assetsbundle') is True:
+            self.cr.commit()
+
         return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_id, context=self.context)
 
     def js(self):
@@ -1558,6 +1561,9 @@ class PreprocessedCSS(StylesheetAsset):
                             name=url,
                             url=url,
                         ), context=self.context)
+
+                if self.context.get('commit_assetsbundle') is True:
+                    self.cr.commit()
             except psycopg2.Error:
                 pass
         return super(PreprocessedCSS, self).to_html()
