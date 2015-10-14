@@ -572,7 +572,7 @@ class AccountTax(models.Model):
         if self.price_include:
             self.include_base_amount = True
 
-    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
+    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None, invoice_line=None):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
             price_unit * quantity eventually affected by previous taxes (if tax is include_base_amount XOR price_include)
         """
@@ -587,7 +587,7 @@ class AccountTax(models.Model):
             return base_amount / (1 - self.amount / 100) - base_amount
 
     @api.v8
-    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
+    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, invoice_line=None):
         """ Returns all information required to apply taxes (in self + their children in case of a tax goup).
             We consider the sequence of the parent for group of taxes.
                 Eg. considering letters as taxes and alphabetic order as sequence :
@@ -629,7 +629,7 @@ class AccountTax(models.Model):
 
         for tax in self:
             if tax.amount_type == 'group':
-                ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
+                ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner, invoice_line)
                 total_excluded = ret['total_excluded']
                 base = ret['total_excluded']
                 total_included = ret['total_included']
@@ -637,7 +637,8 @@ class AccountTax(models.Model):
                 taxes += ret['taxes']
                 continue
 
-            tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
+            tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner, invoice_line)
+            tax_amount = currency.round(tax_amount)
             if company_id.tax_calculation_rounding_method == 'round_globally':
                 tax_amount = round(tax_amount, prec)
             else:
