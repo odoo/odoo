@@ -41,7 +41,7 @@ function add_message (data, options) {
                 channel.hidden = false;
                 chat_manager.bus.trigger('new_channel', channel);
             }
-            if (!_.contains(["static", "public", "private"], channel.type) && (options.show_notification)) {
+            if (!_.contains(["public", "private"], channel.type) && (options.show_notification)) {
                 var query = { is_displayed: false };
                 chat_manager.bus.trigger('anyone_listening', channel, query);
                 if (!query.is_displayed) {
