@@ -59,6 +59,7 @@
             submitForm: function(ev){
                 // extract data
                 var self = this;
+                var $confirm_btn = self.$el.find('button[type="submit"]');
                 var href = self.$el.find('form').attr("action");
                 var action = href.match(/quote\/([a-z]+)/);
                 var order_id = href.match(/quote\/[a-z]+\/([0-9]+)/);
@@ -78,6 +79,8 @@
                     if (is_empty || ! signer_name){
                         return false;
                     }
+                    $confirm_btn.prepend('<i class="fa fa-spinner fa-spin"></i> ');
+                    $confirm_btn.attr('disabled', true);
                     openerp.jsonRpc("/quote/"+action[1], 'call', {
                         'order_id': parseInt(order_id[1]),
                         'token': token,
@@ -85,7 +88,8 @@
                         'sign': signature?JSON.stringify(signature[1]):false,
                     }).then(function (data) {
                         self.$el.modal('hide');
-                        window.location.href = '/quote/'+order_id[1]+'/'+token+'?message=3';
+                        var message_id = (data) ? 3 : 4;
+                        window.location.href = '/quote/'+order_id[1]+'/'+token+'?message='+message_id;
                     });
                     return false;
                 }

@@ -902,7 +902,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
     unlink: function(ids, callback, error_callback) {
         var self = this;
         _.each(ids, function(id) {
-            if (! _.detect(self.to_create, function(x) { return x.id === id; })) {
+            if (! _.detect(self.to_create, function(x) { return x.id === id; }) &&  _.detect(self.cache, function(x) { return x.id === id; })) {
                 self.to_delete.push({id: id});
             }
         });
