@@ -736,6 +736,9 @@ class AccountInvoice(models.Model):
             ctx_nolang = ctx.copy()
             ctx_nolang.pop('lang', None)
             move = account_move.with_context(ctx_nolang).create(move_vals)
+            # Pass invoice in context in method post: used if you want to get the same
+            # account move reference when creating the same invoice after a cancelled one:
+            move.post()
             # make the invoice point to that move
             vals = {
                 'move_id': move.id,
@@ -743,9 +746,6 @@ class AccountInvoice(models.Model):
                 'move_name': move.name,
             }
             inv.with_context(ctx).write(vals)
-            # Pass invoice in context in method post: used if you want to get the same
-            # account move reference when creating the same invoice after a cancelled one:
-            move.post()
         return True
 
     @api.multi
