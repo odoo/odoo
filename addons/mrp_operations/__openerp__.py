@@ -39,20 +39,15 @@ So, that we can compare the theoretic delay and real delay.
     'data': [
         'data/report_paperformat.xml',
         'security/ir.model.access.csv',
-        'mrp_operation_data.xml',
-        'mrp_operations_workflow.xml',
-        'mrp_operations_view.xml',
-        'mrp_operations_report.xml',
+        'views/mrp_operations_workflow.xml',
+        'views/mrp_operations_report.xml',
         'report/mrp_workorder_analysis_view.xml',
         'views/report_wcbarcode.xml',
-        'mrp_operations_workflow_instance.xml'
+        'views/mrp_operations_workflow_instance.xml',
+        'views/mrp_production_views.xml'
     ],
     'demo': [ 
-             'mrp_operations_demo.yml'
-    ],
-    'test': [ 
-        'test/workcenter_operations.yml',
+             'data/mrp_operations_demo.xml'
     ],
     'installable': True,
-    'auto_install': False,
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mrp_production_op" model="mrp.production">
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="product_id" ref="product.product_product_5"/>
+            <field name="product_qty">5.0</field>
+            <field name="allow_reorder">True</field>
+    </record>
+    <record id="mrp_production_op1" model="mrp.production">
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="product_id" ref="product.product_product_5"/>
+            <field name="product_qty">2.0</field>
+    </record>
+    <function model="mrp.production" name="action_compute" eval="[ref('mrp_production_op1')]"/>
+    <workflow action="button_confirm" model="mrp.production" ref="mrp_production_op1"/>
+    <record id="mrp_production_mo1" model="mrp.production">
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="product_id" ref="product.product_product_16"/>
+            <field name="product_qty">5.0</field>
+    </record>
+    <workflow action="button_confirm" model="mrp.production" ref="mrp_production_mo1"/>
+
+</odoo>
