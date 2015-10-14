@@ -4,6 +4,7 @@
 from openerp import exceptions
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp import api, fields as fields8
 
 class ir_filters(osv.osv):
     _name = 'ir.filters'
@@ -45,7 +46,7 @@ class ir_filters(osv.osv):
         filter_ids = self.search(cr, uid, action_domain +
             [('model_id','=',model),('user_id','in',[uid, False])])
         my_filters = self.read(cr, uid, filter_ids,
-            ['name', 'is_default', 'domain', 'context', 'user_id', 'sort'], context=context)
+            ['name', 'is_default', 'domain', 'context', 'user_id', 'sort', 'serialization'], context=context)
         return my_filters
 
     def _check_global_default(self, cr, uid, vals, matching_filters, context=None):
@@ -132,6 +133,36 @@ class ir_filters(osv.osv):
                             (lower(name), model_id, COALESCE(user_id,-1), COALESCE(action_id,-1))""")
         return result
 
+    serialization = fields8.Binary(
+        "Enhanced search serialization",
+        store=True, compute='_empty_serialization',
+        # in case computed stored fields become non-directly-writable in the
+        # future, the point of this one is to be written and read directly but
+        # to be automatically emptied/blanked if the filter is edited by hand
+        readonly=False,
+        help="""Enhanced-semantics serialization of searches.
+
+        Used to recover more information about the original search state when
+        creating ir.filters from search views:
+        * JSON serialization
+        * list of search items
+        * list of pairs
+
+          - ``[field_name, field_value]`` for a search for ``field_value`` in
+            the field ``field_name``
+          - ``[filter_name, true]`` to mark ``filter_name`` as enabled
+          - ``[null, filter_id]`` to enable the ir.filter of id ``filter_id``
+          - ``[null, {name, domain}]`` for an extended search criteria
+            (arbitrary domain), the name should be used as user-facing display
+            for the domain itself
+
+          fields can appear multiple times (the values should be OR-ed,
+          operators are specified by the view), the serialization can also
+          contain multiple custom filters or extended domains.
+
+          Client behaviour is undefined for recursive custom filters.
+        """
+    )
     _columns = {
         'name': fields.char('Filter Name', translate=True, required=True),
         'user_id': fields.many2one('res.users', 'User', ondelete='cascade',
@@ -146,7 +177,7 @@ class ir_filters(osv.osv):
                                      help="The menu action this filter applies to. "
                                           "When left empty the filter applies to all menus "
                                           "for this model."),
-        'active': fields.boolean('Active')
+        'active': fields.boolean('Active'),
     }
     _defaults = {
         'domain': '[]',
@@ -157,3 +188,11 @@ class ir_filters(osv.osv):
         'active': True
     }
     _order = 'model_id, name, id desc'
+
+    @api.depends('domain', 'context')
+    def _empty_serialization(self):
+        """ If domain or context are edited directly, the serialization field
+        should be emptied as they're not going to match anymore
+        """
+        for record in self:
+            record.serialization = False

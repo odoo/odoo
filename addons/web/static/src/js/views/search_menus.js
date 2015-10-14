@@ -6,6 +6,7 @@ var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var Widget = require('web.Widget');
+var search_inputs = require('web.search_inputs');
 
 var _t = core._t;
 
@@ -122,12 +123,21 @@ return Widget.extend({
             is_default: default_filter,
             action_id: this.action_id,
         };
-        return this.model.call('create_or_replace', [filter]).done(function (id) {
+        var serialization = this.searchview.build_serialization();
+        return this.model.call('create_or_replace', [filter]).then(function (id) {
             filter.id = id;
             self.toggle_save_menu(false);
             self.$save_name.find('input').val('').prop('checked', false);
             self.append_filter(filter);
             self.toggle_filter(filter, true);
+            // can't be part of the create_or_replace: the serialization
+            // field is recomputed (and emptied) *after* the create is
+            // performed which unsets the value we've explicitly provided, so
+            // do a two-step: create/replace the filter first then if that
+            // worked set the serialization
+            return self.model.call('write', [[id], {
+                serialization: JSON.stringify(serialization)
+            }]);
         });
     },
     get_default_filter: function () {
@@ -217,25 +227,91 @@ return Widget.extend({
             self.toggle_filter(filter);
         });
     },
+    /**
+     * Converts the provided filter to a list of facets, either unpacking it
+     * into its component serialization (possibly recursively) or delegating
+     * to #facet_for if the unpacking fails.
+     *
+     * @returns Deferred<Array<Facet>>
+     */
+    to_facets: function (filter) {
+        var self = this, view = this.searchview, done = $.Deferred().reject();
+
+        if (filter.serialization) {
+            var inputs = view.search_fields.concat(view.filters, view.groupbys);
+            var s = JSON.parse(filter.serialization);
+            var process_section = function (fs) {
+                if (!s.length) { return fs; }
+                try {
+                    var section = s.shift();
+                    var name = section[0], value = section[1];
+
+                    var res;
+                    if (name) {
+                        var probe = {};
+                        probe[name] = value;
+                        var facets = _.invoke(inputs, 'facet_for_defaults', probe);
+                        res = $.when.apply(null, facets).then(function () {
+                            var results = _(arguments).compact();
+                            if (results.length) {
+                                return fs.concat(results);
+                            } else {
+                                // not a single result?
+                                return $.Deferred().reject();
+                            }
+                        });
+                    } else if (typeof value === 'number') {
+                        var sub = _.findWhere(self.filters, {id: value});
+                        if (!sub) { return $.Deferred().reject(); }
+
+                        res = $.when(fs, self.to_facets(sub)).then(function () {
+                            return [].concat.apply([], arguments);
+                        });
+                    } else {
+                        var filters = _.map(value, function (filter) {
+                                return new search_inputs.Filter({
+                                    tag: 'filter', children: [],
+                                    attrs: {
+                                        domain: filter.domain,
+                                        string: filter.label
+                                    }
+                                }, view);
+                            }),
+                            filter_group = new search_inputs.FilterGroup(filters, view);
+
+                        res = $.when(fs.concat(filters.map(function (filter) {
+                            var facet = filter_group.make_facet([
+                                filter_group.make_value(filter)
+                            ]);
+                            facet.is_extended_filter = true;
+                            return facet;
+                        })));
+                    }
+                } catch (e) {
+                    console && console.error && console.error(e);
+                    return $.Deferred.reject(String(e));
+                }
+                return res.then(process_section);
+            };
+            done = $.when([]).then(process_section);
+        }
+
+        return done.then(null, function () {
+            return $.when([self.facet_for(filter)]);
+        })
+    },
     toggle_filter: function (filter, preventSearch) {
-        var current = this.query.find(function (facet) {
-            return facet.get('_id') === filter.id;
+        var view = this.searchview;
+        this.to_facets(filter).then(function (facets) {
+            view.query.reset(facets, {
+                preventSearch: preventSearch || false
+            });
+            // Load sort settings on view
+            if (!_.isUndefined(filter.sort)) {
+                var sort_items = JSON.parse(filter.sort);
+                view.dataset.set_sort(sort_items);
+            }
         });
-        if (current) {
-            this.query.remove(current);
-            this.$filters[this.key_for(filter)].removeClass('selected');
-            return;
-        }
-        this.query.reset([this.facet_for(filter)], {
-            preventSearch: preventSearch || false});
-
-        // Load sort settings on view
-        if (!_.isUndefined(filter.sort)){
-            var sort_items = JSON.parse(filter.sort);
-            this.searchview.dataset.set_sort(sort_items);
-        }
-
-        this.$filters[this.key_for(filter)].addClass('selected');
     },
     remove_filter: function (filter, $filter, key) {
         var self = this;
@@ -349,7 +425,9 @@ return Widget.extend({
             }),
             filter_group = new search_inputs.FilterGroup(filters_widgets, this.searchview),
             facets = filters_widgets.map(function (filter) {
-                return filter_group.make_facet([filter_group.make_value(filter)]);
+                var facet = filter_group.make_facet([filter_group.make_value(filter)]);
+                facet.is_extended_filter = true;
+                return facet;
             });
         filter_group.insertBefore(this.$add_filter);
         $('<li class="divider">').insertBefore(this.$add_filter);
