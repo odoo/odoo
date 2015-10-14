@@ -1233,23 +1233,19 @@ class AssetsBundle(object):
     def save_attachment(self, type, content, inc=None):
         ira = self.registry['ir.attachment']
         self.clean_attachments(type)
-        attachments = self.get_attachments(type, inc)
+
         values = {}
-
-        if not attachments:
-            values["name"] = "/web/content/%s" % type
-            values["datas_fname"] = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
-            values["res_model"] = 'ir.ui.view'
-            values["public"] = True
-            values["type"] = 'binary'
-            attachment_id = ira.create(self.cr, openerp.SUPERUSER_ID, values, context=self.context)
-            url = '/web/content/%s-%s/%s' % (attachment_id, self.version, values["datas_fname"])
-            values["name"] = url
-            values["url"] = url
-        else:
-            attachment_id = attachments[0].id
-
+        values["name"] = "/web/content/%s" % type
+        values["datas_fname"] = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
+        values["res_model"] = 'ir.ui.view'
+        values["public"] = True
+        values["type"] = 'binary'
+        attachment_id = ira.create(self.cr, openerp.SUPERUSER_ID, values, context=self.context)
+        url = '/web/content/%s-%s/%s' % (attachment_id, self.version, values["datas_fname"])
+        values["name"] = url
+        values["url"] = url
         values["datas"] = content.encode('utf8').encode('base64')
+
         ira.write(self.cr, openerp.SUPERUSER_ID, attachment_id, values, context=self.context)
 
         if self.context.get('commit_assetsbundle') is True:
