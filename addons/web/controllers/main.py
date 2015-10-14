@@ -506,7 +506,11 @@ def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', un
         headers.append(('Content-Disposition', content_disposition(filename)))
 
     # get content after cache control
-    content = obj[field] or ''
+    if model == 'ir.attachment' and obj.type == 'url' and obj.url:
+        status = 301
+        content = obj.url
+    else:
+        content = obj[field] or ''
 
     return (status, headers, content)
 
@@ -1043,6 +1047,8 @@ class Binary(http.Controller):
         status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype)
         if status == 304:
             response = werkzeug.wrappers.Response(status=status, headers=headers)
+        elif status == 301:
+            return werkzeug.utils.redirect(content, code=301)
         elif status != 200:
             response = request.not_found()
         else:
@@ -1074,6 +1080,8 @@ class Binary(http.Controller):
         status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype='image/png')
         if status == 304:
             return werkzeug.wrappers.Response(status=304, headers=headers)
+        elif status == 301:
+            return werkzeug.utils.redirect(content, code=301)
         elif status != 200 and download:
             return request.not_found()
 
