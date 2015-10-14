@@ -152,7 +152,7 @@ function openerp_picking_widgets(instance){
             });
             this.$('.oe_searchbox').blur(function(){
                 self.getParent().barcode_scanner.connect(function(ean){
-                    self.get_Parent().scan(ean);
+                    self.getParent().scan(ean);
                 });
             })
             this.$('#js_select').change(function(){
@@ -844,8 +844,8 @@ function openerp_picking_widgets(instance){
                     if (result.filter_loc !== false){
                         //check if we have receive a location as answer
                         if (result.filter_loc !== undefined){
-                            var modal_loc_hidden = self.$('#js_LocationChooseModal').attr('aria-hidden');
-                            if (modal_loc_hidden === "false"){
+                            var modal_loc_hidden = self.$('#js_LocationChooseModal:visible');
+                            if (modal_loc_hidden.length > 0){
                                 var line = self.$('#js_LocationChooseModal .js_loc_option[data-loc-id='+result.filter_loc_id+']').attr('selected','selected');
                             }
                             else{
