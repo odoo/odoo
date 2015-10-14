@@ -38,8 +38,13 @@ def delete(cr, ident):
 def validate(cr, inst_id, ident, signal, force_running=False):
     cr.execute("select * from wkf_workitem where inst_id=%s", (inst_id,))
     stack = []
-    for witem in cr.dictfetchall():
+    for i, witem in enumerate(cr.dictfetchall()):
         stack = []
+        if i > 0:
+            # test if previous workitem has already processed this one
+            cr.execute("select id from wkf_workitem where id=%s", (witem['id'],))
+            if not cr.fetchone():
+                continue
         workitem.process(cr, witem, ident, signal, force_running, stack=stack)
         # An action is returned
     _update_end(cr, inst_id, ident)
