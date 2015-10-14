@@ -68,11 +68,10 @@ class pos_order_card(models.Model):
 
         return fields
 
-    @api.model
-    def add_payment(self, order_id, data):
-        statement_id = super(pos_order_card, self).add_payment(order_id, data)
+    def add_payment(self, data):
+        statement_id = super(pos_order_card, self).add_payment(data)
         statement_lines = self.env['account.bank.statement.line'].search([('statement_id', '=', statement_id),
-                                                                         ('pos_statement_id', '=', order_id),
+                                                                         ('pos_statement_id', '=', self.id),
                                                                          ('journal_id', '=', data['journal']),
                                                                          ('amount', '=', data['amount'])])
 
