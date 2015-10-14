@@ -90,9 +90,13 @@ var Thread = Widget.extend({
         // Set the date in the browser timezone
         msg.date = moment(time.str_to_datetime(msg.date)).format('YYYY-MM-DD HH:mm:ss');
 
-        // Compute displayed author
-        if (!msg.author_id || !msg.author_id[1]) {
-            msg.displayed_author = msg.email_from || this.options.default_username;
+        // Compute displayed author name or email
+        if ((!msg.author_id || !msg.author_id[0]) && msg.email_from) {
+            msg.mailto = msg.email_from;
+        } else {
+            msg.displayed_author = msg.author_id && msg.author_id[1] ||
+                                   msg.email_from ||
+                                   this.options.default_username;
         }
 
         // Compute the avatar_url

@@ -15,6 +15,7 @@ var Model = require('web.Model');
 
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
+var session = require('web.session');
 var Sidebar = require('web.Sidebar');
 var Widget = require('web.Widget');
 
@@ -384,21 +385,48 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.fetch_and_render_thread();
     },
 
+    /**
+     * Callback performed on o_mail_redirect element clicked
+     *
+     * If the model is res.partner, and there is a user associated with this
+     * partner which isn't the current user, open the DM with this user.
+     * Otherwhise, open the record's form view.
+     */
     on_redirect: function (res_model, res_id) {
-        this.action_manager.do_push_state({
-            model: res_model,
-            id: res_id,
-        });
-        this.do_action({
-            type:'ir.actions.act_window',
-            view_type: 'form',
-            view_mode: 'form',
-            res_model: res_model,
-            views: [[false, 'form']],
-            res_id: res_id,
-        }, {
-            on_reverse_breadcrumb: this.on_reverse_breadcrumb,
-        });
+        var self = this;
+        var redirect_to_document = function (res_model, res_id) {
+            self.action_manager.do_push_state({
+                model: res_model,
+                id: res_id,
+            });
+            self.do_action({
+                type:'ir.actions.act_window',
+                view_type: 'form',
+                view_mode: 'form',
+                res_model: res_model,
+                views: [[false, 'form']],
+                res_id: res_id,
+            }, {
+                on_reverse_breadcrumb: self.on_reverse_breadcrumb,
+            });
+        };
+
+        if (res_model === "res.partner") {
+            var domain = [["partner_id", "=", res_id]];
+            new Model('res.users').call("search", [domain]).then(function (user_ids) {
+                if (user_ids.length && user_ids[0] !== session.uid) {
+                    chat_manager.create_channel(res_id, 'dm').then(function (channel) {
+                        if (!self.channel || self.channel.id !== channel.id) {
+                            self.set_channel(channel);
+                        }
+                    });
+                } else {
+                    redirect_to_document(res_model, res_id);
+                }
+            });
+        } else {
+            redirect_to_document(res_model, res_id);
+        }
     },
     on_reverse_breadcrumb: function () {
         this.update_cp(); // do not reload the client action, just display it, but a refresh of the control panel is needed.

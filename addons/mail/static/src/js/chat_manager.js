@@ -175,6 +175,7 @@ function add_channel (data, options) {
             chat_manager.bus.trigger("open_chat", channel);
         }
     }
+    return channel;
 }
 
 function make_channel (data, options) {

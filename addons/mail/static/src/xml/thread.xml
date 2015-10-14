@@ -51,12 +51,20 @@
                     <t t-if="message.is_note">
                         Note by
                     </t>
-                    <t t-if="message.author_id &amp;&amp; message.author_id[1]">
-                        <strong class="o_mail_redirect" data-oe-model="res.partner" t-att-data-oe-id="message.author_id[0]"><t t-esc="message.author_id[1]"/></strong>
-                    </t>
-                    <t t-if="!message.author_id || !message.author_id[1]">
-                        <strong class="o_mail_redirect"><t t-esc="message.displayed_author"/></strong>
-                    </t>
+
+                    <strong t-if="message.mailto">
+                        <a class="o_mail_mailto" t-attf-href="mailto:#{message.mailto}?subject=Re: #{message.subject}">
+                            <t t-esc="message.mailto"/>
+                        </a>
+                    </strong>
+                    <strong t-if="!message.mailto &amp;&amp; message.author_id[0]"
+                            data-oe-model="res.partner" t-att-data-oe-id="message.author_id[0]"
+                            class="o_mail_redirect">
+                        <t t-esc="message.displayed_author"/>
+                    </strong>
+                    <strong t-if="!message.mailto &amp;&amp; !message.author_id[0]">
+                        <t t-esc="message.displayed_author"/>
+                    </strong>
 
                     <small t-att-title="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LLL')">
                         - <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm A')"/>
