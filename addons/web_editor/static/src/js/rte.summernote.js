@@ -169,13 +169,15 @@ renderer.tplPopovers = function (lang, options) {
 
     //////////////// tooltip
 
-    $airPopover.add($linkPopover).add($imagePopover).find("button")
-        .tooltip('destroy')
-        .tooltip({
-            container: 'body',
-            trigger: 'hover',
-            placement: 'bottom'
-        }).on('click', function () {$(this).tooltip('hide');});
+    setTimeout(function () {
+        $airPopover.add($linkPopover).add($imagePopover).find("button")
+            .tooltip('destroy')
+            .tooltip({
+                container: 'body',
+                trigger: 'hover',
+                placement: 'bottom'
+            }).on('click', function () {$(this).tooltip('hide');});
+    });
 
     return $popover;
 };
@@ -207,7 +209,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
         if (dom.isImgFont(oStyle.image)) {
 
-            $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-event="imageShape"])').addClass("hidden");
+            $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass("hidden");
             $container.find('.only_fa').removeClass("hidden");
             $container.find('button[data-event="resizefa"][data-value="2"]').toggleClass("active", $(oStyle.image).hasClass("fa-2x"));
             $container.find('button[data-event="resizefa"][data-value="3"]').toggleClass("active", $(oStyle.image).hasClass("fa-3x"));
@@ -217,7 +219,6 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
             $container.find('button[data-event="imageShape"][data-value="fa-spin"]').toggleClass("active", $(oStyle.image).hasClass("fa-spin"));
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
-            $container.find('.btn-group:has(button[data-event="imageShape"])').removeClass("hidden");
 
         } else {
 
@@ -610,6 +611,11 @@ eventHandler.attach = function (oLayoutInfo, options) {
             new widgets.MediaDialog(oLayoutInfo.editor(), event.target).appendTo(document.body);
         }
     });
+    if(oLayoutInfo.editor().is('[data-oe-model][data-oe-type="image"]')) {
+        oLayoutInfo.editor().on('click', 'img', function (event) {
+            $(event.target).trigger("dblclick");
+        });
+    }
     oLayoutInfo.editable().on('mousedown', function(e) {
         if(dom.isImg(e.target)) {
             range.createFromNode(e.target).select();
@@ -675,6 +681,7 @@ var fn_detach = eventHandler.detach;
 eventHandler.detach = function (oLayoutInfo, options) {
     fn_detach.call(this, oLayoutInfo, options);
     oLayoutInfo.editor().off("dragstart");
+    oLayoutInfo.editor().off('click');
     $(document).off('mousedown', summernote_mousedown);
     $(document).off('mouseup', summernote_mouseup);
     oLayoutInfo.editor().off("dblclick");
