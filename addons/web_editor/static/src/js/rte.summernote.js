@@ -290,29 +290,13 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
     }
 };
 
-/* TODO: remove (original method seems enough now (only border-top,left is not done) */
-/*
+var fn_handle_update = eventHandler.modules.handle.update;
 eventHandler.modules.handle.update = function ($handle, oStyle, isAirMode) {
-
-    $handle.toggle(!!oStyle.image);
+    fn_handle_update.call(this, $handle, oStyle, isAirMode);
     if (oStyle.image) {
-        var $selection = $handle.find('.note-control-selection');
-        var $image = $(oStyle.image);
-        var szImage = {
-          w: parseInt($image.outerWidth(true), 10),
-          h: parseInt($image.outerHeight(true), 10)
-        };
-        $selection.data('target', oStyle.image); // save current image element.
-        var sSizing = szImage.w + 'x' + szImage.h;
-        $selection.find('.note-control-selection-info').text(szImage.h > 50 ? sSizing : "");
-
-        $selection.find('.note-control-sizing').toggleClass('note-control-sizing note-control-holder').css({
-                'border-top': 0,
-                'border-left': 0
-            });
+        $handle.find('.note-control-selection').hide();
     }
 };
-*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* hack for image and link editor */
