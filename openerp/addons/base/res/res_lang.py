@@ -7,7 +7,7 @@ import logging
 from operator import itemgetter
 import re
 
-from openerp import tools
+from openerp import tools, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
@@ -108,6 +108,15 @@ class lang(osv.osv):
             tools.resetlocale()
         return lang_id
 
+    def _register_hook(self, cr):
+        # check that there is at least one active language
+        if not self.search_count(cr, SUPERUSER_ID, []):
+            _logger.error("No language is active.")
+
+    def _check_active(self, cr, uid, ids, context=None):
+        # do not check during installation
+        return not self.pool.ready or bool(self.search_count(cr, uid, []))
+
     def _check_format(self, cr, uid, ids, context=None):
         for lang in self.browse(cr, uid, ids, context=context):
             for pattern in self._disallowed_datetime_patterns:
@@ -160,6 +169,7 @@ class lang(osv.osv):
     ]
 
     _constraints = [
+        (_check_active, "At least one language must be active.", ['active']),
         (_check_format, 'Invalid date/time format directive specified. Please refer to the list of allowed directives, displayed when you edit a language.', ['time_format', 'date_format']),
         (_check_grouping, "The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case.", ['grouping'])
     ]
@@ -167,7 +177,8 @@ class lang(osv.osv):
     @tools.ormcache('lang')
     def _lang_get(self, cr, uid, lang):
         lang_ids = self.search(cr, uid, [('code', '=', lang)]) or \
-                   self.search(cr, uid, [('code', '=', 'en_US')])
+                   self.search(cr, uid, [('code', '=', 'en_US')]) or \
+                   self.search(cr, uid, [])
         return lang_ids[0]
 
     @tools.ormcache('lang', 'monetary')
@@ -203,9 +214,6 @@ class lang(osv.osv):
 
         if vals.get('active') == False:
             users = self.pool.get('res.users')
-            if self.search_count(cr, uid, [('id', 'in', ids), ('code', '=', 'en_US')], context=context):
-                raise UserError(_("Base Language 'en_US' can not be deactivated!"))
-
             for current_id in ids:
                 current_language = self.browse(cr, uid, current_id, context=context)
                 if users.search(cr, uid, [('lang', '=', current_language.code)], context=context):
