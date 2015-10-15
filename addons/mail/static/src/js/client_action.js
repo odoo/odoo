@@ -106,14 +106,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         },
         "click .o_mail_partner_unpin": function (event) {
             event.stopPropagation();
-            var self = this;
             var channel_id = $(event.target).data("channel-id");
-            chat_manager
-                .unsubscribe(chat_manager.get_channel(channel_id))
-                .then(function () {
-                    self.render_sidebar();
-                    self.set_channel(chat_manager.get_channel("channel_inbox"));
-                });
+            this.unsubscribe_from_channel(chat_manager.get_channel(channel_id));
         },
     },
 
@@ -326,6 +320,19 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             });
         });
     },
+    unsubscribe_from_channel: function (channel) {
+        var self = this;
+        chat_manager
+            .unsubscribe(channel)
+            .then(this.render_sidebar.bind(this))
+            .then(this.set_channel.bind(this, chat_manager.get_channel("channel_inbox")))
+            .then(function () {
+                if (_.contains(['public', 'private'], channel.type)) {
+                    var msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), channel.name);
+                    self.do_notify(_t("Unsubscribed"), msg);
+                }
+            });
+    },
 
     get_thread_rendering_options: function () {
         return {
@@ -459,16 +466,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     on_click_button_unsubscribe: function () {
-        var self = this;
-        var channel = this.channel;
-        chat_manager
-            .unsubscribe(channel)
-            .then(this.set_channel.bind(this, chat_manager.get_channel("channel_inbox")))
-            .then(this.render_sidebar.bind(this))
-            .then(function () {
-                var msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), channel.name);
-                self.do_notify(_t("Unsubscribed"), msg);
-            });
+        this.unsubscribe_from_channel(this.channel);
     },
     on_click_button_settings: function() {
         this.do_action({
