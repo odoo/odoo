@@ -4,6 +4,7 @@
 import locale
 from locale import localeconv
 import logging
+from operator import itemgetter
 import re
 
 from openerp import tools
@@ -67,7 +68,7 @@ class lang(osv.osv):
             _logger.warning(msg, lang, lc)
 
         if not lang_name:
-            lang_name = tools.ALL_LANGUAGES.get(lang, lang)
+            lang_name = lang
 
         def fix_xa0(s):
             """Fix badly-encoded non-breaking space Unicode character from locale.localeconv(),
@@ -181,6 +182,22 @@ class lang(osv.osv):
         grouping = lang_obj.grouping
         return grouping, thousands_sep, decimal_point
 
+    @tools.ormcache()
+    def get_available(self, cr, uid, context=None):
+        """ Return the available languages as a list of (code, name) sorted by name. """
+        langs = self.browse(cr, uid, self.search(cr, uid, [], context={'active_test': False}))
+        return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
+
+    @tools.ormcache()
+    def get_installed(self, cr, uid, context=None):
+        """ Return the installed languages as a list of (code, name) sorted by name. """
+        langs = self.browse(cr, uid, self.search(cr, uid, []))
+        return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
+
+    def create(self, cr, uid, vals, context=None):
+        self.clear_caches()
+        return super(lang, self).create(cr, uid, vals, context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
              ids = [ids]
@@ -195,8 +212,7 @@ class lang(osv.osv):
                 if users.search(cr, uid, [('lang', '=', current_language.code)], context=context):
                     raise UserError(_("Cannot unactivate a language that is currently used by users."))
 
-        self._lang_get.clear_cache(self)
-        self._lang_data_get.clear_cache(self)
+        self.clear_caches()
         return super(lang, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -214,8 +230,7 @@ class lang(osv.osv):
             trans_obj = self.pool.get('ir.translation')
             trans_ids = trans_obj.search(cr, uid, [('lang','=',language['code'])], context=context)
             trans_obj.unlink(cr, uid, trans_ids, context=context)
-        self._lang_get.clear_cache(self)
-        self._lang_data_get.clear_cache(self)
+        self.clear_caches()
         return super(lang, self).unlink(cr, uid, ids, context=context)
 
     #
