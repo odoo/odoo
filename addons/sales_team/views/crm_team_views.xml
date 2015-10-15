@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-  <data>
+<odoo>
         <menuitem name="Sales"
             id="base.menu_base_partner"
             icon="fa-credit-card"
@@ -139,9 +138,7 @@
         <!-- add css / js -->
         <template id="assets_backend" name="sales_team assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/sales_team/static/src/css/sales_team.css"/>
                 <link rel="stylesheet" href="/sales_team/static/src/less/sales_team_dashboard.less"/>
-                <script type="text/javascript" src="/sales_team/static/src/js/sales_team.js"></script>
                 <script type="text/javascript" src="/sales_team/static/src/js/sales_team_dashboard.js"></script>
             </xpath>
         </template>
@@ -172,5 +169,4 @@
             parent="base.menu_sale_config"
             action="sales_team_config_action"/>
 
-    </data>
-</openerp>
+</odoo>
