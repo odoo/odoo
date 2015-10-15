@@ -75,12 +75,6 @@ class ResPartnerBank(models.Model):
         if self.acc_type == 'iban':
             validate_iban(self.acc_number)
 
-    @api.one
-    @api.constrains('acc_number', 'bank_bic')
-    def _check_bank_bic(self):
-        if self.acc_type == 'iban' and not self.bank_bic:
-            raise ValidationError(_("Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments."))
-
 
 # Map ISO 3166-1 -> IBAN template, as described here :
 # http://en.wikipedia.org/wiki/International_Bank_Account_Number#IBAN_formats_by_country
