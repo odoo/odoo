@@ -822,7 +822,8 @@ class ProductTemplate(models.Model):
             template.purchase_count = sum([p.purchase_count for p in template.product_variant_ids])
         return True
 
-    property_account_creditor_price_difference = fields.Many2one('account.account', string="Price Difference Account",\
+    property_account_creditor_price_difference = fields.Many2one(
+        'account.account', string="Price Difference Account", company_dependent=True,
         help="This account will be used to value price difference between purchase price and cost price.")
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
     purchase_count = fields.Integer(compute='_purchase_count', string='# Purchases')
