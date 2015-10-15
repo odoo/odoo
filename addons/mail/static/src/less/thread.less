@@ -1,4 +1,6 @@
 @mail-thread-avatar-size: 36px;
+@mail-thread-icon-opacity: 0.6;
+@mail-thread-side-date-opacity: 0.6;
 
 .o_mail_thread {
     .o_thread_show_more {
@@ -22,18 +24,26 @@
 
     .o_thread_message {
         .o-flex-display();
-        margin: 10px 0;
+        padding: 4px 0;
 
-        .o_thread_message_avatar {
+        .o_thread_message_sidebar {
             .o-flex(0, 0, @mail-thread-avatar-size);
             margin-right: 10px;
+            text-align: center;
 
-            .o_thread_message_avatar_img {
-                display: block;
-                margin: 0 auto; // center the avatar
+            .o_thread_message_avatar {
                 max-width: @mail-thread-avatar-size;
             }
+
+            .o_thread_message_side_date {
+                font-size: smaller;
+                opacity: 0;
+            }
         }
+        &:hover .o_thread_message_side_date {
+            opacity: @mail-thread-side-date-opacity;
+        }
+
 
         .o_thread_message_core {
             .o-flex(1, 1, auto);
@@ -60,13 +70,35 @@
 
             .o_thread_message_star, .o_thread_message_needaction {
                 cursor: pointer;
-                opacity: 0.5;
+                opacity: 0;
+                &.fa-star {
+                    opacity: @mail-thread-icon-opacity;
+                    color: gold;
+                }
+            }
+        }
+
+        &:hover .o_thread_message_core {
+            .o_thread_message_star, .o_thread_message_needaction {
+                opacity: @mail-thread-icon-opacity;
                 &:hover {
                     opacity: 1;
                 }
-                &.fa-star {
-                    color: gold;
-                }
+            }
+        }
+
+        border-bottom: 1px solid transparent;
+        border-top: 1px solid transparent;
+        &.o_thread_selected_message {
+            border-bottom: 1px solid @gray-lighter;
+            border-top: 1px solid @gray-lighter;
+
+            .o_thread_message_side_date {
+                opacity: @mail-thread-side-date-opacity;
+            }
+
+            .o_thread_message_star, .o_thread_message_needaction {
+                opacity: @mail-thread-icon-opacity;
             }
         }
     }

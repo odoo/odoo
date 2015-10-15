@@ -32,8 +32,11 @@
 
     <t t-name="mail.ChatThread.Message">
         <div class="o_thread_message" t-att-data-message-id="message.id">
-            <div t-if="options.display_avatar" class="o_thread_message_avatar">
-                <img t-if="message.avatar_src" t-att-src="message.avatar_src" class="o_thread_message_avatar_img"/>
+            <div t-if="options.display_avatar" class="o_thread_message_sidebar">
+                <img t-if="message.avatar_src &amp;&amp; message.display_author" t-att-src="message.avatar_src" class="o_thread_message_avatar"/>
+                <span t-if="!message.display_author" t-att-title="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LLL')" class="o_thread_message_side_date">
+                    <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm')"/>
+                </span>
             </div>
             <div class="o_thread_message_core">
                 <span class="pull-right">
@@ -44,7 +47,7 @@
                         t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
                         t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
                 </span>
-                <p class="o_mail_info">
+                <p t-if="message.display_author" class="o_mail_info">
                     <t t-if="message.is_note">
                         Note by
                     </t>
