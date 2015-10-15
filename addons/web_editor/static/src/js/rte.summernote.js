@@ -31,7 +31,6 @@ var options = $.summernote.options;
 
 var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
-var tplIconButton = renderer.getTemplate().iconButton;
 var tplDropdown = renderer.getTemplate().dropdown;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
