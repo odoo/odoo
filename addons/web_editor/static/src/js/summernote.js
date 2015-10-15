@@ -134,7 +134,7 @@ dom.hasProgrammaticStyle = function (node) {
 };
 dom.mergeFilter = function (prev, cur, parent) {
     // merge text nodes
-    if (prev && (dom.isText(prev) || (dom.pasteTextApply.indexOf(prev.tagName) !== -1 && prev !== cur.parentNode)) && dom.isText(cur)) {
+    if (prev && (dom.isText(prev) || ("H1 H2 H3 H4 H5 H6 LI P".indexOf(prev.tagName) !== -1 && prev !== cur.parentNode)) && dom.isText(cur)) {
         return true;
     }
     if (prev && prev.tagName === "P" && dom.isText(cur)) {
@@ -443,75 +443,6 @@ dom.removeSpace = function (node, begin, so, end, eo) {
 };
 dom.node = function (node) {
     return node.tagName ? node : node.parentNode;
-};
-dom.pasteTextApply = "h1 h2 h3 h4 h5 h6 li p".split(" ");
-dom.pasteTextClose = "h1 h2 h3 h4 h5 h6 p b bold i u code sup strong small li pre".split(" ");
-dom.pasteText = function (textNode, offset, text, isOnlyText) {
-    // clean the node
-    var node = dom.node(textNode);
-    var data = dom.merge(node.parentNode, textNode, offset, textNode, offset, null, true);
-    data = dom.removeSpace(node.parentNode, data.sc, data.so, data.ec, data.eo);
-    // Break the text node up
-    if (data.sc.tagName) {
-        if (node === data.sc.parentNode) {
-            data.sc = node.insertBefore(document.createTextNode(" "), data.sc);
-        } else if (node.firstChild && !dom.isBR(dom.firstChild(node))) {
-            data.sc = node.insertBefore(document.createTextNode(" "), dom.firstChild(node));
-        } else if (dom.isBR(node)) {
-            data.sc = node.parentNode.insertBefore(document.createTextNode(" "), node);
-        } else {
-            data.sc = node.appendChild(document.createTextNode(" "));
-        }
-        data.so = 0;
-    }
-    var first = data.sc;
-    var try_to_clean = [first, first.splitText(data.so)];
-
-    isOnlyText = isOnlyText || !text.match('\n');
-
-    var sc, so, ec, eo;
-
-    if (!isOnlyText) {
-        var paste_after = dom.isBR(node) ? node.parentElement : node;
-
-        // tag to close and open
-        var tag = paste_after.tagName.toLowerCase();
-        if(dom.pasteTextApply.indexOf(tag) === -1) {
-            text = text.split('\n').join("<br/>");
-            paste_after = data.sc;
-        } else {
-            text = "<"+tag+">"+text.split('\n').join("</"+tag+"><"+tag+">")+"</"+tag+">";
-            try_to_clean.push(paste_after);
-        }
-
-        var nodes = _.toArray($('<div/>').html(text).prop('childNodes'));
-        sc = nodes[0];
-        so = 0;
-        ec = dom.lastChild(nodes[nodes.length - 1]);
-        eo = dom.nodeLength(ec);
-
-        // split parent node and insert text
-        if(!dom.isText(paste_after) && dom.pasteTextClose.indexOf(tag) !== -1) {
-            try_to_clean.push(dom.splitTree(paste_after, {node: first, offset: data.so}));
-            $(paste_after).after( nodes );
-        } else {
-            $(paste_after).after( nodes );
-        }
-    } else {
-        sc = ec = first;
-        so = dom.nodeLength(first);
-        eo = so + text.length;
-        first.appendData( text );
-    }
-
-    // move caret
-    range.create(sc, so, ec, eo).clean().select();
-
-    _(try_to_clean).each(function(node){
-        _(dom.listDescendant(node).reverse().concat(node)).each(function(subnode){
-            if(dom.isEmpty(subnode) || (dom.isText(subnode) && !dom.isVisibleText(subnode))) $(subnode).remove();
-        });
-    });
 };
 dom.removeBetween = function (sc, so, ec, eo, towrite) {
     if (ec.tagName) {
@@ -2301,6 +2232,7 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function summernote_paste (event) {
+
     // keep norma feature if copy a picture
     var clipboardData = event.originalEvent.clipboardData;
     if (clipboardData.items) {
@@ -2311,36 +2243,100 @@ function summernote_paste (event) {
         }
     }
 
-    var $editable = $(event.currentTarget);
-    $editable = $editable.is('[contenteditable]') ? $editable : $editable.find('[contenteditable]');
-    $editable.data('NoteHistory').recordUndo($editable);
+    if (["INPUT", "TEXTAREA"].indexOf(event.target.tagName) !== -1) {
+        return;
+    }
 
-    if (["INPUT", "TEXTAREA"].indexOf(event.target.tagName) === -1) {
-        var r = range.create();
-        if (!r.isCollapsed()) {
-            r = r.deleteContents();
-            r.select();
+    $(event.target).trigger('content_changed');
+
+    var r = range.create();
+    if (!r.isCollapsed()) {
+        r = r.deleteContents();
+        r.select();
+    }
+
+    var html = clipboardData.getData("text/html");
+    var $node = $('<div/>').html(html);
+
+    /* 
+        remove undesirable tag
+        filter classes and style attributes
+        remove undesirable attributes
+    */
+    $node.find('meta, script, style').remove();
+    $node.find('*').each(function() {
+        var $node = $(this);
+
+        if ($(this).attr('style')) {
+            var style = _.filter($(this).attr('style').split(/\s*;\s*/), function (style) {
+                    return /width|height|color|background-color|font-weight|text-align|font-style|text-decoration/i.test(style) && $node.css(style.split(':')[0]) !== $('body').css(style.split(':')[0]);
+                }).join(';');
+            if (style.length) {
+                $node.attr('style', style);
+            } else {
+                $node.removeAttr('style');
+            }
         }
 
-            var text = $('<div />').text(clipboardData.getData("text/plain").toString()).html();
-        dom.pasteText(r.sc, r.so, text);
-        event.preventDefault();
-        return false;
-    }
+        if ($(this).attr('class')) {
+            var classes = _.filter($(this).attr('class').split(/\s+/), function (style) {
+                    return /(^|\s)(fa|pull|text|bg)(\s|-|$)/.test(style);
+                }).join(' ');
+            if (classes.length) {
+                $node.attr('class', classes);
+            } else {
+                $node.removeAttr('class');
+            }
+        }
+    }).removeAttr('title', 'alt', 'id', 'contenteditable');
+
+    /*
+        remove unless span
+    */
+    $node.find('span:not([class]):not([style])').each(function () {
+        $(this).replaceWith($(this).contents());
+    });
+
+    /*
+        reset architecture HTML node and add <p> tag
+    */
+    var $arch = $('<div><p/></div>');
+    var $last = $arch.find('p');
+    $node.contents().each(function () {
+        if (dom.isBR(this)) {
+            $(this).remove();
+            $last = $('<p/>');
+            $arch.append($last);
+        } else if (/h[0-9]+|li|table|p/i.test(this.tagName)) {
+            $last = $('<p/>');
+            $arch.append(this).append($last);
+        } else {
+            $last.append(this);
+        }
+    });
+    $last.filter(':empty').remove();
+
+    /*
+        insert content
+    */
+    window.document.execCommand('insertHTML', false,  $arch.html());
+
+    event.preventDefault();
+    return false;
 }
 
 var fn_attach = eventHandler.attach;
 eventHandler.attach = function (oLayoutInfo, options) {
     var $editable = oLayoutInfo.editor().hasClass('note-editable') ? oLayoutInfo.editor() : oLayoutInfo.editor().find('.note-editable');
     fn_attach.call(this, oLayoutInfo, options);
-    oLayoutInfo.editor().on("paste", summernote_paste);
+    $(document).off("paste", summernote_paste).on("paste",'[contenteditable]', summernote_paste);
     $editable.on("scroll", summernote_table_scroll);
 };
 var fn_detach = eventHandler.detach;
 eventHandler.detach = function (oLayoutInfo, options) {
     var $editable = oLayoutInfo.editor().hasClass('note-editable') ? oLayoutInfo.editor() : oLayoutInfo.editor().find('.note-editable');
     fn_detach.call(this, oLayoutInfo, options);
-    oLayoutInfo.editor().off("paste", summernote_paste);
+    $(document).off("paste", summernote_paste);
     $editable.off("scroll", summernote_table_scroll);
     $('.o_table_handler').remove();
 };
