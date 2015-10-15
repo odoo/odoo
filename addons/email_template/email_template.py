@@ -29,11 +29,40 @@ from osv import fields
 import tools
 from tools.translate import _
 from urllib import quote as quote
+import datetime
+from openerp import SUPERUSER_ID
 
 try:
     from mako.template import Template as MakoTemplate
 except ImportError:
     logging.getLogger('init').warning("email_template: mako templates not available, templating features will not work!")
+
+
+def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
+    context = dict(context or {})
+    if tz:
+        context['tz'] = tz or pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['context_tz'])['context_tz'] or "UTC"
+    timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+
+    ts = fields.datetime.context_timestamp(cr, uid, timestamp, context)
+
+    if format:
+        return ts.strftime(format)
+    else:
+        lang = context.get("lang")
+        lang_params = {}
+        if lang:
+            res_lang = pool.get('res.lang')
+            ids = res_lang.search(cr, uid, [("code", "=", lang)])
+            if ids:
+                lang_params = res_lang.read(cr, uid, ids[0], ["date_format", "time_format"])
+        format_date = lang_params.get("date_format", '%B-%d-%Y')
+        format_time = lang_params.get("time_format", '%I-%M %p')
+
+        fdate = ts.strftime(format_date)
+        ftime = ts.strftime(format_time)
+        return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
+
 
 class email_template(osv.osv):
     "Templates for sending email"
@@ -60,6 +89,8 @@ class email_template(osv.osv):
         if context is None:
             context = {}
         try:
+            def format_tz_wrapper(dt, tz=False, format=False, context=context):
+                return format_tz(self.pool, cr, uid, dt, tz, format, context)
             template = tools.ustr(template)
             record = None
             if res_id:
@@ -67,6 +98,7 @@ class email_template(osv.osv):
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             result = MakoTemplate(template).render_unicode(object=record,
                                                            user=user,
+                                                           format_tz=format_tz_wrapper,
                                                            # context kw would clash with mako internals
                                                            ctx=context,
                                                            quote=quote,
