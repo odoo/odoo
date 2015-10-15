@@ -15,6 +15,7 @@ The kernel of Odoo, needed for all installation.
     'website': 'http://www.openerp.com',
     'depends': [],
     'data': [
+        'res/res.lang.csv',
         'base_data.xml',
         'res/res_currency_data.xml',
         'res/res_country_data.xml',

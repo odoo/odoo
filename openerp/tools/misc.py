@@ -528,6 +528,7 @@ def scan_languages():
     :returns: a list of (lang_code, lang_name) pairs
     :rtype: [(str, unicode)]
     """
+    _logger.warning("scan_languages is deprecated")
     return sorted(ALL_LANGUAGES.iteritems(), key=lambda k: k[1])
 
 def get_user_companies(cr, user):

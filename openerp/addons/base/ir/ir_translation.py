@@ -4,7 +4,7 @@
 from difflib import get_close_matches
 import logging
 
-from openerp import api, tools
+from openerp import api, tools, SUPERUSER_ID
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -631,6 +631,11 @@ class ir_translation(osv.osv):
 
     def load_module_terms(self, cr, modules, langs, context=None):
         context = dict(context or {}) # local copy
+        # make sure the given languages are active
+        lang_obj = self.pool['res.lang']
+        for lang in langs:
+            lang_obj.load_lang(cr, SUPERUSER_ID, lang)
+        # load i18n files
         for module_name in modules:
             modpath = openerp.modules.get_module_path(module_name)
             if not modpath:

@@ -44,6 +44,13 @@ class lang(osv.osv):
         return True
 
     def load_lang(self, cr, uid, lang, lang_name=None):
+        """ Create the given language if necessary, and make it active. """
+        # if the language exists, simply make it active
+        lang_ids = self.search(cr, uid, [('code', '=', lang)], context={'active_test': False})
+        if lang_ids:
+            self.write(cr, uid, lang_ids, {'active': True})
+            return lang_ids[0]
+
         # create the language with locale information
         fail = True
         iso_lang = tools.get_iso_codes(lang)
@@ -62,7 +69,6 @@ class lang(osv.osv):
         if not lang_name:
             lang_name = tools.ALL_LANGUAGES.get(lang, lang)
 
-
         def fix_xa0(s):
             """Fix badly-encoded non-breaking space Unicode character from locale.localeconv(),
                coercing to utf-8, as some platform seem to output localeconv() in their system
@@ -80,7 +86,6 @@ class lang(osv.osv):
             # For some locales, nl_langinfo returns a D_FMT/T_FMT that contains
             # unsupported '%-' patterns, e.g. for cs_CZ
             format = format.replace('%-', '%')
-
             for pattern, replacement in tools.DATETIME_FORMATS_MAP.iteritems():
                 format = format.replace(pattern, replacement)
             return str(format)
@@ -89,7 +94,8 @@ class lang(osv.osv):
             'code': lang,
             'iso_code': iso_lang,
             'name': lang_name,
-            'translatable': 1,
+            'active': True,
+            'translatable': True,
             'date_format' : fix_datetime_format(locale.nl_langinfo(locale.D_FMT)),
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
@@ -139,8 +145,8 @@ class lang(osv.osv):
         'thousands_sep':fields.char('Thousands Separator'),
     }
     _defaults = {
-        'active': 1,
-        'translatable': 0,
+        'active': False,
+        'translatable': False,
         'direction': 'ltr',
         'date_format':_get_default_date_format,
         'time_format':_get_default_time_format,
