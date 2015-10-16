@@ -466,7 +466,7 @@ var AbstractManyField = common.AbstractField.extend({
         this.starting_ids = [];
         // don't set starting_ids for the new record
         if (record.id && record[this.name] && (!isNaN(record.id) || record.id.indexOf(this.dataset.virtual_id_prefix) === -1)) {
-            this.starting_ids =  record[this.name].slice();
+            this.starting_ids =  this.get('value').slice();
         }
         this.trigger("load_record", record);
     },
