@@ -2269,7 +2269,8 @@ class stock_move(osv.osv):
                 if not move.origin_returned_move_id:
                     continue
             if move.product_id.type == 'consu':
-                to_assign_moves.append(move.id)
+                if move.id not in to_assign_moves:
+                    to_assign_moves.append(move.id)
                 continue
             else:
                 todo_moves.append(move)
