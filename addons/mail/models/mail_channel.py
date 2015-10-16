@@ -481,8 +481,13 @@ class Channel(models.Model):
     @api.multi
     def channel_join_and_get_info(self):
         self.ensure_one()
+        notification = {"type": "user_join", "payload": {"channel_id": self.id, "name": self.env.user.partner_id.name}}
+        self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), notification]])
         self.action_follow()
-        return self.channel_info()[0]
+
+        channel_info = self.channel_info()[0]
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
+        return channel_info
 
     @api.model
     def channel_create(self, name, privacy='public'):
@@ -499,4 +504,6 @@ class Channel(models.Model):
             'email_send': False,
             'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
-        return new_channel.channel_info()[0]
+        channel_info = new_channel.channel_info()[0]
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
+        return channel_info
