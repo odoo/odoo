@@ -466,7 +466,7 @@ class ResPartnerBank(models.Model):
     @api.constrains('journal_id')
     def _check_journal_id(self):
         if len(self.journal_id) > 1:
-            raise ValidationError(_('A bank account can anly belong to one journal.'))
+            raise ValidationError(_('A bank account can only belong to one journal.'))
 
 
 #----------------------------------------------------------
