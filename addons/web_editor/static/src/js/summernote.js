@@ -1052,20 +1052,6 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
 
     var br = $("<br/>")[0];
 
-    // table: add a tr
-    var td = dom.ancestor(r.sc, dom.isCell);
-    if (td && (r.sc === td || r.sc === td.lastChild || (dom.isBR(td.lastChild) && r.sc === td.lastChild.previousSibling)) && r.so === r.sc.textContent.length && r.isOnCell() && !dom.nextElementSibling(td)) {
-        var $node = $(td.parentNode);
-        var $clone = $node.clone();
-        $clone.children().html(dom.blank);
-        $node.after($clone);
-        var node = dom.firstElementChild($clone[0]) || $clone[0];
-        range.create(node, 0, node, 0).select();
-        dom.scrollIntoViewIfNeeded(br);
-        event.preventDefault();
-        return false;
-    }
-
     var contentBefore = r.sc.textContent.slice(0,r.so).match(/\S|\u00A0/);
     if (!contentBefore && dom.isText(r.sc)) {
         var node = r.sc.previousSibling;
@@ -1075,8 +1061,8 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         }
     }
 
-    var node = dom.node(r.sc);
     var exist = r.sc.childNodes[r.so] || r.sc;
+    var node = dom.node(exist);
     exist = dom.isVisibleText(exist) || dom.isBR(exist) ? exist : dom.hasContentAfter(exist) || (dom.hasContentBefore(exist) || exist);
     var last = node;
     while (node && dom.isSplitable(node) && !dom.isList(node)) {
@@ -1084,7 +1070,19 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         node = node.parentNode;
     }
 
-    if (last === node && !dom.isBR(node)) {
+    // table: add a tr
+    var td = dom.ancestor(node, dom.isCell);
+    if (td && !dom.nextElementSibling(node) && !dom.nextElementSibling(td) && !dom.nextElementSibling(td.parentNode) && (!dom.isText(r.sc) || !r.sc.textContent.slice(r.so).match(/\S|\u00A0/))) {
+        var $node = $(td.parentNode);
+        var $clone = $node.clone();
+        $clone.children().html(dom.blank);
+        $node.after($clone);
+        var node = dom.firstElementChild($clone[0]) || $clone[0];
+        range.create(node, 0, node, 0).select();
+        dom.scrollIntoViewIfNeeded(br);
+        event.preventDefault();
+        return false;
+    } else if (last === node && !dom.isBR(node)) {
         node = r.insertNode(br, true);
         if (isFormatNode(last.firstChild) && $(last).closest(options.styleTags.join(',')).length) {
             dom.moveContent(last.firstChild, last);
@@ -1397,7 +1395,7 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
         $.summernote.pluginEvents.delete(event, editor, layoutInfo);
     }
     // table tr td
-    else if (r.isOnCell() && !offset && (target === (temp = dom.ancestor(target, dom.isCell)) || target === temp.firstChild)) {
+    else if (r.isOnCell() && !offset && (target === (temp = dom.ancestor(target, dom.isCell)) || target === temp.firstChild || (dom.isText(temp.firstChild) && !dom.isVisibleText(temp.firstChild) && target === temp.firstChild.nextSibling))) {
         if (dom.previousElementSibling(temp)) {
             var td = dom.previousElementSibling(temp);
             node = td.lastChild || td;
@@ -1406,7 +1404,7 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
             var prevTr = dom.previousElementSibling(tr);
             if (!$(temp.parentNode).text().match(/\S|\u00A0/)) {
                 if (prevTr) {
-                    node = (dom.lastElementChild(prevTr).lastChild && dom.lastElementChild(prevTr).lastChild.tagName ? dom.lastElementChild(prevTr).lastChild.previousSibling : dom.lastElementChild(prevTr).lastChild) || dom.lastElementChild(prevTr);
+                    node = dom.lastChild(dom.lastElementChild(prevTr));
                 } else {
                     node = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling(tr)) || $editable.get(0));
                 }
