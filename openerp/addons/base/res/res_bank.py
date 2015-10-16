@@ -29,6 +29,11 @@ class Bank(models.Model):
     active = fields.Boolean(default=True)
     bic = fields.Char('Bank Identifier Code', select=True, help="Sometimes called BIC or Swift.")
 
+    @api.model
+    def get_bank_from_bic(self, bic):
+        """ Either find an existing bank or create a new one """
+        return self.search([('bic', '=ilike', bic)]) or self.create({'name': '?', 'bic': bic})
+
     @api.multi
     @api.depends('name', 'bic')
     def name_get(self):

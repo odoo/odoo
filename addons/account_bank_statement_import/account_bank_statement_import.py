@@ -33,11 +33,11 @@ class AccountBankStatementImport(models.TransientModel):
         self.ensure_one()
         # Let the appropriate implementation module parse the file and return the required data
         # The active_id is passed in context in case an implementation module requires information about the wizard state (see QIF)
-        currency_code, account_number, stmts_vals = self.with_context(active_id=self.ids[0])._parse_file(base64.b64decode(self.data_file))
+        currency_code, account_number, stmts_vals, bank_bic = self.with_context(active_id=self.ids[0])._parse_file(base64.b64decode(self.data_file))
         # Check raw data
         self._check_parsed_data(stmts_vals)
         # Try to find the currency and journal in odoo
-        currency, journal = self._find_additional_data(currency_code, account_number)
+        currency, journal = self._find_additional_data(currency_code, account_number, bank_bic)
         # If no journal found, ask the user about creating one
         if not journal:
             # The active_id is passed in context so the wizard can call import_file again once the journal is created
@@ -97,10 +97,12 @@ class AccountBankStatementImport(models.TransientModel):
                         - 'amount': float
                         - 'unique_import_id': string
                         -o 'account_number': string
+                        -o 'account_bic': string
                             Will be used to find/create the res.partner.bank in odoo
                         -o 'note': string
                         -o 'partner_name': string
                         -o 'ref': string
+                -o BIC: string (e.g: 'BBRUBEBB')
         """
         raise UserError(_('Could not make sense of the given file.\nDid you install the module to support this type of file ?'))
 
@@ -117,7 +119,7 @@ class AccountBankStatementImport(models.TransientModel):
         if no_st_line:
             raise UserError(_('This file doesn\'t contain any transaction.'))
 
-    def _find_additional_data(self, currency_code, account_number):
+    def _find_additional_data(self, currency_code, account_number, bank_bic):
         """ Look for a res.currency and account.journal using values extracted from the
             statement and make sure it's consistent.
         """
@@ -137,7 +139,8 @@ class AccountBankStatementImport(models.TransientModel):
         if account_number:
             # No bank account on the journal : create one from the account number of the statement
             if journal and not journal.bank_account_id:
-                journal.set_bank_account(account_number)
+                bank = bank_bic and self.env['res.bank'].get_bank_from_bic(bank_bic) or None
+                journal.set_bank_account(account_number, bank.id)
             # Already a bank account on the journal : check it's the same as on the statement
             elif journal and journal.bank_account_id.sanitized_acc_number != sanitized_account_number:
                 raise UserError(_('The account of this statement (%s) is not the same as the journal (%s).') % (account_number, journal.bank_account_id.acc_number))
@@ -183,7 +186,8 @@ class AccountBankStatementImport(models.TransientModel):
                             bank_account_id = partner_bank.id
                             partner_id = partner_bank.partner_id.id
                         else:
-                            bank_account_id = self.env['res.partner.bank'].create({'acc_number': line_vals['account_number']}).id
+                            bank = line_vals.get('account_bic') and self.env['res.bank'].get_bank_from_bic(line_vals['account_bic']) or None
+                            bank_account_id = self.env['res.partner.bank'].create({'acc_number': line_vals['account_number'], 'bank_id': bank.id}).id
                     line_vals['partner_id'] = partner_id
                     line_vals['bank_account_id'] = bank_account_id
 
