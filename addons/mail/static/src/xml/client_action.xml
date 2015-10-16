@@ -50,10 +50,22 @@
         </span>
     </t>
     <t t-name="mail.chat.SidebarTitle">
-        <div class="o_mail_sidebar_title">
-            <h4><t t-esc="channel_title"/></h4>
-            <span t-if="!disable_add_channel" class="fa fa-plus o_add" t-att-title="_t('Add')" t-attf-data-type="#{channel_type}"/>
-        </div>
+        <!-- Don't display the channel type if there is no channel of such type
+             and the 'add a channel' option is disabled for this type -->
+        <t t-if="disable_add_channel">
+            <t t-set="empty" t-value="true"/>
+            <t t-foreach="channels" t-as="channel">
+                <t t-if="channel.type === channel_type">
+                    <t t-set="empty" t-value="false"/>
+                </t>
+            </t>
+        </t>
+        <t t-if="!disable_add_channel || !empty">
+            <div class="o_mail_sidebar_title">
+                <h4><t t-esc="channel_title"/></h4>
+                <span t-if="!disable_add_channel" class="fa fa-plus o_add" t-att-title="_t('Add')" t-attf-data-type="#{channel_type}"/>
+            </div>
+        </t>
     </t>
     <t t-name="mail.chat.SidebarItems">
         <t t-foreach="channels" t-as="channel">
