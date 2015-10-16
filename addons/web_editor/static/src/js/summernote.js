@@ -918,11 +918,15 @@ options.keyMap.pc['DELETE'] = 'delete';
 options.keyMap.pc['ENTER'] = 'enter';
 options.keyMap.pc['ESCAPE'] = 'cancel';
 options.keyMap.mac['SHIFT+TAB'] = 'untab';
+options.keyMap.pc['UP'] = 'up';
+options.keyMap.pc['DOWN'] = 'down';
 
 options.keyMap.mac['BACKSPACE'] = 'backspace';
 options.keyMap.mac['DELETE'] = 'delete';
 options.keyMap.mac['ENTER'] = 'enter';
 options.keyMap.mac['ESCAPE'] = 'cancel';
+options.keyMap.mac['UP'] = 'up';
+options.keyMap.mac['DOWN'] = 'down';
 
 $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
   var $editable = layoutInfo.editable();
@@ -997,6 +1001,40 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
 };
 $.summernote.pluginEvents.untab = function (event, editor, layoutInfo) {
     return $.summernote.pluginEvents.tab(event, editor, layoutInfo, true);
+};
+$.summernote.pluginEvents.up = function (event, editor, layoutInfo) {
+    var r = range.create();
+    var node = dom.firstChild(r.sc.childNodes[r.so] || r.sc);
+    if (!r.isOnCell() || (!dom.isCell(node) && dom.hasContentBefore(node) && (!dom.isBR(dom.hasContentBefore(node)) || !dom.isText(node) || dom.isVisibleText(node) || dom.hasContentBefore(dom.hasContentBefore(node))))) {
+        return;
+    }
+    event.preventDefault();
+    var td = dom.ancestor(r.sc, dom.isCell);
+    var tr = td.parentNode;
+    var target = tr.previousElementSibling && tr.previousElementSibling.children[_.indexOf(tr.children, td)];
+    if (!target) {
+        target = (dom.ancestorHavePreviousSibling(tr) || tr).previousSibling;
+    }
+    if (target) {
+        range.create(dom.lastChild(target), dom.lastChild(target).textContent.length).select();
+    }
+};
+$.summernote.pluginEvents.down = function (event, editor, layoutInfo) {
+    var r = range.create();
+    var node = dom.firstChild(r.sc.childNodes[r.so] || r.sc);
+    if (!r.isOnCell() || (!dom.isCell(node) && dom.hasContentAfter(node) && (!dom.isBR(dom.hasContentAfter(node)) || !dom.isText(node) || dom.isVisibleText(node) || dom.hasContentAfter(dom.hasContentAfter(node))))) {
+        return;
+    }
+    event.preventDefault();
+    var td = dom.ancestor(r.sc, dom.isCell);
+    var tr = td.parentNode;
+    var target = tr.nextElementSibling && tr.nextElementSibling.children[_.indexOf(tr.children, td)];
+    if (!target) {
+        target = (dom.ancestorHaveNextSibling(tr) || tr).nextSibling;
+    }
+    if (target) {
+        range.create(dom.firstChild(target), 0).select();
+    }
 };
 $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
     var $editable = layoutInfo.editable();
