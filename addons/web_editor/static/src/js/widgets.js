@@ -324,11 +324,14 @@ var ImageDialog = Widget.extend({
         }
 
         if (!img.is_document) {
+            if (this.media.tagName !== "IMG" || !this.old_media) {
+                this.add_class = "pull-left";
+                this.style = {"width": "100%"};
+            }
             if(this.media.tagName !== "IMG") {
                 var media = document.createElement('img');
                 $(this.media).replaceWith(media);
                 this.media = media;
-                this.add_class = "img-responsive pull-left";
             }
             this.media.setAttribute('src', img.src);
         } else {
@@ -344,7 +347,7 @@ var ImageDialog = Widget.extend({
 
         $(this.media).attr('alt', img.alt);
         var style = this.style;
-        if (style) { this.media.addClass(style); }
+        if (style) { $(this.media).css(style); }
 
         return this.media;
     },
