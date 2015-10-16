@@ -1195,13 +1195,14 @@ function summernote_keydown_clean (field) {
     },0);
 }
 
-function remove_table_content(sc, ec) {
-    var nodes = dom.listBetween(sc, ec);
-    nodes.push(dom.node(sc), dom.node(ec));
-    for (var i in nodes) {
-        if (dom.isCell(nodes[i])) {
-            $(nodes[i]).html("<br/>");
-        }
+function remove_table_content(r) {
+    var ancestor = r.commonAncestor();
+    var end = dom.splitTree(ancestor, dom.prevPoint({'node': r.ec, 'offset': r.eo}));
+    var start = dom.splitTree(ancestor, dom.prevPoint({'node': r.sc, 'offset': r.so}));
+    var nodes = dom.listBetween(start, r.ec);
+    $(nodes).remove();
+    if (!dom.isVisibleText(end)) {
+        $(end).remove();
     }
     event.preventDefault();
     return false;
@@ -1219,7 +1220,7 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
     }
     if (!r.isCollapsed()) {
         if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
-            return remove_table_content(r.sc, r.ec);
+            return remove_table_content(r);
         }
         r = r.deleteContents();
         r.select();
@@ -1299,6 +1300,7 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
     }
     //merge with the next block
     else if ((temp = dom.ancestorHaveNextSibling(target)) &&
+            !r.isOnCell() &&
             dom.isMergable(temp) &&
             dom.isMergable(temp2 = dom.hasContentAfter(temp)) &&
             temp.tagName === temp2.tagName &&
@@ -1353,7 +1355,7 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
     }
     if (!r.isCollapsed()) {
         if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
-            return remove_table_content(r.sc, r.ec);
+            return remove_table_content(r);
         }
         r = r.deleteContents();
         r.select();
