@@ -1197,12 +1197,28 @@ function summernote_keydown_clean (field) {
 
 function remove_table_content(r) {
     var ancestor = r.commonAncestor();
-    var end = dom.splitTree(ancestor, dom.prevPoint({'node': r.ec, 'offset': r.eo}));
-    var start = dom.splitTree(ancestor, dom.prevPoint({'node': r.sc, 'offset': r.so}));
-    var nodes = dom.listBetween(start, r.ec);
-    $(nodes).remove();
-    if (!dom.isVisibleText(end)) {
-        $(end).remove();
+    var nodes = dom.listBetween(r.sc, r.ec);
+    if (dom.isText(r.sc)) {
+        r.sc.textContent = r.sc.textContent.slice(0, r.so);
+    }
+    if (dom.isText(r.ec)) {
+        r.ec.textContent = r.ec.textContent.slice(r.eo);
+    }
+    for (var i in nodes) {
+        var node = nodes[i];
+        if (node === r.sc || node === r.ec || $.contains(node, r.sc) || $.contains(node, r.ec)) {
+            continue;
+        } else if (dom.isCell(node)) {
+            $(node).html("<br/>");
+        } else if(node.parentNode) {
+            do {
+                var parent = node.parentNode;
+                parent.removeChild(node);
+                node = parent;
+            } while(!dom.isVisibleText(node) && !dom.firstElementChild(node) &&
+                !dom.isCell(node) &&
+                node.parentNode && !$(node.parentNode).hasClass('o_editable'));
+        }
     }
     event.preventDefault();
     return false;
@@ -1220,7 +1236,8 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
     }
     if (!r.isCollapsed()) {
         if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
-            return remove_table_content(r);
+            remove_table_content(r);
+            return range.create(r.ec, 0).select();
         }
         r = r.deleteContents();
         r.select();
@@ -1355,7 +1372,8 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
     }
     if (!r.isCollapsed()) {
         if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
-            return remove_table_content(r);
+            remove_table_content(r);
+            return range.create(r.sc, dom.nodeLength(r.sc)).select();
         }
         r = r.deleteContents();
         r.select();
