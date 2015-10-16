@@ -718,7 +718,7 @@ class crm_lead(format_address, osv.osv):
             "name": name,
             "user_id": self.user_id.id,
             "comment": self.description,
-            "section_id": self.section_id.id or False,
+            "team_id": self.team_id.id or False,
             "parent_id": parent_id,
             "phone": self.phone,
             "mobile": self.mobile,
