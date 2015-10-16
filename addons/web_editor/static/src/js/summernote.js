@@ -1153,7 +1153,12 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     if (!r) return;
 
     if (!r.isCollapsed()) {
-        r = r.deleteContents(true);
+        if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
+            remove_table_content(r);
+            r = range.create(r.ec, 0).select();
+        } else {
+            r = r.deleteContents(true);
+        }
         r.select();
     }
 
