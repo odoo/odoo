@@ -357,6 +357,24 @@ class hr_holidays(osv.osv):
         self.holidays_first_validate_notificate(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'validate1', 'manager_id': manager})
 
+    def _prepare_holidays_meeting_values(self, cr, uid, leave, context=None):
+        meeting_vals = {
+            'name': leave.name or _('Leave Request'),
+            'categ_ids': leave.holiday_status_id.categ_id and [(6, 0, [leave.holiday_status_id.categ_id.id])] or [],
+            'duration': leave.number_of_days_temp * 8,
+            'description': leave.notes,
+            'user_id': leave.user_id.id,
+            'start': leave.date_from,
+            'stop': leave.date_to,
+            'allday': False,
+            'state': 'open',            # to block that meeting date in the calendar
+            'class': 'confidential'
+        }
+        # Add the partner_id (if exist) as an attendee
+        if leave.user_id and leave.user_id.partner_id:
+                meeting_vals['partner_ids'] = [(4, leave.user_id.partner_id.id)]
+        return meeting_vals
+
     def holidays_validate(self, cr, uid, ids, context=None):
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
@@ -370,22 +388,7 @@ class hr_holidays(osv.osv):
                 self.write(cr, uid, [record.id], {'manager_id': manager})
             if record.holiday_type == 'employee' and record.type == 'remove':
                 meeting_obj = self.pool.get('calendar.event')
-                meeting_vals = {
-                    'name': record.name or _('Leave Request'),
-                    'categ_ids': record.holiday_status_id.categ_id and [(6,0,[record.holiday_status_id.categ_id.id])] or [],
-                    'duration': record.number_of_days_temp * 8,
-                    'description': record.notes,
-                    'user_id': record.user_id.id,
-                    'start': record.date_from,
-                    'stop': record.date_to,
-                    'allday': False,
-                    'state': 'open',            # to block that meeting date in the calendar
-                    'class': 'confidential'
-                }   
-                #Add the partner_id (if exist) as an attendee             
-                if record.user_id and record.user_id.partner_id:
-                    meeting_vals['partner_ids'] = [(4,record.user_id.partner_id.id)]
-                    
+                meeting_vals = self._prepare_holidays_meeting_values(cr, uid, record, context=context)
                 ctx_no_email = dict(context or {}, no_email=True)
                 meeting_id = meeting_obj.create(cr, uid, meeting_vals, context=ctx_no_email)
                 self._create_resource_leave(cr, uid, [record], context=context)
