@@ -3879,6 +3879,7 @@ class BaseModel(object):
         updend = []
         direct = []
         has_trans = context.get('lang') and context['lang'] != 'en_US'
+        single_lang = len(self.pool['res.lang'].get_installed(cr, user, context)) <= 1
         for field in vals:
             ffield = self._fields.get(field)
             if ffield and ffield.deprecated:
@@ -3888,7 +3889,7 @@ class BaseModel(object):
                 if hasattr(column, 'selection') and vals[field]:
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
-                    if not (has_trans and column.translate and not callable(column.translate)):
+                    if single_lang or not (has_trans and column.translate and not callable(column.translate)):
                         # vals[field] is not a translation: update the table
                         updates.append((field, '%s', column._symbol_set[1](vals[field])))
                     direct.append(field)
