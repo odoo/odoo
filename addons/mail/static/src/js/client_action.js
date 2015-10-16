@@ -344,7 +344,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
     fetch_and_render_thread: function () {
         var self = this;
-        return chat_manager.fetch(this.channel, this.domain).then(function(result) {
+        return chat_manager.get_messages({channel_id: this.channel.id, domain: this.domain}).then(function(result) {
             self.thread.render(result, self.get_thread_rendering_options());
         });
     },
