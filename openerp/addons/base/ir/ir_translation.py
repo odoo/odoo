@@ -541,7 +541,7 @@ class ir_translation(osv.osv):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
                         FROM res_lang l
-                        WHERE NOT EXISTS (
+                        WHERE l.active AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
                         );
@@ -559,7 +559,7 @@ class ir_translation(osv.osv):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
                         FROM res_lang l
-                        WHERE l.code != 'en_US' AND NOT EXISTS (
+                        WHERE l.active AND l.code != 'en_US' AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
