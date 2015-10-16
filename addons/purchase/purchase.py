@@ -582,20 +582,8 @@ class PurchaseOrderLine(models.Model):
         if product_lang.description_purchase:
             self.name += '\n' + product_lang.description_purchase
 
-        taxes = self.product_id.supplier_taxes_id
         fpos = self.order_id.fiscal_position_id
-        if fpos:
-            self.taxes_id = fpos.map_tax(taxes)
-
-        result['value'] = {
-            'name': self.name,
-            'product_uom': self.product_uom.id,
-            'product_qty': self.product_qty,
-            'date_planned': self.date_planned,
-            'taxes_id': self.taxes_id.ids,
-        }
-
-        return result
+        self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
 
 
 class ProcurementRule(models.Model):
