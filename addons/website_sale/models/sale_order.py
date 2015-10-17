@@ -123,10 +123,16 @@ class sale_order(osv.Model):
 class website(orm.Model):
     _inherit = 'website'
 
+    def _get_pricelist_id(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        pricelist = self.get_current_pricelist(cr, uid, context=context)
+        for data in self.browse(cr, uid, ids, context=context):
+            res[data.id] = pricelist.id
+        return res
+
     _columns = {
-        'pricelist_id': fields.related(
-            'user_id', 'partner_id', 'property_product_pricelist',
-            type='many2one', relation='product.pricelist', string='Default Pricelist'),
+        'pricelist_id': fields.function(_get_pricelist_id,\
+            type='many2one', relation="product.pricelist", string='Default Pricelist'),
         'currency_id': fields.related(
             'pricelist_id', 'currency_id',
             type='many2one', relation='res.currency', string='Default Currency'),
@@ -180,7 +186,7 @@ class website(orm.Model):
         """
         isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
         pl_ids = self._get_pl(cr, uid, isocountry, show_visible,
-                              request.website.pricelist_id.id,
+                              request.website.user_id.partner_id.property_product_pricelist.id,
                               request.session.get('website_sale_current_pl'),
                               request.website.website_pricelist_ids)
         return self.pool['product.pricelist'].browse(cr, uid, pl_ids, context=context)
