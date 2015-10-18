@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-09-26 18:31+0000\n"
+"PO-Revision-Date: 2015-10-16 15:29+0000\n"
 "Last-Translator: Lionel Sausin <ls@numerigraphe.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -231,7 +231,7 @@ msgid ""
 "                you select a lot, you can get the traceability of the products contained in lot.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliquez pour ajouter un numéro de série.\n</p><p>\nVoici la liste de tous les lots de production que vous avez enregistrés.  En choisissant un lot, vous pouvez obtenir la traçabilité des produits de ce lot.\n</p>"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -473,7 +473,7 @@ msgstr "Permet de vendre un article dans une unité et de le facturer dans une u
 msgid ""
 "Allows you to store units of a product, but sell and invoice based on a different unit of measure.\n"
 "For instance, you can store pieces of meat that you sell and invoice based on their weight."
-msgstr ""
+msgstr "Vous permet d'utiliser une certaine unité de mesure pour le stockage d'un article, et d'utiliser une autre unité pour les ventes et la facturation.\nVous pouvez par exemple stocker des pièces de viande à l'unité, et les vendre au poids."
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
@@ -1795,7 +1795,7 @@ msgid ""
 "  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and "
 "the system won't propose anything.  You can also let the system propose for "
 "a single product / lot /... "
-msgstr ""
+msgstr "Si vous réalisez un inventaire intégral, vous pouvez choisir \"Tous les articles\", ce qui pré-remplira votre inventaire avec les stocks actuels. Si vous n'inventoriez que quelques articles (par ex. inventaire tournant), vous pouvez choisir \"Sélection manuelle d'articles\" : ainsi, le système ne pré-remplira rien. Vous pouvez également laisser le système pré-remplir l'inventaire pour un seul article, un lot, etc."
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -2449,7 +2449,7 @@ msgstr "Opération manuelle"
 #: code:addons/stock/stock.py:2640
 #, python-format
 msgid "Manual Selection of Products"
-msgstr ""
+msgstr "Sélection manuelle d'articles"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -4106,7 +4106,7 @@ msgstr "Heure prévue de la première partie à expédier. Préciser une date ic
 #. module: stock
 #: help:stock.picking,max_date:0
 msgid "Scheduled time for the last part of the shipment to be processed"
-msgstr ""
+msgstr "Heure prévue de la dernière partie à traiter pour cette livraison."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_sched
@@ -4477,7 +4477,7 @@ msgstr "Emplacement de stockage"
 #. module: stock
 #: field:stock.config.settings,group_uos:0
 msgid "Store products in a different unit of measure than the sales order"
-msgstr ""
+msgstr "Stocker les articles dans une unité de mesure différente de celle des bons de commande."
 
 #. module: stock
 #: field:stock.picking,message_summary:0
@@ -4671,7 +4671,7 @@ msgstr "L'entrepôt de réapprovisionnement par défaut doit être différent de
 #, python-format
 msgid ""
 "The destination location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "L'emplacement de destination doit être le même pour tous les mouvements de la préparation."
 
 #. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
@@ -4762,13 +4762,13 @@ msgstr "L'UdM sélectionnée pour l'article %s n'est pas compatible avec l'UdM d
 #. module: stock
 #: constraint:stock.inventory:0
 msgid "The selected inventory options are not coherent."
-msgstr ""
+msgstr "Les options d'inventaire choisies ne sont pas cohérentes."
 
 #. module: stock
 #: code:addons/stock/stock.py:1070
 #, python-format
 msgid "The source location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "L'emplacement source doit être le même pour tous les mouvements de la préparation."
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -4815,7 +4815,7 @@ msgid ""
 "This allows to manipulate packages.  You can put something in, take "
 "something from a package, but also move entire packages and put them even in"
 " another package.  "
-msgstr ""
+msgstr "Ceci permet de manipuler les colis. Vous pouvez mettre quelque chose dans un colis, y prendre quelque chose, mais également déplacer les colis entiers et même les mettre dans un autre colis."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_production_lot:0
@@ -5419,7 +5419,7 @@ msgid ""
 "You can not change the unit of measure of a product that has already been "
 "used in a done stock move. If you need to change the unit of measure, you "
 "may deactivate this product."
-msgstr ""
+msgstr "Vous ne pouvez pas modifier l'unité de mesure d'un article qui a déjà été utilisé dans un mouvement de stock terminé. Si vous devez modifier l'unité de mesure, vous pouvez désactiver cet article."
 
 #. module: stock
 #: code:addons/stock/stock.py:2846
@@ -5482,7 +5482,7 @@ msgstr "Vous devez choisir une unité de mesure dans la même catégorie que l'u
 #: code:addons/stock/wizard/stock_return_picking.py:62
 #, python-format
 msgid "You may only return one picking at a time!"
-msgstr ""
+msgstr "Vous ne pouvez retourner qu'une seule préparation à la fois !"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:72
