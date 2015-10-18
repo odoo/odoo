@@ -680,7 +680,9 @@ class crm_lead(format_address, osv.osv):
 
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('section_id'):
-            section_stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('section_ids', 'in', merged_data['section_id']), ('type', '=', merged_data.get('type'))], order='sequence', context=context)
+            section_stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [
+                ('section_ids', 'in', merged_data['section_id']), ('type', 'in', [merged_data.get('type'), 'both'])
+            ], order='sequence', context=context)
             if merged_data.get('stage_id') not in section_stage_ids:
                 merged_data['stage_id'] = section_stage_ids and section_stage_ids[0] or False
         # Write merged data into first opportunity

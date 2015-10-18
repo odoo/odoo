@@ -218,7 +218,7 @@ openerp.mail = function (session) {
 
             //formating and add some fields for render
             this.date = this.date ? session.web.str_to_datetime(this.date) : false;
-            this.display_date = this.date.toString('ddd MMM dd yyyy HH:mm');
+            this.display_date = this.date.toString(Date.CultureInfo.formatPatterns.fullDateTime);
             if (this.date && new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
                 this.timerelative = $.timeago(this.date);
             }
@@ -542,7 +542,7 @@ openerp.mail = function (session) {
                 };
 
                 self.do_action(action, {
-                    'on_close': function(){ self.is_log && self.parent_thread.message_fetch() }
+                    'on_close': function(){ !self.parent_thread.options.view_inbox && self.parent_thread.message_fetch() }
                 });
                 self.on_cancel();
             });
