@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# krnkris, 2015
+# Kris Krnacs, 2015
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-19 10:22+0000\n"
-"Last-Translator: krnkris\n"
+"POT-Creation-Date: 2015-10-15 06:40+0000\n"
+"PO-Revision-Date: 2015-10-15 21:09+0000\n"
+"Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +47,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -88,7 +89,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Tisztelt ${object.partner_id.name},</p>\n\n    <p>Egy új számlája van: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIA</strong><br />\n       &nbsp;&nbsp;Számla szám: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Számla összege: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Számla kelte: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Megrendelés hivatkozása: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Kapcsolata: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Fizethet közvetlenül Paypal rendszeren:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>További felmerülő kérdésekkel kapcsolatban keressen meg bennünket.</p>\n    <p>Köszönjük, hogy a ${object.company_id.name or 'bennünke'}-t választotta!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Tisztelt ${object.partner_id.name},</p>\n\n    <p>Egy új számlája van: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIA</strong><br />\n       &nbsp;&nbsp;Számla szám: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Számla összege: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Számla kelte: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Megrendelés hivatkozása: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Kapcsolata: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p> \n   % if object.paypal_url:\n<br/>\n<p>Fizethet közvetlenül Paypal rendszeren:</p>\n<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n<img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n</a>\n% endif\n<br/>\n    <p>További felmerülő kérdésekkel kapcsolatban keressen meg bennünket.</p>\n    <p>Köszönjük, hogy a ${object.company_id.name or 'bennünke'}-t választotta!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -101,10 +102,17 @@ msgid ""
 msgstr " * A 'Vázlat' állapotot akkor használja, ha a felhasználó kódol egy új, még nem igazolt számlát.\n * Akkor 'Pro-forma' ha a számla Pro-forma állapotú, a számlának még nincs számlaszáma.\n * A 'Nyitott' állapotot akkor használja, ha a felhsználó számlát állít ki, egy számlaszámot hoz létre. Addig nyitott állapotú, míg az ki nem lesz egyenlítve.\n * A 'Fizetve' állapotot akkor kapja meg automatikussan, ha a számlát kiegyenlítették, kifizették. Az ide vonatkozó napló bejegyzések vagy párosításra kerülnek vagy nem.\n * A 'Érvénytelenítés' állapotot használ, ha a felhasználó visszavonja a számlát."
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
 msgstr " Központosítás"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:521
+#, python-format
+msgid " seconds"
+msgstr "másodpercek"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -1600,23 +1608,27 @@ msgstr "Alkalmaz"
 
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
-msgid "Apply automatically this fiscal position."
-msgstr "Automatikusan alkalmazza ezt a költség helyet."
-
-#. module: account
-#: help:account.fiscal.position,country_group_id:0
-msgid "Apply only if delivery or invocing country match the group."
-msgstr "Csak akkor alkalmazza, ha szállítási vagy számlázási ország megegyezik a csoporttal."
-
-#. module: account
-#: help:account.fiscal.position,country_id:0
-msgid "Apply only if delivery or invoicing country match."
-msgstr "Akkor alkalmazza, ha szállítási és számlázási ország megegyezik."
+msgid "Apply automatically this fiscal position if the conditions match."
+msgstr "Automatikusan alkalmazza ezt a költség helyet, ha a feltételek egyeznek."
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
 msgid "Apply only if partner has a VAT number."
 msgstr "Csak akkor alkalmazza, ha az ügyfél rendelkezik ADÓ számmal."
+
+#. module: account
+#: help:account.fiscal.position,country_group_id:0
+msgid ""
+"Apply when the shipping or invoicing country is in this country group, and "
+"no position matches the country directly."
+msgstr "Alkalmazza, ha a szállítási vagy a számlázási ország ebbbe az ország csoportba tartozik, és nem egyezik közvetlenül az ország helyével."
+
+#. module: account
+#: help:account.fiscal.position,country_id:0
+msgid ""
+"Apply when the shipping or invoicing country matches. Takes precedence over "
+"positions matching on a country group."
+msgstr "Alkalmazza, ha a szállítási vagy a számlázási ország egyezik. Megközelítőleg a helyzet egyezésre az ország csoporton."
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -2570,6 +2582,13 @@ msgid "Choose Fiscal Year"
 msgstr "Üzleti év kiválasztása"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1297
+#, python-format
+msgid "Choose counterpart"
+msgstr "Ellenoldal kiválasztása"
+
+#. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Close"
@@ -2976,8 +2995,8 @@ msgstr "Ellenszámla"
 
 #. module: account
 #: field:account.fiscal.position,country_id:0
-msgid "Countries"
-msgstr "Országok"
+msgid "Country"
+msgstr "Ország"
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
@@ -3029,6 +3048,13 @@ msgstr "Havi időszakok létrehozása"
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Create Refund"
 msgstr "Visszatérítés létrehozása"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1294
+#, python-format
+msgid "Create Write-off"
+msgstr "Veszteség leírás létrehozás"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -5932,9 +5958,16 @@ msgstr "Hagyja üresen, hogy a jóváhagyás dátumának időszakát használja.
 
 #. module: account
 #. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1299
+#, python-format
+msgid "Keep open"
+msgstr "Hagyja nyitva"
+
+#. module: account
+#. openerp-web
 #: field:account.statement.operation.template,label:0
-#: code:addons/account/static/src/js/account_widgets.js:75
-#: code:addons/account/static/src/js/account_widgets.js:80
+#: code:addons/account/static/src/js/account_widgets.js:74
+#: code:addons/account/static/src/js/account_widgets.js:79
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 #, python-format
@@ -8329,6 +8362,12 @@ msgid "Round per line"
 msgstr "Tételenkénti kerekítés"
 
 #. module: account
+#: code:addons/account/account_bank_statement.py:899
+#, python-format
+msgid "Rounding error from currency conversion"
+msgstr "Kerekítési hiba a pénznem váltásból adódóan"
+
+#. module: account
 #: view:account.subscription:account.view_subscription_search
 #: selection:account.subscription,state:0
 msgid "Running"
@@ -9620,6 +9659,20 @@ msgid ""
 msgstr "Az az értékesítő személy aki a számlához tartozó napló bejegyzéseknél fel lesz tüntetve"
 
 #. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the gain exchange rate account must be the same than the "
+"company selected."
+msgstr "A kiválasztott vállakozásnak kelle lennie a váltási arány nyereség számla tulajdonos vállalkozásnak."
+
+#. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the loss exchange rate account must be the same than the "
+"company selected."
+msgstr "A kiválasztott vállakozásnak kelle lennie a váltási arány veszteség számla tulajdonos vállalkozásnak."
+
+#. module: account
 #: help:account.tax,type:0
 msgid "The computation method for the tax amount."
 msgstr "Az adóösszeg kiszámítási módszere."
@@ -9647,6 +9700,11 @@ msgstr "A párosításhoz szóló tételek ugyanahhoz a vállalkozáshoz kell ho
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
 msgstr "Az ÁFA pozíció meghatározza a partnerre vonatkozó adókat és főkönyvi számlákat."
+
+#. module: account
+#: view:account.config.settings:account.view_account_config_settings
+msgid "The fiscal year is created when installing a Chart of Account."
+msgstr "A Számlatükör telepítésekor kerül létrehozásra az üzleti év."
 
 #. module: account
 #: constraint:account.aged.trial.balance:0 constraint:account.balance.report:0
@@ -9960,6 +10018,30 @@ msgid "This Year"
 msgstr "Tárgyév"
 
 #. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr "A rendszer az alapértelmezett helyett ezt a számlát fogja használni a költségek értékeinek a jelenlegi terméken."
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr "A rendszer az alapértelmezett helyett ezt a számlát fogja használni az értékesítések értékeinek a jelenlegi terméken."
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used for invoices to value expenses."
+msgstr "Ezt a főkönyvi számlát használja a számlákhoz a kiadási költségek értékeinek."
+
+#. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used for invoices to value sales."
+msgstr "Ezt a főkönyvi számlát használja a számlákhoz az értékesítések értékeinek."
+
+#. module: account
 #: help:res.partner,property_account_payable:0
 msgid ""
 "This account will be used instead of the default one as the payable account "
@@ -9972,18 +10054,6 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr "A rendszer az alapértelmezett helyett ezt a számlát fogja használni a partner vevő számlájaként."
-
-#. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid "This account will be used to value outgoing stock using cost price."
-msgstr "Ezt a számlát használja a kimenő raktárkészlet megbecsüléséhez a költség értékek használatával."
-
-#. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid "This account will be used to value outgoing stock using sale price."
-msgstr "Ez a főkönyvi számla értékeli a kimenő árukat az eladási ár alapján."
 
 #. module: account
 #: help:account.config.settings,module_account_budget:0
@@ -10299,8 +10369,8 @@ msgstr "Ez a varázsló a kiválasztott napló és időszak minden könyvelési 
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
-msgid "Tip : Hit ctrl-enter to validate the whole sheet."
-msgstr "Tipp : Nyomja meg ctrl-enter a teljes lap érvényesítéséhez."
+msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
+msgstr "Tipp : Nyomja meg ctrl-enter az összes kiegyenlített  tételek főkönyvi egyeztetéséhez."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -11061,13 +11131,21 @@ msgid ""
 msgstr "Bejelölheti ezt a négyzetet, hogy jelezze a napló tételen, hogy a tétel peresített a hozzá tartozó ügyféllel."
 
 #. module: account
-#: code:addons/account/account_move_line.py:1220
+#: code:addons/account/account_move_line.py:1246
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr "A %s napló, %s lezárt időszak tételeit nem tudja növelni/módosítani."
 
 #. module: account
-#: code:addons/account/account.py:1047
+#: code:addons/account/wizard/account_open_closed_fiscalyear.py:42
+#, python-format
+msgid ""
+"You can not cancel closing entries if the 'End of Year Entries Journal' "
+"period is closed."
+msgstr "Nem tud lezárt tételeket törölni ha a 'Év végi tétel napló' periódust már lezárta."
+
+#. module: account
+#: code:addons/account/account.py:1057
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
 msgstr "Nem tudja újra megnyitni a már lezárt üzleti évhez tartozó időszakot"
@@ -11113,7 +11191,7 @@ msgid ""
 msgstr "Itt megadhatja az együtthatót, amelyet a fölérendelt adógyűjtőben való összevonásnál használ a rendszer. Állítson be 1-et, ha hozzá akarja adni az összeget, és -1-et, ha le akarja vonni."
 
 #. module: account
-#: code:addons/account/account.py:2273
+#: code:addons/account/account.py:2293
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the following labels:\n"
