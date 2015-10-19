@@ -457,9 +457,6 @@ function init () {
         if (model === 'mail.channel') {
             // new message in a channel
             var message = notification[1];
-            if (message.type === 'user_join') {
-                return; // to be implemented later
-            }
             var channel_id = message.channel_ids[0];
             // fetch the channel info if not done already
             var channel = _.findWhere(channels, {id: channel_id});
