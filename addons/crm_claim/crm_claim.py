@@ -17,7 +17,7 @@ class crm_claim_stage(osv.osv):
     _name = "crm.claim.stage"
     _description = "Claim stages"
     _rec_name = 'name'
-    _order = "sequence"
+    _order = "sequence, id"
 
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),
@@ -27,14 +27,11 @@ class crm_claim_stage(osv.osv):
         'case_default': fields.boolean('Common to All Teams',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
         'fold': fields.boolean('Folded in Kanban View',
-                               help='This stage is folded in the kanban view when'
-                               'there are no records in that stage to display.'),
-        'on_followup':fields.boolean('Follow-up')
+                               help='This stage is folded in the kanban view by default'),
     }
 
     _defaults = {
-        'sequence': lambda *args: 1,
-        'on_followup': False
+        'sequence': 100,
     }
 
 class crm_claim(osv.osv):
@@ -216,9 +213,6 @@ class crm_claim(osv.osv):
     def create_claim_followup(self, cr, uid, ids, stage_id, context=None):
         CrmClaimFollowup = self.pool['crm.claim.followup']
         stage = self.pool['crm.claim.stage'].browse(cr, uid, stage_id, context=context)
-        # on_followup: To find a particular stage that is new,settled,rejected
-        if not stage.on_followup:
-            return False
         for claim in self.browse(cr, uid, ids, context=context):
             CrmClaimFollowup.create(cr, uid, {
                 'date': fields.date.today(),
@@ -299,4 +293,27 @@ class crm_claim_category(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'team_id': fields.many2one('crm.team', 'Sales Team'),
+    }
+
+class crm_claim_followup(osv.Model):
+
+    _name = 'crm.claim.followup'
+    _description = "Claim Followup"
+
+    _columns = {
+        'date': fields.date("Date"),
+        'action': fields.char("Executed Action", required=True),
+        'user_id': fields.many2one('res.users', string="Responsible"),
+        'claim_id': fields.many2one('crm.claim', string="Claim"),
+    }
+
+    _defaults = {
+        'date': fields.date.today()
+    }
+
+class calendar_event(osv.Model):
+    _inherit = "calendar.event"
+    
+    _columns = {
+        'claim_id': fields.many2one('crm.claim', string="Claim", ondelete='cascade')
     }

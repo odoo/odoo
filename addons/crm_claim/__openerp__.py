@@ -17,11 +17,11 @@ automatically new claims based on incoming emails.
     """,
     'depends': ['crm'],
     'data': [
-        'crm_claim_data.xml',
         'crm_claim_view.xml',
         'crm_claim_menu.xml',
         'security/ir.model.access.csv',
         'report/crm_claim_report_view.xml',
+        'crm_claim_data.xml',
         'res_partner_view.xml',
         'crm_claim_tip.xml'
     ],

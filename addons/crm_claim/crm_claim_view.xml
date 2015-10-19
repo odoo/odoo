@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
-<odoo>
+<openerp>
+    <data>
 
         <menuitem id="menu_config_claim" name="Claim"
             groups="base.group_no_one"
             parent="base.menu_sale_config" sequence="55"/>
+
         <!-- Claims categories  -->
 
         <record id="crm_claim_category_form" model="ir.ui.view">
@@ -58,7 +60,6 @@
                 <tree string="Claim Stages">
                     <field name="sequence"/>
                     <field name="name"/>
-                    <field name="on_followup"/>
                 </tree>
             </field>
         </record>
@@ -72,13 +73,12 @@
                         <field name="name"/>
                         <field name="case_default"/>
                         <field name="sequence"/>
-                        <field name="on_followup"/>
                     </group>
                 </form>
             </field>
         </record>
 
-        <record id="crm_claim_stage_action" model="ir.actions.act_window">
+        <record id="crm_claim_stage_act" model="ir.actions.act_window">
             <field name="name">Claim Stages</field>
             <field name="res_model">crm.claim.stage</field>
             <field name="view_type">form</field>
@@ -96,8 +96,8 @@
 
         <!-- Claims    -->
 
-        <record id="crm_case_claims_tree_view" model="ir.ui.view">
-            <field name="name"> crm.claim.tree</field>
+        <record model="ir.ui.view" id="crm_case_claims_tree_view">
+            <field name="name">crm.claim.tree</field>
             <field name="model">crm.claim</field>
             <field name="arch" type="xml">
                 <tree string="Claims">
@@ -114,8 +114,8 @@
             </field>
         </record>
 
-        <record  id="crm_case_claims_form_view" model="ir.ui.view">
-            <field name="name"> crm.claim.form</field>
+        <record model="ir.ui.view" id="crm_case_claims_form_view">
+            <field name="name">crm.claim.form</field>
             <field name="model">crm.claim</field>
             <field name="arch" type="xml">
                 <form string="Claim">
@@ -288,4 +288,5 @@
                 </search>
             </field>
         </record>
-</odoo>
+    </data>
+</openerp>
