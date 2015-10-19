@@ -1223,6 +1223,12 @@ class AssetsBundle(object):
         When `type` is css we need to check that we are deleting a different version (and not *any*
         version) because css may be paginated and, therefore, may produce multiple attachments for
         the same bundle's version.
+
+        When `type` is js we need to check that we are deleting a different version (and not *any*
+        version) because, as one of the creates in `save_attachment` can trigger a rollback, the
+        call to `clean_attachments ` is made at the end of the method in order to avoid the rollback
+        of an ir.attachment unlink (because we cannot rollback a removal on the filestore), thus we
+        must exclude the current bundle.
         """
         ira = self.registry['ir.attachment']
         domain = [
@@ -1240,7 +1246,6 @@ class AssetsBundle(object):
 
     def save_attachment(self, type, content, inc=None):
         ira = self.registry['ir.attachment']
-        self.clean_attachments(type)
 
         values = {}
         values["name"] = "/web/content/%s" % type
@@ -1258,6 +1263,8 @@ class AssetsBundle(object):
 
         if self.context.get('commit_assetsbundle') is True:
             self.cr.commit()
+
+        self.clean_attachments(type)
 
         return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_id, context=self.context)
 
