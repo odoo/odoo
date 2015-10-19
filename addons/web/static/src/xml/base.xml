@@ -661,7 +661,7 @@
                 t-att-autofocus="widget.node.attrs.autofocus"
                 t-att-placeholder="widget.node.attrs.placeholder"
                 t-att-maxlength="widget.field.size"
-            /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+            /><img class="oe_field_translate oe_input_icon" t-if="_t.database.multi_lang and widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </t>
         <t t-if="widget.get('effective_readonly')">
             <span class="oe_form_char_content"></span>
@@ -719,7 +719,7 @@
                 t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
                 t-att-maxlength="widget.field.size"
             ></textarea><img class="oe_field_translate oe_input_icon"
-                            t-if="widget.field.translate and !widget.get('effective_readonly')"
+                            t-if="_t.database.multi_lang and widget.field.translate and !widget.get('effective_readonly')"
                             t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
             />
         </t>

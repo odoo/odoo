@@ -661,8 +661,11 @@ class WebClient(http.Controller):
             translations_per_module[mod]['messages'].extend({'id': m['src'],
                                                              'string': m['value']} \
                                                                 for m in msg_group)
-        return {"modules": translations_per_module,
-                "lang_parameters": lang_params}
+        return {
+            'lang_parameters': lang_params,
+            'modules': translations_per_module,
+            'multi_lang': len(res_lang.get_installed(request.cr, uid)) > 1,
+        }
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):
