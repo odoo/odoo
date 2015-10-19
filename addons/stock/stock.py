@@ -484,10 +484,10 @@ class stock_quant(osv.osv):
 
     def apply_removal_strategy(self, cr, uid, location, product, quantity, domain, removal_strategy, context=None):
         if removal_strategy == 'fifo':
-            order = 'in_date, id'
+            order = 'in_date, location_id'
             return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
         elif removal_strategy == 'lifo':
-            order = 'in_date desc, id desc'
+            order = 'in_date desc, location_id'
             return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
         raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
 
