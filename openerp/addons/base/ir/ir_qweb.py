@@ -1235,7 +1235,7 @@ class AssetsBundle(object):
     def get_attachments(self, type, inc=None):
         ira = self.registry['ir.attachment']
         domain = [('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.xmlid, ('%%' if inc is None else '.%s' % inc), type))]
-        attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
+        attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, order='name asc', context=self.context)
         return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context)
 
     def save_attachment(self, type, content, inc=None):
@@ -1299,7 +1299,8 @@ class AssetsBundle(object):
                     page = pages[-1]
                     page_selectors = selectors
             for idx, page in enumerate(pages):
-                attachments |= self.save_attachment("css", ' '.join(page), inc=idx)
+                self.save_attachment("css", ' '.join(page), inc=idx)
+            attachments = self.get_attachments('css')
         return attachments
 
     def css_message(self, message):
