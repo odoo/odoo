@@ -68,17 +68,6 @@ class project(osv.osv):
         return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
             'project.task', self._columns['alias_id'], 'id', alias_prefix='project+', alias_defaults={'project_id':'id'}, context=alias_context)
 
-    def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
-        partner_obj = self.pool.get('res.partner')
-        val = {}
-        if not part:
-            return {'value': val}
-        if 'pricelist_id' in self.fields_get(cr, uid, context=context):
-            pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
-            pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
-            val['pricelist_id'] = pricelist_id
-        return {'value': val}
-
     def unlink(self, cr, uid, ids, context=None):
         alias_ids = []
         mail_alias = self.pool.get('mail.alias')
@@ -217,18 +206,11 @@ class project(osv.osv):
         (_check_dates, 'Error! project start-date must be lower than project end-date.', ['date_start', 'date'])
     ]
 
-    def set_template(self, cr, uid, ids, context=None):
-        return self.setActive(cr, uid, ids, value=False, context=context)
-
-    def reset_project(self, cr, uid, ids, context=None):
-        return self.setActive(cr, uid, ids, value=True, context=context)
-
     def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
         """ copy and map tasks from old to new project """
         if context is None:
             context = {}
         map_task_id = {}
-        task_obj = self.pool.get('project.task')
         proj = self.browse(cr, uid, old_project_id, context=context)
         for task in proj.tasks:
             # preserve task name and stage, normally altered during copy
@@ -236,7 +218,6 @@ class project(osv.osv):
                         'name': task.name}
             map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, defaults, context=context)
         self.write(cr, uid, [new_project_id], {'tasks':[(6,0, map_task_id.values())]})
-        task_obj.duplicate_task(cr, uid, map_task_id, context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -250,51 +231,6 @@ class project(osv.osv):
         res = super(project, self).copy(cr, uid, id, default, context)
         self.map_tasks(cr, uid, id, res, context=context)
         return res
-
-    def duplicate_template(self, cr, uid, ids, context=None):
-        context = dict(context or {})
-        data_obj = self.pool.get('ir.model.data')
-        result = []
-        for proj in self.browse(cr, uid, ids, context=context):
-            context.update({'analytic_project_copy': True})
-            new_date_start = time.strftime('%Y-%m-%d')
-            new_date_end = False
-            if proj.date_start and proj.date:
-                start_date = date(*time.strptime(proj.date_start,'%Y-%m-%d')[:3])
-                end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
-                new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
-            context.update({'copy':True})
-            new_id = self.copy(cr, uid, proj.id, default = {
-                                    'name':_("%s (copy)") % (proj.name),
-                                    'state':'open',
-                                    'date_start':new_date_start,
-                                    'date':new_date_end}, context=context)
-            result.append(new_id)
-
-        if result and len(result):
-            res_id = result[0]
-            form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
-            form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
-            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project')
-            tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
-            search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
-            search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])
-            return {
-                'name': _('Projects'),
-                'view_type': 'form',
-                'view_mode': 'form,tree',
-                'res_model': 'project.project',
-                'view_id': False,
-                'res_id': res_id,
-                'views': [(form_view['res_id'],'form'),(tree_view['res_id'],'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view['res_id'],
-            }
-
-    @api.multi
-    def setActive(self, value=True):
-        """ Set a project as active/inactive, and its tasks as well. """
-        self.write({'active': value})
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -397,15 +333,6 @@ class task(osv.osv):
             vals['date_start'] = fields.datetime.now()
         return {'value': vals}
 
-    def duplicate_task(self, cr, uid, map_ids, context=None):
-        mapper = lambda t: map_ids.get(t.id, t.id)
-        for task in self.browse(cr, uid, map_ids.values(), context):
-            new_child_ids = set(map(mapper, task.child_ids))
-            new_parent_ids = set(map(mapper, task.parent_ids))
-            if new_child_ids or new_parent_ids:
-                task.write({'parent_ids': [(6,0,list(new_parent_ids))],
-                            'child_ids':  [(6,0,list(new_child_ids))]})
-
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -441,8 +368,6 @@ class task(osv.osv):
         'date_deadline': fields.date('Deadline', select=True, copy=False),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True, copy=False, readonly=True),
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select=True, track_visibility='onchange', change_default=True),
-        'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
-        'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
         'planned_hours': fields.float('Initially Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
@@ -475,36 +400,6 @@ class task(osv.osv):
     }
     _order = "priority desc, sequence, date_start, name, id"
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-        for id in ids:
-            visited_branch = set()
-            visited_node = set()
-            res = self._check_cycle(cr, uid, id, visited_branch, visited_node, context=context)
-            if not res:
-                return False
-
-        return True
-
-    def _check_cycle(self, cr, uid, id, visited_branch, visited_node, context=None):
-        if id in visited_branch: #Cycle
-            return False
-
-        if id in visited_node: #Already tested don't work one more time for nothing
-            return True
-
-        visited_branch.add(id)
-        visited_node.add(id)
-
-        #visit child using DFS
-        task = self.browse(cr, uid, id, context=context)
-        for child in task.child_ids:
-            res = self._check_cycle(cr, uid, child.id, visited_branch, visited_node, context=context)
-            if not res:
-                return False
-
-        visited_branch.remove(id)
-        return True
-
     def _check_dates(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
@@ -517,7 +412,6 @@ class task(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids']),
         (_check_dates, 'Error ! Task starting date must be lower than its ending date.', ['date_start','date_end'])
     ]
 
@@ -605,18 +499,6 @@ class task(osv.osv):
             return stage_ids[0]
         return False
 
-    def _check_child_task(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
-        tasks = self.browse(cr, uid, ids, context=context)
-        for task in tasks:
-            if task.child_ids:
-                for child in task.child_ids:
-                    if child.stage_id and not child.stage_id.fold:
-                        raise UserError(_("Child task still open.\nPlease cancel or complete child task first."))
-        return True
-
-
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             self.pool.get('project.task.history').create(cr, uid, {
@@ -676,49 +558,8 @@ class task(osv.osv):
             self._store_history(cr, uid, ids, context=context)
         return result
 
-    def unlink(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        self._check_child_task(cr, uid, ids, context=context)
-        res = super(task, self).unlink(cr, uid, ids, context)
-        return res
-
     def _get_total_hours(self):
         return self.remaining_hours
-
-    def _generate_task(self, cr, uid, tasks, ident=4, context=None):
-        context = context or {}
-        result = ""
-        ident = ' '*ident
-        company = self.pool["res.users"].browse(cr, uid, uid, context=context).company_id
-        duration_uom = {
-            'day(s)': 'd', 'days': 'd', 'day': 'd', 'd': 'd',
-            'month(s)': 'm', 'months': 'm', 'month': 'month', 'm': 'm',
-            'week(s)': 'w', 'weeks': 'w', 'week': 'w', 'w': 'w',
-            'hour(s)': 'H', 'hours': 'H', 'hour': 'H', 'h': 'H',
-        }.get(company.project_time_mode_id.name.lower(), "hour(s)")
-        for task in tasks:
-            if task.stage_id and task.stage_id.fold:
-                continue
-            result += '''
-%sdef Task_%s():
-%s  todo = \"%.2f%s\"
-%s  effort = \"%.2f%s\"''' % (ident, task.id, ident, task.remaining_hours, duration_uom, ident, task._get_total_hours(), duration_uom)
-            start = []
-            for t2 in task.parent_ids:
-                start.append("up.Task_%s.end" % (t2.id,))
-            if start:
-                result += '''
-%s  start = max(%s)
-''' % (ident,','.join(start))
-
-            if task.user_id:
-                result += '''
-%s  resource = %s
-''' % (ident, 'User_'+str(task.user_id.id))
-
-        result += "\n"
-        return result
 
     # ---------------------------------------------------
     # Mail gateway
