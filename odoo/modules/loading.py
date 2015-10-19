@@ -294,9 +294,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if update_module:
             env = api.Environment(cr, SUPERUSER_ID, {})
             Module = env['ir.module.module']
-            if ('base' in tools.config['init']) or ('base' in tools.config['update']):
-                _logger.info('updating modules list')
-                Module.update_list()
+            _logger.info('updating modules list')
+            Module.update_list()
 
             _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
 
