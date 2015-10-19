@@ -43,9 +43,5 @@ Print product labels with barcode.
         'views/partner_views.xml',
         'views/pricelist_report.xml',
         'views/productlabel_report.xml'
-    ],
-    'test': [
-        'product_pricelist_demo.yml',
-        'test/product_pricelist.yml',
     ]
 }
