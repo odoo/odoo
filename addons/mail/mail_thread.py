@@ -1097,9 +1097,9 @@ class mail_thread(osv.AbstractModel):
                 (email_from, email_to, message_id)
             )
 
-    def message_route_process(self, cr, uid, message, message_dict, routes, context=None):
-        # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
+    def message_route_process2(self, cr, uid, message, message_dict, routes, context=None):
         context = dict(context or {})
+        # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
         partner_ids = message_dict.pop('partner_ids', [])
         thread_id = False
         for model, thread_id, custom_values, user_id, alias in routes or ():
@@ -1135,9 +1135,9 @@ class mail_thread(osv.AbstractModel):
                 # postponed after message_post, because this is an external message and we don't want to create
                 # duplicate emails due to notifications
                 self.pool.get('mail.message').write(cr, uid, [new_msg_id], {'partner_ids': partner_ids}, context=context)
-        return thread_id
+        return thread_id, context.get('thread_model')
 
-    def message_process(self, cr, uid, model, message, custom_values=None,
+    def message_process2(self, cr, uid, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
                         thread_id=None, context=None):
         """ Process an incoming RFC2822 email message, relying on
@@ -1197,11 +1197,19 @@ class mail_thread(osv.AbstractModel):
             if existing_msg_ids:
                 _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
                                 msg.get('from'), msg.get('to'), msg.get('message_id'))
-                return False
+                return False, False
 
         # find possible routes for the message
         routes = self.message_route(cr, uid, msg_txt, msg, model, thread_id, custom_values, context=context)
-        thread_id = self.message_route_process(cr, uid, msg_txt, msg, routes, context=context)
+        thread_id, thread_model = self.message_route_process2(cr, uid, msg_txt, msg, routes, context=context)
+        return thread_id, thread_model
+
+    def message_route_process(self, *args, **kwargs):
+        thread_id, thread_model = self.message_route_process2(*args, **kwargs)
+        return thread_id
+
+    def message_process(self, *args, **kwargs):
+        thread_id, thread_model = self.message_process2(*args, **kwargs)
         return thread_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
