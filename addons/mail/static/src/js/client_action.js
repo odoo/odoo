@@ -332,6 +332,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                     var msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), channel.name);
                     self.do_notify(_t("Unsubscribed"), msg);
                 }
+                delete self.channels_scrolltop[channel.id];
             });
     },
 

@@ -106,14 +106,14 @@
             text-overflow: ellipsis;
             cursor: pointer;
 
-            &.o_active {
-                background-color: @gray-dark;
-            }
             &:hover {
-                background-color: @gray-dark;
+                background-color: darken(@gray, 8%);;
                 .o_mail_partner_unpin {
                     opacity: @sidebar-icon-opacity;
                 }
+            }
+            &.o_active {
+                background-color: @gray-dark;
             }
             .o_mail_partner_unpin {
                 opacity: 0;

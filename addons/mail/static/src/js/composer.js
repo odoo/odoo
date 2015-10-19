@@ -88,8 +88,9 @@ var Composer = Widget.extend({
     preprocess_message: function () {
         // Return a deferred as this function is extended with asynchronous
         // behavior for the chatter composer
+        var value = this.$input.val().replace(/\n|\r/g, '<br/>');
         return $.when({
-            content: this.mention_preprocess_message(this.$input.val()),
+            content: this.mention_preprocess_message(value),
             attachment_ids: _.pluck(this.get('attachment_ids'), 'id'),
             partner_ids: _.pluck(this.get('mention_selected_partners'), 'id'),
         });
@@ -395,7 +396,7 @@ var Composer = Widget.extend({
                 var match = matches[i];
                 var end_index = match.index + match[0].length;
                 var partner_name = match[0].substring(1);
-                var processed_text = _.str.sprintf("<a href='#' class='o_mail_redirect' data-oe-model='res.partner' data-oe-id='%s'>%s</a>", partners[i].id, partner_name);
+                var processed_text = _.str.sprintf("<a href='#' class='o_mail_redirect' data-oe-model='res.partner' data-oe-id='%s'>@%s</a>", partners[i].id, partner_name);
                 var subtext = message.substring(start_index, end_index).replace(match[0], processed_text);
                 substrings.push(subtext);
                 start_index = end_index;

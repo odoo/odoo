@@ -168,6 +168,7 @@ function add_channel (data, options) {
     } else {
         channel = make_channel(data, options);
         channels.push(channel);
+        channels = _.sortBy(channels, function (channel) { return channel.name.toLowerCase(); });
         if (!options.silent) {
             chat_manager.bus.trigger("new_channel", channel);
         }
@@ -205,6 +206,9 @@ function make_channel (data, options) {
         channel.type = "dm";
         channel.name = data.direct_partner[0].name;
         channel.status = data.direct_partner[0].im_status;
+    }
+    if ((channel.type === 'public') || (channel.type === 'private')) {
+        channel.name = '#' + channel.name;
     }
     return channel;
 }
