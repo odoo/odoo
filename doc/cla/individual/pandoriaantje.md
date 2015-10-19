@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Steve Holvoet pandoriaantje@gmail.com https://github.com/
+Steve Holvoet pandoriaantje@gmail.com https://github.com/pandoriaantje
