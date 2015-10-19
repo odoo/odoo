@@ -325,6 +325,8 @@ class Field(object):
         'deprecated': None,             # whether the field is deprecated
 
         'related_field': None,          # corresponding related field
+        
+        'ondelete': None,               # to set cascade, restict and set null constraint on the field
     }
 
     def __init__(self, string=None, **kwargs):

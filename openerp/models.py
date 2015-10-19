@@ -418,6 +418,7 @@ class BaseModel(object):
                 'relation_table': f.type == 'many2many' and f.relation or None,
                 'column1': f.type == 'many2many' and f.column1 or None,
                 'column2': f.type == 'many2many' and f.column2 or None,
+                'on_delete': f.ondelete
             }
             if getattr(f, 'serialization_field', None):
                 # resolve link to serialization_field if specified by name
