@@ -254,16 +254,17 @@ class website(orm.Model):
             affiliate_id = request.session.get('affiliate_id')
             salesperson_id = affiliate_id if user_obj.exists(cr, SUPERUSER_ID, affiliate_id, context=context) else request.website.salesperson_id.id
             for w in self.browse(cr, uid, ids):
+                addr = partner.address_get(['delivery', 'invoice'])
                 values = {
                     'partner_id': partner.id,
                     'pricelist_id': pricelist_id,
+                    'payment_term_id': partner.property_payment_term_id.id if partner.property_payment_term_id else False,
                     'team_id': w.salesteam_id.id,
+                    'partner_invoice_id': addr['invoice'],
+                    'partner_shipping_id': addr['delivery'],
+                    'user_id': salesperson_id or w.salesperson_id.id,
                 }
                 sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
-                sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], context=context)
-                values = {'user_id': salesperson_id or w.salesperson_id.id}
-
-                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
                 request.session['sale_order_id'] = sale_order_id
                 sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
 
