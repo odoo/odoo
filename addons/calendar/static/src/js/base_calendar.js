@@ -166,31 +166,32 @@ widgets.SidebarFilter.include({
 
 var CalendarNotification = Notification.extend({
     template: "CalendarNotification",
-    events: {
-        'click .link2event': function() {
-            var self = this;
-
-            this.rpc("/web/action/load", {
-                action_id: "calendar.action_calendar_event_notify",
-            }).then(function(r) {
-                r.res_id = self.eid;
-                return self.do_action(r);
-            });
-        },
-
-        'click .link2recall': function() {
-            this.destroy(true);
-        },
-
-        'click .link2showed': function() {
-            this.destroy(true);
-            this.rpc("/calendar/notify_ack");
-        },
-    },
 
     init: function(parent, title, text, eid) {
         this._super(parent, title, text, true);
         this.eid = eid;
+
+        this.events = _.extend(this.events || {}, {
+            'click .link2event': function() {
+                var self = this;
+
+                this.rpc("/web/action/load", {
+                    action_id: "calendar.action_calendar_event_notify",
+                }).then(function(r) {
+                    r.res_id = self.eid;
+                    return self.do_action(r);
+                });
+            },
+
+            'click .link2recall': function() {
+                this.destroy(true);
+            },
+
+            'click .link2showed': function() {
+                this.destroy(true);
+                this.rpc("/calendar/notify_ack");
+            },
+        });
     },
 });
 

@@ -41,7 +41,7 @@ function add_message (data, options) {
                 channel.hidden = false;
                 chat_manager.bus.trigger('new_channel', channel);
             }
-            if (!_.contains(["static", "public", "private"], channel.type) && (options.show_notification)) {
+            if (!_.contains(["public", "private"], channel.type) && (options.show_notification)) {
                 var query = { is_displayed: false };
                 chat_manager.bus.trigger('anyone_listening', channel, query);
                 if (!query.is_displayed) {
@@ -175,6 +175,7 @@ function add_channel (data, options) {
             chat_manager.bus.trigger("open_chat", channel);
         }
     }
+    return channel;
 }
 
 function make_channel (data, options) {
@@ -382,10 +383,7 @@ var chat_manager = {
 
         return ChannelModel
             .call(method, args)
-            .then(add_channel)
-            .then(function () {
-                bus.restart_poll();
-            });
+            .then(add_channel);
     },
     join_channel: function (channel_id, options) {
         return ChannelModel
@@ -459,6 +457,9 @@ function init () {
         if (model === 'mail.channel') {
             // new message in a channel
             var message = notification[1];
+            if (message.type === 'user_join') {
+                return; // to be implemented later
+            }
             var channel_id = message.channel_ids[0];
             // fetch the channel info if not done already
             var channel = _.findWhere(channels, {id: channel_id});

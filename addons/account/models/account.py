@@ -329,7 +329,7 @@ class AccountJournal(models.Model):
         prefix = code.upper()
         if refund:
             prefix = 'R' + prefix
-        return prefix + '/%(year)s/'
+        return prefix + '/%(range_year)s/'
 
     @api.model
     def _create_sequence(self, vals, refund=False):

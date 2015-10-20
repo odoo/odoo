@@ -81,7 +81,7 @@ var LivechatButton = Widget.extend({
                 self.render_messages();
 
                 bus.add_channel(channel.uuid);
-                bus.restart_poll();
+                bus.poll();
 
                 utils.set_cookie('im_livechat_session', JSON.stringify(channel), 60*60);
             }

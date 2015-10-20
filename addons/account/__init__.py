@@ -21,7 +21,7 @@ def _auto_install_l10n(cr, registry):
         if country_code == 'US':
             module_list.append('account_plaid')
             module_list.append('account_check_printing')
-        if country_code in ['US', 'AU', 'NZ']:
+        if country_code in ['US', 'AU', 'NZ', 'CA', 'CO', 'EC', 'ES', 'FR', 'IN', 'MX', 'UK']:
             module_list.append('account_yodlee')
 
         #european countries will be using SEPA

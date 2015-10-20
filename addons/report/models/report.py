@@ -141,6 +141,17 @@ class Report(osv.Model):
         if context is None:
             context = {}
 
+        # As the assets are generated during the same transaction as the rendering of the
+        # templates calling them, there is a scenario where the assets are unreachable: when
+        # you make a request to read the assets while the transaction creating them is not done.
+        # Indeed, when you make an asset request, the controller has to read the `ir.attachment`
+        # table.
+        # This scenario happens when you want to print a PDF report for the first time, as the
+        # assets are not in cache and must be generated. To workaround this issue, we manually
+        # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
+        if not config['test_enable']:
+            context = dict(context, commit_assetsbundle=True)
+
         if html is None:
             html = self.get_html(cr, uid, ids, report_name, data=data, context=context)
 

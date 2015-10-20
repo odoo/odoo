@@ -3,13 +3,14 @@
 # * l10n_be_invoice_bba
 # 
 # Translators:
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:56+0000\n"
-"PO-Revision-Date: 2015-09-08 05:27+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-15 05:03+0000\n"
+"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,12 +21,12 @@ msgstr ""
 #. module: l10n_be_invoice_bba
 #: model:ir.model.fields,field_description:l10n_be_invoice_bba.field_res_partner_out_inv_comm_algorithm
 msgid "Communication Algorithm"
-msgstr "Communication Algorithm"
+msgstr "Komunikacijski algoritem"
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model.fields,field_description:l10n_be_invoice_bba.field_res_partner_out_inv_comm_type
 msgid "Communication Type"
-msgstr "Communication Type"
+msgstr "Vrsta komunikacije"
 
 #. module: l10n_be_invoice_bba
 #: selection:res.partner,out_inv_comm_algorithm:0
@@ -43,12 +44,12 @@ msgstr "Datum"
 msgid ""
 "Empty BBA Structured Communication!\n"
 "Please fill in a unique BBA Structured Communication."
-msgstr "Empty BBA Structured Communication!\nPlease fill in a unique BBA Structured Communication."
+msgstr "Prazna BBA strukturirana komunikacija!\nIzpolnite unikatno BBA strukturirano komunikacijo."
 
 #. module: l10n_be_invoice_bba
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr "Invalid BBA Structured Communication !"
+msgstr "Neveljavna BBA strukturirana komunikacija!"
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model,name:l10n_be_invoice_bba.model_account_invoice
@@ -63,19 +64,19 @@ msgstr "Partner"
 #. module: l10n_be_invoice_bba
 #: selection:res.partner,out_inv_comm_algorithm:0
 msgid "Random"
-msgstr "Random"
+msgstr "Naključno"
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model.fields,help:l10n_be_invoice_bba.field_res_partner_out_inv_comm_algorithm
 msgid ""
 "Select Algorithm to generate the Structured Communication on Outgoing "
 "Invoices."
-msgstr "Select Algorithm to generate the Structured Communication on Outgoing Invoices."
+msgstr "Izbira algoritma za ustvarjanje strukturirane komunikacije pri izdanih računih."
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model.fields,help:l10n_be_invoice_bba.field_res_partner_out_inv_comm_type
 msgid "Select Default Communication Type for Outgoing Invoices."
-msgstr "Select Default Communication Type for Outgoing Invoices."
+msgstr "Izbira privzete vrste komunikacije za izdane račune."
 
 #. module: l10n_be_invoice_bba
 #: code:addons/l10n_be_invoice_bba/invoice.py:158
@@ -84,7 +85,7 @@ msgstr "Select Default Communication Type for Outgoing Invoices."
 msgid ""
 "The BBA Structured Communication has already been used!\n"
 "Please create manually a unique BBA Structured Communication."
-msgstr "The BBA Structured Communication has already been used!\nPlease create manually a unique BBA Structured Communication."
+msgstr "BBA strukturirana komunikacija je bila že uporabljena!\nRočno ustvarite unikatno BBA strukturirano komunikacijo."
 
 #. module: l10n_be_invoice_bba
 #: code:addons/l10n_be_invoice_bba/invoice.py:102
@@ -92,7 +93,7 @@ msgstr "The BBA Structured Communication has already been used!\nPlease create m
 msgid ""
 "The Partner should have a 3-7 digit Reference Number for the generation of BBA Structured Communications!\n"
 "Please correct the Partner record."
-msgstr "The Partner should have a 3-7 digit Reference Number for the generation of BBA Structured Communications!\nPlease correct the Partner record."
+msgstr "Partner bi moral vsebovati 3-7 znakov dolgo številko sklica za ustvarjanje BBA strukturiranih komunikacij!\nPrilagodite zapis partnerja."
 
 #. module: l10n_be_invoice_bba
 #: code:addons/l10n_be_invoice_bba/invoice.py:91
@@ -101,7 +102,7 @@ msgstr "The Partner should have a 3-7 digit Reference Number for the generation 
 msgid ""
 "The daily maximum of outgoing invoices with an automatically generated BBA Structured Communications has been exceeded!\n"
 "Please create manually a unique BBA Structured Communication."
-msgstr "The daily maximum of outgoing invoices with an automatically generated BBA Structured Communications has been exceeded!\nPlease create manually a unique BBA Structured Communication."
+msgstr "Maksimalno dnevno število izdanih računov s samodejno ustvarjenimi BBA strukturiranimi komunikacijami je bilo preseženo!\nRočno ustvarite unikatno BBA strukturirano komunikacijo."
 
 #. module: l10n_be_invoice_bba
 #: code:addons/l10n_be_invoice_bba/invoice.py:130
@@ -109,4 +110,4 @@ msgstr "The daily maximum of outgoing invoices with an automatically generated B
 msgid ""
 "Unsupported Structured Communication Type Algorithm '%s' !\n"
 "Please contact your Odoo support channel."
-msgstr ""
+msgstr "Nepodprt algoritem vrste strukturirane komunikacije '%s'!\nObrnite se na kanal Odoo podpore."
