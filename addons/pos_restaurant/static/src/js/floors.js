@@ -333,7 +333,6 @@ var TableWidget = PosBaseWidget.extend({
 // as well as edit them.
 var FloorScreenWidget = screens.ScreenWidget.extend({
     template: 'FloorScreenWidget',
-    show_leftpane: false,
 
     // Ignore products, discounts, and client barcodes
     barcode_product_action: function(code){},
