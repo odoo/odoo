@@ -24,6 +24,10 @@ Install some generic chart of accounts.
         #'../account/test/account_cash_statement.yml',
         '../account/test/account_invoice_state.yml',
     ],
+    'demo': [
+        '../account/demo/account_bank_statement.yml',
+        '../account/demo/account_invoice_demo.yml',
+    ],
     'installable': True,
     'website': 'https://www.odoo.com/page/accounting',
 }
