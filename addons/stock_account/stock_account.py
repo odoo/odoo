@@ -40,7 +40,7 @@ class account_invoice_line(osv.osv):
         return round(price, inv.currency_id.decimal_places)
 
     def get_invoice_line_account(self, type, product, fpos, company):
-        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type in ('consu', 'product'):
+        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type == 'product':
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             if type == 'in_invoice':
                 return accounts['stock_input']
@@ -69,7 +69,7 @@ class account_invoice(osv.osv):
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id.id
 
-        if i_line.product_id.type in ('product', 'consu') and i_line.product_id.valuation == 'real_time':
+        if i_line.product_id.type  == 'product' and i_line.product_id.valuation == 'real_time':
             fpos = i_line.invoice_id.fiscal_position_id
             accounts = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             # debit account dacc will be the output account
@@ -200,6 +200,9 @@ class stock_quant(osv.osv):
 
         if move.product_id.valuation != 'real_time':
             return False
+        if move.product_id.type != 'product':
+            #No stock valuation for consumable products
+            return False
         for q in quants:
             if q.owner_id:
                 #if the quant isn't owned by the company, we don't make any valuation entry
@@ -235,14 +238,12 @@ class stock_quant(osv.osv):
 
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
         quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
-        if move.product_id.valuation == 'real_time':
-            self._account_entry_move(cr, uid, [quant], move, context)
+        self._account_entry_move(cr, uid, [quant], move, context)
         return quant
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False, context=None):
         res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
-        if move.product_id.valuation == 'real_time':
-            self._account_entry_move(cr, uid, quants, move, context=context)
+        self._account_entry_move(cr, uid, quants, move, context=context)
         return res
 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
