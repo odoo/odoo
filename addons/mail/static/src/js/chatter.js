@@ -485,6 +485,7 @@ var ChatterComposer = ChatComposer.extend({
                 subtype: 'mail.mt_comment',
                 message_type: 'comment',
                 content_subtype: 'html',
+                context: self.context,
             });
 
             // Subtype
@@ -503,7 +504,7 @@ var ChatterComposer = ChatComposer.extend({
                 self.check_suggested_partners(checked_suggested_partners).done(function (partner_ids) {
                     message.partner_ids = (message.partner_ids || []).concat(partner_ids);
                     // update context
-                    message.context = _.defaults(self.context, {
+                    message.context = _.defaults({}, message.context, {
                         mail_post_autofollow: true,
                     });
                     def.resolve(message);
