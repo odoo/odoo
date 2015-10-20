@@ -50,13 +50,25 @@ class sale_order(osv.Model):
             return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
 
     def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, context=None):
-        product = self.pool['product.product'].browse(cr, uid, product_id, context=context)
+        context = dict(context or {})
+        order = self.pool['sale.order'].browse(cr, SUPERUSER_ID, order_id, context=context)
+        product_context = context.copy()
+        product_context.update({
+            'lang': order.partner_id.lang,
+            'partner': order.partner_id.id,
+            'quantity': qty,
+            'date': order.date_order,
+            'pricelist': order.pricelist_id.id,
+        })
+        product = self.pool['product.product'].browse(cr, uid, product_id, context=product_context)
+
         values = {
             'product_id': product_id,
             'name': product.display_name,
             'product_uom_qty': qty,
             'order_id': order_id,
             'product_uom': product.uom_id.id,
+            'price_unit': product.price,
         }
         if product.description_sale:
             values['name'] += '\n' + product.description_sale
@@ -80,7 +92,6 @@ class sale_order(osv.Model):
             if not line_id:
                 values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=1, context=context)
                 line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
-                sol.product_id_change(cr, SUPERUSER_ID, [line_id], context=context)
                 if add_qty:
                     add_qty -= 1
 
@@ -96,7 +107,6 @@ class sale_order(osv.Model):
             else:
                 # update line
                 values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=quantity, context=context)
-                values['product_uom_qty'] = quantity
                 sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
 
         return {'line_id': line_id, 'quantity': quantity}
