@@ -34,7 +34,7 @@ var Composer = Widget.extend({
             input_max_height: 150,
             input_min_height: 28,
             mention_delimiter: '@',
-            mention_min_length: 2,
+            mention_min_length: 0,
             mention_typing_speed: 400,
             mention_fetch_limit: 8,
         });
@@ -197,7 +197,7 @@ var Composer = Widget.extend({
             // Otherwise, check if a mention is typed
             default:
                 this.mention_word = this.mention_detect_delimiter();
-                if (this.mention_word) {
+                if (this.mention_word !== false) {
                     this.mention_word_changed();
                 } else {
                     this.set('mention_partners', []); // close the dropdown
