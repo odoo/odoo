@@ -92,6 +92,7 @@ class sale_order(osv.Model):
             if not line_id:
                 values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=1, context=context)
                 line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
+                sol._compute_tax_id(cr, SUPERUSER_ID, [line_id], context=context)
                 if add_qty:
                     add_qty -= 1
 
