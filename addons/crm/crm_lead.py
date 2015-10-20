@@ -739,7 +739,7 @@ class crm_lead(format_address, osv.osv):
 
     def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
         partner = self.pool.get('res.partner')
-        vals = lead._map_values_to_partner(name, is_company, parent_id)[0]
+        vals = lead._map_values_to_partner(name, is_company, parent_id)
         partner = partner.create(cr, uid, vals, context=context)
         return partner
 
