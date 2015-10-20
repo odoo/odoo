@@ -337,6 +337,11 @@ class hr_holidays(osv.osv):
             result['value']['number_of_days_temp'] = 0
         return result
 
+    def _check_state_access_right(self, cr, uid, vals, context=None):
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
+            return False
+        return True
+
     def add_follower(self, cr, uid, ids, employee_id, context=None):
         employee = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
         if employee and employee.user_id:
@@ -348,7 +353,7 @@ class hr_holidays(osv.osv):
             context = {}
         employee_id = values.get('employee_id', False)
         context = dict(context, mail_create_nolog=True)
-        if values.get('state') and values['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
+        if not self._check_state_access_right(cr, uid, values, context):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
         if not values.get('name'):
             employee_name = self.pool['hr.employee'].browse(cr, uid, employee_id, context=context).name
@@ -360,7 +365,7 @@ class hr_holidays(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         employee_id = vals.get('employee_id', False)
-        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
+        if not self._check_state_access_right(cr, uid, vals, context):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
         hr_holiday_id = super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
         self.add_follower(cr, uid, ids, employee_id, context=context)
