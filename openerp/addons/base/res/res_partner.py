@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import re
 import datetime
 from lxml import etree
 import math
@@ -814,6 +815,7 @@ class res_partner(osv.Model, format_address):
             args['company_name'] = ''
         elif address.parent_id:
             address_format = '%(company_name)s\n' + address_format
-        return address_format % args
+        display_address = address_format % args
+        return re.sub('\n[\s,]*\n+', '\n', display_address.strip())
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
