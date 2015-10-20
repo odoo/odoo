@@ -298,21 +298,19 @@ class website(orm.Model):
                 if flag_pricelist or recent_fiscal_position != fiscal_position:
                     update_pricelist = True
 
-            if (code and code != sale_order.pricelist_id.code) or \
-               (code is not None and code == '' and request.session.get('sale_order_code_pricelist_id') and request.session.get('sale_order_code_pricelist_id') != ''): # empty code so reset
+            if code and code != sale_order.pricelist_id.code:
                 pricelist_ids = self.pool['product.pricelist'].search(cr, uid, [('code', '=', code)], limit=1, context=context)
                 if pricelist_ids:
                     pricelist_id = pricelist_ids[0]
-                    request.session['sale_order_code_pricelist_id'] = pricelist_id
-                    request.session['website_sale_current_pl'] = pricelist_id
                     update_pricelist = True
-                elif code == '' and request.session['website_sale_current_pl'] == request.session['sale_order_code_pricelist_id']:
-                    request.session['website_sale_current_pl'] = partner.property_product_pricelist.id
-                    request.session['sale_order_code_pricelist_id'] = False
-                    update_pricelist = True
+            elif code is not None and sale_order.pricelist_id.code:
+                # code is not None when user removes code and click on "Apply"
+                pricelist_id = partner.property_product_pricelist.id
+                update_pricelist = True
 
             # update the pricelist
             if update_pricelist:
+                request.session['website_sale_current_pl'] = pricelist_id
                 values = {'pricelist_id': pricelist_id}
                 sale_order.write(values)
                 for line in sale_order.order_line:
@@ -340,7 +338,6 @@ class website(orm.Model):
         request.session.update({
             'sale_order_id': False,
             'sale_transaction_id': False,
-            'sale_order_code_pricelist_id': False,
             'website_sale_current_pl': False,
         })
 
