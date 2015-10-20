@@ -19,5 +19,4 @@ You can add the following additional dates to a sales order:
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['sale_stock'],
     'data': ['views/sale_order_views.xml'],
-    'test': ['test/requested_date.yml'],
 }
