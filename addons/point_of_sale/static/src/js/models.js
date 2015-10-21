@@ -93,11 +93,15 @@ exports.PosModel = Backbone.Model.extend({
         });
     },
     after_load_server_data: function(){
-         this.load_orders();
-         this.set_start_order();
-         if(this.config.use_proxy){
-             return this.connect_to_proxy();
-         }
+        this.load_orders();
+        this.set_start_order();
+        if(this.config.use_proxy){
+            if (this.config.iface_customer_facing_display) {
+                this.on('change:selectedOrder', this.send_current_order_to_customer_facing_display, this);
+            }
+
+            return this.connect_to_proxy();
+        }
     },
     // releases ressources holds by the model at the end of life of the posmodel
     destroy: function(){
@@ -233,7 +237,8 @@ exports.PosModel = Backbone.Model.extend({
                                     self.config.iface_electronic_scale ||
                                     self.config.iface_print_via_proxy  ||
                                     self.config.iface_scan_via_proxy   ||
-                                    self.config.iface_cashdrawer;
+                                    self.config.iface_cashdrawer       ||
+                                    self.config.iface_customer_facing_display;
 
             if (self.config.company_id[0] !== self.user.company_id[0]) {
                 throw new Error(_t("Error: The Point of Sale User must belong to the same company as the Point of Sale. You are probably trying to load the point of sale as an administrator in a multi-company setup, with the administrator account set to the wrong company."));
@@ -657,10 +662,102 @@ exports.PosModel = Backbone.Model.extend({
         }
     },
 
+    _convert_product_img_to_base64: function (product, url) {
+        var deferred = new $.Deferred();
+        var img = new Image();
+
+	    img.onload = function () {
+	       var canvas = document.createElement('CANVAS');
+	       var ctx = canvas.getContext('2d');
+
+	       canvas.height = this.height;
+	       canvas.width = this.width;
+	       ctx.drawImage(this,0,0);
+
+            var dataURL = canvas.toDataURL('image/jpeg');
+            product.image_base64 = dataURL;
+	       canvas = null;
+
+            deferred.resolve();
+	   };
+	   img.src = url;
+
+        return deferred;
+    },
+
+    send_current_order_to_customer_facing_display: function() {
+        var self = this;
+        this.render_html_for_customer_facing_display().then(function (rendered_html) {
+            self.proxy.update_customer_facing_display(rendered_html);
+        });
+    },
+
+    render_html_for_customer_facing_display: function () {
+        var self = this;
+        var order = this.get_order();
+        var rendered_html = this.config.customer_facing_display_html;
+
+        // If we're using an external device like the POSBox, we
+        // cannot get /web/image?model=product.product because the
+        // POSBox is not logged in and thus doesn't have the access
+        // rights to access product.product. So instead we'll base64
+        // encode it and embed it in the HTML.
+        var get_image_deferreds = [];
+
+        if (order) {
+            order.get_orderlines().forEach(function (orderline) {
+                var product = orderline.product;
+                var image_url = window.location.origin + '/web/image?model=product.product&field=image_medium&id=' + product.id;
+
+                // only download and convert image if we haven't done it before
+                if (! product.image_base64) {
+                    get_image_deferreds.push(self._convert_product_img_to_base64(product, image_url));
+                }
+            });
+        }
+
+        // when all images are loaded in product.image_base64
+        return $.when.apply($, get_image_deferreds).then(function () {
+            var rendered_order_lines = "";
+            var rendered_payment_lines = "";
+
+            if (order) {
+                rendered_order_lines = QWeb.render('CustomerFacingDisplayOrderLines', {
+                    'orderlines': order.get_orderlines(),
+                    'widget': self.chrome,
+                });
+                rendered_payment_lines = QWeb.render('CustomerFacingDisplayPaymentLines', {
+                    'order': order,
+                    'widget': self.chrome,
+                });
+            }
+
+            var $rendered_html = $(rendered_html);
+            $rendered_html.find('.pos_orderlines_list').html(rendered_order_lines);
+            $rendered_html.find('.pos-total').find('.pos_total-amount').html(self.chrome.format_currency(order.get_total_with_tax()));
+            var pos_change_title = $rendered_html.find('.pos-change_title').text();
+            $rendered_html.find('.pos-paymentlines').html(rendered_payment_lines);
+            $rendered_html.find('.pos-change_title').text(pos_change_title);
+
+            // prop only uses the first element in a set of elements,
+            // and there's no guarantee that
+            // customer_facing_display_html is wrapped in a single
+            // root element.
+            rendered_html = _.reduce($rendered_html, function (memory, current_element) {
+                return memory + $(current_element).prop('outerHTML');
+            }, ""); // initial memory of ""
+
+            rendered_html = QWeb.render('CustomerFacingDisplayHead', {
+                origin: window.location.origin
+            }) + rendered_html;
+            return rendered_html;
+        });
+    },
+
     // saves the order locally and try to send it to the backend. 
     // it returns a deferred that succeeds after having tried to send the order and all the other pending orders.
     push_order: function(order, opts) {
-            opts = opts || {};
+        opts = opts || {};
         var self = this;
 
         if(order){
@@ -1677,6 +1774,15 @@ exports.Order = Backbone.Model.extend({
         this.paymentlines.on('change', function(){ this.save_to_db("paymentline:change"); }, this);
         this.paymentlines.on('add',    function(){ this.save_to_db("paymentline:add"); }, this);
         this.paymentlines.on('remove', function(){ this.save_to_db("paymentline:rem"); }, this);
+
+        if (this.pos.config.iface_customer_facing_display) {
+            this.orderlines.on('change', this.pos.send_current_order_to_customer_facing_display, this.pos);
+            // removing last orderline does not trigger change event
+            this.orderlines.on('remove',   this.pos.send_current_order_to_customer_facing_display, this.pos);
+            this.paymentlines.on('change', this.pos.send_current_order_to_customer_facing_display, this.pos);
+            // removing last paymentline does not trigger change event
+            this.paymentlines.on('remove', this.pos.send_current_order_to_customer_facing_display, this.pos);
+        }
 
         this.init_locked = false;
         this.save_to_db();

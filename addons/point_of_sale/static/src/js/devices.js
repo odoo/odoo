@@ -131,6 +131,8 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
             }
         });
 
+        this.posbox_supports_display = true;
+
         window.hw_proxy = this;
     },
     set_connection_status: function(status,drivers){
@@ -451,6 +453,25 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
             var report = QWeb.render('SaleDetailsReport', env);
             self.print_receipt(report);
         })
+    },
+
+    update_customer_facing_display: function(html) {
+        if (this.posbox_supports_display) {
+            return this.message('customer_facing_display',
+                { html: html },
+                { timeout: 5000 });
+        }
+    },
+
+    take_ownership_over_client_screen: function(html) {
+        return this.message("take_control", { html: html });
+    },
+
+    test_ownership_of_client_screen: function() {
+        if (this.connection) {
+            return this.message("test_ownership", {});
+        }
+        return null;
     },
 
     // asks the proxy to log some information, as with the debug.log you can provide several arguments.
