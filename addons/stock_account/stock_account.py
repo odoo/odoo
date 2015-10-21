@@ -269,7 +269,13 @@ class stock_quant(osv.osv):
                 valuation_amount = cost if move.product_id.cost_method == 'real' else move.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
-        valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
+        debit_value = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
+        credit_value = debit_value
+        if move.product_id.cost_method == 'average' and move.location_dest_id.usage == 'supplier' and move.company_id.anglo_saxon_accounting:
+            #in case of a supplier return in anglo saxon mode, for products in average costing method, the stock_input
+            #account books the real purchase price, while the stock account books the average price. The difference is
+            #booked in the dedicated price difference account.
+            debit_value = cost
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
@@ -278,8 +284,8 @@ class stock_quant(osv.osv):
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'partner_id': partner_id,
-                    'debit': valuation_amount > 0 and valuation_amount or 0,
-                    'credit': valuation_amount < 0 and -valuation_amount or 0,
+                    'debit': debit_value,
+                    'credit': 0,
                     'account_id': debit_account_id,
         }
         credit_line_vals = {
@@ -289,11 +295,32 @@ class stock_quant(osv.osv):
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'partner_id': partner_id,
-                    'credit': valuation_amount > 0 and valuation_amount or 0,
-                    'debit': valuation_amount < 0 and -valuation_amount or 0,
+                    'credit': credit_value,
+                    'debit': 0,
                     'account_id': credit_account_id,
         }
-        return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+        res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+        if credit_value != debit_value:
+            #for supplier returns of product in average costing method, in anglo saxon mode
+            diff_amount = debit_value - credit_value
+            price_diff_account = move.product_id.property_account_creditor_price_difference
+            if not price_diff_account:
+                price_diff_account = move.product_id.categ_id.property_account_creditor_price_difference_categ
+            if not price_diff_account:
+                raise UserError(_('Configuration error. Please configure the price difference account on the product or its category to process this operation.'))
+            price_diff_line = {
+                    'name': move.name,
+                    'product_id': move.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': move.product_id.uom_id.id,
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'partner_id': partner_id,
+                    'credit': diff_amount > 0 and diff_amount or 0,
+                    'debit': diff_amount < 0 and -diff_amount or 0,
+                    'account_id': price_diff_account.id,
+            }
+            res.append((0, 0, price_diff_line))
+        return res
 
     def _create_account_move_line(self, cr, uid, quants, move, credit_account_id, debit_account_id, journal_id, context=None):
         #group quants by cost
