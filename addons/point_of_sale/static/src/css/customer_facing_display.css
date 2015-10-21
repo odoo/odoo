@@ -1,0 +1,56 @@
+body {
+    background-color: #efefef;
+    font-size: 16px;
+    font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 300;
+}
+
+table {
+    width: 100%;
+}
+
+thead {
+    font-size: 13px;
+    border-bottom: 5px solid #adadad;
+}
+
+.product-cell img {
+    height: 45px;
+}
+
+/* restrict width of image column of table */
+tr.product-cell > td:first-child {
+    width: 12%;
+    text-align: center;
+}
+
+tr.product-cell > td:nth-child(2) {
+    width: 68%;
+}
+
+tr.product-cell > td:nth-child(3) {
+    width: 10%;
+}
+
+tr.product-cell > td:nth-child(4) {
+    width: 10%;
+}
+
+.scroll-orderlines {
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.payment-info {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: #3E3E3E;
+    color: white;
+    width: 100%;
+}
+
+.total-amount-formatting {
+    color: #1fb496;
+    font-size: 24px;
+}

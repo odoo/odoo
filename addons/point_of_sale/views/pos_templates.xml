@@ -58,4 +58,141 @@
     </body>
 </html>
 </template>
+
+<template id="extra_head">
+    <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/point_of_sale/static/src/css/customer_facing_display.css" rel="stylesheet"/>
+    <style type="text/css">
+        /* allow content to be max-width and height, because otherwise
+        it's way narrower than what you actually get on the screen */
+        #editable_area {
+           max-width: unset;
+           margin-top: unset;
+        }
+
+        /* hide dashed right margin */
+        .editor_enable #wrapwrap > main > div:first-child:after {
+           display: none;
+        }
+
+        /* set a dummy height for orderlines (normally this gets dynamically computed by js) */
+        div.scroll-orderlines {
+           height: 300px;
+        }
+    </style>
+</template>
+
+<template id="customer_facing_display_snippets">
+    <!-- web_editor needs a ul (normally contains the header, body, extra buttons)-->
+    <ul/>
+
+    <div id="o_scroll">
+        <div class="o_panel">
+            <div class="o_panel_body">
+                <div name="Text-Image" class="basic_theme o_user_facing_display_snippet">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 class="text-center">Fill in text here</h2>
+                            </div>
+                            <div class="col-xs-12">
+                                <img src="/point_of_sale/static/src/img/odoo_ad.png" alt="" class="img-responsive"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div name="Text Block" class="basic_theme o_user_facing_display_snippet">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 class="text-center">Fill in text here</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div name="Orders Block" class="basic_theme o_user_facing_display_snippet">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2>The following items are in your basket:</h2>
+                                <div class="scroll-orderlines">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <td>Image</td>
+                                                <td>Product name</td>
+                                                <td class="text-right">Quantity</td>
+                                                <td class="text-right">Price</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="orderlines">
+                                            <tr class="product-cell">
+                                                <td>
+                                                    <img alt="" class="img" src="/point_of_sale/static/img/evian_1l-image.jpg"/>
+                                                </td>
+                                                <td>Evian 2l</td>
+                                                <td class="text-right">2.000</td>
+                                                <td class="text-right">$ 1.02</td>
+                                            </tr>
+
+                                            <tr class="product-cell">
+                                                <td>
+                                                    <img alt="" class="img" src="/point_of_sale/static/img/oranges-image.jpg"/>
+                                                </td>
+                                                <td>Oranges</td>
+                                                <td class="text-right">3.000</td>
+                                                <td class="text-right">$ 3.12</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div name="Payment Info Block" class="basic_theme o_user_facing_display_snippet">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="payment-info">
+                                <div class="col-xs-offset-4 col-xs-4">
+                                    <span class="total-amount-formatting">TOTAL:</span>
+                                </div>
+                                <div class="col-xs-4 text-right">
+                                    <span id="total-amount" class="total-amount-formatting">$ 4.14</span>
+                                </div>
+                                <div id="paymentlines">
+                                    <div class="col-xs-offset-4 col-xs-4">
+                                        <span>Cash (USD)</span>
+                                    </div>
+                                    <div class="col-xs-4 text-right">
+                                        <span>$ 5.00</span>
+                                    </div>
+                                    <div class="col-xs-offset-4 col-xs-4">
+                                        <span>CHANGE:</span>
+                                    </div>
+                                    <div class="col-xs-4 text-right">
+                                        <span>$ 0.86</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="snippet_options" class="hidden">
+        <t t-call="web_editor.snippet_options"/>
+
+        <div data-js='content' class="hidden"
+             data-selector="[data-oe-field='customer_facing_display_html'] > div, .oe_snippet_body"
+             data-drop-near="[data-oe-field='customer_facing_display_html'] > *"
+             data-drop-in="[data-oe-field='customer_facing_display_html'], .ad-space, div.row > div[class^='col-xs-']">
+        </div>
+    </div>
+</template>
 </odoo>

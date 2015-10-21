@@ -434,6 +434,10 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
         send_printing_job();
     },
 
+    update_customer_facing_display: function(html) {
+        return this.message('customer_facing_display',{ html: html },{ timeout: 5000 });
+    },
+
     // asks the proxy to log some information, as with the debug.log you can provide several arguments.
     log: function(){
         return this.message('log',{'arguments': _.toArray(arguments)});

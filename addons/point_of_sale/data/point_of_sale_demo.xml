@@ -365,4 +365,86 @@
         <record id="product.membership_1" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
         <record id="product.membership_2" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
 
+        <record model="pos.config" id="pos_config_main">
+            <field name="customer_facing_display_html">
+                <![CDATA[
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <div>
+                <img src="/logo" alt="Your Company Logo" class="pull-right img-responsive"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 ad-space">
+            <img src="/point_of_sale/static/src/img/odoo_ad.png" class="img-responsive" alt=""/>
+        </div>
+
+        <div class="col-xs-8">
+            <h2>The following items are in your basket:</h2>
+            <div class="scroll-orderlines">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Image</td>
+                            <td>Product name</td>
+                            <td class="text-right">Quantity</td>
+                            <td class="text-right">Price</td>
+                        </tr>
+                    </thead>
+                    <tbody id="orderlines">
+                        <tr class="product-cell">
+                            <td>
+                                <img alt="" class="img" src="/point_of_sale/static/img/evian_1l-image.jpg"/>
+                            </td>
+                            <td>Evian 2l</td>
+                            <td class="text-right">2.000</td>
+                            <td class="text-right">$ 1.02</td>
+                        </tr>
+
+                        <tr class="product-cell">
+                            <td>
+                                <img alt="" class="img" src="/point_of_sale/static/img/oranges-image.jpg"/>
+                            </td>
+                            <td>Oranges</td>
+                            <td class="text-right">3.000</td>
+                            <td class="text-right">$ 3.12</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- We use absolute positioning to get this div
+                 at the bottom of the screen.  because of this
+                 bootstrap behaves like we're not in a row
+                 anymore, hence the offsets -->
+            <div class="payment-info">
+                <div class="col-xs-offset-4 col-xs-4">
+                    <span class="total-amount-formatting">TOTAL:</span>
+                </div>
+                <div class="col-xs-4 text-right">
+                    <span id="total-amount" class="total-amount-formatting">$ 4.14</span>
+                </div>
+                <div id="paymentlines">
+                    <div class="col-xs-offset-4 col-xs-4">
+                        <span>Cash (USD)</span>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <span>$ 5.00</span>
+                    </div>
+                    <div class="col-xs-offset-4 col-xs-4">
+                        <span>CHANGE:</span>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <span>$ 0.86</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                ]]>
+            </field>
+        </record>
 </odoo>

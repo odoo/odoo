@@ -1465,4 +1465,57 @@
         </div>
     </t>
 
+    <t t-name="CustomerFacingDisplayHead">
+<![CDATA[
+        <head>
+            <base href="]]><t t-esc="origin"/><![CDATA[/"/>
+            <script src="/web/static/lib/jquery/jquery.js"></script>
+            <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+            <link href="/point_of_sale/static/src/css/customer_facing_display.css" rel="stylesheet"/>
+            <script>
+                $(window).load(function () {
+                      var $orderlines = $(".scroll-orderlines");
+                      var payment_info_top = $(".payment-info").offset().top;
+                      var orderlines_top = $orderlines.offset().top;
+                      /* set the size of the div for scrollbar */
+                      $orderlines.height(payment_info_top - orderlines_top - 5);
+                      /* scroll to bottom */
+                      $orderlines[0].scrollTop = $orderlines[0].scrollHeight;
+                  });
+            </script>
+            </head>
+]]>
+    </t>
+
+    <t t-name="CustomerFacingDisplayOrderLines">
+        <t t-foreach="orderlines" t-as="orderline">
+            <tr class="product-cell">
+                <td>
+                    <img t-att-src='orderline.product.image_base64' alt="" class="img"/>
+                </td>
+                <td><t t-esc="orderline.product.display_name"/></td>
+                <td class="text-right"><t t-esc="orderline.get_quantity_str()"/></td>
+                <td class="text-right"><t t-esc="widget.format_currency(orderline.get_display_price())"/></td>
+            </tr>
+        </t>
+    </t>
+
+    <t t-name="CustomerFacingDisplayPaymentLines">
+        <t t-foreach="order.get_paymentlines()" t-as="paymentline">
+            <div class="col-xs-offset-4 col-xs-4">
+                <span><t t-esc="paymentline.name"/></span>
+            </div>
+            <div class="col-xs-4 text-right">
+                <span><t t-esc="widget.format_currency(paymentline.get_amount())"/></span>
+            </div>
+        </t>
+        <t t-if="order.get_paymentlines().length > 0">
+            <div class="col-xs-offset-4 col-xs-4">
+                <span>CHANGE:</span>
+            </div>
+            <div class="col-xs-4 text-right">
+                <span><t t-esc="widget.format_currency(order.get_change())"/></span>
+            </div>
+        </t>
+    </t>
 </templates>

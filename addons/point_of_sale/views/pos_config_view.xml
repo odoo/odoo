@@ -53,6 +53,10 @@
                         <field name="iface_scan_via_proxy" string="Barcode Scanner"/>
                         <field name="iface_electronic_scale" />
                         <field name="iface_cashdrawer" />
+                        <field name="iface_customer_facing_display" />
+                    </group>
+                    <group attrs="{'invisible' : [('iface_customer_facing_display', '=', False)]}" >
+                        <field name="customer_facing_display_html" widget="html_frame" nolabel="1" options="{'editor_url': '/point_of_sale/field/customer_facing_display_template'}"/>
                     </group>
                     <group name="receipt" string="Receipt" >
                         <field name="receipt_header" string="Header" placeholder="A custom receipt header message"/>
@@ -124,6 +128,21 @@
             </p>
         </field>
     </record>
+ 
+    <template id="FieldTextHtml">
+        <t t-set="head">
+            <t t-raw="head"/>
+            <t t-if="enable_editor">
+                <link rel="stylesheet" href="/point_of_sale/static/src/css/customer_facing_display_editor_thumb.css" type="text/css"/>
+            </t>
+        </t>
+        <t t-call="web_editor.layout">
+            <div id="editable_area" class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html">
+                <t t-raw="content">
+                </t>
+            </div>
+        </t>
+    </template>
 
     <!-- Barcode Nomenclatures -->
     <menuitem id="menu_pos_barcode_nomenclature_all" parent="menu_point_config_product" action="barcodes.action_barcode_nomenclature_form" sequence="30"/>
