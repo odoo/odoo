@@ -14,7 +14,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get -y dist-upgrade
 
-PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-simplejson python-tz python-unittest2 python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data"
+PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-simplejson python-tz python-unittest2 python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data xorg chromium-browser xdotool unclutter"
 
 apt-get -y install ${PKGS_TO_INSTALL}
 
@@ -29,6 +29,10 @@ rm -rf /usr/share/doc
 pip install pyusb==1.0.0b1
 pip install qrcode
 pip install evdev
+
+# --upgrade because websocket_client in wheezy is bad:
+# https://github.com/docker/compose/issues/1288
+pip install --upgrade websocket_client
 
 groupadd usbusers
 usermod -a -G usbusers pi
@@ -52,6 +56,11 @@ update-rc.d -f isc-dhcp-server remove
 systemctl daemon-reload
 systemctl enable ramdisks.service
 systemctl disable dphys-swapfile.service
+
+# disable overscan in /boot/config.txt, we can't use
+# overwrite_after_init because it's on a different device
+# (/dev/mmcblk0p1) and we don't mount that afterwards.
+echo "disable_overscan=1" >> /boot/config.txt
 
 # https://www.raspberrypi.org/forums/viewtopic.php?p=79249
 # to not have "setting up console font and keymap" during boot take ages
