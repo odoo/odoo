@@ -871,9 +871,11 @@ class Environment(object):
         return bool(self.all.todo)
 
     def get_todo(self):
-        """ Return a pair `(field, records)` to recompute. """
-        for field, recs_list in self.all.todo.iteritems():
-            return field, recs_list[0]
+        """ Return a pair ``(field, records)`` to recompute.
+            The field is such that none of its dependencies must be recomputed.
+        """
+        field = min(self.all.todo, key=self.registry.field_sequence)
+        return field, self.all.todo[field][0]
 
     def check_cache(self):
         """ Check the cache consistency. """

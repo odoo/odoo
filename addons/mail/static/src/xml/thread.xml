@@ -32,8 +32,11 @@
 
     <t t-name="mail.ChatThread.Message">
         <div class="o_thread_message" t-att-data-message-id="message.id">
-            <div t-if="options.display_avatar" class="o_thread_message_avatar">
-                <img t-if="message.avatar_src" t-att-src="message.avatar_src" class="o_thread_message_avatar_img"/>
+            <div t-if="options.display_avatar" class="o_thread_message_sidebar">
+                <img t-if="message.avatar_src &amp;&amp; message.display_author" t-att-src="message.avatar_src" class="o_thread_message_avatar"/>
+                <span t-if="!message.display_author" t-att-title="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LLL')" class="o_thread_message_side_date">
+                    <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm')"/>
+                </span>
             </div>
             <div class="o_thread_message_core">
                 <span class="pull-right">
@@ -44,16 +47,24 @@
                         t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
                         t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
                 </span>
-                <p class="text-muted">
+                <p t-if="message.display_author" class="o_mail_info">
                     <t t-if="message.is_note">
                         Note by
                     </t>
-                    <t t-if="message.author_id &amp;&amp; message.author_id[1]">
-                        <strong class="o_mail_redirect" data-oe-model="res.partner" t-att-data-oe-id="message.author_id[0]"><t t-esc="message.author_id[1]"/></strong>
-                    </t>
-                    <t t-if="!message.author_id || !message.author_id[1]">
-                        <strong class="o_mail_redirect"><t t-esc="message.displayed_author"/></strong>
-                    </t>
+
+                    <strong t-if="message.mailto">
+                        <a class="o_mail_mailto" t-attf-href="mailto:#{message.mailto}?subject=Re: #{message.subject}">
+                            <t t-esc="message.mailto"/>
+                        </a>
+                    </strong>
+                    <strong t-if="!message.mailto &amp;&amp; message.author_id[0]"
+                            data-oe-model="res.partner" t-att-data-oe-id="message.author_id[0]"
+                            class="o_mail_redirect">
+                        <t t-esc="message.displayed_author"/>
+                    </strong>
+                    <strong t-if="!message.mailto &amp;&amp; !message.author_id[0]">
+                        <t t-esc="message.displayed_author"/>
+                    </strong>
 
                     <small t-att-title="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LLL')">
                         - <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm A')"/>
@@ -65,7 +76,7 @@
                 <t t-if="message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0">
                     <t t-call="mail.ChatThread.MessageTracking"/>
                 </t>
-                <div t-if="message.subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></div>
+                <p t-if="message.subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
                 <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
                     <t t-raw="message.body"/>
                 </t>

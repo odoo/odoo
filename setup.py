@@ -102,6 +102,7 @@ def py2exe_options():
                         'vatnumber',
                         'vobject',
                         'win32service', 'win32serviceutil',
+                        'xlrd',
                         'xlwt',
                         'xml', 'xml.dom',
                         'yaml',

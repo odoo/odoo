@@ -249,6 +249,12 @@ class stock_quant(osv.osv):
             acc_valuation = acc_valuation.id
         if not accounts.get('stock_journal', False):
             raise UserError(_('You don\'t have any stock journal defined on your product category, check if you have installed a chart of accounts'))
+        if not acc_src:
+            raise UserError(_('Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (move.product_id.name))
+        if not acc_dest:
+            raise UserError(_('Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (move.product_id.name))
+        if not acc_valuation:
+            raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
         journal_id = accounts['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
 
@@ -270,6 +276,9 @@ class stock_quant(osv.osv):
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
         debit_value = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
+        #check that all data is correct
+        if move.company_id.currency_id.is_zero(debit_value):
+            raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (move.product_id.name,))
         credit_value = debit_value
         if move.product_id.cost_method == 'average' and move.location_dest_id.usage == 'supplier' and move.company_id.anglo_saxon_accounting:
             #in case of a supplier return in anglo saxon mode, for products in average costing method, the stock_input

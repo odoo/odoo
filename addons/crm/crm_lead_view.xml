@@ -108,9 +108,6 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
-                    <button name="action_set_won" string="Mark Won"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}"/>
                     <button name="action_set_lost" string="Mark Lost"
                             type="object" class="oe_highlight"
                             attrs="{'invisible': [('active', '=', False)]}"/>

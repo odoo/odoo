@@ -119,7 +119,7 @@ class AccountInvoice(models.Model):
                         if line['tax_ids']:
                             #line['tax_ids'] is like [(4, tax_id, None), (4, tax_id2, None)...]
                             taxes = self.env['account.tax'].browse([x[1] for x in line['tax_ids']])
-                            price_unit = taxes.compute_all(price_unit, currency=inv.currency_id, quantity=line['quantity'])['total_excluded']
+                            price_unit = taxes.compute_all(price_unit, currency=inv.currency_id, quantity=1.0)['total_excluded']
                         price_line = round(valuation_price_unit * line['quantity'], account_prec)
                         price_diff = round(price_unit - price_line, account_prec)
                         line.update({'price': price_line})

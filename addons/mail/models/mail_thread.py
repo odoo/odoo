@@ -63,7 +63,8 @@ class MailThread(models.AbstractModel):
     _mail_post_access = 'write'  # access required on the document to post on it
     _mail_mass_mailing = False  # enable mass mailing on this model
 
-    message_is_follower = fields.Boolean('Is Follower', compute='_compute_is_follower')
+    message_is_follower = fields.Boolean(
+        'Is Follower', compute='_compute_is_follower', search='_search_is_follower')
     message_follower_ids = fields.One2many(
         'mail.followers', 'res_id', string='Followers',
         domain=lambda self: [('res_model', '=', self._name)])
@@ -134,6 +135,18 @@ class MailThread(models.AbstractModel):
         following_ids = followers.mapped('res_id')
         for record in self:
             record.message_is_follower = record.id in following_ids
+
+    @api.model
+    def _search_is_follower(self, operator, operand):
+        followers = self.env['mail.followers'].sudo().search([
+            ('res_model', '=', self._name),
+            ('partner_id', '=', self.env.user.partner_id.id),
+            ])
+        # Cases ('message_is_follower', '=', True) or  ('message_is_follower', '!=', False)
+        if (operator == '=' and operand) or (operator == '!=' and not operand):
+            return [('id', 'in', followers.mapped('res_id'))]
+        else:
+            return [('id', 'not in', followers.mapped('res_id'))]
 
     @api.multi
     def _get_message_unread(self):
@@ -1654,7 +1667,10 @@ class MailThread(models.AbstractModel):
         new_message = MailMessage.create(values)
 
         # Post-process: subscribe author, update message_last_post
-        if model and model != 'mail.thread' and self.ids and subtype_id:
+        # Note: the message_last_post mechanism is no longer used.  This
+        # will be removed in a later version.
+        if (self._context.get('mail_save_message_last_post') and
+                model and model != 'mail.thread' and self.ids and subtype_id):
             subtype_rec = self.env['mail.message.subtype'].sudo().browse(subtype_id)
             if not subtype_rec.internal:
                 # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access

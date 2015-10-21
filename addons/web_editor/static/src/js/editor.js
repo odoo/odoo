@@ -44,7 +44,7 @@ editor.reload = function () {
     if (location.search.indexOf("enable_editor") > -1) {
         window.location.href = window.location.href.replace(/&?enable_editor(=[^&]*)?/g, '');
     } else {
-        window.location.reload();
+        window.location.reload(true);
     }
 };
 
@@ -160,4 +160,3 @@ editor.Class = Widget.extend({
 return editor;
 
 });
-

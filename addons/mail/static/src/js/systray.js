@@ -36,7 +36,7 @@ var NotificationTopButton = Widget.extend({
             return this._super();
         },
         update_counter: function (counter) {
-            this.$('.fa-comment').html(counter);
+            this.$('.o_notification_counter').html(counter);
         },
         on_click: function (event) {
             var self = this;

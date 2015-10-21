@@ -120,7 +120,7 @@ class AccountMove(models.Model):
                 new_name = False
                 journal = move.journal_id
 
-                if invoice and invoice.move_name != '/':
+                if invoice and invoice.move_name and invoice.move_name != '/':
                     new_name = invoice.move_name
                 else:
                     if journal.sequence_id:
@@ -226,6 +226,11 @@ class AccountMoveLine(models.Model):
             for unreconciled lines, and something in-between for partially reconciled lines.
         """
         for line in self:
+            if not line.account_id.reconcile:
+                line.reconciled = False
+                line.amount_residual = 0
+                line.amount_residual_currency = 0
+                continue
             #amounts in the partial reconcile table aren't signed, so we need to use abs()
             amount = abs(line.debit - line.credit)
             amount_residual_currency = abs(line.amount_currency) or 0.0
@@ -1134,8 +1139,8 @@ class AccountPartialReconcile(models.Model):
     _name = "account.partial.reconcile"
     _description = "Partial Reconcile"
 
-    debit_move_id = fields.Many2one('account.move.line')
-    credit_move_id = fields.Many2one('account.move.line')
+    debit_move_id = fields.Many2one('account.move.line', index=True)
+    credit_move_id = fields.Many2one('account.move.line', index=True)
     amount = fields.Monetary(currency_field='company_currency_id', help="Amount concerned by this matching. Assumed to be always positive")
     amount_currency = fields.Monetary(string="Amount in Currency")
     currency_id = fields.Many2one('res.currency', string='Currency')

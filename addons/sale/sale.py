@@ -197,6 +197,7 @@ class SaleOrder(models.Model):
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
+            'note': self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note,
         }
 
         if self.partner_id.user_id:
@@ -784,13 +785,6 @@ class AccountInvoice(models.Model):
         for (order, name) in todo:
             order.message_post(body=_("Invoice %s paid") % (name))
         return res
-
-    @api.model
-    def _refund_cleanup_lines(self, lines):
-        result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
-        for index, line in enumerate(lines):
-            result[index][2]['sale_line_ids'] = [(6, 0, line.sale_line_ids.ids)]
-        return result
 
 
 class AccountInvoiceLine(models.Model):

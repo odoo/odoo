@@ -604,11 +604,11 @@
 
         <!-- Left menu elements: Survey -->
         <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
-        <menuitem name="Answers" id="menu_survey_type_form1" action="action_survey_user_input" parent="menu_surveys" sequence="1" groups="base.group_no_one"/>
+        <menuitem name="Answers" id="menu_survey_type_form1" action="action_survey_user_input" parent="menu_surveys" sequence="1"/>
 
 
         <!-- Left menu elements: Technical Configuration -->
-        <menuitem name="Configuration" id="menu_surveys_configuration" parent="menu_surveys" groups="base.group_configuration" sequence="100" />
+        <menuitem name="Configuration" id="menu_surveys_configuration" parent="menu_surveys" groups="base.group_no_one" sequence="100" />
         <menuitem name="Pages" id="menu_survey_page_form1" action="action_survey_page_form" parent="menu_surveys_configuration" sequence="1"/>
         <menuitem name="Questions" id="menu_survey_question_form1" action="action_survey_question_form" parent="menu_surveys_configuration" sequence="2"/>
         <menuitem name="Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>

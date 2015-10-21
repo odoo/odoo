@@ -423,7 +423,7 @@ class PurchaseOrderLine(models.Model):
                 qty += inv_line.uom_id._compute_qty_obj(inv_line.uom_id, inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
-    @api.depends('move_ids.state')
+    @api.depends('order_id.state', 'move_ids.state')
     def _compute_qty_received(self):
         for line in self:
             if line.order_id.state not in ['purchase', 'done']:
@@ -475,7 +475,7 @@ class PurchaseOrderLine(models.Model):
             order = line.order_id
             price_unit = line.price_unit
             if line.taxes_id:
-                price_unit = line.taxes_id.compute_all(price_unit, currency=line.order_id.currency_id, quantity=line.product_qty)['total_excluded']
+                price_unit = line.taxes_id.compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_excluded']
             if line.product_uom.id != line.product_id.uom_id.id:
                 price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
             if order.currency_id != order.company_id.currency_id:
@@ -571,8 +571,8 @@ class PurchaseOrderLine(models.Model):
         if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
             price_unit = seller.currency_id.compute(price_unit, self.order_id.currency_id)
         self.price_unit = price_unit
-
-        self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        if seller or not self.date_planned:
+            self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         product_lang = self.product_id.with_context({
             'lang': self.partner_id.lang,
@@ -582,20 +582,8 @@ class PurchaseOrderLine(models.Model):
         if product_lang.description_purchase:
             self.name += '\n' + product_lang.description_purchase
 
-        taxes = self.product_id.supplier_taxes_id
         fpos = self.order_id.fiscal_position_id
-        if fpos:
-            self.taxes_id = fpos.map_tax(taxes)
-
-        result['value'] = {
-            'name': self.name,
-            'product_uom': self.product_uom.id,
-            'product_qty': self.product_qty,
-            'date_planned': self.date_planned,
-            'taxes_id': self.taxes_id.ids,
-        }
-
-        return result
+        self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
 
 
 class ProcurementRule(models.Model):
@@ -834,7 +822,8 @@ class ProductTemplate(models.Model):
             template.purchase_count = sum([p.purchase_count for p in template.product_variant_ids])
         return True
 
-    property_account_creditor_price_difference = fields.Many2one('account.account', string="Price Difference Account",\
+    property_account_creditor_price_difference = fields.Many2one(
+        'account.account', string="Price Difference Account", company_dependent=True,
         help="This account will be used to value price difference between purchase price and cost price.")
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
     purchase_count = fields.Integer(compute='_purchase_count', string='# Purchases')
