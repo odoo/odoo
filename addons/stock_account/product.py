@@ -127,11 +127,11 @@ class product_template(osv.osv):
                         # Accounting Entries
                         amount_diff = abs(diff * qty)
                         if diff * qty > 0:
-                            debit_account_id = datas['stock_input'].id
+                            debit_account_id = datas['expense'].id
                             credit_account_id = datas['stock_valuation'].id
                         else:
                             debit_account_id = datas['stock_valuation'].id
-                            credit_account_id = datas['stock_output'].id
+                            credit_account_id = datas['expense'].id
 
                         lines = [(0, 0, {'name': _('Standard Price changed'),
                                         'account_id': debit_account_id,
