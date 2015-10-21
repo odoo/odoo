@@ -160,7 +160,6 @@ class stock_config_settings(osv.osv_memory):
         'module_stock_barcode': fields.boolean("Barcode scanner support"),
         'module_delivery_dhl': fields.boolean("DHL integration"),
         'module_delivery_fedex': fields.boolean("Fedex integration"),
-        'module_delivery_temando': fields.boolean("Temando integration"),
         'module_delivery_ups': fields.boolean("UPS integration"),
         'module_delivery_usps': fields.boolean("USPS integration"),
     }
