@@ -237,11 +237,12 @@ class sale_order(osv.osv):
         data = {
             'order_line': lines,
             'website_description': quote_template.website_description,
-            'note': quote_template.note,
             'options': options,
             'validity_date': date,
             'require_payment': quote_template.require_payment
         }
+        if quote_template.note:
+            data['note'] = quote_template.note
         return {'value': data}
 
     def recommended_products(self, cr, uid, ids, context=None):
