@@ -402,9 +402,94 @@ class ProcurementOrder(models.Model):
             'group_id': orderpoint.group_id.id,
         }
 
+    @api.model
+    def _procure_orderpoint_confirm(self, use_new_cursor=False, company_id=False):
+        '''
+        Create procurement based on Orderpoint
+        :param bool use_new_cursor: if set, use a dedicated cursor and auto-commit after processing each procurement.
+            This is appropriate for batch jobs only.
+        '''
+        if use_new_cursor:
+            cr = openerp.registry(self.env.cr.dbname).cursor()
+        Orderpoint = self.env['stock.warehouse.orderpoint']
+        Procurement = self.env['procurement.order']
+
+        dom = self.company_id and [('company_id', '=', self.company_id)] or []
+        orderpoint_ids = Orderpoint.search(dom, order="location_id")
+        ids = orderpoint_ids[:1000]
+        prev_ids = []
+        tot_procs = []
+        for op in orderpoint_ids:
+            product_dict = {}
+            ops_dict = {}
+            key = (op.location_id.id,)
+            if not product_dict.get(key):
+                    product_dict[key] = [op.product_id]
+                    ops_dict[key] = [op]
+            else:
+                product_dict[key] += [op.product_id]
+                ops_dict[key] += [op]
+            for key in product_dict.keys():
+                self.with_context({'location': ops_dict[key][0].location_id.id})
+                prod_qty = [x._product_available() for x in product_dict[key]]
+                order_point_ids = Orderpoint.browse([x.id for x in ops_dict[key]])
+                subtract_qty = order_point_ids.subtract_procurements_from_orderpoints()
+                for op in ops_dict[key]:
+                    try:
+                        prods = prod_qty[0][op.product_id.id]['virtual_available']
+                        if prods is None:
+                            continue
+                        if float_compare(prods, op.product_min_qty, precision_rounding=op.product_uom.rounding) <= 0:
+                            qty = max(op.product_min_qty, op.product_max_qty) - prods
+                            reste = op.qty_multiple > 0 and qty % op.qty_multiple or 0.0
+                            if float_compare(reste, 0.0, precision_rounding=op.product_uom.rounding) > 0:
+                                qty += op.qty_multiple - reste
+
+                            if float_compare(qty, 0.0, precision_rounding=op.product_uom.rounding) < 0:
+                                continue
+
+                            qty -= subtract_qty[op.id]
+
+                            qty_rounded = float_round(qty, precision_rounding=op.product_uom.rounding)
+                            if qty_rounded > 0:
+                                proc_id = Procurement.create(self._prepare_orderpoint_procurement(op, qty_rounded))
+                                tot_procs.append(proc_id.id)
+                            if use_new_cursor:
+                                cr.commit()
+                    except OperationalError:
+                        if use_new_cursor:
+                            orderpoint_ids.append(op.id)
+                            cr.rollback()
+                            continue
+                        else:
+                            raise
+            try:
+                tot_procs.reverse()
+                self.run(tot_procs)
+                tot_procs = []
+                if use_new_cursor:
+                    cr.commit()
+            except OperationalError:
+                if use_new_cursor:
+                    cr.rollback()
+                    continue
+                else:
+                    raise
+
+            if use_new_cursor:
+                cr.commit()
+            if prev_ids == ids:
+                break
+            else:
+                prev_ids = ids
+
+        if use_new_cursor:
+            cr.commit()
+            cr.close()
+        return {}
+
     @api.v7
     def _procure_orderpoint_confirm(self, cr, uid, use_new_cursor=False, company_id=False, context=None):
-        print "_procure_orderpoint_confirm v7 >>>>>>>>>>>>>>>"
         '''
         Create procurement based on Orderpoint
 
@@ -479,7 +564,7 @@ class ProcurementOrder(models.Model):
                             raise
             try:
                 tot_procs.reverse()
-                print "self.run(cr, uid, tot_procs, context=context) >>>>>>>>>", self.run(cr, uid, tot_procs, context=context)
+                self.run(cr, uid, tot_procs, context=context)
                 tot_procs = []
                 if use_new_cursor:
                     cr.commit()
