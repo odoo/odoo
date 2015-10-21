@@ -167,6 +167,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$buttons.on('click', '.o_mail_chat_button_detach', this.on_click_button_detach);
 
         this.thread.on('redirect', this, this.on_redirect);
+        this.thread.on('redirect_to_channel', this, function (channel_id) {
+            this.set_channel(chat_manager.get_channel(channel_id));
+        });
         this.thread.on('load_more_messages', this, this.load_more_messages);
         this.thread.on('mark_as_read', this, function (message_id) {
             chat_manager.mark_as_read(message_id);
@@ -340,6 +343,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         return {
             display_load_more: !chat_manager.all_history_loaded(this.channel, this.domain),
             display_needactions: this.channel.display_needactions,
+            channel_id: this.channel.id,
         };
     },
 

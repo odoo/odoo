@@ -18,6 +18,7 @@ var Thread = Widget.extend({
 
     events: {
         "click .o_mail_redirect": "on_click_redirect",
+        "click .o_channel_redirect": "on_channel_redirect",
         "click .o_thread_show_more": "on_click_show_more",
         "click .o_thread_message_needaction": function (event) {
             event.stopPropagation();
@@ -78,6 +79,12 @@ var Thread = Widget.extend({
         var res_id = $(event.target).data('oe-id');
         var res_model = $(event.target).data('oe-model');
         this.trigger('redirect', res_model, res_id);
+    },
+
+    on_channel_redirect: function (event) {
+        event.preventDefault();
+        var channel_id = $(event.target).data('channel-id');
+        this.trigger('redirect_to_channel', channel_id);
     },
 
     on_click_show_more: function () {
