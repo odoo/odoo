@@ -280,11 +280,13 @@ class stock_quant(osv.osv):
         if move.company_id.currency_id.is_zero(debit_value):
             raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (move.product_id.name,))
         credit_value = debit_value
+
         if move.product_id.cost_method == 'average' and move.location_dest_id.usage == 'supplier' and move.company_id.anglo_saxon_accounting:
             #in case of a supplier return in anglo saxon mode, for products in average costing method, the stock_input
             #account books the real purchase price, while the stock account books the average price. The difference is
             #booked in the dedicated price difference account.
-            debit_value = cost
+            if move.origin_returned_move_id and move.origin_returned_move_id.purchase_line_id:
+                debit_value = move.origin_returned_move_id.purchase_line_id.price_unit
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
