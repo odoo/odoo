@@ -588,8 +588,15 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/ace_lib', type='json', auth='none')
     def ace_lib(self, xmlid, **kwargs):
         asset = AssetsBundle(xmlid)
-        js_status, js_headers, js_content = binary_content(id=getattr(asset, 'js')().id, unique=asset.checksum)
-        css_status, css_headers, css_content = binary_content(id=getattr(asset, 'css')().id, unique=asset.checksum)
+        mock_attachment_js = getattr(asset, 'js')()
+        if isinstance(mock_attachment_js, list):
+            mock_attachment_js = mock_attachment_js[0]
+        js_status, js_headers, js_content = binary_content(id=mock_attachment_js.id, unique=asset.checksum)
+
+        mock_attachment_css = getattr(asset, 'css')()
+        if isinstance(mock_attachment_css, list):
+            mock_attachment_css = mock_attachment_css[0]
+        css_status, css_headers, css_content = binary_content(id=mock_attachment_css.id, unique=asset.checksum)
         html = asset.to_html(css=css_content, js=js_content)
         return html
 
