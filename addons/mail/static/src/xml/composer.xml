@@ -36,13 +36,17 @@
 
     <t t-name="mail.ChatComposer.MentionMenu">
         <ul class="dropdown-menu" aria-labelledby="dropdownMailMentionMenu">
-            <t t-foreach="partners" t-as="partner">
-                <li t-att-class="'o_mention_proposition ' + (partner_index === 0 ? 'active' : '')"
-                    t-att-data-partner-id="partner.id">
-                    <a href="#">
-                        <t t-esc="partner.name"/> <t t-if="partner.email">(<t t-esc="partner.email"/>)</t>
-                    </a>
-                </li>
+            <t t-set="show_divider" t-value="false"/>
+            <t t-foreach="suggestions" t-as="group">
+                <t t-foreach="group" t-as="partner">
+                    <li t-if="show_divider &amp;&amp; (partner_index === 0)" class="divider"/>
+                    <t t-set="show_divider" t-value="true"/>
+                    <li class="o_mention_proposition" t-att-data-partner-id="partner.id">
+                        <a href="#">
+                            <t t-esc="partner.name"/> <t t-if="partner.email">(<t t-esc="partner.email"/>)</t>
+                        </a>
+                    </li>
+                </t>
             </t>
         </ul>
     </t>

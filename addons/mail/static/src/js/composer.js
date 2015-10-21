@@ -35,10 +35,12 @@ var Composer = Widget.extend({
             input_min_height: 28,
             mention_delimiter: '@',
             mention_min_length: 0,
-            mention_typing_speed: 400,
+            mention_typing_speed: 200,
             mention_fetch_limit: 8,
+            get_channel_info: function () {},
         });
         this.context = this.options.context;
+        this.get_channel_info = this.options.get_channel_info;
 
         // Attachments
         this.AttachmentDataSet = new data.DataSetSearch(this, 'ir.attachment', this.context);
@@ -47,6 +49,7 @@ var Composer = Widget.extend({
 
         // Mention
         this.PartnerModel = new Model('res.partner');
+        this.mention_dropdown_open = false;
         this.set('mention_partners', []); // proposition of not-mention partner matching the mention_word
         this.set('mention_selected_partners', []); // contains the mention partners sorted as they appear in the input text
     },
@@ -154,7 +157,7 @@ var Composer = Widget.extend({
             // UP, DOWN: prevent moving cursor if navigation in mention propositions
             case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN:
-                if (this.get('mention_partners').length) {
+                if (this.mention_dropdown_open) {
                     event.preventDefault();
                 }
                 break;
@@ -165,7 +168,7 @@ var Composer = Widget.extend({
                 break;
             // ENTER: submit the message only if the dropdown mention proposition is not displayed
             case $.ui.keyCode.ENTER:
-                if (this.get('mention_partners').length) {
+                if (this.mention_dropdown_open) {
                     event.preventDefault();
                 } else if (!this.prevent_send(event)) {
                     event.preventDefault();
@@ -296,7 +299,7 @@ var Composer = Widget.extend({
 
         var text_input = this.$input.val();
         var partner_id = $(event.currentTarget).data('partner-id');
-        var selected_partner = _.filter(this.get('mention_partners'), function (p) {
+        var selected_partner = _.filter(_.flatten(this.get('mention_partners')), function (p) {
             return p.id === partner_id;
         })[0];
 
@@ -336,9 +339,9 @@ var Composer = Widget.extend({
         } else { // navigation in propositions
             var $to;
             if (keycode === $.ui.keyCode.DOWN) {
-                $to = $active.next('.o_mention_proposition:not(.active)');
+                $to = $active.nextAll('.o_mention_proposition').first();
             } else {
-                $to = $active.prev('.o_mention_proposition:not(.active)');
+                $to = $active.prevAll('.o_mention_proposition').first();
             }
             if ($to.length) {
                 $active.removeClass('active');
@@ -384,16 +387,17 @@ var Composer = Widget.extend({
         }, this.options.mention_typing_speed);
     },
 
-    mention_fetch_partner: function (search_str) {
+    mention_fetch_partner: function (search) {
         var self = this;
-        this.PartnerModel
-            .query(['id', 'name', 'email'])
-            .filter([['id', 'not in', _.pluck(this.get('mention_selected_partners'), 'id')],
-                    '|', ['name', 'ilike', search_str], ['email', 'ilike', search_str]])
-            .limit(this.options.mention_fetch_limit)
-            .all().then(function (partners) {
-                self.set('mention_partners', partners);
-            });
+        var kwargs = {
+            channel: this.get_channel_info(),
+            exclude: _.pluck(this.get('mention_selected_partners'), 'id'),
+            limit: this.options.mention_fetch_limit,
+            search: search,
+        };
+        this.PartnerModel.call('get_mention_suggestions', kwargs).then(function (suggestions) {
+            self.set('mention_partners', suggestions);
+        });
     },
 
     mention_check_remove: function () {
@@ -437,14 +441,18 @@ var Composer = Widget.extend({
     },
 
     render_mention_partners: function () {
-        if (this.get('mention_partners').length) {
+        if (_.flatten(this.get('mention_partners')).length) {
             this.$mention_dropdown.html(QWeb.render('mail.ChatComposer.MentionMenu', {
-                partners: this.get('mention_partners'),
+                suggestions: this.get('mention_partners'),
             }));
-            this.$mention_dropdown.addClass('open');
+            this.$mention_dropdown
+                .addClass('open')
+                .find('.o_mention_proposition').first().addClass('active');
+            this.mention_dropdown_open = true;
         } else {
             this.$mention_dropdown.removeClass('open');
             this.$mention_dropdown.empty();
+            this.mention_dropdown_open = false;
         }
     },
 

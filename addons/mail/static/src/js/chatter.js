@@ -842,6 +842,9 @@ var Chatter = form_common.AbstractField.extend({
             internal_subtypes: this.options.internal_subtypes,
             is_log: options && options.is_log,
             record_name: this.record_name,
+            get_channel_info: function () {
+                return { res_id: self.res_id, res_model: self.model };
+            },
         });
         this.composer.insertBefore(this.$('.o_mail_thread')).then(function () {
             // destroy existing composer

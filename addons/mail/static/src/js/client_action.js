@@ -156,7 +156,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             },
         });
 
-        this.composer = new ChatComposer(this);
+        this.composer = new ChatComposer(this, {
+            get_channel_info: function () {
+                return { channel_id: self.channel.id };
+            },
+        });
         this.thread = new ChatThread(this, {
             no_content_helper: this.action.help,
         });
