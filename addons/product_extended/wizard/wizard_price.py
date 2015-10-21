@@ -7,7 +7,7 @@ from openerp.tools.translate import _
 
 class wizard_price(osv.osv):
     _name = "wizard.price"
-    _description = "Compute price wizard"
+    _description = "Compute Price Wizard"
     _columns = {
         'info_field': fields.text('Info', readonly=True), 
         'real_time_accounting': fields.boolean("Generate accounting entries when real-time"),
@@ -35,7 +35,7 @@ class wizard_price(osv.osv):
             context = {}
         model = context.get('active_model')
         if model != 'product.template':
-            raise UserError(_('This wizard is build for product templates, while you are currently running it from a product variant.'))
+            raise UserError(_('This wizard is built for product templates, while you are currently running it from a product variant.'))
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context.')
         prod_obj = self.pool.get('product.template')

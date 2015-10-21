@@ -26,7 +26,7 @@
 # die Zuordnung bei Produkten und überschreibt diese im Einzelfall.
 #
 # Zur Vereinfachung der Steuerausweise und Buchung bei Auslandsgeschäften
-# erlaubt OpenERP ein generelles Mapping von Steuerausweis und Steuerkonten
+# erlaubt Odoo ein generelles Mapping von Steuerausweis und Steuerkonten
 # (z.B. Zuordnung 'Umsatzsteuer 19%' zu 'steuerfreie Einfuhren aus der EU')
 # zwecks Zuordnung dieses Mappings zum ausländischen Partner (Kunde/Lieferant).
 

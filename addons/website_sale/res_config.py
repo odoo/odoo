@@ -8,6 +8,7 @@ class website_config_settings(models.TransientModel):
     salesteam_id = fields.Many2one('crm.team', related='website_id.salesteam_id', string='Sales Team')
     module_delivery_dhl = fields.Boolean("DHL integration")
     module_delivery_fedex = fields.Boolean("Fedex integration")
+    module_delivery_temando = fields.Boolean("Temando integration")
     module_delivery_ups = fields.Boolean("UPS integration")
     module_delivery_usps = fields.Boolean("USPS integration")
     module_sale_ebay = fields.Boolean("eBay connector")

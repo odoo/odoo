@@ -7,7 +7,7 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-The module adds the possibility to display data from OpenERP in Google Spreadsheets in real time.
+The module adds the possibility to display data from Odoo in Google Spreadsheets in real time.
 =================================================================================================
 """,
     'depends': ['google_drive'],

@@ -333,7 +333,6 @@ var TableWidget = PosBaseWidget.extend({
 // as well as edit them.
 var FloorScreenWidget = screens.ScreenWidget.extend({
     template: 'FloorScreenWidget',
-    show_leftpane: false,
 
     // Ignore products, discounts, and client barcodes
     barcode_product_action: function(code){},
@@ -770,11 +769,29 @@ models.PosModel = models.PosModel.extend({
         return _super_posmodel.initialize.call(this,session,attributes);
     },
 
-    // changes the current table. 
+    transfer_order_to_different_table: function () {
+        this.order_to_transfer_to_different_table = this.get_order();
+
+        // go to 'floors' screen, this will set the order to null and
+        // eventually this will cause the gui to go to its
+        // default_screen, which is 'floors'
+        this.set_table(null);
+    },
+
+    // changes the current table.
     set_table: function(table) {
         if (!table) { // no table ? go back to the floor plan, see ScreenSelector
-            this.set_order(null);   
-        } else {     // table ? load the associated orders  ...
+            this.set_order(null);
+        } else if (this.order_to_transfer_to_different_table) {
+            this.order_to_transfer_to_different_table.table = table;
+            this.order_to_transfer_to_different_table = null;
+
+            // set this table
+            this.set_table(table);
+
+            // trigger a change so the table change gets stored in localStorage
+            this.get_order().trigger('change', this.get_order());
+        } else {
             this.table = table;
             var orders = this.get_order_list();
             if (orders.length) {   
@@ -905,6 +922,21 @@ screens.OrderWidget.include({
 screens.define_action_button({
     'name': 'guests',
     'widget': TableGuestsButton,
+    'condition': function(){
+        return this.pos.config.iface_floorplan;
+    },
+});
+
+var TransferOrderButton = screens.ActionButtonWidget.extend({
+    template: 'TransferOrderButton',
+    button_click: function() {
+        this.pos.transfer_order_to_different_table();
+    },
+});
+
+screens.define_action_button({
+    'name': 'transfer',
+    'widget': TransferOrderButton,
     'condition': function(){
         return this.pos.config.iface_floorplan;
     },

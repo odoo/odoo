@@ -10,6 +10,7 @@
                  <field name="team_id" type="col"/>
                  <field name="date" interval="month" type="row"/>
                  <field name="price_total" type="measure"/>
+                 <field name="categ_id" type="row"/>
              </pivot>
          </field>
     </record>
@@ -66,7 +67,7 @@
                 <field name="product_id"/>
                 <field name="user_id"/>
                 <group expand="0" string="Extended Filters">
-                    <field name="categ_id"/>
+                    <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <group expand="1" string="Group By">

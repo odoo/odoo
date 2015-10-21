@@ -57,7 +57,7 @@ class StockPicking(models.Model):
     carrier_id = fields.Many2one("delivery.carrier", string="Carrier")
     volume = fields.Float(copy=False)
     weight = fields.Float(compute='_cal_weight', digits_compute=dp.get_precision('Stock Weight'), store=True)
-    carrier_tracking_ref = fields.Char(string='Carrier Tracking Ref', copy=False)
+    carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     number_of_packages = fields.Integer(string='Number of Packages', copy=False)
     weight_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly="1", help="Unit of measurement for Weight", default=_default_uom)
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')

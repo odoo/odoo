@@ -9,7 +9,7 @@
     'summary': 'News, Blogs, Announces, Discussions',
     'version': '1.0',
     'description': """
-OpenERP Blog
+Odoo Blog
 ============
 
         """,

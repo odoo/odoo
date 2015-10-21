@@ -12,7 +12,7 @@
         'product_image_demo.xml',
     ],
     'description': """
-This is the base module for managing products and pricelists in OpenERP.
+This is the base module for managing products and pricelists in Odoo.
 ========================================================================
 
 Products support variants, different pricing methods, vendors information,

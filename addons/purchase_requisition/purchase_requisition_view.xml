@@ -89,11 +89,11 @@
                                 </group>
                             </form>
                         </field>
-                        <separator string="Requests for Quotation"/>
+                        <separator string="Requests for Quotation" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                         <button name="%(action_purchase_requisition_partner)d" type="action"
                         string="Request a Quotation" icon="fa-cogs"
                         attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
-                        <field name="purchase_ids" options="{'reload_on_button': true}">
+                        <field name="purchase_ids" options="{'reload_on_button': true}" attrs="{'invisible': [('state', '=', 'draft')]}" readonly="1">
                             <tree string="Purchase Order">
                                 <field name="name" string="Reference"/>
                                 <field name="date_order" string="Order Date"/>
