@@ -567,7 +567,10 @@ class PurchaseOrderLine(models.Model):
             date=self.order_id.date_order and self.order_id.date_order[:10],
             uom_id=self.product_uom)
 
-        price_unit = seller.price if seller else 0.0
+        fpos = self.order_id.fiscal_position_id
+        self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
+
+        price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, self.product_id.supplier_taxes_id, self.taxes_id) if seller else 0.0
         if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
             price_unit = seller.currency_id.compute(price_unit, self.order_id.currency_id)
         self.price_unit = price_unit
@@ -581,9 +584,6 @@ class PurchaseOrderLine(models.Model):
         self.name = product_lang.display_name
         if product_lang.description_purchase:
             self.name += '\n' + product_lang.description_purchase
-
-        fpos = self.order_id.fiscal_position_id
-        self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
 
 
 class ProcurementRule(models.Model):
@@ -624,7 +624,7 @@ class ProcurementOrder(models.Model):
                         date=procurement.purchase_line_id.order_id.date_order and procurement.purchase_line_id.order_id.date_order[:10],
                         uom_id=procurement.product_uom)
 
-                    price_unit = seller.price if seller else 0.0
+                    price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, procurement.purchase_line_id.product_id.supplier_taxes_id, procurement.purchase_line_id.taxes_id) if seller else 0.0
                     if price_unit and seller and procurement.purchase_line_id.order_id.currency_id and seller.currency_id != procurement.purchase_line_id.order_id.currency_id:
                         price_unit = seller.currency_id.compute(price_unit, procurement.purchase_line_id.order_id.currency_id)
 
@@ -697,7 +697,11 @@ class ProcurementOrder(models.Model):
             date=po.date_order and po.date_order[:10],
             uom_id=self.product_uom)
 
-        price_unit = seller.price if seller else 0.0
+        taxes = self.product_id.supplier_taxes_id
+        fpos = po.fiscal_position_id
+        taxes_id = fpos.map_tax(taxes).ids if fpos else []
+
+        price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, self.product_id.supplier_taxes_id, taxes_id) if seller else 0.0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
             price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
@@ -710,10 +714,6 @@ class ProcurementOrder(models.Model):
             name += '\n' + product_lang.description_purchase
 
         date_planned = self.env['purchase.order.line']._get_date_planned(seller, po=po).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
-        taxes = self.product_id.supplier_taxes_id
-        fpos = po.fiscal_position_id
-        taxes_id = fpos.map_tax(taxes).ids if fpos else []
 
         return {
             'name': name,
@@ -790,7 +790,7 @@ class ProcurementOrder(models.Model):
                         date=po.date_order and po.date_order[:10],
                         uom_id=self.product_uom)
 
-                    price_unit = seller.price if seller else 0.0
+                    price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, line.product_id.supplier_taxes_id, line.taxes_id) if seller else 0.0
                     if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
                         price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 

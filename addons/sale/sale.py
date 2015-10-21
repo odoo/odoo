@@ -499,7 +499,6 @@ class SaleOrderLine(models.Model):
             line.price_reduce = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
     @api.multi
-    @api.onchange('order_id', 'product_id')
     def _compute_tax_id(self):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
@@ -715,8 +714,10 @@ class SaleOrderLine(models.Model):
             name += '\n' + product.description_sale
         vals['name'] = name
 
+        self._compute_tax_id()
+
         if self.order_id.pricelist_id and self.order_id.partner_id:
-            vals['price_unit'] = product.price
+            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price(product.price, product.taxes_id, self.tax_id)
         self.update(vals)
         return {'domain': domain}
 
@@ -734,7 +735,7 @@ class SaleOrderLine(models.Model):
                 pricelist=self.order_id.pricelist_id.id,
                 uom=self.product_uom.id
             )
-            self.price_unit = product.price
+            self.price_unit = self.env['account.tax']._fix_tax_included_price(product.price, product.taxes_id, self.tax_id)
 
     @api.multi
     def unlink(self):
