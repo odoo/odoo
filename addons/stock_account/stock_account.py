@@ -286,7 +286,7 @@ class stock_quant(osv.osv):
             #account books the real purchase price, while the stock account books the average price. The difference is
             #booked in the dedicated price difference account.
             if move.origin_returned_move_id and move.origin_returned_move_id.purchase_line_id:
-                debit_value = move.origin_returned_move_id.purchase_line_id.price_unit
+                debit_value = move.origin_returned_move_id.price_unit
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
