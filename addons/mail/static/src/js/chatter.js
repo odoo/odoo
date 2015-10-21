@@ -756,6 +756,7 @@ var Chatter = form_common.AbstractField.extend({
 
     on_post_message: function (message) {
         var self = this;
+        message.context = this.context
         chat_manager
             .post_message_in_document(this.model, this.res_id, message)
             .then(function () {
