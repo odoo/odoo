@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'Online Proposals',
     'category': 'Website',
     'summary': 'Send Professional Quotations',
     'website': 'https://www.odoo.com/page/quote-builder',
-    'version': '1.0',
     'description': """
 Odoo Sale Quote Roller
 =========================
@@ -25,5 +25,4 @@ Odoo Sale Quote Roller
         'data/website_quote_demo.xml'
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'installable': True,
 }
