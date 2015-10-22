@@ -133,7 +133,7 @@ class ir_filters(osv.osv):
                             (lower(name), model_id, COALESCE(user_id,-1), COALESCE(action_id,-1))""")
         return result
 
-    serialization = fields8.Binary(
+    serialization = fields8.Char(
         "Enhanced search serialization",
         store=True, compute='_empty_serialization',
         # in case computed stored fields become non-directly-writable in the
