@@ -417,6 +417,18 @@ var FieldFloat = FieldChar.extend({
     }
 });
 
+/**
+ * Options:
+ *
+ * ``model`` (alternative: ``model_field``)
+ *      model to search/filter on
+ * ``model_field`` (alternative: ``model``)
+ *      if no ``model`` specified, current form's field in which to look
+ *      up/fetch the model
+ * ``serialization`` (optional)
+ *      field from which to fetch or in which to set the search view
+ *      serialization if using that feature
+ */
 var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     template: "FieldCharDomain",
     events: {
@@ -460,6 +472,10 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
         event.preventDefault();
 
         var self = this;
+        var serialization_field = this.options.serialization,
+            serialization = serialization_field
+                    ? this.field_manager.get_field_value(serialization_field)
+                    : null;
         var dialog = new common.DomainEditorDialog(this, {
             res_model: this.options.model || this.field_manager.get_field_value(this.options.model_field),
             default_domain: this.get('value'),
@@ -467,9 +483,16 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
             readonly: this.get('effective_readonly'),
             disable_multiple_selection: this.get('effective_readonly'),
             no_create: this.get('effective_readonly'),
+            serialization: serialization,
             on_selected: function(selected_ids) {
                 if (!self.get('effective_readonly')) {
                     self.set_value(dialog.get_domain(selected_ids));
+                    if (serialization_field) {
+                        var vals = {};
+                        vals[serialization_field] = JSON.stringify(
+                            dialog.searchview.build_serialization());
+                        self.field_manager.set_values(vals);
+                    }
                 }
             }
         }).open();

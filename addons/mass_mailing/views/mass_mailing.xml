@@ -454,10 +454,11 @@
                                 <field name="mailing_model" widget="radio" style="margin-bottom: 8px"
                                     on_change="on_change_model_and_list(mailing_model, contact_list_ids)"/>
 
+                                <field name="mailing_domain_serialization" invisible="1"/>
                                 <field name="mailing_domain" widget="char_domain"
                                     placeholder="Select recipients"
                                     attrs="{'invisible': [('mailing_model', '=', 'mail.mass_mailing.contact')]}"
-                                    options="{'model_field': 'mailing_model', 'model_domain': 'mailing_domain'}"
+                                    options="{'model_field': 'mailing_model', 'model_domain': 'mailing_domain', 'serialization': 'mailing_domain_serialization'}"
                                     context="{'search_default_not_opt_out':1}"/>
 
                                 <div attrs="{'invisible': [('mailing_model', '&lt;&gt;', 'mail.mass_mailing.contact')]}">

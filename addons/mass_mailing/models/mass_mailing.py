@@ -515,6 +515,7 @@ class MassMailing(osv.Model):
         # recipients
         'mailing_model': fields.selection(_mailing_model, string='Recipients Model', required=True),
         'mailing_domain': fields.char('Domain', oldname='domain'),
+        'mailing_domain_serialization': fields.char("Domain serialization", invisible=True),
         'contact_list_ids': fields.many2many(
             'mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
             string='Mailing Lists',
@@ -558,10 +559,6 @@ class MassMailing(osv.Model):
         ),
         'bounced': fields.function(
             _get_statistics, string='Bounced',
-            type='integer', multi='_get_statistics',
-        ),
-        'failed': fields.function(
-            _get_statistics, string='Failed',
             type='integer', multi='_get_statistics',
         ),
         'received_ratio': fields.function(
@@ -671,7 +668,7 @@ class MassMailing(osv.Model):
     #------------------------------------------------------
 
     def on_change_model_and_list(self, cr, uid, ids, mailing_model, list_ids, context=None):
-        value = {}
+        value = {'mass_mailing_serialization': False}
         if mailing_model == 'mail.mass_mailing.contact':
             mailing_list_ids = set()
             for item in list_ids:
