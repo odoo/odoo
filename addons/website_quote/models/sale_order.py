@@ -3,6 +3,7 @@
 
 from openerp import api
 from openerp.osv import osv, fields
+from odoo import api, fields as fields_new, models
 import uuid
 import time
 import datetime
@@ -11,32 +12,27 @@ import openerp.addons.decimal_precision as dp
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 
-class sale_order_line(osv.osv):
+class SaleOrderLine(osv.osv):
     _inherit = "sale.order.line"
     _description = "Sales Order Line"
-    _columns = {
-        'website_description': fields.html('Line Description'),
-        'option_line_id': fields.one2many('sale.order.option', 'line_id', 'Optional Products Lines'),
-    }
 
-    def _inject_quote_description(self, cr, uid, values, context=None):
-        values = dict(values or {})
-        if not values.get('website_description') and values.get('product_id'):
-            product = self.pool['product.product'].browse(cr, uid, values['product_id'], context=context)
-            values['website_description'] = product.quote_description or product.website_description
-        return values
+    website_description = fields_new.Html(string='Line Description')
+    option_line_id = fields_new.One2many('sale.order.option', 'line_id', string='Optional Products Lines')
 
-    def create(self, cr, uid, values, context=None):
-        values = self._inject_quote_description(cr, uid, values, context)
-        ret = super(sale_order_line, self).create(cr, uid, values, context=context)
-        # hack because create don t make the job for a related field
-        if values.get('website_description'):
-            self.write(cr, uid, ret, {'website_description': values['website_description']}, context=context)
-        return ret
+    def _inject_quote_description(self, vals):
+        if not vals.get('website_description') and vals.get('product_id'):
+            product = self.env['product.product'].browse(vals['product_id'])
+            vals['website_description'] = product.quote_description or product.website_description
+        return vals
 
-    def write(self, cr, uid, ids, values, context=None):
-        values = self._inject_quote_description(cr, uid, values, context)
-        return super(sale_order_line, self).write(cr, uid, ids, values, context=context)
+    @api.model
+    def create(self, vals):
+        return super(SaleOrderLine, self).create(self._inject_quote_description(vals))
+
+    @api.multi
+    def write(self, vals):
+        return super(SaleOrderLine, self).write(self._inject_quote_description(vals))
+
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -194,25 +190,20 @@ class sale_order(osv.osv):
             values = dict(template_values, **values)
         return super(sale_order, self).create(cr, uid, values, context=context)
 
-class sale_order_option(osv.osv):
+
+class SaleOrderOption(models.Model):
     _name = "sale.order.option"
     _description = "Sale Options"
-    _columns = {
-        'order_id': fields.many2one('sale.order', 'Sale Order Reference', ondelete='cascade', select=True),
-        'line_id': fields.many2one('sale.order.line', on_delete="set null"),
-        'name': fields.text('Description', required=True),
-        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)]),
-        'website_description': fields.html('Line Description'),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
-        'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
-        'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
-        'quantity': fields.float('Quantity', required=True,
-            digits_compute= dp.get_precision('Product UoS')),
-    }
 
-    _defaults = {
-        'quantity': 1,
-    }
+    order_id = fields_new.Many2one('sale.order', string='Sale Order Reference', ondelete='cascade', index=True)
+    line_id = fields_new.Many2one('sale.order.line', ondelete="set null")
+    name = fields_new.Text(string='Description', required=True)
+    product_id = fields_new.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)])
+    website_description = fields_new.Html(string='Line Description')
+    price_unit = fields_new.Float(string='Unit Price', required=True, digits_compute=dp.get_precision('Product Price'))
+    discount = fields_new.Float(string='Discount (%)', digits_compute=dp.get_precision('Discount'))
+    uom_id = fields_new.Many2one('product.uom', string='Unit of Measure ', required=True)
+    quantity = fields_new.Float(required=True, digits_compute=dp.get_precision('Product UoS'), default=1)
 
     # TODO master: to remove, replaced by onchange of the new api
     def on_change_product_id(self, cr, uid, ids, product, uom_id=None, context=None):
@@ -238,12 +229,6 @@ class sale_order_option(osv.osv):
             domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
         return {'value': vals, 'domain': domain}
 
-    def product_uom_change(self, cr, uid, ids, product, uom_id, context=None):
-        context = context or {}
-        if not uom_id:
-            return {'value': {'price_unit': 0.0, 'uom_id': False}}
-        return self.on_change_product_id(cr, uid, ids, product, uom_id=uom_id, context=context)
-
     @api.onchange('product_id')
     def _onchange_product_id(self):
         product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
@@ -257,3 +242,8 @@ class sale_order_option(osv.osv):
             partner_id = self.order_id.partner_id.id
             pricelist = self.order_id.pricelist_id.id
             self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
+
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
+        if self.uom_id:
+            return self._onchange_product_id()
