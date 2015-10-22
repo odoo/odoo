@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Martin Ambroz martin@its.mu https://github.com/amsys
+Martin Ambrož martin@its.mu https://github.com/amsys
