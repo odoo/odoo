@@ -165,6 +165,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$buttons.find('button').css({display:"inline-block"});
         this.$buttons.on('click', '.o_mail_chat_button_invite', this.on_click_button_invite);
         this.$buttons.on('click', '.o_mail_chat_button_detach', this.on_click_button_detach);
+        this.$buttons.on('click', '.o_mail_toggle_channels', function () {
+            self.$('.o_mail_chat_sidebar').slideToggle(200);
+        });
 
         this.thread.on('redirect', this, this.on_redirect);
         this.thread.on('redirect_to_channel', this, function (channel_id) {
@@ -295,10 +298,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var new_channel_scrolltop = this.channels_scrolltop[channel.id];
         this.channel = channel;
         this.set("title", channel.name);
-        this.$buttons.toggle(channel.type !== "static");
+        this.$buttons
+            .find('.o_mail_chat_button_detach')
+            .toggle(channel.type !== "static");
         this.$buttons
             .find('.o_mail_chat_button_invite')
-            .toggle(channel.type !== "dm");
+            .toggle(channel.type !== "dm" && channel.type !== 'static');
 
         this.update_cp();
         this.action.context.active_id = channel.id;
@@ -318,6 +323,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             if (!config.device.touch) {
                 self.composer.focus();
             }
+            if (config.device.size_class === config.device.SIZES.XS) {
+                self.$('.o_mail_chat_sidebar').hide();
+            }
+
             self.action_manager.do_push_state({
                 action: self.action.id,
                 active_id: self.channel.id,
