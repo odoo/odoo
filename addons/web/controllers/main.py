@@ -1088,7 +1088,7 @@ class Binary(http.Controller):
         image_base64 = content and base64.b64decode(content) or self.placeholder()
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
-        response.status = str(status)
+        response.status_code = status
         return response
 
     # backward compatibility
