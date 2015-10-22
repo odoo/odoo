@@ -12,4 +12,4 @@ List of contributors:
 
 Alan Ramos alan.ramos@jarsa.com.mx https://github.com/alan196
 Luis Triana luis.triana@jarsa.com.mx https://github.com/xluiisx
-Luis Triana luistriana.28@gmail.com
+Luis Triana luistriana.28@gmail.com https://github.com/xluiisx
