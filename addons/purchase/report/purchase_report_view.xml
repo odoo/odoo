@@ -65,6 +65,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="date_order"/>
                     <field name="date_approve"/>
+                    <field name="category_id" filter_domain="[('category_id', 'child_of', self)]"/>
                 </group>
                 <group expand="1" string="Group By">
                     <filter string="Vendor" name="group_partner_id" context="{'group_by':'partner_id'}"/>
