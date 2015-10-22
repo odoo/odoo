@@ -50,14 +50,16 @@ var WidgetButton = common.FormWidget.extend({
     },
     on_click: function() {
         var self = this;
-        this.force_disabled = true;
-        this.check_disable();
-        this.execute_action().always(function() {
-            self.force_disabled = false;
+        this.view.onchange_done.then(function() {
+            self.force_disabled = true;
             self.check_disable();
-            if (self.$el.hasClass('o_wow')) {
-                self.show_wow();
-            }
+            self.execute_action().always(function() {
+                self.force_disabled = false;
+                self.check_disable();
+                if (self.$el.hasClass('o_wow')) {
+                    self.show_wow();
+                }
+            });
         });
     },
     execute_action: function() {

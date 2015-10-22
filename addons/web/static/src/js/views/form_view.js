@@ -66,6 +66,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.tags_registry = core.form_tag_registry;
         this.widgets_registry = core.form_custom_registry;
         this.has_been_loaded = $.Deferred();
+        this.onchange_done = $.Deferred();
         this.translatable_fields = [];
         _.defaults(this.options, {
             "not_interactible_on_create": false,
@@ -1155,6 +1156,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         d.open();
     },
     register_field: function(field, name) {
+        var self = this;
         this.fields[name] = field;
         this.fields_order.push(name);
         if (JSON.parse(field.node.attrs.default_focus || "0")) {
@@ -1175,7 +1177,10 @@ var FormView = View.extend(common.FieldManagerMixin, {
             }
             field._dirty_flag = true;
             if (field.is_syntax_valid()) {
-                this.do_onchange(field);
+                this.onchange_done = this.do_onchange(field);
+                this.onchange_done.then(function() {
+                    self.onchange_done = $.Deferred();
+                });
                 this.on_form_changed(true);
                 this.do_notify_change();
             }
