@@ -14,10 +14,9 @@ class LivechatController(http.Controller):
         mock_attachment = getattr(asset, ext)()
         if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
             mock_attachment = mock_attachment[0]
-        attachment = request.env['ir.attachment'].search([('name', '=', mock_attachment.url)])
         # can't use /web/content directly because we don't have attachment ids (attachments must be created)
-        status, headers, content = binary_content(id=attachment.id, unique=asset.checksum)
-        content_base64 = base64.b64decode(content)
+        status, headers, content = binary_content(id=mock_attachment.id, unique=asset.checksum)
+        content_base64 = base64.b64decode(content) if content else ''
         headers.append(('Content-Length', len(content_base64)))
         return request.make_response(content_base64, headers)
 

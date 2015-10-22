@@ -18,10 +18,6 @@
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <div>
-                        <label string="You will find more options in your company details: address for the header and footer, overdue payments texts, etc."/>
-                        <button type="object" name="open_company" string="Configure your company data" icon="fa-cogs" class="oe_inline oe_link"/>
-                    </div>
                     <field name="has_default_company" invisible="1" />
                     <field name="has_chart_of_accounts" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
@@ -42,6 +38,9 @@
                     <group string="Chart of Accounts" attrs="{'invisible': [('expects_chart_of_accounts','=',False)]}">
                         <label for="id" string="Chart of Account"/>
                         <div>
+                            <div>
+                                <button type="object" name="open_company" string="Configure your company data" class="oe_link btn-link"/>
+                            </div>
                             <div>
                                 <label for="chart_template_id" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
                                 <field name="chart_template_id"
@@ -142,6 +141,51 @@
                             </div>
                         </div>
                     </group>
+                    <separator string="Bank &amp; Cash"/>
+                    <group name="bank_cash">
+                        <label for="id" string="Bank Statements"/>
+                        <div name="bank_statement_import_options">
+                            <div>
+                                <field name="module_account_yodlee" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_yodlee"/>
+                                <a href="https://www.odoo.com/page/accounting-features"> View supported banks</a>
+                            </div>
+                            <div>
+                                <field name="module_account_plaid" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_plaid"/>
+                            </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_qif" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_qif"/>
+                            </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_ofx" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_ofx"/>
+                            </div>
+                        </div>
+                        <label for="id" string="Automate Payments"/>
+                        <div name="bank_payments">
+                            <div>
+                                <field name="module_account_sepa" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_sepa"/>
+                            </div>
+                            <div>
+                                <field name="module_l10n_us_check_printing" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_l10n_us_check_printing"/>
+                            </div>
+                        </div>
+                        <label for="id" string="Configuration"/>
+                        <div name="bank_options">
+                            <div name='company_footer'>
+                                <label for="company_footer"/>
+                                <field name="company_footer"/>
+                            </div>
+                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                                <label for="transfer_account_id"/>
+                                <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('has_chart_of_accounts','!=',False)]}"/>
+                            </div>
+                        </div>
+                    </group>
                     <separator string="Invoicing &amp; Payments"/>
                     <group>
                         <label for="id" string="Customer"/>
@@ -183,47 +227,6 @@
                             <div name='payment_acquirer'>
                                 <label for="paypal_account"/>
                                 <field name="paypal_account" placeholder="e.g. sales@odoo.com" class="oe_inline"/>
-                            </div>
-                        </div>
-                    </group>
-                    <separator string="Bank &amp; Cash"/>
-                    <group name="bank_cash">
-                        <label for="id" string="Configuration"/>
-                        <div name="bank_options">
-                            <div name='company_footer'>
-                                <label for="company_footer"/>
-                                <field name="company_footer"/>
-                            </div>
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
-                                <label for="transfer_account_id"/>
-                                <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('has_chart_of_accounts','!=',False)]}"/>
-                            </div>
-                            <div>
-                                <field name="module_l10n_us_check_printing" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_l10n_us_check_printing"/>
-                            </div>
-                            <div>
-                                <field name="module_account_sepa" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_sepa"/>
-                            </div>
-                        </div>
-                        <label for="id" string="Bank Statements"/>
-                        <div name="bank_statement_import_options">
-                            <div>
-                                <field name="module_account_bank_statement_import_qif" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_bank_statement_import_qif"/>
-                            </div>
-                            <div>
-                                <field name="module_account_bank_statement_import_ofx" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_bank_statement_import_ofx"/>
-                            </div>
-                            <div>
-                                <field name="module_account_yodlee" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_yodlee"/>
-                            </div>
-                            <div>
-                                <field name="module_account_plaid" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_plaid"/>
                             </div>
                         </div>
                     </group>

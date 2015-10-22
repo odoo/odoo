@@ -3,13 +3,14 @@
 # * hr_attendance
 # 
 # Translators:
+# Davor Bojkić <bole@dajmi5.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 19:21+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-07 13:37+0000\n"
+"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +23,12 @@ msgstr ""
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded.<br/>\n"
 "(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
+msgstr "(*) pozitivan odmak znači da je djelatnik radio manje nego je ubilježeno</br>\n(*) negativan odmak znači da je djelatnik radio više nego je ubilježeno"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "<strong>Total period</strong>"
-msgstr ""
+msgstr "<strong>Ukupno period</strong>"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -56,7 +57,7 @@ msgstr "Vrsta akcije"
 msgid ""
 "Allowed difference in minutes between the signin/signout and the timesheet "
 "computation for one sheet. Set this to 0 for no tolerance."
-msgstr ""
+msgstr "Dozvoljena razlika u minutama između prijave/odjave i obračuna prisutnosti za jednu listu. Postavite na 0 za obračun bez tolerancije."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
@@ -81,7 +82,7 @@ msgstr "Pristup prisutnosti"
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph_filtered
 msgid "Attendance Analysis"
-msgstr ""
+msgstr "Analiza prisutnosti"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
@@ -92,7 +93,7 @@ msgstr "Izvještaj grešaka prisutnosti"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Attendance Errors:"
-msgstr ""
+msgstr "Greške prisutnosti:"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
@@ -118,7 +119,7 @@ msgid ""
 "Below the maximum tolerance, the attendance error will not be taken into "
 "account. Above the maximum tolerance, the error is considered to be "
 "voluntary and will be taken into account."
-msgstr ""
+msgstr "Ispod maksimalne tolerancije, greška prisutnosti neće biti uzeta u obračun. Iznad maksimalne tolerancije, greška se smatra kao dobrovoljna i uzima se u obračun."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
@@ -154,7 +155,7 @@ msgstr "Datum kreiranja"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "Current Month"
-msgstr ""
+msgstr "Tekući mjesec"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_name
@@ -192,7 +193,7 @@ msgstr "Odjel"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_report_hr_attendance_report_attendanceerrors_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikaži Naziv"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
@@ -242,7 +243,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error___last_update
 #: model:ir.model.fields,field_description:hr_attendance.field_report_hr_attendance_report_attendanceerrors___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnja promjena"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_sign
@@ -273,7 +274,7 @@ msgstr "Zadnji zapis prijave: %s,<br />%s.<br />Klikni za odjavu."
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_max_delay
 msgid "Maximum Tolerance (in minutes)"
-msgstr ""
+msgstr "Maksimalna tolerancija (u minutama)"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
@@ -377,7 +378,7 @@ msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
-msgstr ""
+msgstr "Funkcionalnost praćenja vremena omogućuje upravljanje radnjama prijave/odjave djelatnike. Također možete povezati ovu funkcionalnost na uređaj za praćenje radnog vremena putem odoo web-servisa."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -397,7 +398,7 @@ msgstr "Danas"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
 msgid "Worked Hours"
-msgstr ""
+msgstr "Odrađeni sati"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:163
@@ -410,4 +411,4 @@ msgstr "Pokušali ste %s sa datumom ispred drugog događaja.\nPokušajte kontakt
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_report_hr_attendance_report_attendanceerrors
 msgid "report.hr_attendance.report_attendanceerrors"
-msgstr ""
+msgstr "report.hr_attendance.report_attendanceerrors"

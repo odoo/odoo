@@ -3878,8 +3878,7 @@ class BaseModel(object):
         upd_todo = []
         updend = []
         direct = []
-        has_lang = context.get('lang')
-        has_trans = has_lang and context['lang'] != 'en_US'
+        has_trans = context.get('lang') and context['lang'] != 'en_US'
         for field in vals:
             ffield = self._fields.get(field)
             if ffield and ffield.deprecated:
@@ -3889,10 +3888,7 @@ class BaseModel(object):
                 if hasattr(column, 'selection') and vals[field]:
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
-                    if has_lang and callable(column.translate):
-                        flabel = ffield.get_description(recs.env)['string']
-                        raise UserError(_("You cannot update the translated value of field '%s'") % flabel)
-                    if not (has_trans and column.translate):
+                    if not (has_trans and column.translate and not callable(column.translate)):
                         # vals[field] is not a translation: update the table
                         updates.append((field, '%s', column._symbol_set[1](vals[field])))
                     direct.append(field)
@@ -3924,7 +3920,6 @@ class BaseModel(object):
                 if callable(column.translate):
                     # The source value of a field has been modified,
                     # synchronize translated terms when possible.
-                    assert not has_lang
                     self.pool['ir.translation']._sync_terms_translations(
                         cr, user, self._fields[f], recs, context=context)
 

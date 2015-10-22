@@ -157,7 +157,7 @@ class stock_config_settings(osv.osv_memory):
             (1, "Adapt lead times using the suppliers' open days calendars (advanced)")
             ], "Minimum Stock Rules",
             help='This allows you to handle minimum stock rules differently by the possibility to take into account the purchase and delivery calendars \n-This installs the module stock_calendar.'),
-        'module_stock_barcode': fields.boolean("Barcode Support"),
+        'module_stock_barcode': fields.boolean("Barcode scanner support"),
         'module_delivery_dhl': fields.boolean("DHL integration"),
         'module_delivery_fedex': fields.boolean("Fedex integration"),
         'module_delivery_ups': fields.boolean("UPS integration"),

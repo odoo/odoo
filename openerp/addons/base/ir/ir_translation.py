@@ -457,7 +457,9 @@ class ir_translation(osv.osv):
 
             # remap existing translations on terms when possible
             for trans in record_trans:
-                if trans.src not in terms:
+                if trans.src == trans.value:
+                    discarded += trans
+                elif trans.src not in terms:
                     matches = get_close_matches(trans.src, terms, 1, 0.9)
                     if matches:
                         trans.write({'src': matches[0], 'state': trans.state})

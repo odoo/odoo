@@ -27,7 +27,7 @@ class stock_inventory(osv.osv):
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
-    def _get_price_unit(self):
+    def _get_anglo_saxon_price_unit(self):
         self.ensure_one()
         return self.product_id.standard_price
 
@@ -40,11 +40,11 @@ class account_invoice_line(osv.osv):
         return round(price, inv.currency_id.decimal_places)
 
     def get_invoice_line_account(self, type, product, fpos, company):
-        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund'):
-            accounts = product.product_tmpl_id.get_product_accounts(fpos)
+        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type in ('consu', 'product'):
+            accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             if type == 'in_invoice':
                 return accounts['stock_input']
-            return accounts['stock_ouput']
+            return accounts['stock_output']
         return super(account_invoice_line, self).get_invoice_line_account(type, product, fpos, company)
 
 class account_invoice(osv.osv):
@@ -70,13 +70,14 @@ class account_invoice(osv.osv):
         company_currency = inv.company_id.currency_id.id
 
         if i_line.product_id.type in ('product', 'consu') and i_line.product_id.valuation == 'real_time':
-            accounts = i_line.product_id.product_tmpl_id.get_product_accounts()
+            fpos = i_line.invoice_id.fiscal_position_id
+            accounts = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             # debit account dacc will be the output account
             dacc = accounts['stock_output'].id
             # credit account cacc will be the expense account
             cacc = accounts['expense'].id
             if dacc and cacc:
-                price_unit = i_line._get_price_unit()
+                price_unit = i_line._get_anglo_saxon_price_unit()
                 return [
                     {
                         'type':'src',
@@ -88,7 +89,6 @@ class account_invoice(osv.osv):
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
                         'account_analytic_id': False,
-                        'taxes':i_line.invoice_line_tax_ids,
                     },
 
                     {
@@ -101,7 +101,6 @@ class account_invoice(osv.osv):
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
                         'account_analytic_id': False,
-                        'taxes':i_line.invoice_line_tax_ids,
                     },
                 ]
         return []
@@ -363,7 +362,7 @@ class stock_move(osv.osv):
         if any([q.qty <= 0 for q in move.quant_ids]):
             #if there is a negative quant, the standard price shouldn't be updated
             return
-        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will svaluate it at 6€
+        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will valuate it at 6€
         average_valuation_price = 0.0
         for q in move.quant_ids:
             average_valuation_price += q.qty * q.cost

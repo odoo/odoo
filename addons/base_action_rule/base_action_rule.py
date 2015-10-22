@@ -186,14 +186,14 @@ class base_action_rule(osv.osv):
 
         def make_create():
             """ Instanciate a create method that processes action rules. """
-            def create(self, cr, uid, vals, context=None, **kwargs):
+            def create(self, cr, uid, vals, context=None):
                 # avoid loops or cascading actions
                 if context and context.get('action'):
                     return create.origin(self, cr, uid, vals, context=context)
 
                 # call original method with a modified context
                 context = dict(context or {}, action=True)
-                new_id = create.origin(self, cr, uid, vals, context=context, **kwargs)
+                new_id = create.origin(self, cr, uid, vals, context=context)
 
                 # as it is a new record, we do not consider the actions that have a prefilter
                 action_model = self.pool.get('base.action.rule')
@@ -210,11 +210,15 @@ class base_action_rule(osv.osv):
             return create
 
         def make_write():
-            """ Instanciate a write method that processes action rules. """
-            def write(self, cr, uid, ids, vals, context=None, **kwargs):
+            """ Instanciate a _write method that processes action rules. """
+            #
+            # Note: we patch method _write() instead of write() in order to
+            # catch updates made by field recomputations.
+            #
+            def _write(self, cr, uid, ids, vals, context=None):
                 # avoid loops or cascading actions
                 if context and context.get('action'):
-                    return write.origin(self, cr, uid, ids, vals, context=context)
+                    return _write.origin(self, cr, uid, ids, vals, context=context)
 
                 # modify context
                 context = dict(context or {}, action=True)
@@ -238,7 +242,7 @@ class base_action_rule(osv.osv):
                     old_values[old_vals.pop('id')] = old_vals
 
                 # call original method
-                write.origin(self, cr, uid, ids, vals, context=context, **kwargs)
+                _write.origin(self, cr, uid, ids, vals, context=context)
 
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions:
@@ -247,7 +251,7 @@ class base_action_rule(osv.osv):
                         action_model._process(cr, uid, action, post_ids, context=dict(context, old_values=old_values))
                 return True
 
-            return write
+            return _write
 
         def make_unlink():
             """ Instanciate an unlink method that processes action rules. """
@@ -316,10 +320,10 @@ class base_action_rule(osv.osv):
 
             elif action_rule.kind == 'on_create_or_write':
                 patch(model_obj, 'create', make_create())
-                patch(model_obj, 'write', make_write())
+                patch(model_obj, '_write', make_write())
 
             elif action_rule.kind == 'on_write':
-                patch(model_obj, 'write', make_write())
+                patch(model_obj, '_write', make_write())
 
             elif action_rule.kind == 'on_unlink':
                 patch(model_obj, 'unlink', make_unlink())

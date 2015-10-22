@@ -39,8 +39,20 @@
         </record>
 
         <record id="conf_cas" model="account.account.template">
-            <field name="code">1011</field>
-            <field name="name">Purchased Stocks</field>
+            <field name="code">10111</field>
+            <field name="name">Stock Valuation Account</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="configurable_chart_template"/>
+        </record>
+        <record id="conf_cas_interim1" model="account.account.template">
+            <field name="code">10112</field>
+            <field name="name">Stock Interim Account (Received)</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="configurable_chart_template"/>
+        </record>
+        <record id="conf_cas_interim2" model="account.account.template">
+            <field name="code">10113</field>
+            <field name="name">Stock Interim Account (Delivered)</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
@@ -218,6 +230,9 @@
             <field name="property_account_income_categ_id" ref="conf_a_sale"/>
             <field name="complete_tax_set" eval="False"/>
             <field name="use_anglo_saxon" eval="True"/>
+            <field name="property_stock_account_input_categ_id" ref="conf_cas_interim1"/>
+            <field name="property_stock_account_output_categ_id" ref="conf_cas_interim2"/>
+            <field name="property_stock_valuation_account_id" ref="conf_cas"/>
             <field name="income_currency_exchange_account_id" ref="exchange_fx_income"/>
             <field name="expense_currency_exchange_account_id" ref="exchange_fx_expense"/>
         </record>
@@ -241,90 +256,5 @@
             <field name="refund_account_id" ref="conf_ova"/>
         </record>
 
-<!--
-        <record id="otaxs" model="account.tax.template">
-            <field name="chart_template_id" ref="configurable_chart_template"/>
-            <field name="name">OTAX S</field>
-            <field eval="15" name="amount"/>
-            <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="conf_ova"/>
-            <field name="account_id" ref="conf_ova"/>
-            <field name="type_tax_use">purchase</field>
-        </record>
-
-        <record id="otaxr" model="account.tax.template">
-            <field name="chart_template_id" ref="configurable_chart_template"/>
-            <field name="name">OTAX R</field>
-            <field eval="5" name="amount"/>
-            <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="conf_ova"/>
-            <field name="account_id" ref="conf_ova"/>
-            <field name="type_tax_use">purchase</field>
-        </record>
-
-        <record id="otaxx" model="account.tax.template">
-            <field name="chart_template_id" ref="configurable_chart_template"/>
-            <field name="name">OTAX X</field>
-            <field eval="0.0" name="amount"/>
-            <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="conf_ova"/>
-            <field name="account_id" ref="conf_ova"/>
-            <field name="type_tax_use">purchase</field>
-        </record>
-
-        <record id="otaxo" model="account.tax.template">
-            <field name="chart_template_id" ref="configurable_chart_template"/>
-            <field name="name">OTAX O</field>
-            <field eval="0.0" name="amount"/>
-            <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="conf_ova"/>
-            <field name="account_id" ref="conf_ova"/>
-            <field name="type_tax_use">purchase</field>
-        </record>
-
-
-        <record id="itaxs" model="account.tax.template">
-            <field name="chart_template_id" ref="configurable_chart_template"/>
-            <field name="name">ITAX S</field>
-            <field eval="15" name="amount"/>
-            <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="conf_iva"/>
-            <field name="account_id" ref="conf_iva"/>
-            <field name="type_tax_use">sale</field>
-        </record>
-
-        <record id="itaxr" model="account.tax.template">
-            <field name="chart_template_id" ref="configurable_chart_template"/>
-            <field name="name">ITAX R</field>
-            <field eval="5" name="amount"/>
-            <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="conf_iva"/>
-            <field name="account_id" ref="conf_iva"/>
-            <field name="type_tax_use">sale</field>
-        </record>
-
-        <record id="itaxx" model="account.tax.template">
-            <field name="chart_template_id" ref="configurable_chart_template"/>
-            <field name="name">ITAX X</field>
-            <field eval="0.0" name="amount"/>
-            <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="conf_iva"/>
-            <field name="account_id" ref="conf_iva"/>
-            <field name="type_tax_use">sale</field>
-        </record>
-
-        <record id="itaxo" model="account.tax.template">
-            <field name="chart_template_id" ref="configurable_chart_template"/>
-
-            <field name="name">ITAX O</field>
-            <field eval="0.0" name="amount"/>
-            <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="conf_iva"/>
-            <field name="account_id" ref="conf_iva"/>
-            <field name="type_tax_use">sale</field>
-        </record>
-
-
--->
     </data>
 </openerp>

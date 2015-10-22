@@ -138,7 +138,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _compute_analytic(self, domain=None):
         if not domain:
-            domain = [('so_line', 'in', self.ids), '|', ('amount', '<', 0.0), ('is_timesheet', '=', True)]
+            domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('is_timesheet', '=', True)]
         return super(SaleOrderLine, self)._compute_analytic(domain=domain)
 
     @api.model

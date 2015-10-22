@@ -21,7 +21,7 @@
         <t t-foreach="messages" t-as="message">
             <div t-if="current_day != message.date.split(' ')[0]" class="o_thread_date_separator">
                 <span class="o_thread_date">
-                    <t t-raw="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LL')"/>
+                    <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LL')"/>
                 </span>
                 <t t-set="current_day" t-value="message.date.split(' ')[0]"/>
             </div>
@@ -37,8 +37,12 @@
             </div>
             <div class="o_thread_message_core">
                 <span class="pull-right">
-                    <i t-if="message.is_needaction &amp;&amp; options.display_needactions" class="fa fa-check o_thread_message_needaction" t-att-data-message-id="message.id" t-att-title="_t('Mark as Done')"/>
-                    <i t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')" t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
+                    <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
+                       class="fa fa-check o_thread_message_needaction"
+                       t-att-data-message-id="message.id" t-att-title="_t('Mark as Done')"/>
+                    <i t-if="options.display_stars"
+                        t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
+                        t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
                 </span>
                 <p class="text-muted">
                     <t t-if="message.is_note">
@@ -52,7 +56,7 @@
                     </t>
 
                     <small t-att-title="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LLL')">
-                        - <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm')"/>
+                        - <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm A')"/>
                     </small>
                     <t t-if="message.model &amp;&amp; (message.model != 'mail.channel') &amp;&amp; options.display_document_link">
                         on <a class="o_mail_redirect" href="#" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id"><t t-esc="message.record_name"/></a>
@@ -100,7 +104,7 @@
     <t t-name="mail.Attachment">
         <div t-attf-class="o_attachment #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <a class="o_image" t-att-href='attachment.url' target="_blank" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80">
-                <span class='o_attachment_name'><t t-raw='attachment.name'/></span>
+                <span class='o_attachment_name'><t t-esc='attachment.name'/></span>
             </a>
             <t t-if="editable">
                 <div class="o_attachment_delete">

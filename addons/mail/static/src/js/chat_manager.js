@@ -10,6 +10,7 @@ var web_client = require('web.web_client');
 
 var _t = core._t;
 var LIMIT = 20;
+var preview_msg_max_size = 50;
 
 var MessageModel = new Model('mail.message', session.context);
 var ChannelModel = new Model('mail.channel', session.context);
@@ -40,11 +41,18 @@ function add_message (data, options) {
                 channel.hidden = false;
                 chat_manager.bus.trigger('new_channel', channel);
             }
-            if ((channel.type === "dm") && (options.show_notification)) {
+            if (!_.contains(["static", "public", "private"], channel.type) && (options.show_notification)) {
                 var query = { is_displayed: false };
                 chat_manager.bus.trigger('anyone_listening', channel, query);
                 if (!query.is_displayed) {
-                    web_client.do_notify(_t('New message'), _t("You received a message from ") + msg.author_id[1]);
+                    var title = _t('New message');
+                    if (msg.author_id[1]) {
+                        title += _t(' from ') + msg.author_id[1];
+                    }
+                    var trunc_text = function (t, limit) {
+                        return (t.length > limit) ? t.substr(0, limit-1)+'&hellip;' : t;
+                    };
+                    web_client.do_notify(title, trunc_text(msg.body, preview_msg_max_size));
                 }
             }
         }
@@ -121,7 +129,7 @@ function post_channel_message (data) {
         message_type: 'comment',
         content_subtype: 'html',
         partner_ids: data.partner_ids,
-        body: data.content,
+        body: _.str.trim(data.content),
         subtype: 'mail.mt_comment',
         attachment_ids: data.attachment_ids,
     });
@@ -130,8 +138,9 @@ function post_channel_message (data) {
 function post_document_message (model_name, res_id, data) {
     var values = {
         attachment_ids: data.attachment_ids,
-        body: data.content,
+        body: _.str.trim(data.content),
         content_subtype: data.content_subtype,
+        context: data.context,
         message_type: data.message_type,
         partner_ids: data.partner_ids,
         subtype: data.subtype,
@@ -172,7 +181,7 @@ function make_channel (data, options) {
     var channel = {
         id: data.id,
         name: data.name,
-        type: data.type || "public",
+        type: data.type || data.channel_type,
         all_history_loaded: false,
         uuid: data.uuid,
         is_detached: data.is_minimized,
@@ -186,7 +195,9 @@ function make_channel (data, options) {
             message_ids: [],
         }},
     };
-    if (data.public === "private") {
+    if (channel.type === "channel" && data.public !== "private") {
+        channel.type = "public";
+    } else if (data.public === "private") {
         channel.type = "private";
     }
     if ('direct_partner' in data) {
@@ -438,6 +449,13 @@ function init () {
 
     bus.on('notification', null, function (notification) {
         var model = notification[0][1];
+        if (model === 'ir.needaction') {
+            // new message in the inbox
+            var message = notification[1];
+            message = add_message(message, { channel_id: 'channel_inbox', show_notification: true} );
+            needaction_counter = needaction_counter + 1;
+            chat_manager.bus.trigger('update_needaction', needaction_counter);
+        }
         if (model === 'mail.channel') {
             // new message in a channel
             var message = notification[1];
@@ -449,11 +467,7 @@ function init () {
                 channel_ready = chat_manager.join_channel(channel_id, { autoswitch: false });
             }
             $.when(channel_ready).then(function () {
-                message = add_message(message, { channel_id: channel_id, show_notification: true });
-                if (_.contains(message.channel_ids, 'channel_inbox')) {
-                    needaction_counter = needaction_counter + 1;
-                    chat_manager.bus.trigger('update_needaction', needaction_counter);
-                }
+                add_message(message, { channel_id: channel_id, show_notification: true });
             });
         }
         if (model === 'res.partner') {

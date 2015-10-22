@@ -21,7 +21,9 @@ trigger an automatic reminder email.
         'base_action_rule_view.xml',
         'security/ir.model.access.csv',
     ],
-    'demo': [],
+    'demo': [
+        'base_action_rule_demo.xml',
+    ],
     'installable': True,
     'auto_install': False,
 }

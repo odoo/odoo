@@ -186,11 +186,12 @@
                                         <group>
                                             <field name="product_id"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
-                                                attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
+                                                attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('procurement_ids', '!=', [])]}"
                                                />
                                             <field name="invoice_status" invisible="1"/>
                                             <field name="qty_to_invoice" invisible="1"/>
                                             <field name="qty_delivered_updateable" invisible="1"/>
+                                            <field name="procurement_ids" invisible="1"/>
                                             <label for="product_uom_qty" string="Ordered Quantity"/>
                                             <div>
                                                 <field
@@ -216,7 +217,8 @@
                                             </div>
                                         </group>
                                         <group>
-                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
+                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                                attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                             <label for="customer_lead"/>
                                             <div>
                                                 <field name="customer_lead" class="oe_inline"/> days
@@ -234,7 +236,7 @@
                                 <tree string="Sales Order Lines" editable="bottom" decoration-info="invoice_status=='to invoice'">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"
-                                        attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
+                                        attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('procurement_ids', '!=', [])]}"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                        />
                                     <field name="name"/>
@@ -253,10 +255,12 @@
                                         groups="product.group_uom" options='{"no_open": True}'/>
                                     <field name="price_unit"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
-                                    <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
+                                    <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                     <field name="qty_delivered_updateable" invisible="1"/>
+                                    <field name="procurement_ids" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="invoice_status" invisible="1"/>
                                     <field name="customer_lead" invisible="1"/>

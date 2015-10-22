@@ -211,8 +211,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
         this.$('.o_mail_add_channel[data-type=public]').find("input").autocomplete({
             source: function(request, response) {
-                self.last_search_val = request.term;
-                self.do_search_channel(request.term).done(function(result){
+                self.last_search_val = _.escape(request.term);
+                self.do_search_channel(self.last_search_val).done(function(result){
                     result.push({
                         'label':  _.str.sprintf('<strong>'+_t("Create %s")+'</strong>', '<em>"'+self.last_search_val+'"</em>'),
                         'value': '_create',
@@ -237,8 +237,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
         this.$('.o_mail_add_channel[data-type=dm]').find("input").autocomplete({
             source: function(request, response) {
-                self.last_search_val = request.term;
-                self.do_search_partner(request.term).done(function(result){
+                self.last_search_val = _.escape(request.term);
+                self.do_search_partner(self.last_search_val).done(function(result){
                     response(result);
                 });
             },
@@ -253,7 +253,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
 
         this.$('.o_mail_add_channel[data-type=private]').find("input").on('keyup', this, function (event) {
-            var name = $(event.target).val();
+            var name = _.escape($(event.target).val());
             if(event.which === $.ui.keyCode.ENTER && name) {
                 chat_manager.create_channel(name, "private");
             }

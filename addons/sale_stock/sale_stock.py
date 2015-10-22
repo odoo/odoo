@@ -250,7 +250,7 @@ class StockPicking(models.Model):
                 if move.procurement_id.sale_line_id:
                     sale_order = move.procurement_id.sale_line_id.order_id
                     break
-            self.sale_id = sale_order.id if sale_order else False
+            picking.sale_id = sale_order.id if sale_order else False
 
     sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order", compute='_compute_sale_id')
 
@@ -258,8 +258,8 @@ class StockPicking(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
-    def _get_price_unit(self):
-        price_unit = super(AccountInvoiceLine,self)._get_price_unit()
+    def _get_anglo_saxon_price_unit(self):
+        price_unit = super(AccountInvoiceLine,self)._get_anglo_saxon_price_unit()
         # in case of anglo saxon with a product configured as invoiced based on delivery, with perpetual
         # valuation and real price costing method, we must find the real price for the cost of good sold
         uom_obj = self.env['product.uom']

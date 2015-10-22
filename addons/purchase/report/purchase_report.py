@@ -77,10 +77,10 @@ class purchase_report(osv.osv):
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
-                    sum(l.price_unit*cr.rate*l.product_qty)::decimal(16,2) as price_total,
-                    avg(100.0 * (l.price_unit*cr.rate*l.product_qty) / NULLIF(ip.value_float*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
+                    sum(l.price_unit * COALESCE(cr.rate, 1.0) * l.product_qty)::decimal(16,2) as price_total,
+                    avg(100.0 * (l.price_unit * COALESCE(cr.rate,1.0) * l.product_qty) / NULLIF(ip.value_float*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
                     sum(ip.value_float*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
-                    (sum(l.product_qty*cr.rate*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average,
+                    (sum(l.product_qty * COALESCE(cr.rate, 1.0) * l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id,
                     analytic_account.id as account_analytic_id
@@ -94,7 +94,7 @@ class purchase_report(osv.osv):
                     left join product_uom u2 on (u2.id=t.uom_id)
                     left join stock_picking_type spt on (spt.id=s.picking_type_id)
                     left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
-                    join currency_rate cr on (cr.currency_id = s.currency_id and
+                    left join currency_rate cr on (cr.currency_id = s.currency_id and
                         cr.date_start <= coalesce(s.date_order, now()) and
                         (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
                 group by

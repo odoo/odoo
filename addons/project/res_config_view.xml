@@ -27,21 +27,24 @@
                         <field name="module_sale_service" widget="radio"/>
                         <field name="module_pad" widget="radio"/>
                         <field name="group_time_work_estimation_tasks" on_change="onchange_time_estimation_project_timesheet(group_time_work_estimation_tasks)" widget="radio"/>
-                        <label for="id" string="Extra features"/>
+                        <label for="id" string="Forecasts"/>
                         <div>
-                              <div>
-                                  <field name="module_project_timesheet_synchro" widget="upgrade_boolean"/>
-                                  <label for="module_project_timesheet_synchro"/>
-                              </div>
                               <div>
                                   <field name="module_project_forecast" widget="upgrade_boolean"/>
                                   <label for="module_project_forecast"/>
                               </div>
                          </div>
                     </group>
+                    <group string="Timesheets">
+                        <label for="id" string="Extra features"/>
+                        <div>
+                            <field name="module_project_timesheet_synchro" widget="upgrade_boolean"/>
+                            <label for="module_project_timesheet_synchro"/>
+                        </div>
+                        <field name="module_project_issue_sheet" widget="radio"/>
+                    </group>
                     <group string="Helpdesk &amp; Support">
                         <field name="module_rating_project" widget="radio"/>
-                        <field name="module_project_issue_sheet" widget="radio"/>
                     </group>
                 </form>
             </field>

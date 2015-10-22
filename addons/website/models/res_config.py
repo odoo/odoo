@@ -24,8 +24,8 @@ class website_config_settings(osv.osv_memory):
         'cdn_activated': fields.related('website_id', 'cdn_activated', type="boolean", string='Use a Content Delivery Network (CDN)'),
         'cdn_url': fields.related('website_id', 'cdn_url', type="char", string='CDN Base URL'),
         'cdn_filters': fields.related('website_id', 'cdn_filters', type="text", string='CDN Filters'),
-        'module_website_form_editor': fields.boolean("Website form builder"),
-        'module_website_version': fields.boolean("Website A/B testing and versioning"),
+        'module_website_form_editor': fields.boolean("Form builder: create and customize forms"),
+        'module_website_version': fields.boolean("A/B testing and versioning"),
     }
 
     def on_change_website_id(self, cr, uid, ids, website_id, context=None):
