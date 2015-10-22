@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import unittest
-from openerp.tools.translate import quote, unquote, xml_translate
+from openerp.tools.translate import quote, unquote, xml_translate, html_translate
 
 class TranslationToolsTestCase(unittest.TestCase):
 
@@ -142,3 +142,11 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertEquals(result, source)
         self.assertItemsEqual(terms,
             ['<span class="oe_menu_text">Blah</span>', 'More <b class="caret"/>'])
+
+    def test_translate_html(self):
+        """ Test xml_translate() and html_translate() with <i> elements. """
+        source = """<i class="fa-check"></i>"""
+        result = xml_translate(lambda term: term, source)
+        self.assertEquals(result, """<i class="fa-check"/>""")
+        result = html_translate(lambda term: term, source)
+        self.assertEquals(result, source)
