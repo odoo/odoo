@@ -1,53 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="sale_order_form_quote">
-            <field name="name">sale.order.form.payment</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//header/button[@name='action_quotation_send'][1]" position="replace">
-                    <button name="action_quotation_send" string="Send by Email" type="object"
-                        groups="base.group_user"
-                        attrs="{'invisible': ['|',('quote_viewed','=',True),('state','!=', 'draft')]}"/>
-                    <button name="action_quotation_send" string="Send by Email" type="object" groups="base.group_user"
-                        class="oe_highlight"
-                        attrs="{'invisible': ['|',('quote_viewed','=',False),('state','!=', 'draft')]}"/>
-                    <button name="open_quotation" type="object" 
-                        class="oe_highlight o_open_quotation" string="View Online Quotation"
-                        attrs="{'invisible': [('template_id', '=', False)]}"/>
-                </xpath>
-                <xpath expr="//header/button[@name='print_quotation'][1]" position="replace">
-                    <button name="print_quotation" string="Print" type="object" states="draft" groups="base.group_user"/>
-                </xpath>
-                <xpath expr="//page/field[@name='order_line']/.." position="after">
-                    <page string="Suggested Products">
-                        <field name="quote_viewed" invisible="1"/>
-                        <field name="options">
-                            <tree string="Sales Quotation Template Lines" editable="bottom">
-                                    <field name="product_id"/>
-                                    <field name="name"/>
-                                    <field name="quantity"/>
-                                    <field name="uom_id" groups="product.group_uom" on_change="product_uom_change(product_id, uom_id)"/>
-                                    <field name="price_unit"/>
-                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                    <field name="website_description" invisible="1"/>
-                            </tree>
-                        </field>
-                    </page>
-                </xpath>
-                <xpath expr="//field[@name='project_id']" position="before">
-                    <label for="template_id"/>
-                    <div>
-                        <field name="template_id" context="{'company_id': company_id}" on_change="onchange_template_id(template_id, partner_id, fiscal_position_id, pricelist_id)"/>
-                    </div>
-                </xpath>
-                <xpath expr="//field[@name='client_order_ref']" position="after">
-                    <field name="require_payment" widget="radio"/>
-                    <field name="website_description" invisible="1"/>
-                </xpath>
-            </field>
-        </record>
 
         <record model="ir.ui.view" id="view_sale_quote_template_form">
             <field name="name">sale.quote.template.form</field>

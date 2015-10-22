@@ -13,7 +13,8 @@ Odoo Sale Quote Roller
     'data': [
         'views/website_quote_report.xml',
         'views/website_quote_templates.xml',
-        'views/website_quotation_backend.xml',
+        'views/sale_order_views.xml',
+        'views/sale_quote_template_views.xml',
         'views/report_saleorder.xml',
         'views/report_quote.xml',
         'data/website_quote_data.xml',
