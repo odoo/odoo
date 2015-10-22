@@ -5,6 +5,7 @@ import datetime
 import dateutil
 import email
 import json
+import lxml
 from lxml import etree
 import logging
 import pytz
@@ -1210,6 +1211,22 @@ class MailThread(models.AbstractModel):
             self.write(update_vals)
         return True
 
+    def _message_extract_payload_postprocess(self, message, body, attachments):
+        """ Perform some cleaning / postprocess in the body and attachments
+        extracted from the email. Note that this processing is specific to the
+        mail module, and should not contain security or generic html cleaning.
+        Indeed those aspects should be covered by html_email_clean and
+        html_sanitize methods located in tools. """
+        root = lxml.html.fromstring(body)
+        postprocessed = False
+        for node in root.iter():
+            if 'o_mail_notification' in node.get('class', '') or 'o_mail_notification' in node.get('summary', ''):
+                postprocessed = True
+                node.getparent().remove(node)
+        if postprocessed:
+            body = etree.tostring(root, pretty_print=False, encoding='UTF-8')
+        return body, attachments
+
     def _message_extract_payload(self, message, save_original=False):
         """Extract body as HTML and attachments from the mail message"""
         attachments = []
@@ -1276,6 +1293,8 @@ class MailThread(models.AbstractModel):
                 # 4) Anything else -> attachment
                 else:
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+
+        body, attachments = self._message_extract_payload_postprocess(message, body, attachments)
         return body, attachments
 
     @api.model
