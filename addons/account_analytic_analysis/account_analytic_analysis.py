@@ -841,7 +841,7 @@ class account_analytic_account_summary_user(osv.osv):
              WHERE (j.type = 'general' ) and (j.id=l.journal_id)   
              GROUP BY l.account_id, l.user_id   
             )
-            select (lu.account_id * mu.max_user) + lu.user_id as id,
+            select (lu.account_id::bigint * mu.max_user) + lu.user_id as id,
                     lu.account_id as account_id,
                     lu.user_id as "user",
                     unit_amount

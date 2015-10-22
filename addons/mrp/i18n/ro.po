@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 18:23+0000\n"
+"PO-Revision-Date: 2015-10-16 15:42+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -95,7 +95,7 @@ msgid ""
 "                orders according to procurement needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\"> \nDați clic pentru a crea o lista de materiale. \n</p><p>\nListele de Materiale vă permit să definiți lista de materii prime necesare pentru a face produsul finit; printr-o comandă de fabricație sau un pachet de produse.\n</p><p>\nOdoo utilizează aceste LdM pentru a propune comenzi de  fabricație în funcție de nevoile de aprovizionare.\n</p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -114,7 +114,7 @@ msgid ""
 "                schedule a production using the matching bill of materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nDati clic pentru a crea un grup de proprietati.\n </p><p>\nDefiniti grupuri specifice de proprietati care pot fi atribuite listei de materiale si comenzilor de vanzare. Proprietatile ii permit lui Odoo sa selecteze automat listele de materiale potrivite in functie de proprietatile selectate in comanda de vanzare de catre agentul de vanzari.\n</p><p>\nDe exemplu, in grupul de proprietati \"Garantie\", aveti\ndoua proprietati: 1 an garantie, 3 ani garantie. In functie\n de proprietatile selectate in comanda de vanzare, Odoo va programa o productie folosind lista de materiale potrivita.\n</p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -130,7 +130,7 @@ msgid ""
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Dati clic pentru a crea o comanda de productie. \n              </p><p>\n                O comanda de productie, bazata pe o lista de materiale, va\n                consuma materiile prime si va produce produsele finite.\n              </p><p>\n                Manufacturing orders are usually proposed automatically based\n                on customer requirements or automated rules like the minimum\n                stock rule.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
@@ -177,7 +177,7 @@ msgid ""
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nDati clic pentru a incepe o noua comanda de productie. \n</p><p>\n O comanda de productie, bazata pe o lista de materiale, va\nconsuma materii prime si va produce produse finite.\n</p><p>\nComenzile de productie sunt de obicei propuse automat pe baza cerintelor clientilor sau regullori automate precum regula\nstocului minim.\n</p>\n            "
 
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
@@ -1770,7 +1770,7 @@ msgstr "Secvență"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Set"
-msgstr ""
+msgstr "Set"
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -2043,12 +2043,12 @@ msgstr ""
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "Valabil din luna"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
 msgid "Valid Until"
-msgstr "Valabil pînă la"
+msgstr "Valabil până la"
 
 #. module: mrp
 #: help:mrp.bom.line,date_start:0 help:mrp.bom.line,date_stop:0
