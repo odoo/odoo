@@ -129,7 +129,7 @@ class stock_history(osv.osv):
                 source
                 FROM
                 ((SELECT
-                    stock_move.id::text || '-' || quant.id::text AS id,
+                    stock_move.id AS id,
                     quant.id AS quant_id,
                     stock_move.id AS move_id,
                     dest_location.id AS location_id,
@@ -156,9 +156,9 @@ class stock_history(osv.osv):
                     (source_location.company_id is not null and dest_location.company_id is null) or
                     source_location.company_id != dest_location.company_id or
                     source_location.usage not in ('internal', 'transit'))
-                ) UNION
+                ) UNION ALL
                 (SELECT
-                    '-' || stock_move.id::text || '-' || quant.id::text AS id,
+                    (-1) * stock_move.id AS id,
                     quant.id AS quant_id,
                     stock_move.id AS move_id,
                     source_location.id AS location_id,
