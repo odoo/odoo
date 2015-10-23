@@ -6,3 +6,4 @@ import report_paperformat
 import abstract_report
 import ir_qweb
 import res_company
+import ir_actions_report_xml
