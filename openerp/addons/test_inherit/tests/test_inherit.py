@@ -78,4 +78,18 @@ class test_inherits(common.TransactionCase):
         self.assertIn(partner_demo, partners)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class test_override_property(common.TransactionCase):
+
+    def test_override_with_function_field(self):
+        """ test overriding a property field by a function field """
+        record = self.env['test.inherit.property'].create({'name': "Stuff"})
+        # record.property_foo is not a property field
+        self.assertEqual(record.property_foo, 42)
+        self.assertFalse(type(record).property_foo.company_dependent)
+
+    def test_override_with_computed_field(self):
+        """ test overriding a property field by a computed field """
+        record = self.env['test.inherit.property'].create({'name': "Stuff"})
+        # record.property_bar is not a property field
+        self.assertEqual(record.property_bar, 42)
+        self.assertFalse(type(record).property_bar.company_dependent)
