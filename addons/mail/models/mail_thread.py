@@ -57,6 +57,25 @@ class MailThread(models.AbstractModel):
                 are automatically attached to the first message posted on the
                 ressource. If set to False, the display of Chatter is done using
                 threads, and no parent_id is automatically set.
+
+    MailThread features can be somewhat controlled through context keys :
+
+     - ``mail_create_nosubscribe``: at create or message_post, do not subscribe
+       uid to the record thread
+     - ``mail_create_nolog``: at create, do not log the automatic '<Document>
+       created' message
+     - ``mail_notrack``: at create and write, do not perform the value tracking
+       creating messages
+     - ``tracking_disable``: at create and write, perform no MailThread features
+       (auto subscription, tracking, post, ...)
+     - ``mail_save_message_last_post``: at message_post, update message_last_post
+       datetime field
+     - ``mail_auto_delete``: auto delete mail notifications; True by default
+       (technical hack for templates)
+     - ``mail_notify_force_send``: if less than 50 email notifications to send,
+       send them directly instead of using the queue; True by default
+     - ``mail_notify_user_signature``: add the current user signature in
+       email notifications; True by default
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
