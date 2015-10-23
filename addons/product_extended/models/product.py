@@ -85,13 +85,3 @@ class product_template(osv.osv):
                 wiz_id = wizard_obj.create(cr, uid, {'new_price': price}, context=ctx)
                 wizard_obj.change_price(cr, uid, [wiz_id], context=ctx)
         return price
-
-
-class product_bom(osv.osv):
-    _inherit = 'mrp.bom'
-            
-    _columns = {
-        'standard_price': fields.related('product_tmpl_id','standard_price',type="float",relation="product.product",string="Standard Price",store=False)
-    }
-
-product_bom()
