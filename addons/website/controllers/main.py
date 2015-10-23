@@ -12,6 +12,7 @@ import urllib2
 import werkzeug.wrappers
 
 import openerp
+from openerp.addons.base.ir.ir_qweb import AssetsBundle
 from openerp.addons.web.controllers.main import WebClient
 from openerp.addons.web_editor.controllers.main import Web_Editor
 from openerp.addons.web import http
@@ -303,7 +304,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return [enable, disable]
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
-    def theme_customize(self, enable, disable):
+    def theme_customize(self, enable, disable, get_bundle=False):
         """ enable or Disable lists of ``xml_id`` of the inherit templates
         """
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
@@ -316,6 +317,10 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         set_active(disable, False)
         set_active(enable, True)
+
+        if get_bundle:
+            bundle = AssetsBundle('website.assets_frontend', cr=http.request.cr, uid=http.request.uid, context={}, registry=http.request.registry)
+            return bundle.to_html()
 
         return True
 
