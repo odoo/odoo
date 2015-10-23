@@ -42,7 +42,7 @@ class pos_config(osv.osv):
         result = dict()
 
         for record in self.browse(cr, uid, ids, context=context):
-            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed')
+            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed' and not r.rescue)
             result[record.id] = {
                 'current_session_id': session_id,
                 'current_session_state': session_id.state,
