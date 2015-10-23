@@ -119,8 +119,8 @@ class MassMailingContact(models.Model):
         Mail Returned to Sender) is received for an existing thread. As contacts
         do not inherit form mail.thread, we have to define this method to be able
         to track bounces (see mail.thread for more details). """
-        for obj in self:
-            obj.write({'message_bounce': obj.message_bounce + 1})
+        for contact in self:
+            contact.message_bounce = contact.message_bounce + 1
 
 
 class MassMailingStage(models.Model):
@@ -131,7 +131,7 @@ class MassMailingStage(models.Model):
     _order = 'sequence'
 
     name = fields.Char(required=True, translate=True)
-    sequence = fields.Integer(default=0)
+    sequence = fields.Integer()
 
 
 class MassMailingCampaign(models.Model):

@@ -98,10 +98,11 @@ class MailMail(models.Model):
                 res['body'] = res['body'].replace(link_to_replace, unsubscribe_url if unsubscribe_url else '#')
         return res
 
-    @api.model
-    def _postprocess_sent_message(self, mail, mail_sent=True):
-        if mail_sent is True and mail.statistics_ids:
-            mail.statistics_ids.write({'sent': fields.Datetime.now()})
-        elif mail_sent is False and mail.statistics_ids:
-            mail.statistics_ids.write({'exception': fields.Datetime.now()})
-        return super(MailMail, self)._postprocess_sent_message(mail=mail, mail_sent=mail_sent)
+    @api.multi
+    def _postprocess_sent_message_v9(self, mail_sent=True):
+        for mail in self:
+            if mail_sent is True and mail.statistics_ids:
+                mail.statistics_ids.write({'sent': fields.Datetime.now()})
+            elif mail_sent is False and mail.statistics_ids:
+                mail.statistics_ids.write({'exception': fields.Datetime.now()})
+        return super(MailMail, self)._postprocess_sent_message_v9(mail_sent=mail_sent)

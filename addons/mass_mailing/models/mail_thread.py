@@ -16,7 +16,6 @@ _logger = logging.getLogger(__name__)
 class MailThread(models.AbstractModel):
     """ Update MailThread to add the feature of bounced emails and replied emails
     in message_process. """
-    _name = 'mail.thread'
     _inherit = ['mail.thread']
 
     def message_route_check_bounce(self, message):
@@ -45,7 +44,7 @@ class MailThread(models.AbstractModel):
                 _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s',
                              email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id)
                 if bounced_model and bounced_model in self.pool and hasattr(self.env[bounced_model], 'message_receive_bounce') and bounced_thread_id:
-                    self.env[bounced_model].browse([bounced_thread_id]).message_receive_bounce(mail_id=bounced_mail_id)
+                    self.env[bounced_model].browse(bounced_thread_id).message_receive_bounce(mail_id=bounced_mail_id)
                 return False
 
         return True
@@ -63,8 +62,8 @@ class MailThread(models.AbstractModel):
         behavior is to check is an integer  ``message_bounce`` column exists.
         If it is the case, its content is incremented. """
         if 'message_bounce' in self._fields:
-            for record in self:
-                record.message_bounce = record.message_bounce + 1
+            for mail_thread in self:
+                mail_thread.message_bounce = mail_thread.message_bounce + 1
 
     @api.model
     def message_route_process(self, message, message_dict, routes):
