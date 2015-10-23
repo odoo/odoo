@@ -229,8 +229,8 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
-        journal_ids = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.company_id.id)], limit=1)
-        if not journal_ids:
+        journal_id = self.env['account.invoice'].default_get(['journal_id'])['journal_id']
+        if not journal_id:
             raise UserError(_('Please define an accounting sale journal for this company.'))
         invoice_vals = {
             'name': self.client_order_ref or '',
@@ -239,7 +239,7 @@ class SaleOrder(models.Model):
             'reference': self.client_order_ref or self.name,
             'account_id': self.partner_invoice_id.property_account_receivable_id.id,
             'partner_id': self.partner_invoice_id.id,
-            'journal_id': journal_ids[0].id,
+            'journal_id': journal_id,
             'currency_id': self.pricelist_id.currency_id.id,
             'comment': self.note,
             'payment_term_id': self.payment_term_id.id,

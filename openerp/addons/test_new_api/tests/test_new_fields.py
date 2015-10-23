@@ -337,6 +337,19 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(discussion.name, 'Bar')
         self.assertEqual(message.discussion_name, 'Bar')
 
+        # change discussion name via related field on several records
+        discussion1 = discussion.create({'name': 'X1'})
+        discussion2 = discussion.create({'name': 'X2'})
+        discussion1.participants = discussion2.participants = self.env.user
+        message1 = message.create({'discussion': discussion1.id})
+        message2 = message.create({'discussion': discussion2.id})
+        self.assertEqual(message1.discussion_name, 'X1')
+        self.assertEqual(message2.discussion_name, 'X2')
+
+        (message1 + message2).write({'discussion_name': 'X3'})
+        self.assertEqual(discussion1.name, 'X3')
+        self.assertEqual(discussion2.name, 'X3')
+
         # search on related field, and check result
         search_on_related = self.env['test_new_api.message'].search([('discussion_name', '=', 'Bar')])
         search_on_regular = self.env['test_new_api.message'].search([('discussion.name', '=', 'Bar')])
