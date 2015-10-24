@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2015-10-07 20:44+0000\n"
+"PO-Revision-Date: 2015-10-24 12:37+0000\n"
 "Last-Translator: Nancy Bolognesi <nb@microcom.ca>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr "Permet de paramétrer la valorisation de stock sur les articles et les c
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_asset_category_id
 msgid "Asset Type"
-msgstr ""
+msgstr "Type d'Immobilisé"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -64,7 +64,7 @@ msgstr "Prix moyen"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
 msgid "Can be expensed"
-msgstr ""
+msgstr "Peut être inséré dans une note de frais"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -87,7 +87,7 @@ msgstr "Modifier le prix standard"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose a date in the past to get the inventory at that date."
-msgstr ""
+msgstr "Choisissez une date dans le passé pour obtenir l'inventaire à cette date."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -106,7 +106,7 @@ msgstr "Choisir la date"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
 "coeff"
-msgstr ""
+msgstr "Coefficient permettant de convertir l'unité de mesure en unité de vente\n UdV = UdM * coeff"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
@@ -117,7 +117,7 @@ msgstr "Société"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Compute from average price"
-msgstr ""
+msgstr "Calculez le prix moyen"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -151,14 +151,14 @@ msgstr "Date"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_deferred_revenue_category_id
 msgid "Deferred Revenue Type"
-msgstr ""
+msgstr "Type de revenu différé"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_display_name
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nom affiché"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
@@ -205,7 +205,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Si l'évaluation permanente est activée pour un produit, le système créera automatiquement les entrées de journal correspondant aux mouvements de stock, avec un prix de produit conforme à la méthode des coûts. La variation du compte de stock établie sur la catégorie de produit représentera la valeur actuelle des stocks, le compte des sorties et entrées en stock et présenteront la contrepartie des mouvements."
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -222,7 +222,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
-msgstr ""
+msgstr "Inventaire"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -248,7 +248,7 @@ msgstr "Valeur d'inventaire"
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
 #: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
 msgid "Inventory at Date"
-msgstr ""
+msgstr "Date d'inventaire"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice
@@ -263,14 +263,14 @@ msgstr "Ligne de facuration"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_module_stock_landed_costs
 msgid "Landed Costs"
-msgstr ""
+msgstr "Coûts logistiques"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
 #: model:ir.model.fields,field_description:stock_account.field_stock_history___last_update
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Dernière modification le"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
@@ -320,7 +320,7 @@ msgstr "Date de l'opération"
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
-msgstr ""
+msgstr "Périodique (manuel)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
@@ -432,7 +432,7 @@ msgstr "Indiquez une unité de mesure ici si la facturation s'effectue dans une 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Indiquer si le produit peut être sélectionné dans une note de frais."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -454,7 +454,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "Prix Standard : Le prix de revient est mis à jour manuellement à la fin d'une période donnée (généralement une fois par an).\nPrix moyen : Le prix de revient est recalculé à chaque arrivage et utilisé pour l'évaluation du produit.\nPrix réel : Le prix de revient affiché est le prix du dernier produit sortant (il sera utilisé en cas de perte de stocks par exemple)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method

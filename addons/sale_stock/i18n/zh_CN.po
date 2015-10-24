@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-10-01 09:22+0000\n"
+"PO-Revision-Date: 2015-10-22 07:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>国际贸易术语解释通则:</strong>"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
@@ -42,7 +42,7 @@ msgstr "允许你用 属性来标识销售订单行"
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "Choose specific routes on sales order lines (advanced)"
-msgstr ""
+msgstr "在销售订单选择特定的路线（高级）"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -52,7 +52,7 @@ msgstr "公司"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
 msgid "Default Shipping Policy"
-msgstr ""
+msgstr "默认的运输政策"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -77,7 +77,7 @@ msgstr "交货单"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Don't use manufacturing properties (recommended as its easier)"
-msgstr ""
+msgstr "不用生产属性（这样更容易些）"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -131,18 +131,18 @@ msgstr "向客户承诺日期的误差幅度。产品将被比实际承诺的日
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "No order specific routes like MTO or drop shipping"
-msgstr ""
+msgstr "不用特殊路线例如MTO 或drop shipping"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "No shipping costs on sales orders"
-msgstr ""
+msgstr "销售订单不加运输成本"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:141
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "库存不够"
 
 #. module: sale_stock
 #: code:addons/sale_stock/res_config.py:42
@@ -153,13 +153,13 @@ msgstr "仅有管理员可以改变该设置"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
 msgid "Order Routing"
-msgstr ""
+msgstr "订单的工艺路线"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:152
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "订货数量减少"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -184,7 +184,7 @@ msgstr "产品模板"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Properties on SO Lines"
-msgstr ""
+msgstr "销售订单行的属性"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -219,7 +219,7 @@ msgstr "销售订单统计"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "销售送货安全期"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -229,12 +229,12 @@ msgstr "在销售订单行上可选"
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship all products at once, without back orders"
-msgstr ""
+msgstr "一次性发货所有产品"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship products when some are available, and allow back orders"
-msgstr ""
+msgstr "当有库存时候，就可以发货，勿须全部数量"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
@@ -261,7 +261,7 @@ msgstr "库存调拨"
 #: code:addons/sale_stock/sale_stock.py:194
 #, python-format
 msgid "This product is packaged by %d . You should sell %d ."
-msgstr ""
+msgstr "产品用 %d包装 . 你可以卖 %d ."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -278,7 +278,7 @@ msgstr "仓库"
 #: code:addons/sale_stock/sale_stock.py:193
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:153
@@ -286,7 +286,7 @@ msgstr ""
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr ""
+msgstr "你在减少订单数量，不要忘记需要手工更新发货单的数量"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:142
@@ -294,7 +294,7 @@ msgstr ""
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available!\n"
 "The stock on hand is %.2f %s."
-msgstr ""
+msgstr "你计划销售 %.2f %s 但是只有 %.2f %s 在手 ！ 实际库存 %.2f %s"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings

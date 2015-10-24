@@ -4,12 +4,14 @@
 # 
 # Translators:
 # Davor Bojkić <bole@dajmi5.com>, 2015
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
+# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-10-11 17:38+0000\n"
+"PO-Revision-Date: 2015-10-24 16:42+0000\n"
 "Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -24,32 +26,32 @@ msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
 "* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
 "* The 'Done' status is used when users timesheet is accepted by his/her senior."
-msgstr ""
+msgstr " * 'Nacrt' je status koji se koristi kada korisnik unosi novu nepotvrđenu evidenciju rada.                         \n* 'Potvrđeno' je status koji se koristi za potvrdu evidencije rada od strane korisnika                \n* 'Završeno' je status koji se koristi kada evidenciju rada kreiranu od strane korisnika prihvati njegov nadređeni. "
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
 msgid "# Nbr Timesheet"
-msgstr ""
+msgstr "# Br. evidencije rada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
 msgid "# Total Attendance"
-msgstr ""
+msgstr "# Ukupna prisutnost"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
 msgid "# Total Diff"
-msgstr ""
+msgstr "# Ukupna razlika"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
 msgid "# Total Timesheet"
-msgstr ""
+msgstr "# Ukupan broj evidentiranih sati u evidenciji rada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "<span class=\"o_stat_text\">Timesheet</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Evidencija rada</span>"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -73,7 +75,7 @@ msgstr "Dodaj stavku"
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
-msgstr ""
+msgstr "Dozvoljena razlika u satima između prijave/odjave i obračuna prisutnosti za jednu listu. Postavite na 0 za obračun bez tolerancije."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
@@ -120,7 +122,7 @@ msgstr "Odustani"
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:51
 #, python-format
 msgid "Click to add projects, contracts or analytic accounts."
-msgstr ""
+msgstr "Kliknite za dodavanje projekata, ugovora ili analitičkih konta."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_res_company
@@ -217,7 +219,7 @@ msgstr "Razlike"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_display_name
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_display_name
 msgid "Display Name"
-msgstr "Prikaži Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,state:0
@@ -304,7 +306,7 @@ msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
+msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -323,7 +325,7 @@ msgstr "U nacrtu"
 msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a"
 " user."
-msgstr ""
+msgstr "Kako bi se kreirali evidenciju rada za ovog djelatnika, morate njega/nju vezati na korisnika."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:68
@@ -331,7 +333,7 @@ msgstr ""
 msgid ""
 "In order to create a timesheet for this employee, you must link the employee"
 " to a product."
-msgstr ""
+msgstr "Kako biste kreirali evidenciju rada za ovog djelatnika, morate djelatnika vezati na artikl."
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
@@ -346,7 +348,7 @@ msgstr "Je pratitelj"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "It will open your current timesheet"
-msgstr ""
+msgstr "Ovo će otvoriti vašu trenutačnu evidenciju rada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_last_post
@@ -404,7 +406,7 @@ msgid ""
 "the end of the period defined in the company, the timesheet is confirmed by "
 "the user and can be validated by his manager. If required, as defined on the"
 " project, you can generate the invoices based on the timesheet."
-msgstr ""
+msgstr "Unutar vaše evidencije rada možete otvoriti novu karticu evidencije rada, tako da možete rezervirati svoje aktivnosti u sustavu . Iz istog obrasca možete unositi prisutnost (prijava/odjava) i upisivati radno vrijeme ostvareno na različitim projektima . Na kraju razdoblja, definiranog u tvrtki, evidenciju rada potrebno je potvrditi od strane korisnika i nakon toga može je ovjeriti njegov menadžer. Ako je potrebno , kao što je definirano u projektu , možete generirati račune na temelju evidencije rada."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,state:0
@@ -415,7 +417,7 @@ msgstr "Novi"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 msgid "New timesheet to approve."
-msgstr ""
+msgstr "Nova evidencija rada za odobriti."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_name
@@ -425,7 +427,7 @@ msgstr "Bilješka"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
 msgid "Number of Actions"
-msgstr "Broj Akcija"
+msgstr "Broj akcija"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
@@ -452,7 +454,7 @@ msgstr "Otvori izbornik ljudskih resursa"
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:30
 #, python-format
 msgid "Open Timesheet"
-msgstr ""
+msgstr "Otvorite evidenciju rada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_period_ids
@@ -464,14 +466,14 @@ msgstr "Period"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_res_company_timesheet_range
 msgid "Periodicity on which you validate your timesheets."
-msgstr ""
+msgstr "Razdoblja nakon kojih provjeravate i potvrđujete vašu evidenciju rada."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:108
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
-msgstr ""
+msgstr "Molimo provjerite da li je ukupna razlika po listama manja od %.2f."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -491,12 +493,12 @@ msgstr "Odbiti"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_filter
 msgid "Search Account"
-msgstr ""
+msgstr "Traži konto"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Search Timesheet"
-msgstr ""
+msgstr "Traži evidenciju rada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -544,7 +546,7 @@ msgstr "Sažetak"
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
-msgstr ""
+msgstr "Evidencija rada ne može biti potvrđena jer ne sadrži jednak broj sati prijave/odjave za potvrdu."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
@@ -567,12 +569,12 @@ msgstr "Period kontrolne kartice"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_max_difference
 msgid "Timesheet allowed difference(Hours)"
-msgstr ""
+msgstr "Dopuštena razlika u evidenciji rada (sati)"
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
 msgid "Timesheet approved"
-msgstr ""
+msgstr "Odobrena evidencija rada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
@@ -583,27 +585,27 @@ msgstr "Raspored po Kupcu"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_form
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_tree
 msgid "Timesheet by Accounts"
-msgstr ""
+msgstr "Radna evidencija po računima"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
-msgstr ""
+msgstr "Radna evidencija po danu"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_timesheet_ids
 msgid "Timesheet lines"
-msgstr ""
+msgstr "Stavke evidencije rada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_range
 msgid "Timesheet range"
-msgstr ""
+msgstr "Vrsta evidencije rada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_department_timesheet_to_approve_count
 msgid "Timesheet to Approve"
-msgstr ""
+msgstr "Evidencija rada za odobriti."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
@@ -619,7 +621,7 @@ msgstr "Kontrolne Kartice"
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_approved
 msgid "Timesheets Approved"
-msgstr ""
+msgstr "Odobrene evidencije rada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
@@ -632,7 +634,7 @@ msgstr "Kontrolne kartice po periodu"
 msgid ""
 "Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract."
-msgstr ""
+msgstr "Evidencije rada može se, također, fakturirati kupcima ovisno o konfiguraciji svakog projekta i povezanih ugovora."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -640,7 +642,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_confirmed
 msgid "Timesheets to Approve"
-msgstr ""
+msgstr "Evidencije rada za odobriti."
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -682,7 +684,7 @@ msgstr "Ukupno vrijeme"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_total_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_day_tree
 msgid "Total Timesheet"
-msgstr ""
+msgstr "Ukupan broj evidentiranih sati u evidenciji rada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
@@ -697,7 +699,7 @@ msgstr "Brojač nepročitanih poruka"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unvalidated Timesheets"
-msgstr ""
+msgstr "Neovjerene evidencije rada"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_user_id
@@ -718,7 +720,7 @@ msgstr "Website poruke"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Povijest komunikacije Web stranice"
 
 #. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
@@ -741,7 +743,7 @@ msgstr "Tjedno"
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
-msgstr ""
+msgstr "Ne možete unijeti datum prisutnosti izvan datuma u trenutnoj evidenciji rada."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:452
@@ -749,39 +751,39 @@ msgstr ""
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
-msgstr ""
+msgstr "Ne možete unijeti prisutnost u potvrđenu i predanu evidenciju rada. Zamolite vašeg menađera da je resetira prije dodavanja prisutnosti."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:231
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
-msgstr ""
+msgstr "Ne možete obrisati evidenciju rada koja ima evidentiranu prisutnost."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:229
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
-msgstr ""
+msgstr "Ne možete obrisati evidenciju rada koja je već potvrđena."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:49
 #, python-format
 msgid "You cannot duplicate a timesheet."
-msgstr ""
+msgstr "Ne možete duplicirati evidenciju rada."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:473
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
-msgstr ""
+msgstr "Ne možete unijeti datum prisutnosti izvan datuma u trenutnoj evidenciji rada."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr ""
+msgstr "Ne možete imati 2 evidencije rada koje se preklapaju! \nMolimo koristite izbornik 'Moja trenutna evidencija rada' kako bi izbjegli ovaj problem."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
@@ -789,13 +791,13 @@ msgstr ""
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
-msgstr ""
+msgstr "Ne možete imati 2 evidencije rada koje se preklapaju! \nTrebali biste koristiti izbornik 'Moja trenutna evidencija rada' kako bi izbjegli ovaj problem."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:480
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
-msgstr ""
+msgstr "Ne možete mijenjati unose u potvrđenoj evidenciji rada."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:343
@@ -809,14 +811,14 @@ msgid ""
 "You must record timesheets every day and confirm at the end\n"
 "                of the week. Once the timesheet is confirmed, it should be\n"
 "                validated by a manager."
-msgstr ""
+msgstr "Morate snimiti evidencije rada svaki dan i potvrditi na kraju tjedna . Nakon što je evidencija rada potvrđena,  trebala bi biti ovjerena od strane menadžera."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:52
 #, python-format
 msgid "You will be able to register your working hours and activities."
-msgstr ""
+msgstr "Vama će biti omogućneno da registrirate svoje radno vrijeme i aktivnosti."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
