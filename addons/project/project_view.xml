@@ -405,7 +405,8 @@
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
                         </group>
                         <group>
-                            <field name="date_deadline"/>
+                            <field name="date_deadline"
+                                   on_change="onchange_date_deadline(date_end, date_deadline)"/>
                             <field name="categ_ids" widget="many2many_tags"/>
                             <field name="progress" widget="progressbar"
                                 groups="project.group_time_work_estimation_tasks"/>
