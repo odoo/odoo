@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
+
         <template id="report_sale_layouted" inherit_id="sale.report_saleorder_document">
             <xpath expr="//table/tbody[@class='sale_tbody']" position="replace">
-                <t t-foreach="doc.sale_layout_lines(order_id = doc.id)" t-as="p">
+                <t t-foreach="doc.sale_layout_lines()" t-as="p">
                     <!-- Name of the category -->
                     <t t-call="sale_layout.category_template" />
 
@@ -68,5 +68,5 @@
                 </t>
             </xpath>
        </template>
-    </data>
-</openerp>
+
+</odoo>
