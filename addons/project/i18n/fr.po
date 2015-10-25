@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-16 15:51+0000\n"
-"Last-Translator: Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-19 08:29+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgstr ""
 #. module: project
 #: field:res.partner,task_count:0
 msgid "# Tasks"
-msgstr ""
+msgstr "Nb de tâches"
 
 #. module: project
 #: field:report.project.task.user,no_of_days:0
@@ -98,7 +98,7 @@ msgid ""
 "                    track progress, discuss on tasks, attach documents, etc.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nLa gestion de projets Odoo vous permet de gérer le pipeline des tâches afin de faire les choses de manière efficace. \nVous pouvez suivre le progrès, discuter des tâches, joindre des documents, etc.\n</p>"
 
 #. module: project
 #: help:project.task,kanban_state:0
@@ -198,7 +198,7 @@ msgstr "Date d'affectation"
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr ""
+msgstr "Mois d'assignation"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -246,7 +246,7 @@ msgstr "Par responsable"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_reviewer
 msgid "By Reviewer"
-msgstr ""
+msgstr "par réviseur"
 
 #. module: project
 #: code:addons/project/wizard/project_task_delegate.py:69
@@ -422,7 +422,7 @@ msgstr "Date du dernier message posté sur cet enregistrement"
 #. module: project
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Assign"
-msgstr ""
+msgstr "Jours à attribuer"
 
 #. module: project
 #: field:report.project.task.user,closing_days:0
@@ -554,8 +554,8 @@ msgstr "Date de fin"
 
 #. module: project
 #: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr "Erreur ! La date de fin de la tâche doit être postérieure à la date de démarrage"
+msgid "Error ! Task end-date must be greater than task start-date"
+msgstr ""
 
 #. module: project
 #: constraint:project.task:0
@@ -564,8 +564,8 @@ msgstr "Erreur ! Vous ne pouvez pas créer de tâches récursives"
 
 #. module: project
 #: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr "Erreur ! La date de début du projet doit être antérieure à la date de fin du projet."
+msgid "Error! project start-date must be lower than project end-date."
+msgstr ""
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -757,7 +757,7 @@ msgstr "En cours"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Incoming Emails create"
-msgstr ""
+msgstr "Les emails entrants créent"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -776,7 +776,7 @@ msgstr "Courriel interne associé à ce projet. Les courriels entrants sont auto
 #: code:addons/project/project.py:201
 #, python-format
 msgid "Internal project: all employees can access"
-msgstr ""
+msgstr "Projet interne: tous les employés ont accès"
 
 #. module: project
 #: code:addons/project/project.py:171
@@ -826,7 +826,7 @@ msgstr "Date de dernière modification"
 #: field:project.task,date_last_stage_update:0
 #: field:report.project.task.user,date_last_stage_update:0
 msgid "Last Stage Update"
-msgstr ""
+msgstr "Dernière étape de mise à jour"
 
 #. module: project
 #: field:project.category,write_uid:0
@@ -847,7 +847,7 @@ msgstr "Dernière mise à jour le"
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to new pads (for example: http://etherpad.com/).\n"
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
 
@@ -1094,7 +1094,7 @@ msgstr "Confidentialité / visibilité"
 #: code:addons/project/project.py:202
 #, python-format
 msgid "Private project: followers Only"
-msgstr ""
+msgstr "Projet privé: seulement les abonnés"
 
 #. module: project
 #: field:project.project,progress_rate:0
@@ -1220,7 +1220,7 @@ msgstr ""
 #: code:addons/project/project.py:200
 #, python-format
 msgid "Public project"
-msgstr ""
+msgstr "Projet public"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1428,7 +1428,7 @@ msgstr "Activités de tâches"
 #: model:mail.message.subtype,name:project.mt_project_task_assigned
 #: model:mail.message.subtype,name:project.mt_task_assigned
 msgid "Task Assigned"
-msgstr ""
+msgstr "Tâche assignée"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
@@ -1586,7 +1586,7 @@ msgstr "Le type de document créé quand un message est reçu sur l'alias de mes
 msgid ""
 "This allows you to transfer the entries under tasks defined for Project Management to the timesheet line entries for particular date and user, with the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
-msgstr ""
+msgstr "Ceci permet de transférer les entrées dans les tâches définies pour la gestion de projet vers les entrées de ligne de feuille de temps pour la date et l'utilisateur particuliers, avec pour effet de créer, éditer et supprimer d'une manière ou d'une autre. \n- Ceci installe le module project_timesheet."
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
@@ -1616,12 +1616,14 @@ msgstr "Ce rapport vous permet d'analyser la performance de vos projets et utili
 msgid ""
 "This stage is folded in the kanban view whenthere are no records in that "
 "stage to display."
-msgstr ""
+msgstr "Cette étape est intégrée dans la vue kanban, tant qu'il n'y a pas d’élément dans celle-ci à afficher."
 
 #. module: project
 #: help:project.config.settings,time_unit:0
-msgid "This will set the unit of measure used in projects and tasks."
-msgstr "Cela détermine l'unité de mesure utilisée dans les projets et les tâches."
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"Changing the unit will only impact new entries."
+msgstr ""
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -1708,7 +1710,7 @@ msgstr "Accessibilité"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Use Tasks"
-msgstr ""
+msgstr "Utilisez les Tâches"
 
 #. module: project
 #: field:project.config.settings,module_pad:0
@@ -1771,7 +1773,7 @@ msgstr "Temps de Travail"
 #. module: project
 #: field:project.task,progress:0
 msgid "Working Time Progress (%)"
-msgstr ""
+msgstr "Progression sur le temùps de tr"
 
 #. module: project
 #: field:project.config.settings,time_unit:0
@@ -1781,7 +1783,7 @@ msgstr "Unité de temps de travail"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
 msgid "Workload"
-msgstr ""
+msgstr "Charge de travail"
 
 #. module: project
 #: code:addons/project/project.py:172
@@ -1823,7 +1825,7 @@ msgstr "ou"
 #: code:addons/project/project.py:878
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "tâches"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0

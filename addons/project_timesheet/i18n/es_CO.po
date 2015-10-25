@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:54+0000\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-24 07:21+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-8/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr ""
 msgid ""
 "<p class=\"oe_view_nocontent_create\">Record your timesheets for the project"
 " '%s'.</p>"
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">Registre sus partes de horas para el proyecto '%s'.</p>"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
@@ -58,18 +58,18 @@ msgstr ""
 #. module: project_timesheet
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_form_inherit_account_id
 msgid "Analytic Account/Project"
-msgstr ""
+msgstr "Cuenta Analítica/Proyecto"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Línea Analítica"
 
 #. module: project_timesheet
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_search_account_inherit
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_tree_inherit_account_id
 msgid "Analytic account/project"
-msgstr ""
+msgstr "Cuenta analítica/proyecto"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -124,12 +124,12 @@ msgstr "Febrero"
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 msgid "Group By"
-msgstr ""
+msgstr "Agrupar por"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 msgid "Group by month of date"
-msgstr ""
+msgstr "Agrupar por mes"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
@@ -139,7 +139,7 @@ msgstr ""
 #. module: project_timesheet
 #: view:project.project:project_timesheet.view_project_kanban_inherited
 msgid "Hours"
-msgstr ""
+msgstr "Horas"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,id:0
@@ -167,7 +167,7 @@ msgstr ""
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturando"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -226,14 +226,6 @@ msgstr ""
 #, python-format
 msgid ""
 "Please define journal on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:87
-#, python-format
-msgid ""
-"Please define product and product category property account on the related employee.\n"
 "Fill in the HR Settings tab of the employee form."
 msgstr ""
 
@@ -242,7 +234,15 @@ msgstr ""
 #, python-format
 msgid ""
 "Please define product and product category property account on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
+"Fill in the HR Settings of the employee form."
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:87
+#, python-format
+msgid ""
+"Please define product and product category property account on the related employee.\n"
+"Fill in the HR Settings tab of the employee form."
 msgstr ""
 
 #. module: project_timesheet
@@ -302,7 +302,7 @@ msgstr ""
 #: view:project.project:project_timesheet.project_invoice_form
 #, python-format
 msgid "Timesheets"
-msgstr ""
+msgstr "Partes de Horas"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
@@ -322,7 +322,7 @@ msgstr "Año"
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
-msgstr ""
+msgstr "No puede eliminar un asociado que está asignado a un proyecto, pero puede desmarcar la casilla 'Activo'."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:321

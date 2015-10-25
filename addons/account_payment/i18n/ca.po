@@ -3,14 +3,15 @@
 # * account_payment
 # 
 # Translators:
+# Carles Antolí <carlesantoli@hotmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-09-19 10:32+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-18 08:15+0000\n"
+"Last-Translator: Carles Antolí <carlesantoli@hotmail.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgid ""
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\"> Feu clic per crear una ordre de pagament. </p><p> Una ordre de pagament és una sol·licitud de pagament de la seva empresa per pagar una factura de un proveïdor o un reemborsament al client. </p>"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -43,7 +44,7 @@ msgstr "Compte del pagament a realitzar"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "Comptes / Pagaments"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -117,7 +118,7 @@ msgstr "Cancel·la"
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Cancel Payments"
-msgstr ""
+msgstr "Pagaments Cancel·lats"
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -161,7 +162,7 @@ msgstr "Moneda de la companyia"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Company Currency:"
-msgstr ""
+msgstr "Moneda de l'Empresa:"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
@@ -224,7 +225,7 @@ msgstr "Compte de destí"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "Compte Bancari Destinació"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -296,7 +297,7 @@ msgstr "Data d'execució"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Execution:"
-msgstr ""
+msgstr "Execució:"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -339,12 +340,12 @@ msgstr "Si no s'indica data de pagament, el banc processarà aquesta línia de p
 #. module: account_payment
 #: view:account.bank.statement:account_payment.view_bank_statement_form
 msgid "Import Lines"
-msgstr ""
+msgstr "Importar Línies"
 
 #. module: account_payment
 #: view:account.bank.statement:account_payment.view_bank_statement_form
 msgid "Import Payment Lines"
-msgstr ""
+msgstr "Importar Línies Pagament"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_form
@@ -394,7 +395,7 @@ msgstr "Apunts comptables"
 #: field:payment.line,write_uid:0 field:payment.mode,write_uid:0
 #: field:payment.order,write_uid:0 field:payment.order.create,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Actualitzat per última vegada per"
 
 #. module: account_payment
 #: field:account.payment.make.payment,write_date:0
@@ -402,7 +403,7 @@ msgstr ""
 #: field:payment.line,write_date:0 field:payment.mode,write_date:0
 #: field:payment.order,write_date:0 field:payment.order.create,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Actualitzat per última vegada el dia"
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -519,7 +520,7 @@ msgstr "Genera extracte de pagament"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Payment Type:"
-msgstr ""
+msgstr "Tipus de Pagament:"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -555,7 +556,7 @@ msgstr "Genera extracte:"
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "Data Preferida"
 
 #. module: account_payment
 #: field:payment.order,reference:0
@@ -634,7 +635,7 @@ msgstr "El missatge de pagament realitzat a comunicar."
 #: code:addons/account_payment/account_move_line.py:57
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "No hi ha una empresa definida en la línea d'entrada."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -652,7 +653,7 @@ msgstr "Total"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Total (Currency)"
-msgstr ""
+msgstr "Total (Moneda)"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
@@ -668,7 +669,7 @@ msgstr "Informació de transacció"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Used Account:"
-msgstr ""
+msgstr "Compte Utilitzat:"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -688,7 +689,7 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
+msgstr "Quan es fa una comanda l'estat és 'Borrador'.\nUn cop confirmat el banc de l'estat està en 'Confirmat'.\nUn cop l'ordre es paga l'estat és 'Fet''."
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -701,7 +702,7 @@ msgstr "Si"
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
+msgstr "No pots cancel·lar una factura quan ja s'ha importat en una ordre de pagament. Eliminar-la de l'ordre de pagament següent: %s."
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -719,4 +720,4 @@ msgstr "_Afegeix a l'ordre de pagament"
 #: view:payment.order.create:account_payment.view_create_payment_order
 #: view:payment.order.create:account_payment.view_create_payment_order_lines
 msgid "or"
-msgstr ""
+msgstr "o"

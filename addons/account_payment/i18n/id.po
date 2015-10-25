@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Gabriella Santoso <gabriella.santoso@gmail.com>, 2015
 # Mohamad Dadi Nurdiansah <dadi.nurdiansah@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:45+0000\n"
-"Last-Translator: Mohamad Dadi Nurdiansah <dadi.nurdiansah@gmail.com>\n"
+"PO-Revision-Date: 2015-10-20 07:16+0000\n"
+"Last-Translator: Gabriella Santoso <gabriella.santoso@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgid ""
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "Klik untuk membuat pesanan pembayaran.\nPesanan pembayaran adalah permintaan pembayaran dari perusahaan anda untuk membayar tagihan dari pemasok atau pengembalian uang ke pelanggan."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -44,7 +45,7 @@ msgstr "Akun untuk pembayaran"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "Akunting / Pembayaran"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -90,7 +91,7 @@ msgstr "Akun Bank"
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr ""
+msgstr "Akun Bank untuk Mode Pembayaran"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
@@ -118,7 +119,7 @@ msgstr "Batal"
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Cancel Payments"
-msgstr ""
+msgstr "Pembatalan Pembayaran"
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -162,7 +163,7 @@ msgstr "Mata uang perusahaan"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Company Currency:"
-msgstr ""
+msgstr "Mata Uang Perusahaan"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
@@ -225,7 +226,7 @@ msgstr "Akun Tujuan"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "Akun Bank Tujuan"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -292,12 +293,12 @@ msgstr "Gagal!"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Tanggal Pelaksanaan"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Execution:"
-msgstr ""
+msgstr "Pelaksanaan"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -520,7 +521,7 @@ msgstr ""
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Payment Type:"
-msgstr ""
+msgstr "Jenis pembayaran"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -556,7 +557,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "Tanggal yang Diinginkan"
 
 #. module: account_payment
 #: field:payment.order,reference:0
@@ -635,7 +636,7 @@ msgstr "Pesan pengganti dari Komunikasi."
 #: code:addons/account_payment/account_move_line.py:57
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "Tidak ada rekanan yang ditunjukkan di baris masukan."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -653,7 +654,7 @@ msgstr "Total"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Total (Currency)"
-msgstr ""
+msgstr "Total (Mata Uang)"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
@@ -669,7 +670,7 @@ msgstr "Informasi Transaksi"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Used Account:"
-msgstr ""
+msgstr "Akun yang digunakan"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -689,7 +690,7 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
+msgstr "Ketika sebuah pesan dibuat, statusnya adalah 'Draft'. \nJika bank sudah konfirmasi maka statusnya berubah menjadi 'Dikonfirmasi'.\nLalu setelah pesanan dibayar statusnya menjadi 'Selesai'"
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -702,7 +703,7 @@ msgstr "Ya"
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
+msgstr "Anda tidak bisa membatalkan nota yang sudah diproses ke pesanan pembayaran. Ubah nota dari pesanan pembayaran: %s."
 
 #. module: account_payment
 #: field:payment.line,name:0

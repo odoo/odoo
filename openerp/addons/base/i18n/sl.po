@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-08 14:50+0000\n"
-"PO-Revision-Date: 2015-10-03 13:58+0000\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-22 04:31+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -109,7 +109,7 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\n\nOverview:\n---------\n\n* Chart of Accounts and Taxes template for companies in Japan.\n* This probably does not cover all the necessary accounts for a company. You are expected to add/delete/modify accounts based on this template.\n\nNote:\n-----\n\n* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  You may not need to use these at all under normal circumstances.\n\n[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n\n    "
 
 #. module: base
 #: code:addons/base/res/res_config.py:379
@@ -196,7 +196,7 @@ msgid ""
 "    Will be removed from Saas-6 and will be put in procurement_jit\n"
 "    over there, where procurement_jit will depend on stock\n"
 "    "
-msgstr ""
+msgstr "\n    If you install this module, it can make sure that not only\n    the ship of pick-pack-ship will be created in batch, but\n    the pick and the pack also.  (which will dramatically improve performance)\n\n    Will be removed from Saas-6 and will be put in procurement_jit\n    over there, where procurement_jit will depend on stock\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -904,7 +904,7 @@ msgid ""
 "- Council Implementing Regulation (EU) No 1042/2013\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nEU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and electronic services\n=============================================================================================\n\nAs of January 1rst, 2015, telecommunications, broadcasting\nand electronic services sold within the European Union\nhave to be always taxed in the country where the customer\nbelongs. In order to simplify the application of this EU\ndirective, the Mini One Stop Shop (MOSS) registration scheme\nallows businesses to make a unique tax declaration.\n\nThis module makes it possible by helping with the creation\nof the required EU fiscal positions and taxes in order to\nautomatically apply and record the required taxes.\n\nThis module installs a wizard to help setup fiscal positions\nand taxes for selling electronic services inside EU.\n\nThe wizard lets you select:\n - the EU countries to which you are selling these\n   services\n - your national VAT tax for services, to be mapped\n   to the target country's tax\n - optionally: a template fiscal position, in order\n   to copy the account mapping. Should be your\n   existing B2C Intra-EU fiscal position. (defaults\n   to no account mapping)\n - optionally: an account to use for collecting the\n   tax amounts (defaults to the account used by your\n   national VAT tax for services)\n\nIt creates the corresponding fiscal positions and taxes,\nautomatically applicable for EU sales with a customer\nin the selected countries.\nThe wizard can be run again for adding more countries.\n\nThe wizard creates a separate Chart of Taxes for collecting the\nVAT amounts of the MOSS declaration, so extracting the MOSS\ndata should be easy.\nLook for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\nTaxes Report menu (Generic Accounting Report).\n\nReferences\n++++++++++\n- Directive 2008/8/EC\n- Council Implementing Regulation (EU) No 1042/2013\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
@@ -1791,6 +1791,17 @@ msgid ""
 "* In a module, so that administrators and users of OpenERP who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr "\nNov razširljiv uvoz datotek za OpenERP\n======================================\n\nPopolna predelava OpenERP sistema za uvoz datotek:\n\n* Strežniška stran, prejšnji sistem vsili večino logike odjemalcu,\n  kar podvaja napor (med odjemalci) in oteži\n  uporabo sistema za uvoz brez odjemalca (neposredni RPC ali\n  druge oblike avtomatizacije) ter tudi oteži pridobivanje znanja o\n  sistemu za uvoz/izvoz, saj je razširjen preko\n  3+ različnih projektov.\n\n* Bolj razširljiv način, da lahko uporabniki in partnerji gradijo svoj\n  lasten vmesnik za uvoz iz drugih formatov datotek (npr. OpenDocument\n  datoteke), ki jim ga bo enostavneje upravljati v sklopu njihovih delovnih procesov\n  ali iz njihovih virov proizvodnih podatkov.\n\n* V modulu, da lahko administratorji in uporabniki, ki ne potrebujejo\n  ali želijo spletnega uvoza, preprečijo dostop uporabnikom.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa
+msgid ""
+"\n"
+"Odoo Arabic localization for most arabic countries and Saudi Arabia.\n"
+"\n"
+"This initially includes chart of accounts of USA translated to Arabic.\n"
+"\n"
+"In future this module will include some payroll rules for ME .\n"
+msgstr "\nOdoo Arabic localization for most arabic countries and Saudi Arabia.\n\nThis initially includes chart of accounts of USA translated to Arabic.\n\nIn future this module will include some payroll rules for ME .\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_odoo_support
@@ -2723,7 +2734,7 @@ msgid ""
 "    * the 2015 chart of taxes is implemented to a large extent,\n"
 "      see the first sheet of tax.xls for details of coverage\n"
 "    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
-msgstr ""
+msgstr "\nThis is the base module to manage the accounting chart for Luxembourg.\n======================================================================\n\n    * the Luxembourg Official Chart of Accounts (law of June 2009 + 2015 chart and Taxes),\n    * the Tax Code Chart for Luxembourg\n    * the main taxes used in Luxembourg\n    * default fiscal position for local, intracom, extracom\n\nNotes:\n    * the 2015 chart of taxes is implemented to a large extent,\n      see the first sheet of tax.xls for details of coverage\n    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -3452,7 +3463,7 @@ msgid ""
 "The ability to extract the correctly represented local accounts from IBAN accounts \n"
 "with a single statement.\n"
 "    "
-msgstr ""
+msgstr "\nThis module installs the base for IBAN (International Bank Account Number) bank accounts and checks for it's validity.\n======================================================================================================================\n\nThe ability to extract the correctly represented local accounts from IBAN accounts \nwith a single statement.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_multi_company
@@ -3463,7 +3474,7 @@ msgid ""
 "\n"
 "This module is the base module for other multi-company modules.\n"
 "    "
-msgstr ""
+msgstr "\nThis module is for managing a multicompany environment.\n=======================================================\n\nThis module is the base module for other multi-company modules.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_analysis
@@ -3473,7 +3484,7 @@ msgid ""
 "===================================================================================================================\n"
 "\n"
 "Adds menu to show relevant information to each manager.You can also view the report of account analytic summary user-wise as well as month-wise.\n"
-msgstr ""
+msgstr "\nThis module is for modifying account analytic view to show important data to project manager of services companies.\n===================================================================================================================\n\nAdds menu to show relevant information to each manager.You can also view the report of account analytic summary user-wise as well as month-wise.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic_contract_hr_expense
@@ -3481,7 +3492,7 @@ msgid ""
 "\n"
 "This module is for modifying account analytic view to show some data related to the hr_expense module.\n"
 "======================================================================================================\n"
-msgstr ""
+msgstr "\nThis module is for modifying account analytic view to show some data related to the hr_expense module.\n======================================================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_association
@@ -3493,7 +3504,7 @@ msgid ""
 "It installs the profile for associations to manage events, registrations, memberships, \n"
 "membership products (schemes).\n"
 "    "
-msgstr ""
+msgstr "\nThis module is to configure modules related to an association.\n==============================================================\n\nIt installs the profile for associations to manage events, registrations, memberships, \nmembership products (schemes).\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_report_designer
@@ -3504,7 +3515,7 @@ msgid ""
 "\n"
 "This module adds wizards to Import/Export .sxw report that you can modify in OpenOffice. \n"
 "Once you have modified it you can upload the report using the same wizard.\n"
-msgstr ""
+msgstr "\nThis module is used along with OpenERP OpenOffice Plugin.\n=========================================================\n\nThis module adds wizards to Import/Export .sxw report that you can modify in OpenOffice. \nOnce you have modified it you can upload the report using the same wizard.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_rib
@@ -3534,7 +3545,7 @@ msgid ""
 "are now progressively adopting the international IBAN format instead of the RIB format.\n"
 "The RIB and IBAN codes for a single account can be entered by recording two Bank\n"
 "Accounts in OpenERP: the first with the type 'RIB', the second with the type 'IBAN'. \n"
-msgstr ""
+msgstr "\nThis module lets users enter the banking details of Partners in the RIB format (French standard for bank accounts details).\n===========================================================================================================================\n\nRIB Bank Accounts can be entered in the \"Accounting\" tab of the Partner form by specifying the account type \"RIB\". \n\nThe four standard RIB fields will then become mandatory:\n--------------------------------------------------------    \n    - Bank Code\n    - Office Code\n    - Account number\n    - RIB key\n    \nAs a safety measure, OpenERP will check the RIB key whenever a RIB is saved, and\nwill refuse to record the data if the key is incorrect. Please bear in mind that\nthis can only happen when the user presses the 'save' button, for example on the\nPartner Form. Since each bank account may relate to a Bank, users may enter the\nRIB Bank Code in the Bank form - it will the pre-fill the Bank Code on the RIB\nwhen they select the Bank. To make this easier, this module will also let users\nfind Banks using their RIB code.\n\nThe module base_iban can be a useful addition to this module, because French banks\nare now progressively adopting the international IBAN format instead of the RIB format.\nThe RIB and IBAN codes for a single account can be entered by recording two Bank\nAccounts in OpenERP: the first with the type 'RIB', the second with the type 'IBAN'. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_visible_discount
@@ -3552,7 +3563,7 @@ msgid ""
 "    If the check box is unchecked, we will have on Sale Order and Invoice lines:\n"
 "    Unit price=225, Discount=0,00, Net price=225.\n"
 "    "
-msgstr ""
+msgstr "\nThis module lets you calculate discounts on Sale Order lines and Invoice lines base on the partner's pricelist.\n===============================================================================================================\n\nTo this end, a new check box named 'Visible Discount' is added to the pricelist form.\n\n**Example:**\n    For the product PC1 and the partner \"Asustek\": if listprice=450, and the price\n    calculated using Asustek's pricelist is 225. If the check box is checked, we\n    will have on the sale order line: Unit price=450, Discount=50,00, Net price=225.\n    If the check box is unchecked, we will have on Sale Order and Invoice lines:\n    Unit price=225, Discount=0,00, Net price=225.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sequence
@@ -3571,7 +3582,7 @@ msgid ""
 "    * Increment Number\n"
 "    * Number Padding\n"
 "    "
-msgstr ""
+msgstr "\nThis module maintains internal sequence number for accounting entries.\n======================================================================\n\nAllows you to configure the accounting sequences to be maintained.\n\nYou can customize the following attributes of the sequence:\n-----------------------------------------------------------\n    * Prefix\n    * Suffix\n    * Next Number\n    * Increment Number\n    * Number Padding\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp
@@ -3583,7 +3594,7 @@ msgid ""
 "It is basically used when we want to keep track of production orders generated\n"
 "from sales order. It adds sales name and sales Reference on production order.\n"
 "    "
-msgstr ""
+msgstr "\nThis module provides facility to the user to install mrp and sales modulesat a time.\n====================================================================================\n\nIt is basically used when we want to keep track of production orders generated\nfrom sales order. It adds sales name and sales Reference on production order.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_marketing_campaign
@@ -3621,7 +3632,7 @@ msgid ""
 "This module provides the standard Accounting Chart for Austria which is based on the Template from BMF.gv.at.\n"
 "============================================================================================================= \n"
 "Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.\n"
-msgstr ""
+msgstr "\nThis module provides the standard Accounting Chart for Austria which is based on the Template from BMF.gv.at.\n============================================================================================================= \nPlease keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_anglo_saxon
@@ -3642,7 +3653,7 @@ msgid ""
 "debtor or creditor account. Secondly, price differences between actual \n"
 "purchase price and fixed product standard price are booked on a separate \n"
 "account."
-msgstr ""
+msgstr "\nThis module supports the Anglo-Saxon accounting methodology by changing the accounting logic with stock transactions.\n=====================================================================================================================\n\nThe difference between the Anglo-Saxon accounting countries and the Rhine \n(or also called Continental accounting) countries is the moment of taking \nthe Cost of Goods Sold versus Cost of Sales. Anglo-Saxons accounting does \ntake the cost when sales invoice is created, Continental accounting will \ntake the cost at the moment the goods are shipped.\n\nThis module will add this functionality by using a interim account, to \nstore the value of shipped goods and will contra book this interim \naccount when the invoice is created to transfer this amount to the \ndebtor or creditor account. Secondly, price differences between actual \npurchase price and fixed product standard price are booked on a separate \naccount."
 
 #. module: base
 #: model:ir.module.module,description:base.module_note_pad
@@ -3653,7 +3664,7 @@ msgid ""
 "\n"
 "Use for update your text memo in real time with the following user that you invite.\n"
 "\n"
-msgstr ""
+msgstr "\nThis module update memos inside OpenERP for using an external pad\n=================================================================\n\nUse for update your text memo in real time with the following user that you invite.\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban_gauge
@@ -3679,7 +3690,7 @@ msgid ""
 "\n"
 "It allows the manager to quickly check the issues, assign them and decide on their status quickly as they evolve.\n"
 "    "
-msgstr ""
+msgstr "\nTrack Issues/Bugs Management for Projects\n=========================================\nThis application allows you to manage the issues you might face in a project like bugs in a system, client complaints or material breakdowns. \n\nIt allows the manager to quickly check the issues, assign them and decide on their status quickly as they evolve.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -3716,7 +3727,7 @@ msgid ""
 "* Tasks Analysis\n"
 "* Cumulative Flow\n"
 "    "
-msgstr ""
+msgstr "\nTrack multi-level projects, tasks, work done on tasks\n=====================================================\n\nThis application allows an operational project management system to organize your activities into tasks and plan the work you need to get the tasks completed.\n\nGantt diagrams will give you a graphical representation of your project plans, as well as resources availability and workload.\n\nDashboard / Reports for Project Management will include:\n--------------------------------------------------------\n* My Tasks\n* Open Tasks\n* Tasks Analysis\n* Cumulative Flow\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -3729,7 +3740,7 @@ msgid ""
 "    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
 "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
 "    "
-msgstr ""
+msgstr "\nTürkiye için Tek düzen hesap planı şablonu OpenERP Modülü.\n==========================================================\n\nBu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
@@ -3799,7 +3810,7 @@ msgid ""
 "such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,\n"
 "only the country code will be validated.\n"
 "    "
-msgstr ""
+msgstr "\nVAT validation for Partner's VAT numbers.\n=========================================\n\nAfter installing this module, values entered in the VAT field of Partners will\nbe validated for all supported countries. The country is inferred from the\n2-letter country code that prefixes the VAT number, e.g. ``BE0477472701``\nwill be validated using the Belgian rules.\n\nThere are two different levels of VAT number validation:\n--------------------------------------------------------\n    * By default, a simple off-line check is performed using the known validation\n      rules for the country, usually a simple check digit. This is quick and \n      always available, but allows numbers that are perhaps not truly allocated,\n      or not valid anymore.\n      \n    * When the \"VAT VIES Check\" option is enabled (in the configuration of the user's\n      Company), VAT numbers will be instead submitted to the online EU VIES\n      database, which will truly verify that the number is valid and currently\n      allocated to a EU company. This is a little bit slower than the simple\n      off-line check, requires an Internet connection, and may not be available\n      all the time. If the service is not available or does not support the\n      requested country (e.g. for non-EU countries), a simple check will be performed\n      instead.\n\nSupported countries currently include EU countries, and a few non-EU countries\nsuch as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,\nonly the country code will be validated.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_fleet
@@ -3867,7 +3878,7 @@ msgid ""
 "\n"
 "Works with Worldline keys version 2.0, contains implementation of\n"
 "payments acquirer using Worldline SIPS."
-msgstr ""
+msgstr "\nWorldline SIPS Payment Acquirer for online payments\n\nWorks with Worldline keys version 2.0, contains implementation of\npayments acquirer using Worldline SIPS."
 
 #. module: base
 #: code:addons/base/res/res_company.py:68
@@ -4711,7 +4722,7 @@ msgid ""
 "         login once with a valid LDAP user, let OpenERP create a blank local\n"
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
-msgstr ""
+msgstr "Adds support for authentication by LDAP server.\n===============================================\nThis module allows users to login with their LDAP username and password, and\nwill automatically create OpenERP users for them on the fly.\n\n**Note:** This module only work on servers who have Python's ``ldap`` module installed.\n\nConfiguration:\n--------------\nAfter installing this module, you need to configure the LDAP parameters in the\nConfiguration tab of the Company details. Different companies may have different\nLDAP servers, as long as they have unique usernames (usernames need to be unique\nin OpenERP, even across multiple companies).\n\nAnonymous LDAP binding is also supported (for LDAP servers that allow it), by\nsimply keeping the LDAP user and password empty in the LDAP configuration.\nThis does not allow anonymous authentication for users, it is only for the master\nLDAP account that is used to verify if a user exists before attempting to\nauthenticate it.\n\nSecuring the connection with STARTTLS is available for LDAP servers supporting\nit, by enabling the TLS option in the LDAP configuration.\n\nFor further options configuring the LDAP settings, refer to the ldap.conf\nmanpage: manpage:`ldap.conf(5)`.\n\nSecurity Considerations:\n------------------------\nUsers' LDAP passwords are never stored in the OpenERP database, the LDAP server\nis queried whenever a user needs to be authenticated. No duplication of the\npassword occurs, and passwords are managed in one place only.\n\nOpenERP does not manage password changes in the LDAP, so any change of password\nshould be conducted by other means in the LDAP directory directly (for LDAP users).\n\nIt is also possible to have local OpenERP users in the database along with\nLDAP-authenticated users (the Administrator account is one obvious example).\n\nHere is how it works:\n---------------------\n    * The system first attempts to authenticate users against the local OpenERP\n      database;\n    * if this authentication fails (for example because the user has no local\n      password), the system then attempts to authenticate against LDAP;\n\nAs LDAP users have blank passwords by default in the local OpenERP database\n(which means no access), the first step always fails and the LDAP server is\nqueried to do the authentication.\n\nEnabling STARTTLS ensures that the authentication query to the LDAP server is\nencrypted.\n\nUser Template:\n--------------\nIn the LDAP configuration on the Company form, it is possible to select a *User\nTemplate*. If set, this user will be used as template to create the local users\nwhenever someone authenticates for the first time via LDAP authentication. This\nallows pre-setting the default groups and menus of the first-time users.\n\n**Warning:** if you set a password for the user template, this password will be\n         assigned as local password for each new LDAP user, effectively setting\n         a *master password* for these users (until manually changed). You\n         usually do not want this. One easy way to setup a template user is to\n         login once with a valid LDAP user, let OpenERP create a blank local\n         user with the same login (and a blank password), then rename this new\n         user to a username that does not exist in LDAP, and setup its groups\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -4766,6 +4777,11 @@ msgstr "Afganistan"
 #: selection:res.currency,position:0
 msgid "After Amount"
 msgstr "Ostali znesek"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_aftersale
+msgid "After-Sale Services"
+msgstr "Po-prodajne storitve"
 
 #. module: base
 #: model:res.country,name:base.al
@@ -5008,6 +5024,8 @@ msgstr "Upravljanje sredstev"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_association
+#: model:ir.ui.menu,name:base.menu_association
+#: model:ir.ui.menu,name:base.menu_report_association
 msgid "Association"
 msgstr "Združenje"
 
@@ -5052,6 +5070,7 @@ msgstr "Priponke"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
+#: model:res.groups,name:base.group_hr_attendance
 msgid "Attendances"
 msgstr "Prisotnosti"
 
@@ -5251,6 +5270,11 @@ msgstr "Polja tipov bank"
 #: view:res.bank:base.view_res_bank_tree field:res.partner,bank_ids:0
 msgid "Banks"
 msgstr "Banke"
+
+#. module: base
+#: help:res.partner,ean13:0 help:res.users,ean13:0
+msgid "BarCode"
+msgstr "Črtna koda"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -6173,6 +6197,10 @@ msgstr "Koraki nastavitvenega čarovnika"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
 #: model:ir.ui.menu,name:base.menu_config
+#: model:ir.ui.menu,name:base.menu_definitions
+#: model:ir.ui.menu,name:base.menu_event_config
+#: model:ir.ui.menu,name:base.menu_marketing_config_association
+#: model:ir.ui.menu,name:base.menu_marketing_config_root
 #: model:ir.ui.menu,name:base.menu_reporting_config
 #: view:res.company:base.view_company_form
 #: view:res.config:base.res_config_view_base
@@ -6445,6 +6473,7 @@ msgstr "Ustvarjanje dostopnih pravic"
 
 #. module: base
 #: field:ir.logging,create_date:0 field:ir.ui.view,create_date:0
+#: field:res.partner,create_date:0 field:res.users,create_date:0
 msgid "Create Date"
 msgstr "Datum nastanka"
 
@@ -6614,13 +6643,11 @@ msgstr "Ustvaril"
 #: field:res.country.group,create_date:0 field:res.country.state,create_date:0
 #: field:res.currency,create_date:0 field:res.currency.rate,create_date:0
 #: field:res.font,create_date:0 field:res.groups,create_date:0
-#: field:res.lang,create_date:0 field:res.partner,create_date:0
-#: field:res.partner.bank,create_date:0
+#: field:res.lang,create_date:0 field:res.partner.bank,create_date:0
 #: field:res.partner.bank.type,create_date:0
 #: field:res.partner.bank.type.field,create_date:0
 #: field:res.partner.category,create_date:0
 #: field:res.partner.title,create_date:0 field:res.request.link,create_date:0
-#: field:res.users,create_date:0
 #: field:wizard.ir.model.menu.create,create_date:0
 #: field:workflow,create_date:0 field:workflow.activity,create_date:0
 #: field:workflow.transition,create_date:0
@@ -6902,6 +6929,11 @@ msgid "Date Format"
 msgstr "Oblika datuma"
 
 #. module: base
+#: field:ir.attachment,write_date:0
+msgid "Date Modified"
+msgstr "Datum spremembe"
+
+#. module: base
 #: selection:ir.property,type:0
 msgid "DateTime"
 msgstr "Datum/Čas"
@@ -6935,6 +6967,19 @@ msgstr "Dan: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Dni"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr "Spoštovani.\n\nIz naših poslovnih knjig je razvidno, da imate zapadle obveznosti do našega podjetja. Prosimo, da svoj dolg takoj poravnate. Če ste svoj dolg medtem že poravnali, lahko ta opomin štejete za brezpredmeten.\n\nZa sodelovanje se vam v naprej zahvaljujemo.\nLep pozdrav,"
 
 #. module: base
 #: field:ir.mail_server,smtp_debug:0
@@ -7132,6 +7177,11 @@ msgid "Display"
 msgstr "Prikaz"
 
 #. module: base
+#: model:res.groups,name:base.group_website_publisher
+msgid "Display Editor Bar on Website"
+msgstr "Prikaz urejevalne vrstice na spletni strani"
+
+#. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Display an option on related documents to run this sever action"
 msgstr "Prikaz opcije na povezanih dokumentih za zagon tega strežniškega dejanja"
@@ -7177,6 +7227,11 @@ msgstr "Distributer"
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr "Džibuti"
+
+#. module: base
+#: model:res.groups,name:base.group_mono_salesteams
+msgid "Do Not Use Sales Teams"
+msgstr "Ne uporabljaj prodajnih ekip"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
@@ -7285,7 +7340,7 @@ msgid "Dynamic expression builder"
 msgstr "Gradnik dinamičnih izrazov"
 
 #. module: base
-#: field:res.partner,ean13:0
+#: field:res.partner,ean13:0 field:res.users,ean13:0
 msgid "EAN13"
 msgstr "EAN13"
 
@@ -7297,7 +7352,7 @@ msgstr "Strojni gonilnik ESC/POS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_service
 msgid "EU Mini One Stop Shop (MOSS)"
-msgstr ""
+msgstr "EU Mini One Stop Shop (MOSS)"
 
 #. module: base
 #: sql_constraint:ir.model:0
@@ -8919,6 +8974,11 @@ msgid "Implementation"
 msgstr "Izvedba"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_import_crm
+msgid "Import & Synchronize"
+msgstr "Uvoz in sinhronizacija"
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
 msgid "Import / Export"
 msgstr "Uvoz / Izvoz"
@@ -9308,6 +9368,11 @@ msgid "Invoice on Timesheets"
 msgstr "Obračun po časovnicah"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_invoiced
+msgid "Invoicing"
+msgstr "Obračun"
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
 msgid "Invoicing & Payments"
 msgstr "Izdaja računov in plačila"
@@ -9598,6 +9663,11 @@ msgid "Last Modification Date"
 msgstr "Datum zadnje spremembe"
 
 #. module: base
+#: field:ir.attachment,write_uid:0
+msgid "Last Modification User"
+msgstr "Zadnji spreminjal"
+
+#. module: base
 #: field:base.language.export,write_uid:0
 #: field:base.language.import,write_uid:0
 #: field:base.language.install,write_uid:0
@@ -9752,6 +9822,11 @@ msgstr "Launchpad"
 #: model:ir.module.module,shortdesc:base.module_crm_project_issue
 msgid "Lead to Issue"
 msgstr "Indic v zadevo"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_lead
+msgid "Leads & Opportunities"
+msgstr "Indici in priložnosti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
@@ -10079,6 +10154,16 @@ msgid "Malta"
 msgstr "Malta"
 
 #. module: base
+#: model:res.groups,name:base.group_multi_salesteams
+msgid "Manage Sales Teams"
+msgstr "Upravljanje prodajnih ekip"
+
+#. module: base
+#: model:res.groups,name:base.group_website_designer
+msgid "Manage Website and qWeb view"
+msgstr "Upravljanje spletne strani in qWeb prikaza"
+
+#. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
 msgid ""
 "Manage and customize the items available and displayed in your Odoo system "
@@ -10111,7 +10196,9 @@ msgid ""
 msgstr "Urejanje nazivov partnerjev, ki jih želite imeti dostopne v vašem sistemu. Naziv partnerjev je pravni status podjetja: d.o.o., d.d., itd."
 
 #. module: base
+#: model:res.groups,name:base.group_hr_manager
 #: model:res.groups,name:base.group_sale_manager
+#: model:res.groups,name:base.group_tool_manager
 msgid "Manager"
 msgstr "Upravitelj"
 
@@ -10135,6 +10222,8 @@ msgstr "Proizvajalec"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
+#: model:ir.ui.menu,name:base.menu_mrp_config
+#: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
 msgstr "Proizvodnja"
 
@@ -10174,6 +10263,8 @@ msgstr "Marža v prodajnih nalogih"
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
 #: model:ir.module.module,shortdesc:base.module_marketing
+#: model:ir.ui.menu,name:base.marketing_menu
+#: model:ir.ui.menu,name:base.marketing_reporting_menu
 msgid "Marketing"
 msgstr "Marketing"
 
@@ -11058,6 +11149,11 @@ msgid "Office Supplies"
 msgstr "Pisarniško oskrbovanje"
 
 #. module: base
+#: model:res.groups,name:base.group_hr_user
+msgid "Officer"
+msgstr "Uradnik"
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_ogone
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Ogone Payment Acquirer"
@@ -11225,6 +11321,11 @@ msgstr "Operacija preklicana"
 #, python-format
 msgid "Operation Forbidden"
 msgstr "Operacija ni dovoljena"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_opportunity
+msgid "Opportunities"
+msgstr "Priložnosti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
@@ -11469,6 +11570,11 @@ msgid "Partner Assignation & Geolocation"
 msgstr "Dodelitev in geografska lokacija partnerja"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_partner_mass_mail
+msgid "Partner Mass Mailing"
+msgstr "Masovno pošiljanje pošte partnerju"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner Module for Website"
 msgstr "Modul Partner za spletno stran"
@@ -11571,6 +11677,11 @@ msgstr "Prejemnik plačila: Paypal implementacija"
 #: model:ir.module.module,summary:base.module_payment_transfer
 msgid "Payment Acquirer: Transfer Implementation"
 msgstr "Prejemnik plačila: Transfer implementacija"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_sales_followup
+msgid "Payment Follow-up"
+msgstr "Opomini"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_followup
@@ -11900,6 +12011,11 @@ msgid "Product extension to track sales and purchases"
 msgstr "Razširitev proizvoda na sledenje prodaje in nabave"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_product
+msgid "Products"
+msgstr "Proizvodi"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
 msgstr "Proizvodi in ceniki"
@@ -11921,6 +12037,9 @@ msgstr "Profesor"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_project_management
+#: model:ir.ui.menu,name:base.menu_main_pm
+#: model:ir.ui.menu,name:base.menu_project_config
+#: model:ir.ui.menu,name:base.menu_project_report
 msgid "Project"
 msgstr "Projekt"
 
@@ -12013,6 +12132,11 @@ msgid "Puerto Rico"
 msgstr "Portoriko"
 
 #. module: base
+#: model:ir.ui.menu,name:base.next_id_73
+msgid "Purchase"
+msgstr "Nabava"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_analytic_plans
 msgid "Purchase Analytic Plans"
 msgstr "Analitični nabavni plani"
@@ -12034,6 +12158,7 @@ msgstr "Nabavna povpraševanja"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_purchase_management
+#: model:ir.ui.menu,name:base.menu_purchase_root
 msgid "Purchases"
 msgstr "Nabave"
 
@@ -12203,6 +12328,11 @@ msgstr "Zapis ne obstaja ali pa je bil izbrisan."
 #: view:ir.rule:base.view_rule_form view:ir.rule:base.view_rule_tree
 msgid "Record rules"
 msgstr "Pravila zapisov"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_case_job_req_main
+msgid "Recruitment"
+msgstr "Kadrovanje"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
@@ -12648,7 +12778,9 @@ msgstr "Prodajna postavitev, prelom strani, vmesne vsote, ločilniki, poročilo"
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_management
 #: model:ir.ui.menu,name:base.menu_base_partner
-#: model:ir.ui.menu,name:base.menu_sales
+#: model:ir.ui.menu,name:base.menu_sale_config
+#: model:ir.ui.menu,name:base.menu_sale_config_sales
+#: model:ir.ui.menu,name:base.menu_sales model:ir.ui.menu,name:base.next_id_64
 msgid "Sales"
 msgstr "Prodaja"
 
@@ -12706,6 +12838,11 @@ msgstr "San Marino"
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
 msgstr "Saudska Arabija"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa
+msgid "Saudi Arabia - Accounting"
+msgstr "Saudska Arabija - knjigovodstvo"
 
 #. module: base
 #: view:res.users:base.view_users_form_simple_modif
@@ -12791,6 +12928,16 @@ msgstr "Varnost"
 #: view:ir.mail_server:base.ir_mail_server_form
 msgid "Security and Authentication"
 msgstr "Varnost in overitev"
+
+#. module: base
+#: model:res.groups,name:base.group_sale_salesman
+msgid "See Own Leads"
+msgstr "Vidi lastne indice"
+
+#. module: base
+#: model:res.groups,name:base.group_sale_salesman_all_leads
+msgid "See all Leads"
+msgstr "Vidi vse indice"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:306
@@ -12946,7 +13093,7 @@ msgstr "Polje številčenja"
 #: code:addons/models.py:418
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr ""
+msgstr "Serialization field `%s` not found for sparse field `%s`!"
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -13384,6 +13531,11 @@ msgid "Sri Lanka"
 msgstr "Šrilanka"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_project_config_project
+msgid "Stages"
+msgstr "Stopnje"
+
+#. module: base
 #: selection:ir.sequence,implementation:0
 msgid "Standard"
 msgstr "Običajno"
@@ -13535,6 +13687,7 @@ msgstr "Dobavitelji"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
+#: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: view:res.partner:base.view_res_partner_filter
 msgid "Suppliers"
 msgstr "Dobavitelji"
@@ -13558,6 +13711,16 @@ msgstr "Surinam"
 #: model:ir.module.module,shortdesc:base.module_survey
 msgid "Survey"
 msgstr "Vprašalnik"
+
+#. module: base
+#: model:res.groups,name:base.group_survey_manager
+msgid "Survey / Manager"
+msgstr "Anketa / Upravitelj"
+
+#. module: base
+#: model:res.groups,name:base.group_survey_user
+msgid "Survey / User"
+msgstr "Anketa / Uporabnik"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey_crm
@@ -13770,6 +13933,7 @@ msgstr "Tehnični naziv"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
+#: view:res.users:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Tehnične nastavitve"
 
@@ -13777,6 +13941,11 @@ msgstr "Tehnične nastavitve"
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
 msgstr "Tehnična navodila"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_17
+msgid "Telecom sector"
+msgstr "Telekomunikacijski sektor"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -13950,7 +14119,7 @@ msgstr "Ciljna dejavnost"
 msgid ""
 "The field on the current object that links to the target object record (must"
 " be a many2one, or an integer field with the record ID)"
-msgstr ""
+msgstr "The field on the current object that links to the target object record (must be a many2one, or an integer field with the record ID)"
 
 #. module: base
 #: help:res.country,name:0
@@ -14047,7 +14216,7 @@ msgid ""
 "The optional domain to restrict possible values for relationship fields, "
 "specified as a Python expression defining a list of triplets. For example: "
 "[('color','=','red')]"
-msgstr ""
+msgstr "The optional domain to restrict possible values for relationship fields, specified as a Python expression defining a list of triplets. For example: [('color','=','red')]"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:92
@@ -14069,7 +14238,7 @@ msgstr "Partnerjev časovni pas za prikazovanje ustreznih časovnih in datumskih
 msgid ""
 "The path to the main report file (depending on Report Type) or NULL if the "
 "content is in another field"
-msgstr ""
+msgstr "The path to the main report file (depending on Report Type) or NULL if the content is in another field"
 
 #. module: base
 #: help:ir.actions.report.xml,report_rml:0
@@ -14083,7 +14252,7 @@ msgstr "Pot do glavne datoteke/kontrolnika poročila (glede na tip poročila) al
 msgid ""
 "The priority of the job, as an integer: 0 means higher priority, 10 means "
 "lower priority."
-msgstr ""
+msgstr "The priority of the job, as an integer: 0 means higher priority, 10 means lower priority."
 
 #. module: base
 #: help:res.currency.rate,rate:0
@@ -14122,7 +14291,7 @@ msgstr "Zahtevana operacija ne more biti končana zaradi varnostnih omejitev. Pr
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
 "%s, which is not a valid SQL table name."
-msgstr ""
+msgstr "The second argument of the many2many field %s must be a SQL table !You used %s, which is not a valid SQL table name."
 
 #. module: base
 #: view:base.language.install:base.view_base_language_install
@@ -14159,7 +14328,7 @@ msgstr "Tehnični naziv modela, ki mu to polje pripada"
 msgid ""
 "The user this filter is private to. When left empty the filter is public and"
 " available to all users."
-msgstr ""
+msgstr "The user this filter is private to. When left empty the filter is public and available to all users."
 
 #. module: base
 #: code:addons/models.py:6079
@@ -14173,7 +14342,7 @@ msgstr "Vrednost za polje '%s' že obstaja."
 msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
 "change it before setting a new default"
-msgstr ""
+msgstr "There is already a shared filter set as default for %(model)s, delete or change it before setting a new default"
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -14216,7 +14385,7 @@ msgstr "To polje se uporablja za nastavljanje/pridobivanje uporabnikovih jezikov
 msgid ""
 "This field specifies whether the model is transient or not (i.e. if records "
 "are automatically deleted from the database or not)"
-msgstr ""
+msgstr "This field specifies whether the model is transient or not (i.e. if records are automatically deleted from the database or not)"
 
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
@@ -14230,7 +14399,7 @@ msgid ""
 "enabled when displaying the result of an action, federating view mode, views"
 " and reference view. The result is returned as an ordered list of pairs "
 "(view_id,view_mode)."
-msgstr ""
+msgstr "This function field computes the ordered list of views that should be enabled when displaying the result of an action, federating view mode, views and reference view. The result is returned as an ordered list of pairs (view_id,view_mode)."
 
 #. module: base
 #: help:ir.actions.report.xml,attachment:0
@@ -14238,7 +14407,7 @@ msgid ""
 "This is the filename of the attachment used to store the printing result. "
 "Keep empty to not save the printed reports. You can use a python expression "
 "with the object and time variables."
-msgstr ""
+msgstr "This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -14890,7 +15059,8 @@ msgstr "Uporabljeno za samodejno izbiro pravega naslova, glede na kontekst v pro
 #: field:change.password.user,user_id:0 view:ir.cron:base.ir_cron_view_search
 #: field:ir.cron,user_id:0 view:ir.filters:base.ir_filters_view_search
 #: field:ir.filters,user_id:0 field:ir.ui.view.custom,user_id:0
-#: field:ir.values,user_id:0 model:res.groups,name:base.group_sale_salesman
+#: field:ir.values,user_id:0 model:res.groups,name:base.group_document_user
+#: model:res.groups,name:base.group_tool_user
 #: view:res.users:base.view_users_search field:workflow.instance,uid:0
 msgid "User"
 msgstr "Uporabnik"
@@ -15184,6 +15354,12 @@ msgstr "Opozorilna sporočila in opomniki"
 #, python-format
 msgid "Warning!"
 msgstr "Opozorilo!"
+
+#. module: base
+#: code:addons/models.py:5803 code:addons/models.py:5856
+#, python-format
+msgid "Warnings"
+msgstr "Opozorila"
 
 #. module: base
 #: view:base.module.upgrade:base.view_base_module_upgrade_install
@@ -15485,7 +15661,7 @@ msgstr "Delovne postavke"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
 msgid "Worldline SIPS Payment Acquiring  for online payments"
-msgstr ""
+msgstr "Worldline SIPS Payment Acquiring  for online payments"
 
 #. module: base
 #: view:ir.model.access:base.ir_access_view_search
@@ -15590,7 +15766,7 @@ msgid ""
 "%(country_name)s: the name of the country\n"
 "            \n"
 "%(country_code)s: the code of the country"
-msgstr ""
+msgstr "You can state here the usual format to use for the addresses belonging to this country.\n\nYou can use the python-style string patern with all the field of the address (for example, use '%(street)s' to display the field 'street') plus\n            \n%(state_name)s: the name of the state\n            \n%(state_code)s: the code of the state\n            \n%(country_name)s: the name of the country\n            \n%(country_code)s: the code of the country"
 
 #. module: base
 #: constraint:res.partner:0
@@ -15654,7 +15830,7 @@ msgid ""
 "Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
 "instead.If SSL is needed, an upgrade to Python 2.6 on the server-side should"
 " do the trick."
-msgstr ""
+msgstr "Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead.If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:511
@@ -16034,6 +16210,44 @@ msgstr "test-workflow"
 #: model:ir.module.module,shortdesc:base.module_test_convert
 msgid "test_convert"
 msgstr "test_convert"
+
+#. module: base
+#: model:res.groups,comment:base.group_hr_user
+msgid "the user will be able to approve document created by employees."
+msgstr "uporabnik bo lahko potrjeval dokumente zaposlenih."
+
+#. module: base
+#: model:res.groups,comment:base.group_user
+msgid ""
+"the user will be able to manage his own human resources stuff (leave "
+"request, timesheets, ...), if he is linked to an employee in the system."
+msgstr "uporabnik bo lahko videl svojo kadrovsko dokumentacijo (zahtevki po odsotnosti, časovnice, ...), če je v sistemu povezan z delojemalcem"
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr "uporabnik bo imel dostop do vseh zapisov prodajne aplikacije."
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr "uporabnik bo imel dostop do svojih podatkov v sklopu prodajne aplikacije."
+
+#. module: base
+#: model:res.groups,comment:base.group_hr_manager
+msgid ""
+"the user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr "uporabnik bo imel dostop do kadrovskih nastavitev in statističnih poročil"
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
+msgstr "uporabnik bo imel dostop do nastavitev prodaje in statističnih poročil"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form

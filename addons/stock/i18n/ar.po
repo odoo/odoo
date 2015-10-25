@@ -6,13 +6,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # hoxhe aits <hoxhe0@gmail.com>, 2015
 # Mustafa Rawi <mustafa@cubexco.com>, 2015
+# safi2266 <safi2266@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-09-08 10:55+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
+"PO-Revision-Date: 2015-10-06 05:31+0000\n"
+"Last-Translator: safi2266 <safi2266@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,19 +51,19 @@ msgstr ""
 #: code:addons/stock/stock.py:1662
 #, python-format
 msgid " (%s reserved)"
-msgstr ""
+msgstr " (%s محفوظة)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid " (reserved)"
-msgstr ""
+msgstr " (محفوظة)"
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
 #, python-format
 msgid " MTO"
-msgstr ""
+msgstr "حسب الطلب"
 
 #. module: stock
 #: code:addons/stock/product.py:179 code:addons/stock/product.py:335
@@ -103,7 +104,7 @@ msgstr "مسلسل الاستلام"
 #. module: stock
 #: field:stock.inventory,move_ids_exist:0
 msgid " Stock Move Exists?"
-msgstr ""
+msgstr "هل حركة المخزون موجودة ؟"
 
 #. module: stock
 #: code:addons/stock/stock.py:2444
@@ -115,13 +116,13 @@ msgstr "%s %s %sتم<b>نقلها الى</b>الملغى"
 #: code:addons/stock/stock.py:2930
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr ""
+msgstr "%s: تزويد المنتج من %s"
 
 #. module: stock
 #: code:addons/stock/res_config.py:43
 #, python-format
 msgid "%s: Transit Location"
-msgstr ""
+msgstr "%s: موقع العبور"
 
 #. module: stock
 #: help:stock.move,state:0
@@ -358,7 +359,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2556
 #, python-format
 msgid "A Pack"
-msgstr ""
+msgstr "حزمة"
 
 #. module: stock
 #: field:report.stock.lines.date,active:0 field:stock.incoterms,active:0
@@ -403,7 +404,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Advanced: Apply Procurement Rules"
-msgstr ""
+msgstr "متقدم: تطبيق قواعد التحصيل"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_form
@@ -433,7 +434,7 @@ msgstr "جميع حركات الإعادة"
 #: code:addons/stock/procurement.py:241
 #, python-format
 msgid "All stock moves have been cancelled for this procurement."
-msgstr ""
+msgstr "كل تحركات المخزون تم إلغائها لهذا التحصيل."
 
 #. module: stock
 #: field:stock.config.settings,module_claim_from_delivery:0
@@ -517,7 +518,7 @@ msgstr "تعيين مالك"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Assigned Moves"
-msgstr ""
+msgstr "التحركات المعينة"
 
 #. module: stock
 #: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
@@ -558,25 +559,25 @@ msgstr "امر عودة لـ"
 #: code:addons/stock/stock.py:952
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
-msgstr ""
+msgstr "<b>تم إنشاء</b> الطلب التكميلي <em>%s</em> ."
 
 #. module: stock
 #: code:addons/stock/stock.py:4193
 #, python-format
 msgid "Backorder exists"
-msgstr ""
+msgstr "الطلب التكميلي موجود "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: view:stock.picking:stock.view_picking_internal_search
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Backorders"
-msgstr ""
+msgstr "الطلبات التكميلية"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Backorders (%)"
-msgstr ""
+msgstr "الطلبات التكميلية (%)"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -601,13 +602,13 @@ msgstr "الموردون الكبار"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Bring goods to output location before shipping (Pick + Ship)"
-msgstr ""
+msgstr "جلب البضائع لموقع الاخراج قبل الشحن (تجهيز + شحن)"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
 #: field:stock.quant.package,quant_ids:0
 msgid "Bulk Content"
-msgstr ""
+msgstr "محتوى جماعي"
 
 #. module: stock
 #: code:addons/stock/stock.py:1978
@@ -654,7 +655,7 @@ msgstr "لا يمكن العثور على أي مكان للعميل أو للم
 #: code:addons/stock/stock.py:3074
 #, python-format
 msgid "Can't find any generic Make To Order route."
-msgstr ""
+msgstr "لا يمكن العثور على اي موجه حسب الطلب عام."
 
 #. module: stock
 #: view:make.procurement:stock.view_make_procurment_wizard
@@ -895,7 +896,7 @@ msgstr "خصائص مواقع العداد"
 #: code:addons/stock/static/src/xml/picking.xml:166
 #, python-format
 msgid "Create / Change Lot"
-msgstr ""
+msgstr "إنشاء / تغيير الترميز"
 
 #. module: stock
 #. openerp-web
@@ -903,19 +904,19 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:43
 #, python-format
 msgid "Create Lot"
-msgstr ""
+msgstr "إنشاء ترميز"
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Create Procurement"
-msgstr ""
+msgstr "إنشاء تحصيل"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:80
 #, python-format
 msgid "Create backorder"
-msgstr ""
+msgstr "إنشاء طلب تكميلي"
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
@@ -925,7 +926,7 @@ msgstr "انشاء التحركات"
 #. module: stock
 #: field:stock.warehouse.orderpoint,procurement_ids:0
 msgid "Created Procurements"
-msgstr ""
+msgstr "التحصيلات التي تم إنشاءها"
 
 #. module: stock
 #: field:make.procurement,create_uid:0
@@ -991,7 +992,7 @@ msgstr "تاريخ الإنشاء"
 #. module: stock
 #: help:stock.picking,date:0
 msgid "Creation Date, usually the time of the order"
-msgstr ""
+msgstr "تأريخ الإنشاء عادةً هو وقت الأمر"
 
 #. module: stock
 #: code:addons/stock/stock.py:3392
@@ -1155,7 +1156,7 @@ msgstr "المالك الافتراضي"
 #. module: stock
 #: field:stock.warehouse,default_resupply_wh_id:0
 msgid "Default Resupply Warehouse"
-msgstr ""
+msgstr "مخزن إعادة التزويد الإفتراضي"
 
 #. module: stock
 #: field:stock.picking.type,default_location_src_id:0
@@ -1175,12 +1176,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Default: Take From Stock"
-msgstr ""
+msgstr "الإفتراضي : الأخذ من المخزون"
 
 #. module: stock
 #: help:stock.warehouse,route_ids:0
 msgid "Defaults routes through the warehouse"
-msgstr ""
+msgstr "الموجهات الإفتراضية خلال المخزن"
 
 #. module: stock
 #: help:stock.location,putaway_strategy_id:0
@@ -1531,7 +1532,7 @@ msgstr "من"
 #. module: stock
 #: field:product.template,track_all:0
 msgid "Full Lots Traceability"
-msgstr ""
+msgstr "تعقب كامل للترميزات"
 
 #. module: stock
 #: code:addons/stock/product.py:262
@@ -1587,7 +1588,7 @@ msgstr "معلومات عامة"
 #. module: stock
 #: field:stock.config.settings,module_procurement_jit:0
 msgid "Generate procurement in real time"
-msgstr ""
+msgstr "توليد التحصيل في الوقت الحقيقي"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
@@ -2082,7 +2083,7 @@ msgstr "متابع"
 #. module: stock
 #: field:stock.location,scrap_location:0
 msgid "Is a Scrap Location?"
-msgstr ""
+msgstr "هل هو موقع للخردة ؟"
 
 #. module: stock
 #: help:stock.move,product_packaging:0
@@ -2177,7 +2178,7 @@ msgstr "متأخر"
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Late (%)"
-msgstr ""
+msgstr "المتأخر (%)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
@@ -2356,7 +2357,7 @@ msgstr "حصص"
 #. module: stock
 #: field:stock.warehouse,mto_pull_id:0
 msgid "MTO rule"
-msgstr ""
+msgstr "قاعدة حسب الطلب"
 
 #. module: stock
 #: model:ir.model,name:stock.model_make_procurement
@@ -2504,12 +2505,12 @@ msgstr "الكمية الدنيا"
 #. module: stock
 #: field:procurement.order,orderpoint_id:0
 msgid "Minimum Stock Rule"
-msgstr ""
+msgstr "قاعدة الحد الأدنى للمخزون"
 
 #. module: stock
 #: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rules"
-msgstr ""
+msgstr "قواعد الحد الأدنى للمخزون"
 
 #. module: stock
 #: field:stock.config.settings,propagation_minimum_delta:0
@@ -2532,7 +2533,7 @@ msgstr "نقل"
 #: code:addons/stock/procurement.py:43
 #, python-format
 msgid "Move From Another Location"
-msgstr ""
+msgstr "التحريك من موقع آخر"
 
 #. module: stock
 #: field:stock.quant,negative_move_id:0
@@ -2547,7 +2548,7 @@ msgstr ""
 #. module: stock
 #: field:procurement.rule,procure_method:0
 msgid "Move Supply Method"
-msgstr ""
+msgstr "طريقة حركة التزويد"
 
 #. module: stock
 #: help:stock.move,date:0
@@ -2929,7 +2930,7 @@ msgstr "المالك"
 #. module: stock
 #: help:stock.location,partner_id:0
 msgid "Owner of the location if not internal"
-msgstr ""
+msgstr "صاحب الموقع إن لم يكن داخليا"
 
 #. module: stock
 #: help:stock.pack.operation,owner_id:0
@@ -2967,7 +2968,7 @@ msgstr ""
 #: view:stock.quant.package:stock.view_quant_package_tree
 #: view:website:stock.report_inventory
 msgid "Package"
-msgstr ""
+msgstr "طرد"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode_small
@@ -2983,26 +2984,26 @@ msgstr ""
 #: view:stock.quant.package:stock.quant_package_search_view
 #: field:stock.quant.package,complete_name:0
 msgid "Package Name"
-msgstr ""
+msgstr "اسم الطرد"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
 #: field:stock.quant.package,name:0
 msgid "Package Reference"
-msgstr ""
+msgstr "رقم إشارة الطرد"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:57
 #, python-format
 msgid "Package type"
-msgstr ""
+msgstr "نوع الطرد"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
 #: model:ir.ui.menu,name:stock.menu_package
 msgid "Packages"
-msgstr ""
+msgstr "الطرود"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -3019,7 +3020,7 @@ msgstr "التعبئة"
 #. module: stock
 #: field:stock.warehouse,wh_pack_stock_loc_id:0
 msgid "Packing Location"
-msgstr ""
+msgstr "موقع التعبئة"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation
@@ -3031,7 +3032,7 @@ msgstr ""
 #: model:stock.location,name:stock.location_pack_zone
 #, python-format
 msgid "Packing Zone"
-msgstr ""
+msgstr "منطقة التعبئة "
 
 #. module: stock
 #: field:stock.transfer_details,packop_ids:0
@@ -3135,7 +3136,7 @@ msgstr "قائمة الالتقاط"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr ""
+msgstr "قوائم التجهيز"
 
 #. module: stock
 #: field:procurement.rule,picking_type_id:0 field:stock.move,picking_type_id:0
@@ -3143,7 +3144,7 @@ msgstr ""
 #: field:stock.picking,picking_type_id:0
 #: view:stock.picking.type:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr ""
+msgstr "نوع التعبئة"
 
 #. module: stock
 #: field:stock.picking,picking_type_code:0
@@ -3153,7 +3154,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking.type,name:0
 msgid "Picking Type Name"
-msgstr ""
+msgstr "إسم نوع التجهيز"
 
 #. module: stock
 #: help:procurement.rule,picking_type_id:0
@@ -3224,7 +3225,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_return_picking.py:150
 #, python-format
 msgid "Please specify at least one non-zero quantity."
-msgstr ""
+msgstr "يرجى تحديد كمية واحدة غير صفر على الأقل ."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:58
@@ -3447,7 +3448,7 @@ msgstr "وحدة قياس المنتج"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_variant_config_stock
 msgid "Product Variants"
-msgstr ""
+msgstr "موديلات المنتج"
 
 #. module: stock
 #: model:stock.location,name:stock.location_production
@@ -3720,7 +3721,7 @@ msgstr "الدفعات"
 #: code:addons/stock/static/src/xml/picking.xml:218
 #, python-format
 msgid "Quit"
-msgstr ""
+msgstr "خروج"
 
 #. module: stock
 #: field:product.template,loc_rack:0
@@ -3742,12 +3743,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Ready to Transfer"
-msgstr ""
+msgstr "جاهز للنقل"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Real Quantity"
-msgstr ""
+msgstr "كمية حقيقية"
 
 #. module: stock
 #: view:product.product:stock.product_kanban_stock_view
@@ -3802,7 +3803,7 @@ msgstr "الكمية المستلمة"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Recheck Availability"
-msgstr ""
+msgstr "إعادة تدقيق التوفر"
 
 #. module: stock
 #. openerp-web

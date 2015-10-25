@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-10-15 10:00+0000\n"
+"PO-Revision-Date: 2015-10-20 07:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -552,7 +552,7 @@ msgstr ""
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "= Theoretical Closing Balance"
-msgstr ""
+msgstr "= Теоретическое закрыие баланса"
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
@@ -569,18 +569,18 @@ msgid ""
 "accounting entries, all new entries should then be made on the following "
 "open period. Close a period when you do not want to record new entries and "
 "want to lock this period for tax related calculation."
-msgstr ""
+msgstr "Период является финансовый период, в течение которого бухгалтерские записи должны быть записаны для учета деятельности. Ежемесячный период является нормой, но в зависимости от ваших потребностей, стран или компаний, возможны также ежеквартальные периоды. Закрытие периода сделает невозможным записать новые записи учета, все новые записи должны быть сделаны на следующий открытый период. Закрыть период, когда вы не хотите, чтобы записывались новые данные и хотите заблокировать этот налоговый период, связано с пересчетом."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:736
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr ""
+msgstr "Выбранная строка была уже сверена"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr ""
+msgstr "Налоговое финансовое положение может быть определено только единожды для тех же налогов."
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -1396,13 +1396,13 @@ msgstr "Сумма к оплате"
 #. module: account
 #: field:account.statement.operation.template,amount_type:0
 msgid "Amount type"
-msgstr ""
+msgstr "Тип суммы"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr ""
+msgstr "финансовое положение аккаунта может быть определено единожды для тех же счетов."
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -1412,7 +1412,7 @@ msgstr "Направление анализа"
 #. module: account
 #: view:website:account.report_agedpartnerbalance
 msgid "Analysis Direction:"
-msgstr ""
+msgstr "Направление анализа"
 
 #. module: account
 #: view:account.move:account.view_move_form
@@ -1428,7 +1428,7 @@ msgstr "Аналитический"
 #: code:addons/account/static/src/js/account_widgets.js:123
 #, python-format
 msgid "Analytic Acc."
-msgstr ""
+msgstr "Аналитическая Точность."
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -1588,7 +1588,7 @@ msgstr "Опции применимости"
 #: field:account.tax,python_applicable:0
 #: field:account.tax.template,python_applicable:0
 msgid "Applicable Code"
-msgstr ""
+msgstr "Применимый код"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -1614,7 +1614,7 @@ msgstr ""
 #. module: account
 #: help:account.fiscal.position,vat_required:0
 msgid "Apply only if partner has a VAT number."
-msgstr ""
+msgstr "Применить только если партнер имеет сумму НДС."
 
 #. module: account
 #: help:account.fiscal.position,country_group_id:0
@@ -1668,7 +1668,7 @@ msgid ""
 "As an example, a decimal precision of 2 will allow journal entries  like: "
 "9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like:"
 " 0.0231 EUR."
-msgstr ""
+msgstr "В качестве примера, десятичной точность 2 позволит записывать в журнал, как: 9,99 евро, в то время как десятичная точность 4 позволит записывать в журнал, как: 0.0231 евро"
 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
@@ -2249,7 +2249,7 @@ msgstr "Наличные"
 #: view:account.bank.statement:account.view_bank_statement_form2
 #: field:account.journal,cash_control:0
 msgid "Cash Control"
-msgstr ""
+msgstr "Контроль купюр"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -4061,7 +4061,7 @@ msgstr "Проводки по позициям"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Entries Date by Month"
-msgstr ""
+msgstr "Проводки по месяцам"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -4309,7 +4309,7 @@ msgstr "Расширенные фильтры..."
 #: code:addons/account/static/src/js/account_widgets.js:545
 #, python-format
 msgid "Fast reconciler"
-msgstr ""
+msgstr "Быстрая сверка"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -4344,7 +4344,7 @@ msgstr "Фильтр"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filter By:"
-msgstr ""
+msgstr "Фильтр по:"
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -4433,7 +4433,7 @@ msgstr "Структура финансовых отчетов"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_financial
 msgid "Financial report"
-msgstr ""
+msgstr "Финансовый отчет"
 
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
@@ -5420,7 +5420,7 @@ msgstr "Дата счета"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Invoice Date:"
-msgstr ""
+msgstr "Дата счёта:"
 
 #. module: account
 #: view:account.invoice.line:account.view_invoice_line_form
@@ -6582,7 +6582,7 @@ msgstr "Следующий номер счета поставщика"
 #: code:addons/account/account_move_line.py:194
 #, python-format
 msgid "No Analytic Journal!"
-msgstr ""
+msgstr "Нет журнала аналитики!"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -7655,7 +7655,7 @@ msgstr "Напечатан"
 #: view:website:account.report_analyticcostledger
 #: view:website:account.report_analyticcostledgerquantity
 msgid "Printing Date:"
-msgstr ""
+msgstr "Дата печати:"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -9187,7 +9187,7 @@ msgstr "Поставщики"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "TIN:"
-msgstr ""
+msgstr "TIN:"
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
@@ -9240,7 +9240,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 msgid "Tasks Month"
-msgstr ""
+msgstr "Месячный план"
 
 #. module: account
 #. openerp-web
