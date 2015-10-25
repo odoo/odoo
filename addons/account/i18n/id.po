@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-10-15 10:00+0000\n"
+"PO-Revision-Date: 2015-10-21 09:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -102,7 +102,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr ""
+msgstr " * Status 'Draft' adalah ketika user sedang memasukkan data Invoice baru dan belum dokonfirmasi.\n * Status 'Pro-forma' adalah ketika sebuah invoice ingin dikirimkan kepada rekanan / pelanggan untuk mendapatkan konfirmasi bahwa informasi dan nilai tagihan sudah benar. Jika pihak pelanggan setuju maka invoice bisa dinaikkan statusnya menjadi Open. Jika tidak, maka invoice harus dirubah dulu hingga pelanggannya setuju. Pada status ini, invoice belum dapat diberi nomor.\n * Status 'Open' adalah ketika tagihan sudah dinyatakan benar isinya dan pelanggan wajib membayar sejumlah yang tertera pada invoice. Pada status ini, invoice sudah diberi nomor.\n * Status 'Paid' akan secara otomatis ketika pembayaran sudah sepenuhnya diterima.\n * Status 'Cancelled' adalah ketika invoice dibatalkan."
 
 #. module: account
 #: code:addons/account/account.py:1477
@@ -157,13 +157,13 @@ msgstr "# Jml. Transaksi"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1861
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (Copy)"
 
 #. module: account
 #: code:addons/account/account.py:635 code:addons/account/account.py:786
@@ -175,7 +175,7 @@ msgstr "%s (copy)"
 #. module: account
 #: view:website:account.report_partnerbalance
 msgid "(Account/Partner) Name"
-msgstr ""
+msgstr "(Akun/Rekanan) Nama"
 
 #. module: account
 #: view:account.chart:account.view_account_chart
@@ -188,7 +188,7 @@ msgstr "(jika tahun fiskal tidak dipilih, semua tahun fiskal yang terbuka akan d
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid ""
 "(If you do not select a specific period, all open periods will be selected)"
-msgstr ""
+msgstr "(Jika anda tidak memilih periode tertentu, semua periode yang terbuka akan dipilih)"
 
 #. module: account
 #: view:account.state.open:account.view_account_state_open
@@ -199,24 +199,24 @@ msgstr "(Invoice seharusnya belum direkonsoliasi jika ingin membukanya)"
 #: view:account.analytic.chart:account.account_analytic_chart_view
 #: view:project.account.analytic.line:account.view_project_account_analytic_line_form
 msgid "(Keep empty to open the current situation)"
-msgstr ""
+msgstr "(Biarkan kosong untuk saat ini)"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "(change)"
-msgstr ""
+msgstr "(ubah)"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 msgid "(update)"
-msgstr ""
+msgstr "(perbaharui)"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "+ Transactions"
-msgstr ""
+msgstr "+ Transaksi"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -332,7 +332,7 @@ msgid ""
 "                the bottom of each invoice.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n   Klik untuk membuat customer invoice baru.\n</p><p>\n   Fasilitas penagihan elektronik (electronic invoicing) memungkinkan kita untuk mempermudah dan mempercepat proses penagihan dari pelanggan. Invoice akan dikirim melalui email dan pelanggan juga dapat melakukan pembayaran secara online (jika fasilitas payment online tersedia) atau dapat juga mengimpornya langsung ke sistem mereka (jika mereka sama2 menggunakan Odoo)\n</p><p>\nSejarah diskusi dengan pelanggan akan secara otomatis tercatat di bagian bawah dari setiap invoice.\n</p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -531,7 +531,7 @@ msgid ""
 "                    No journal items found.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nJurnal tidak ditemukan.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_analytic_account_tree2
@@ -816,7 +816,7 @@ msgstr "Rekonsiliasi Akun"
 #: field:account.financial.report,children_ids:0
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
-msgstr ""
+msgstr "Laporan akun"
 
 #. module: account
 #: field:accounting.report,account_report_id:0
@@ -991,7 +991,7 @@ msgstr ""
 #. module: account
 #: view:account.account:account.view_account_form
 msgid "Account name"
-msgstr ""
+msgstr "Name akun"
 
 #. module: account
 #: view:website:account.report_analyticjournal
@@ -1006,7 +1006,7 @@ msgstr "Periode Akun"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_vat
 msgid "Account tax"
-msgstr ""
+msgstr "Pajak akun"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
@@ -1026,7 +1026,7 @@ msgstr "Akun yang digunakan dalam jurnal ini"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Accountant"
-msgstr ""
+msgstr "Akuntan"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_config
@@ -1040,7 +1040,7 @@ msgstr "Akuntansi"
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "Akuntansi & Keuangan"
 
 #. module: account
 #: view:account.installer:account.view_account_configuration_installer
@@ -1052,7 +1052,7 @@ msgstr ""
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_form
 msgid "Accounting Documents"
-msgstr ""
+msgstr "Dokumen Akuntansi"
 
 #. module: account
 #: view:res.partner.bank:account.view_partner_bank_form_inherit
@@ -1072,12 +1072,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
 msgid "Accounting Report"
-msgstr ""
+msgstr "Laporan Akuntansi"
 
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
 msgid "Accounting Reports"
-msgstr ""
+msgstr "Laporan Akuntansi"
 
 #. module: account
 #: view:res.partner:account.view_partner_property_form
@@ -1162,7 +1162,7 @@ msgstr "Informasi Tambahan"
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Additional notes..."
-msgstr ""
+msgstr "Catatan tambahan"
 
 #. module: account
 #: field:account.account,adjusted_balance:0
@@ -1172,7 +1172,7 @@ msgstr ""
 #. module: account
 #: view:account.journal:account.view_account_journal_form
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Pengaturan lebih lanjut"
 
 #. module: account
 #: view:account.aged.trial.balance:account.account_aged_balance_view
@@ -1271,7 +1271,7 @@ msgstr ""
 #. module: account
 #: view:website:account.report_trialbalance
 msgid "All accounts"
-msgstr ""
+msgstr "Seluruh akun"
 
 #. module: account
 #: view:website:account.report_generalledger
@@ -1717,7 +1717,7 @@ msgstr "Agustus"
 #. module: account
 #: field:account.fiscal.position,auto_apply:0
 msgid "Automatic"
-msgstr ""
+msgstr "Otomatis"
 
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
@@ -1880,7 +1880,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr ""
+msgstr "Akun Bank"
 
 #. module: account
 #: view:res.partner:account.view_partner_property_form
@@ -2246,7 +2246,7 @@ msgstr "Kode"
 #: code:addons/account/account.py:3071
 #, python-format
 msgid "Cash"
-msgstr ""
+msgstr "Tunai"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -2700,12 +2700,12 @@ msgstr "Nama Kolom"
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
 msgid "Comment"
-msgstr ""
+msgstr "Komentar"
 
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Comment:"
-msgstr ""
+msgstr "Komentar:"
 
 #. module: account
 #: field:account.invoice,commercial_partner_id:0
@@ -2778,7 +2778,7 @@ msgstr "Perusahaan"
 #. module: account
 #: view:account.entries.report:account.view_company_analysis_tree
 msgid "Company Analysis"
-msgstr ""
+msgstr "Analisis Perusahaan"
 
 #. module: account
 #: field:account.account,company_currency_id:0
@@ -2820,7 +2820,7 @@ msgstr ""
 #: code:addons/account/account_invoice.py:402
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "Buat Email"
 
 #. module: account
 #: view:account.payment.term:account.view_payment_term_form
@@ -2864,7 +2864,7 @@ msgstr "Konfigurasi"
 #: code:addons/account/wizard/pos_box.py:75
 #, python-format
 msgid "Configuration Error"
-msgstr ""
+msgstr "Terjadi Kesalahan Konfigurasi"
 
 #. module: account
 #: code:addons/account/account.py:3531
@@ -2943,7 +2943,7 @@ msgstr "Dikonfirmasi"
 #: code:addons/account/static/src/js/account_widgets.js:534
 #, python-format
 msgid "Congrats, you're all done !"
-msgstr ""
+msgstr "Selamat, anda sudah selesai!"
 
 #. module: account
 #: field:account.account,child_consol_ids:0
@@ -3030,7 +3030,7 @@ msgstr ""
 #. module: account
 #: field:report.invoice.created,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Tanggal dibuat"
 
 #. module: account
 #: view:account.use.model:account.view_account_use_model
@@ -3399,7 +3399,7 @@ msgstr ""
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Tagihan Pelanggan"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
@@ -3719,7 +3719,7 @@ msgstr "Menentukan urutan tampilan dalam laporan 'Accounting \\ Reporting \\ Gen
 #: view:account.bank.statement:account.view_bank_statement_form2
 #: field:account.bank.statement,difference:0
 msgid "Difference"
-msgstr ""
+msgstr "Perbedaan"
 
 #. module: account
 #: help:account.bank.statement,difference:0
@@ -4317,7 +4317,7 @@ msgstr ""
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "Features"
-msgstr ""
+msgstr "Fitur"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -4436,7 +4436,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_financial
 msgid "Financial report"
-msgstr ""
+msgstr "Laporan keuangan"
 
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
@@ -4848,7 +4848,7 @@ msgstr "ke partner selanjutnya"
 #: code:addons/account/account_move_line.py:552
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Menuju panel konfigurasi"
 
 #. module: account
 #. openerp-web
@@ -5349,7 +5349,7 @@ msgstr ""
 #. module: account
 #: field:account.account,note:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Catatan internal"
 
 #. module: account
 #: field:account.journal,internal_account_id:0
@@ -5991,7 +5991,7 @@ msgstr ""
 #: field:account.bank.statement,message_last_post:0
 #: field:account.invoice,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Tanggal pesan terakhir"
 
 #. module: account
 #: field:account.account,write_uid:0
@@ -6836,7 +6836,7 @@ msgstr ""
 #: code:addons/account/account.py:3392 code:addons/account/res_config.py:305
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Hanya administrator yang dapat mengubah pengaturan"
 
 #. module: account
 #. openerp-web
@@ -7321,7 +7321,7 @@ msgstr ""
 #: view:account.invoice:account.invoice_supplier_form
 #: selection:account.vat.declaration,based_on:0
 msgid "Payments"
-msgstr ""
+msgstr "Pembayaran"
 
 #. module: account
 #: field:res.company,paypal_account:0
@@ -7705,7 +7705,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,product_qty:0
 msgid "Product Quantity"
-msgstr ""
+msgstr "Kuantitas"
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
@@ -8603,7 +8603,7 @@ msgstr ""
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "Select Company"
-msgstr ""
+msgstr "Pilih Perusahaan"
 
 #. module: account
 #: help:account.open.closed.fiscalyear,fyear_id:0
@@ -8617,7 +8617,7 @@ msgstr ""
 #: code:addons/account/static/src/js/account_widgets.js:975
 #, python-format
 msgid "Select Partner"
-msgstr ""
+msgstr "Pilih Rekanan"
 
 #. module: account
 #: view:account.analytic.balance:account.account_analytic_balance_view
@@ -8705,7 +8705,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Send by Email"
-msgstr ""
+msgstr "Dikirim dengan Email"
 
 #. module: account
 #: field:account.config.settings,module_product_email_template:0
@@ -8715,7 +8715,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice,sent:0
 msgid "Sent"
-msgstr ""
+msgstr "Terkirim"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -8875,7 +8875,7 @@ msgstr "Susun sebagai"
 #. module: account
 #: view:website:account.report_generalledger
 msgid "Sorted By:"
-msgstr ""
+msgstr "Diurutkan berdasarkan:"
 
 #. module: account
 #: field:account.invoice,origin:0 field:account.invoice.line,origin:0
@@ -9050,7 +9050,7 @@ msgstr "Status"
 #. module: account
 #: view:account.tax.code:account.view_tax_code_form
 msgid "Statistics"
-msgstr ""
+msgstr "Statistik"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -9079,7 +9079,7 @@ msgstr "Sub Total"
 #. module: account
 #: field:account.subscription.line,subscription_id:0
 msgid "Subscription"
-msgstr ""
+msgstr "Berlangganan"
 
 #. module: account
 #: view:account.subscription.generate:account.view_account_subscription_generate
@@ -9499,7 +9499,7 @@ msgstr ""
 #: view:account.analytic.account:account.view_account_analytic_account_search
 #: field:account.config.settings,chart_template_id:0
 msgid "Template"
-msgstr ""
+msgstr "Cetakan"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
@@ -9524,7 +9524,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr ""
+msgstr "Cetakan Bagan Akun"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -9534,7 +9534,7 @@ msgstr "Lembar Contoh untuk Akun"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "Cetakan Perpajakan"
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -10013,12 +10013,12 @@ msgstr "Fiskal tahun ini"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "This Period"
-msgstr ""
+msgstr "Periode Ini"
 
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "This Year"
-msgstr ""
+msgstr "Tahun Ini"
 
 #. module: account
 #: help:product.template,property_account_expense:0
@@ -10260,7 +10260,7 @@ msgstr ""
 #. module: account
 #: help:account.tax,name:0
 msgid "This name will be displayed on reports"
-msgstr ""
+msgstr "Nama ini akan ditampilkan di laporan"
 
 #. module: account
 #: help:accounting.report,debit_credit:0
@@ -10378,18 +10378,18 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 2 (bold)"
-msgstr ""
+msgstr "Judul 2 (tebal)"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 3 (bold, smaller)"
-msgstr ""
+msgstr "Judul 3 (tebal, lebih kecil)"
 
 #. module: account
 #: field:account.analytic.chart,to_date:0
 #: field:project.account.analytic.line,to_date:0
 msgid "To"
-msgstr ""
+msgstr "Kepada"
 
 #. module: account
 #: view:account.period:account.view_account_period_search
@@ -10483,7 +10483,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement,total_entry_encoding:0
 msgid "Total Transactions"
-msgstr ""
+msgstr "Total Transaksi"
 
 #. module: account
 #: field:account.invoice.report,price_total:0
@@ -10494,7 +10494,7 @@ msgstr "Jumlah Tanpa Pajak"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "Jumlah Tanpa Pajak"
 
 #. module: account
 #: help:account.account,adjusted_balance:0
@@ -10564,12 +10564,12 @@ msgstr "Total:"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:136
 #, python-format
 msgid "Transaction"
-msgstr ""
+msgstr "Transaksi"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Transactions"
-msgstr ""
+msgstr "Transaksi"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_transfers
@@ -10718,7 +10718,7 @@ msgstr "Jurnal item belum di Post"
 #: field:account.bank.statement,message_unread:0
 #: field:account.invoice,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Pesan Belum Dibaca"
 
 #. module: account
 #: field:account.account,unrealized_gain_loss:0
@@ -11039,7 +11039,7 @@ msgstr ""
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
 msgid "With tax"
-msgstr ""
+msgstr "Dengan pajak"
 
 #. module: account
 #: help:account.config.settings,module_product_email_template:0
@@ -11383,7 +11383,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1257
 #, python-format
 msgid "You cannot use an inactive account."
-msgstr ""
+msgstr "Anda tidak dapat menggunakan akun yang tidak aktif."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1324
@@ -11482,7 +11482,7 @@ msgstr ""
 #: code:addons/account/static/src/js/account_widgets.js:1807
 #, python-format
 msgid "You must choose at least one record."
-msgstr ""
+msgstr "Anda harus memilih setidaknya satu data"
 
 #. module: account
 #: code:addons/account/account_invoice.py:95
@@ -11494,7 +11494,7 @@ msgstr "Anda harus mendefinisikan jurnal analitik tipe '%s'!"
 #: code:addons/account/account_invoice.py:1311
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "Anda harus memilih rekanan terlebih dahulu"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:154
@@ -11506,13 +11506,13 @@ msgstr "Anda harus memilih akun untuk di rekonsiliasi"
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:57
 #, python-format
 msgid "You must set a period length greater than 0."
-msgstr ""
+msgstr "Anda harus mengeset panjang periode lebih besar dari 0"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:59
 #, python-format
 msgid "You must set a start date."
-msgstr ""
+msgstr "Anda harus mengeset tanggal mulai"
 
 #. module: account
 #: code:addons/account/account.py:422
@@ -11585,7 +11585,7 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:693
 #, python-format
 msgid "change"
-msgstr ""
+msgstr "ubah"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -11684,7 +11684,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:35
 #, python-format
 msgid "remaining)"
-msgstr ""
+msgstr "sisa)"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart
@@ -11720,7 +11720,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "transactions."
-msgstr ""
+msgstr "transaksi."
 
 #. module: account
 #: field:account.cashbox.line,bank_statement_id:0

@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2015
+# Christophe Dubuit <cdubuit@yahoo.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-19 14:42+0000\n"
-"Last-Translator: Clo <clo@odoo.com>\n"
+"PO-Revision-Date: 2015-10-24 12:36+0000\n"
+"Last-Translator: Christophe Dubuit <cdubuit@yahoo.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #: code:addons/stock_landed_costs/stock_landed_costs.py:150
 #, python-format
 msgid " already out"
-msgstr ""
+msgstr "Déjà sortie"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
@@ -32,7 +33,7 @@ msgid ""
 "                    Click to create a new landed cost.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliquer pour créer un nouveau coût logistique.\n</p>"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
@@ -41,7 +42,7 @@ msgid ""
 "                Click to define a new kind of landed cost.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliquer pour définir un nouveau type de coût logistique.\n</p>"
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost.lines,account_id:0
@@ -56,13 +57,13 @@ msgstr "Journal des comptes"
 #. module: stock_landed_costs
 #: field:stock.valuation.adjustment.lines,additional_landed_cost:0
 msgid "Additional Landed Cost"
-msgstr ""
+msgstr "Prix au débarquement additionnel"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Current Cost Price"
-msgstr ""
+msgstr "Par coût unitaire"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -85,7 +86,7 @@ msgstr "Par poids"
 #. module: stock_landed_costs
 #: field:product.template,landed_cost_ok:0
 msgid "Can constitute a landed cost"
-msgstr ""
+msgstr "Peut être utilisé comme coût logistique"
 
 #. module: stock_landed_costs
 #: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
@@ -110,13 +111,13 @@ msgstr "Coût"
 #. module: stock_landed_costs
 #: field:stock.valuation.adjustment.lines,cost_line_id:0
 msgid "Cost Line"
-msgstr ""
+msgstr "Ligne de coût"
 
 #. module: stock_landed_costs
 #: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
 #: field:stock.landed.cost,cost_lines:0
 msgid "Cost Lines"
-msgstr ""
+msgstr "Lignes de coût"
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,create_uid:0
@@ -187,12 +188,12 @@ msgstr "Abonnés"
 #. module: stock_landed_costs
 #: field:stock.valuation.adjustment.lines,former_cost:0
 msgid "Former Cost"
-msgstr ""
+msgstr "Coût précédent"
 
 #. module: stock_landed_costs
 #: field:stock.valuation.adjustment.lines,former_cost_per_unit:0
 msgid "Former Cost(Per Unit)"
-msgstr ""
+msgstr "Coût précédent (par unité)"
 
 #. module: stock_landed_costs
 #: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_search
@@ -230,7 +231,7 @@ msgstr "Est abonné"
 #. module: stock_landed_costs
 #: field:stock.landed.cost,description:0
 msgid "Item Description"
-msgstr ""
+msgstr "Description du produit"
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,account_move_id:0
@@ -241,12 +242,12 @@ msgstr "Pièce comptable"
 #: field:stock.landed.cost.lines,cost_id:0
 #: field:stock.valuation.adjustment.lines,cost_id:0
 msgid "Landed Cost"
-msgstr ""
+msgstr "Prix au débarquement"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
 msgid "Landed Cost Type"
-msgstr ""
+msgstr "Type de coût logistique"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
@@ -257,12 +258,12 @@ msgstr ""
 #: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_search
 #: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_tree
 msgid "Landed Costs"
-msgstr ""
+msgstr "Coûts logistiques"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr ""
+msgstr "Coût logistique validé"
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,message_last_post:0
@@ -351,7 +352,7 @@ msgstr "Quantité"
 #: field:product.template,split_method:0
 #: field:stock.landed.cost.lines,split_method:0
 msgid "Split Method"
-msgstr ""
+msgstr "Méthode de répartition"
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,state:0
@@ -381,7 +382,7 @@ msgstr "Mouvement de stock"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Stock Valuation Adjustment Lines"
-msgstr ""
+msgstr "Lignes de correction de valorisation de stock"
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,message_summary:0
@@ -396,7 +397,7 @@ msgid ""
 "landed costs. Landed costs are only possible for products configured in real"
 " time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
-msgstr ""
+msgstr "L'opération sélectionnée ne contient aucun mouvement qui pourrait être impacté par un coût logistique. Les coûts logistiques sont possibles seulement pour les articles configurés avec une valorisation de l'inventaire \"temps réel\" et avec la méthode de valorisation des stocks au \"prix réel\". Assurez-vous que c'est le cas ou que l'opération sélectionnée est la bonne."
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,amount_total:0
@@ -417,7 +418,7 @@ msgstr "Valider"
 #: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
 #: field:stock.landed.cost,valuation_adjustment_lines:0
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "Correction de valorisation"
 
 #. module: stock_landed_costs
 #: field:stock.valuation.adjustment.lines,volume:0
@@ -443,7 +444,7 @@ msgstr "Poids"
 #: code:addons/stock_landed_costs/stock_landed_costs.py:192
 #, python-format
 msgid "You cannot validate a landed cost which has no valid valuation lines."
-msgstr ""
+msgstr "Vous ne pouvez pas valider un coût logistique qui n'a pas de lignes de valorisation valides"
 
 #. module: stock_landed_costs
 #: view:product.product:stock_landed_costs.view_stock_landed_cost_type_form

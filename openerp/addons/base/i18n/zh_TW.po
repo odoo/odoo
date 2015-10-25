@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-08 14:50+0000\n"
-"PO-Revision-Date: 2015-09-18 09:43+0000\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-19 09:06+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-8/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgid ""
 "    增加小企业会计科目表\n"
 "    \n"
 "    "
-msgstr ""
+msgstr "\n\n    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n\n    添加中文省份数据\n\n    增加小企业会计科目表\n    \n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -1791,6 +1791,17 @@ msgid ""
 "\n"
 "* In a module, so that administrators and users of OpenERP who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa
+msgid ""
+"\n"
+"Odoo Arabic localization for most arabic countries and Saudi Arabia.\n"
+"\n"
+"This initially includes chart of accounts of USA translated to Arabic.\n"
+"\n"
+"In future this module will include some payroll rules for ME .\n"
 msgstr ""
 
 #. module: base
@@ -4769,6 +4780,11 @@ msgid "After Amount"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_aftersale
+msgid "After-Sale Services"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.al
 msgid "Albania"
 msgstr "阿爾巴尼亞"
@@ -5009,6 +5025,8 @@ msgstr "資產管理"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_association
+#: model:ir.ui.menu,name:base.menu_association
+#: model:ir.ui.menu,name:base.menu_report_association
 msgid "Association"
 msgstr "會務管理"
 
@@ -5053,6 +5071,7 @@ msgstr "附件"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
+#: model:res.groups,name:base.group_hr_attendance
 msgid "Attendances"
 msgstr "出席者"
 
@@ -5252,6 +5271,11 @@ msgstr "銀行類型欄位"
 #: view:res.bank:base.view_res_bank_tree field:res.partner,bank_ids:0
 msgid "Banks"
 msgstr "銀行"
+
+#. module: base
+#: help:res.partner,ean13:0 help:res.users,ean13:0
+msgid "BarCode"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -6174,6 +6198,10 @@ msgstr "設定精靈步驟"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
 #: model:ir.ui.menu,name:base.menu_config
+#: model:ir.ui.menu,name:base.menu_definitions
+#: model:ir.ui.menu,name:base.menu_event_config
+#: model:ir.ui.menu,name:base.menu_marketing_config_association
+#: model:ir.ui.menu,name:base.menu_marketing_config_root
 #: model:ir.ui.menu,name:base.menu_reporting_config
 #: view:res.company:base.view_company_form
 #: view:res.config:base.res_config_view_base
@@ -6446,6 +6474,7 @@ msgstr "新增存取權限"
 
 #. module: base
 #: field:ir.logging,create_date:0 field:ir.ui.view,create_date:0
+#: field:res.partner,create_date:0 field:res.users,create_date:0
 msgid "Create Date"
 msgstr "建立日期"
 
@@ -6574,7 +6603,7 @@ msgstr "已建立檢視"
 #: field:workflow,create_uid:0 field:workflow.activity,create_uid:0
 #: field:workflow.transition,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "建立者"
 
 #. module: base
 #: field:base.language.export,create_date:0
@@ -6615,13 +6644,11 @@ msgstr ""
 #: field:res.country.group,create_date:0 field:res.country.state,create_date:0
 #: field:res.currency,create_date:0 field:res.currency.rate,create_date:0
 #: field:res.font,create_date:0 field:res.groups,create_date:0
-#: field:res.lang,create_date:0 field:res.partner,create_date:0
-#: field:res.partner.bank,create_date:0
+#: field:res.lang,create_date:0 field:res.partner.bank,create_date:0
 #: field:res.partner.bank.type,create_date:0
 #: field:res.partner.bank.type.field,create_date:0
 #: field:res.partner.category,create_date:0
 #: field:res.partner.title,create_date:0 field:res.request.link,create_date:0
-#: field:res.users,create_date:0
 #: field:wizard.ir.model.menu.create,create_date:0
 #: field:workflow,create_date:0 field:workflow.activity,create_date:0
 #: field:workflow.transition,create_date:0
@@ -6903,6 +6930,11 @@ msgid "Date Format"
 msgstr "日期格式"
 
 #. module: base
+#: field:ir.attachment,write_date:0
+msgid "Date Modified"
+msgstr ""
+
+#. module: base
 #: selection:ir.property,type:0
 msgid "DateTime"
 msgstr "日期時間"
@@ -6936,6 +6968,19 @@ msgstr "日數：%(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "日"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
 
 #. module: base
 #: field:ir.mail_server,smtp_debug:0
@@ -7133,6 +7178,11 @@ msgid "Display"
 msgstr "顯示"
 
 #. module: base
+#: model:res.groups,name:base.group_website_publisher
+msgid "Display Editor Bar on Website"
+msgstr ""
+
+#. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Display an option on related documents to run this sever action"
 msgstr ""
@@ -7178,6 +7228,11 @@ msgstr "發行者"
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr "吉布地"
+
+#. module: base
+#: model:res.groups,name:base.group_mono_salesteams
+msgid "Do Not Use Sales Teams"
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
@@ -7286,7 +7341,7 @@ msgid "Dynamic expression builder"
 msgstr ""
 
 #. module: base
-#: field:res.partner,ean13:0
+#: field:res.partner,ean13:0 field:res.users,ean13:0
 msgid "EAN13"
 msgstr "條碼類型（EAN13）"
 
@@ -7666,7 +7721,7 @@ msgstr "外部編號"
 #: view:ir.model.data:base.view_model_data_search
 #: model:ir.ui.menu,name:base.ir_model_data_menu
 msgid "External Identifiers"
-msgstr ""
+msgstr "外部識別碼"
 
 #. module: base
 #: help:ir.model.data,name:0
@@ -7820,7 +7875,7 @@ msgstr "過濾器"
 #. module: base
 #: view:ir.filters:base.ir_filters_view_search field:ir.filters,name:0
 msgid "Filter Name"
-msgstr ""
+msgstr "篩選姓名"
 
 #. module: base
 #: sql_constraint:ir.filters:0
@@ -8011,12 +8066,12 @@ msgstr "格式錯誤"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum
 msgid "Forum"
-msgstr ""
+msgstr "討論版"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum_doc
 msgid "Forum, Documentation"
-msgstr ""
+msgstr "討論,文件"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
@@ -8178,7 +8233,7 @@ msgstr "通用"
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules
 msgid "Generic Modules"
-msgstr ""
+msgstr "一般的模組"
 
 #. module: base
 #: model:res.country,name:base.ge
@@ -8244,22 +8299,22 @@ msgstr "金色"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_analytics
 msgid "Google Analytics"
-msgstr ""
+msgstr "Google流量分析"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_calendar
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google行事曆"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_drive
 msgid "Google Drive™ integration"
-msgstr ""
+msgstr "Google Drive™ 整合"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_spreadsheet
 msgid "Google Spreadsheet"
-msgstr ""
+msgstr "Google試算表"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_account
@@ -8920,6 +8975,11 @@ msgid "Implementation"
 msgstr "實作"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_import_crm
+msgid "Import & Synchronize"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
 msgid "Import / Export"
 msgstr "匯入／匯出"
@@ -9309,6 +9369,11 @@ msgid "Invoice on Timesheets"
 msgstr "工時表上之發票"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_invoiced
+msgid "Invoicing"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
 msgid "Invoicing & Payments"
 msgstr "發票與付款"
@@ -9596,6 +9661,11 @@ msgstr "寮國"
 #. module: base
 #: field:ir.ui.view,write_date:0
 msgid "Last Modification Date"
+msgstr "最後修改日期"
+
+#. module: base
+#: field:ir.attachment,write_uid:0
+msgid "Last Modification User"
 msgstr ""
 
 #. module: base
@@ -9644,7 +9714,7 @@ msgstr ""
 #: field:wizard.ir.model.menu.create,write_uid:0 field:workflow,write_uid:0
 #: field:workflow.activity,write_uid:0 field:workflow.transition,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "最後更新："
 
 #. module: base
 #: field:base.language.export,write_date:0
@@ -9695,7 +9765,7 @@ msgstr ""
 #: field:workflow,write_date:0 field:workflow.activity,write_date:0
 #: field:workflow.transition,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "最後更新於"
 
 #. module: base
 #: field:ir.module.module,installed_version:0
@@ -9752,6 +9822,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_project_issue
 msgid "Lead to Issue"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_lead
+msgid "Leads & Opportunities"
 msgstr ""
 
 #. module: base
@@ -9914,7 +9989,7 @@ msgstr "載入翻譯"
 #: model:ir.actions.act_window,name:base.open_module_tree
 #: model:ir.ui.menu,name:base.menu_module_tree
 msgid "Local Modules"
-msgstr ""
+msgstr "本機模組"
 
 #. module: base
 #: field:res.lang,code:0
@@ -9937,7 +10012,7 @@ msgstr "日誌"
 #: model:ir.actions.act_window,name:base.ir_logging_all_act
 #: model:ir.ui.menu,name:base.ir_logging_all_menu
 msgid "Logging"
-msgstr ""
+msgstr "記錄中"
 
 #. module: base
 #: field:res.users,login:0
@@ -10080,6 +10155,16 @@ msgid "Malta"
 msgstr "馬爾他"
 
 #. module: base
+#: model:res.groups,name:base.group_multi_salesteams
+msgid "Manage Sales Teams"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_website_designer
+msgid "Manage Website and qWeb view"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
 msgid ""
 "Manage and customize the items available and displayed in your Odoo system "
@@ -10112,7 +10197,9 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:res.groups,name:base.group_hr_manager
 #: model:res.groups,name:base.group_sale_manager
+#: model:res.groups,name:base.group_tool_manager
 msgid "Manager"
 msgstr "經理"
 
@@ -10136,6 +10223,8 @@ msgstr "製造商"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
+#: model:ir.ui.menu,name:base.menu_mrp_config
+#: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
 msgstr "製造"
 
@@ -10175,6 +10264,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
 #: model:ir.module.module,shortdesc:base.module_marketing
+#: model:ir.ui.menu,name:base.marketing_menu
+#: model:ir.ui.menu,name:base.marketing_reporting_menu
 msgid "Marketing"
 msgstr "行銷"
 
@@ -11059,6 +11150,11 @@ msgid "Office Supplies"
 msgstr "辦公用品"
 
 #. module: base
+#: model:res.groups,name:base.group_hr_user
+msgid "Officer"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_ogone
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Ogone Payment Acquirer"
@@ -11225,6 +11321,11 @@ msgstr "操作取消"
 #: code:addons/base/workflow/workflow.py:101
 #, python-format
 msgid "Operation Forbidden"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_opportunity
+msgid "Opportunities"
 msgstr ""
 
 #. module: base
@@ -11470,6 +11571,11 @@ msgid "Partner Assignation & Geolocation"
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_partner_mass_mail
+msgid "Partner Mass Mailing"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner Module for Website"
 msgstr ""
@@ -11571,6 +11677,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
 msgid "Payment Acquirer: Transfer Implementation"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_sales_followup
+msgid "Payment Follow-up"
 msgstr ""
 
 #. module: base
@@ -11901,6 +12012,11 @@ msgid "Product extension to track sales and purchases"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_product
+msgid "Products"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
 msgstr "產品及價目表"
@@ -11922,6 +12038,9 @@ msgstr "教授"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_project_management
+#: model:ir.ui.menu,name:base.menu_main_pm
+#: model:ir.ui.menu,name:base.menu_project_config
+#: model:ir.ui.menu,name:base.menu_project_report
 msgid "Project"
 msgstr "專案"
 
@@ -12014,6 +12133,11 @@ msgid "Puerto Rico"
 msgstr "波多黎各"
 
 #. module: base
+#: model:ir.ui.menu,name:base.next_id_73
+msgid "Purchase"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_analytic_plans
 msgid "Purchase Analytic Plans"
 msgstr "採購分析計劃"
@@ -12035,6 +12159,7 @@ msgstr "請購"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_purchase_management
+#: model:ir.ui.menu,name:base.menu_purchase_root
 msgid "Purchases"
 msgstr "購貨"
 
@@ -12204,6 +12329,11 @@ msgstr ""
 #: view:ir.rule:base.view_rule_form view:ir.rule:base.view_rule_tree
 msgid "Record rules"
 msgstr "記錄規則"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_case_job_req_main
+msgid "Recruitment"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
@@ -12649,7 +12779,9 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_management
 #: model:ir.ui.menu,name:base.menu_base_partner
-#: model:ir.ui.menu,name:base.menu_sales
+#: model:ir.ui.menu,name:base.menu_sale_config
+#: model:ir.ui.menu,name:base.menu_sale_config_sales
+#: model:ir.ui.menu,name:base.menu_sales model:ir.ui.menu,name:base.next_id_64
 msgid "Sales"
 msgstr "銷售"
 
@@ -12707,6 +12839,11 @@ msgstr "聖馬利諾"
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
 msgstr "沙烏地阿拉伯"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa
+msgid "Saudi Arabia - Accounting"
+msgstr ""
 
 #. module: base
 #: view:res.users:base.view_users_form_simple_modif
@@ -12792,6 +12929,16 @@ msgstr "安全"
 #: view:ir.mail_server:base.ir_mail_server_form
 msgid "Security and Authentication"
 msgstr "安全及認證"
+
+#. module: base
+#: model:res.groups,name:base.group_sale_salesman
+msgid "See Own Leads"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_sale_salesman_all_leads
+msgid "See all Leads"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:306
@@ -13385,6 +13532,11 @@ msgid "Sri Lanka"
 msgstr "斯里蘭卡"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_project_config_project
+msgid "Stages"
+msgstr ""
+
+#. module: base
 #: selection:ir.sequence,implementation:0
 msgid "Standard"
 msgstr "標準"
@@ -13536,6 +13688,7 @@ msgstr "供應商夥伴"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
+#: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: view:res.partner:base.view_res_partner_filter
 msgid "Suppliers"
 msgstr "供應商"
@@ -13559,6 +13712,16 @@ msgstr "蘇利南"
 #: model:ir.module.module,shortdesc:base.module_survey
 msgid "Survey"
 msgstr "問卷"
+
+#. module: base
+#: model:res.groups,name:base.group_survey_manager
+msgid "Survey / Manager"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_survey_user
+msgid "Survey / User"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey_crm
@@ -13771,6 +13934,7 @@ msgstr "技術性名稱"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
+#: view:res.users:base.user_groups_view
 msgid "Technical Settings"
 msgstr ""
 
@@ -13778,6 +13942,11 @@ msgstr ""
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
 msgstr "技術指南"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_17
+msgid "Telecom sector"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14891,7 +15060,8 @@ msgstr "用於根據銷售與採購文件脈絡自動選擇正確地址。"
 #: field:change.password.user,user_id:0 view:ir.cron:base.ir_cron_view_search
 #: field:ir.cron,user_id:0 view:ir.filters:base.ir_filters_view_search
 #: field:ir.filters,user_id:0 field:ir.ui.view.custom,user_id:0
-#: field:ir.values,user_id:0 model:res.groups,name:base.group_sale_salesman
+#: field:ir.values,user_id:0 model:res.groups,name:base.group_document_user
+#: model:res.groups,name:base.group_tool_user
 #: view:res.users:base.view_users_search field:workflow.instance,uid:0
 msgid "User"
 msgstr "用戶"
@@ -15185,6 +15355,12 @@ msgstr "警告訊息與警示"
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
+
+#. module: base
+#: code:addons/models.py:5803 code:addons/models.py:5856
+#, python-format
+msgid "Warnings"
+msgstr ""
 
 #. module: base
 #: view:base.module.upgrade:base.view_base_module_upgrade_install
@@ -16037,6 +16213,44 @@ msgid "test_convert"
 msgstr ""
 
 #. module: base
+#: model:res.groups,comment:base.group_hr_user
+msgid "the user will be able to approve document created by employees."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_user
+msgid ""
+"the user will be able to manage his own human resources stuff (leave "
+"request, timesheets, ...), if he is linked to an employee in the system."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_hr_manager
+msgid ""
+"the user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
+msgstr ""
+
+#. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "time: Python time module"
 msgstr ""
@@ -16089,4 +16303,4 @@ msgstr "奧蘭群島"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn
 msgid "中国会计科目表"
-msgstr ""
+msgstr "中国会计科目表"

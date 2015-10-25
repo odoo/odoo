@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-08 14:50+0000\n"
-"PO-Revision-Date: 2015-09-18 09:43+0000\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-19 09:06+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/odoo-8/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -269,7 +269,7 @@ msgid ""
 "    * Requested Date (will be used as the expected date on pickings)\n"
 "    * Commitment Date\n"
 "    * Effective Date\n"
-msgstr ""
+msgstr "\nAdd additional date information to the sales order.\n===================================================\n\nYou can add the following additional dates to a sales order:\n------------------------------------------------------------\n    * Requested Date (will be used as the expected date on pickings)\n    * Commitment Date\n    * Effective Date\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -319,7 +319,7 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to new\n"
 "pads (by default, http://etherpad.com/).\n"
 "    "
-msgstr ""
+msgstr "\nAdds enhanced support for (Ether)Pad attachments in the web client.\n===================================================================\n\nLets the company customise which Pad installation should be used to link to new\npads (by default, http://etherpad.com/).\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -694,7 +694,7 @@ msgid ""
 "answers of question and according to that survey is done. Partners are also\n"
 "sent mails with personal token for the invitation of the survey.\n"
 "    "
-msgstr ""
+msgstr "\nCreate beautiful web surveys and visualise answers\n==================================================\n\nIt depends on the answers or reviews of some questions by different users. A\nsurvey may have multiple pages. Each page may contain multiple questions and\neach question may have multiple answers. Different users may give different\nanswers of question and according to that survey is done. Partners are also\nsent mails with personal token for the invitation of the survey.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_subscription
@@ -777,7 +777,7 @@ msgid ""
 "the portal automatically adds it to the portal users, etc).  That feature is\n"
 "very handy when used in combination with the module 'share'.\n"
 "    "
-msgstr ""
+msgstr "\nCustomise access to your OpenERP database to external users by creating portals.\n================================================================================\nA portal defines a specific user menu and access rights for its members.  This\nmenu can be seen by portal members, public users and any other user that\nhave the access to technical features (e.g. the administrator).\nAlso, each portal member is linked to a specific partner.\n\nThe module also associates user groups to the portal users (adding a group in\nthe portal automatically adds it to the portal users, etc).  That feature is\nvery handy when used in combination with the module 'share'.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -1178,7 +1178,7 @@ msgid ""
 "\n"
 "This module allows authorized users to import a custom data module (.xml files and static assests)\n"
 "for customization purpose.\n"
-msgstr ""
+msgstr "\nImport a custom data module\n===========================\n\nThis module allows authorised users to import a custom data module (.xml files and static assests)\nfor customisation purpose.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -1251,7 +1251,7 @@ msgid ""
 "\n"
 "This module allows you to integrate google documents to any of your OpenERP record quickly and easily using OAuth 2.0 for Installed Applications,\n"
 "You can configure your google Authorization Code from Settings > Configuration > General Settings by clicking on \"Generate Google Authorization Code\"\n"
-msgstr ""
+msgstr "\nIntegrate google document to Odoo record.\n============================================\n\nThis module allows you to integrate google documents to any of your Odoo record quickly and easily using OAuth 2.0 for Installed Applications,\nYou can configure your google Authorisation Code from Settings > Configuration > General Settings by clicking on \"Generate Google Authorisation Code\"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_invoice_directly
@@ -1792,6 +1792,17 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_sa
+msgid ""
+"\n"
+"Odoo Arabic localization for most arabic countries and Saudi Arabia.\n"
+"\n"
+"This initially includes chart of accounts of USA translated to Arabic.\n"
+"\n"
+"In future this module will include some payroll rules for ME .\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_im_odoo_support
 msgid ""
 "\n"
@@ -2298,7 +2309,7 @@ msgid ""
 "For more specific needs, you may also assign custom-defined actions\n"
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
-msgstr ""
+msgstr "\nRetrieve incoming email on POP/IMAP servers.\n============================================\n\nEnter the parameters of your POP/IMAP account(s), and any incoming emails on\nthese accounts will be automatically downloaded into your Odoo system. All\nPOP3/IMAP-compatible servers are supported, included those that require an\nencrypted SSL/TLS connection.\n\nThis can be used to easily create email-based workflows for many email-enabled Odoo documents, such as:\n----------------------------------------------------------------------------------------------------------\n    * CRM Leads/Opportunities\n    * CRM Claims\n    * Project Issues\n    * Project Tasks\n    * Human Resource Recruitments (Applicants)\n\nJust install the relevant application, and you can assign any of these document\ntypes (Leads, Project Issues) to your incoming email accounts. New emails will\nautomatically spawn new documents of the chosen type, so it's a snap to create a\nmailbox-to-Odoo integration. Even better: these documents directly act as mini\nconversations synchronised by email. You can reply from within Odoo, and the\nanswers will automatically be collected when they come back, and attached to the\nsame *conversation* document.\n\nFor more specific needs, you may also assign custom-defined actions\n(technically: Server Actions) to be triggered for each incoming mail.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
@@ -2525,7 +2536,7 @@ msgid ""
 "\n"
 "The module adds the possibility to synchronize Google Calendar with OpenERP\n"
 "===========================================================================\n"
-msgstr ""
+msgstr "\nThe module adds the possibility to synchronise Google Calendar with OpenERP\n===========================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_journal
@@ -3001,7 +3012,7 @@ msgid ""
 "    * Collated and book format support\n"
 "    * Zip return for separated PDF\n"
 "    * Web client WYSIWYG\n"
-msgstr ""
+msgstr "\nThis module adds a new Report Engine based on WebKit library (wkhtmltopdf) to support reports designed in HTML + CSS.\n=====================================================================================================================\n\nThe module structure and some code is inspired by the report_openoffice module.\n\nThe module allows:\n------------------\n    - HTML report definition\n    - Multi header support\n    - Multi logo\n    - Multi company support\n    - HTML and CSS-3 support (In the limit of the actual WebKIT version)\n    - JavaScript support\n    - Raw HTML debugger\n    - Book printing capabilities\n    - Margins definition\n    - Paper size definition\n\nMultiple headers and logos can be defined per company. CSS style, header and\nfooter body are defined per company.\n\nFor a sample report see also the webkit_report_sample module, and this video:\n    http://files.me.com/nbessi/06n92k.mov\n\nRequirements and Installation:\n------------------------------\nThis module requires the ``wkhtmltopdf`` library to render HTML documents as\nPDF. Version 0.9.9 or later is necessary, and can be found at\nhttp://code.google.com/p/wkhtmltopdf/ for Linux, Mac OS X (i386) and Windows (32bits).\n\nAfter installing the library on the OpenERP Server machine, you may need to set\nthe path to the ``wkhtmltopdf`` executable file in a system parameter named\n``webkit_path`` in Settings -> Customisation -> Parameters -> System Parameters\n\nIf you are experiencing missing header/footer problems on Linux, be sure to\ninstall a 'static' version of the library. The default ``wkhtmltopdf`` on\nUbuntu is known to have this issue.\n\n\nTODO:\n-----\n    * JavaScript support activation deactivation\n    * Collated and book format support\n    * Zip return for separated PDF\n    * Web client WYSIWYG\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -3314,7 +3325,7 @@ msgid ""
 "team. Once you get back your migrated database, you restore it and reverse the\n"
 "anonymization process to recover your previous data.\n"
 "    "
-msgstr ""
+msgstr "\nThis module allows you to anonymise a database.\n===============================================\n\nThis module allows you to keep your data confidential for a given database.\nThis process is useful, if you want to use the migration process and protect\nyour own or your customer’s confidential data. The principle is that you run\nan anonymisation tool which will hide your confidential data(they are replaced\nby ‘XXX’ characters). Then you can send the anonymised database to the migration\nteam. Once you get back your migrated database, you restore it and reverse the\nanonymisation process to recover your previous data.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic_user_function
@@ -4043,7 +4054,7 @@ msgstr ""
 #. module: base
 #: view:res.company:base.view_company_form
 msgid "(reload fonts)"
-msgstr ""
+msgstr "(reload fonts)"
 
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
@@ -4767,6 +4778,11 @@ msgid "After Amount"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_aftersale
+msgid "After-Sale Services"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.al
 msgid "Albania"
 msgstr "Albania"
@@ -5007,6 +5023,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_association
+#: model:ir.ui.menu,name:base.menu_association
+#: model:ir.ui.menu,name:base.menu_report_association
 msgid "Association"
 msgstr "Association"
 
@@ -5051,6 +5069,7 @@ msgstr "Attachments"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
+#: model:res.groups,name:base.group_hr_attendance
 msgid "Attendances"
 msgstr "Attendances"
 
@@ -5250,6 +5269,11 @@ msgstr "Bank type fields"
 #: view:res.bank:base.view_res_bank_tree field:res.partner,bank_ids:0
 msgid "Banks"
 msgstr "Banks"
+
+#. module: base
+#: help:res.partner,ean13:0 help:res.users,ean13:0
+msgid "BarCode"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -6006,7 +6030,7 @@ msgstr ""
 #. module: base
 #: field:res.partner,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Colour Index"
 
 #. module: base
 #: help:ir.actions.act_window,view_mode:0
@@ -6172,6 +6196,10 @@ msgstr "Configuration Wizard Steps"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
 #: model:ir.ui.menu,name:base.menu_config
+#: model:ir.ui.menu,name:base.menu_definitions
+#: model:ir.ui.menu,name:base.menu_event_config
+#: model:ir.ui.menu,name:base.menu_marketing_config_association
+#: model:ir.ui.menu,name:base.menu_marketing_config_root
 #: model:ir.ui.menu,name:base.menu_reporting_config
 #: view:res.company:base.view_company_form
 #: view:res.config:base.res_config_view_base
@@ -6410,7 +6438,7 @@ msgstr "Country Code"
 #: view:res.country.group:base.view_country_group_form
 #: view:res.country.group:base.view_country_group_tree
 msgid "Country Group"
-msgstr ""
+msgstr "Country Group"
 
 #. module: base
 #: field:res.country,country_group_ids:0
@@ -6444,6 +6472,7 @@ msgstr "Create Access Right"
 
 #. module: base
 #: field:ir.logging,create_date:0 field:ir.ui.view,create_date:0
+#: field:res.partner,create_date:0 field:res.users,create_date:0
 msgid "Create Date"
 msgstr "Create Date"
 
@@ -6613,13 +6642,11 @@ msgstr "Created by"
 #: field:res.country.group,create_date:0 field:res.country.state,create_date:0
 #: field:res.currency,create_date:0 field:res.currency.rate,create_date:0
 #: field:res.font,create_date:0 field:res.groups,create_date:0
-#: field:res.lang,create_date:0 field:res.partner,create_date:0
-#: field:res.partner.bank,create_date:0
+#: field:res.lang,create_date:0 field:res.partner.bank,create_date:0
 #: field:res.partner.bank.type,create_date:0
 #: field:res.partner.bank.type.field,create_date:0
 #: field:res.partner.category,create_date:0
 #: field:res.partner.title,create_date:0 field:res.request.link,create_date:0
-#: field:res.users,create_date:0
 #: field:wizard.ir.model.menu.create,create_date:0
 #: field:workflow,create_date:0 field:workflow.activity,create_date:0
 #: field:workflow.transition,create_date:0
@@ -6846,7 +6873,7 @@ msgstr "Database"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_anonymization
 msgid "Database Anonymization"
-msgstr ""
+msgstr "Database Anonymisation"
 
 #. module: base
 #: field:ir.attachment,db_datas:0
@@ -6901,6 +6928,11 @@ msgid "Date Format"
 msgstr "Date Format"
 
 #. module: base
+#: field:ir.attachment,write_date:0
+msgid "Date Modified"
+msgstr ""
+
+#. module: base
 #: selection:ir.property,type:0
 msgid "DateTime"
 msgstr "DateTime"
@@ -6934,6 +6966,19 @@ msgstr "Day: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Days"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
 
 #. module: base
 #: field:ir.mail_server,smtp_debug:0
@@ -7131,6 +7176,11 @@ msgid "Display"
 msgstr ""
 
 #. module: base
+#: model:res.groups,name:base.group_website_publisher
+msgid "Display Editor Bar on Website"
+msgstr ""
+
+#. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Display an option on related documents to run this sever action"
 msgstr ""
@@ -7176,6 +7226,11 @@ msgstr ""
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr "Djibouti"
+
+#. module: base
+#: model:res.groups,name:base.group_mono_salesteams
+msgid "Do Not Use Sales Teams"
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
@@ -7284,7 +7339,7 @@ msgid "Dynamic expression builder"
 msgstr ""
 
 #. module: base
-#: field:res.partner,ean13:0
+#: field:res.partner,ean13:0 field:res.users,ean13:0
 msgid "EAN13"
 msgstr "EAN13"
 
@@ -7808,7 +7863,7 @@ msgstr "File Name"
 #. module: base
 #: field:ir.attachment,file_size:0
 msgid "File Size"
-msgstr ""
+msgstr "File Size"
 
 #. module: base
 #: field:ir.actions.act_window,filter:0
@@ -8918,6 +8973,11 @@ msgid "Implementation"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_import_crm
+msgid "Import & Synchronize"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
 msgid "Import / Export"
 msgstr "Import / Export"
@@ -9046,7 +9106,7 @@ msgstr "Initial Setup Tools"
 #. module: base
 #: field:ir.model.constraint,date_init:0 field:ir.model.relation,date_init:0
 msgid "Initialization Date"
-msgstr ""
+msgstr "Initialisation Date"
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
@@ -9305,6 +9365,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_invoice
 msgid "Invoice on Timesheets"
 msgstr "Invoice on Timesheets"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_invoiced
+msgid "Invoicing"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
@@ -9597,6 +9662,11 @@ msgid "Last Modification Date"
 msgstr ""
 
 #. module: base
+#: field:ir.attachment,write_uid:0
+msgid "Last Modification User"
+msgstr ""
+
+#. module: base
 #: field:base.language.export,write_uid:0
 #: field:base.language.import,write_uid:0
 #: field:base.language.install,write_uid:0
@@ -9750,6 +9820,11 @@ msgstr "Launchpad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_project_issue
 msgid "Lead to Issue"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_lead
+msgid "Leads & Opportunities"
 msgstr ""
 
 #. module: base
@@ -10078,6 +10153,16 @@ msgid "Malta"
 msgstr "Malta"
 
 #. module: base
+#: model:res.groups,name:base.group_multi_salesteams
+msgid "Manage Sales Teams"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_website_designer
+msgid "Manage Website and qWeb view"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
 msgid ""
 "Manage and customize the items available and displayed in your Odoo system "
@@ -10085,7 +10170,7 @@ msgid ""
 " line and then delete it through the button that appeared. Items can be "
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
-msgstr ""
+msgstr "Manage and customise the items available and displayed in your Odoo system menu. You can delete an item by clicking on the box at the beginning of each line and then delete it through the button that appeared. Items can be assigned to specific groups in order to make them accessible to some users within the system."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_customer_relationship_management
@@ -10110,7 +10195,9 @@ msgid ""
 msgstr "Manage the partner titles you want to have available in your system. The partner title is the legal status of the company: Private Limited, SA, etc."
 
 #. module: base
+#: model:res.groups,name:base.group_hr_manager
 #: model:res.groups,name:base.group_sale_manager
+#: model:res.groups,name:base.group_tool_manager
 msgid "Manager"
 msgstr "Manager"
 
@@ -10130,17 +10217,19 @@ msgstr "Manual: Launched manually.\nAutomatic: Runs whenever the system is recon
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
 msgid "Manufacturer"
-msgstr ""
+msgstr "Manufacturer"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
+#: model:ir.ui.menu,name:base.menu_mrp_config
+#: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
 msgstr "Manufacturing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_operations
 msgid "Manufacturing Operations"
-msgstr ""
+msgstr "Manufacturing Operations"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
@@ -10173,6 +10262,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
 #: model:ir.module.module,shortdesc:base.module_marketing
+#: model:ir.ui.menu,name:base.marketing_menu
+#: model:ir.ui.menu,name:base.marketing_reporting_menu
 msgid "Marketing"
 msgstr "Marketing"
 
@@ -10234,7 +10325,7 @@ msgstr "Mayotte"
 #. module: base
 #: field:res.partner,image_medium:0
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Medium-sized image"
 
 #. module: base
 #: help:res.partner,image_medium:0
@@ -10242,7 +10333,7 @@ msgid ""
 "Medium-sized image of this contact. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "Medium-sized image of this contact. It is automatically resized as a 128x128px image, with aspect ratio preserved. Use this field in form views or some kanban views."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_membership
@@ -10286,7 +10377,7 @@ msgstr "Menus"
 #. module: base
 #: view:res.users:base.view_users_form
 msgid "Menus Customization"
-msgstr ""
+msgstr "Menus Customisation"
 
 #. module: base
 #: field:ir.logging,message:0
@@ -11057,6 +11148,11 @@ msgid "Office Supplies"
 msgstr ""
 
 #. module: base
+#: model:res.groups,name:base.group_hr_user
+msgid "Officer"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_ogone
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Ogone Payment Acquirer"
@@ -11165,7 +11261,7 @@ msgstr "Only if this bank account belongs to your company"
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
-msgstr ""
+msgstr "Only users with the following access level are currently allowed to do that"
 
 #. module: base
 #: view:base.module.update:base.view_base_module_update
@@ -11223,6 +11319,11 @@ msgstr "Operation Cancelled"
 #: code:addons/base/workflow/workflow.py:101
 #, python-format
 msgid "Operation Forbidden"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_opportunity
+msgid "Opportunities"
 msgstr ""
 
 #. module: base
@@ -11468,6 +11569,11 @@ msgid "Partner Assignation & Geolocation"
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_partner_mass_mail
+msgid "Partner Mass Mailing"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner Module for Website"
 msgstr ""
@@ -11533,7 +11639,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Payment Acquirer"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment
@@ -11569,6 +11675,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
 msgid "Payment Acquirer: Transfer Implementation"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_sales_followup
+msgid "Payment Follow-up"
 msgstr ""
 
 #. module: base
@@ -11899,6 +12010,11 @@ msgid "Product extension to track sales and purchases"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_product
+msgid "Products"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
 msgstr ""
@@ -11920,6 +12036,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_project_management
+#: model:ir.ui.menu,name:base.menu_main_pm
+#: model:ir.ui.menu,name:base.menu_project_config
+#: model:ir.ui.menu,name:base.menu_project_report
 msgid "Project"
 msgstr "Project"
 
@@ -11979,7 +12098,7 @@ msgstr ""
 msgid ""
 "Public users have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual Odoo groups."
-msgstr ""
+msgstr "Public users have specific access rights (such as record rules and restricted menus).\n                They usually do not belong to the usual Odoo groups."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_membership
@@ -12012,6 +12131,11 @@ msgid "Puerto Rico"
 msgstr "Puerto Rico"
 
 #. module: base
+#: model:ir.ui.menu,name:base.next_id_73
+msgid "Purchase"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_analytic_plans
 msgid "Purchase Analytic Plans"
 msgstr ""
@@ -12033,6 +12157,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_purchase_management
+#: model:ir.ui.menu,name:base.menu_purchase_root
 msgid "Purchases"
 msgstr "Purchases"
 
@@ -12202,6 +12327,11 @@ msgstr ""
 #: view:ir.rule:base.view_rule_form view:ir.rule:base.view_rule_tree
 msgid "Record rules"
 msgstr "Record rules"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_case_job_req_main
+msgid "Recruitment"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
@@ -12647,7 +12777,9 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_management
 #: model:ir.ui.menu,name:base.menu_base_partner
-#: model:ir.ui.menu,name:base.menu_sales
+#: model:ir.ui.menu,name:base.menu_sale_config
+#: model:ir.ui.menu,name:base.menu_sale_config_sales
+#: model:ir.ui.menu,name:base.menu_sales model:ir.ui.menu,name:base.next_id_64
 msgid "Sales"
 msgstr "Sales"
 
@@ -12705,6 +12837,11 @@ msgstr "San Marino"
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
 msgstr "Saudi Arabia"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa
+msgid "Saudi Arabia - Accounting"
+msgstr ""
 
 #. module: base
 #: view:res.users:base.view_users_form_simple_modif
@@ -12790,6 +12927,16 @@ msgstr "Security"
 #: view:ir.mail_server:base.ir_mail_server_form
 msgid "Security and Authentication"
 msgstr "Security and Authentication"
+
+#. module: base
+#: model:res.groups,name:base.group_sale_salesman
+msgid "See Own Leads"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_sale_salesman_all_leads
+msgid "See all Leads"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:306
@@ -13109,7 +13256,7 @@ msgstr "Size"
 #: code:addons/base/ir/ir_model.py:318
 #, python-format
 msgid "Size of the field can never be less than 0 !"
-msgstr ""
+msgstr "Size of the field can never be less than 0 !"
 
 #. module: base
 #: view:res.config.installer:base.res_config_installer
@@ -13144,7 +13291,7 @@ msgstr "Slovenian / slovenščina"
 #. module: base
 #: field:res.partner,image_small:0
 msgid "Small-sized image"
-msgstr ""
+msgstr "Small-sized image"
 
 #. module: base
 #: help:res.partner,image_small:0
@@ -13383,6 +13530,11 @@ msgid "Sri Lanka"
 msgstr "Sri Lanka"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_project_config_project
+msgid "Stages"
+msgstr ""
+
+#. module: base
 #: selection:ir.sequence,implementation:0
 msgid "Standard"
 msgstr "Standard"
@@ -13534,6 +13686,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
+#: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: view:res.partner:base.view_res_partner_filter
 msgid "Suppliers"
 msgstr "Suppliers"
@@ -13557,6 +13710,16 @@ msgstr "Suriname"
 #: model:ir.module.module,shortdesc:base.module_survey
 msgid "Survey"
 msgstr "Survey"
+
+#. module: base
+#: model:res.groups,name:base.group_survey_manager
+msgid "Survey / Manager"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_survey_user
+msgid "Survey / User"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey_crm
@@ -13769,6 +13932,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
+#: view:res.users:base.user_groups_view
 msgid "Technical Settings"
 msgstr ""
 
@@ -13776,6 +13940,11 @@ msgstr ""
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
 msgstr "Technical guide"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_17
+msgid "Telecom sector"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14158,7 +14327,7 @@ msgstr "The technical name of the model this field belongs to"
 msgid ""
 "The user this filter is private to. When left empty the filter is public and"
 " available to all users."
-msgstr ""
+msgstr "The user this filter is private to. When left empty the filter is public and available to all users."
 
 #. module: base
 #: code:addons/models.py:6079
@@ -14655,12 +14824,12 @@ msgstr "Unable to upgrade module \"%s\" because an external dependency is not me
 #. module: base
 #: view:ir.ui.view:base.view_view_search
 msgid "Unactive"
-msgstr ""
+msgstr "Unactive"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
 msgid "Uncategorized"
-msgstr ""
+msgstr "Uncategorised"
 
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
@@ -14855,7 +15024,7 @@ msgid ""
 "The HR officer can now manage challenges and badges.\n"
 "This allow the user to send badges to employees instead of simple users.\n"
 "Badge received are displayed on the user profile.\n"
-msgstr ""
+msgstr "Use the HR ressources for the gamification process.\n\nThe HR officer can now manage challenges and badges.\nThis allow the user to send badges to employees instead of simple users.\nBadge received are displayed on the user profile.\n"
 
 #. module: base
 #: selection:ir.actions.server,use_relational_model:0
@@ -14889,7 +15058,8 @@ msgstr "Used to select automatically the right address according to the context 
 #: field:change.password.user,user_id:0 view:ir.cron:base.ir_cron_view_search
 #: field:ir.cron,user_id:0 view:ir.filters:base.ir_filters_view_search
 #: field:ir.filters,user_id:0 field:ir.ui.view.custom,user_id:0
-#: field:ir.values,user_id:0 model:res.groups,name:base.group_sale_salesman
+#: field:ir.values,user_id:0 model:res.groups,name:base.group_document_user
+#: model:res.groups,name:base.group_tool_user
 #: view:res.users:base.view_users_search field:workflow.instance,uid:0
 msgid "User"
 msgstr "User"
@@ -14959,7 +15129,7 @@ msgstr "Users added to this group are automatically added to the following group
 #. module: base
 #: help:res.groups,implied_ids:0
 msgid "Users of this group automatically inherit those groups"
-msgstr ""
+msgstr "Users of this group automatically inherit those groups"
 
 #. module: base
 #: model:res.country,name:base.uz
@@ -15112,7 +15282,7 @@ msgstr "Views"
 msgid ""
 "Views allows you to personalize each view of Odoo. You can add new fields, "
 "move fields, rename them or delete the ones that you do not need."
-msgstr ""
+msgstr "Views allows you to personalise each view of Odoo. You can add new fields, move fields, rename them or delete the ones that you do not need."
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -15183,6 +15353,12 @@ msgstr "Warning Messages and Alerts"
 #, python-format
 msgid "Warning!"
 msgstr "Warning!"
+
+#. module: base
+#: code:addons/models.py:5803 code:addons/models.py:5856
+#, python-format
+msgid "Warnings"
+msgstr ""
 
 #. module: base
 #: view:base.module.upgrade:base.view_base_module_upgrade_install
@@ -15347,7 +15523,7 @@ msgid ""
 " node or arrow, you can only change fields that are empty or set to the "
 "default value. If you don't do that, your customization will be overwrited "
 "at the next update or upgrade to a future version of Odoo."
-msgstr ""
+msgstr "When customising a workflow, be sure you do not modify an existing node or arrow, but rather add new nodes or arrows. If you absolutly need to modify a node or arrow, you can only change fields that are empty or set to the default value. If you don't do that, your customisation will be overwritten at the next update or upgrade to a future version of Odoo."
 
 #. module: base
 #: help:ir.actions.server,sequence:0
@@ -15644,7 +15820,7 @@ msgstr "You try to upgrade a module that depends on the module: %s.\nBut this mo
 msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
-msgstr ""
+msgstr "You will be able to define additional access rights by editing the newly created user under the Settings / Users menu."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:234
@@ -16032,6 +16208,44 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_convert
 msgid "test_convert"
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_hr_user
+msgid "the user will be able to approve document created by employees."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_user
+msgid ""
+"the user will be able to manage his own human resources stuff (leave "
+"request, timesheets, ...), if he is linked to an employee in the system."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_hr_manager
+msgid ""
+"the user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
 msgstr ""
 
 #. module: base

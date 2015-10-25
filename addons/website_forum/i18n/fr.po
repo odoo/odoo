@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-09-26 18:28+0000\n"
+"PO-Revision-Date: 2015-10-22 20:00+0000\n"
 "Last-Translator: Florian Hatat\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -50,7 +50,7 @@ msgstr "\n<p>\nBonjour ${object.name},\n</p>\n<p>\nNous vous invitons à valider
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "Validation de forums ${object.company_id.name}"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -60,17 +60,17 @@ msgstr "&times;"
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "(only one answer per question is allowed)"
-msgstr ""
+msgstr "(une seule réponse par question est autorisé)"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- it really helps to select the best questions and answers!"
-msgstr ""
+msgstr "- ça aide d'identifier les meilleures questions et réponses !"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- no need to answer the same question twice. Also, please"
-msgstr ""
+msgstr "- il n'est pas nécessaire de répondre à la même question deux fois. Aussi, s'il vous plaît"
 
 #. module: website_forum
 #: selection:forum.post.vote,vote:0
@@ -91,14 +91,14 @@ msgstr "<p>Une nouvelle réponse pour <i>%s</i> à été postée. <a href=\"%s/f
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
-msgstr ""
+msgstr "<p>Une nouvelle question <i>%s</i> à été posée à propos de %s. <a href=\"%s/forum/%s/question/%s\">Cliquez ici pour y accéder.</a></p>"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
 msgid ""
 "<p>This community is for professionals and enthusiasts of our products and "
 "services.</p>"
-msgstr ""
+msgstr "<p>Cette communauté s'adresse aux professionnels et enthousiastes de nos produits et services.</p>"
 
 #. module: website_forum
 #: view:website:website_forum.tag
@@ -106,27 +106,27 @@ msgid ""
 "A tag is a label that categorizes your question with other,\n"
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question."
-msgstr ""
+msgstr "Une étiquette est un label qui permet de catégoriser votre question parmi d'autres. Utilisés de la bonne manière, elles vous permettent d'obtenir votre réponse plus rapidement."
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "About This Forum"
-msgstr ""
+msgstr "À propos de ce forum"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_own:0
 msgid "Accept an answer on its own questions"
-msgstr ""
+msgstr "Approuver une réponse provenant de vos propres questions"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_all:0
 msgid "Accept an answer to all questions"
-msgstr ""
+msgstr "Approuver une réponse à toutes les questions"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accept:0
 msgid "Accepting an answer"
-msgstr ""
+msgstr "Approuver une réponse"
 
 #. module: website_forum
 #: field:forum.post,active:0 selection:forum.post,state:0
@@ -154,7 +154,7 @@ msgstr "Réponse"
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
 msgid "Answer Edited"
-msgstr ""
+msgstr "Réponse éditée"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer:0
@@ -164,27 +164,27 @@ msgstr "Répondre à une question"
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accepted:0
 msgid "Answer accepted"
-msgstr ""
+msgstr "Réponse approuvée"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_downvote:0
 msgid "Answer downvoted"
-msgstr ""
+msgstr "Réponse rejetée"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_flagged:0
 msgid "Answer flagged"
-msgstr ""
+msgstr "Réponse inappropriée"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_upvote:0
 msgid "Answer upvoted"
-msgstr ""
+msgstr "Réponse approuvée"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Answered on"
-msgstr ""
+msgstr "Répondue le"
 
 #. module: website_forum
 #: field:forum.post,child_count:0 field:forum.post,child_ids:0
@@ -201,23 +201,23 @@ msgstr "Poser une question"
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Ask your Question"
-msgstr ""
+msgstr "Posez votre question"
 
 #. module: website_forum
 #: field:forum.post,create_date:0
 #: view:website:website_forum.post_description_full
 msgid "Asked on"
-msgstr ""
+msgstr "Posée le"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Asked:"
-msgstr ""
+msgstr "Posée:"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_new:0
 msgid "Asking a question"
-msgstr ""
+msgstr "Poser une question"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -227,17 +227,17 @@ msgstr "Auteur"
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_1
 msgid "Autobiographer"
-msgstr ""
+msgstr "Auteur (autobiographie)"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Back to"
-msgstr ""
+msgstr "Retourner à"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "Badge \""
-msgstr ""
+msgstr "Badge \""
 
 #. module: website_forum
 #: field:res.users,badge_ids:0 view:website:website_forum.badge
@@ -252,12 +252,12 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr ""
+msgstr "Au delà de gagner de la réputation avec vos questions et réponses, vous pouvez aussi recevoir des badges en étant particulièrement brillant. Ceux-ci apparaissent sur votre profil et vos messages."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Biography"
-msgstr ""
+msgstr "Biographie"
 
 #. module: website_forum
 #: field:forum.post,can_accept:0
@@ -317,7 +317,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.user_badges
 msgid "Check available badges"
-msgstr ""
+msgstr "Valider les badges disponibles"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
@@ -425,7 +425,7 @@ msgstr ""
 msgid ""
 "Congratulations! Your email has just been validated. You may now participate"
 " to our forums."
-msgstr ""
+msgstr "Félicitations! Votre e-mail vient d'être validé. Vous pouvez désormais participer à nos forums."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -480,7 +480,7 @@ msgstr "Créé le"
 #: model:gamification.badge,name:website_forum.badge_q_4
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
 msgid "Credible Question"
-msgstr ""
+msgstr "Question crédible"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_5
@@ -497,7 +497,7 @@ msgstr "Date du dernier message enregistré sur cet enregistrement"
 #. module: website_forum
 #: field:forum.forum,karma_unlink_all:0
 msgid "Delete all posts"
-msgstr ""
+msgstr "Supprimer tous les posts"
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_own:0
@@ -514,7 +514,7 @@ msgstr "Description"
 #: model:gamification.challenge,name:website_forum.challenge_disciplined
 #: model:gamification.goal.definition,name:website_forum.definition_disciplined
 msgid "Disciplined"
-msgstr ""
+msgstr "Discipliné"
 
 #. module: website_forum
 #: field:forum.forum,karma_downvote:0
@@ -524,22 +524,22 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Edit Profile"
-msgstr ""
+msgstr "Modifier le profil"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Edit Your Bio"
-msgstr ""
+msgstr "Modifiez votre bio"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
-msgstr ""
+msgstr "Modifiez votre précédente réponse"
 
 #. module: website_forum
 #: field:forum.forum,karma_edit_all:0
 msgid "Edit all posts"
-msgstr ""
+msgstr "Editer tous les postes"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -566,7 +566,7 @@ msgstr ""
 #: model:gamification.challenge,name:website_forum.challenge_editor
 #: model:gamification.goal.definition,name:website_forum.definition_editor
 msgid "Editor"
-msgstr ""
+msgstr "Éditeur"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -589,63 +589,63 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
-msgstr ""
+msgstr "Question célèbre"
 
 #. module: website_forum
 #: field:forum.post,favourite_count:0
 msgid "Favorite Count"
-msgstr ""
+msgstr "Compteur de favoris"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_5
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
-msgstr ""
+msgstr "Question favorite"
 
 #. module: website_forum
 #: field:forum.post,favourite_ids:0
 msgid "Favourite"
-msgstr ""
+msgstr "Favori"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
 msgid "Favourite Question (1)"
-msgstr ""
+msgstr "Question favorite (1)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
 msgid "Favourite Question (25)"
-msgstr ""
+msgstr "Question favorite (25)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
 msgid "Favourite Question (5)"
-msgstr ""
+msgstr "Question favorite (5)"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Favourite Questions"
-msgstr ""
+msgstr "Questions favorites"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Filter on"
-msgstr ""
+msgstr "Filtrer sur"
 
 #. module: website_forum
 #: field:forum.forum,karma_flag:0
 msgid "Flag a post as offensive"
-msgstr ""
+msgstr "Marquer un message comme offensif"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Followed"
-msgstr ""
+msgstr "Suivi"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Followed Questions"
-msgstr ""
+msgstr "Questions suivies"
 
 #. module: website_forum
 #: field:forum.forum,message_follower_ids:0
@@ -697,12 +697,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
 msgid "Gamification badge"
-msgstr ""
+msgstr "Badge d'émulation"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr ""
+msgstr "Défi d'émulation"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
@@ -979,7 +979,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Newest"
-msgstr ""
+msgstr "Le Plus Récent"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_2
@@ -1147,7 +1147,7 @@ msgstr ""
 #: field:forum.tag,post_ids:0
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 msgid "Posts"
-msgstr ""
+msgstr "Billets"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -1202,7 +1202,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Question:"
-msgstr ""
+msgstr "Question:"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index view:website:website_forum.header
@@ -1299,7 +1299,7 @@ msgstr "Trier par"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Stats"
-msgstr ""
+msgstr "Statistiques"
 
 #. module: website_forum
 #: field:forum.post,state:0
@@ -1384,7 +1384,7 @@ msgstr "au"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Basculer la navigation"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1475,7 +1475,7 @@ msgstr "Vues"
 #: field:forum.post.vote,vote:0
 #: model:ir.model,name:website_forum.model_forum_post_vote
 msgid "Vote"
-msgstr ""
+msgstr "Voter"
 
 #. module: website_forum
 #: field:forum.post,vote_count:0 field:forum.post,vote_ids:0
@@ -1727,17 +1727,17 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "stats"
-msgstr ""
+msgstr "statistiques"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "time"
-msgstr ""
+msgstr "temps"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "times"
-msgstr ""
+msgstr "temps"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
@@ -1772,7 +1772,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "views"
-msgstr ""
+msgstr "Vues"
 
 #. module: website_forum
 #: view:website:website_forum.display_post view:website:website_forum.vote
@@ -1788,7 +1788,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "website"
-msgstr ""
+msgstr "Site web"
 
 #. module: website_forum
 #: view:website:website_forum.display_post

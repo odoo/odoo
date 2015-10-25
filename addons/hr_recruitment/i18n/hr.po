@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 07:20+0000\n"
+"PO-Revision-Date: 2015-10-23 14:26+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-8/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -31,42 +31,42 @@ msgstr ""
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
 msgid "0-15"
-msgstr ""
+msgstr "0-15"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_2
 msgid "16-20"
-msgstr ""
+msgstr "16-20"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_3
 msgid "21-30"
-msgstr ""
+msgstr "21-30"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_4
 msgid "31-40"
-msgstr ""
+msgstr "31-40"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_5
 msgid "41-50"
-msgstr ""
+msgstr "41-50"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_6
 msgid "51-60"
-msgstr ""
+msgstr "51-60"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_7
 msgid "61-70"
-msgstr ""
+msgstr "61-70"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_8
 msgid "71+"
-msgstr ""
+msgstr "71+"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
@@ -152,7 +152,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id.signature | safe}"
-msgstr ""
+msgstr "<p>Poštovani ${objekt.učesnik_ime ili 'podnosilac zamolbe'},</p>\n<p>Čestitamo! Vaš životopis nas je zainteresirao!\n Nazvati ćemo Vas ubrzo kako bismo napravili 10 minutni telefonski intervju i dogovorili prvi sastanak.</p>\n<p>Ako ne možemo doći do vas ili ste propustili naš poziv budite slobodni kontaktirati nas na broj 001 312 349 3030\nAko ne odgovorim, molim Vas da mi ostavite poruku kada Vas mogu  nazvati.</p>\n<p>Srdačan pozdrav,</p>\n<br/>\n ${objekt.korisnik_id.potpis ja sigurno}"
 
 #. module: hr_recruitment
 #: model:email.template,body_html:hr_recruitment.applicant_refuse
@@ -165,7 +165,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
-msgstr ""
+msgstr "<p>Poštovani ${object.učesnik_ime or 'podnosilac zamolbe'},</p>\n<p>Zahvaljujemo Vam na Vašem interesu za našu tvrtku i za Vašu prijavu.\nNažalost, Vaš profil ne odgovara našim potrbama za zapošljavanjem\nnatječaj je završio.</p>                                                                                <p>Ako želite saznati više detalja budite slobodni kontaktirati nas telefonom.</p>\n<p>Srdačan pozdrav,</p>\n<br/>\n ${objekt.korisnik_id i objekt.korisnik_id.potpis ja sigurno ili ''}"
 
 #. module: hr_recruitment
 #: model:survey.survey,description:hr_recruitment.recruitment_form
@@ -199,7 +199,7 @@ msgstr "Aktivnosti"
 #. module: hr_recruitment
 #: help:hr.job,address_id:0
 msgid "Address where employees are working"
-msgstr ""
+msgstr "Adrese gdje zaposlenici rade"
 
 #. module: hr_recruitment
 #: field:hr.job,alias_id:0
@@ -219,7 +219,7 @@ msgstr "Dozvoli automatsko indesiranje životopisa"
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
 msgid "Answer related job question"
-msgstr ""
+msgstr "Odgovori na pitanje vezano za posao"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
@@ -240,12 +240,12 @@ msgstr "Kandidat zaposlen"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
 msgid "Applicant Stage Changed"
-msgstr ""
+msgstr "Podnositelj zahtjeva za izvršenjem promjene"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
 msgid "Applicant created"
-msgstr ""
+msgstr "Kandidat je podnio zahtjev"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
@@ -268,17 +268,17 @@ msgstr "Kandidati"
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
 msgid "Application Summary"
-msgstr ""
+msgstr "Sažetak prijave"
 
 #. module: hr_recruitment
 #: model:email.template,subject:hr_recruitment.applicant_interest
 msgid "Application approved"
-msgstr ""
+msgstr "Prihvaćena prijava"
 
 #. module: hr_recruitment
 #: model:email.template,subject:hr_recruitment.applicant_refuse
 msgid "Application refused"
-msgstr ""
+msgstr "Odbijena prijava"
 
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.hr_job_survey
@@ -309,7 +309,7 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.applicant,date_open:0
 msgid "Assigned"
-msgstr ""
+msgstr "Dodijeljeno"
 
 #. module: hr_recruitment
 #: field:hr.applicant,availability:0 field:hr.recruitment.report,available:0
@@ -351,7 +351,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:survey.page,title:hr_recruitment.recruitment_1
 msgid "Basic information"
-msgstr ""
+msgstr "Osnovne informacije"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -362,17 +362,17 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_departmnet
 msgid "By Department"
-msgstr ""
+msgstr "Po odjelu"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_job
 msgid "By Job"
-msgstr ""
+msgstr "Po poslu"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_recruiter
 msgid "By Recruiter"
-msgstr ""
+msgstr "Po regruteru"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
@@ -713,7 +713,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Prošireni filteri..."
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
@@ -810,7 +810,7 @@ msgstr "Grupiraj po"
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
-msgstr ""
+msgstr "Zaposleni djelatnici"
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_summary:0
@@ -969,7 +969,7 @@ msgstr "Vrijeme promjene"
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.view_hr_job_kanban
 msgid "Launch Recruitment"
-msgstr ""
+msgstr "Pokreni proces zapošljavanja"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_linkedin
@@ -1063,7 +1063,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Nova pošta"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/hr_recruitment.py:425
@@ -1560,7 +1560,7 @@ msgstr "Website poruke"
 #. module: hr_recruitment
 #: help:hr.applicant,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Povijest komunikacije Web stranice"
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_3
@@ -1586,7 +1586,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.view_hr_job_kanban
 msgid "click here"
-msgstr ""
+msgstr "klikni ovdje"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job

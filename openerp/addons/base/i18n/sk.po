@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-08 14:50+0000\n"
-"PO-Revision-Date: 2015-09-26 14:52+0000\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-24 09:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -1790,6 +1790,17 @@ msgid ""
 "\n"
 "* In a module, so that administrators and users of OpenERP who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa
+msgid ""
+"\n"
+"Odoo Arabic localization for most arabic countries and Saudi Arabia.\n"
+"\n"
+"This initially includes chart of accounts of USA translated to Arabic.\n"
+"\n"
+"In future this module will include some payroll rules for ME .\n"
 msgstr ""
 
 #. module: base
@@ -4301,7 +4312,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_test_new_api
 msgid "A module to test the API."
-msgstr ""
+msgstr "Modul na testovanie API."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_uninstall
@@ -4478,7 +4489,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_values_form_action
 #: view:ir.values:base.values_view_form_action
 msgid "Action Bindings"
-msgstr ""
+msgstr "Väzba akcií"
 
 #. module: base
 #: view:ir.values:base.values_view_tree_action
@@ -4533,7 +4544,7 @@ msgstr "Použitie akcie"
 msgid ""
 "Action bound to this entry - helper field for binding an action, will "
 "automatically set the correct reference"
-msgstr ""
+msgstr "Akcia viazaná k tomuto zadaniu - pomocné pole pre pripojenie akcie, automaticky nastaví správny odkaz"
 
 #. module: base
 #: field:ir.actions.act_url,help:0 field:ir.actions.act_window,help:0
@@ -4768,6 +4779,11 @@ msgid "After Amount"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_aftersale
+msgid "After-Sale Services"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.al
 msgid "Albania"
 msgstr "Albánsko"
@@ -4847,7 +4863,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Analytické účtovníctvo"
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -4904,7 +4920,7 @@ msgstr ""
 #: view:res.users:base.user_groups_view
 #, python-format
 msgid "Application"
-msgstr ""
+msgstr "Aplikácia"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -4914,7 +4930,7 @@ msgstr "Výrazy aplikácie"
 #. module: base
 #: view:res.config:base.res_config_view_base
 msgid "Apply"
-msgstr ""
+msgstr "Použiť"
 
 #. module: base
 #: code:addons/base/module/module.py:565
@@ -4932,29 +4948,29 @@ msgstr "Vykonať naplánované aktualizácie"
 #. module: base
 #: field:ir.rule,perm_create:0
 msgid "Apply for Create"
-msgstr ""
+msgstr "Použiť pre vytvorenie"
 
 #. module: base
 #: field:ir.rule,perm_unlink:0
 msgid "Apply for Delete"
-msgstr ""
+msgstr "Použiť pre zmazanie"
 
 #. module: base
 #: field:ir.rule,perm_read:0
 msgid "Apply for Read"
-msgstr ""
+msgstr "Použiť pre čitanie"
 
 #. module: base
 #: field:ir.rule,perm_write:0
 msgid "Apply for Write"
-msgstr ""
+msgstr "Použiť pre zápis"
 
 #. module: base
 #: model:ir.actions.client,name:base.modules_act_cl
 #: view:ir.module.module:base.view_module_filter
 #: model:ir.ui.menu,name:base.module_mi
 msgid "Apps"
-msgstr ""
+msgstr "Aplikácia"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -4984,7 +5000,7 @@ msgstr "Argumenty"
 #. module: base
 #: help:ir.actions.client,params:0
 msgid "Arguments sent to the client along withthe view tag"
-msgstr ""
+msgstr "Argumenty odoslané klientovi spolu zo značkou pohľadu"
 
 #. module: base
 #: help:ir.cron,args:0
@@ -5004,17 +5020,19 @@ msgstr "Aruba"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
 msgid "Assets Management"
-msgstr ""
+msgstr "Správa majetku"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_association
+#: model:ir.ui.menu,name:base.menu_association
+#: model:ir.ui.menu,name:base.menu_report_association
 msgid "Association"
 msgstr "Spojenie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_association
 msgid "Associations Management"
-msgstr ""
+msgstr "Správa spojovania"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_membership
@@ -5052,8 +5070,9 @@ msgstr "Prílohy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
+#: model:res.groups,name:base.group_hr_attendance
 msgid "Attendances"
-msgstr ""
+msgstr "Dochádzky"
 
 #. module: base
 #: model:res.country,name:base.au
@@ -5068,7 +5087,7 @@ msgstr "Rakúsko"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_at
 msgid "Austria - Accounting"
-msgstr ""
+msgstr "Rakúsko - Účtovníctvo"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_authentication
@@ -5078,7 +5097,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
 msgid "Authentication via LDAP"
-msgstr ""
+msgstr "Overenie cez LDAP"
 
 #. module: base
 #: view:ir.module.module:base.view_module_filter
@@ -5105,24 +5124,24 @@ msgstr "Automatická obnova"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_action_rule
 msgid "Automated Action Rules"
-msgstr ""
+msgstr "Pravidlá automatických akcií"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_gengo
 msgid "Automated Translations through Gengo API"
-msgstr ""
+msgstr "Automatický preklad prostredníctvom Gengo API"
 
 #. module: base
 #: field:ir.module.module,auto_install:0
 msgid "Automatic Installation"
-msgstr ""
+msgstr "Automatická inštalácia"
 
 #. module: base
 #: help:ir.translation,state:0
 msgid ""
 "Automatically set to let administators find new terms that might need to be "
 "translated"
-msgstr ""
+msgstr "Nastaviť automatické poskytovanie nových termínov k prekladu administrátorom"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_automation
@@ -5213,7 +5232,7 @@ msgstr "Kód banky"
 #: view:res.partner.bank:base.view_partner_bank_search
 #: field:res.partner.bank,bank_name:0
 msgid "Bank Name"
-msgstr ""
+msgstr "Názov banky"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_extensions
@@ -5253,6 +5272,11 @@ msgid "Banks"
 msgstr "Banky"
 
 #. module: base
+#: help:res.partner,ean13:0 help:res.users,ean13:0
+msgid "BarCode"
+msgstr "Čiarový kód"
+
+#. module: base
 #: model:res.country,name:base.bb
 msgid "Barbados"
 msgstr "Barbados"
@@ -5260,7 +5284,7 @@ msgstr "Barbados"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_scanner
 msgid "Barcode Scanner Hardware Driver"
-msgstr ""
+msgstr "Hardvérový ovládač čítačky čiarového kódu"
 
 #. module: base
 #: view:ir.model:base.view_model_search
@@ -5278,7 +5302,7 @@ msgstr "Základné pole"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_kanban
 msgid "Base Kanban"
-msgstr ""
+msgstr "Základný kanban"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:203
@@ -5329,7 +5353,7 @@ msgstr ""
 #. module: base
 #: selection:res.currency,position:0
 msgid "Before Amount"
-msgstr ""
+msgstr "Pred čiastkou"
 
 #. module: base
 #: model:res.country,name:base.by
@@ -5349,7 +5373,7 @@ msgstr "Belgicko"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be
 msgid "Belgium - Accounting"
-msgstr ""
+msgstr "Belgicko - Účtovníctvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
@@ -5359,7 +5383,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
 msgid "Belgium - Payroll"
-msgstr ""
+msgstr "Belgicko - výplatná páska"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
@@ -5394,7 +5418,7 @@ msgstr "Bhután"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet
 msgid "Bill Time on Tasks"
-msgstr ""
+msgstr "Účtovaný čas úloh"
 
 #. module: base
 #: view:ir.attachment:base.view_attachment_search
@@ -5465,7 +5489,7 @@ msgstr "Brazília"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
 msgid "Brazilian - Accounting"
-msgstr ""
+msgstr "Brazília - Účtovníctvo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_payment
@@ -5480,7 +5504,7 @@ msgstr "Britské indickooceánske územie"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_6
 msgid "Bronze"
-msgstr ""
+msgstr "Bronzový"
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -5496,7 +5520,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
 msgid "Budgets Management"
-msgstr ""
+msgstr "Správa rozpočtu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website
@@ -5526,7 +5550,7 @@ msgstr "Burundi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gamification_sale_crm
@@ -5600,7 +5624,7 @@ msgstr "Kanada"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca
 msgid "Canada - Accounting"
-msgstr ""
+msgstr "Kanada - Účtovníctvo"
 
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
@@ -5710,22 +5734,22 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_change_password_wizard
 msgid "Change Password Wizard"
-msgstr ""
+msgstr "Sprievodca zmenou hesla"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
 msgid "Change Password Wizard User"
-msgstr ""
+msgstr "Užívateľ sprievodcu zmenou hesla"
 
 #. module: base
 #: view:res.users:base.view_users_form_simple_modif
 msgid "Change password"
-msgstr ""
+msgstr "Zmeniť heslo"
 
 #. module: base
 #: view:res.users:base.view_users_form
 msgid "Change the user password."
-msgstr ""
+msgstr "Zmeňte heslo užívateľa"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:383
@@ -5741,7 +5765,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:475
 #, python-format
 msgid "Changing the model of a field is forbidden!"
-msgstr ""
+msgstr "Je zakázaná zmena modelu poľa"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:419
@@ -5780,12 +5804,12 @@ msgstr ""
 #. module: base
 #: help:res.partner,is_company:0
 msgid "Check if the contact is a company, otherwise it is a person"
-msgstr ""
+msgstr "Zaškrtnite toto pole, pokiaľ je kontakt firmou, inak budete jednať s osobou."
 
 #. module: base
 #: help:res.partner,customer:0
 msgid "Check this box if this contact is a customer."
-msgstr ""
+msgstr "Zaškrtnite toto pole, pokiaľ je kontakt zákazník."
 
 #. module: base
 #: help:res.partner,supplier:0
@@ -5797,7 +5821,7 @@ msgstr ""
 #. module: base
 #: help:res.partner,employee:0
 msgid "Check this box if this contact is an Employee."
-msgstr ""
+msgstr "Zaškrtnite toto pole, pokiaľ je kontakt zamestnancom."
 
 #. module: base
 #: help:ir.actions.server,link_new_record:0
@@ -6007,7 +6031,7 @@ msgstr ""
 #. module: base
 #: field:res.partner,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Farebný index"
 
 #. module: base
 #: help:ir.actions.act_window,view_mode:0
@@ -6173,6 +6197,10 @@ msgstr "Nastavenie krokov sprievodcu"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
 #: model:ir.ui.menu,name:base.menu_config
+#: model:ir.ui.menu,name:base.menu_definitions
+#: model:ir.ui.menu,name:base.menu_event_config
+#: model:ir.ui.menu,name:base.menu_marketing_config_association
+#: model:ir.ui.menu,name:base.menu_marketing_config_root
 #: model:ir.ui.menu,name:base.menu_reporting_config
 #: view:res.company:base.view_company_form
 #: view:res.config:base.res_config_view_base
@@ -6445,6 +6473,7 @@ msgstr ""
 
 #. module: base
 #: field:ir.logging,create_date:0 field:ir.ui.view,create_date:0
+#: field:res.partner,create_date:0 field:res.users,create_date:0
 msgid "Create Date"
 msgstr "Dátum vytvorenia"
 
@@ -6614,13 +6643,11 @@ msgstr "Vytvoril"
 #: field:res.country.group,create_date:0 field:res.country.state,create_date:0
 #: field:res.currency,create_date:0 field:res.currency.rate,create_date:0
 #: field:res.font,create_date:0 field:res.groups,create_date:0
-#: field:res.lang,create_date:0 field:res.partner,create_date:0
-#: field:res.partner.bank,create_date:0
+#: field:res.lang,create_date:0 field:res.partner.bank,create_date:0
 #: field:res.partner.bank.type,create_date:0
 #: field:res.partner.bank.type.field,create_date:0
 #: field:res.partner.category,create_date:0
 #: field:res.partner.title,create_date:0 field:res.request.link,create_date:0
-#: field:res.users,create_date:0
 #: field:wizard.ir.model.menu.create,create_date:0
 #: field:workflow,create_date:0 field:workflow.activity,create_date:0
 #: field:workflow.transition,create_date:0
@@ -6902,6 +6929,11 @@ msgid "Date Format"
 msgstr "Formát dátumu"
 
 #. module: base
+#: field:ir.attachment,write_date:0
+msgid "Date Modified"
+msgstr ""
+
+#. module: base
 #: selection:ir.property,type:0
 msgid "DateTime"
 msgstr "DateTime"
@@ -6935,6 +6967,19 @@ msgstr "Deň: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Dní"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
 
 #. module: base
 #: field:ir.mail_server,smtp_debug:0
@@ -7096,7 +7141,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de
 msgid "Deutschland - Accounting"
-msgstr ""
+msgstr "Nemecko - Účtovníctvo"
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -7130,6 +7175,11 @@ msgstr ""
 #: view:res.currency:base.view_currency_form
 msgid "Display"
 msgstr "Zobraziť"
+
+#. module: base
+#: model:res.groups,name:base.group_website_publisher
+msgid "Display Editor Bar on Website"
+msgstr ""
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -7177,6 +7227,11 @@ msgstr ""
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr "Džibutsko"
+
+#. module: base
+#: model:res.groups,name:base.group_mono_salesteams
+msgid "Do Not Use Sales Teams"
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
@@ -7229,7 +7284,7 @@ msgstr "Dominikánska republika"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_do
 msgid "Dominican Republic - Accounting"
-msgstr ""
+msgstr "Dominikánska republika - Účtovníctvo"
 
 #. module: base
 #: selection:ir.actions.todo,state:0
@@ -7285,7 +7340,7 @@ msgid "Dynamic expression builder"
 msgstr ""
 
 #. module: base
-#: field:res.partner,ean13:0
+#: field:res.partner,ean13:0 field:res.users,ean13:0
 msgid "EAN13"
 msgstr "EAN13"
 
@@ -7317,7 +7372,7 @@ msgstr "Ekvádor"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
 msgid "Ecuador - Accounting"
-msgstr ""
+msgstr "Ekvádor - Účtovníctvo"
 
 #. module: base
 #: model:res.country,name:base.eg
@@ -7508,7 +7563,7 @@ msgstr "Etiópia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_et
 msgid "Ethiopia - Accounting"
-msgstr ""
+msgstr "Etiópia - Účtovníctvo"
 
 #. module: base
 #: field:ir.server.object.lines,type:0
@@ -8036,7 +8091,7 @@ msgstr "Francúzsko"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
 msgid "France - Accounting"
-msgstr ""
+msgstr "Francúzko - Účtovníctvo"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8284,7 +8339,7 @@ msgstr "Grécko"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr
 msgid "Greece - Accounting"
-msgstr ""
+msgstr "Grécko - Účtovníctvo"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8375,7 +8430,7 @@ msgstr "Guatemala"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gt
 msgid "Guatemala - Accounting"
-msgstr ""
+msgstr "Guatemala - Účtovníctvo"
 
 #. module: base
 #: model:res.country,name:base.gg
@@ -8589,7 +8644,7 @@ msgstr "Honduras"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hn
 msgid "Honduras - Accounting"
-msgstr ""
+msgstr "Honduras - Účtovníctvo"
 
 #. module: base
 #: model:res.country,name:base.hk
@@ -8631,7 +8686,7 @@ msgstr "Ľudské zdroje"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu
 msgid "Hungarian - Accounting"
-msgstr ""
+msgstr "Maďarsko - Účtovníctvo"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8919,6 +8974,11 @@ msgid "Implementation"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_import_crm
+msgid "Import & Synchronize"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
 msgid "Import / Export"
 msgstr "Import / Export"
@@ -9148,7 +9208,7 @@ msgstr ""
 #. module: base
 #: view:res.partner:base.view_partner_form
 msgid "Internal Notes"
-msgstr ""
+msgstr "Interné poznámky"
 
 #. module: base
 #: field:ir.cron,interval_number:0
@@ -9280,7 +9340,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules_inventory_control
 msgid "Inventory Control"
-msgstr ""
+msgstr "Kontrola inventára"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock
@@ -9305,6 +9365,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_invoice
 msgid "Invoice on Timesheets"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_invoiced
+msgid "Invoicing"
 msgstr ""
 
 #. module: base
@@ -9371,7 +9436,7 @@ msgstr "Taliansko"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it
 msgid "Italy - Accounting"
-msgstr ""
+msgstr "Taliansko - Účtovníctvo"
 
 #. module: base
 #: model:res.country,name:base.ci
@@ -9598,6 +9663,11 @@ msgid "Last Modification Date"
 msgstr ""
 
 #. module: base
+#: field:ir.attachment,write_uid:0
+msgid "Last Modification User"
+msgstr ""
+
+#. module: base
 #: field:base.language.export,write_uid:0
 #: field:base.language.import,write_uid:0
 #: field:base.language.install,write_uid:0
@@ -9751,6 +9821,11 @@ msgstr "Launchpad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_project_issue
 msgid "Lead to Issue"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_lead
+msgid "Leads & Opportunities"
 msgstr ""
 
 #. module: base
@@ -9925,7 +10000,7 @@ msgstr "Kód lokalizácie"
 #: model:ir.ui.menu,name:base.menu_localisation
 #: view:res.users:base.view_users_form
 msgid "Localization"
-msgstr ""
+msgstr "Lokalizácia"
 
 #. module: base
 #: view:ir.logging:base.ir_logging_form_view
@@ -10079,6 +10154,16 @@ msgid "Malta"
 msgstr "Malta"
 
 #. module: base
+#: model:res.groups,name:base.group_multi_salesteams
+msgid "Manage Sales Teams"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_website_designer
+msgid "Manage Website and qWeb view"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
 msgid ""
 "Manage and customize the items available and displayed in your Odoo system "
@@ -10111,7 +10196,9 @@ msgid ""
 msgstr "Spravovať tituly partnera, ktoré chcete mať dostupné vo Vašom systéme.  Tituly partnera sú právne formy spoločnosti: spoločnost s ručením obmedzením, akciová spoločnosť, atď."
 
 #. module: base
+#: model:res.groups,name:base.group_hr_manager
 #: model:res.groups,name:base.group_sale_manager
+#: model:res.groups,name:base.group_tool_manager
 msgid "Manager"
 msgstr "Manažér"
 
@@ -10135,6 +10222,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
+#: model:ir.ui.menu,name:base.menu_mrp_config
+#: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
 msgstr "Výroba"
 
@@ -10174,6 +10263,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
 #: model:ir.module.module,shortdesc:base.module_marketing
+#: model:ir.ui.menu,name:base.marketing_menu
+#: model:ir.ui.menu,name:base.marketing_reporting_menu
 msgid "Marketing"
 msgstr "Reklama"
 
@@ -10302,7 +10393,7 @@ msgstr ""
 #. module: base
 #: field:ir.cron,function:0
 msgid "Method"
-msgstr ""
+msgstr "Metóda"
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -10636,12 +10727,12 @@ msgstr "Mozambik"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_mister
 msgid "Mr."
-msgstr ""
+msgstr "Pán"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Mrs."
-msgstr ""
+msgstr "Pani"
 
 #. module: base
 #: model:res.groups,name:base.group_multi_company
@@ -10780,7 +10871,7 @@ msgstr ""
 #. module: base
 #: field:change.password.user,new_passwd:0
 msgid "New Password"
-msgstr ""
+msgstr "Nové heslo"
 
 #. module: base
 #: selection:ir.actions.act_url,target:0
@@ -11058,6 +11149,11 @@ msgid "Office Supplies"
 msgstr ""
 
 #. module: base
+#: model:res.groups,name:base.group_hr_user
+msgid "Officer"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_ogone
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Ogone Payment Acquirer"
@@ -11224,6 +11320,11 @@ msgstr ""
 #: code:addons/base/workflow/workflow.py:101
 #, python-format
 msgid "Operation Forbidden"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_opportunity
+msgid "Opportunities"
 msgstr ""
 
 #. module: base
@@ -11469,6 +11570,11 @@ msgid "Partner Assignation & Geolocation"
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_partner_mass_mail
+msgid "Partner Mass Mailing"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner Module for Website"
 msgstr ""
@@ -11570,6 +11676,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
 msgid "Payment Acquirer: Transfer Implementation"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_sales_followup
+msgid "Payment Follow-up"
 msgstr ""
 
 #. module: base
@@ -11735,7 +11846,7 @@ msgstr "Poľsko"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl
 msgid "Poland - Accounting"
-msgstr ""
+msgstr "Poľské - Účtovníctvo"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -11887,7 +11998,7 @@ msgstr "Priorita"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_procurement
 msgid "Procurements"
-msgstr ""
+msgstr "Obstarávania"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_email_template
@@ -11897,6 +12008,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_extended
 msgid "Product extension to track sales and purchases"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_product
+msgid "Products"
 msgstr ""
 
 #. module: base
@@ -11921,6 +12037,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_project_management
+#: model:ir.ui.menu,name:base.menu_main_pm
+#: model:ir.ui.menu,name:base.menu_project_config
+#: model:ir.ui.menu,name:base.menu_project_report
 msgid "Project"
 msgstr "Projekt"
 
@@ -12013,6 +12132,11 @@ msgid "Puerto Rico"
 msgstr "Portoriko"
 
 #. module: base
+#: model:ir.ui.menu,name:base.next_id_73
+msgid "Purchase"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_analytic_plans
 msgid "Purchase Analytic Plans"
 msgstr ""
@@ -12034,6 +12158,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_purchase_management
+#: model:ir.ui.menu,name:base.menu_purchase_root
 msgid "Purchases"
 msgstr "Nákupy"
 
@@ -12205,6 +12330,11 @@ msgid "Record rules"
 msgstr "Pravidlá záznamu"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_crm_case_job_req_main
+msgid "Recruitment"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
 msgid "Recruitment Process"
 msgstr ""
@@ -12212,7 +12342,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_subscription
 msgid "Recurring Documents"
-msgstr ""
+msgstr "Dokumenty opakovania"
 
 #. module: base
 #: code:addons/base/module/module.py:382
@@ -12577,7 +12707,7 @@ msgstr "SQL obmedzenie"
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
 msgid "SSL/TLS"
-msgstr ""
+msgstr "SSL/TLS"
 
 #. module: base
 #: field:ir.actions.report.xml,report_sxw_content:0
@@ -12648,7 +12778,9 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_management
 #: model:ir.ui.menu,name:base.menu_base_partner
-#: model:ir.ui.menu,name:base.menu_sales
+#: model:ir.ui.menu,name:base.menu_sale_config
+#: model:ir.ui.menu,name:base.menu_sale_config_sales
+#: model:ir.ui.menu,name:base.menu_sales model:ir.ui.menu,name:base.next_id_64
 msgid "Sales"
 msgstr "Obchod"
 
@@ -12690,7 +12822,7 @@ msgstr ""
 #. module: base
 #: view:res.partner:base.view_res_partner_filter field:res.partner,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Predajca"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -12708,9 +12840,14 @@ msgid "Saudi Arabia"
 msgstr "Saudská arábia"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa
+msgid "Saudi Arabia - Accounting"
+msgstr ""
+
+#. module: base
 #: view:res.users:base.view_users_form_simple_modif
 msgid "Save"
-msgstr ""
+msgstr "Uložiť"
 
 #. module: base
 #: field:ir.actions.report.xml,attachment:0
@@ -12790,6 +12927,16 @@ msgstr "Bezpečnosť"
 #. module: base
 #: view:ir.mail_server:base.ir_mail_server_form
 msgid "Security and Authentication"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_sale_salesman
+msgid "See Own Leads"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_sale_salesman_all_leads
+msgid "See all Leads"
 msgstr ""
 
 #. module: base
@@ -12951,7 +13098,7 @@ msgstr ""
 #. module: base
 #: selection:ir.logging,type:0
 msgid "Server"
-msgstr ""
+msgstr "Server"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -13125,7 +13272,7 @@ msgstr "Slovenčina"
 #. module: base
 #: model:res.country,name:base.sk
 msgid "Slovakia"
-msgstr ""
+msgstr "Slovensko"
 
 #. module: base
 #: model:res.country,name:base.si
@@ -13384,6 +13531,11 @@ msgid "Sri Lanka"
 msgstr "Srí Lanka"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_project_config_project
+msgid "Stages"
+msgstr ""
+
+#. module: base
 #: selection:ir.sequence,implementation:0
 msgid "Standard"
 msgstr ""
@@ -13535,6 +13687,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
+#: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: view:res.partner:base.view_res_partner_filter
 msgid "Suppliers"
 msgstr "Dodávatelia"
@@ -13557,6 +13710,16 @@ msgstr "Surinam"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey
 msgid "Survey"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_survey_manager
+msgid "Survey / Manager"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_survey_user
+msgid "Survey / User"
 msgstr ""
 
 #. module: base
@@ -13671,7 +13834,7 @@ msgstr ""
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
 msgid "TLS (STARTTLS)"
-msgstr ""
+msgstr "TLS (STARTTLS)"
 
 #. module: base
 #: field:ir.default,ref_table:0
@@ -13770,6 +13933,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
+#: view:res.users:base.user_groups_view
 msgid "Technical Settings"
 msgstr ""
 
@@ -13777,6 +13941,11 @@ msgstr ""
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
 msgstr "Technická príručka"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_17
+msgid "Telecom sector"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14295,7 +14464,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
 msgid "Timesheets"
-msgstr ""
+msgstr "Časový rozvrh"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet_sheet
@@ -14321,7 +14490,7 @@ msgstr "Titul"
 #: model:ir.actions.act_window,name:base.action_partner_title_partner
 #: model:ir.ui.menu,name:base.menu_partner_title_partner
 msgid "Titles"
-msgstr ""
+msgstr "Tituly"
 
 #. module: base
 #: view:ir.actions.todo:base.config_wizard_step_view_search
@@ -14429,7 +14598,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_translation
 #: model:ir.ui.menu,name:base.menu_action_translation
 msgid "Translated Terms"
-msgstr ""
+msgstr "Preložené výrazy"
 
 #. module: base
 #: field:ir.translation,name:0
@@ -14890,7 +15059,8 @@ msgstr "Použité na automatický výber správnej adresy vzhľadom na kontext o
 #: field:change.password.user,user_id:0 view:ir.cron:base.ir_cron_view_search
 #: field:ir.cron,user_id:0 view:ir.filters:base.ir_filters_view_search
 #: field:ir.filters,user_id:0 field:ir.ui.view.custom,user_id:0
-#: field:ir.values,user_id:0 model:res.groups,name:base.group_sale_salesman
+#: field:ir.values,user_id:0 model:res.groups,name:base.group_document_user
+#: model:res.groups,name:base.group_tool_user
 #: view:res.users:base.view_users_search field:workflow.instance,uid:0
 msgid "User"
 msgstr "Používateľ"
@@ -15184,6 +15354,12 @@ msgstr ""
 #, python-format
 msgid "Warning!"
 msgstr "Varovanie !"
+
+#. module: base
+#: code:addons/models.py:5803 code:addons/models.py:5856
+#, python-format
+msgid "Warnings"
+msgstr ""
 
 #. module: base
 #: view:base.module.upgrade:base.view_base_module_upgrade_install
@@ -15939,7 +16115,7 @@ msgstr ""
 #. module: base
 #: view:ir.attachment:base.view_attachment_form
 msgid "on"
-msgstr ""
+msgstr "na"
 
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
@@ -16033,6 +16209,44 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_convert
 msgid "test_convert"
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_hr_user
+msgid "the user will be able to approve document created by employees."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_user
+msgid ""
+"the user will be able to manage his own human resources stuff (leave "
+"request, timesheets, ...), if he is linked to an employee in the system."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_hr_manager
+msgid ""
+"the user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
 msgstr ""
 
 #. module: base

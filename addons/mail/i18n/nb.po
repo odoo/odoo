@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 07:34+0000\n"
+"PO-Revision-Date: 2015-10-21 11:51+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-8/language/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -86,7 +86,7 @@ msgid ""
 "                    follow.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n<b>Godt jobbet!</b>\nInnboksen din er tom.\n</p><p>\nInnboksen din inneholder private meldinger og e-poster sendt til deg,\nsamt informasjon relatert til dokumenter og mennesker du følger.\n</p>\n            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_to_me_feeds
@@ -109,7 +109,7 @@ msgid ""
 "                    as <i>todo</i>. From this menu, you can process all your todo.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n<b>Ingen gjøremål.</b>\n</p><p>\nNår du behandler meldinger i din innboks kan du markere noen av dem som <i>gjøremål</i>. \nFra denne menyen kan du behandle alle gjøremålene dine.\n</p>"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_archives_feeds
@@ -121,7 +121,7 @@ msgid ""
 "                    message will be sent by email if it's an internal contact.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nIngen meldinger funnet og ingen meldinger er sendt enda.\n</p><p>\nKlikk på ikonet, plassert oppe til høyre, for å opprette en melding.\nDenne meldingen vil bli sendt på e-post dersom det er en intern kontakt.\n</p>"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_group_feeds
@@ -281,7 +281,7 @@ msgstr "Bruk"
 #: model:ir.actions.client,name:mail.action_mail_archives_feeds
 #: model:ir.ui.menu,name:mail.mail_archivesfeeds
 msgid "Archives"
-msgstr ""
+msgstr "Arkiver"
 
 #. module: mail
 #. openerp-web
@@ -413,7 +413,7 @@ msgstr "Kommentar"
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "Skriv e-post"
 
 #. module: mail
 #: field:mail.compose.message,composition_mode:0
@@ -486,7 +486,7 @@ msgstr "Dato"
 #: help:mail.group,message_last_post:0 help:mail.thread,message_last_post:0
 #: help:res.partner,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Dato for siste melding på denne posten."
 
 #. module: mail
 #: field:mail.message.subtype,default:0
@@ -602,7 +602,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "E-post tråd"
 
 #. module: mail
 #: help:res.users,alias_id:0
@@ -816,7 +816,7 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Inneholder meldings-sammendrag (antall meldinger, ...). Dette sammendraget er i HTML-format, slik at det det kan bli satt rett inn i kanban-visninger."
 
 #. module: mail
 #: field:mail.alias,id:0 field:mail.compose.message,id:0
@@ -876,7 +876,7 @@ msgstr ""
 #: model:ir.actions.client,name:mail.action_mail_inbox_feeds
 #: model:ir.ui.menu,name:mail.mail_inboxfeeds
 msgid "Inbox"
-msgstr ""
+msgstr "Innboks"
 
 #. module: mail
 #: help:mail.compose.message,parent_id:0 help:mail.message,parent_id:0
@@ -937,7 +937,7 @@ msgstr ""
 #: field:mail.group,message_last_post:0 field:mail.thread,message_last_post:0
 #: field:res.partner,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Siste meldingsdato"
 
 #. module: mail
 #: field:mail.alias,write_uid:0 field:mail.compose.message,write_uid:0
@@ -1118,7 +1118,7 @@ msgstr "Meldinger og kommunikasjon historie."
 #: model:ir.ui.menu,name:mail.mail_feeds
 #: model:ir.ui.menu,name:mail.mail_feeds_main
 msgid "Messaging"
-msgstr ""
+msgstr "Meldinger"
 
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
@@ -1295,7 +1295,7 @@ msgstr "Utgående"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Utgående e-poster"
 
 #. module: mail
 #: field:mail.compose.message,mail_server_id:0
@@ -1583,7 +1583,7 @@ msgstr ""
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Send a message to the group"
-msgstr ""
+msgstr "Send en melding til gruppen"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
@@ -1742,7 +1742,7 @@ msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
+msgstr "Den forespurte operasjonen kan ikke fullføres grunnet sikkerhetsrestriksjoner.\nVennligst kontakt systemadministrator.\n\n(Dokumenttype: %s, Operasjon: %s)"
 
 #. module: mail
 #: help:mail.group,image:0
@@ -1795,7 +1795,7 @@ msgstr "Å lese."
 #: model:ir.actions.client,name:mail.action_mail_star_feeds
 #: model:ir.ui.menu,name:mail.mail_starfeeds
 msgid "To-do"
-msgstr ""
+msgstr "Gjøremål"
 
 #. module: mail
 #. openerp-web
