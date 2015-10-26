@@ -195,8 +195,8 @@ class lang(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'code' in vals:
-            for lang in self.browse(cr, uid, ids, context):
-                if lang.code != vals['code']:
+            for rec in self.browse(cr, uid, ids, context):
+                if rec.code != vals['code']:
                     raise UserError(_("Language code cannot be modified."))
         self._lang_get.clear_cache(self)
         self._lang_data_get.clear_cache(self)
