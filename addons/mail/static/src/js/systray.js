@@ -2,7 +2,6 @@ odoo.define('mail.systray', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
 var SystrayMenu = require('web.SystrayMenu');
 var web_client = require('web.web_client');
 var Widget = require('web.Widget');
@@ -20,16 +19,6 @@ var NotificationTopButton = Widget.extend({
         events: {
             "click": "on_click",
         },
-        willStart: function () {
-            var self = this;
-            var ir_model = new Model("ir.model.data");
-            var def1 = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_menu_root_chat"]);
-            var def2 = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_action_client_chat"]);
-            return $.when(def1, def2, this._super()).then(function (menu_id, action_id) {
-                self.discuss_menu_id = menu_id;
-                self.client_action_id = action_id;
-            });
-        },
         start: function () {
             chat_manager.bus.on("update_needaction", this, this.update_counter);
             this.update_counter(chat_manager.get_needaction_counter());
@@ -39,10 +28,10 @@ var NotificationTopButton = Widget.extend({
             this.$('.o_notification_counter').html(counter);
         },
         on_click: function (event) {
-            var self = this;
             event.preventDefault();
-            this.do_action(this.client_action_id, {clear_breadcrumbs: true}).then(function () {
-                core.bus.trigger('change_menu_section', self.discuss_menu_id);
+            var discuss_ids = chat_manager.get_discuss_ids();
+            this.do_action(discuss_ids.action_id, {clear_breadcrumbs: true}).then(function () {
+                core.bus.trigger('change_menu_section', discuss_ids.menu_id);
             });
         },
 });

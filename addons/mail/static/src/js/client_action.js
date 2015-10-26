@@ -118,11 +118,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
     },
 
-    init: function(parent, action) {
+    init: function(parent, action, options) {
         this._super.apply(this, arguments);
         this.action_manager = parent;
         this.domain = [];
         this.action = action;
+        this.options = options || {};
         this.channels_scrolltop = {};
     },
 
@@ -137,7 +138,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         };
         var dataset = new data.DataSetSearch(this, 'mail.message');
         var view_id = (this.action && this.action.search_view_id && this.action.search_view_id[0]) || false;
-        var default_channel_id = this.action.context.active_id ||
+        var default_channel_id = this.options.active_id ||
+                                 this.action.context.active_id ||
                                  this.action.params.default_active_id ||
                                  'channel_inbox';
         this.searchview = new SearchView(this, dataset, view_id, {}, options);
@@ -164,7 +166,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
         this.thread.on('redirect', this, this.on_redirect);
         this.thread.on('redirect_to_channel', this, function (channel_id) {
-            this.set_channel(chat_manager.get_channel(channel_id));
+            var channel = chat_manager.get_channel(channel_id);
+            if (channel.id === channel_id) {
+                this.set_channel(channel);
+            } else {
+                chat_manager.join_channel(channel_id);
+            }
         });
         this.thread.on('load_more_messages', this, this.load_more_messages);
         this.thread.on('mark_as_read', this, function (message_id) {
