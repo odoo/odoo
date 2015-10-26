@@ -925,7 +925,8 @@ var BufferedDataSet = DataSetStatic.extend({
         // and this breaks the assumptions of other methods (that the data
         // for new and altered records is both in the cache and in the change
         // or to_create collection)
-        this._update_cache(id, {'from_read': {}});
+        this.get_cache(id).from_read = {};
+        this._update_cache(id);
     },
     call_button: function (method, args) {
         this.evict_record(args[0][0]);
