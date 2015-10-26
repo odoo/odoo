@@ -387,7 +387,7 @@ class crm_lead(format_address, osv.osv):
         for lead in self.browse(cr, uid, ids, context=context):
             if not lead.next_activity_id:
                 continue
-            body_html = """<div><b>${object.next_activity_id.name}</b></div>
+            body_html = """<div><b>Activity Done</b>: ${object.next_activity_id.name}</div>
 %if object.title_action:
 <div>${object.title_action}</div>
 %endif"""
