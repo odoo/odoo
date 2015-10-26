@@ -19,5 +19,5 @@ Generic Payroll system Integrated with Accounting.
         'views/hr_payslip_run_views.xml',
     ],
     'demo': ['data/hr_payroll_account_demo.xml'],
-    'test': ['../account/test/account_minimal_test.xml', 'test/hr_payroll_account.yml'],
+    'test': ['../account/test/account_minimal_test.xml'],
 }
