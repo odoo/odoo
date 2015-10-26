@@ -3239,6 +3239,17 @@ class BaseModel(object):
                 # discard fields that must be recomputed
                 if not (f.compute and self.env.field_todo(f))
             )
+        elif field.column._multi:
+            # prefetch all function fields with the same value for 'multi'
+            multi = field.column._multi
+            fs.update(
+                f
+                for f in self._fields.itervalues()
+                # select stored fields with the same multi
+                if f.column and f.column._multi == multi
+                # discard fields with groups that the user may not access
+                if not (f.groups and not self.user_has_groups(f.groups))
+            )
 
         # special case: discard records to recompute for field
         records -= self.env.field_todo(field)
