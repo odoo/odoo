@@ -14,10 +14,6 @@ class ReportHrAttendanceerrors(models.AbstractModel):
     def _get_employees(self, emp_ids):
         return self.env['hr.employee'].browse(emp_ids)
 
-<<<<<<< HEAD
-=======
-    @api.multi
->>>>>>> 5f2cea5... [IMP] hr_attendance: imporved the attendace error report
     def _lst(self, employee_id, dt_from, dt_to, max):
         self.env.cr.execute("select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and to_char(name, 'YYYY-mm-dd')<=%s and to_char(name, 'YYYY-mm-dd')>=%s and action IN (%s, %s) order by name", (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
         res = self.env.cr.dictfetchall()
@@ -32,10 +28,6 @@ class ReportHrAttendanceerrors(models.AbstractModel):
                 r['delay2'] = '/'
         return res
 
-<<<<<<< HEAD
-=======
-    @api.multi
->>>>>>> 5f2cea5... [IMP] hr_attendance: imporved the attendace error report
     def _lst_total(self, employee_id, dt_from, dt_to, max):
         self.env.cr.execute("select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and to_char(name, 'YYYY-mm-dd')<=%s and to_char(name, 'YYYY-mm-dd')>=%s and action IN (%s, %s) order by name", (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
         res = self.env.cr.dictfetchall()
