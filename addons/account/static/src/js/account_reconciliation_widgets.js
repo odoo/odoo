@@ -128,7 +128,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                     relation: "account.tax",
                     string: _t("Tax"),
                     type: "many2one",
-                    domain: [['type_tax_use','=','purchase']],
                 },
             },
             amount: {
