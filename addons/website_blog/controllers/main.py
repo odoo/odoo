@@ -158,6 +158,7 @@ class WebsiteBlog(http.Controller):
         values = {
             'blog': blog,
             'blogs': blogs,
+            'main_object': blog,
             'tags': all_tags,
             'active_tag_ids': active_tag_ids,
             'tags_list' : tags_list,

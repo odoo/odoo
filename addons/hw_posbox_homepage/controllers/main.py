@@ -44,7 +44,8 @@ index_template = """
         </p>
         <p>
         For more information on how to setup the Point of Sale with
-        the PosBox, please refer to <a href='/hw_proxy/static/doc/manual.pdf'>the manual</a>.
+        the PosBox, please refer to
+        <a href='https://www.odoo.com/documentation/user/point_of_sale/posbox/index.html'>the manual</a>.
         </p>
         <p>
         To see the status of the connected hardware, please refer 
