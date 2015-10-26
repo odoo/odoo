@@ -44,6 +44,10 @@ class sale_configuration(osv.TransientModel):
             (0, 'Salespeople do not need to view margins when quoting'),
             (1, 'Display margins on quotations and sales orders')
             ], "Margins"),
+        'module_sale_layout': fields.selection([
+            (0, 'Do not personalize sale orders and invoice reports'),
+            (1, 'Personnalize the sale orders and invoice report with separators, page-breaks or subtotals')
+            ], "Sale Reports Layout"),
         'module_website_quote': fields.selection([
             (0, 'Print quotes or send by email'),
             (1, 'Send online quotations based on templates (advanced)')
