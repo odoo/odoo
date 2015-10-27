@@ -119,9 +119,11 @@ commands as root:
     # wget -O - https://nightly.odoo.com/odoo.key | apt-key add -
     # echo "deb http://nightly.odoo.com/8.0/nightly/deb/ ./" >> /etc/apt/sources.list
     # apt-get update && apt-get install odoo
+    # sudo -u postgres createuser -s odoo
 
 This will automatically install all dependencies, install Odoo itself as a
-daemon and automatically start it.
+daemon and automatically start it. 
+It will create the odoo user in the PostgreSQL database.
 
 .. danger:: to print PDF reports, you must install wkhtmltopdf_ yourself:
             the version of wkhtmltopdf_ available in debian repositories does
