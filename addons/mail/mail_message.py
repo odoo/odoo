@@ -641,7 +641,7 @@ class mail_message(osv.Model):
         cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, n.partner_id
             FROM "%s" m LEFT JOIN "mail_notification" n
             ON n.message_id=m.id AND n.partner_id = (%%s)
-            WHERE m.id = ANY (%%s)""" % self._table, (pid, ids,))
+            WHERE m.id = ANY (VALUES %s)""" % (self._table, ','.join(['(%d)' % (x) for x in ids])), (pid,))
         for id, rmod, rid, author_id, partner_id in cr.fetchall():
             if author_id == pid:
                 author_ids.add(id)
