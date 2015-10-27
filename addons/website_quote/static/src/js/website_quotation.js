@@ -64,7 +64,7 @@ if(!$('.o_website_quote').length) {
             var self = this;
             var href = self.$el.find('form').attr("action");
             var action = href.match(/quote\/([a-z]+)/);
-            var order_id = href.match(/quote\/[a-z]+\/([0-9]+)/);
+            var order_id = href.match(/order_id=(.*)&/);
             var token = href.match(/token=(.*)/);
             if (token){
                 token = token[1];

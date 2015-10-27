@@ -77,7 +77,7 @@ class sale_quote(http.Controller):
                     context=render_ctx)
         return request.website.render('website_quote.so_quotation', values)
 
-    @http.route(['/quote/accept/<int:order_id>'], type='http', auth="public", website=True, methods=['POST'])
+    @http.route(['/quote/accept'], type='json', auth="public", website=True)
     def accept(self, order_id, token=None, signer=None, sign=None, **post):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
