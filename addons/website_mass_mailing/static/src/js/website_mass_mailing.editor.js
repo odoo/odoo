@@ -68,7 +68,7 @@ options.registry.newsletter_popup = mass_mailing_common.extend({
 });
 
 web_editor.Class.include({
-    edit: function () {
+    init : function () {
         this._super();
         $('body').on('click','#edit_dialog',_.bind(this.edit_dialog, this.rte.editor));
     },
