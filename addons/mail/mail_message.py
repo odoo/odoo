@@ -121,7 +121,7 @@ class mail_message(osv.Model):
                         ('email', 'Email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
-                        ], 'Type', size=12, 
+                        ], 'Type', size=12,
             help="Message type: email for email message, notification for system "\
                  "message, comment for other messages such as user replies"),
         'email_from': fields.char('From',
@@ -184,9 +184,9 @@ class mail_message(osv.Model):
     _defaults = {
         'type': 'email',
         'date': fields.datetime.now,
-        'author_id': lambda self, cr, uid, ctx=None: self._get_default_author(cr, uid, ctx),
+        'author_id': lambda self, cr, uid, ctx = None: self._get_default_author(cr, uid, ctx),
         'body': '',
-        'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
+        'email_from': lambda self, cr, uid, ctx = None: self._get_default_from(cr, uid, ctx),
     }
 
     #------------------------------------------------------
