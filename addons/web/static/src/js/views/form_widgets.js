@@ -1729,7 +1729,9 @@ var UpgradeRadio = FieldRadio.extend(AbstractFieldUpgrade, {
 var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     template: "AceEditor",
     init: function() {
+        var self = this;
         this._super.apply(this, arguments);
+        this.ace_loaded = $.Deferred();
         if (!window.ace_require) {
             this.rpc('/web/webclient/ace_lib', {xmlid: 'web.assets_ace_xml_python'}).then(function(result) {
                 var assets = result.split("\n");
@@ -1743,6 +1745,7 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
                     } else if ($(asset).prop('tagName') == "LINK"){
                         $("head").append($(asset));
                     }
+                    self.ace_loaded.resolve();
                 });
             });
         }
@@ -1751,11 +1754,13 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         var self = this;
         this.load_def = $.Deferred();
         if (! this.get("effective_readonly")) {
-            ace_require(["ace/ace"], function(ace) {
+            $.when(this.ace_loaded).then(function() {
+                ace_require(["ace/ace"], function(ace) {
                 self.ace = ace;
                 self.aceEditor = ace.edit(self.$('.ace-view-editor')[0]);
                 self.aceEditor.setTheme("ace/theme/monokai");
                 self.load_def.resolve();
+                });
             });
         }
     },
