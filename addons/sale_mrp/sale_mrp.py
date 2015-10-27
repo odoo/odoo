@@ -15,7 +15,7 @@ class MrpProduction(models.Model):
     def _compute_sale_name_sale_ref(self):
         def get_parent_move(move):
             if move.move_dest_id:
-                return get_parent_move(move.move_dest_id.id)
+                return get_parent_move(move.move_dest_id)
             return move
         for production in self:
             if production.move_prod_id:
