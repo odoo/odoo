@@ -1730,8 +1730,8 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     template: "AceEditor",
     init: function() {
         var self = this;
-        this._super.apply(this, arguments);
         this.ace_loaded = $.Deferred();
+        this._super.apply(this, arguments);
         if (!window.ace_require) {
             this.rpc('/web/webclient/ace_lib', {xmlid: 'web.assets_ace_xml_python'}).then(function(result) {
                 var assets = result.split("\n");
@@ -1756,10 +1756,10 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         if (! this.get("effective_readonly")) {
             $.when(this.ace_loaded).then(function() {
                 ace_require(["ace/ace"], function(ace) {
-                self.ace = ace;
-                self.aceEditor = ace.edit(self.$('.ace-view-editor')[0]);
-                self.aceEditor.setTheme("ace/theme/monokai");
-                self.load_def.resolve();
+                    self.ace = ace;
+                    self.aceEditor = ace.edit(self.$('.ace-view-editor')[0]);
+                    self.aceEditor.setTheme("ace/theme/monokai");
+                    self.load_def.resolve();
                 });
             });
         }
