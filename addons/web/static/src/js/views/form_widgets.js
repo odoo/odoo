@@ -1745,8 +1745,8 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
                     } else if ($(asset).prop('tagName') == "LINK"){
                         $("head").append($(asset));
                     }
-                    self.ace_loaded.resolve();
                 });
+                self.ace_loaded.resolve();
             });
         }
     },
