@@ -58,14 +58,14 @@ class PaypalController(http.Controller):
             _logger.warning('Paypal: unrecognized paypal answer, received %s instead of VERIFIED or INVALID' % resp.text)
         return res
 
-    @http.route('/payment/paypal/ipn/', type='http', auth='none', methods=['POST'])
+    @http.route('/payment/paypal/ipn/', type='http', auth='none', methods=['POST'], csrf=False)
     def paypal_ipn(self, **post):
         """ Paypal IPN. """
         _logger.info('Beginning Paypal IPN form_feedback with post data %s', pprint.pformat(post))  # debug
         self.paypal_validate_data(**post)
         return ''
 
-    @http.route('/payment/paypal/dpn', type='http', auth="none", methods=['POST'])
+    @http.route('/payment/paypal/dpn', type='http', auth="none", methods=['POST'], csrf=False)
     def paypal_dpn(self, **post):
         """ Paypal DPN """
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug

@@ -41,7 +41,15 @@ odoo.py" | tee --append .git/info/sparse-checkout > /dev/null
 git read-tree -mu HEAD
 cd "${__dir}"
 
-# rc.local
+USR_BIN="${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr/bin/"
+mkdir -p "${USR_BIN}"
+cd "/tmp"
+curl 'https://dl.ngrok.com/ngrok_2.0.19_linux_arm.zip' > ngrok.zip
+unzip ngrok.zip
+rm ngrok.zip
+cd "${__dir}"
+mv /tmp/ngrok "${USR_BIN}"
+
 LOOP_MAPPER_PATH=$(kpartx -av posbox.img | tail -n 1 | cut -d ' ' -f 3)
 LOOP_MAPPER_PATH="/dev/mapper/${LOOP_MAPPER_PATH}"
 mkdir "${MOUNT_POINT}"
@@ -52,6 +60,8 @@ cp -a "${OVERWRITE_FILES_BEFORE_INIT_DIR}"/* "${MOUNT_POINT}"
 
 # get rid of the git clone
 rm -rf "${CLONE_DIR}"
+# and the ngrok usr/bin
+rm -rf "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
 
 # get rid of the mount, we have to remount it anyway because we have
 # to "refresh" the filesystem after qemu modified it

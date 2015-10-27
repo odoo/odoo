@@ -153,6 +153,15 @@ def onchange(*args):
         when one of the given fields is modified. The method is invoked on a
         pseudo-record that contains the values present in the form. Field
         assignments on that record are automatically sent back to the client.
+
+        The method may return a dictionary for changing field domains and pop up
+        a warning message, like in the old API::
+
+            return {
+                'domain': {'other_id': [('partner_id', '=', partner_id)]},
+                'warning': {'title': "Warning", 'message': "What is this?"},
+            }
+
     """
     return lambda method: decorate(method, '_onchange', args)
 

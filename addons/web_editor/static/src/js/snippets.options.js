@@ -230,6 +230,7 @@ var Option = Class.extend({
 
 /* ----- default options ---- */
 
+// to remove after 9.0 (keep for compatibility without update with -u)
 var media = Option.extend({
     start: function () {
         var self =this;

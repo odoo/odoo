@@ -31,14 +31,17 @@ apt-get -y autoremove
 apt-get update
 apt-get -y dist-upgrade
 
-PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen"
+PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server"
 
 apt-get -y install ${PKGS_TO_INSTALL}
 
 apt-get clean
 localepurge
-rm -rf /usr/share/doc || true
-rm -rf /home/pi/python_games || true
+rm -rf /usr/share/doc
+rm -rf /home/pi/python_games
+
+# remove raspi-config notice, it's not necessary and it's not installed anyway
+rm -f /etc/profile.d/raspi-config.sh
 
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
@@ -64,7 +67,8 @@ chmod 644 /etc/logrotate.conf
 
 echo "* * * * * rm /var/run/odoo/sessions/*" | crontab -
 
-update-rc.d odoo defaults
+update-rc.d -f hostapd remove
+update-rc.d -f isc-dhcp-server remove
 
 # https://www.raspberrypi.org/forums/viewtopic.php?p=79249
 # to not have "setting up console font and keymap" during boot take ages

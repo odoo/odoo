@@ -6,8 +6,9 @@
     height: 100%;
 
     @media (max-width: @screen-xs-max) {
-        position: static;
         height: auto;
+        flex-direction: column;
+
     }
 
     .o-flex-display();
@@ -17,6 +18,11 @@
         .o-flex(0, 0, 200px);
         overflow: auto;
         padding: 8px 0;
+
+        @media (max-width: @screen-xs-max) {
+            flex: none;
+            display: none;
+        }
 
         .o_mail_sidebar_title {
             .o-webclient-padding(@top: 5px, @bottom: 5px);
@@ -56,9 +62,6 @@
         height: 100%;
         .o-flex-display();
         .o-flex-flow(column, nowrap);
-        @media (max-width: @screen-xs-max) {
-            height: auto;
-        }
 
         .o_mail_thread {
             .o-flex(1, 0, 0);
@@ -106,14 +109,14 @@
             text-overflow: ellipsis;
             cursor: pointer;
 
-            &.o_active {
-                background-color: @gray-dark;
-            }
             &:hover {
-                background-color: @gray-dark;
+                background-color: darken(@gray, 8%);;
                 .o_mail_partner_unpin {
                     opacity: @sidebar-icon-opacity;
                 }
+            }
+            &.o_active {
+                background-color: @gray-dark;
             }
             .o_mail_partner_unpin {
                 opacity: 0;

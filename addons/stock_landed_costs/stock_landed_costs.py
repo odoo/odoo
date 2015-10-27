@@ -267,7 +267,8 @@ class stock_landed_cost(osv.osv):
 
                         if digits:
                             value = float_round(value, precision_digits=digits[1], rounding_method='UP')
-                            value = min(value, line.price_unit - value_split)
+                            fnc = min if line.price_unit > 0 else max
+                            value = fnc(value, line.price_unit - value_split)
                             value_split += value
 
                         if valuation.id not in towrite_dict:

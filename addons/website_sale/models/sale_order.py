@@ -50,13 +50,25 @@ class sale_order(osv.Model):
             return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
 
     def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, context=None):
-        product = self.pool['product.product'].browse(cr, uid, product_id, context=context)
+        context = dict(context or {})
+        order = self.pool['sale.order'].browse(cr, SUPERUSER_ID, order_id, context=context)
+        product_context = context.copy()
+        product_context.update({
+            'lang': order.partner_id.lang,
+            'partner': order.partner_id.id,
+            'quantity': qty,
+            'date': order.date_order,
+            'pricelist': order.pricelist_id.id,
+        })
+        product = self.pool['product.product'].browse(cr, uid, product_id, context=product_context)
+
         values = {
             'product_id': product_id,
             'name': product.display_name,
             'product_uom_qty': qty,
             'order_id': order_id,
             'product_uom': product.uom_id.id,
+            'price_unit': product.price,
         }
         if product.description_sale:
             values['name'] += '\n' + product.description_sale
@@ -80,7 +92,7 @@ class sale_order(osv.Model):
             if not line_id:
                 values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=1, context=context)
                 line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
-                sol.product_id_change(cr, SUPERUSER_ID, [line_id], context=context)
+                sol._compute_tax_id(cr, SUPERUSER_ID, [line_id], context=context)
                 if add_qty:
                     add_qty -= 1
 
@@ -96,7 +108,6 @@ class sale_order(osv.Model):
             else:
                 # update line
                 values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=quantity, context=context)
-                values['product_uom_qty'] = quantity
                 sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
 
         return {'line_id': line_id, 'quantity': quantity}
@@ -287,21 +298,19 @@ class website(orm.Model):
                 if flag_pricelist or recent_fiscal_position != fiscal_position:
                     update_pricelist = True
 
-            if (code and code != sale_order.pricelist_id.code) or \
-               (code is not None and code == '' and request.session.get('sale_order_code_pricelist_id') and request.session.get('sale_order_code_pricelist_id') != ''): # empty code so reset
+            if code and code != sale_order.pricelist_id.code:
                 pricelist_ids = self.pool['product.pricelist'].search(cr, uid, [('code', '=', code)], limit=1, context=context)
                 if pricelist_ids:
                     pricelist_id = pricelist_ids[0]
-                    request.session['sale_order_code_pricelist_id'] = pricelist_id
-                    request.session['website_sale_current_pl'] = pricelist_id
                     update_pricelist = True
-                elif code == '' and request.session['website_sale_current_pl'] == request.session['sale_order_code_pricelist_id']:
-                    request.session['website_sale_current_pl'] = partner.property_product_pricelist.id
-                    request.session['sale_order_code_pricelist_id'] = False
-                    update_pricelist = True
+            elif code is not None and sale_order.pricelist_id.code:
+                # code is not None when user removes code and click on "Apply"
+                pricelist_id = partner.property_product_pricelist.id
+                update_pricelist = True
 
             # update the pricelist
             if update_pricelist:
+                request.session['website_sale_current_pl'] = pricelist_id
                 values = {'pricelist_id': pricelist_id}
                 sale_order.write(values)
                 for line in sale_order.order_line:
@@ -329,7 +338,6 @@ class website(orm.Model):
         request.session.update({
             'sale_order_id': False,
             'sale_transaction_id': False,
-            'sale_order_code_pricelist_id': False,
             'website_sale_current_pl': False,
         })
 

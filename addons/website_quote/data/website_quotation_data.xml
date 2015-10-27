@@ -14,7 +14,11 @@
         <!--
             Update Email template to send right quote url
         -->
+    </data>
 
+    <!-- Mails & quote templates is done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
         <record id="sale.email_template_edi_sale" model="mail.template">
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
@@ -150,11 +154,7 @@
                 </section>
             </field>
         </record>
-    </data>
 
-    <!-- Mail template is done in a NOUPDATE block
-         so users can freely customize/delete them -->
-    <data noupdate="1">
         <!--Email template -->
         <record id="email_template_edi_sale" model="mail.template">
             <field name="name">Sales Order - Send by Email (Online Quote)</field>
