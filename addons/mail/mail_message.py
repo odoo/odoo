@@ -702,7 +702,7 @@ class mail_message(osv.Model):
 
         # Read mail_message.ids to have their values
         message_values = dict((res_id, {}) for res_id in ids)
-        cr.execute('SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
+        cr.execute('SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (VALUES %s)' % (self._table, ','.join(['(%d)' % (x) for x in ids])))
         for id, rmod, rid, author_id, parent_id in cr.fetchall():
             message_values[id] = {'model': rmod, 'res_id': rid, 'author_id': author_id, 'parent_id': parent_id}
 
