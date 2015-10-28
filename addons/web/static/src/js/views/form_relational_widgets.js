@@ -947,35 +947,14 @@ var X2ManyViewManager = ViewManager.extend({
 
 var X2ManyListView = ListView.extend({
     is_valid: function () {
-        var self = this;
-        if (!this.fields_view || !this.editable()){
+        if (!this.fields_view || !this.editable() || _.isEmpty(this.records.records) || !this.editor.record) {
             return true;
         }
-        if (_.isEmpty(this.records.records)){
-            return true;
-        }
-        var current_values = {};
-        _.each(this.editor.form.fields, function(field){
-            field._inhibit_on_change_flag = true;
-            field.no_rerender = true;
-            current_values[field.name] = field.get('value');
+        return _.every(this.editor.form.fields, function(field){
+            field.process_modifiers();
+            field._check_css_flags();
+            return field.is_valid();
         });
-        var valid = _.every(this.records.records, function(record){
-            _.each(self.editor.form.fields, function(field){
-                field.set_value(record.attributes[field.name]);
-            });
-            return _.every(self.editor.form.fields, function(field){
-                field.process_modifiers();
-                field._check_css_flags();
-                return field.is_valid();
-            });
-        });
-        _.each(this.editor.form.fields, function(field){
-            field.set('value', current_values[field.name]);
-            field._inhibit_on_change_flag = false;
-            field.no_rerender = false;
-        });
-        return valid;
     },
 });
 
