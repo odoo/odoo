@@ -229,6 +229,11 @@ class website(orm.Model):
         sale_order_id = request.session.get('sale_order_id') or (partner.last_website_so_id.id if partner.last_website_so_id and partner.last_website_so_id.state == 'draft' else False)
 
         sale_order = None
+        # Test validity of the sale_order_id
+        if sale_order_id and sale_order_obj.exists(cr, SUPERUSER_ID, sale_order_id, context=context):
+            sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
+        else:
+            sale_order_id = None
         pricelist_id = request.session.get('website_sale_current_pl')
 
         if force_pricelist and self.pool['product.pricelist'].search_count(cr, uid, [('id', '=', force_pricelist)], context=context):
@@ -254,15 +259,12 @@ class website(orm.Model):
 
                 sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
                 request.session['sale_order_id'] = sale_order_id
+                sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
 
                 if request.website.partner_id.id != partner.id:
                     self.pool['res.partner'].write(cr, SUPERUSER_ID, partner.id, {'last_website_so_id': sale_order_id})
 
         if sale_order_id:
-            sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-            if not sale_order.exists():
-                request.session['sale_order_id'] = None
-                return None
 
             # check for change of pricelist with a coupon
             pricelist_id = pricelist_id or partner.property_product_pricelist.id
@@ -320,6 +322,10 @@ class website(orm.Model):
             # update browse record
             if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id != partner.id or force_pricelist:
                 sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order.id, context=context)
+
+        else:
+            request.session['sale_order_id'] = None
+            return None
 
         return sale_order
 
