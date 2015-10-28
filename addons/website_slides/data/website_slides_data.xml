@@ -21,47 +21,22 @@
             <field name="model_id" ref="model_slide_slide"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
-<div style="padding:0px; margin:0px;">
-<table cellpadding="0" cellspacing="0" style="width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px; background-color:#ffffff">
-    <tbody><tr>
-        <td style="width: 600px; text-align:center" valign="center">
-            <a href="${user.company_id.website}" style="text-decoration:none">
-                <img alt="Odoo" src="${ctx['base_url']}/logo.png" style="display:block; border:none; min-height:60px; margin:0 auto;">
-            </a>
-        </td>
-    </tr></tbody>
-</table>
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; width:600px;">
+    <img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
+    <p>Hello ,</p>
+    <p>
+        New ${object.slide_type} <strong>${object.name}</strong> has been published (at ${object.write_date}) on ${object.channel_id.name}.
+    Click on the below button to access the published ${object.slide_type}.
+    </p>
+    <p>
+        <a style="margin-left: 45px; padding:5px 10px; border-radius: 3px; background-color:#a24689; text-align:center; text-decoration:none; color:#F7FBFD;" href="${object.website_url}">
+            View <strong>${object.name}</strong></a>
+    </p>
+    % if user.signature:
+        <pre>${user.signature | safe}</pre>
+    % endif
 </div>
-<div style="padding:0px; margin:0px;">
-<table cellpadding="0" cellspacing="0" style="width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px;">
-    <tbody><tr>
-        <td style="width: 600px; text-align:center; color: #ffffff; background-color:#a24689;" valign="center">
-            <h2 style="margin:0px;">
-                New ${object.slide_type} published on ${object.channel_id.name}
-            </h2>
-        </td>
-    </tr><tr>
-        <td style="width: 600px; vertical-align:top; text-align:center; background-color:#FFFFF; color:#414141">
-            <a href="${object.website_url}" style="color: #a24689;">
-                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image" style="height:auto; width:500px; background-color: #cccccc; margin: 16px;">
-            </a>
-            <p style="font-size:24px; font-weight:bold"><a href="${object.website_url}">${object.name}</a></p>
-            <p style="color: #ccc;">Published on ${object.write_date}</p>
-            <p><a href="${object.website_url}">Click here to open the ${object.slide_type}</a></p>
-        </td>
-    </tr></tbody>
-</table>
-</div>
-<div style="padding:0px; margin:0px;">
-<table cellpadding="0" cellspacing="0" style="margin: 10px 0px 0px 0px; vertical-align: top;padding: 0px; font-family:arial; font-size:12px; color: #ffffff; background-color:#8f8f8f;">
-    <tbody><tr>
-        <td style="width: 600px; font-size:12px; text-align:center; padding-top:10px; color:#a24689; padding-bottom:5px">
-            <a href="${object.website_url}" style="color:#a24689">View in browser</a> |
-            <a href="/page/contactus" style="color:#a24689">Contact</a>
-        </td>
-    </tr></tbody>
-</table>
-</div>]]></field>
+]]></field>
         </record>
 
         <record id="slide_template_shared" model="mail.template">
@@ -72,47 +47,20 @@
             <field name="email_to">${ctx['email']}</field>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
-<div style="padding:0px; margin:0px;">
-<table cellpadding="0" cellspacing="0" style="width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px; background-color:#ffffff">
-    <tbody><tr>
-        <td style="width: 600px; text-align:center" valign="center">
-            <a href="${user.company_id.website}" style="text-decoration:none">
-                <img alt="Odoo" src="${ctx['base_url']}/logo.png" style="display:block; border:none; min-height:60px; margin:0 auto;">
-            </a>
-        </td>
-    </tr></tbody>
-</table>
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; width:600px;">
+    <img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
+    <p>Hello ,</p>
+    <p>${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> (published on ${object.write_date}) with you!<br/>
+    Click on the below button to access the shared ${object.slide_type}.
+    </p>
+    <p>
+        <a style="margin-left: 45px; padding:5px 10px; border-radius: 3px; background-color:#a24689; text-align:center; text-decoration:none; color:#F7FBFD;" href="${object.website_url}">
+            View <strong>${object.name}</strong></a>
+    </p>
+    % if user.signature:
+        <pre>${user.signature | safe}</pre>
+    % endif
 </div>
-<div style="padding:0px; margin:0px;">
-<table cellpadding="0" cellspacing="0" style="width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px;">
-    <tbody><tr>
-        <td style="width: 600px; text-align:center; color: #ffffff; background-color:#a24689;" valign="center">
-            <h2 style="margin:0px;">
-                ${user.name} shared the ${object.slide_type} ${object.name} with you!
-            </h2>
-        </td>
-    </tr><tr>
-        <td style="width: 600px; vertical-align:top; text-align:center; background-color:#FFFFF; color:#414141">
-            <a href="${object.website_url}" style="color: #a24689;">
-                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image"
-                    style="height:auto; width:500px; background-color: #cccccc; margin: 16px;">
-            </a>
-            <p style="font-size:24px; font-weight:bold"><a href="${object.website_url}">${object.name}</a></p>
-            <p style="color: #ccc;">Published on ${object.write_date}</p>
-            <p><a href="${object.website_url}">Click here to open the ${object.slide_type}</a></p>
-        </td>
-    </tr></tbody>
-</table>
-</div>
-<div style="padding:0px; margin:0px;">
-<table cellpadding="0" cellspacing="0" style="margin: 10px 0px 0px 0px; vertical-align: top;padding: 0px; font-family:arial; font-size:12px; color: #ffffff; background-color:#8f8f8f;">
-    <tbody><tr>
-        <td style="width: 600px; font-size:12px; text-align:center; padding-top:10px; color:#a24689; padding-bottom:5px">
-            <a href="${object.website_url}" style="color:#a24689">View in browser</a> |
-            <a href="/page/contactus" style="color:#a24689">Contact</a>
-        </td>
-    </tr></tbody>
-</table>
 </div>]]></field>
         </record>
 
