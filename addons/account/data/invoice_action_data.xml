@@ -16,58 +16,31 @@
             <field name="report_name">Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
-<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
-    <p>Hello ${object.partner_id.name},</p>
-    <p>A new invoice is available for you: </p>
-    
-    <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
-       &nbsp;&nbsp;<strong>REFERENCES</strong><br />
-       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />
-       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />
-       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />
-       % if object.origin:
-       &nbsp;&nbsp;Order reference: ${object.origin}<br />
-       % endif
-       % if object.user_id:
-       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}">${object.user_id.name}</a>
-       % endif
-    </p>  
-    
-    % if object.paypal_url:
-    <br/>
-    <p>It is also possible to directly pay with Paypal:</p>
-        <a style="margin-left: 120px;" href="${object.paypal_url}">
-            <img class="oe_edi_paypal_button" src="/account/static/src/img/btn_paynowcc_lg.gif"/>
-        </a>
-    % endif
-    
-    <br/>
-    <p>If you have any question, do not hesitate to contact us.</p>
-    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>
-    <br/>
-    <br/>
-    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
-        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
-            <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
-    </div>
-    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
-        <span style="color: #222; margin-bottom: 5px; display: block; ">
-            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}
-        </span>
-        % if object.company_id.phone:
-            <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
-                Phone:&nbsp; ${object.company_id.phone}
-            </div>
-        % endif
-        % if object.company_id.website:
-            <div>
-                Web :&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
-            </div>
-        %endif
-        <p></p>
-    </div>
-</div>
-            ]]></field>
+% set access_action = object.get_access_action()
+% set access_name = 'View invoice' if access_action and access_action['type'] == 'ir.actions.act_url' else 'See invoice'
+% set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)
+
+<p>Dear
+% if object.partner_id.company_type == 'company' and object.child_ids:
+    ${object.partner_id.child_ids[0].name}
+% else :
+    ${object.partner_id.name}
+% endif
+,</p>
+<p>Thank you for your inquiry. Here is your invoice <strong>${object.name}</strong>
+% if object.origin:
+(with reference: ${object.origin} )
+% endif
+amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>
+from ${object.company_id.name}.
+</p>
+
+<p style="margin-left: 30px;">
+    <a href="${access_url}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">${access_name}</a>
+</p>
+<p>If you have any question, do not hesitate to contact us.</p>
+<p>Best regards,</p>
+]]></field>
         </record>
     </data>
 </openerp>
