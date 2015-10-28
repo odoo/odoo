@@ -108,7 +108,7 @@ class purchase_order(osv.Model):
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
 
-    @api.onchange('partner_id')
+    @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
         result =  super(account_invoice, self)._onchange_partner_id()
         partner = self.partner_id
