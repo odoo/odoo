@@ -14,7 +14,7 @@
                         </h1>
                         <label for="brand_id" class="oe_edit_only"/>
                         <h2>
-                            <field name="brand_id" on_change="on_change_brand(brand_id)" placeholder="e.g. Tesla"/>
+                            <field name="brand_id" placeholder="e.g. Tesla"/>
                         </h2>
                     </div>
                     <notebook>
@@ -236,7 +236,7 @@
                         <div class="oe_title">
                             <label for="model_id" class="oe_edit_only"/>
                             <h1>
-                                <field name="model_id" on_change="on_change_model(model_id)" placeholder="e.g. Model S"/>
+                                <field name="model_id" placeholder="e.g. Model S"/>
                             </h1>
                             <label for="license_plate" class="oe_edit_only"/>
                             <h2>
@@ -426,7 +426,7 @@
                     <sheet>
                         <group col="2">
                             <group string="Contract details">
-                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                                <field name="vehicle_id"/>
                                 <field name="cost_subtype_id" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
                                 <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract"/>
                                 <label for="cost_generated"/>
@@ -458,7 +458,7 @@
                         <notebook>
                             <page string="Included Services">
                                 <group>
-                                    <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1" on_change="on_change_indic_cost(cost_ids)">
+                                    <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1">
                                         <tree editable="bottom">
                                             <field name="cost_subtype_id" string="Service" domain="[('category','=','service')]"/>
                                             <field name="amount" sum="Price" string="Indicative Cost" />
@@ -558,7 +558,7 @@
                 <form string="Odometer Logs">
                     <sheet>
                         <group>
-                            <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                            <field name="vehicle_id"/>
                                 <div>
                                     <field name="value" class="oe_inline"/>
                                     <field name="unit" class="oe_inline"/>
@@ -576,7 +576,7 @@
             <field name="arch" type="xml">
                 <tree string="Odometer Logs" editable="top">
                     <field name="date" />
-                    <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                    <field name="vehicle_id"/>
                     <field name="value" />
                     <field name="unit" />
                 </tree>
@@ -638,12 +638,12 @@
                     <sheet>
                         <group>
                             <group string="Vehicle Details">
-                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                                <field name="vehicle_id"/>
                             </group>
                             <group string="Refueling Details">
-                                <field name="liter" on_change="on_change_liter(liter,price_per_liter,amount)"/>
-                                <field name="price_per_liter" on_change="on_change_price_per_liter(liter,price_per_liter,amount)" />
-                                <field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)"/>
+                                <field name="liter"/>
+                                <field name="price_per_liter"/>
+                                <field name="amount"/>
                             </group>
                         </group>
                         <group>
@@ -742,7 +742,7 @@
                     <sheet>
                         <group col="2">
                             <group string="Services Details">
-                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                                <field name="vehicle_id"/>
                                 <field name="cost_subtype_id" string="Service Type" domain="['|',('category','=','service'),('category','=','both')]" required="1"/>
                                 <field name="amount"/>
                             </group>
