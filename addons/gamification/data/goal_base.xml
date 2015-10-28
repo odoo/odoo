@@ -10,6 +10,7 @@
             <field name="model_id" ref="gamification.model_gamification_goal"/>
             <field name="lang">${object.user_id.lang}</field>
             <field name="body_html"><![CDATA[
+    <img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo"><br/>
     <header>
         <strong>Reminder ${object.name}</strong>
     </header>
@@ -21,6 +22,7 @@
         <record id="simple_report_template" model="mail.template">
             <field name="name">Simple Challenge Report Progress</field>
             <field name="body_html"><![CDATA[
+<img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo"><br/>
 <header>
     <strong>${object.name}</strong>
 </header>

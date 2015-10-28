@@ -47,6 +47,8 @@
             <field name="model_id" ref="gamification.model_gamification_badge_user"/>
             <field name="lang">${object.user_id.lang}</field>
             <field name="body_html"><![CDATA[
+        <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+        <img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
         <p>Congratulation, you have received the badge <strong>${object.badge_id.name}</strong> !
             % if object.sender_id
                 This badge was granted by <strong>${object.sender_id.name}</strong>.
@@ -56,7 +58,7 @@
         % if object.comment
             <p><em>${object.comment}</em></p>
         % endif
-        ]]></field>
+        </div>]]></field>
         </record>
     </data>
 </openerp>
