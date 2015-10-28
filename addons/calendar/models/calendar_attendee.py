@@ -1,43 +1,21 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import timedelta
 
 import pytz
-import time
-import openerp
-import openerp.service.report
-from datetime import timedelta
-from openerp import tools
-from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
 
 
-class calendar_attendee(osv.Model):
+class CalendarAttendee(models.Model):
     """
     Calendar Attendee Information
     """
     _name = 'calendar.attendee'
     _rec_name = 'cn'
     _description = 'Attendee information'
-
-    def _compute_data(self, cr, uid, ids, name, arg, context=None):
-        """
-        Compute data on function fields for attendee values.
-        @param ids: list of calendar attendee's IDs
-        @param name: name of field
-        @return: dictionary of form {id: {'field Name': value'}}
-        """
-        name = name[0]
-        result = {}
-        for attdata in self.browse(cr, uid, ids, context=context):
-            id = attdata.id
-            result[id] = {}
-            if name == 'cn':
-                if attdata.partner_id:
-                    result[id][name] = attdata.partner_id.name or False
-                else:
-                    result[id][name] = attdata.email or ''
-        return result
 
     STATE_SELECTION = [
         ('needsAction', 'Needs Action'),
@@ -46,46 +24,50 @@ class calendar_attendee(osv.Model):
         ('accepted', 'Accepted'),
     ]
 
-    _columns = {
-        'state': fields.selection(STATE_SELECTION, 'Status', readonly=True, help="Status of the attendee's participation"),
-        'cn': fields.function(_compute_data, string='Common name', type="char", multi='cn', store=True),
-        'partner_id': fields.many2one('res.partner', 'Contact', readonly="True"),
-        'email': fields.char('Email', help="Email of Invited Person"),
-        'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
-        'access_token': fields.char('Invitation Token'),
-        'event_id': fields.many2one('calendar.event', 'Meeting linked', ondelete='cascade'),
-    }
-    _defaults = {
-        'state': 'needsAction',
-    }
+    state = fields.Selection(STATE_SELECTION, string='Status', default='needsAction', readonly=True, help="Status of the attendee's participation")
+    cn = fields.Char(compute='_compute_data', string='Common name', store=True)
+    partner_id = fields.Many2one('res.partner', string='Contact', readonly="True")
+    email = fields.Char(help="Email of Invited Person")
+    availability = fields.Selection([('free', 'Free'), ('busy', 'Busy')], string='Free/Busy', readonly="True")
+    access_token = fields.Char('Invitation Token')
+    event_id = fields.Many2one('calendar.event', string='Meeting linked', ondelete='cascade')
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    @api.depends('partner_id', 'email', 'partner_id.name')
+    def _compute_data(self):
+        """
+        Compute data on function fields for attendee values.
+        """
+        for attdata in self:
+            if attdata.partner_id:
+                attdata.cn = attdata.partner_id.name or False
+            else:
+                attdata.cn = attdata.email or ''
+
+    @api.multi
+    def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
-    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
         """
         Make entry on email and availability on change of partner_id field.
-        @param partner_id: changed value of partner id
         """
-        if not partner_id:
-            return {'value': {'email': ''}}
-        partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-        return {'value': {'email': partner.email}}
+        self.email = self.partner_id.email
 
-    def get_ics_file(self, cr, uid, event_obj, context=None):
+    @api.multi
+    def get_ics_file(self, event_obj):
         """
         Returns iCalendar file for the event invitation.
         @param event_obj: event object (browse record)
-        @return: .ics file content
         """
         res = None
 
         def ics_datetime(idate, allday=False):
             if idate:
                 if allday:
-                    return openerp.fields.Date.from_string(idate)
+                    return fields.Date.from_string(idate)
                 else:
-                    return openerp.fields.Datetime.from_string(idate).replace(tzinfo=pytz.timezone('UTC'))
+                    return fields.Datetime.from_string(idate).replace(tzinfo=pytz.timezone('UTC'))
             return False
 
         try:
@@ -98,7 +80,7 @@ class calendar_attendee(osv.Model):
         event = cal.add('vevent')
         if not event_obj.start or not event_obj.stop:
             raise UserError(_("First you have to specify the date of the invitation."))
-        event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+        event.add('created').value = ics_datetime(fields.Datetime.now())
         event.add('dtstart').value = ics_datetime(event_obj.start, event_obj.allday)
         event.add('dtend').value = ics_datetime(event_obj.stop, event_obj.allday)
         event.add('summary').value = event_obj.name
@@ -130,24 +112,22 @@ class calendar_attendee(osv.Model):
         res = cal.serialize()
         return res
 
-    def _send_mail_to_attendees(self, cr, uid, ids, email_from=tools.config.get('email_from', False),
-                                template_xmlid='calendar_template_meeting_invitation', force=False, context=None):
+    @api.multi
+    def _send_mail_to_attendees(self, email_from=tools.config.get('email_from', False),
+                                template_xmlid='calendar_template_meeting_invitation', force=False):
         """
         Send mail for event invitation to event attendees.
         @param email_from: email address for user sending the mail
         @param force: If set to True, email will be sent to user himself. Usefull for example for alert, ...
         """
         res = False
+        mail_ids = []
 
-        if self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.block_mail', default=False) or context.get("no_mail_to_attendees"):
+        if self.env['ir.config_parameter'].get_param('calendar.block_mail') or self.env.context.get("no_mail_to_attendees"):
             return res
 
-        mail_ids = []
-        data_pool = self.pool['ir.model.data']
-        mailmess_pool = self.pool['mail.message']
-        mail_pool = self.pool['mail.mail']
-        template_pool = self.pool['mail.template']
-        local_context = context.copy()
+        Mail = self.env['mail.mail']
+        local_context = self.env.context.copy()
         color = {
             'needsAction': 'grey',
             'accepted': 'green',
@@ -155,22 +135,19 @@ class calendar_attendee(osv.Model):
             'declined': 'red'
         }
 
-        if not isinstance(ids, (tuple, list)):
-            ids = [ids]
-
-        dummy, template_id = data_pool.get_object_reference(cr, uid, 'calendar', template_xmlid)
-        dummy, act_id = data_pool.get_object_reference(cr, uid, 'calendar', "view_calendar_event_calendar")
+        Template = self.env.ref('calendar.%s' % template_xmlid)
+        act_id = self.env.ref('calendar.view_calendar_event_calendar').id
         local_context.update({
             'color': color,
-            'action_id': self.pool['ir.actions.act_window'].search(cr, uid, [('view_id', '=', act_id)], context=context)[0],
-            'dbname': cr.dbname,
-            'base_url': self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
+            'action_id': self.env['ir.actions.act_window'].search([('view_id', '=', act_id)], limit=1).id,
+            'dbname': self.env.cr.dbname,
+            'base_url': self.env['ir.config_parameter'].get_param('web.base.url', default='http://localhost:8069')
         })
 
-        for attendee in self.browse(cr, uid, ids, context=context):
+        for attendee in self:
             if attendee.email and email_from and (attendee.email != email_from or force):
-                ics_file = self.get_ics_file(cr, uid, attendee.event_id, context=context)
-                mail_id = template_pool.send_mail(cr, uid, template_id, attendee.id, context=local_context)
+                ics_file = self.get_ics_file(attendee.event_id)
+                mail_id = Template.with_context(local_context).send_mail(attendee.id)
 
                 vals = {}
                 if ics_file:
@@ -178,15 +155,15 @@ class calendar_attendee(osv.Model):
                                                       'datas_fname': 'invitation.ics',
                                                       'datas': str(ics_file).encode('base64')})]
                 vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
-                the_mailmess = mail_pool.browse(cr, uid, mail_id, context=context).mail_message_id
-                mailmess_pool.write(cr, uid, [the_mailmess.id], vals, context=context)
+                the_mailmess = Mail.browse(mail_id).mail_message_id
+                the_mailmess.write(vals)
                 mail_ids.append(mail_id)
 
         if mail_ids:
-            res = mail_pool.send(cr, uid, mail_ids, context=context)
-
+            res = Mail.browse(mail_ids).send()
         return res
 
+    @api.v7
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         """
         Make entry on email and availability on change of user_id field.
@@ -200,48 +177,38 @@ class calendar_attendee(osv.Model):
         user = self.pool['res.users'].browse(cr, uid, user_id, *args)
         return {'value': {'email': user.email, 'availability': user.availability}}
 
-    def do_tentative(self, cr, uid, ids, context=None, *args):
+    @api.multi
+    def do_tentative(self):
         """
         Makes event invitation as Tentative.
-        @param ids: list of attendee's IDs
         """
-        return self.write(cr, uid, ids, {'state': 'tentative'}, context)
+        self.state = 'tentative'
+        return True
 
-    def do_accept(self, cr, uid, ids, context=None, *args):
+    @api.multi
+    def do_accept(self):
         """
         Marks event invitation as Accepted.
-        @param ids: list of attendee's IDs
         """
-        if context is None:
-            context = {}
-        meeting_obj = self.pool['calendar.event']
-        res = self.write(cr, uid, ids, {'state': 'accepted'}, context)
-        for attendee in self.browse(cr, uid, ids, context=context):
-            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_("%s has accepted invitation") % (attendee.cn),
-                                     subtype="calendar.subtype_invitation", context=context)
+        self.state = 'accepted'
+        for attendee in self:
+            attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.cn), subtype="calendar.subtype_invitation")
+        return True
 
-        return res
-
-    def do_decline(self, cr, uid, ids, context=None, *args):
+    @api.multi
+    def do_decline(self):
         """
         Marks event invitation as Declined.
-        @param ids: list of calendar attendee's IDs
         """
-        if context is None:
-            context = {}
-        meeting_obj = self.pool['calendar.event']
-        res = self.write(cr, uid, ids, {'state': 'declined'}, context)
-        for attendee in self.browse(cr, uid, ids, context=context):
-            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_("%s has declined invitation") % (attendee.cn), subtype="calendar.subtype_invitation", context=context)
-        return res
+        self.state = 'declined'
+        for attendee in self:
+            attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.cn), subtype="calendar.subtype_invitation")
+        return True
 
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+    @api.model
+    def create(self, vals):
         if not vals.get("email") and vals.get("cn"):
             cnval = vals.get("cn").split(':')
-            email = filter(lambda x: x.__contains__('@'), cnval)
+            email = filter(lambda x: '@' in x, cnval)
             vals['email'] = email and email[0] or ''
-            vals['cn'] = vals.get("cn")
-        res = super(calendar_attendee, self).create(cr, uid, vals, context=context)
-        return res
+        return super(CalendarAttendee, self).create(vals)

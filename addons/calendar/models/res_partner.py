@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from openerp.osv import fields, osv
-from openerp.addons.calendar.models.calendar import get_real_ids
+from odoo import api, fields, models
+from ..models.calendar import get_real_ids
 
 
-class res_partner(osv.Model):
+class ResPartner(models.Model):
     _inherit = 'res.partner'
-    _columns = {
-        'calendar_last_notif_ack': fields.datetime('Last notification marked as read from base Calendar'),
-    }
 
-    def get_attendee_detail(self, cr, uid, ids, meeting_id, context=None):
+    calendar_last_notif_ack = fields.Datetime('Last notification marked as read from base Calendar')
+
+    @api.multi
+    def get_attendee_detail(self, meeting_id):
         """
         Return a list of tuple (id, name, status)
         Used by web_calendar.js : Many2ManyAttendee
@@ -19,9 +19,9 @@ class res_partner(osv.Model):
         datas = []
         meeting = None
         if meeting_id:
-            meeting = self.pool['calendar.event'].browse(cr, uid, get_real_ids(meeting_id), context=context)
-        for partner in self.browse(cr, uid, ids, context=context):
-            data = self.name_get(cr, uid, [partner.id], context)[0]
+            meeting = self.env['calendar.event'].browse(get_real_ids(meeting_id))
+        for partner in self:
+            data = (partner.id, partner.name)
             data = [data[0], data[1], False, partner.color]
             if meeting:
                 for attendee in meeting.attendee_ids:
@@ -30,7 +30,6 @@ class res_partner(osv.Model):
             datas.append(data)
         return datas
 
-    def _set_calendar_last_notif_ack(self, cr, uid, context=None):
-        partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id
-        self.write(cr, uid, partner.id, {'calendar_last_notif_ack': datetime.now()}, context=context)
-        return
+    @api.multi
+    def _set_calendar_last_notif_ack(self):
+        self.env.user.partner_id.write({'calendar_last_notif_ack': fields.Datetime.now()})

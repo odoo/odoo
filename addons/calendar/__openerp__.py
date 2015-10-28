@@ -3,7 +3,6 @@
 
 {
     'name': 'Calendar',
-    'version': '1.0',
     'sequence': 130,
     'depends': ['base', 'mail', 'base_action_rule', 'web_calendar'],
     'summary': 'Personal & Shared Calendar',
@@ -29,12 +28,10 @@ If you need to manage your meetings, you should install the CRM module.
         'views/calendar.xml',
         'views/calendar_view.xml'
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'test': [
         'test/calendar_test.yml',
         'test/test_calendar_recurrent_event_case2.yml'
     ],
-    'installable': True,
+    'qweb': ['static/src/xml/*.xml'],
     'application': True,
-    'auto_install': False,
 }

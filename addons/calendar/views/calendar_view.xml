@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
 
     <!-- Calendar Events Types Form View -->
@@ -30,8 +29,8 @@
             <tree string="Calendar Alarm" editable="bottom">
                 <field name="name"/>
                 <field name="type"/>
-                <field name="duration" on_change="onchange_duration_interval(duration, interval)"/>
-                <field name="interval" on_change="onchange_duration_interval(duration, interval)"/>
+                <field name="duration"/>
+                <field name="interval"/>
             </tree>
         </field>
     </record>
@@ -47,8 +46,8 @@
                         <field name="type" groups="base.group_no_one"/>
                     </group>
                     <group>
-                        <field name="interval" on_change="onchange_duration_interval(duration, interval)"/>
-                        <field name="duration" on_change="onchange_duration_interval(duration, interval)"/>
+                        <field name="interval"/>
+                        <field name="duration"/>
                     </group>
                 </group>
             </form>
@@ -86,7 +85,6 @@
                             <field name="partner_ids" widget="many2manyattendee"
                                 placeholder="Select attendees..."
                                 context="{'force_email':True}"
-                                on_change="onchange_partner_ids(partner_ids)"
                                 class="oe_inline"/>
                         </h2>
                     </div>
@@ -102,17 +100,16 @@
                                     <field name="start" attrs="{'invisible': True}"/>
                                     <field name="stop" attrs="{'invisible': True}"/>
 
-                                    <field name="start_date" string="Starting at" on_change="onchange_dates('start', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
-                                    <field name="stop_date" string="Ending at" on_change="onchange_dates('stop', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
-
-                                    <field name="start_datetime" string="Starting at" on_change="onchange_duration(start_datetime, duration)" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)]}"/>
+                                    <field name="stop_date" string="Ending at" attrs="{'invisible': [('allday','=',False)]}"/>
+                                    <field name="start_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <field name="stop_datetime" invisible="1"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
-                                        <field name="duration" widget="float_time" string="Duration" on_change="onchange_duration(start_datetime, duration)" class="oe_inline"/>
+                                        <field name="duration" widget="float_time" string="Duration" class="oe_inline"/>
                                         <span> hours</span>
                                     </div>
-                                    <field name="allday"  on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)"/>
+                                    <field name="allday"/>
                                 </group>
                                 <group>
                                     <field name="categ_ids" widget="many2many_tags" />
@@ -351,7 +348,4 @@
         <field name="view_mode">form,calendar,tree</field>
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
-       
-    
-    </data>
-</openerp>
+</odoo>
