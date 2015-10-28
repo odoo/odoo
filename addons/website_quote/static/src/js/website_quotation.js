@@ -62,6 +62,7 @@ if(!$('.o_website_quote').length) {
         submitForm: function(ev){
             // extract data
             var self = this;
+            var $confirm_btn = self.$el.find('button[type="submit"]');
             var href = self.$el.find('form').attr("action");
             var action = href.match(/quote\/([a-z]+)/);
             var order_id = href.match(/order_id=(.*)&/);
@@ -84,6 +85,8 @@ if(!$('.o_website_quote').length) {
                     })
                     return false;
                 }
+                $confirm_btn.prepend('<i class="fa fa-spinner fa-spin"></i> ');
+                $confirm_btn.attr('disabled', true);
                 ajax.jsonRpc("/quote/"+action[1], 'call', {
                     'order_id': parseInt(order_id[1]),
                     'token': token,

@@ -552,7 +552,7 @@ class view(osv.osv):
                             separator = child.get('separator', ',')
                             if separator == ' ':
                                 separator = None    # squash spaces
-                            to_add = map(str.strip, child.get('add', '').split(separator))
+                            to_add = filter(bool, map(str.strip, child.get('add', '').split(separator)))
                             to_remove = map(str.strip, child.get('remove', '').split(separator))
                             values = map(str.strip, node.get(attribute, '').split(separator))
                             value = (separator or ' ').join(filter(lambda s: s not in to_remove, values) + to_add)
