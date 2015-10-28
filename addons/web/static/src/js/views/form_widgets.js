@@ -1,6 +1,7 @@
 odoo.define('web.form_widgets', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
@@ -1730,7 +1731,8 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     template: "AceEditor",
     init: function() {
         var self = this;
-        this.ace_loaded = $.Deferred();
+        this.ace_lib_loaded = $.Deferred();
+        var ace_asset_deferreds = [];
         this._super.apply(this, arguments);
         if (!window.ace_require) {
             this.rpc('/web/webclient/ace_lib', {xmlid: 'web.assets_ace_xml_python'}).then(function(result) {
@@ -1738,15 +1740,14 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
                 _.each(assets, function(asset) {
                     //$(head).append($(asset)) does not work, it does GET call with unnecessary querystrings
                     if ($(asset).prop('tagName') == "SCRIPT") {
-                        var script = document.createElement('script');
-                        script.type = 'text/javascript';
-                        script.src = $(asset).prop('src');
-                        $("head")[0].appendChild(script);
+                        ace_asset_deferreds.push(ajax.loadJS($(asset).prop('src')));
                     } else if ($(asset).prop('tagName') == "LINK"){
                         $("head").append($(asset));
                     }
                 });
-                self.ace_loaded.resolve();
+                $.when.apply($, ace_asset_deferreds).done(function() {
+                    self.ace_lib_loaded.resolve();
+                });
             });
         }
     },
@@ -1754,7 +1755,7 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         var self = this;
         this.load_def = $.Deferred();
         if (! this.get("effective_readonly")) {
-            $.when(this.ace_loaded).then(function() {
+            $.when(this.ace_lib_loaded).then(function() { //Load ace when we are sure that script is pushed in DOM
                 ace_require(["ace/ace"], function(ace) {
                     self.ace = ace;
                     self.aceEditor = ace.edit(self.$('.ace-view-editor')[0]);
