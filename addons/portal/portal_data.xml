@@ -17,7 +17,9 @@
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="True"/>
             <field name="body_html"><![CDATA[
-            	<p>
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+                <img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
+                <p>
                     Dear ${object.user_id.name or ''},
                 </p>
                 <p>
@@ -33,21 +35,18 @@
                     <li>Portal: <a href="${'portal_url' in ctx and ctx['portal_url'] or ''}">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>
                 </ul>
                 <ul>
-                	<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>
+                    <li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>
                 </ul>
                 <p>
-                	You can set or change your password via the following url:
+                    You can set or change your password via the following url:
                 </p>
                 <ul>
                     <li><a href="${object.user_id.signup_url}">${object.user_id.signup_url}</a></li>
                 </ul>
                 <p>
-                	${object.wizard_id.welcome_message or ''}
+                    ${object.wizard_id.welcome_message or ''}
                 </p>
-                <p>---<br />
-                    Odoo - Open Source Business Applications<br />
-                    http://www.odoo.com<br />
-                </p>
+                </div>
             ]]>
             </field>
         </record>
