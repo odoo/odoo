@@ -26,14 +26,19 @@
         <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="0"/>
-        <field name="body_html"><![CDATA[<p>Dear ${object.partner_name or 'applicant'},</p>
-        <p>We thank you for your interest in our company and for your application.
-        Unfortunately, your profile does not match with our needs or our recruitment
-        campaign has reached its term.</p>
-        <p>If you want more details, feel free to contact us by phone.</p>
-        <p>Kind regards,</p>
+        <field name="body_html"><![CDATA[
+        <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+        <img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
+        <p>Hi ${object.partner_name or 'applicant'},</p>
+        <p>We thank you for your interest in our company.</p>
+        <p>Unfortunately, your profile does not match with our needs.</p>
+        <p>If you have any questions, please let us know.</p>
+        <p>Thanks,</p>
         <br/>
-         ${object.user_id and object.user_id.signature | safe or ''}]]></field>
+        %if object.user_id and object.user_id.signature:
+            <pre>${object.user_id.signature | safe}</pre>
+        %endif
+        </div>]]></field>
     </record>
 
     <record id="hr_welcome_new_employee" model="mail.template">
@@ -61,14 +66,20 @@
         <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="0"/>
-        <field name="body_html"><![CDATA[<p>Dear ${object.partner_name or 'applicant'},</p>
-        <p>Congrats! Your resume's got our interest!
-        I will call you as soon as possible to make a 10 minutes phone interview and  plan a first meeting.</p>
-        <p>If we can’t reach you or if you miss our call, feel free to reach me back on the number 001 312 349 3030
-        If I do not answer, please let me a message with some schedules to call you back.</p>
-        <p>Kind regards,</p>
+        <field name="body_html"><![CDATA[
+        <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+        <img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
+        <p>Hi ${object.partner_name or 'applicant'},</p>
+        <p>We thank you for your interest in our company.</p>
+        <p>Your resume's got our interest!
+        I will contact you as soon as possible to plan next steps of the recruitment process.</p>
+        <p>If you have any questions, please let us know.</p>
+        <p>Thanks,</p>
         <br/>
-         ${object.user_id.signature | safe}]]></field>
+        %if object.user_id and object.user_id.signature:
+            <pre>${object.user_id.signature | safe}</pre>
+        %endif
+        </div>]]></field>
     </record>
 
         <!--    Resource(type_id)        -->
