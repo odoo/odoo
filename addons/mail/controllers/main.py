@@ -118,7 +118,7 @@ class MailController(http.Controller):
         if not record_sudo:
             # record does not seem to exist -> redirect to login
             return self._redirect_to_messaging()
-        record_action = record_sudo.get_access_action()[0]
+        record_action = record_sudo.get_access_action()
 
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':

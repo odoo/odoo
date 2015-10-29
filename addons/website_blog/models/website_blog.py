@@ -245,10 +245,10 @@ class BlogPost(osv.Model):
         self._check_for_publication(cr, uid, ids, vals, context=context)
         return result
 
-    def get_access_action(self, cr, uid, id, context=None):
+    def get_access_action(self, cr, uid, ids, context=None):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the post on the website directly """
-        post = self.browse(cr, uid, id, context=context)
+        post = self.browse(cr, uid, ids[0], context=context)
         return {
             'type': 'ir.actions.act_url',
             'url': '/blog/%s/post/%s' % (post.blog_id.id, post.id),
