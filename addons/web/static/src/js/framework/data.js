@@ -812,7 +812,7 @@ var BufferedDataSet = DataSetStatic.extend({
         _.each(ids, function (id) {
             self.get_cache(id).to_delete = true;
         });
-        this.set_ids(_.without(this.ids, _.pluck(_.filter(this.cache, function (c) {return c.to_delete;}), 'id')));
+        this.set_ids(_.difference(this.ids, _.pluck(_.filter(this.cache, function (c) {return c.to_delete;}), 'id')));
         this.trigger("dataset_changed", ids, callback, error_callback);
         return $.async_when({result: true}).done(callback);
     },
