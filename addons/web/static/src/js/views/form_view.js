@@ -665,6 +665,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
      */
     to_view_mode: function() {
         this._actualize_mode("view");
+        this.trigger('to_view_mode');
     },
     /**
      * Ask the view to switch to edit mode if possible. The view may not do it
@@ -673,6 +674,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
     to_edit_mode: function() {
         this.onchanges_mutex = new utils.Mutex();
         this._actualize_mode("edit");
+        this.trigger('to_edit_mode');
     },
     /**
      * Ask the view to switch to a precise mode if possible. The view is free to
@@ -1069,6 +1071,30 @@ var FormView = View.extend(common.FieldManagerMixin, {
     },
     sidebar_eval_context: function () {
         return $.when(this.build_eval_context());
+    },
+    /**
+     * Add a notification box inside the form. The notification automatically
+     * goes away (by default when switching to edit mode or changing the form
+     * content.)
+     *
+     * @param {jQuery} $content
+     * @param {Object} [options]
+     * @param {String} [options.type], one of: "success", "info", "warning", "danger"
+     * @param {String} [options.events], when to remove notification
+     */
+    notify_in_form: function ($content, options) {
+        options = options || {};
+        var type = options.type || 'info';
+        var $box = $(QWeb.render('notification-box', {type: type}));
+        $box.append($content);
+        // create handler to remove notification box
+        var events = options.events || 'to_edit_mode view_content_has_changed';
+        this.once(events, null, function() {
+            $box.remove();
+        });
+        // add content inside notification box on top of the sheet/form
+        var $target = this.$('.oe_form_sheet').length ? this.$('.oe_form_sheet') : this.$el;
+        $target.prepend($box);
     },
     open_defaults_dialog: function () {
         var self = this;

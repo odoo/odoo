@@ -336,18 +336,6 @@ WebClient.include({
     }
 });
 
-formView.include({
-    to_edit_mode: function() {
-        this._super();
-        this.trigger('to_edit_mode');
-    },
-
-    to_view_mode: function() {
-        this._super();
-        this.trigger('to_view_mode');
-    }
-});
-
 var FieldStatus = core.form_widget_registry.get('statusbar');
 
 FieldStatus.include({
