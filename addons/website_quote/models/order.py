@@ -261,9 +261,9 @@ class sale_order(osv.osv):
             return super(sale_order, self).get_access_action(cr, uid, id, context=context)
         return {
             'type': 'ir.actions.act_url',
-            'url': '/quote/%s' % id,
+            'url': '/quote/%s' % quote.id,
             'target': 'self',
-            'res_id': id,
+            'res_id': quote.id,
         }
 
     def action_quotation_send(self, cr, uid, ids, context=None):
