@@ -83,8 +83,8 @@ class FleetVehicleTag(models.Model):
     ]
 
 
-class FleetVehicleState(models.Model):
-    _name = 'fleet.vehicle.state'
+class FleetVehicleStage(models.Model):
+    _name = 'fleet.vehicle.stage'
     _order = 'sequence asc'
 
     name = fields.Char(required=True)
@@ -177,8 +177,8 @@ class FleetVehicle(models.Model):
     odometer_count = fields.Integer(compute='_compute_count_odometer', string='Odometer')
     acquisition_date = fields.Date(help='Date when the vehicle has been bought')
     color = fields.Char(help='Color of the vehicle')
-    state_id = fields.Many2one('fleet.vehicle.state', string='Stage', track_visibility='onchange',
-                               help='Current state of the vehicle', default=_get_default_state)
+    stage_id = fields.Many2one('fleet.vehicle.stage', string='Stage', track_visibility='onchange',
+                               help='Current state of the vehicle', default=_get_default_state, oldname='state_id')
     location = fields.Char(help='Location of the vehicle (garage, ...)')
     seats = fields.Integer(string='Seats Number', help='Number of seats of the vehicle')
     doors = fields.Integer(string='Doors Number', help='Number of doors of the vehicle', default=5)

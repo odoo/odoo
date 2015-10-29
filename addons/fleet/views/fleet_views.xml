@@ -148,9 +148,9 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_state_tree'>
-            <field name="name">fleet.vehicle.state.tree</field>
-            <field name="model">fleet.vehicle.state</field>
+        <record model='ir.ui.view' id='fleet_vehicle_stage_tree'>
+            <field name="name">fleet.vehicle.stage.tree</field>
+            <field name="model">fleet.vehicle.stage</field>
             <field name="arch" type="xml">
                 <tree string="State" editable="bottom">
                     <field name="sequence" widget="handler" invisible="1"/>
@@ -160,9 +160,9 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='fleet_vehicle_state_act'>
+        <record model='ir.actions.act_window' id='fleet_vehicle_stage_act'>
             <field name="name">Vehicle Status</field>
-            <field name="res_model">fleet.vehicle.state</field>
+            <field name="res_model">fleet.vehicle.stage</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
@@ -179,7 +179,7 @@
         <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="100" groups="group_fleet_manager"/>
         <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" groups="base.group_no_one"/>
         <menuitem action="fleet_vehicle_model_make_act" parent="fleet_configuration" id="fleet_vehicle_model_make_menu" groups="base.group_no_one"/>
-        <menuitem action="fleet_vehicle_state_act" parent="fleet_configuration" id="fleet_vehicle_state_menu" groups="group_fleet_manager"/>
+        <menuitem action="fleet_vehicle_stage_act" parent="fleet_configuration" id="fleet_vehicle_stage_menu" groups="group_fleet_manager"/>
 
         <record model='ir.ui.view' id='fleet_vehicle_form'>
             <field name="name">fleet.vehicle.form</field>
@@ -187,7 +187,7 @@
             <field name="arch" type="xml">
                 <form string="Vehicle">
                     <header>
-                        <field name="state_id"  widget="statusbar" clickable="True" />
+                        <field name="stage_id"  widget="statusbar" clickable="True" />
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -301,7 +301,7 @@
                     <field name="driver_id" />
                     <field name="vin_sn" />
                     <field name="acquisition_date" />
-                    <field name="state_id"/>
+                    <field name="stage_id"/>
                     <field name="odometer"/>
                     <field name="odometer_unit" />
                     <field name="contract_renewal_due_soon" invisible="1"/>
@@ -319,10 +319,10 @@
                     <field name="driver_id"/>
                     <field name="tag_ids"/>
                     <field name="location"/>
-                    <field name="state_id" />
+                    <field name="stage_id" />
                     <filter name="alert_true" domain="['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]" string="Has Alert(s)"/>
                     <group expand="1" string="Group By">
-                        <filter name="groupby_status" context="{'group_by' : 'state_id'}" string="Status"/>
+                        <filter name="groupby_status" context="{'group_by' : 'stage_id'}" string="Status"/>
                         <filter name="groupby_model" context="{'group_by' : 'model_id'}" string="Model"/>
                     </group>
                </search>
@@ -339,7 +339,7 @@
                     <field name="model_id" />
                     <field name="driver_id" />
                     <field name="location" />
-                    <field name="state_id" />
+                    <field name="stage_id" />
 
                     <field name="image" />
                     <field name="tag_ids" />

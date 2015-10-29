@@ -5,22 +5,22 @@
         <field name="groups_id" eval="[(4, ref('fleet.group_fleet_manager'))]" />
       </record>
 
-      <record id="vehicle_state_inshop" model="fleet.vehicle.state">
+      <record id="vehicle_stage_inshop" model="fleet.vehicle.stage">
         <field name="name">In shop</field>
         <field name="sequence">1</field>
       </record>
 
-      <record id="vehicle_state_active" model="fleet.vehicle.state">
+      <record id="vehicle_stage_active" model="fleet.vehicle.stage">
         <field name="name">Active</field>
         <field name="sequence">2</field>
       </record>
 
-      <record id="vehicle_state_inactive" model="fleet.vehicle.state">
+      <record id="vehicle_stage_inactive" model="fleet.vehicle.stage">
         <field name="name">Inactive</field>
         <field name="sequence">3</field>
       </record>
 
-      <record id="vehicle_state_sold" model="fleet.vehicle.state">
+      <record id="vehicle_stage_sold" model="fleet.vehicle.stage">
         <field name="name">Sold</field>
         <field name="sequence">4</field>
       </record>
@@ -34,7 +34,7 @@
           <field name="doors">5</field>
           <field name="driver_id" ref="base.user_demo_res_partner" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="stage_id" ref="vehicle_stage_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_break'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
@@ -49,7 +49,7 @@
           <field name="doors">5</field>
           <field name="driver_id" ref="base.res_partner_address_25" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_inactive"/>
+          <field name="stage_id" ref="vehicle_stage_inactive"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">16000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
@@ -64,7 +64,7 @@
           <field name="doors">3</field>
           <field name="driver_id" ref="base.res_partner_address_17" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="stage_id" ref="vehicle_stage_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
@@ -79,7 +79,7 @@
           <field name="doors">3</field>
           <field name="driver_id" ref="base.res_partner_address_16" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="stage_id" ref="vehicle_stage_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
@@ -94,7 +94,7 @@
           <field name="doors">5</field>
           <field name="driver_id" ref="base.res_partner_address_15" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="stage_id" ref="vehicle_stage_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">18000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
