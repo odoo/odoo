@@ -208,8 +208,6 @@ class FleetVehicle(models.Model):
                                               search='_search_overdue_contract_reminder',
                                               string='Has Contracts Overdue')
     contract_renewal_name = fields.Text(compute='_compute_contract_reminder', string='Name of contract to renew soon')
-    contract_renewal_total = fields.Integer(compute='_compute_contract_reminder',
-                                            string='Total of contracts due or overdue minus one')
     car_value = fields.Float(help='Value of the bought vehicle')
 
     @api.one
@@ -273,13 +271,12 @@ class FleetVehicle(models.Model):
 
         for vehicle in self:
             max_due_time = current_date + datetime.timedelta(days=15)
-            contracts = self.env['fleet.vehicle.log.contract'].search(['&', '&', ('state', 'in', ('open', 'toclose')),
+            contract = self.env['fleet.vehicle.log.contract'].search(['&', '&', ('state', 'in', ('open', 'toclose')),
                                                                                 ('vehicle_id', '=', vehicle.id),
                                                                                 ('expiration_date', '<', fields.Datetime.to_string(max_due_time))],
-                                                                     order='expiration_date asc', limit=100)
-            if contracts:
-                vehicle.contract_renewal_total = len(contracts)
-                due_time_contract = fields.Datetime.from_string(contracts.expiration_date)
+                                                                     order='expiration_date asc', limit=1)
+            if contract:
+                due_time_contract = fields.Datetime.from_string(contract.expiration_date)
                 vehicle.contract_renewal_name = contract.cost_subtype_id.name
                 diff_time = (due_time_contract - current_date).days
                 if diff_time < 0:
@@ -290,7 +287,6 @@ class FleetVehicle(models.Model):
                 vehicle.contract_renewal_overdue = False
                 vehicle.contract_renewal_due_soon = False
                 vehicle.contract_renewal_name = ''
-                vehicle.contract_renewal_total = 0
 
     @api.multi
     def _compute_count_logfuel(self):

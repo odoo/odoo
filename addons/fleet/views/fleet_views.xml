@@ -306,7 +306,6 @@
                     <field name="odometer_unit" />
                     <field name="contract_renewal_due_soon" invisible="1"/>
                     <field name="contract_renewal_overdue" invisible="1" />
-                    <field name="contract_renewal_total" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -347,7 +346,6 @@
                     <field name="contract_renewal_due_soon" />
                     <field name="contract_renewal_overdue" />
                     <field name="contract_renewal_name" />
-                    <field name="contract_renewal_total" />
 
                     <templates>
                         <t t-name="kanban-box">
@@ -372,10 +370,10 @@
                                     </ul>
                                     <div class="o_kanban_button">
                                         <a t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-warning" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
-                                            <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
+                                            <field name="contract_renewal_name"/>
                                         </a>
                                         <a t-if="record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-danger" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
-                                            <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
+                                            <field name="contract_renewal_name"/> 
                                         </a>
                                     </div>
                                 </div>
