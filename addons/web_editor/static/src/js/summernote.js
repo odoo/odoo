@@ -1231,10 +1231,13 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
     if (!r.isCollapsed()) {
         if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
             remove_table_content(r);
-            return range.create(r.ec, 0).select();
+            range.create(r.ec, 0).select();
+        } else {
+            r = r.deleteContents();
+            r.select();
         }
-        r = r.deleteContents();
-        r.select();
+        event.preventDefault();
+        return false;
     }
 
     var target = r.ec;
@@ -1367,10 +1370,13 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
     if (!r.isCollapsed()) {
         if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
             remove_table_content(r);
-            return range.create(r.sc, dom.nodeLength(r.sc)).select();
+            range.create(r.sc, dom.nodeLength(r.sc)).select();
+        } else {
+            r = r.deleteContents();
+            r.select();
         }
-        r = r.deleteContents();
-        r.select();
+        event.preventDefault();
+        return false;
     }
 
     var target = r.sc;
