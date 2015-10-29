@@ -1749,13 +1749,15 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
                     self.ace_lib_loaded.resolve();
                 });
             });
+        } else {
+            self.ace_lib_loaded.resolve();
         }
     },
     initialize_content: function () {
         var self = this;
         this.load_def = $.Deferred();
         if (! this.get("effective_readonly")) {
-            $.when(this.ace_lib_loaded).then(function() { //Load ace when we are sure that script is pushed in DOM
+            $.when(this.ace_lib_loaded).done(function() { //Load ace when we are sure that script is pushed in DOM
                 ace_require(["ace/ace"], function(ace) {
                     self.ace = ace;
                     self.aceEditor = ace.edit(self.$('.ace-view-editor')[0]);
