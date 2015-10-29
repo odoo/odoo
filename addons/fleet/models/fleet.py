@@ -122,13 +122,13 @@ class FleetVehicleModelBrand(models.Model):
                           help="This field holds the image used as logo for the brand, limited to 1024x1024px.")
     image_medium = fields.Binary("Medium-sized image",
                                  compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
-                                 help="Medium-sized logo of the brand. It is automatically "\
-                                      "resized as a 128x128px image, with aspect ratio preserved. "\
+                                 help="Medium-sized logo of the brand. It is automatically "
+                                      "resized as a 128x128px image, with aspect ratio preserved. "
                                       "Use this field in form views or some kanban views.")
     image_small = fields.Binary("Small-sized image",
                                 compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
-                                help="Small-sized logo of the brand. It is automatically "\
-                                     "resized as a 64x64px image, with aspect ratio preserved. "\
+                                help="Small-sized logo of the brand. It is automatically "
+                                     "resized as a 64x64px image, with aspect ratio preserved. "
                                      "Use this field anywhere a small image is required.")
 
     @api.depends('image')
@@ -270,31 +270,27 @@ class FleetVehicle(models.Model):
     @api.multi
     def _compute_contract_reminder(self):
         current_date = fields.Datetime.from_string(fields.Date.context_today(self))
-        for vehicle in self:
-            overdue = False
-            due_soon = False
-            total = 0
-            name = ''
-            if vehicle.log_contracts_ids:
-                contract = vehicle.log_contracts_ids.filtered(lambda contract:
-                    contract.state in ('open', 'toclose') \
-                    and contract.expiration_date != None).sorted(lambda contract: \
-                    contract.expiration_date)[0]
-                due_time = fields.Datetime.from_string(contract.expiration_date)
-                diff_time = (due_time-current_date).days
-                if diff_time < 0:
-                    overdue = True
-                    total += 1
-                if diff_time < 15 and diff_time >= 0:
-                    due_soon = True
-                    total += 1
-                if overdue or due_soon:
-                    name = contract.cost_subtype_id.name
 
-            vehicle.contract_renewal_overdue = overdue
-            vehicle.contract_renewal_due_soon = due_soon
-            vehicle.contract_renewal_total = (total - 1)  # we remove 1 from the real total for display purposes
-            vehicle.contract_renewal_name = name
+        for vehicle in self:
+            max_due_time = current_date + datetime.timedelta(days=15)
+            contracts = self.env['fleet.vehicle.log.contract'].search(['&', '&', ('state', 'in', ('open', 'toclose')),
+                                                                                ('vehicle_id', '=', vehicle.id),
+                                                                                ('expiration_date', '<', fields.Datetime.to_string(max_due_time))],
+                                                                     order='expiration_date asc', limit=100)
+            if contracts:
+                vehicle.contract_renewal_total = len(contracts)
+                due_time_contract = fields.Datetime.from_string(contracts.expiration_date)
+                vehicle.contract_renewal_name = contract.cost_subtype_id.name
+                diff_time = (due_time_contract - current_date).days
+                if diff_time < 0:
+                    vehicle.contract_renewal_overdue = True
+                else:
+                    vehicle.contract_renewal_due_soon = True
+            else:
+                vehicle.contract_renewal_overdue = False
+                vehicle.contract_renewal_due_soon = False
+                vehicle.contract_renewal_name = ''
+                vehicle.contract_renewal_total = 0
 
     @api.multi
     def _compute_count_logfuel(self):
