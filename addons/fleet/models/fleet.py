@@ -100,34 +100,34 @@ class FleetVehicleModel(models.Model):
     _order = 'name asc'
 
     name = fields.Char('Model name', required=True)
-    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Make', required=True, help='Make of the vehicle')
+    make_id = fields.Many2one('fleet.make', 'Make', required=True, help='Make of the vehicle', oldname='brand_id')
     vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
-    image = fields.Binary(related='brand_id.image', string="Logo")
-    image_medium = fields.Binary(related='brand_id.image_medium', string="Logo (medium)")
-    image_small = fields.Binary(related='brand_id.image_small', string="Logo (small)")
+    image = fields.Binary(related='make_id.image', string="Logo")
+    image_medium = fields.Binary(related='make_id.image_medium', string="Logo (medium)")
+    image_small = fields.Binary(related='make_id.image_small', string="Logo (small)")
 
     @api.multi
     def name_get(self):
-        return self.mapped(lambda m: (m.id, '/'.join([m.brand_id.name, m.name])))
+        return self.mapped(lambda m: (m.id, '/'.join([m.make_id.name, m.name])))
 
 
-class FleetVehicleModelBrand(models.Model):
-    _name = 'fleet.vehicle.model.brand'
-    _description = 'Brand model of the vehicle'
+class FleetMake(models.Model):
+    _name = 'fleet.make'
+    _description = 'Make model of the vehicle'
     _order = 'name asc'
 
     name = fields.Char('Make', required=True)
 
     image = fields.Binary("Logo", attachment=True,
-                          help="This field holds the image used as logo for the brand, limited to 1024x1024px.")
+                          help="This field holds the image used as logo for the make, limited to 1024x1024px.")
     image_medium = fields.Binary("Medium-sized image",
                                  compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
-                                 help="Medium-sized logo of the brand. It is automatically "
+                                 help="Medium-sized logo of the make. It is automatically "
                                       "resized as a 128x128px image, with aspect ratio preserved. "
                                       "Use this field in form views or some kanban views.")
     image_small = fields.Binary("Small-sized image",
                                 compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
-                                help="Small-sized logo of the brand. It is automatically "
+                                help="Small-sized logo of the make. It is automatically "
                                      "resized as a 64x64px image, with aspect ratio preserved. "
                                      "Use this field anywhere a small image is required.")
 
@@ -198,9 +198,9 @@ class FleetVehicle(models.Model):
     horsepower_tax = fields.Float(string='Horsepower Taxation')
     power = fields.Integer(help='Power in kW of the vehicle')
     co2 = fields.Float(string='CO2 Emissions', help='CO2 emissions of the vehicle')
-    image = fields.Binary(related='model_id.brand_id.image', string="Logo")
-    image_medium = fields.Binary(related='model_id.brand_id.image_medium', string="Logo (medium)")
-    image_small = fields.Binary(related='model_id.brand_id.image_small', string="Logo (small)")
+    image = fields.Binary(related='model_id.make_id.image', string="Logo")
+    image_medium = fields.Binary(related='model_id.make_id.image_medium', string="Logo (medium)")
+    image_small = fields.Binary(related='model_id.make_id.image_small', string="Logo (small)")
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder',
                                                search='_search_contract_renewal_due_soon',
                                                string='Has Contracts to renew')
@@ -213,7 +213,7 @@ class FleetVehicle(models.Model):
     @api.one
     @api.depends('license_plate')
     def _compute_vehicle_name(self):
-        self.name = ('%s' + ' / ' + '%s' + ' / ' + '%s') % (self.model_id.brand_id.name, self.model_id.name, self.license_plate)
+        self.name = ('%s' + ' / ' + '%s' + ' / ' + '%s') % (self.model_id.make_id.name, self.model_id.name, self.license_plate)
 
     @api.multi
     def _compute_count_odometer(self):
