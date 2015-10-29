@@ -625,10 +625,3 @@ class FleetVehicleLogContract(models.Model):
     @api.one
     def contract_open(self):
         self.state = 'open'
-
-
-class FleetContractState(models.Model):
-    _name = 'fleet.contract.state'
-    _description = 'Contains the different possible status of a leasing contract'
-
-    name = fields.Char(string='Contract Status', required=True)
