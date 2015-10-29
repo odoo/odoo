@@ -72,6 +72,9 @@ var ProgressBar = Widget.extend({
 
     on_change_input: function(e) {
         var $input = $(e.target);
+        if(e.type === 'change' && !$input.is(':focus')) {
+            return;
+        }
         if(isNaN($input.val())) {
             this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
         } else {

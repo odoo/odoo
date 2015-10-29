@@ -3,13 +3,14 @@
 # * base_vat
 # 
 # Translators:
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-18 22:41+0000\n"
+"Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,13 +28,13 @@ msgstr "Compañías"
 msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
-msgstr "Si o activa, El IVA será validado contra el servicio de VIES"
+msgstr "Si lo activa, la Identificación Tributaria será validada con el servicio VIES (Solo válido para Europa)"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:111
 #, python-format
 msgid "Importing VAT Number [%s] is not valid !"
-msgstr ""
+msgstr "¡El número de identificación  [%s] no es válido!"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -46,7 +47,7 @@ msgstr "Empresa"
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
-msgstr ""
+msgstr "El número de identificación  [%s] para la empresa [%s] no parece ser válido. \nNota: el formato esperado es %s"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:127
@@ -54,7 +55,7 @@ msgstr ""
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
-msgstr ""
+msgstr "El número de identificación [%s] para la empresa [%s] ha fallado en la validación del VAT VIES ya que no respeta el formato esperado %s."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
@@ -64,4 +65,4 @@ msgstr "Revisar IVA"
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "e.g. BE0477472701"
-msgstr ""
+msgstr "e.g. EC03056655 (EC + 10 dígitos para una Cédula de Identidad) ó EC03056655001 (EC + 13 dígitos para un RUC)"

@@ -949,7 +949,7 @@ calendar view are:
     ``date_stop`` is provided records become movable (via drag and drop)
     directly in the calendar
 ``date_delay``
-    alternative to ``date_end``, provides the duration of the event instead of
+    alternative to ``date_stop``, provides the duration of the event instead of
     its end date
 
     .. todo:: what's the unit? Does it allow moving the record?

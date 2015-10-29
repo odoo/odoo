@@ -32,7 +32,7 @@ function add_message (data, options) {
     var msg = _.findWhere(messages, { id: data.id });
 
     if (!msg) {
-        msg = make_message(data, options.channel_id);
+        msg = make_message(data);
         // Keep the array ordered by date when inserting the new message
         messages.splice(_.sortedIndex(messages, msg, 'date'), 0, msg);
         if (options.channel_id) {
@@ -41,7 +41,7 @@ function add_message (data, options) {
                 channel.hidden = false;
                 chat_manager.bus.trigger('new_channel', channel);
             }
-            if (!_.contains(["static", "public", "private"], channel.type) && (options.show_notification)) {
+            if (!_.contains(["public", "private"], channel.type) && (options.show_notification)) {
                 var query = { is_displayed: false };
                 chat_manager.bus.trigger('anyone_listening', channel, query);
                 if (!query.is_displayed) {
@@ -59,13 +59,11 @@ function add_message (data, options) {
         if (!options.silent) {
             chat_manager.bus.trigger('new_message', msg);
         }
-    } else if (msg && options.channel_id !== undefined) {
-        add_channel_to_message(msg, options.channel_id);
     }
     return msg;
 }
 
-function make_message (data, channel_id) {
+function make_message (data) {
     var msg = {
         id: data.id,
         author_id: data.author_id,
@@ -78,7 +76,7 @@ function make_message (data, channel_id) {
         email_from: data.email_from,
         record_name: data.record_name,
         tracking_value_ids: data.tracking_value_ids,
-        channel_ids: (channel_id !== undefined ? [channel_id] : []),
+        channel_ids: data.channel_ids,
         model: data.model,
         res_id: data.res_id,
     };
@@ -115,6 +113,13 @@ function make_message (data, channel_id) {
     }
     if (_.contains(data.starred_partner_ids, session.partner_id)) {
         msg.is_starred = true;
+    }
+    var real_channels = _.without(msg.channel_ids, 'channel_inbox', 'channel_starred');
+    var origin = real_channels.length ? real_channels[0] : undefined;
+    var channel;
+    if (origin && (channel = _.findWhere(channels, {id: origin}))) {
+        msg.origin_id = origin;
+        msg.origin_name = channel.name;
     }
     return msg;
 }
@@ -168,6 +173,7 @@ function add_channel (data, options) {
     } else {
         channel = make_channel(data, options);
         channels.push(channel);
+        channels = _.sortBy(channels, function (channel) { return channel.name.toLowerCase(); });
         if (!options.silent) {
             chat_manager.bus.trigger("new_channel", channel);
         }
@@ -175,6 +181,7 @@ function add_channel (data, options) {
             chat_manager.bus.trigger("open_chat", channel);
         }
     }
+    return channel;
 }
 
 function make_channel (data, options) {
@@ -204,6 +211,9 @@ function make_channel (data, options) {
         channel.type = "dm";
         channel.name = data.direct_partner[0].name;
         channel.status = data.direct_partner[0].im_status;
+    }
+    if ((channel.type === 'public') || (channel.type === 'private')) {
+        channel.name = '#' + channel.name;
     }
     return channel;
 }
@@ -382,10 +392,7 @@ var chat_manager = {
 
         return ChannelModel
             .call(method, args)
-            .then(add_channel)
-            .then(function () {
-                bus.restart_poll();
-            });
+            .then(add_channel);
     },
     join_channel: function (channel_id, options) {
         return ChannelModel

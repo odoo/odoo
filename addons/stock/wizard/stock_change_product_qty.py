@@ -44,7 +44,7 @@ class stock_change_product_qty(osv.osv_memory):
                 try:
                     self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
                 except (AccessError):
-                   pass
+                   location_id = False
             res['location_id'] = location_id
         return res
 

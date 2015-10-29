@@ -21,6 +21,17 @@
         <!-- alias domain: project.config.settings -->
         <function id="default_alias_domain_project" model="ir.values" name="set_default" eval="('project.config.settings', 'generate_project_alias', 1)"/>
 
+
+        <!-- sale_timesheet and project define the same field without depending on each, which causes the field to be deleted when the module that created it
+        is deleted. To avoid this, we create xmlids manually for this field in both modules to prevent accidental deletion. To fix in saas-7 by moving the field definition-->
+        <record id="duplicate_field_xmlid" model="ir.model.data">
+            <field name="res_id" search="[('model','=','res.company'),('name','=','project_time_mode_id')]" model="ir.model.fields"/>
+            <field name="model">ir.model.fields</field>
+            <field name="module">project</field>
+            <field name="name">project_time_mode_id_duplicate_xmlid</field>
+            <field name="noupdate">True</field>
+        </record>
+
     </data>
     <data>
 
@@ -318,7 +329,6 @@
         <record id="project_task_data_14" model="project.task">
             <field name="displayed_image_id" ref="msg_task_data_14_attach"/>
         </record>
-
 
     </data>
 </openerp>

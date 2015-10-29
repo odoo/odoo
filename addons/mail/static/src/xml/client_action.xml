@@ -32,7 +32,6 @@
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="display_status">true</t>
-                <t t-set="display_close_button">true</t>
                 <t t-set="input_placeholder">Open chat</t>
             </t>
 
@@ -51,17 +50,29 @@
         </span>
     </t>
     <t t-name="mail.chat.SidebarTitle">
-        <div class="o_mail_sidebar_title">
-            <h4><t t-esc="channel_title"/></h4>
-            <span t-if="!disable_add_channel" class="fa fa-plus o_add" t-att-title="_t('Add')" t-attf-data-type="#{channel_type}"/>
-        </div>
+        <!-- Don't display the channel type if there is no channel of such type
+             and the 'add a channel' option is disabled for this type -->
+        <t t-if="disable_add_channel">
+            <t t-set="empty" t-value="true"/>
+            <t t-foreach="channels" t-as="channel">
+                <t t-if="channel.type === channel_type">
+                    <t t-set="empty" t-value="false"/>
+                </t>
+            </t>
+        </t>
+        <t t-if="!disable_add_channel || !empty">
+            <div class="o_mail_sidebar_title">
+                <h4><t t-esc="channel_title"/></h4>
+                <span t-if="!disable_add_channel" class="fa fa-plus o_add" t-att-title="_t('Add')" t-attf-data-type="#{channel_type}"/>
+            </div>
+        </t>
     </t>
     <t t-name="mail.chat.SidebarItems">
         <t t-foreach="channels" t-as="channel">
             <div t-if="channel.type === channel_type" class="o_mail_chat_channel_item" t-att-data-channel-id="channel.id">
-                <i t-if="display_status" t-att-class="'fa ' + (channel.status == 'online' ? 'fa-circle' : 'fa-circle-o')"/>
+                <span><i t-if="display_status" t-att-class="'o_user_status fa ' + (channel.status == 'online' ? 'fa-circle' : 'fa-circle-o')"/></span>
                 <t t-esc="channel.name"/>
-                <span t-if="display_close_button" class="fa fa-times pull-right o_mail_partner_unpin" t-att-title="_t('Close')" t-att-data-channel-id="channel.id"/>
+                <span class="fa fa-times pull-right o_mail_partner_unpin" t-att-title="_t('Close')" t-att-data-channel-id="channel.id"/>
             </div>
         </t>
         <div t-if="!disable_add_channel" class="o_mail_add_channel" t-attf-data-type="#{channel_type}">
@@ -72,8 +83,9 @@
     <!-- Buttons of the Control Panel -->
     <t t-name="mail.chat.ControlButtons">
         <div>
-            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite" t-att-title='_t("Invite people")'>Invite</button>
-            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_detach" t-att-title='_t("Detach the conversation")'>Detach</button>
+            <button type="button" class="btn btn-primary btn-sm o_mail_toggle_channels visible-xs-inline" t-att-title='_t("Toggle Channels")'>Channels</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_invite" t-att-title='_t("Invite people")'>Invite</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_detach hidden-xs" t-att-title='_t("Detach the conversation")'>Detach</button>
         </div>
     </t>
 

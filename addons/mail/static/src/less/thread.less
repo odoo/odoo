@@ -1,4 +1,6 @@
-@mail-thread-avatar-size: 50px;
+@mail-thread-avatar-size: 36px;
+@mail-thread-icon-opacity: 0.6;
+@mail-thread-side-date-opacity: 0.6;
 
 .o_mail_thread {
     .o_thread_show_more {
@@ -22,23 +24,28 @@
 
     .o_thread_message {
         .o-flex-display();
-        margin: 10px 0;
+        padding: 4px 0;
 
-        .o_thread_message_avatar {
+        .o_thread_message_sidebar {
             .o-flex(0, 0, @mail-thread-avatar-size);
             margin-right: 10px;
-            @media (max-width: @screen-xs-max) {
-                .o-flex(0, 0, @mail-thread-avatar-size/2);
+            text-align: center;
+
+            .o_thread_message_avatar {
+                max-width: @mail-thread-avatar-size;
             }
 
-            .o_thread_message_avatar_img {
-                display: block;
-                margin: 0 auto; // center the avatar
-                max-width: @mail-thread-avatar-size;
-                @media (max-width: @screen-xs-max) {
-                    max-width: @mail-thread-avatar-size/2;
-                }
+            .o_thread_message_side_date {
+                font-size: smaller;
+                opacity: 0;
             }
+        }
+        &:hover .o_thread_message_side_date {
+            opacity: @mail-thread-side-date-opacity;
+        }
+
+        .o_mail_redirect {
+            cursor: pointer;
         }
 
         .o_thread_message_core {
@@ -48,23 +55,60 @@
                 font-style: italic;
             }
 
+            .o_mail_notification {
+                font-style: italic;
+                color: gray;
+            }
+
             > p {
                 margin: 0 0 9px; // Required by the old design to override a general rule on p's
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            .o_mail_info {
+                margin-bottom: 2px;
+                .text-muted();
+                .o_mail_mailto, .o_mail_mailto:hover {
+                    .text-muted();
+                }
+                .o_channel_redirect {
+                    color: gray;
+                }
             }
 
             .o_thread_message_star, .o_thread_message_needaction {
                 cursor: pointer;
-                opacity: 0.5;
-                &:hover {
-                    opacity: 1;
-                }
+                opacity: 0;
                 &.fa-star {
+                    opacity: @mail-thread-icon-opacity;
                     color: gold;
                 }
             }
+        }
 
-            .o_mail_redirect {
-                cursor: pointer;
+        &:hover .o_thread_message_core {
+            .o_thread_message_star, .o_thread_message_needaction {
+                opacity: @mail-thread-icon-opacity;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
+        border-bottom: 1px solid transparent;
+        border-top: 1px solid transparent;
+        &.o_thread_selected_message {
+            border-bottom: 1px solid @gray-lighter;
+            border-top: 1px solid @gray-lighter;
+
+            .o_thread_message_side_date {
+                opacity: @mail-thread-side-date-opacity;
+            }
+
+            .o_thread_message_star, .o_thread_message_needaction {
+                opacity: @mail-thread-icon-opacity;
             }
         }
     }

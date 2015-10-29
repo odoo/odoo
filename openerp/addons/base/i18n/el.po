@@ -3,13 +3,14 @@
 # * base
 # 
 # Translators:
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-10 09:45+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-22 06:34+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -148,7 +149,7 @@ msgid ""
 "\n"
 "\n"
 "[object with reference: %s - %s]"
-msgstr ""
+msgstr "\n\n[object with reference: %s - %s]"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -2046,7 +2047,7 @@ msgid ""
 "------------------------------------------------------------------------------------------------------------------\n"
 "    Reporting / Accounting / **Follow-ups Analysis\n"
 "\n"
-msgstr ""
+msgstr "\nΆρθρωμα για να δημιουργήσει αυτόματα επιστολές για απλήρωτα τιμολόγια, με πολύ-επίπεδες επανακλήσεις.\n=========================================================================\n\nYou can define your multiple levels of recall through the menu:\n---------------------------------------------------------------\n    Configuration / Follow-up / Follow-up Levels\n    \nOnce it is defined, you can automatically print recalls every day through simply clicking on the menu:\n------------------------------------------------------------------------------------------------------\n    Payment Follow-Up / Send Email and letters\n\nIt will generate a PDF / send emails / set manual actions according to the the different levels \nof recall defined. You can define different policies for different companies. \n\nNote that if you want to check the follow-up level for a given partner/account entry, you can do from in the menu:\n------------------------------------------------------------------------------------------------------------------\n    Reporting / Accounting / **Follow-ups Analysis\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -2097,7 +2098,7 @@ msgid ""
 "description provided by the CODA configuration tables is based upon the CODA\n"
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
-msgstr ""
+msgstr "\nΆρθρωμα για να εισάγει CODA bank statements.\n======================================\n\nSupported are CODA flat files in V2 format from Belgian bank accounts.\n----------------------------------------------------------------------\n    * CODA v1 support.\n    * CODA v2.2 support.\n    * Foreign Currency support.\n    * Support for all data record types (0, 1, 2, 3, 4, 8, 9).\n    * Parsing & logging of all Transaction Codes and Structured Format\n      Communications.\n    * Automatic Financial Journal assignment via CODA configuration parameters.\n    * Support for multiple Journals per Bank Account Number.\n    * Support for multiple statements from different bank accounts in a single\n      CODA file.\n    * Support for 'parsing only' CODA Bank Accounts (defined as type='info' in\n      the CODA Bank Account configuration records).\n    * Multi-language CODA parsing, parsing configuration data provided for EN,\n      NL, FR.\n\nThe machine readable CODA Files are parsed and stored in human readable format in\nCODA Bank Statements. Also Bank Statements are generated containing a subset of\nthe CODA information (only those transaction lines that are required for the\ncreation of the Financial Accounting records). The CODA Bank Statement is a\n'read-only' object, hence remaining a reliable representation of the original\nCODA file whereas the Bank Statement will get modified as required by accounting\nbusiness processes.\n\nCODA Bank Accounts configured as type 'Info' will only generate CODA Bank Statements.\n\nA removal of one object in the CODA processing results in the removal of the\nassociated objects. The removal of a CODA File containing multiple Bank\nStatements will also remove those associated statements.\n\nInstead of a manual adjustment of the generated Bank Statements, you can also\nre-import the CODA after updating the OpenERP database with the information that\nwas missing to allow automatic reconciliation.\n\nRemark on CODA V1 support:\n~~~~~~~~~~~~~~~~~~~~~~~~~~\nIn some cases a transaction code, transaction category or structured\ncommunication code has been given a new or clearer description in CODA V2.The\ndescription provided by the CODA configuration tables is based upon the CODA\nV2.2 specifications.\nIf required, you can manually adjust the descriptions via the CODA configuration menu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -4248,27 +4249,27 @@ msgstr "%B - Πλήρες όνομα μήνα."
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%H - Hour (24-hour clock) [00,23]."
-msgstr ""
+msgstr "%H - Ώρα (24-ωρών ρολόι) [00,23]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%I - Hour (12-hour clock) [01,12]."
-msgstr ""
+msgstr "%I - Ώρα (12-ωρών ρολόι) [01,12]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%M - Minute [00,59]."
-msgstr ""
+msgstr "%M - Λεπτά [00,59]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%S - Seconds [00,61]."
-msgstr ""
+msgstr "%S - Δευτερόλεπτα [00,61]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%Y - Year with century."
-msgstr ""
+msgstr "%Y - Έτος με τον αιώνα."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4283,17 +4284,17 @@ msgstr "%b - Σύντομο όνομα μήνα."
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%d - Day of the month [01,31]."
-msgstr ""
+msgstr "%d - Ημέρα του μήνα [01,31]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%j - Day of the year [001,366]."
-msgstr ""
+msgstr "%j - Ημέρα του έτους [001,366]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%m - Month number [01,12]."
-msgstr ""
+msgstr "%m - Μήνας - αριθμός [01,12]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4321,12 +4322,12 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%w - Weekday number [0(Sunday),6]."
-msgstr ""
+msgstr "%w - Εβδομάδα - αριθμός [0(Κυριακή),6]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%y - Year without century [00,99]."
-msgstr ""
+msgstr "%y - Έτος χωρίς τον αιώνα [00,99]."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:1055
@@ -4358,12 +4359,12 @@ msgstr "'%s' δεν μοιάζει να είναι έγκυρη ώρα ημέρ�
 #: code:addons/base/ir/ir_fields.py:177
 #, python-format
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
-msgstr ""
+msgstr "'%s' δεν μοιάζει να είναι ένας ακέραιος αριθμός για το πεδίο '%%(field)s'"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "(edit)"
-msgstr ""
+msgstr "(επεξεργασία)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -4396,12 +4397,12 @@ msgstr ",ή τον προτιμώμενο σας επεξεργαστή κειμ
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid ", readonly"
-msgstr ""
+msgstr ", μόνο για ανάγνωση"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid ", required"
-msgstr ""
+msgstr ", απαιτείται"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_key
@@ -4413,37 +4414,37 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- domain ="
-msgstr ""
+msgstr "- τομέας ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- field ="
-msgstr ""
+msgstr "- πεδίο ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- groups ="
-msgstr ""
+msgstr "- ομάδες ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- ondelete ="
-msgstr ""
+msgstr "- σε διαγραφή ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- relation ="
-msgstr ""
+msgstr "- σχέση ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- selection ="
-msgstr ""
+msgstr "- επιλογή ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- size ="
-msgstr ""
+msgstr "- μέγεθος ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -4468,7 +4469,7 @@ msgstr "-Αυτό το άρθρωμα δεν εξαρτάται από οποι�
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "1.  %b, %B         ==> Dec, December"
-msgstr ""
+msgstr "1. %b, %B ==> Δεκ, Δεκέμβριος"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -4491,7 +4492,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "3.  %y, %Y         ==> 08, 2008"
-msgstr ""
+msgstr "3. %y, %Y ==> 08, 2008"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -4503,37 +4504,37 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "4.  %d, %m         ==> 05, 12"
-msgstr ""
+msgstr "4. %d, %m ==> 05, 12"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "5.  %H:%M:%S      ==> 18:25:20"
-msgstr ""
+msgstr "5. %H:%M:%S ==> 18:25:20"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "6.  %I:%M:%S %p  ==> 06:25:20 PM"
-msgstr ""
+msgstr "6. %I:%M:%S %p ==> 06:25:20 μ.μ."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "7.  %j              ==> 340"
-msgstr ""
+msgstr "7. %j ==> 340"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "8. %S              ==> 20"
-msgstr ""
+msgstr "8. %S ==> 20"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "9. %w              ==> 5 ( Friday is the 6th day)"
-msgstr ""
+msgstr "9. %w ==> 5 (Η Παρασκευή είναι η 6η ημέρα)"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
 msgid "<b>No module found!</b>"
-msgstr ""
+msgstr "<b>Δεν βρέθηκε άρθρωμα</b>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -4542,19 +4543,19 @@ msgid ""
 "                                                partner_name = obj.name + '_code'\n"
 "                                                self.pool[\"res.partner\"].create(cr, uid, {\"name\": partner_name}, context=context)  \n"
 "                                            </code>"
-msgstr ""
+msgstr "<code>\npartner_name = obj.name + '_code'\nself.pool[\"res.partner\"].create(cr, uid, {\"name\": partner_name}, context=context) \n</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>datetime</code> (Python module)"
-msgstr ""
+msgstr "<code>datetime</code> (άρθρωμα Python)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>dateutil</code> (Python module)"
-msgstr ""
+msgstr "<code>dateutil</code> (άρθρωμα Python)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -4571,52 +4572,52 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Apps</strong>"
-msgstr ""
+msgstr "<strong>Εφαρμογές</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Attribute</strong>"
-msgstr ""
+msgstr "<strong>Χαρακτηριστικό</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Dependencies :</strong>"
-msgstr ""
+msgstr "<strong>Εξαρτήσεις:</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Group</strong>"
-msgstr ""
+msgstr "<strong>Ομάδα</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Idx</strong>"
-msgstr ""
+msgstr "<strong>Idx</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Inherited</strong>"
-msgstr ""
+msgstr "<strong>Κληρονομική</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Label</strong>"
-msgstr ""
+msgstr "<strong>Ετικέτα</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Menu :</strong>"
-msgstr ""
+msgstr "<strong>Μενού :</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Name</strong>"
-msgstr ""
+msgstr "<strong>Όνομα</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Reports :</strong>"
-msgstr ""
+msgstr "<strong>Αναφορές :</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -4663,17 +4664,17 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Fields</strong></u>"
-msgstr ""
+msgstr "<u><strong>Πεδία</strong></u>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Security</strong></u>"
-msgstr ""
+msgstr "<u><strong>Ασφάλεια</strong></u>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Views</strong></u>"
-msgstr ""
+msgstr "<u><strong>Προβολές</strong></u>"
 
 #. module: base
 #: code:addons/models.py:3480
@@ -5901,7 +5902,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr ""
+msgstr "Βέλγιο - Εισαγωγή CODA Bank Statements"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
@@ -5958,7 +5959,7 @@ msgstr "Ημερ/νία γέννησης"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
 msgid "Blogs"
-msgstr ""
+msgstr "Ιστολόγια"
 
 #. module: base
 #: model:res.country,name:base.bo
@@ -6795,7 +6796,7 @@ msgstr "Εξαρτήματα Αγοραστή"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_compute
 msgid "Compute"
-msgstr ""
+msgstr "Υπολογισμός"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -7040,7 +7041,7 @@ msgstr "Κόστα Ρίκα - Λογιστική"
 #: code:addons/base/res/res_partner.py:629
 #, python-format
 msgid "Couldn't create contact without email address!"
-msgstr "Δεν μπορεί να δημιουργηθεί επαφή χωρίς διεύθυνση e-mail!"
+msgstr "Δεν μπορεί να δημιουργηθεί επαφή χωρίς διεύθυνση email!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -7691,7 +7692,7 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr ""
+msgstr "Αγαπητέ Κύριε/Κυρία,\n\nΟι εγγραφές μας δείχνουν ότι μερικές πληρωμές του λογαριασμού σας είναι ακόμη ανοικτές.Παρακαλώ βρείτε τις λεπτομέρειες παρακάτω.\nΕάν το ποσό έχει ήδη πληρωθεί, παρακαλώ αγνοήστε αυτή την ειδοποίηση. Εάν όχι, παρακαλώ εμβάστε μας το συνολικό ποσό που αναφέρεται παρακάτω.\nΕάν έχετε οποιεσδήποτε απορίες για τον λογαριασμό σας, παρακαλώ επικοινωνήστε μαζί μας.\n\nΕυχαριστούμε εκ των προτέρων για την συνεργασία σας.\nΜε εκτίμηση,"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -7930,7 +7931,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_discuss
 #: model:ir.module.module,shortdesc:base.module_mail
 msgid "Discuss"
-msgstr ""
+msgstr "Συζητήστε"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail
@@ -8039,7 +8040,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_display_name
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Όνομα εμφάνισης"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -9222,12 +9223,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_analytics
 msgid "Google Analytics"
-msgstr ""
+msgstr "Google Analytics"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_calendar
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google Ημερολόγιο"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_drive
@@ -9237,38 +9238,38 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_spreadsheet
 msgid "Google Spreadsheet"
-msgstr ""
+msgstr "Google Υπολογιστικά Φύλλα"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_account
 msgid "Google Users"
-msgstr ""
+msgstr "Google Χρήστες"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 msgid "Graph"
-msgstr ""
+msgstr "Γράφημα"
 
 #. module: base
 #: model:res.country,name:base.gr
 msgid "Greece"
-msgstr ""
+msgstr "Greece / Ελλάδα"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr
 msgid "Greece - Accounting"
-msgstr ""
+msgstr "Ελλάδα - Λογιστική"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr_reports
 msgid "Greece - Accounting Reports"
-msgstr ""
+msgstr "Ελλάδα - Αναφορές Λογιστικής"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Greek / Ελληνικά"
-msgstr ""
+msgstr "Greek / Ελληνικά"
 
 #. module: base
 #: model:res.country,name:base.gl
@@ -9285,7 +9286,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.ir_access_view_search
 #: model:ir.ui.view,arch_db:base.view_groups_search
 msgid "Group"
-msgstr ""
+msgstr "Ομάδα"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -9304,17 +9305,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_window_action_search
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_search
 msgid "Group By"
-msgstr ""
+msgstr "Ομαδοποίηση Kατά"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_full_name
 msgid "Group Name"
-msgstr ""
+msgstr "Όνομα Ομάδας"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_group_id
 msgid "Group Required"
-msgstr ""
+msgstr "Απαιτείται Ομάδα"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups_share
@@ -9324,7 +9325,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_country_group_form
 msgid "Group name"
-msgstr ""
+msgstr "Όνομα oμάδας"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_groups
@@ -9346,12 +9347,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_form
 #: model:ir.ui.view,arch_db:base.view_view_form
 msgid "Groups"
-msgstr ""
+msgstr "Ομάδες"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid "Groups (no group = global)"
-msgstr ""
+msgstr "Ομάδες (καμμία ομάδα = καθολική)"
 
 #. module: base
 #: model:res.country,name:base.gp
@@ -9406,7 +9407,7 @@ msgstr ""
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "HTML"
-msgstr ""
+msgstr "HTML"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_type
@@ -9420,7 +9421,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "Δρομολόγηση HTTP"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -9445,12 +9446,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_hardware_drivers
 msgid "Hardware Drivers"
-msgstr ""
+msgstr "Οδηγοί υλικού"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_proxy
 msgid "Hardware Proxy"
-msgstr ""
+msgstr "Διακομιστής μεσολάβησης υλικού"
 
 #. module: base
 #: model:res.country,name:base.hm
@@ -9467,17 +9468,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Help"
-msgstr ""
+msgstr "Βοήθεια"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_planner
 msgid "Help to configure application"
-msgstr ""
+msgstr "Βοήθεια για την ρύθμιση εφαρμογής"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Help with Python expressions."
-msgstr ""
+msgstr "Βοήθεια με τις εκφράσεις της Python"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_point_of_sale
@@ -9507,7 +9508,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_event_management
 msgid "Helps you manage your Events."
-msgstr ""
+msgstr "Σε βοηθά να διαχειριστείς τις Εκδηλώσεις σου."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources
@@ -9564,7 +9565,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_hidden
 msgid "Hidden"
-msgstr ""
+msgstr "Κρυφό"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9574,7 +9575,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "History"
-msgstr ""
+msgstr "Ιστορικό"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
@@ -9589,7 +9590,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_action_id
 msgid "Home Action"
-msgstr ""
+msgstr "Αρχική Ενέργεια"
 
 #. module: base
 #: model:res.country,name:base.hn
@@ -9609,22 +9610,22 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_host
 msgid "Hostname or IP of SMTP server"
-msgstr ""
+msgstr "Όνομα κεντρικού υπολογιστή ή η διεύθυνση IP του διακομιστή SMTP"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Hour 00->12: %(h12)s"
-msgstr ""
+msgstr "Ώρα 00->12: %(h12)s"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Hour 00->24: %(h24)s"
-msgstr ""
+msgstr "Ώρα 00->24: %(h24)s"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
 msgid "Hours"
-msgstr ""
+msgstr "Ώρες"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron_numbercall
@@ -9642,7 +9643,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources
 msgid "Human Resources"
-msgstr ""
+msgstr "Ανθρώπινοι Πόροι"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu
@@ -9667,7 +9668,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_iban
 msgid "IBAN Bank Accounts"
-msgstr ""
+msgstr "IBAN Τραπεζικοί Λογαριασμοί"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown_id
@@ -9767,7 +9768,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_id
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_id
 msgid "ID"
-msgstr ""
+msgstr "Κωδικός"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_xml_id
@@ -9792,7 +9793,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import_code
 msgid "ISO Code"
-msgstr ""
+msgstr "Κωδικός ISO"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_import_code
@@ -9802,12 +9803,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_iso_code
 msgid "ISO code"
-msgstr ""
+msgstr "Κωδικός ISO"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
 msgid "IT Services"
-msgstr ""
+msgstr "Υπηρεσίες Πληροφορικής"
 
 #. module: base
 #: model:res.country,name:base.is
@@ -9817,19 +9818,19 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_icon_image
 msgid "Icon"
-msgstr ""
+msgstr "Εικονίδιο"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_icon
 msgid "Icon URL"
-msgstr ""
+msgstr "URL Εικονιδίου"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_multi
 msgid ""
 "If checked and the action is bound to a model, it will only appear in the "
 "More menu on list views"
-msgstr ""
+msgstr "Εάν επιλεγεί και η ενέργεια δεσμεύεται σε ένα μοντέλο, θα εμφανιστεί μόνο στο μενού Άλλα στην οθόνη λίστας."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_debug
@@ -9841,12 +9842,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_global
 msgid "If no group is specified the rule is global and applied to everyone"
-msgstr ""
+msgstr "Εάν καμία ομάδα δεν καθορίζεται ο κανόνας είναι παγκόσμιος και εφαρμόζεται στον καθένα"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_property_res_id
 msgid "If not set, acts as a default value for new resources"
-msgstr ""
+msgstr "Αν δεν έχει ορισθεί, δρα ως η προεπιλεγμένη τιμή για νέους πόρους."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_multi
@@ -9854,17 +9855,17 @@ msgstr ""
 msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view."
-msgstr ""
+msgstr "Αν ρυθμιστεί 'true', η ενέργεια δε θα εμφανίζεται στη δεξιά γραμμή εργαλείων της φόρμας."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_company_id
 msgid "If set, action binding only applies for this company"
-msgstr ""
+msgstr "Εάν οριστεί η σύνδεση ενεργειών εφαρμόζεται μόνο για αυτή την εταιρία"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_user_id
 msgid "If set, action binding only applies for this user."
-msgstr ""
+msgstr "Εάν οριστεί η σύνδεση ενεργειών εφαρμόζεται μόνο για αυτόν τον χρήστη"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_serialization_field_id
@@ -9872,21 +9873,21 @@ msgid ""
 "If set, this field will be stored in the sparse structure of the "
 "serialization field, instead of having its own database column. This cannot "
 "be changed after creation."
-msgstr ""
+msgstr "Εάν οριστεί, αυτό το πεδίο θα αποθηκεύεται στην αραιά υποδομή του πεδίου σειριοποίησης, αντί να έχει την δική του στήλη στην βάση δεδομένων. Δεν μπορεί να αλλαχτεί μετά την δημιουργία."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "If several child actions return an action, only the last one will be executed.\n"
 "                                    This may happen when having server actions executing code that returns an action, or server actions returning a client action."
-msgstr ""
+msgstr "Εάν διαφορετικές θυγατρικές ενέργειες επιστρέφουν μια ενέργεια, μόνο η τελευταία θα εκτελεστεί.\nΑυτό μπορεί να συμβεί όταν υπάρχει εκτελέσιμος κώδικας ενεργειών διακομιστή ο οποίος επιστρέφει μια ενέργεια, ή ενέργειες διακομιστή επιστρέφουν μια ενέργεια τερματικού."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_action_id
 msgid ""
 "If specified, this action will be opened at log on for this user, in "
 "addition to the standard menu."
-msgstr ""
+msgstr "Εάν καθοριστεί, αυτή η ενέργεια θα ανοίξει μια αρχειοθέτηση για αυτόν τον χρήστη, πρόσθετα στο τυπικό μενού."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_lang
@@ -10807,7 +10808,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_wkf_triggers___last_update
 #: model:ir.model.fields,field_description:base.field_wkf_workitem___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Τελευταία αλλαγή στις"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_write_uid
@@ -11632,13 +11633,13 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Misc"
-msgstr ""
+msgstr "Διαφ."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Διάφορα"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -12801,14 +12802,14 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "Partner Tag"
-msgstr ""
+msgstr "Ετικέτα Συνεργάτη"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model:ir.model,name:base.model_res_partner_category
 #: model:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Partner Tags"
-msgstr ""
+msgstr "Ετικέτες Συνεργάτη"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_title_form
@@ -12988,7 +12989,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_copyvalue
 msgid "Placeholder Expression"
-msgstr ""
+msgstr "Έκφραση κράτησης θέσης"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_planner
@@ -14659,7 +14660,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "Slides"
-msgstr ""
+msgstr "Διαφάνειες"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -15293,7 +15294,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_category_id
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 msgid "Tags"
-msgstr ""
+msgstr "Ετικέτες"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -16387,7 +16388,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
 msgid "Uncategorized"
-msgstr ""
+msgstr "Μη κατηγοριοποιημένη"
 
 #. module: base
 #: code:addons/base/module/module.py:561
@@ -16404,7 +16405,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_product_uos
 msgid "Unit of Sale"
-msgstr ""
+msgstr "Μονάδα Πωλήσεων"
 
 #. module: base
 #: model:res.country,name:base.ae

@@ -2152,7 +2152,7 @@ class BaseModel(object):
         return parent_alias
 
     @api.model
-    def _inherits_join_calc(self, alias, field, query):
+    def _inherits_join_calc(self, alias, field, query, implicit=True, outer=False):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
         the field coming from an '_inherits' parent table (no duplicates).
@@ -2172,7 +2172,7 @@ class BaseModel(object):
             # JOIN parent_model._table AS parent_alias ON alias.parent_field = parent_alias.id
             parent_alias, _ = query.add_join(
                 (alias, parent_model._table, parent_field, 'id', parent_field),
-                implicit=True,
+                implicit=implicit, outer=outer,
             )
             model, alias = parent_model, parent_alias
         # handle the case where the field is translated
@@ -2225,7 +2225,7 @@ class BaseModel(object):
                 # if val is a many2one, just write the ID
                 if type(val) == tuple:
                     val = val[0]
-                if val is not False:
+                if f._type == 'boolean' or val is not False:
                     cr.execute(update_query, (ss[1](val), key))
 
     @api.model
@@ -3238,6 +3238,17 @@ class BaseModel(object):
                 if not (f.groups and not self.user_has_groups(f.groups))
                 # discard fields that must be recomputed
                 if not (f.compute and self.env.field_todo(f))
+            )
+        elif field.column._multi:
+            # prefetch all function fields with the same value for 'multi'
+            multi = field.column._multi
+            fs.update(
+                f
+                for f in self._fields.itervalues()
+                # select stored fields with the same multi
+                if f.column and f.column._multi == multi
+                # discard fields with groups that the user may not access
+                if not (f.groups and not self.user_has_groups(f.groups))
             )
 
         # special case: discard records to recompute for field
@@ -4662,7 +4673,7 @@ class BaseModel(object):
                 parent_obj = self.pool[self._inherit_fields[order_field][3]]
                 order_column = parent_obj._columns[order_field]
                 if order_column._classic_read:
-                    inner_clauses = [self._inherits_join_calc(alias, order_field, query)]
+                    inner_clauses = [self._inherits_join_calc(alias, order_field, query, implicit=False, outer=True)]
                     add_dir = True
                 elif order_column._type == 'many2one':
                     key = (parent_obj._name, order_column._obj, order_field)

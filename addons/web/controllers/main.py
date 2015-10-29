@@ -34,7 +34,6 @@ import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 from openerp.modules import get_module_resource
-from openerp.service import model as service_model
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
@@ -506,7 +505,11 @@ def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', un
         headers.append(('Content-Disposition', content_disposition(filename)))
 
     # get content after cache control
-    content = obj[field] or ''
+    if model == 'ir.attachment' and obj.type == 'url' and obj.url:
+        status = 301
+        content = obj.url
+    else:
+        content = obj[field] or ''
 
     return (status, headers, content)
 
@@ -957,10 +960,7 @@ class DataSet(http.Controller):
         if method.startswith('_'):
             raise AccessError(_("Underscore prefixed methods cannot be remotely called"))
 
-        @service_model.check
-        def checked_call(__dbname, *args, **kwargs):
-            return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
-        return checked_call(request.db, *args, **kwargs)
+        return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
 
     @http.route('/web/dataset/call', type='json', auth="user")
     def call(self, model, method, args, domain_id=None, context_id=None):
@@ -1043,6 +1043,8 @@ class Binary(http.Controller):
         status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype)
         if status == 304:
             response = werkzeug.wrappers.Response(status=status, headers=headers)
+        elif status == 301:
+            return werkzeug.utils.redirect(content, code=301)
         elif status != 200:
             response = request.not_found()
         else:
@@ -1074,6 +1076,8 @@ class Binary(http.Controller):
         status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype='image/png')
         if status == 304:
             return werkzeug.wrappers.Response(status=304, headers=headers)
+        elif status == 301:
+            return werkzeug.utils.redirect(content, code=301)
         elif status != 200 and download:
             return request.not_found()
 
@@ -1088,7 +1092,7 @@ class Binary(http.Controller):
         image_base64 = content and base64.b64decode(content) or self.placeholder()
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
-        response.status = str(status)
+        response.status_code = status
         return response
 
     # backward compatibility

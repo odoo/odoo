@@ -6,6 +6,7 @@ var ChatComposer = require('mail.ChatComposer');
 var ChatThread = require('mail.ChatThread');
 
 var ajax = require('web.ajax');
+var config = require('web.config');
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
@@ -469,13 +470,6 @@ var ChatterComposer = ChatComposer.extend({
         return $.when(this._super.apply(this, arguments), this.message_get_suggested_recipients());
     },
 
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            autosize(self.$input);
-        });
-    },
-
     preprocess_message: function () {
         var self = this;
         var def = $.Deferred();
@@ -485,6 +479,7 @@ var ChatterComposer = ChatComposer.extend({
                 subtype: 'mail.mt_comment',
                 message_type: 'comment',
                 content_subtype: 'html',
+                context: self.context,
             });
 
             // Subtype
@@ -503,7 +498,7 @@ var ChatterComposer = ChatComposer.extend({
                 self.check_suggested_partners(checked_suggested_partners).done(function (partner_ids) {
                     message.partner_ids = (message.partner_ids || []).concat(partner_ids);
                     // update context
-                    message.context = _.defaults(self.context, {
+                    message.context = _.defaults({}, message.context, {
                         mail_post_autofollow: true,
                     });
                     def.resolve(message);
@@ -518,13 +513,10 @@ var ChatterComposer = ChatComposer.extend({
     },
 
     /**
-     * Override keydown event handler to go to next line on ENTER and send message on CTRL+ENTER
-     */
-    on_keydown: function (event) {
-        if (!event.ctrlKey && (event.keyCode === $.ui.keyCode.ENTER) && !this.get('mention_partners').length) {
-            return;
-        }
-        this._super(event);
+    * Send the message on SHIFT+ENTER, but go to new line on ENTER
+    */
+    prevent_send: function (event) {
+        return !event.shiftKey;
     },
 
     message_get_suggested_recipients: function () {
@@ -843,15 +835,24 @@ var Chatter = form_common.AbstractField.extend({
         var old_composer = this.composer;
         // create the new composer
         this.composer = new ChatterComposer(this, this.thread_dataset, {
+            context: this.context,
+            input_min_height: 50,
+            input_max_height: Number.MAX_VALUE, // no max_height limit for the chatter
+            input_baseline: 14,
             internal_subtypes: this.options.internal_subtypes,
             is_log: options && options.is_log,
-            context: this.context,
             record_name: this.record_name,
+            get_channel_info: function () {
+                return { res_id: self.res_id, res_model: self.model };
+            },
         });
         this.composer.insertBefore(this.$('.o_mail_thread')).then(function () {
             // destroy existing composer
             if (old_composer) {
                 old_composer.destroy();
+            }
+            if (!config.device.touch) {
+                self.composer.focus();
             }
             self.composer.on('post_message', self, self.on_post_message);
             self.composer.on('need_refresh', self, self.refresh_followers);

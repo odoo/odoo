@@ -22,7 +22,6 @@ import werkzeug
 from lxml import etree, html
 from PIL import Image
 import psycopg2
-from collections import namedtuple
 
 import openerp.http
 import openerp.tools
@@ -41,7 +40,6 @@ from openerp.modules.module import get_resource_path
 _logger = logging.getLogger(__name__)
 
 MAX_CSS_RULES = 4095
-MOCK_ATTACH = namedtuple('mock_attach', ['id', 'url', 'last_update'])
 
 #--------------------------------------------------------------------
 # QWeb template engine
@@ -1106,12 +1104,13 @@ class AssetsBundle(object):
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
-    def __init__(self, xmlid, debug=False, cr=None, uid=None, context=None, registry=None):
+    def __init__(self, xmlid, cr=None, uid=None, context=None, registry=None, max_css_rules=MAX_CSS_RULES):
         self.xmlid = xmlid
         self.cr = request.cr if cr is None else cr
         self.uid = request.uid if uid is None else uid
         self.context = request.context if context is None else context
         self.registry = request.registry if registry is None else registry
+        self.max_css_rules = max_css_rules
         self.javascripts = []
         self.stylesheets = []
         self.css_errors = []
@@ -1182,8 +1181,15 @@ class AssetsBundle(object):
         else:
             url_for = self.context.get('url_for', lambda url: url)
             if css and self.stylesheets:
-                for attachment in self.css():
-                    response.append('<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+                css_attachments = self.css()
+                if not self.css_errors:
+                    for attachment in css_attachments:
+                        response.append('<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+                else:
+                    msg = '\n'.join(self.css_errors)
+                    self.stylesheets.append(StylesheetAsset(self, inline=self.css_message(msg)))
+                    for style in self.stylesheets:
+                        response.append(style.to_html())
             if js and self.javascripts:
                 response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(self.js().url)))
         response.extend(self.remains)
@@ -1211,59 +1217,60 @@ class AssetsBundle(object):
         return hashlib.sha1(check).hexdigest()
 
     def clean_attachments(self, type):
+        """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
+        saving a fresh one.
+
+        When `type` is css we need to check that we are deleting a different version (and not *any*
+        version) because css may be paginated and, therefore, may produce multiple attachments for
+        the same bundle's version.
+
+        When `type` is js we need to check that we are deleting a different version (and not *any*
+        version) because, as one of the creates in `save_attachment` can trigger a rollback, the
+        call to `clean_attachments ` is made at the end of the method in order to avoid the rollback
+        of an ir.attachment unlink (because we cannot rollback a removal on the filestore), thus we
+        must exclude the current bundle.
+        """
         ira = self.registry['ir.attachment']
-        domain = ['&', '!', ('url', '=like', '/web/content/%%-%s/%%' % self.version), ('url', '=like', '/web/content/%%-%%/%s%%.%s' % (self.xmlid, type))]
+        domain = [
+            ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.xmlid, type)),  # The wilcards are id, version and pagination number (if any)
+            '!', ('url', '=like', '/web/content/%-{}/%'.format(self.version))
+        ]
         attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
         return ira.unlink(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context)
-
-    def _mock_attachments(self, attachments):
-        """ As the assets are generated during the same transaction as the rendering of the
-        templates calling them, there is a scenario where the assets are unreachable: when
-        you make a request to read the assets while the transaction creating them is not done.
-        Indeed, when you make an asset request, the controller has to read the `ir.attachment`
-        table.
-
-        This scenario happens when you want to print a PDF report for the first
-        time, as the assets are not in cache and must be generated. To workaround this issue, we
-        need to open multiple cursors to write in the `ir.attachment` table outside of the ~main
-        transaction. But there's another tweak: a recordset browsed with a closed cursor becomes
-        unusable. We chose to copy their content in a namedtuple.
-        """
-        return [MOCK_ATTACH(attachment.id, attachment.url, attachment['__last_update']) for attachment in attachments]
 
     def get_attachments(self, type, inc=None):
         ira = self.registry['ir.attachment']
         domain = [('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.xmlid, ('%%' if inc is None else '.%s' % inc), type))]
-        attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
-        return self._mock_attachments(ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context))
+        attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, order='name asc', context=self.context)
+        return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context)
 
     def save_attachment(self, type, content, inc=None):
         ira = self.registry['ir.attachment']
-        self.clean_attachments(type)
-        attachments = self.get_attachments(type, inc)
+
         values = {}
+        values["name"] = "/web/content/%s" % type
+        values["datas_fname"] = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
+        values["res_model"] = 'ir.ui.view'
+        values["public"] = True
+        values["type"] = 'binary'
+        attachment_id = ira.create(self.cr, openerp.SUPERUSER_ID, values, context=self.context)
+        url = '/web/content/%s-%s/%s' % (attachment_id, self.version, values["datas_fname"])
+        values["name"] = url
+        values["url"] = url
+        values["datas"] = content.encode('utf8').encode('base64')
 
-        with self.registry.cursor() as cr2:
-            if not attachments:
-                values["name"] = "/web/content/%s" % type
-                values["datas_fname"] = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
-                values["res_model"] = 'ir.ui.view'
-                values["public"] = True
-                values["type"] = 'binary'
-                attachment_id = ira.create(cr2, openerp.SUPERUSER_ID, values, context=self.context)
-                url = '/web/content/%s-%s/%s' % (attachment_id, self.version, values["datas_fname"])
-                values["name"] = url
-                values["url"] = url
-            else:
-                attachment_id = attachments[0].id
+        ira.write(self.cr, openerp.SUPERUSER_ID, attachment_id, values, context=self.context)
 
-            values["datas"] = content.encode('utf8').encode('base64')
-            ira.write(cr2, openerp.SUPERUSER_ID, attachment_id, values, context=self.context)
-            return self._mock_attachments(ira.browse(cr2, openerp.SUPERUSER_ID, attachment_id, context=self.context))[0]
+        if self.context.get('commit_assetsbundle') is True:
+            self.cr.commit()
+
+        self.clean_attachments(type)
+
+        return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_id, context=self.context)
 
     def js(self):
         attachments = self.get_attachments('js')
-        if not attachments or attachments[0].last_update < Datetime.to_string(max([asset.last_modified for asset in self.javascripts])):
+        if not attachments:
             content = ';\n'.join(asset.minify() for asset in self.javascripts)
             return self.save_attachment('js', content)
         return attachments[0]
@@ -1275,8 +1282,7 @@ class AssetsBundle(object):
             # get css content
             css = self.preprocess_css()
             if self.css_errors:
-                msg = '\n'.join(self.css_errors)
-                css += self.css_message(msg)
+                return
 
             # move up all @import rules to the top
             matches = []
@@ -1292,7 +1298,7 @@ class AssetsBundle(object):
             page_selectors = 0
             for rule in re.findall(re_rules, css):
                 selectors = len(re.findall(re_selectors, rule))
-                if page_selectors + selectors < MAX_CSS_RULES:
+                if page_selectors + selectors <= self.max_css_rules:
                     page_selectors += selectors
                     page.append(rule)
                 else:
@@ -1300,7 +1306,8 @@ class AssetsBundle(object):
                     page = pages[-1]
                     page_selectors = selectors
             for idx, page in enumerate(pages):
-                attachments.append(self.save_attachment("css", ' '.join(page), inc=idx))
+                self.save_attachment("css", ' '.join(page), inc=idx)
+            attachments = self.get_attachments('css')
         return attachments
 
     def css_message(self, message):
@@ -1557,25 +1564,27 @@ class PreprocessedCSS(StylesheetAsset):
     def to_html(self):
         if self.url:
             try:
-                with self.registry.cursor() as cr3:
-                    ira = self.registry['ir.attachment']
-                    url = self.html_url % self.url
-                    domain = [('type', '=', 'binary'), ('url', '=', url)]
-                    with cr3.savepoint():
-                        ira_id = ira.search(cr3, openerp.SUPERUSER_ID, domain, context=self.context)
-                        datas = self.content.encode('utf8').encode('base64')
-                        if ira_id:
-                            # TODO: update only if needed
-                            ira.write(cr3, openerp.SUPERUSER_ID, ira_id, {'datas': datas},
-                                      context=self.context)
-                        else:
-                            ira.create(cr3, openerp.SUPERUSER_ID, dict(
-                                datas=datas,
-                                mimetype='text/css',
-                                type='binary',
-                                name=url,
-                                url=url,
-                            ), context=self.context)
+                ira = self.registry['ir.attachment']
+                url = self.html_url % self.url
+                domain = [('type', '=', 'binary'), ('url', '=', url)]
+                with self.cr.savepoint():
+                    ira_id = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
+                    datas = self.content.encode('utf8').encode('base64')
+                    if ira_id:
+                        # TODO: update only if needed
+                        ira.write(self.cr, openerp.SUPERUSER_ID, ira_id, {'datas': datas},
+                                  context=self.context)
+                    else:
+                        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+                            datas=datas,
+                            mimetype='text/css',
+                            type='binary',
+                            name=url,
+                            url=url,
+                        ), context=self.context)
+
+                if self.context.get('commit_assetsbundle') is True:
+                    self.cr.commit()
             except psycopg2.Error:
                 pass
         return super(PreprocessedCSS, self).to_html()

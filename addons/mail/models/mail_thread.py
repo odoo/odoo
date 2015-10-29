@@ -5,6 +5,7 @@ import datetime
 import dateutil
 import email
 import json
+import lxml
 from lxml import etree
 import logging
 import pytz
@@ -56,6 +57,25 @@ class MailThread(models.AbstractModel):
                 are automatically attached to the first message posted on the
                 ressource. If set to False, the display of Chatter is done using
                 threads, and no parent_id is automatically set.
+
+    MailThread features can be somewhat controlled through context keys :
+
+     - ``mail_create_nosubscribe``: at create or message_post, do not subscribe
+       uid to the record thread
+     - ``mail_create_nolog``: at create, do not log the automatic '<Document>
+       created' message
+     - ``mail_notrack``: at create and write, do not perform the value tracking
+       creating messages
+     - ``tracking_disable``: at create and write, perform no MailThread features
+       (auto subscription, tracking, post, ...)
+     - ``mail_save_message_last_post``: at message_post, update message_last_post
+       datetime field
+     - ``mail_auto_delete``: auto delete mail notifications; True by default
+       (technical hack for templates)
+     - ``mail_notify_force_send``: if less than 50 email notifications to send,
+       send them directly instead of using the queue; True by default
+     - ``mail_notify_user_signature``: add the current user signature in
+       email notifications; True by default
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
@@ -63,7 +83,8 @@ class MailThread(models.AbstractModel):
     _mail_post_access = 'write'  # access required on the document to post on it
     _mail_mass_mailing = False  # enable mass mailing on this model
 
-    message_is_follower = fields.Boolean('Is Follower', compute='_compute_is_follower')
+    message_is_follower = fields.Boolean(
+        'Is Follower', compute='_compute_is_follower', search='_search_is_follower')
     message_follower_ids = fields.One2many(
         'mail.followers', 'res_id', string='Followers',
         domain=lambda self: [('res_model', '=', self._name)])
@@ -134,6 +155,18 @@ class MailThread(models.AbstractModel):
         following_ids = followers.mapped('res_id')
         for record in self:
             record.message_is_follower = record.id in following_ids
+
+    @api.model
+    def _search_is_follower(self, operator, operand):
+        followers = self.env['mail.followers'].sudo().search([
+            ('res_model', '=', self._name),
+            ('partner_id', '=', self.env.user.partner_id.id),
+            ])
+        # Cases ('message_is_follower', '=', True) or  ('message_is_follower', '!=', False)
+        if (operator == '=' and operand) or (operator == '!=' and not operand):
+            return [('id', 'in', followers.mapped('res_id'))]
+        else:
+            return [('id', 'not in', followers.mapped('res_id'))]
 
     @api.multi
     def _get_message_unread(self):
@@ -1197,6 +1230,22 @@ class MailThread(models.AbstractModel):
             self.write(update_vals)
         return True
 
+    def _message_extract_payload_postprocess(self, message, body, attachments):
+        """ Perform some cleaning / postprocess in the body and attachments
+        extracted from the email. Note that this processing is specific to the
+        mail module, and should not contain security or generic html cleaning.
+        Indeed those aspects should be covered by html_email_clean and
+        html_sanitize methods located in tools. """
+        root = lxml.html.fromstring(body)
+        postprocessed = False
+        for node in root.iter():
+            if 'o_mail_notification' in node.get('class', '') or 'o_mail_notification' in node.get('summary', ''):
+                postprocessed = True
+                node.getparent().remove(node)
+        if postprocessed:
+            body = etree.tostring(root, pretty_print=False, encoding='UTF-8')
+        return body, attachments
+
     def _message_extract_payload(self, message, save_original=False):
         """Extract body as HTML and attachments from the mail message"""
         attachments = []
@@ -1263,6 +1312,8 @@ class MailThread(models.AbstractModel):
                 # 4) Anything else -> attachment
                 else:
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+
+        body, attachments = self._message_extract_payload_postprocess(message, body, attachments)
         return body, attachments
 
     @api.model
@@ -1654,7 +1705,10 @@ class MailThread(models.AbstractModel):
         new_message = MailMessage.create(values)
 
         # Post-process: subscribe author, update message_last_post
-        if model and model != 'mail.thread' and self.ids and subtype_id:
+        # Note: the message_last_post mechanism is no longer used.  This
+        # will be removed in a later version.
+        if (self._context.get('mail_save_message_last_post') and
+                model and model != 'mail.thread' and self.ids and subtype_id):
             subtype_rec = self.env['mail.message.subtype'].sudo().browse(subtype_id)
             if not subtype_rec.internal:
                 # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access

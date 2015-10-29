@@ -326,13 +326,6 @@ class project(osv.osv):
             tasks.write({'active': vals['active']})
         return res
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        context = dict(context or {})
-        if context.get('message_is_follower', False):
-            res = super(project, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
-            return [proj.id for proj in self.browse(cr, uid, res, context=context) if proj.message_is_follower]
-        return super(project, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
-
 
 class task(osv.osv):
     _name = "project.task"
@@ -415,9 +408,12 @@ class task(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
+        current = self.browse(cr, uid, id, context=context)
         if not default.get('name'):
-            current = self.browse(cr, uid, id, context=context)
             default['name'] = _("%s (copy)") % current.name
+        if 'remaining_hours' not in default:
+            default['remaining_hours'] = current.planned_hours
+
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     _columns = {

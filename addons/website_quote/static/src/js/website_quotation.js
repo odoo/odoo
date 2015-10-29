@@ -62,15 +62,25 @@ if(!$('.o_website_quote').length) {
         submitForm: function(ev){
             // extract data
             var self = this;
+            var $confirm_btn = self.$el.find('button[type="submit"]');
+
+            // Support 2 routes:
+            // - <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" ...>
+            // - <form id="accept" method="POST" t-att-data-order-id="quotation.id" t-att-data-token="quotation.access_token" ...>
+            // The first route is deprecated but might still be used if the template is not updated
             var href = self.$el.find('form').attr("action");
-            var action = href.match(/quote\/([a-z]+)/);
-            var order_id = href.match(/quote\/[a-z]+\/([0-9]+)/);
-            var token = href.match(/token=(.*)/);
-            if (token){
-                token = token[1];
+            if (href) {
+                var action = href.match(/quote\/([a-z]+)/)[1];
+                var order_id = parseInt(href.match(/quote\/[a-z]+\/([0-9]+)/)[1]);
+                var token = href.match(/token=(.*)/) && href.match(/token=(.*)/)[1];
+            }
+            else {
+                var action = 'accept';
+                var order_id = self.$el.find('form').data("order-id");
+                var token = self.$el.find('form').data("token");
             }
 
-            if (action[1]=='accept') {
+            if (action == 'accept') {
                 ev.preventDefault();
                 // process : display errors, or submit
                 var signer_name = self.$("#name").val();
@@ -84,14 +94,16 @@ if(!$('.o_website_quote').length) {
                     })
                     return false;
                 }
-                ajax.jsonRpc("/quote/"+action[1], 'call', {
-                    'order_id': parseInt(order_id[1]),
+                $confirm_btn.prepend('<i class="fa fa-spinner fa-spin"></i> ');
+                $confirm_btn.attr('disabled', true);
+                ajax.jsonRpc("/quote/"+action, 'call', {
+                    'order_id': order_id,
                     'token': token,
                     'signer': signer_name,
                     'sign': signature?JSON.stringify(signature[1]):false,
                 }).then(function (data) {
                     self.$el.modal('hide');
-                    window.location.href = '/quote/'+order_id[1]+'/'+token+'?message=3';
+                    window.location.href = '/quote/'+order_id.toString()+'/'+token+'?message=3';
                 });
                 return false;
             }

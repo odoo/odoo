@@ -1,43 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+
+<template id="assets_common" name="stock_location_barcodes pdf assets" inherit_id="report.assets_common">
+    <xpath expr="." position="inside">
+        <link href="/stock/static/src/less/report_location_barcode.less" rel="stylesheet"/>
+    </xpath>
+</template>
+
 <template id="report_location_barcode">
-    <style type="text/css">
-        .barcode {
-            position: absolute;
-            -webkit-transform: rotate(90deg);
-            width: 300px;
-            margin-left: -150px;
-            height: 50px;
-            margin-top: -25px;
-        }
-        .barcode:nth-child(1) {
-            top: 47mm;
-            left: 75%;
-        }
-        .barcode:nth-child(2) {
-            top: 161mm;
-            left: 75%;
-        }
-        .barcode:nth-child(3) {
-            top: 47mm;
-            left: 25%;
-        }
-        .barcode:nth-child(4) {
-            top: 161mm;
-            left: 25%;
-        }
-    </style>
     <t t-call="report.html_container">
-        <t t-foreach="[docs[x:x+4] for x in xrange(0, len(docs), 4)]" t-as="page_docs">
-            <div class="page">
-                <t t-foreach="page_docs" t-as="o">
-                    <t t-if="o.barcode"><t t-set="content" t-value="o.barcode"/></t>
-                    <t t-if="not o.barcode"><t t-set="content" t-value="o.name"/></t>
-                    <img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', content, 600, 100)"/>
-                </t>
-            </div>
-        </t>
+        <div t-foreach="[docs[x:x+4] for x in xrange(0, len(docs), 4)]" t-as="page_docs" class="page page_stock_location_barcodes">
+            <t t-foreach="page_docs" t-as="o">
+                <t t-if="o.barcode"><t t-set="content" t-value="o.barcode"/></t>
+                <t t-if="not o.barcode"><t t-set="content" t-value="o.name"/></t>
+                <img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', content, 600, 100)"/>
+            </t>
+        </div>
     </t>
 </template>
 </data>

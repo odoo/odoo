@@ -120,7 +120,7 @@ class AccountMove(models.Model):
                 new_name = False
                 journal = move.journal_id
 
-                if invoice and invoice.move_name != '/':
+                if invoice and invoice.move_name and invoice.move_name != '/':
                     new_name = invoice.move_name
                 else:
                     if journal.sequence_id:
@@ -226,6 +226,11 @@ class AccountMoveLine(models.Model):
             for unreconciled lines, and something in-between for partially reconciled lines.
         """
         for line in self:
+            if not line.account_id.reconcile:
+                line.reconciled = False
+                line.amount_residual = 0
+                line.amount_residual_currency = 0
+                continue
             #amounts in the partial reconcile table aren't signed, so we need to use abs()
             amount = abs(line.debit - line.credit)
             amount_residual_currency = abs(line.amount_currency) or 0.0
@@ -347,8 +352,8 @@ class AccountMoveLine(models.Model):
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     date = fields.Date(related='move_id.date', string='Date', required=True, index=True, default=fields.Date.context_today, store=True, copy=False)
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines', oldname="analytic_lines")
-    tax_ids = fields.Many2many('account.tax', string='Taxes', copy=False, readonly=True)
-    tax_line_id = fields.Many2one('account.tax', string='Originator tax', copy=False, readonly=True)
+    tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
+    tax_line_id = fields.Many2one('account.tax', string='Originator tax', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True)
     counterpart = fields.Char("Counterpart", compute='_get_counterpart', help="Compute the counter part accounts of this journal item for this journal entry. This can be needed in reports.")
@@ -940,11 +945,12 @@ class AccountMoveLine(models.Model):
         tax_lines_vals = []
         if apply_taxes and not context.get('dont_create_taxes') and vals.get('tax_ids'):
             # Get ids from triplets : https://www.odoo.com/documentation/master/reference/orm.html#openerp.models.Model.write
-            tax_ids = map(lambda tax: tax[1], vals['tax_ids'])
+            tax_ids = [tax['id'] for tax in self.resolve_2many_commands('tax_ids', vals['tax_ids']) if tax.get('id')]
             # Since create() receives ids instead of recordset, let's just use the old-api bridge
             taxes = self.env['account.tax'].browse(tax_ids)
+            currency = self.env['res.currency'].browse(vals.get('currency_id'))
             res = taxes.compute_all(amount,
-                vals.get('currency_id'), 1, vals.get('product_id'), vals.get('partner_id'))
+                currency, 1, vals.get('product_id'), vals.get('partner_id'))
             # Adjust line amount if any tax is price_include
             if abs(res['total_excluded']) < abs(amount):
                 if vals['debit'] != 0.0: vals['debit'] = res['total_excluded']
@@ -1134,8 +1140,8 @@ class AccountPartialReconcile(models.Model):
     _name = "account.partial.reconcile"
     _description = "Partial Reconcile"
 
-    debit_move_id = fields.Many2one('account.move.line')
-    credit_move_id = fields.Many2one('account.move.line')
+    debit_move_id = fields.Many2one('account.move.line', index=True)
+    credit_move_id = fields.Many2one('account.move.line', index=True)
     amount = fields.Monetary(currency_field='company_currency_id', help="Amount concerned by this matching. Assumed to be always positive")
     amount_currency = fields.Monetary(string="Amount in Currency")
     currency_id = fields.Many2one('res.currency', string='Currency')

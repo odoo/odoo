@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-10 09:45+0000\n"
+"PO-Revision-Date: 2015-10-22 04:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -117,7 +117,7 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\n\nOverview:\n---------\n\n* Chart of Accounts and Taxes template for companies in Japan.\n* This probably does not cover all the necessary accounts for a company. You are expected to add/delete/modify accounts based on this template.\n\nNote:\n-----\n\n* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  You may not need to use these at all under normal circumstances.\n\n[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_deferred_revenue
@@ -1438,7 +1438,7 @@ msgid ""
 "- Council Implementing Regulation (EU) No 1042/2013\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nEU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and electronic services\n=============================================================================================\n\nAs of January 1rst, 2015, telecommunications, broadcasting\nand electronic services sold within the European Union\nhave to be always taxed in the country where the customer\nbelongs. In order to simplify the application of this EU\ndirective, the Mini One Stop Shop (MOSS) registration scheme\nallows businesses to make a unique tax declaration.\n\nThis module makes it possible by helping with the creation\nof the required EU fiscal positions and taxes in order to\nautomatically apply and record the required taxes.\n\nThis module installs a wizard to help setup fiscal positions\nand taxes for selling electronic services inside EU.\n\nThe wizard lets you select:\n - the EU countries to which you are selling these\n   services\n - your national VAT tax for services, to be mapped\n   to the target country's tax\n - optionally: a template fiscal position, in order\n   to copy the account mapping. Should be your\n   existing B2C Intra-EU fiscal position. (defaults\n   to no account mapping)\n - optionally: an account to use for collecting the\n   tax amounts (defaults to the account used by your\n   national VAT tax for services)\n\nIt creates the corresponding fiscal positions and taxes,\nautomatically applicable for EU sales with a customer\nin the selected countries.\nThe wizard can be run again for adding more countries.\n\nThe wizard creates a separate Chart of Taxes for collecting the\nVAT amounts of the MOSS declaration, so extracting the MOSS\ndata should be easy.\nLook for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\nTaxes Report menu (Generic Accounting Report).\n\nReferences\n++++++++++\n- Directive 2008/8/EC\n- Council Implementing Regulation (EU) No 1042/2013\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
@@ -1548,7 +1548,7 @@ msgid ""
 "Generates Intrastat XML report for declaration\n"
 "Based on invoices.\n"
 "    "
-msgstr ""
+msgstr "\nUstvari Intrastat XML poročilo za prijavo\nna osnovi računov.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_account
@@ -2046,7 +2046,7 @@ msgid ""
 "------------------------------------------------------------------------------------------------------------------\n"
 "    Reporting / Accounting / **Follow-ups Analysis\n"
 "\n"
-msgstr ""
+msgstr "\nModul za avtomatizacijo pisnih opominov za odprte postavke z več nivojskimi ponovitvami.\n=========================================================================\n\nDoločite lahko več nivojev opominjanj preko menija:\n---------------------------------------------------------------\n    Nastavitve / Opomini / Nivoji opominov\n    \nKo je določeno, lahko vsakodnevno samodejno tiskamo opomine preko klika na meni:\n------------------------------------------------------------------------------------------------------\n    Opomini za plačila / Pošlji e-pošto in dopise\n\nUstvarjen bo PDF / e-pošta bo poslana / nastavijo se ročna dejanja glede na različne nivoje \nopominov, ki so določeni. Določite lahko različna pravila za različne družbe. \n\nČe želite označiti nivo opomina za določenega partnerja/kontni vnos, to storite preko menija:\n------------------------------------------------------------------------------------------------------------------\n    Poročanje / Knjigovodstvo / **Analiza opominov\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -2097,7 +2097,7 @@ msgid ""
 "description provided by the CODA configuration tables is based upon the CODA\n"
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
-msgstr ""
+msgstr "\nModul za uvoz CODA bančnih izpiskov.\n======================================\n\nPodpira CODA ploske datoteke v V2 formatu Belgijskih bančnih računov.\n----------------------------------------------------------------------\n    * CODA v1 podpora.\n    * CODA v2.2 podpora.\n    * Podpora tujim valutam.\n    * Podpora za vse tipe zapisov (0, 1, 2, 3, 4, 8, 9).\n    * Razčlenjevanje in beleženje transakcijskih kod in strukturiranih \n      komunikacij.\n    * samodejno dodeljevanje finančnih dnevnikov preko CODA nastavitvenih parametrov.\n    * Podpira po več dnevnikov za vsako številko bančnega računa.\n    * Podpira po več izpiskov iz različnih bančnih računov v skupni\n      CODA datoteki.\n    * Podpira 'le členjene' CODA bančne račune (določene kot tip='info' v\n      nastavitvenih zapisih CODA bančnega računa).\n    * Več-jezično CODA členjenje, nastavitve členjenja podane v EN,\n      NL, FR.\n\nCODA datoteke za strojno branje so členjene in shranjene v človeku berljiv format v\nCODA bančnih izpiskih. Bančni izpiski se ustvarjajo tako, da vsebujejo\nCODA podatke (le tiste postavke transakcij, ki so zahtevane za\nustvarjanje finančnih računovodskih zapisov). CODA bančni izpisek je\nobjekt 'le za branje', ter tako ostane zanesljiv prikaz izvorne\nCODA datoteke, bančni izpisek pa dobi spremembe, kot jih zahteva računovodski\nposlovni proces.\n\nCODA bančni izpiski nastavljeni kot tip 'Info' ustvarijo le CODA bančne izpiske.\n\nOdstranitev enega objekta iz CODA obdelave povztoči odstranitev\npovezanih objekotv. Odstranitev CODA datoteke, ki vsebuje več bančnih\nizpiskov prav tako odstrani te povezane izpiske.\n\nNamesto ročnega popravljanja ustvarjenih bančnih izpiskov, lahko tudi\nponovno uvozite CODA po posodobitvi OpenERP podatkovne baze z manjkajočimi podatki za samodejno usklajevanje.\n\nOpomba na CODA V1 podporo:\n~~~~~~~~~~~~~~~~~~~~~~~~~~\nV nekaterih primerih koda transakcije, kategorija transakcije ali koda\nstrukturirane komunikacije dobijo nov, boljši opis v CODA V2.\nOpis, ki ga podajo CODA nastavitvene tabele, je osnovan na CODA\nV2.2 specifikacijah.\nČe je potrebno, lahko ročno popravite opise preko CODA nastavitvenega menija.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -2188,7 +2188,7 @@ msgid ""
 "This initially includes chart of accounts of USA translated to Arabic.\n"
 "\n"
 "In future this module will include some payroll rules for ME .\n"
-msgstr ""
+msgstr "\nOdoo Arabic localization for most arabic countries and Saudi Arabia.\n\nThis initially includes chart of accounts of USA translated to Arabic.\n\nIn future this module will include some payroll rules for ME .\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form_editor
@@ -3119,7 +3119,7 @@ msgid ""
 "    * the 2015 chart of taxes is implemented to a large extent,\n"
 "      see the first sheet of tax.xls for details of coverage\n"
 "    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
-msgstr ""
+msgstr "\nThis is the base module to manage the accounting chart for Luxembourg.\n======================================================================\n\n    * the Luxembourg Official Chart of Accounts (law of June 2009 + 2015 chart and Taxes),\n    * the Tax Code Chart for Luxembourg\n    * the main taxes used in Luxembourg\n    * default fiscal position for local, intracom, extracom\n\nNotes:\n    * the 2015 chart of taxes is implemented to a large extent,\n      see the first sheet of tax.xls for details of coverage\n    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -4212,7 +4212,7 @@ msgid ""
 "\n"
 "Works with Worldline keys version 2.0, contains implementation of\n"
 "payments acquirer using Worldline SIPS."
-msgstr ""
+msgstr "\nWorldline SIPS Payment Acquirer for online payments\n\nWorks with Worldline keys version 2.0, contains implementation of\npayments acquirer using Worldline SIPS."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_score
@@ -4715,7 +4715,7 @@ msgstr "Modul za testiranje uvoza/izvoza."
 #. module: base
 #: model:ir.module.module,description:base.module_test_new_api
 msgid "A module to test the API."
-msgstr ""
+msgstr "Modul za testiranje API."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_uninstall
@@ -4725,7 +4725,7 @@ msgstr "Modul za testiranje odstranjevanja modulov."
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
 msgid "A module to verify the inheritance using _inherits."
-msgstr ""
+msgstr "Modul za preverjanje dedovanja z _inherits."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherit
@@ -4868,12 +4868,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_report
 msgid "Account Report"
-msgstr ""
+msgstr "Konto-poročilo"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_reports
 msgid "Account Reports"
-msgstr ""
+msgstr "Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_cash_basis
@@ -4904,7 +4904,7 @@ msgstr "Test pravilnosti kontnega načrta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports
 msgid "Accounting Reports"
-msgstr ""
+msgstr "Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant
@@ -5495,7 +5495,7 @@ msgstr "Arhitektura"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Archived"
-msgstr ""
+msgstr "Arhivirano"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -5643,7 +5643,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr ""
+msgstr "Prejemnik plačila z Authorize.Net"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_auto_search
@@ -5881,7 +5881,7 @@ msgstr "Belorusija"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
-msgstr ""
+msgstr "Belgijska Intrastat prijava"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -5901,7 +5901,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr ""
+msgstr "Belgija - Uvoz bančnih CODA izpiskov"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
@@ -6742,7 +6742,7 @@ msgstr "Družba"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_17
 msgid "Company Contact"
-msgstr ""
+msgstr "Stik družbe"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_name
@@ -6795,7 +6795,7 @@ msgstr "Kupec komponent"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_compute
 msgid "Compute"
-msgstr ""
+msgstr "Izračunaj"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -7691,7 +7691,7 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr ""
+msgstr "Dragi gospod/gospa,\n\nPo naši evidenci imate do nas še določene odprte postavke, ki so podrobneje prikazane spodaj.\nV kolikor je medtem bila obveznost že poravnana, lahko smatrate ta opomin kot ničen. V nasprotnem primeru vas prosimo, da poravnate spodaj navedeni znesek.\nV primeru potrebe po kakršnihkoli pojasnilih, smo vam vedno na voljo.\n\nZa sodelovanje se vam v naprej zahvaljujemo ter vas lepo pozdravljamo."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -7828,7 +7828,7 @@ msgstr "Odvisnost"
 #: model:ir.model.fields,field_description:base.field_ir_module_module_description
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_description_html
@@ -8039,7 +8039,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_display_name
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikaz naziva"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -8162,7 +8162,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Dutch (BE) / Nederlands (BE)"
-msgstr ""
+msgstr "Nizozemsko (BE) / Nederlands (BE)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8182,7 +8182,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_service
 msgid "EU Mini One Stop Shop (MOSS)"
-msgstr ""
+msgstr "EU Mini One Stop Shop (MOSS)"
 
 #. module: base
 #: sql_constraint:ir.model:0
@@ -8306,7 +8306,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (AU)"
-msgstr ""
+msgstr "Angleški (AU)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9165,7 +9165,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Georgian / ქართული ენა"
-msgstr ""
+msgstr "Gruzijsko / ქართული ენა"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9304,7 +9304,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_window_action_search
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_search
 msgid "Group By"
-msgstr ""
+msgstr "Združi po"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_full_name
@@ -9767,7 +9767,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_id
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_xml_id
@@ -9990,7 +9990,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_import_crm
 msgid "Import & Synchronize"
-msgstr ""
+msgstr "Uvoz in sinhronizacija"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
@@ -10167,7 +10167,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer
 msgid "Install Apps"
-msgstr ""
+msgstr "Namestitev aplikacij"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
@@ -10413,7 +10413,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_account
 #: model:ir.ui.menu,name:base.menu_invoiced
 msgid "Invoicing"
-msgstr ""
+msgstr "Obračun"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
@@ -10516,7 +10516,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp
 msgid "Japan - Accounting"
-msgstr ""
+msgstr "Japonska - računovodstvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp_reports
@@ -10572,7 +10572,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Kabyle / Taqbaylit"
-msgstr ""
+msgstr "Kabilščina / Taqbaylit"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -10645,7 +10645,7 @@ msgstr ""
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "LGPL Version 3"
-msgstr ""
+msgstr "LGPL verzija 3"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_landed_costs
@@ -10880,7 +10880,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_wkf_transition_write_uid
 #: model:ir.model.fields,field_description:base.field_wkf_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnjič posodobil"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_write_date
@@ -10952,7 +10952,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_wkf_transition_write_date
 #: model:ir.model.fields,field_description:base.field_wkf_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnjič posodobljeno"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_installed_version
@@ -11009,7 +11009,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_lead_automation
 msgid "Lead Automation"
-msgstr ""
+msgstr "Avtomatizacija indicev"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_score
@@ -11024,7 +11024,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr ""
+msgstr "Indici in priložnosti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
@@ -11632,13 +11632,13 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Misc"
-msgstr ""
+msgstr "Razno"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Razno"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -11900,7 +11900,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
 msgid "Month"
-msgstr ""
+msgstr "Mesec"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
@@ -12382,7 +12382,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "Officer"
-msgstr ""
+msgstr "Uradnik"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_ogone
@@ -12456,7 +12456,7 @@ msgstr ""
 #: code:addons/base/res/res_config.py:551
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Le administratorji lahko spremenijo nastavitve"
 
 #. module: base
 #: code:addons/base/ir/ir_attachment.py:108
@@ -12509,12 +12509,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_diagram
 msgid "OpenERP Web Diagram"
-msgstr ""
+msgstr "Spletni diagram"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr ""
+msgstr "Priložnosti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
@@ -12781,7 +12781,7 @@ msgstr ""
 #: model:res.partner.category,name:base.res_partner_category_0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_partner_assign
@@ -12791,7 +12791,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_mass_mail
 msgid "Partner Mass Mailing"
-msgstr ""
+msgstr "Masovno pošiljanje pošte partnerju"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
@@ -12801,14 +12801,14 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "Partner Tag"
-msgstr ""
+msgstr "Oznaka partnerja"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model:ir.model,name:base.model_res_partner_category
 #: model:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Partner Tags"
-msgstr ""
+msgstr "Partner ključne besede"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_title_form
@@ -12874,7 +12874,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_authorize
 msgid "Payment Acquirer: Authorize.net Implementation"
-msgstr ""
+msgstr "Prejemnik plačila: Authorize.net implementacija"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_buckaroo
@@ -12899,7 +12899,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_followup
 msgid "Payment Follow-up Management"
-msgstr ""
+msgstr "Upravljanje opominov"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment
@@ -13202,7 +13202,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_print
 msgid "Print Invoice"
-msgstr ""
+msgstr "Izpis računa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_print_docsaway
@@ -13400,7 +13400,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Purchase"
-msgstr ""
+msgstr "Nabava"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase
@@ -13634,7 +13634,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.res_request_link-act
 #: model:ir.ui.menu,name:base.menu_res_request_link_act
 msgid "Referenceable Models"
-msgstr ""
+msgstr "Referenčni modeli"
 
 #. module: base
 #: code:addons/base/res/res_company.py:108
@@ -14192,7 +14192,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa
 msgid "Saudi Arabia - Accounting"
-msgstr ""
+msgstr "Saudska Arabija - knjigovodstvo"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -14274,12 +14274,12 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_sale_salesman
 msgid "See Own Leads"
-msgstr ""
+msgstr "Vidi lastne indice"
 
 #. module: base
 #: model:res.groups,name:base.group_sale_salesman_all_leads
 msgid "See all Leads"
-msgstr ""
+msgstr "Vidi vse indice"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:306
@@ -14533,7 +14533,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_sale_general_settings
 #: model:res.groups,name:base.group_system
 msgid "Settings"
-msgstr ""
+msgstr "Nastavitve"
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -14942,7 +14942,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_project_config_project
 msgid "Stages"
-msgstr ""
+msgstr "Stopnje"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -14994,7 +14994,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_state
 #: model:ir.ui.view,arch_db:base.view_workflow_workitem_search
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_number_increment
@@ -15293,7 +15293,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_category_id
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 msgid "Tags"
-msgstr ""
+msgstr "Ključne besede"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -15413,7 +15413,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_new_api
 msgid "Test API"
-msgstr ""
+msgstr "Preizkus API"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -15968,7 +15968,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
 msgid "Timesheets"
-msgstr ""
+msgstr "Časovnice"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet_sheet
@@ -16404,7 +16404,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_product_uos
 msgid "Unit of Sale"
-msgstr ""
+msgstr "Prodajna EM"
 
 #. module: base
 #: model:res.country,name:base.ae
@@ -16652,7 +16652,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_users_search
 #: model:res.groups,name:base.group_survey_user
 msgid "User"
-msgstr ""
+msgstr "Uporabnik"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_2
@@ -16979,7 +16979,7 @@ msgstr ""
 #: code:addons/models.py:5855 code:addons/models.py:5905
 #, python-format
 msgid "Warnings"
-msgstr ""
+msgstr "Opozorila"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -17338,7 +17338,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
 msgid "Worldline SIPS Payment Acquiring  for online payments"
-msgstr ""
+msgstr "Worldline SIPS Payment Acquiring  for online payments"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_write
@@ -18166,7 +18166,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits
 msgid "test-inherits"
-msgstr ""
+msgstr "test-inherits"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
@@ -18191,40 +18191,40 @@ msgstr ""
 #. module: base
 #: model:res.groups,comment:base.group_hr_user
 msgid "the user will be able to approve document created by employees."
-msgstr ""
+msgstr "uporabnik bo lahko potrjeval dokumente zaposlenih."
 
 #. module: base
 #: model:res.groups,comment:base.group_user
 msgid ""
 "the user will be able to manage his own human resources stuff (leave "
 "request, timesheets, ...), if he is linked to an employee in the system."
-msgstr ""
+msgstr "uporabnik bo lahko videl svojo kadrovsko dokumentacijo (zahtevki po odsotnosti, časovnice, ...), če je v sistemu povezan z delojemalcem"
 
 #. module: base
 #: model:res.groups,comment:base.group_sale_salesman_all_leads
 msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
-msgstr ""
+msgstr "uporabnik bo imel dostop do vseh zapisov prodajne aplikacije."
 
 #. module: base
 #: model:res.groups,comment:base.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr ""
+msgstr "uporabnik bo imel dostop do svojih podatkov v sklopu prodajne aplikacije."
 
 #. module: base
 #: model:res.groups,comment:base.group_hr_manager
 msgid ""
 "the user will have an access to the human resources configuration as well as"
 " statistic reports."
-msgstr ""
+msgstr "uporabnik bo imel dostop do kadrovskih nastavitev in statističnih poročil"
 
 #. module: base
 #: model:res.groups,comment:base.group_sale_manager
 msgid ""
 "the user will have an access to the sales configuration as well as statistic"
 " reports."
-msgstr ""
+msgstr "uporabnik bo imel dostop do nastavitev prodaje in statističnih poročil"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form

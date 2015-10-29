@@ -41,6 +41,8 @@ class SaleOrderEventRegistration(models.TransientModel):
                     'sale_order_line_id': so_line.id,
                 }])
         res['event_registration_ids'] = attendee_list
+        res = self._convert_to_cache(res, validate=False)
+        res = self._convert_to_write(res)
         return res
 
     @api.multi
