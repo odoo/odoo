@@ -316,11 +316,11 @@ var BuildingBlock = Widget.extend({
         $("body").toggleClass("editor_has_snippets", !!number);
 
         // select all default text to edit (if snippet default text)
-        /*self.$snippets.find('.oe_snippet_body, .oe_snippet_body *')
+        self.$snippets.find('.oe_snippet_body, .oe_snippet_body *')
             .contents()
             .filter(function() {
                 return this.nodeType === 3 && this.textContent.match(/\S/);
-            }).parent().addClass("o_default_snippet_text");*/
+            }).parent().addClass("o_default_snippet_text");
         $(document).on("mouseup", ".o_default_snippet_text", function (event) {
             $(event.target).selectContent();
         });
