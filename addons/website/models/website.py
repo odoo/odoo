@@ -125,6 +125,8 @@ DEFAULT_CDN_FILTERS = [
     "^/web/(css|js)/",
     "^/web/image",
     "^/web/content",
+    # retrocompatibility
+    "^/website/image/",
 ]
 
 def unslug(s):
