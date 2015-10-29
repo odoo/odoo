@@ -9,10 +9,6 @@ from odoo import tools, _, models, api, fields
 from odoo.exceptions import UserError
 
 
-def str_to_datetime(strdate):
-    return datetime.datetime.strptime(strdate, tools.DEFAULT_SERVER_DATE_FORMAT)
-
-
 class FleetVehicleCost(models.Model):
     _name = 'fleet.vehicle.cost'
     _description = 'Cost related to a vehicle'
@@ -516,7 +512,7 @@ class FleetVehicleLogContract(models.Model):
 
     def _compute_next_year_date(self, strdate):
         oneyear = datetime.timedelta(days=365)
-        curdate = str_to_datetime(strdate)
+        curdate = datetime.datetime.strptime(strdate, tools.DEFAULT_SERVER_DATE_FORMAT)
         return datetime.datetime.strftime(curdate + oneyear, tools.DEFAULT_SERVER_DATE_FORMAT)
 
     @api.one
