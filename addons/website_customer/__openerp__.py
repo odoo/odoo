@@ -8,7 +8,7 @@
     'summary': 'Publish Your Customer References',
     'version': '1.0',
     'description': """
-OpenERP Customer References
+Odoo Customer References
 ===========================
 """,
     'depends': [

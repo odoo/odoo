@@ -8,7 +8,7 @@
     'website': 'https://www.savoirfairelinux.com',
     'category': 'Localization/Account Charts',
     'description': """
-This is the module to manage the Canadian accounting chart in OpenERP.
+This is the module to manage the Canadian accounting chart in Odoo.
 ===========================================================================================
 
 Canadian accounting charts and localizations.

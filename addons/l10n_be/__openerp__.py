@@ -6,7 +6,7 @@
     'version': '1.1',
     'category': 'Localization/Account Charts',
     'description': """
-This is the base module to manage the accounting chart for Belgium in OpenERP.
+This is the base module to manage the accounting chart for Belgium in Odoo.
 ==============================================================================
 
 After installing this module, the Configuration wizard for accounting is launched.
@@ -34,7 +34,7 @@ Wizards provided by this module:
         **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
-    'author': 'Noviat & OpenERP SA',
+    'author': 'Noviat & Odoo SA',
     'depends': [
         'account',
         'base_vat',

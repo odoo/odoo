@@ -4,7 +4,7 @@
 from difflib import get_close_matches
 import logging
 
-from openerp import api, tools
+from openerp import api, tools, SUPERUSER_ID
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -541,7 +541,7 @@ class ir_translation(osv.osv):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
                         FROM res_lang l
-                        WHERE NOT EXISTS (
+                        WHERE l.active AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
                         );
@@ -559,7 +559,7 @@ class ir_translation(osv.osv):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
                         FROM res_lang l
-                        WHERE l.code != 'en_US' AND NOT EXISTS (
+                        WHERE l.active AND l.code != 'en_US' AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
@@ -631,6 +631,11 @@ class ir_translation(osv.osv):
 
     def load_module_terms(self, cr, modules, langs, context=None):
         context = dict(context or {}) # local copy
+        # make sure the given languages are active
+        lang_obj = self.pool['res.lang']
+        for lang in langs:
+            lang_obj.load_lang(cr, SUPERUSER_ID, lang)
+        # load i18n files
         for module_name in modules:
             modpath = openerp.modules.get_module_path(module_name)
             if not modpath:

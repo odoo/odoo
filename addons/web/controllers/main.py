@@ -241,7 +241,7 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
     return r
 
 def manifest_list(extension, mods=None, db=None, debug=None):
-    """ list ressources to load specifying either:
+    """ list resources to load specifying either:
     mods: a comma separated string listing modules
     db: a database name (return all installed modules in that database)
     """
@@ -664,8 +664,11 @@ class WebClient(http.Controller):
             translations_per_module[mod]['messages'].extend({'id': m['src'],
                                                              'string': m['value']} \
                                                                 for m in msg_group)
-        return {"modules": translations_per_module,
-                "lang_parameters": lang_params}
+        return {
+            'lang_parameters': lang_params,
+            'modules': translations_per_module,
+            'multi_lang': len(res_lang.get_installed(request.cr, uid)) > 1,
+        }
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):

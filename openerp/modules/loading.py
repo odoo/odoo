@@ -182,9 +182,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     report.record_result(load_test(module_name, idref, mode))
                     # Python tests
                     ir_http = registry['ir.http']
-                    if hasattr(ir_http, '_routing_map'):
-                        # Force routing map to be rebuilt between each module test suite
-                        del(ir_http._routing_map)
+                    # Force routing map to be rebuilt between each module test suite
+                    vars(ir_http).pop('routing_map', None)
+
                     report.record_result(openerp.modules.module.run_unit_tests(module_name, cr.dbname))
 
             processed_modules.append(package.name)

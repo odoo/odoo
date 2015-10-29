@@ -78,7 +78,7 @@
                                 <label for="current" />
                                 <div>
                                     <field name="current" class="oe_inline"/>
-                                    <button string="refresh" type="object" name="update" class="oe_link" attrs="{'invisible':['|',('computation_mode', '=', 'manually'),('state', '=', 'draft')]}" />
+                                    <button string="refresh" type="object" name="update_goal" class="oe_link" attrs="{'invisible':['|',('computation_mode', '=', 'manually'),('state', '=', 'draft')]}" />
                                     <div class="oe_grey" attrs="{'invisible':[('definition_id', '=', False)]}">
                                         Reached when current value is <strong><field name="definition_condition" class="oe_inline"/></strong> than the target.
                                     </div>

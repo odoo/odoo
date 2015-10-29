@@ -171,6 +171,7 @@ class AccountChartTemplate(models.Model):
                 'default_debit_account_id': _get_default_account(journal, 'debit'),
                 'refund_sequence': True,
                 'show_on_dashboard': journal['favorite'],
+                'sequence': journal['sequence']
             }
             journal_data.append(vals)
         return journal_data
@@ -758,6 +759,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
                 'type': acc.account_type,
                 'company_id': company.id,
                 'currency_id': acc.currency_id.id,
+                'sequence': 10
             })
 
 

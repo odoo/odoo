@@ -90,7 +90,7 @@ class gamification_challenge(osv.Model):
     
     def _get_categories(self, cr, uid, context=None):
         return [
-            ('hr', 'Human Ressources / Engagement'),
+            ('hr', 'Human Resources / Engagement'),
             ('other', 'Settings / Gamification Tools'),
         ]
 
@@ -305,7 +305,7 @@ class gamification_challenge(osv.Model):
         """, (tuple(ids), yesterday.strftime(DF)))
         goal_ids = [res[0] for res in cr.fetchall()]
         # update every running goal already generated linked to selected challenges
-        goal_obj.update(cr, uid, goal_ids, context=context)
+        goal_obj.update_goal(cr, uid, goal_ids, context=context)
 
         self._recompute_challenge_users(cr, uid, ids, context=context)
         self._generate_goals_from_challenge(cr, uid, ids, context=context)
@@ -333,7 +333,7 @@ class gamification_challenge(osv.Model):
     def quick_update(self, cr, uid, challenge_id, context=None):
         """Update all the goals of a specific challenge, no generation of new goals"""
         goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', '=', challenge_id)], context=context)
-        self.pool.get('gamification.goal').update(cr, uid, goal_ids, context=context)
+        self.pool.get('gamification.goal').update_goal(cr, uid, goal_ids, context=context)
         return True
 
     def _get_challenger_users(self, cr, uid, domain, context=None):
@@ -459,7 +459,7 @@ class gamification_challenge(osv.Model):
                     goal_id = goal_obj.create(cr, uid, values, context=context)
                     to_update.append(goal_id)
 
-            goal_obj.update(cr, uid, to_update, context=context)
+            goal_obj.update_goal(cr, uid, to_update, context=context)
 
         return True
 

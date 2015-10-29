@@ -143,8 +143,7 @@ class res_partner_title(osv.osv):
 
 @api.model
 def _lang_get(self):
-    languages = self.env['res.lang'].search([])
-    return [(language.code, language.name) for language in languages]
+    return self.env['res.lang'].get_installed()
 
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 

@@ -7,14 +7,15 @@
     'version': '1.3',
     'category': 'Hidden',
     'description': """
-The kernel of OpenERP, needed for all installation.
+The kernel of Odoo, needed for all installation.
 ===================================================
 """,
-    'author': 'OpenERP SA',
-    'maintainer': 'OpenERP SA',
+    'author': 'Odoo SA',
+    'maintainer': 'Odoo SA',
     'website': 'http://www.openerp.com',
     'depends': [],
     'data': [
+        'res/res.lang.csv',
         'base_data.xml',
         'res/res_currency_data.xml',
         'res/res_country_data.xml',

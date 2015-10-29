@@ -218,7 +218,7 @@ class AccountJournal(models.Model):
         help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
     refund_sequence_id = fields.Many2one('ir.sequence', string='Refund Entry Sequence',
         help="This field contains the information related to the numbering of the refund entries of this journal.", copy=False)
-    sequence = fields.Integer(help='Used to order Journals in the dashboard view')
+    sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency", oldname='currency')
@@ -466,7 +466,7 @@ class ResPartnerBank(models.Model):
     @api.constrains('journal_id')
     def _check_journal_id(self):
         if len(self.journal_id) > 1:
-            raise ValidationError(_('A bank account can anly belong to one journal.'))
+            raise ValidationError(_('A bank account can only belong to one journal.'))
 
 
 #----------------------------------------------------------
