@@ -655,7 +655,7 @@
                             <group string="Additional Details">
                                 <field name="date" />
                                 <field name="purchaser_id" />
-                                <field name="inv_ref" />
+                                <field name="invoice_reference" />
                                 <field name="vendor_id" context="{'default_supplier': True}"/>
                             </group>
                         </group>
@@ -675,7 +675,7 @@
                     <field name="odometer" invisible="1"/>
                     <field name="odometer_unit" invisible="1"/>
                     <field name="purchaser_id" />
-                    <field name="inv_ref" invisible="1"/>
+                    <field name="invoice_reference" invisible="1"/>
                     <field name="vendor_id" invisible="1"/>
                     <field name="liter" />
                     <field name="price_per_liter" invisible="1"/>
@@ -757,7 +757,7 @@
                                 <field name="date" />
                                 <field name="purchaser_id" />
                                 <field name="vendor_id" context="{'default_supplier': True}"/>
-                                <field name="inv_ref" />
+                                <field name="invoice_reference" />
                             </group>
                         </group>
                         <group string="Included Services">
@@ -786,7 +786,7 @@
                     <field name="cost_subtype_id"/>
                     <field name="purchaser_id"/>
                     <field name="vendor_id" />
-                    <field name="inv_ref" />
+                    <field name="invoice_reference" />
                     <field name="notes" />
                     <field name="amount" sum="Total"/>
                 </tree>

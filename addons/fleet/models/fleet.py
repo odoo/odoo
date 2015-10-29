@@ -381,7 +381,7 @@ class FleetVehicleLogFuel(models.Model):
     price_per_liter = fields.Float()
     purchaser_id = fields.Many2one('res.partner', string='Purchaser',
                                    domain="['|', ('customer', '=', True), ('employee', '=', True)]")
-    inv_ref = fields.Char(string='Invoice Reference')
+    invoice_reference = fields.Char(oldname='inv_ref')
     vendor_id = fields.Many2one('res.partner', string='Supplier', domain="[('supplier', '=', True)]")
     notes = fields.Text()
     cost_id = fields.Many2one('fleet.vehicle.cost', string='Cost', required=True, ondelete='cascade')
@@ -429,7 +429,7 @@ class FleetVehicleLogServices(models.Model):
 
     purchaser_id = fields.Many2one('res.partner', string='Purchaser',
                                    domain="['|', ('customer', '=', True), ('employee', '=', True)]")
-    inv_ref = fields.Char()
+    invoice_reference = fields.Char()
     vendor_id = fields.Many2one('res.partner', string='Supplier', domain="[('supplier', '=', True)]")
     cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True)
     notes = fields.Text()
