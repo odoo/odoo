@@ -101,7 +101,7 @@ class FleetVehicleModel(models.Model):
 
     name = fields.Char('Model name', required=True)
     make_id = fields.Many2one('fleet.make', 'Make', required=True, help='Make of the vehicle', oldname='brand_id')
-    vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
+    vendor_ids = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors', oldname='vendors')
     image = fields.Binary(related='make_id.image', string="Logo")
     image_medium = fields.Binary(related='make_id.image_medium', string="Logo (medium)")
     image_small = fields.Binary(related='make_id.image_small', string="Logo (small)")
