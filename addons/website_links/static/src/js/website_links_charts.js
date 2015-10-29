@@ -60,7 +60,7 @@ if(!$('.o_website_links_chart').length) {
                     .x(function(d) { return getDate(d); })
                     .y(function(d) { return getNbClicks(d); })
                     .tooltips(true)
-                    .transitionDuration(0)
+                    .transition(0)
                     .showYAxis(true)
                     .showXAxis(true);
 

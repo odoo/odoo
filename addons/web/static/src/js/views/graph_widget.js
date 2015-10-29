@@ -158,7 +158,7 @@ return Widget.extend({
         var chart = nv.models.multiBarChart();
         chart.options({
           delay: 250,
-          transitionDuration: 10,
+          transition: 10,
           showLegend: true,
           showXAxis: true,
           showYAxis: true,
@@ -212,7 +212,7 @@ return Widget.extend({
         var chart = nv.models.pieChart();
         chart.options({
           delay: 250,
-          transitionDuration: 100,
+          transition: 100,
           color: d3.scale.category10().range(),
         });
 
