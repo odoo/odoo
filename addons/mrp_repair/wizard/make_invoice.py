@@ -1,43 +1,30 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from openerp import api, fields, models
 
-class make_invoice(osv.osv_memory):
+
+class MakeInvoice(models.TransientModel):
     _name = 'mrp.repair.make_invoice'
     _description = 'Make Invoice'
 
-    _columns = {
-           'group': fields.boolean('Group by partner invoice address'),
-    }
+    group = fields.Boolean('Group by partner invoice address')
 
-    def make_invoices(self, cr, uid, ids, context=None):
+    @api.multi
+    def make_invoices(self):
         """ Generates invoice(s) of selected records.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected
-        @param context: A standard dictionary
         @return: Loads the view of new invoice(s).
         """
-        if context is None:
-            context = {}
-        inv = self.browse(cr, uid, ids[0], context=context)
-        order_obj = self.pool.get('mrp.repair')
-        mod_obj = self.pool.get('ir.model.data')
-        newinv = order_obj.action_invoice_create(cr, uid, context['active_ids'],
-                                                 group=inv.group,context=context)
-
+        orders = self.env['mrp.repair'].browse(self.env.context['active_ids'])
+        newinv = orders.action_invoice_create(group=self.group)
         # We have to trigger the workflow of the given repairs, otherwise they remain 'to be invoiced'.
         # Note that the signal 'action_invoice_create' will trigger another call to the method 'action_invoice_create',
         # but that second call will not do anything, since the repairs are already invoiced.
-        order_obj.signal_workflow(cr, uid, context['active_ids'], 'action_invoice_create')
-
-        form_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-        form_id = form_res and form_res[1] or False
-        tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
-        tree_id = tree_res and tree_res[1] or False
-
+        orders.signal_workflow('action_invoice_create')
+        form_res = self.env.ref('account.invoice_form')
+        form_id = form_res and form_res.id or False
+        tree_res = self.env.ref('account.invoice_tree')
+        tree_id = tree_res and tree_res.id or False
         return {
             'domain': [('id','in', newinv.values())],
             'name': 'Invoices',

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        
+<odoo>
         <!--  Make Invoice -->
         
         <record id="view_make_invoice" model="ir.ui.view">
@@ -20,14 +18,12 @@
             </field>
         </record>
 
-        <act_window name="Create Invoice"            
+        <act_window id="act_mrp_repair_invoice"
+            name="Create Invoice"
             res_model="mrp.repair.make_invoice"
             src_model="mrp.repair"
             view_mode="form"
             target="new"        
             key2="client_action_multi"    
-            id="act_mrp_repair_invoice"
             multi="True"/>        
-        
-    </data>
-</openerp>    
+</odoo>
