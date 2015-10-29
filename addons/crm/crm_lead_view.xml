@@ -369,7 +369,7 @@
                             help="No salesperson"/>
                     <separator />
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
-                    <filter string="Archived" domain="[('active', '=', False)]"/>
+                    <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                     <separator />
                     <filter string="Followup" name="activities"
                         domain="[('date_action', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
