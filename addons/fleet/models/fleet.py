@@ -477,7 +477,7 @@ class FleetVehicleLogContract(models.Model):
     purchaser_id = fields.Many2one('res.partner', string='Contractor',
                                    help='Person to which the contract is signed for',
                                    default=lambda self: self.env['res.users'].browse(self._uid).partner_id.id or False)
-    ins_ref = fields.Char(string='Contract Reference', copy=False)
+    contract_reference = fields.Char(copy=False, oldname='ins_ref')
     state = fields.Selection([('open', 'In Progress'), ('toclose', 'To Close'), ('closed', 'Terminated')],
                              string='Status', readonly=True, help='Choose whether the contract is still valid or not',
                              copy=False, default='open')
