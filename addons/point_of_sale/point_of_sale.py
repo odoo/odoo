@@ -42,7 +42,7 @@ class pos_config(osv.osv):
         result = dict()
 
         for record in self.browse(cr, uid, ids, context=context):
-            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed' and not r.rescue)
+            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed')
             result[record.id] = {
                 'current_session_id': session_id,
                 'current_session_state': session_id.state,
@@ -387,8 +387,7 @@ class pos_session(osv.osv):
         'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
                 select=1, copy=False),
-        'rescue': fields.boolean('Rescue session', readonly=True,
-                                 help="Auto-generated session for orphan orders, ignored in constraints"),
+        
         'sequence_number': fields.integer('Order Sequence Number', help='A sequence number that is incremented with each order'),
         'login_number':  fields.integer('Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session'),
 
@@ -459,8 +458,7 @@ class pos_session(osv.osv):
             # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
             domain = [
                 ('state', 'not in', ('closed','closing_control')),
-                ('user_id', '=', session.user_id.id),
-                ('rescue', '=', False)
+                ('user_id', '=', session.user_id.id)
             ]
             count = self.search_count(cr, uid, domain, context=context)
             if count>1:
@@ -471,8 +469,7 @@ class pos_session(osv.osv):
         for session in self.browse(cr, uid, ids, context=None):
             domain = [
                 ('state', '!=', 'closed'),
-                ('config_id', '=', session.config_id.id),
-                ('rescue', '=', False)
+                ('config_id', '=', session.config_id.id)
             ]
             count = self.search_count(cr, uid, domain, context=context)
             if count>1:
@@ -676,27 +673,39 @@ class pos_order(osv.osv):
             'journal':      ui_paymentline['journal_id'],
         }
 
-    def _get_rescue_session(self, cr, uid, order, context=None):
-        """ Find or generate a rescue session """
-        pos_session = self.pool['pos.session']
-        date = order.get('creation_date', time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))
-        closed_session = pos_session.browse(cr, uid, order['pos_session_id'], context=context)
-        rescue_session_ids = pos_session.search(cr, uid, [
-            ('rescue', '=', True), ('config_id', '=', closed_session.config_id.id),
-            ('start_at', '<=', date), ('state', '=', 'opened')
-        ], limit=1, context=context)
-        if not rescue_session_ids:
-            return pos_session.copy(cr, uid, order['pos_session_id'], default={
-                'rescue': True,
+    # This deals with orders that belong to a closed session. In order
+    # to recover from this we:
+    # - assign the order to another compatible open session
+    # - if that doesn't exist, create a new one
+    def _get_valid_session(self, cr, uid, order, context=None):
+        session = self.pool.get('pos.session')
+        closed_session = session.browse(cr, uid, order['pos_session_id'], context=context)
+        open_sessions = session.search(cr, uid, [('state', '=', 'opened'),
+                                                 ('config_id', '=', closed_session.config_id.id),
+                                                 ('user_id', '=', closed_session.user_id.id)],
+                                       limit=1, order="start_at DESC", context=context)
+
+        if open_sessions:
+            return open_sessions[0]
+        else:
+            new_session_id = session.create(cr, uid, {
+                'config_id': closed_session.config_id.id,
             }, context=context)
-        return rescue_session_ids[0]
+            new_session = session.browse(cr, uid, new_session_id, context=context)
+
+            # bypass opening_control (necessary when using cash control)
+            new_session.signal_workflow('open')
+
+            return new_session_id
 
     def _process_order(self, cr, uid, order, context=None):
-        session = self.pool['pos.session'].browse(cr, uid, order['pos_session_id'], context=context)
-        if session.state == 'closed':
-            rescue_session_id = self._get_rescue_session(cr, uid, order, context=context)
-            order['pos_session_id'] = rescue_session_id
-            session = self.pool['pos.session'].browse(cr, uid, rescue_session_id, context=context)
+        session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+
+        if session.state == 'closing_control' or session.state == 'closed':
+            session_id = self._get_valid_session(cr, uid, order, context=context)
+            session = self.pool.get('pos.session').browse(cr, uid, session_id, context=context)
+            order['pos_session_id'] = session_id
+
         order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
         journal_ids = set()
         for payments in order['statement_ids']:
