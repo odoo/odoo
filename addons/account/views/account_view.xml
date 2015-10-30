@@ -147,6 +147,12 @@
             src_model="account.account"/>
 
         <act_window
+            id="action_move_select"
+            name="Journal Entries"
+            context="{'search_default_dummy_account_id': [active_id]}"
+            res_model="account.move"/>
+
+        <act_window
             id="action_move_line_select_posted"
             name="Journal Items"
             context="{'search_default_account_id': [active_id], 'search_default_posted': 1}"
