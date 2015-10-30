@@ -9,7 +9,7 @@ var session = require('web.session');
 var web_client = require('web.web_client');
 
 var _t = core._t;
-var LIMIT = 20;
+var LIMIT = 100;
 var preview_msg_max_size = 50;
 
 var MessageModel = new Model('mail.message', session.context);

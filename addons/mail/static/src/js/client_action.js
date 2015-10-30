@@ -219,7 +219,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 self.last_search_val = _.escape(request.term);
                 self.do_search_channel(self.last_search_val).done(function(result){
                     result.push({
-                        'label':  _.str.sprintf('<strong>'+_t("Create %s")+'</strong>', '<em>"'+self.last_search_val+'"</em>'),
+                        'label':  _.str.sprintf('<strong>'+_t("Create %s")+'</strong>', '<em>"#'+self.last_search_val+'"</em>'),
                         'value': '_create',
                     });
                     response(result);
