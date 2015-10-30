@@ -682,7 +682,6 @@ class crm_lead(format_address, osv.osv):
             team_id = lead.team_id and lead.team_id.id or False
         val = {
             'planned_revenue': lead.planned_revenue,
-            'probability': lead.probability,
             'name': lead.name,
             'partner_id': customer and customer.id or False,
             'type': 'opportunity',
