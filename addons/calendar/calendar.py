@@ -1086,8 +1086,7 @@ class calendar_event(osv.Model):
                 if not current_user.email or current_user.email != partner.email:
                     mail_from = current_user.email or tools.config.get('email_from', False)
                     if not context.get('no_email'):
-                        if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context):
-                            self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), subtype="calendar.subtype_invitation", context=context)
+                        self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context)
 
             if current_user.partner_id.id not in new_att_partner_ids:
                 access_token = self.new_invitation_token(cr, uid, event, current_user.partner_id.id)
@@ -1349,14 +1348,6 @@ class calendar_event(osv.Model):
             data['end_type'] = 'end_date'
         return data
 
-    def _track_subtype(self, cr, uid, ids, init_values, context=None):
-        record = self.browse(cr, uid, ids[0], context=context)
-        if 'start' in init_values and record.start:
-            return 'calendar.subtype_invitation'
-        elif 'location' in init_values and record.location:
-            return 'calendar.subtype_invitation'
-        return super(calendar_event, self)._track_subtype(cr, uid, ids, init_values, context=context)
-
     def onchange_partner_ids(self, cr, uid, ids, value, context=None):
         """ The basic purpose of this method is to check that destination partners
             effectively have email addresses. Otherwise a warning is thrown.
@@ -1420,8 +1411,7 @@ class calendar_event(osv.Model):
             current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
 
             if current_user.email:
-                if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], email_from=current_user.email, context=context):
-                    self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), subtype="calendar.subtype_invitation", context=context)
+                self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], email_from=current_user.email, context=context)
         return
 
     def get_attendee(self, cr, uid, meeting_id, context=None):
@@ -1624,8 +1614,7 @@ class calendar_event(osv.Model):
 
                 if mail_to_ids:
                     current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-                    if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, template_xmlid='calendar_template_meeting_changedate', email_from=current_user.email, context=context):
-                        self.message_post(cr, uid, the_id, body=_("A email has been send to specify that the date has been changed !"), subtype="calendar.subtype_invitation", context=context)
+                    self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, template_xmlid='calendar_template_meeting_changedate', email_from=current_user.email, context=context)
         return res or True and False
 
     def create(self, cr, uid, vals, context=None):
