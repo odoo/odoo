@@ -547,7 +547,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_log_contract_act" parent="fleet_vehicles" id="fleet_vehicle_log_contract_menu" groups="group_fleet_user"/>
+        <menuitem action="fleet_vehicle_log_contract_act" parent="fleet_vehicles" id="fleet_vehicle_log_contract_menu" groups="base.group_no_one"/>
 
        <record model='ir.ui.view' id='fleet_vehicle_odometer_form'>
             <field name="name">fleet.vehicle.odometer.form</field>
@@ -626,7 +626,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" groups="group_fleet_user"/>
+        <menuitem action="fleet_vehicle_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" groups="base.group_no_one"/>
 
         <record model='ir.ui.view' id='fleet_vehicle_log_fuel_form'>
             <field name="name">fleet.vehicle.log.fuel.form</field>
@@ -729,7 +729,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" groups="group_fleet_user"/>
+        <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" groups="base.group_no_one"/>
 
 
         <record model='ir.ui.view' id='fleet_vehicle_log_services_form'>
@@ -832,7 +832,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" groups="group_fleet_user"/>
+        <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" groups="base.group_no_one"/>
 
         <record model='ir.ui.view' id='fleet_vehicle_service_types_tree'>
             <field name="name">fleet.service.type.tree</field>
@@ -1000,7 +1000,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_costs_act" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" groups="group_fleet_manager"/>
+        <menuitem action="fleet_vehicle_costs_act" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" groups="base.group_no_one"/>
 
         <record model="ir.actions.act_window" id="action_fleet_reporting_costs">
       <field name="name">Costs Analysis</field>
