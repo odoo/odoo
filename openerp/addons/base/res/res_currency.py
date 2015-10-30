@@ -114,12 +114,7 @@ class res_currency(osv.osv):
         return super(res_currency, self).copy(
             cr, uid, id, default=default, context=context)
 
-    @api.v8
-    def round(self, amount):
-        """ Return `amount` rounded according to currency `self`. """
-        return float_round(amount, precision_rounding=self.rounding)
-
-    @api.v7
+    @api.cr_uid_records
     def round(self, cr, uid, currency, amount):
         """Return ``amount`` rounded  according to ``currency``'s
            rounding rules.
@@ -127,25 +122,12 @@ class res_currency(osv.osv):
            :param Record currency: currency for which we are rounding
            :param float amount: the amount to round
            :return: rounded float
+
+           With the new API, call it like: ``currency.round(amount)``.
         """
         return float_round(amount, precision_rounding=currency.rounding)
 
-    @api.v8
-    def compare_amounts(self, amount1, amount2):
-        """ Compare `amount1` and `amount2` after rounding them according to
-            `self`'s precision. An amount is considered lower/greater than
-            another amount if their rounded value is different. This is not the
-            same as having a non-zero difference!
-
-            For example 1.432 and 1.431 are equal at 2 digits precision, so this
-            method would return 0. However 0.006 and 0.002 are considered
-            different (returns 1) because they respectively round to 0.01 and
-            0.0, even though 0.006-0.002 = 0.004 which would be considered zero
-            at 2 digits precision.
-        """
-        return float_compare(amount1, amount2, precision_rounding=self.rounding)
-
-    @api.v7
+    @api.cr_uid_records
     def compare_amounts(self, cr, uid, currency, amount1, amount2):
         """Compare ``amount1`` and ``amount2`` after rounding them according to the
            given currency's precision..
@@ -164,22 +146,12 @@ class res_currency(osv.osv):
            :return: (resp.) -1, 0 or 1, if ``amount1`` is (resp.) lower than,
                     equal to, or greater than ``amount2``, according to
                     ``currency``'s rounding.
+
+           With the new API, call it like: ``currency.compare_amounts(amount1, amount2)``.
         """
         return float_compare(amount1, amount2, precision_rounding=currency.rounding)
 
-    @api.v8
-    def is_zero(self, amount):
-        """ Return true if `amount` is small enough to be treated as zero
-            according to currency `self`'s rounding rules.
-
-            Warning: ``is_zero(amount1-amount2)`` is not always equivalent to 
-            ``compare_amounts(amount1,amount2) == 0``, as the former will round
-            after computing the difference, while the latter will round before,
-            giving different results, e.g., 0.006 and 0.002 at 2 digits precision.
-        """
-        return float_is_zero(amount, precision_rounding=self.rounding)
-
-    @api.v7
+    @api.cr_uid_records
     def is_zero(self, cr, uid, currency, amount):
         """Returns true if ``amount`` is small enough to be treated as
            zero according to ``currency``'s rounding rules.
@@ -191,6 +163,8 @@ class res_currency(osv.osv):
 
            :param Record currency: currency for which we are rounding
            :param float amount: amount to compare with currency's zero
+
+           With the new API, call it like: ``currency.is_zero(amount)``.
         """
         return float_is_zero(amount, precision_rounding=currency.rounding)
 
