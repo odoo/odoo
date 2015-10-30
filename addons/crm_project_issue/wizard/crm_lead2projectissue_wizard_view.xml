@@ -28,23 +28,5 @@
         </field>
     </record>
 
-    <!-- inherit view of Lead Form : adding the "convert to issue" button -->
-    <record model="ir.ui.view" id="crm_case_form_view_leads_project_issue">
-        <field name="name">CRM - Leads Form</field>
-        <field name="model">crm.lead</field>
-        <field name="inherit_id" ref="crm.crm_case_form_view_leads" />
-        <field name="arch" type="xml">
-            <div name="button_box" position="inside">
-                    <button class="oe_stat_button" type="action" name="%(convert_lead2projectissue_wizard_action)d" icon="fa-bug"  
-                        help="Convert to Issue">
-                        <div class="o_form_field o_stat_info">
-                            <span class="o_stat_text">Convert To</span>
-                            <span class="o_stat_text">Issue</span>
-                        </div>
-                    </button>
-            </div>
-        </field>
-    </record>
-
 </data>
 </openerp>
