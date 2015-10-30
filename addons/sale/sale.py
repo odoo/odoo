@@ -162,6 +162,7 @@ class SaleOrder(models.Model):
             return 'sale.mt_order_sent'
         return super(SaleOrder, self)._track_subtype(init_values)
 
+    @api.multi
     @api.onchange('partner_shipping_id')
     def onchange_partner_shipping_id(self):
         """
