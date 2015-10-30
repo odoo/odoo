@@ -818,7 +818,7 @@ class AccountBankStatementLine(models.Model):
             ctx = dict(self._context, date=self.date)
             for aml_dict in to_create:
                 aml_dict['move_id'] = move.id
-                aml_dict['date'] = self.statement_id.date
+                aml_dict['date'] = self.date
                 aml_dict['partner_id'] = self.partner_id.id
                 aml_dict['journal_id'] = self.journal_id.id
                 aml_dict['company_id'] = self.company_id.id
