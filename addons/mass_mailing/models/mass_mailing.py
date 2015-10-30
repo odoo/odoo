@@ -230,12 +230,6 @@ class MassMailingCampaign(models.Model):
         for campaign in self:
             campaign.total_mailings = mapped_data.get(campaign.id, 0)
 
-    @api.multi
-    def mass_mailing_statistics_action(self):
-        res = self.env.ref('mass_mailing.action_view_mass_mailing_statistics')
-        res['domain'] = [('mass_mailing_campaign_id', 'in', self.ids)]
-        return res
-
     def get_recipients(self, model=None):
         """Return the recipients of a mailing campaign. This is based on the statistics
         build for each mailing. """
@@ -424,13 +418,6 @@ class MassMailing(models.Model):
                     mass_mailing.next_departure = schedule_date
             else:
                 mass_mailing.next_departure = cron_next_call
-
-    @api.multi
-    def mass_mailing_statistics_action(self):
-        res = self.env.ref('mass_mailing.action_view_mass_mailing_statistics')
-        link_clicks_ids = self.env['link.tracker.click'].search([('mass_mailing_id', 'in', self.ids)]).ids
-        res['domain'] = [('id', 'in', link_click_ids)]
-        return res
 
     @api.onchange('mass_mailing_campaign_id')
     def _onchange_mass_mailing_campaign_id(self):
