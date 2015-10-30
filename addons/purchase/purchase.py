@@ -441,13 +441,13 @@ class PurchaseOrderLine(models.Model):
             line.qty_received = total
 
     name = fields.Text(string='Description', required=True)
-    product_qty = fields.Float(string='Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
+    product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, select=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes')
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, required=True)
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
-    price_unit = fields.Float(string='Unit Price', required=True, digits_compute=dp.get_precision('Product Price'))
+    price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
