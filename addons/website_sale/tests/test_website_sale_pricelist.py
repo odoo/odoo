@@ -11,6 +11,7 @@ class TestWebsitePriceList(TransactionCase):
     def setUp(self):
         super(TestWebsitePriceList, self).setUp()
         self.website = self.registry('website').browse(self.cr, self.uid, 1)
+        self.website.pricelist_id = self.registry('ir.model.data').xmlid_to_res_id(self.cr, self.uid, 'product.list0')
         self.patcher = patch('openerp.addons.website_sale.models.sale_order.website.get_pricelist_available', wraps=self._get_pricelist_available)
         self.mock_get_pricelist_available = self.patcher.start()
 

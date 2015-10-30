@@ -128,7 +128,7 @@
                                 <label for="partner_id" string="Vendor" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             </div>
                             <field name="partner_id" string="Partner" nolabel="1"/>
-                            <field name="invoice_id" string="Invoice"/>
+                            <field name="invoice_id" string="Invoice" options="{'no_create': True}"/>
                         </group>
                     </group>
                     <notebook colspan="4">

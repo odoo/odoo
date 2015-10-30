@@ -189,7 +189,7 @@
                                     <group>
                                         <field name="split_method"/>
                                         <field name="standard_price"/>
-                                        <field name="property_account_expense_id"/>
+                                        <field name="property_account_expense_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
                                     </group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>

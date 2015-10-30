@@ -827,7 +827,7 @@ class Tags(models.Model):
     posts_count = fields.Integer('Number of Posts', compute='_get_posts_count', store=True)
 
     _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name, forum_id)', "Tag name already exists !"),
     ]
 
     @api.multi

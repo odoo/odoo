@@ -232,7 +232,7 @@ options.registry.gallery = options.Class.extend({
         editor.on('saved', this, function (attachments) {
             for (var i = 0 ; i < attachments.length; i++) {
                 var img = $('<img class="img img-responsive mb8 mt8"/>')
-                    .attr("src", attachments[i].url)
+                    .attr("src", attachments[i].src)
                     .attr('data-index', index+i)
                     .data('index', index+i)
                     .appendTo($container);

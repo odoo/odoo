@@ -216,8 +216,13 @@
         <t t-raw="0"/>
     </div>
     <div class="btn-group btn-group-sm oe-pager-buttons" style="display: inline-block">
-        <a class="fa fa-chevron-left btn btn-default oe-pager-button" accesskey="O" type="button" data-pager-action="previous"></a>
-        <a class="fa fa-chevron-right btn btn-default oe-pager-button" accesskey="P" type="button" data-pager-action="next"></a>
+        <!-- accesskeys not wanted in X2Many widgets -->
+        <t t-if="!widget.x2m">
+            <t t-set="att_prev" t-value="{'accesskey': 'O'}" />
+            <t t-set="att_next" t-value="{'accesskey': 'P'}" />
+        </t>
+        <a class="fa fa-chevron-left btn btn-default oe-pager-button" t-att="att_prev" type="button" data-pager-action="previous"></a>
+        <a class="fa fa-chevron-right btn btn-default oe-pager-button" t-att="att_next" type="button" data-pager-action="next"></a>
     </div>
 </span>
 
@@ -361,7 +366,7 @@
 <t t-name="ListView.buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
     <div class="oe_list_buttons">
-        <button type="button" class="btn btn-sm btn-primary o_list_button_add">
+        <button type="button" class="btn btn-sm btn-primary o_list_button_add" accesskey="C">
             <t t-esc="widget.options.addable"/>
         </button>
     </div>
@@ -402,10 +407,10 @@
 </tr>
 <t t-extend="ListView.buttons">
     <t t-jquery="button.o_list_button_add" t-operation="after">
-        <button type="button" class="btn btn-primary btn-sm o_list_button_save">
+        <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="S">
             Save
         </button>
-        <button type="button" class="btn btn-default btn-sm o_list_button_discard">
+        <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="D">
             Discard
         </button>
     </t>
@@ -1425,8 +1430,13 @@
 <div t-name="Pager">
     <span class="o_pager_value"></span> / <span class="o_pager_limit"></span>
     <span class="btn-group btn-group-sm">
-        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" accesskey="O"/>
-        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" accesskey="P"/>
+        <!-- accesskeys not wanted in X2Many widgets -->
+        <t t-if="!widget.getParent().x2m">
+            <t t-set="att_prev" t-value="{'accesskey': 'O'}" />
+            <t t-set="att_next" t-value="{'accesskey': 'P'}" />
+        </t>
+        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" t-att="att_prev"/>
+        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" t-att="att_next"/>
     </span>
 </div>
 

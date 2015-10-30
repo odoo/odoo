@@ -814,17 +814,6 @@ range.WrappedRange.prototype.reRange = function (keep_end, isNotBreakable) {
 
     return new range.WrappedRange(sc, so, ec, eo);
 };
-range.WrappedRange.prototype.deleteContents = function (towrite) {
-    var prevBP = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
-
-    $(dom.node(prevBP.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
-    return new range.WrappedRange(
-      prevBP.sc,
-      prevBP.so,
-      prevBP.ec,
-      prevBP.eo
-    );
-};
 // isOnImg: judge whether range is an image node or not
 range.WrappedRange.prototype.isOnImg = function () {
     var nb = 0;
@@ -1242,10 +1231,13 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
     if (!r.isCollapsed()) {
         if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
             remove_table_content(r);
-            return range.create(r.ec, 0).select();
+            range.create(r.ec, 0).select();
+        } else {
+            r = r.deleteContents();
+            r.select();
         }
-        r = r.deleteContents();
-        r.select();
+        event.preventDefault();
+        return false;
     }
 
     var target = r.ec;
@@ -1378,10 +1370,13 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
     if (!r.isCollapsed()) {
         if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
             remove_table_content(r);
-            return range.create(r.sc, dom.nodeLength(r.sc)).select();
+            range.create(r.sc, dom.nodeLength(r.sc)).select();
+        } else {
+            r = r.deleteContents();
+            r.select();
         }
-        r = r.deleteContents();
-        r.select();
+        event.preventDefault();
+        return false;
     }
 
     var target = r.sc;
