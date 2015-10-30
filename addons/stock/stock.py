@@ -3329,10 +3329,10 @@ class StockWarehouse(models.Model):
                 warehouse.wh_pack_stock_loc_id.write({'active': True})
         return True
 
-    @api.multi
-    def _get_reception_delivery_route(self, route_name):
+    @api.model
+    def _get_reception_delivery_route(self, warehouse, route_name):
         return {
-            'name': self._format_routename(route_name),
+            'name': self._format_routename(warehouse, route_name),
             'product_categ_selectable': True,
             'product_selectable': False,
             'sequence': 10,
@@ -3424,10 +3424,10 @@ class StockWarehouse(models.Model):
             }]
         return res
 
-    @api.multi
-    def _get_crossdock_route(self, route_name):
+    @api.model
+    def _get_crossdock_route(self, warehouse, route_name):
         return {
-            'name': self._format_routename(route_name),
+            'name': self._format_routename(warehouse, route_name),
             'warehouse_selectable': False,
             'product_selectable': True,
             'product_categ_selectable': True,
@@ -3444,7 +3444,7 @@ class StockWarehouse(models.Model):
         routes_dict = self.get_routes_dict(warehouse)
         #create reception route and rules
         route_name, values = routes_dict[warehouse.reception_steps]
-        route_vals = warehouse._get_reception_delivery_route(route_name)
+        route_vals = self._get_reception_delivery_route(warehouse, route_name)
         reception_route_id = route_obj.create(route_vals)
         wh_route_ids.append((4, reception_route_id.id))
         push_rules_list, pull_rules_list = warehouse._get_push_pull_rules(True, values, reception_route_id)
@@ -3458,7 +3458,7 @@ class StockWarehouse(models.Model):
 
         #create MTS route and procurement rules for delivery and a specific route MTO to be set on the product
         route_name, values = routes_dict[warehouse.delivery_steps]
-        route_vals = warehouse._get_reception_delivery_route(route_name)
+        route_vals = self._get_reception_delivery_route(warehouse, route_name)
         #create the route and its procurement rules
         delivery_route_id = route_obj.create(route_vals)
         wh_route_ids.append((4, delivery_route_id.id))
@@ -3471,7 +3471,7 @@ class StockWarehouse(models.Model):
 
         #create a route for cross dock operations, that can be set on products and product categories
         route_name, values = routes_dict['crossdock']
-        crossdock_route_vals = warehouse._get_crossdock_route(route_name)
+        crossdock_route_vals = self._get_crossdock_route(warehouse, route_name)
         crossdock_route_id = route_obj.create(vals=crossdock_route_vals)
         wh_route_ids.append((4, crossdock_route_id.id))
         dummy, pull_rules_list = warehouse._get_push_pull_rules(warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step', values, crossdock_route_id)
@@ -3673,9 +3673,9 @@ class StockWarehouse(models.Model):
     def _format_rulename(self, from_loc, dest_loc):
         return self.code + ': ' + from_loc.name + ' -> ' + dest_loc.name
 
-    @api.multi
-    def _format_routename(self, name):
-        return self.name + ': ' + name
+    @api.model
+    def _format_routename(self, obj, name):
+        return obj.name + ': ' + name
 
     @api.multi
     def get_routes_dict(self, warehouse):
@@ -3695,18 +3695,18 @@ class StockWarehouse(models.Model):
     @api.model
     def _handle_renaming(self, warehouse, name, code):
         #rename location
-        location_id = warehouse.lot_stock_id.location_id
+        location_id = self.lot_stock_id.location_id
         location_id.write({'name': code})
         #rename route and push-procurement rules
-        for route in warehouse.route_ids:
-            route.write({'name': route.name.replace(warehouse.name, name, 1)})
+        for route in self.route_ids:
+            route.write({'name': route.name.replace(self.name, name, 1)})
             for pull in route.pull_ids:
-                pull.write({'name': pull.name.replace(warehouse.name, name, 1)})
+                pull.write({'name': pull.name.replace(self.name, name, 1)})
             for push in route.push_ids:
-                push.write({'name': pull.name.replace(warehouse.name, name, 1)})
+                push.write({'name': pull.name.replace(self.name, name, 1)})
         #change the mto procurement rule name
-        if warehouse.mto_pull_id.id:
-            warehouse.mto_pull_id.write({'name': warehouse.mto_pull_id.name.replace(warehouse.name, name, 1)})
+        if self.mto_pull_id.id:
+            self.mto_pull_id.write({'name': self.mto_pull_id.name.replace(self.name, name, 1)})
 
     @api.multi
     def _check_delivery_resupply(self, new_location, change_to_multiple):
