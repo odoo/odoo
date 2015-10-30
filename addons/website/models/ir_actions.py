@@ -36,9 +36,9 @@ class actions_server(osv.Model):
             help='The full URL to access the server action through the website.'),
         'website_published': fields.boolean(
             'Available on the Website', copy=False,
-            help='A code server action can be executed from the website, using a dedicated'
-                 'controller. The address is <base>/website/action/<website_path>.'
-                 'Set this field as True to allow users to run this action. If it'
+            help='A code server action can be executed from the website, using a dedicated '
+                 'controller. The address is <base>/website/action/<website_path>. '
+                 'Set this field as True to allow users to run this action. If it '
                  'set to is False the action cannot be run through the website.'),
     }
 

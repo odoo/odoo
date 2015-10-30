@@ -246,8 +246,8 @@ class MassMailingCampaign(osv.Model):
         ),
         'unique_ab_testing': fields.boolean(
             'AB Testing',
-            help='If checked, recipients will be mailed only once, allowing to send'
-                 'various mailings in a single campaign to test the effectiveness'
+            help='If checked, recipients will be mailed only once, allowing to send '
+                 'various mailings in a single campaign to test the effectiveness '
                  'of the mailings.'),
         'color': fields.integer('Color Index'),
         'clicks_ratio': fields.function(

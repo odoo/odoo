@@ -37,7 +37,7 @@ class crm_stage(osv.Model):
             'Priority Management Explanation', translate=True,
             help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.'),
         'fold': fields.boolean('Folded in Pipeline',
-                               help='This stage is folded in the kanban view when'
+                               help='This stage is folded in the kanban view when '
                                'there are no records in that stage to display.'),
         'type': fields.selection([('lead', 'Lead'), ('opportunity', 'Opportunity'), ('both', 'Both')],
                                  string='Type', required=True,

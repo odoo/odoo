@@ -145,7 +145,7 @@ class stock_config_settings(osv.osv_memory):
             (0, 'Suppliers always deliver to your warehouse(s)'),
             (1, "Allow suppliers to deliver directly to your customers")
             ], "Dropshipping",
-            help='\nCreates the dropship route and add more complex tests'
+            help='\nCreates the dropship route and add more complex tests\n'
                  '-This installs the module stock_dropshipping.'),
         'module_stock_picking_wave': fields.selection([
             (0, 'Manage pickings one at a time'),
