@@ -67,10 +67,10 @@
         <meta itemprop="name" content="View ${ctx['model_name']}"/>
     </div>
 </div>
-<div summary="o_mail_notification" class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777" data-snippet-theme="basic_theme">
-    <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+<div summary="o_mail_notification" style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:600px; border-collapse:collapse; background:inherit; color:inherit">
         <tbody><tr>
-            <td valign="center" width="270" style="padding:10px 10px 10px 5px;font-size: 30px">
+            <td valign="center" width="270" style="padding:5px 10px 5px 5px;font-size: 30px">
                 % if ctx.get('button_access'):
                 <a href="${ctx['button_access']['url']}" style="-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">${ctx['button_access']['title']}</a>
                 % endif
@@ -92,7 +92,7 @@
                 </p>
                 % endif
             </td>
-            <td valign="center" align="right" width="270" style="padding:10px 15px 10px 10px; font-size: 12px;">
+            <td valign="center" align="right" width="270" style="padding:5px 15px 5px 10px; font-size: 12px;">
                 <p>
                 % if ctx.get('actions'):
                 % for action in ctx['actions']:
@@ -117,47 +117,42 @@
         </tr>
     </tbody></table>
 </div>
-<div style="padding:0px;width:600px;margin:auto;color:#777777;background-color:#FFFFFF" class="">
-    <table cellspacing="0" cellpadding="0" style="vertical-align:top;padding:0px;font-family:arial;font-size:12px;border-collapse:collapse;background:inherit;color:inherit">
-        <tbody>
-            <tr>
-                <td valign="top" style="width:600px; padding:10px 10px 10px 5px;">
-                    <div>
-                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
-                    </div>
-                </td>
-            </tr>
-        </tbody>
+<div style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777">
+    <table cellspacing="0" cellpadding="0" style="vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody><tr>
+            <td valign="top" style="width:600px; padding:5px 10px 5px 5px;">
+                <div>
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
+                </div>
+            </td>
+        </tr></tbody>
     </table>
 </div>
-<div class="snippet_row bg-color" style="padding:0;width:600px;max-width:600px;margin:0 auto;background: #fff repeat top /100%;color:#777777">
-    <table style="width:100%;text-align:justify;margin:0 auto;background:inherit;color:inherit;border-collapse:collapse;color:inherit">
+<div style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit">
         <tbody><tr>
-            <td style="padding:10px 10px 10px 5px;font-size: 14px;">
+            <td style="padding:5px 10px 5px 5px;font-size: 14px;">
                 ${object.body | safe}
                 % if ctx.get('tracking'):
+                    <ul>
                     % for tracking in ctx['tracking']
-                        ${tracking[0]} : ${tracking[1]} -> ${tracking[2]}
+                        <li>${tracking[0]} : ${tracking[1]} -> ${tracking[2]}</li>
                     % endfor
+                    </ul>
                 % endif
             </td>
-        </tr>
-    </tbody></table>
+        </tr></tbody>
+    </table>
 </div>
 % if ctx.get('signature'):
-<div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #fff repeat top /100%;color:#777777">
-    <center>
-        <table width="600" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto; width:600px; border-collapse:collapse;background:inherit;color:inherit">
-            <tbody><tr>
-                <td style="padding:10px 10px 10px 5px;font-size: 14px; text-align: left;">
-                    &nbsp;
-                    ${ctx['signature'] | safe}
-                    &nbsp;
-                </td>
-                </tr>
-            </tbody>
-        </table>
-    </center>
+<div style="padding:0px; width:600px;margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody><tr>
+            <td style="padding:5px 10px 5px 5px;font-size: 14px; text-align: left;">
+                ${ctx['signature'] | safe}
+            </td>
+        </tr></tbody>
+    </table>
 </div>
 % endif]]></field>
         </record>
