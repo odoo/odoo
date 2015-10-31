@@ -1294,7 +1294,7 @@ class account_voucher(osv.osv):
                     'move_id': move_id,
                     'partner_id': line.voucher_id.partner_id.id,
                     'currency_id': line.move_line_id.currency_id.id,
-                    'amount_currency': -1 * foreign_currency_diff,
+                    'amount_currency': (-1 if line.type == 'cr' else 1) * foreign_currency_diff,
                     'quantity': 1,
                     'credit': 0.0,
                     'debit': 0.0,
