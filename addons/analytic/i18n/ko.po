@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-08-20 08:55+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr ""
+msgstr "하위 계정"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -31,12 +31,12 @@ msgstr "진행 중"
 #: code:addons/analytic/analytic.py:229
 #, python-format
 msgid "Contract: "
-msgstr ""
+msgstr "계약 :"
 
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_pending
 msgid "Contract pending"
-msgstr ""
+msgstr "보류 계약"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -51,7 +51,7 @@ msgstr "종료날짜"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
+msgstr "계산할 양의 금액을 지정합니다."
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -67,22 +67,22 @@ msgid ""
 "                                        reached, the account manager is notified \n"
 "                                        by email to renew the contract with the\n"
 "                                        customer."
-msgstr ""
+msgstr "계약 종료일을 지났거나 서비스 횟수(지원 계약)의\n                                        최대 숫자에 도달했을 때\n                                        계정 관리자는 고객에게 계약 갱신에 관한\n                                        이메일 알림을 보냅니다."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Contract or Project"
-msgstr ""
+msgstr "계약 또는 프로젝트"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account/Contract Name"
-msgstr ""
+msgstr "계정/계약 이름"
 
 #. module: analytic
 #: field:account.analytic.account,manager_id:0
 msgid "Account Manager"
-msgstr ""
+msgstr "계정 관리자"
 
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
@@ -95,7 +95,7 @@ msgstr "팔로워"
 msgid ""
 "If you set a company, the currency selected has to be the same as it's currency. \n"
 "You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
-msgstr ""
+msgstr "귀하가 회사를 설정하면 회사 통화와 같은 통화로 선택해야 합니다.\n귀하는 소속된 회사를 제거할 수 있고 통화도 변경할 수 있습니다. 다만 '화면' 유형의 분석적 계정에서만 가능합니다. 예를 들면 이것은 서로 다른 통화와 여러 기업 도표의 통합을 위해 무척 유용할 수 있습니다."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -105,7 +105,7 @@ msgstr "마감됨"
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_pending
 msgid "Contract to Renew"
-msgstr ""
+msgstr "계약 갱신"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -131,7 +131,7 @@ msgstr "%s (사본)"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "분석 입력줄"
 
 #. module: analytic
 #: field:account.analytic.account,description:0
@@ -143,7 +143,7 @@ msgstr "설명"
 #: code:addons/analytic/analytic.py:262
 #, python-format
 msgid "Quick account creation disallowed."
-msgstr ""
+msgstr "빠른 계정 생성 불가."
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
@@ -153,7 +153,7 @@ msgstr "읽지 않은 메시지"
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You cannot create recursive analytic accounts."
-msgstr ""
+msgstr "오류! 분석적 계정을 재귀적으로 만들 수 없습니다."
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -164,7 +164,7 @@ msgstr "회사"
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "Renewal"
-msgstr ""
+msgstr "갱신"
 
 #. module: analytic
 #: help:account.analytic.account,message_summary:0
@@ -183,7 +183,7 @@ msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니�
 msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
-msgstr ""
+msgstr "업무일정표를 기준으로 계약에 있어 업무 최고 한계 시간을 설정합니다. (예를 들어 계약 지원에 시간을 제한)"
 
 #. module: analytic
 #: field:account.analytic.account,message_is_follower:0
@@ -198,7 +198,7 @@ msgstr "사용자"
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
 msgid "Parent Analytic Account"
-msgstr ""
+msgstr "상위 분석적 계정"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -208,24 +208,24 @@ msgstr "날짜"
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_closed
 msgid "Contract Finished"
-msgstr ""
+msgstr "계약 완료"
 
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "이용 약관"
 
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Expiration Date"
-msgstr ""
+msgstr "만료일"
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
 msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
-msgstr ""
+msgstr "수량과 제품 원가로 주어진 가격을 곱하여 계산합니다. 항상 회사의 주요 통화로 표시합니다."
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
@@ -235,7 +235,7 @@ msgstr "고객"
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr ""
+msgstr "계정 계층 구조"
 
 #. module: analytic
 #: field:account.analytic.account,message_ids:0
@@ -250,18 +250,18 @@ msgstr "메시지 및 대화이력"
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You cannot create analytic line on view account."
-msgstr ""
+msgstr "당신은 화면 계정에 대한 분석 명세를 만들 수 없습니다."
 
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "Contract Information"
-msgstr ""
+msgstr "계약 정보"
 
 #. module: analytic
 #: field:account.analytic.account,template_id:0
 #: selection:account.analytic.account,type:0
 msgid "Template of Contract"
-msgstr ""
+msgstr "계약 서식"
 
 #. module: analytic
 #: field:account.analytic.account,message_summary:0
@@ -271,7 +271,7 @@ msgstr "요약"
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Prepaid Service Units"
-msgstr ""
+msgstr "선불 서비스 단위"
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -281,7 +281,7 @@ msgstr "대변"
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_opened
 msgid "Contract Opened"
-msgstr ""
+msgstr "계약 개시됨"
 
 #. module: analytic
 #: help:account.analytic.account,type:0
@@ -290,7 +290,7 @@ msgid ""
 "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
 "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
 "The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
-msgstr ""
+msgstr "화면 유형을 선택하면 그 계정을 사용해서 분개 항목을 작성할 수 없다는 것을 의미합니다.\n'분석적 계정' 유형은 단지 회계에서 사용하고자 하는 일반적인 계정을 의미합니다.\n계약 또는 프로젝트를 선택하면 귀하에게 유효성을 관리할 수 있는 가능성과 이 계정에 대한 송장 옵션을 제공합니다.\n특수한 유형인 '계약 서식'은 귀하가 쉽게 다시 사용할 수 있도록 기본 데이터와 서식을 정의할 수 있도록 합니다."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -300,7 +300,7 @@ msgstr "취소함"
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Analytic View"
-msgstr ""
+msgstr "분석적 화면"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -315,7 +315,7 @@ msgstr "전체 이름"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "To Renew"
-msgstr ""
+msgstr "갱신하기"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -337,7 +337,7 @@ msgstr "오류!"
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_closed
 msgid "Contract closed"
-msgstr ""
+msgstr "계약 마감됨"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -364,7 +364,7 @@ msgstr "통화"
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_opened
 msgid "Contract opened"
-msgstr ""
+msgstr "계약 개시됨"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:262
@@ -375,7 +375,7 @@ msgstr "경고"
 #. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Type of Account"
-msgstr ""
+msgstr "계정 유형"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
@@ -385,4 +385,4 @@ msgstr "시작 날짜"
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr ""
+msgstr "분석 기입 항목"

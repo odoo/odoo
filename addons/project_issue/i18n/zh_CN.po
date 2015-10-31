@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-29 05:38+0000\n"
+"PO-Revision-Date: 2015-10-27 08:28+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -93,7 +93,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
 " * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr ""
+msgstr "问题的看板状态显示了影响它的特殊状况:\n * 正常状态是默认的状态\n * 等待状态显示有事情阻止问题的进一步发展\n * 预备好下一步状态显示问题已经做好准备进入到下一个阶段"
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
@@ -259,7 +259,7 @@ msgstr "负责人"
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "等待"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -303,7 +303,7 @@ msgstr "新建"
 #. module: project_issue
 #: view:project.project:0
 msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-msgstr ""
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 
 #. module: project_issue
 #: field:project.issue,email_from:0
@@ -357,7 +357,7 @@ msgstr "project.issue.version"
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
 msgid "Create issues from an incoming email account "
-msgstr ""
+msgstr "从邮件中创建反馈"
 
 #. module: project_issue
 #: view:project.issue:0 selection:project.issue,state:0
@@ -759,7 +759,7 @@ msgstr "问题"
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
 msgid "PBCK"
-msgstr ""
+msgstr "PBCK"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -784,7 +784,7 @@ msgstr "五月"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "项目配置"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_closed
@@ -801,7 +801,7 @@ msgstr "电子邮件"
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Created"
-msgstr ""
+msgstr "新建"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:511
@@ -840,7 +840,7 @@ msgid ""
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "添加新的问题，定义不同的问题版本"
 
 #. module: project_issue
 #: help:project.issue,section_id:0
@@ -857,7 +857,7 @@ msgstr "我的问题"
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "问题开始的天数"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -867,12 +867,12 @@ msgstr "四月"
 #. module: project_issue
 #: view:project.issue:0
 msgid "⇒ Escalate"
-msgstr ""
+msgstr "提升"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue created"
-msgstr ""
+msgstr "新建"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
@@ -887,7 +887,7 @@ msgstr "ID"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "等待"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report

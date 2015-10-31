@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2015-07-14 06:20+0000\n"
+"PO-Revision-Date: 2015-10-27 11:54+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-7/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "Maksanut Jäsen"
 #. module: membership
 #: view:report.membership:0
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr ""
+msgstr "Tämä näyttää kentät \"odottaa\", \"laskutettu\" ja \"odottaa yhteensä\""
 
 #. module: membership
 #: view:report.membership:0 view:res.partner:0
@@ -53,12 +53,12 @@ msgstr "# Maksettu"
 #. module: membership
 #: field:report.membership,tot_earned:0
 msgid "Earned Amount"
-msgstr ""
+msgstr "Ansaittu summ"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
 msgid "Membership Analysis"
-msgstr ""
+msgstr "Jäsenyysanalyysi"
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -96,13 +96,13 @@ msgstr ""
 #. module: membership
 #: help:report.membership,date_to:0
 msgid "End membership date"
-msgstr ""
+msgstr "Jäsenyyden päättämispäivä"
 
 #. module: membership
 #: field:product.product,membership_date_to:0
 #: field:res.partner,membership_stop:0
 msgid "Membership End Date"
-msgstr ""
+msgstr "Jäsenyyden päättämispäivä"
 
 #. module: membership
 #: view:report.membership:0 field:report.membership,user_id:0
@@ -118,7 +118,7 @@ msgstr "Odottaa laskutusta"
 #. module: membership
 #: view:report.membership:0
 msgid "This will display paid, old and total earned columns"
-msgstr ""
+msgstr "Tämä näyttää kentät \"maksettu\", \"vanha\", ja \"yhteensä\""
 
 #. module: membership
 #: view:res.partner:0
@@ -162,7 +162,7 @@ msgstr "Liitettävä tuote"
 #. module: membership
 #: model:product.template,name:membership.membership_1_product_template
 msgid "Silver Membership"
-msgstr ""
+msgstr "Hopeajäsenyys"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_associatedmember0
@@ -172,7 +172,7 @@ msgstr "Jäsen on liitetty"
 #. module: membership
 #: field:report.membership,tot_pending:0
 msgid "Pending Amount"
-msgstr ""
+msgstr "Odottava määrä"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_associationpartner0
@@ -193,18 +193,18 @@ msgstr "# Laskutettu"
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
 #: model:ir.ui.menu,name:membership.menu_report_membership
 msgid "Members Analysis"
-msgstr ""
+msgstr "Jäsenanalyysi"
 
 #. module: membership
 #: view:res.partner:0
 msgid "End Membership Date"
-msgstr ""
+msgstr "Jäsenyyden päättämispäivä"
 
 #. module: membership
 #: code:addons/membership/membership.py:414
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr ""
+msgstr "Kumppanilla ei ole laskutettavaa osoitetta."
 
 #. module: membership
 #: model:ir.model,name:membership.model_res_partner
@@ -250,7 +250,7 @@ msgstr "Jäsenyyden aloituspäivämäärä"
 #. module: membership
 #: field:res.partner,membership_cancel:0
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "Jäsenyyden peruuttamispäivä"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
@@ -272,7 +272,7 @@ msgstr "Jäsenet"
 #. module: membership
 #: view:res.partner:0
 msgid "Invoiced/Paid/Free"
-msgstr ""
+msgstr "Laskutettu/Maksettu/Ilmainen"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_invoicedmember0
@@ -294,13 +294,13 @@ msgstr ""
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr ""
+msgstr "Jäsen, johon haluat liittää jäsenyyden. Jäsenyydessä huomioidaan liittyvän jäsenen tila."
 
 #. module: membership
 #: view:product.product:0 view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
-msgstr ""
+msgstr "Jäsenyystuote"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
@@ -316,7 +316,7 @@ msgstr "Laskutettu jäsen voi olla liitetty jäsen."
 #: help:product.product,membership_date_to:0
 #: help:res.partner,membership_stop:0
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Päivä, johon asti jäsenyys pysyy voimassa."
 
 #. module: membership
 #: view:product.product:0
@@ -326,7 +326,7 @@ msgstr "Jäsenyystuotteet"
 #. module: membership
 #: field:res.partner,membership_state:0
 msgid "Current Membership Status"
-msgstr ""
+msgstr "Jäsenyyden tila"
 
 #. module: membership
 #: view:product.product:0
@@ -336,7 +336,7 @@ msgstr "Lisää kuvaus..."
 #. module: membership
 #: field:membership.membership_line,date:0
 msgid "Join Date"
-msgstr ""
+msgstr "Liittymispiävä"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_setassociation0
@@ -351,7 +351,7 @@ msgstr ""
 #. module: membership
 #: view:res.partner:0
 msgid "Memberships"
-msgstr ""
+msgstr "Jäsenyydet"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_paidmember0
@@ -387,24 +387,24 @@ msgstr "Ryhmittele..."
 #: code:addons/membership/membership.py:411
 #, python-format
 msgid "Partner is a free Member."
-msgstr ""
+msgstr "Kumppani on ilmaisjäsen."
 
 #. module: membership
 #: view:res.partner:0
 msgid "Buy Membership"
-msgstr ""
+msgstr "Osta jäsenyys"
 
 #. module: membership
 #: field:report.membership,associate_member_id:0 view:res.partner:0
 #: field:res.partner,associate_member:0
 msgid "Associate Member"
-msgstr ""
+msgstr "Liittyvä jäsen"
 
 #. module: membership
 #: help:product.product,membership_date_from:0
 #: help:res.partner,membership_start:0
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "Päivä, jolloin jäsenyys muuttuu aktiiviseksi"
 
 #. module: membership
 #: view:report.membership:0
@@ -415,7 +415,7 @@ msgstr "Yhteistyökumppani"
 #: model:ir.model,name:membership.model_membership_invoice
 #: view:membership.invoice:0
 msgid "Membership Invoice"
-msgstr ""
+msgstr "Jäsenyyslasku"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
@@ -435,7 +435,7 @@ msgstr "Yhteystiedot"
 #. module: membership
 #: view:report.membership:0
 msgid "Forecast"
-msgstr ""
+msgstr "Ennuste"
 
 #. module: membership
 #: field:report.membership,partner_id:0
@@ -445,7 +445,7 @@ msgstr "Jäsen"
 #. module: membership
 #: view:product.product:0
 msgid "Date From"
-msgstr ""
+msgstr "Alkupäivä"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
@@ -455,12 +455,12 @@ msgstr "Liitetty jäsen"
 #. module: membership
 #: help:membership.membership_line,date:0
 msgid "Date on which member has joined the membership"
-msgstr ""
+msgstr "Päivä jolloin jäsen on liittynyt jäseneksi"
 
 #. module: membership
 #: field:membership.membership_line,state:0
 msgid "Membership Status"
-msgstr ""
+msgstr "Jäsenyyden tlia"
 
 #. module: membership
 #: view:res.partner:0
@@ -487,7 +487,7 @@ msgstr "Jäsenyystuotteet"
 #. module: membership
 #: sql_constraint:product.product:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Virhe! Päättymispäivä ei voi olla ennen alkamispäivää."
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -497,7 +497,7 @@ msgstr "Kesäkuu"
 #. module: membership
 #: help:product.product,membership:0
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Tarkasta jos tuote on oikeutettu jäsenyyteen."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -561,27 +561,27 @@ msgstr "Tammikuu"
 #. module: membership
 #: view:res.partner:0
 msgid "Membership Partners"
-msgstr ""
+msgstr "Jäsenyyskumppanit"
 
 #. module: membership
 #: field:membership.membership_line,member_price:0 view:product.product:0
 msgid "Membership Fee"
-msgstr ""
+msgstr "Jäsenmaksu"
 
 #. module: membership
 #: help:res.partner,membership_amount:0
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "Kumppanin neuvottelema hinta"
 
 #. module: membership
 #: model:product.template,name:membership.membership_2_product_template
 msgid "Basic Membership"
-msgstr ""
+msgstr "Normaali jäsenyys"
 
 #. module: membership
 #: view:res.partner:0
 msgid "None/Canceled/Old/Waiting"
-msgstr ""
+msgstr "Ei ole/Peruttu/Vanha/Odottaa"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -598,7 +598,7 @@ msgstr "Vastaanottaja"
 #. module: membership
 #: view:report.membership:0 field:report.membership,membership_state:0
 msgid "Current Membership State"
-msgstr ""
+msgstr "Jäsenyyden tila"
 
 #. module: membership
 #: help:membership.membership_line,state:0
@@ -610,7 +610,7 @@ msgid ""
 "                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "                        -Invoiced Member: A member whose invoice has been created.\n"
 "                        -Paid Member: A member who has paid the membership amount."
-msgstr ""
+msgstr "Määrittää jäsenyyden tilan.\n- Ei jäsen: kumppani joka ei ole hakenut jäsenyyttä.\n- Peruttu jäsen: jäsen joka on perunut jäsenyytensä.\n- Vanha jäsen: jäsen jonka jäsenyys on vanhentunut.\n- Odottava jäsen: jäsen joka on hakenut jäsenyyttä, mutta laskua ei ole vielä luotu.\n- Maksava jäsen: jäsen joka on maksanut jäsenmaksun. "
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
@@ -636,7 +636,7 @@ msgstr "Peru"
 #. module: membership
 #: view:res.partner:0
 msgid "All non Members"
-msgstr ""
+msgstr "Kaikki ei-jäsenet"
 
 #. module: membership
 #: field:membership.membership_line,account_invoice_line:0
@@ -656,7 +656,7 @@ msgstr "Jäsenhinta"
 #. module: membership
 #: view:product.product:0
 msgid "Membership Duration"
-msgstr ""
+msgstr "Jäsenyyden kesto"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
@@ -672,17 +672,17 @@ msgstr "Toukokuu"
 #: field:product.product,membership_date_from:0
 #: field:res.partner,membership_start:0
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Jäsenyyden alkupäivä"
 
 #. module: membership
 #: help:res.partner,free_member:0
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Valitse jos haluat antaa ilmaisen jäsenyyden."
 
 #. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership Amount"
-msgstr ""
+msgstr "Jäsenyyden hinta"
 
 #. module: membership
 #: field:report.membership,date_to:0 view:res.partner:0
@@ -712,7 +712,7 @@ msgstr ""
 #. module: membership
 #: help:res.partner,membership_cancel:0
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "Päivä jolloin jäsenyys on peruutettu"
 
 #. module: membership
 #: field:membership.membership_line,date_cancel:0
@@ -738,19 +738,19 @@ msgstr "Jäsenyystuote"
 #. module: membership
 #: help:membership.membership_line,member_price:0
 msgid "Amount for the membership"
-msgstr ""
+msgstr "Jäsenyyden hinta"
 
 #. module: membership
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Virhe! Et voi luoda rekursiivisia liittyviä jäseniä."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Cancelled Member"
-msgstr ""
+msgstr "Peruutettu jäsen"
 
 #. module: membership
 #: view:report.membership:0 field:report.membership,year:0
@@ -765,4 +765,4 @@ msgstr "Kirjanpito"
 #. module: membership
 #: view:report.membership:0
 msgid "Revenue Done"
-msgstr ""
+msgstr "Hoidetut tulot"

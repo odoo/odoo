@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-24 09:58+0000\n"
+"PO-Revision-Date: 2015-10-27 11:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-7/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -21,14 +21,14 @@ msgstr ""
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
 msgid "Deadly bug"
-msgstr ""
+msgstr "Kriittinen virhe (stopperi!)"
 
 #. module: project_issue
 #: help:project.config.settings,fetchmail_issue:0
 msgid ""
 "Allows you to configure your incoming mail server, and create issues from "
 "incoming emails."
-msgstr ""
+msgstr "Voit määrittää tulevan sähköpostipalvelimen asetukset ja luoda tapauksia tulevista sähköposteista."
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
@@ -93,7 +93,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
 " * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr ""
+msgstr "Tapauksen Kanban tila kuvaa erityistilanteita jotka vaikuttavat tapaukseen:\n* Normal: oletustilanne\n* Blocked: jokin asia estää tapauksen käsittelyä eteenpäin\n* Ready for next stage: tapaus voidaan siirtää seuraavaan vaiheeseen"
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
@@ -103,7 +103,7 @@ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
 msgid "Check this field if this project manages issues"
-msgstr ""
+msgstr "Valitse tämä kenttä jos projektissa hallitaan myös tapauksia"
 
 #. module: project_issue
 #: field:project.issue,day_open:0
@@ -153,7 +153,7 @@ msgstr "Tehtävä"
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr ""
+msgstr "Tapauksen tila/vaihe muuttunut"
 
 #. module: project_issue
 #: field:project.issue,message_ids:0
@@ -193,7 +193,7 @@ msgstr "Peruttu"
 #. module: project_issue
 #: field:project.issue,description:0
 msgid "Private Note"
-msgstr ""
+msgstr "Yksityinen muistiinpano"
 
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
@@ -259,7 +259,7 @@ msgstr "Vastuuhenkilö"
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "Tapaus estetty"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -303,7 +303,7 @@ msgstr "Uusi"
 #. module: project_issue
 #: view:project.project:0
 msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-msgstr ""
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 
 #. module: project_issue
 #: field:project.issue,email_from:0
@@ -357,7 +357,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
 msgid "Create issues from an incoming email account "
-msgstr ""
+msgstr "Luo tapauksia tulevista sähköpostiviesteistä"
 
 #. module: project_issue
 #: view:project.issue:0 selection:project.issue,state:0
@@ -377,7 +377,7 @@ msgid ""
 "support or after-sales services. You can track the issues per age. You can "
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
-msgstr ""
+msgstr "Tämän tapauksiin liittyvän raportin avulla voit analysoida tuki- ja jälkimarkkinointipalvelujen laatua. Voit seurata tapauksia niiden iän mukaan (vanhin-uusin) ja tapausten käsittelyaikaa (aika tapauksen avaamisesta sen sulkemiseen), keskimääräistä käsittelyaikaa ja paljonko tapaukseen on tarvittu sähköpostinvaihtoa yms."
 
 #. module: project_issue
 #: view:project.issue:0 field:project.issue,stage_id:0
@@ -448,7 +448,7 @@ msgstr "Tapausseurannan puu"
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_01
 msgid "Little problem"
-msgstr ""
+msgstr "Pieni ongelma"
 
 #. module: project_issue
 #: view:project.project:0
@@ -463,7 +463,7 @@ msgstr "Päivityksen päiväys"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Project:"
-msgstr ""
+msgstr "Projekti:"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -733,7 +733,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Valmis seuraavaan vaiheeseen"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -759,7 +759,7 @@ msgstr "Tapaus"
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
 msgid "PBCK"
-msgstr ""
+msgstr "(Problem Between Chair and Keyboard) Käyttäjävirhe ;)"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -801,7 +801,7 @@ msgstr "Sähköpostien määrä"
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Created"
-msgstr ""
+msgstr "Tapaus luotu"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:511
@@ -840,7 +840,7 @@ msgid ""
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa lisätäksesi uuden version.\n</p><p>\nMääritä tässä ne tuotteet/tuoteversiot joille voit tehdä tapauksia.\n</p>"
 
 #. module: project_issue
 #: help:project.issue,section_id:0
@@ -857,7 +857,7 @@ msgstr "Omat tapahtumat"
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "Päivien määrä projektin tapauksen avaamiseen"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -867,12 +867,12 @@ msgstr "Huhtikuu"
 #. module: project_issue
 #: view:project.issue:0
 msgid "⇒ Escalate"
-msgstr ""
+msgstr "⇒ Eskaloi tapaus toiseen projektiin"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue created"
-msgstr ""
+msgstr "Tapaus luotu"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
@@ -887,7 +887,7 @@ msgstr "Tunniste (ID)"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "Tapaus estetty"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report

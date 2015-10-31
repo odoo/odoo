@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-28 14:51+0000\n"
+"PO-Revision-Date: 2015-10-16 08:19+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-7/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -465,7 +465,7 @@ msgstr "Det belopp som uttrycks i en valfri annan valuta."
 #. module: account
 #: view:account.journal:0
 msgid "Available Coins"
-msgstr ""
+msgstr "Tillgängliga mynt"
 
 #. module: account
 #: field:accounting.report,enable_filter:0
@@ -742,7 +742,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Create Refund"
-msgstr ""
+msgstr "Skapa återbetalning"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1218,7 +1218,7 @@ msgstr "Startdatum"
 #. module: account
 #: view:account.tax:0
 msgid "Refunds"
-msgstr ""
+msgstr "Återbetalningar"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
@@ -1577,7 +1577,7 @@ msgstr "E-fakturor och betalningar"
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
 msgid "Cost Ledger for Period"
-msgstr ""
+msgstr "Kostnadsliggare för period"
 
 #. module: account
 #: view:account.entries.report:0
@@ -1724,7 +1724,7 @@ msgid ""
 "                (profit/loss or balance sheet).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlicka för att definiera en ny kontotyp.\n</p><p>\nEn kontotyp används för att bestämma hur ett konto används i varje verifikation. En kontotyps Carry forward-metod bestämmer processen för årsbokslutet. Rapporter såsom balans- och resultaträkningen använder kategorin.\n</p>"
 
 #. module: account
 #: report:account.invoice:0 view:account.invoice:0
@@ -1922,7 +1922,7 @@ msgstr "Draft statement"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr ""
+msgstr "Faktura godkänd"
 
 #. module: account
 #: field:account.config.settings,module_account_check_writing:0
@@ -2142,7 +2142,7 @@ msgstr ""
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close Fiscal Year"
-msgstr ""
+msgstr "Stäng verksamhetsår"
 
 #. module: account
 #. openerp-web
@@ -3158,7 +3158,7 @@ msgstr ""
 #. module: account
 #: view:account.config.settings:0 view:account.installer:0
 msgid "Date Range"
-msgstr ""
+msgstr "Datumintervall"
 
 #. module: account
 #: view:account.period:0
@@ -3373,12 +3373,12 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hej ${object.partner_id.name},</p>\n\n    <p>En ny faktura finns för Er: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>UPPGIFTER</strong><br />\n       &nbsp;&nbsp;Fakturanummer: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Fakturatotal: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Fakturadatum: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Orderreferens: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Er kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Det är även möjligt att betala via Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Har du frågor, tveka inte att kontakta oss.</p>\n    <p>Tack för att ni väljer ${object.company_id.name or 'oss'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tel:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Webb :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: view:account.period:0
 msgid "Account Period"
-msgstr ""
+msgstr "Bokföringsperiod"
 
 #. module: account
 #: help:account.account,currency_id:0
@@ -3482,7 +3482,7 @@ msgstr "Konfiguration av bokföringen"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
 msgid "Account Tax Declaration"
-msgstr ""
+msgstr "Skattedeklaration"
 
 #. module: account
 #: help:account.bank.statement,name:0
@@ -4379,7 +4379,7 @@ msgstr "Kontotyp"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Bank and Checks"
-msgstr ""
+msgstr "Bank och checkar"
 
 #. module: account
 #: field:account.account.template,note:0
@@ -4591,7 +4591,7 @@ msgstr ""
 #. module: account
 #: view:account.tax:0
 msgid "Tax Computation"
-msgstr ""
+msgstr "Skatteberäkning"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -4684,7 +4684,7 @@ msgstr "Nummer (Affärshändelse)"
 #. module: account
 #: view:cash.box.out:0
 msgid "Describe why you take money from the cash register:"
-msgstr ""
+msgstr "Beskriv varför du tar pengar från kassa-apparaten:"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -4768,7 +4768,7 @@ msgstr "Försäljningsmoms"
 #. module: account
 #: view:account.move:0
 msgid "Cancel Entry"
-msgstr ""
+msgstr "Avbryt post"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -4938,7 +4938,7 @@ msgstr "Compute"
 #. module: account
 #: view:account.invoice:0
 msgid "Additional notes..."
-msgstr ""
+msgstr "Extra noteringar"
 
 #. module: account
 #: field:account.tax,type_tax_use:0
@@ -5418,7 +5418,7 @@ msgstr "Startdatum"
 #. module: account
 #: model:account.account.type,name:account.account_type_asset_view1
 msgid "Asset View"
-msgstr ""
+msgstr "Vy över tillgångar"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -5883,7 +5883,7 @@ msgid ""
 "                to disclose a certain amount of information.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klicka för att lägga till ett konto.\n              </p><p>\nKonton används för att ditt bolag skall kunna registrera alla typer av debit / kredit-transaktioner till bokföringen.\nBokslutet innehåller två huvuddelar: balans och resultaträkningen (intäkter och kostnader). Bokslutet är en viktig del i myndighetsrapporteringen.\n              </p>\n            "
 
 #. module: account
 #: view:account.invoice.report:0 field:account.invoice.report,nbr:0
@@ -6188,7 +6188,7 @@ msgstr "Visar underliggare utan trädstruktur"
 #. module: account
 #: view:account.config.settings:0
 msgid "Bank & Cash"
-msgstr ""
+msgstr "Bank och kontant"
 
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
@@ -6978,7 +6978,7 @@ msgstr "Utgående moms"
 #. module: account
 #: view:account.period:0
 msgid "Re-Open Period"
-msgstr ""
+msgstr "Återöppna period"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
@@ -8135,7 +8135,7 @@ msgstr "Utgående balans"
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralized Counterpart"
-msgstr ""
+msgstr "Centraliserad motpart"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -8246,7 +8246,7 @@ msgid ""
 "                and one for miscellaneous information.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klicka för att lägga till en journal.\n              </p><p>\n\n                A journal is used to record transactions of all accounting data\n                related to the day-to-day business.\n              </p><p>\n                A typical company may use one journal per payment method (cash,\n                bank accounts, checks), one purchase journal, one sale journal\n                and one for miscellaneous information.\n              </p>\n            "
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close_state
@@ -8441,7 +8441,7 @@ msgid ""
 "                entries to automate the postings in the system.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlicka för att definiera en återkommande verifikation.\n</p><p>\nEn återkommande verifikation inträffar på återkommande basis från ett specifikt datum, t. ex. motsvarande undertecknandet av ett kontrakt eller ett avtal med en kund eller leverantör. Du kan skapa sådana verifikationer för att automatisera processen i systemet.\n</p>\n            "
 
 #. module: account
 #: view:account.journal:0
@@ -8877,7 +8877,7 @@ msgstr "Associerade företag"
 #. module: account
 #: view:account.invoice:0
 msgid "Ask Refund"
-msgstr ""
+msgstr "Efterfråga återbetalning"
 
 #. module: account
 #: view:account.move.line:0
@@ -8987,7 +8987,7 @@ msgstr "Skulder"
 #. module: account
 #: view:account.account:0
 msgid "Account name"
-msgstr ""
+msgstr "Kontonamn"
 
 #. module: account
 #: view:board.board:0
@@ -9201,7 +9201,7 @@ msgstr "Slutperiod"
 #. module: account
 #: model:account.account.type,name:account.account_type_expense_view1
 msgid "Expense View"
-msgstr ""
+msgstr "Utgiftsvy"
 
 #. module: account
 #: field:account.move.line,date_maturity:0

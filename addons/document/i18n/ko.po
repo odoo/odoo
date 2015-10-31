@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-08-03 04:34+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. module: document
 #: field:document.directory,parent_id:0
 msgid "Parent Directory"
-msgstr ""
+msgstr "상위 디렉토리"
 
 #. module: document
 #: code:addons/document/document.py:348
@@ -32,14 +32,14 @@ msgstr "디렉토리 이름이 특수 문자를 포함하고 있습니다 !"
 #. module: document
 #: view:document.directory:0
 msgid "Search Document Directory"
-msgstr ""
+msgstr "문서 디렉토리 검색"
 
 #. module: document
 #: help:document.directory,resource_field:0
 msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
-msgstr ""
+msgstr "필드는 자원 디렉토리 이름으로 사용됩니다. 비워져 있는 경우 \"이름\"이 사용됩니다."
 
 #. module: document
 #: view:document.directory:0
@@ -49,12 +49,12 @@ msgstr "분류 기준..."
 #. module: document
 #: view:ir.attachment:0
 msgid "Modification"
-msgstr ""
+msgstr "수정"
 
 #. module: document
 #: view:document.directory:0
 msgid "Resources"
-msgstr ""
+msgstr "자원"
 
 #. module: document
 #: field:document.directory,file_ids:0 view:report.document.user:0
@@ -64,7 +64,7 @@ msgstr "파일"
 #. module: document
 #: field:document.directory.content.type,mimetype:0
 msgid "Mime Type"
-msgstr ""
+msgstr "MIME 유형"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -101,12 +101,12 @@ msgstr "문서 관리"
 msgid ""
 "A python expression used to evaluate the field.\n"
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
-msgstr ""
+msgstr "파이썬 표현식은 필드를 평가하는데 사용됩니다.\n동적 폴더 안에 현재 레코드에 참조로는 'res_id', 'res_model'을, 현재 디렉토리에는 'dir_id'를 사용할 수 있습니다."
 
 #. module: document
 #: help:document.directory.dctx,field:0
 msgid "The name of the field."
-msgstr ""
+msgstr "필드의 이름입니다."
 
 #. module: document
 #: code:addons/document/document.py:338 code:addons/document/document.py:343
@@ -129,7 +129,7 @@ msgstr "인덱스된 컨텐트"
 msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
-msgstr ""
+msgstr "참일 경우, 이 자원과 일치하는 모든 첨부 파일에 위치해 있습니다. 거짓일 경우, 상위로써 가지는 것이 단 하나입니다."
 
 #. module: document
 #: view:document.directory:0
@@ -141,17 +141,17 @@ msgstr "디렉토리"
 #. module: document
 #: model:ir.model,name:document.model_report_document_user
 msgid "Files details by Users"
-msgstr ""
+msgstr "사용자 별 파일 세부사항"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
 msgid "Find all resources"
-msgstr ""
+msgstr "모든 자원 찾기"
 
 #. module: document
 #: selection:document.directory,type:0
 msgid "Folders per resource"
-msgstr ""
+msgstr "자원 당 폴더"
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -161,12 +161,12 @@ msgstr "접미사"
 #. module: document
 #: field:report.document.user,change_date:0
 msgid "Modified Date"
-msgstr ""
+msgstr "수정한 날짜"
 
 #. module: document
 #: view:document.configuration:0
 msgid "Knowledge Application Configuration"
-msgstr ""
+msgstr "지식 응용 프로그램 구성"
 
 #. module: document
 #: view:ir.attachment:0 field:ir.attachment,partner_id:0
@@ -177,7 +177,7 @@ msgstr "파트너"
 #: model:ir.actions.act_window,name:document.act_res_partner_document
 #: model:ir.actions.act_window,name:document.zoom_directory
 msgid "Related Documents"
-msgstr ""
+msgstr "관련된 문서"
 
 #. module: document
 #: model:ir.actions.act_window,help:document.action_document_file_form
@@ -189,14 +189,14 @@ msgid ""
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n            새 문서를 작성합니다. \n          </p><p>\n            문서 저장소는 메일, 프로젝트 문서, 송장 등 모든 첨부파일에\n            접근할 수 있습니다.\n          </p>\n        "
 
 #. module: document
 #: code:addons/document/document.py:338 code:addons/document/document.py:343
 #: code:addons/document/document.py:348
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "ValidateError"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
@@ -208,12 +208,12 @@ msgstr "ir.actions.report.xml"
 #: model:ir.ui.menu,name:document.menu_document_doc
 #: model:ir.ui.menu,name:document.menu_document_files
 msgid "Documents"
-msgstr ""
+msgstr "문서"
 
 #. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
-msgstr ""
+msgstr "리소스 모델"
 
 #. module: document
 #: field:report.document.file,file_size:0
@@ -235,7 +235,7 @@ msgstr "타입"
 #. module: document
 #: sql_constraint:ir.attachment:0
 msgid "The filename must be unique in a directory !"
-msgstr ""
+msgstr "파일 이름은 디렉토리에서 고유해야 합니다!"
 
 #. module: document
 #: code:addons/document/document.py:118 code:addons/document/document.py:308
@@ -248,7 +248,7 @@ msgstr "%s (사본)"
 msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
-msgstr ""
+msgstr "객체를 선택하고 자원의 기록 당 하나의 폴더가 있을 것입니다."
 
 #. module: document
 #: help:document.directory,domain:0
@@ -259,17 +259,17 @@ msgstr "가시적인 리소스에 자동 필터를 적용하려면, 도메인을
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You cannot create recursive directories."
-msgstr ""
+msgstr "오류! 재귀 디렉토리를 생성할 수 없습니다."
 
 #. module: document
 #: field:document.directory,resource_field:0
 msgid "Name field"
-msgstr ""
+msgstr "필드명"
 
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr ""
+msgstr "문맥 필드"
 
 #. module: document
 #: view:document.directory:0 field:report.document.user,type:0
@@ -300,19 +300,19 @@ msgstr "가상 파일"
 #: code:addons/document/document.py:574
 #, python-format
 msgid "Error at doc write!"
-msgstr ""
+msgstr "문서 기록 오류!"
 
 #. module: document
 #: view:document.directory:0
 msgid "Generated Files"
-msgstr ""
+msgstr "생성한 파일"
 
 #. module: document
 #: view:document.configuration:0
 msgid ""
 "When executing this wizard, it will configure your directories automatically"
 " according to modules installed."
-msgstr ""
+msgstr "이 마법사를 실행하면, 자동으로 설치 모듈에 따라 디렉토리를 구성합니다."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -338,12 +338,12 @@ msgstr "최종 수정 사용자"
 #: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
 #: view:report.document.user:0
 msgid "Files by User"
-msgstr ""
+msgstr "사용자 별 파일"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "on"
-msgstr ""
+msgstr "에"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -358,18 +358,18 @@ msgstr "날짜가 수정됨"
 #. module: document
 #: model:ir.model,name:document.model_report_document_file
 msgid "Files details by Directory"
-msgstr ""
+msgstr "디렉토리 별 파일 세부사항"
 
 #. module: document
 #: view:report.document.user:0
 msgid "All users files"
-msgstr ""
+msgstr "모든 사용자 파일"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
-msgstr ""
+msgstr "월별 파일 크기"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -389,12 +389,12 @@ msgstr "월"
 #. module: document
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
-msgstr ""
+msgstr "하위 디렉토리와 파일에 대한 문맥 단어 정의"
 
 #. module: document
 #: view:document.directory:0
 msgid "Static"
-msgstr ""
+msgstr "정적인"
 
 #. module: document
 #: field:report.document.user,user:0
@@ -429,13 +429,13 @@ msgstr "생성 날짜"
 msgid ""
 "Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
-msgstr ""
+msgstr "레코드 이름을 포함하는 파일 이름을 원하는 경우 이 필드를 선택합니다.\n설정하면 디렉토리는 자원 하나가 될 것입니다."
 
 #. module: document
 #: view:document.configuration:0
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
-msgstr ""
+msgstr "디렉토리 구성"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -459,14 +459,14 @@ msgstr "시스템이 선택한 오브젝트와 동일한 트리 구조를 이용
 msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
-msgstr ""
+msgstr "상위 모델과 함께 이 ID는 상위 모델의 특정 레코드에 폴더를 연결합니다."
 
 #. module: document
 #. openerp-web
 #: code:addons/document/static/src/js/document.js:6
 #, python-format
 msgid "Attachment(s)"
-msgstr ""
+msgstr "첨부 파일"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -476,12 +476,12 @@ msgstr "8월"
 #. module: document
 #: view:document.directory:0
 msgid "Dynamic context"
-msgstr ""
+msgstr "동적 문맥"
 
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr ""
+msgstr "디렉토리는 자신의 상위 요소가 될 수 없습니다!"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -510,7 +510,7 @@ msgid ""
 " these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
-msgstr ""
+msgstr "객체를 넣을 경우, 디렉토리 틀은 객체의 모든 노호로 나타납니다. 이러한 디렉토리는 첨부 파일과 같은 특정 모델이나 기록에 \"연결\"됩니다. 상위 모델을 선택하는 경우, 상위 디렉토리를 넣지 마십시오."
 
 #. module: document
 #: view:document.directory:0
@@ -530,7 +530,7 @@ msgstr "시퀀스"
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
 msgid "All Users files"
-msgstr ""
+msgstr "모든 사용자 파일"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -540,12 +540,12 @@ msgstr "1월"
 #. module: document
 #: view:document.directory:0
 msgid "Document Directory"
-msgstr ""
+msgstr "문서 디렉토리"
 
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
-msgstr ""
+msgstr "디렉토리 이름은 고유해야 합니다!"
 
 #. module: document
 #: view:ir.attachment:0
@@ -570,7 +570,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
-msgstr ""
+msgstr "월별 파일"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -600,7 +600,7 @@ msgstr "필드"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr ""
+msgstr "디렉토리 동적 문맥"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
@@ -612,7 +612,7 @@ msgstr "페어런트 모델"
 msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
-msgstr ""
+msgstr "이 그룹은 그들 자신의 그룹을 정의해야만 하는 하위 디렉토리에 적용이 되지 않습니다."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -622,22 +622,22 @@ msgstr "5월"
 #. module: document
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
-msgstr ""
+msgstr "각 항목에 대해, 가상 파일이 폴더에 나타납니다."
 
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "ir.attachment"
 
 #. module: document
 #: view:report.document.user:0
 msgid "Users File"
-msgstr ""
+msgstr "사용자 파일"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Directory Configuration"
-msgstr ""
+msgstr "디렉토리 환경 설정"
 
 #. module: document
 #: help:document.directory,type:0
@@ -647,7 +647,7 @@ msgid ""
 "directory that can contain a set of files. The directories linked to systems"
 " resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
-msgstr ""
+msgstr "각 디렉토리는 정적 유형을 가질 수 있거나, 다른 자원에 연결 될 수 있습니다. 운영 체제와 같은 정적 디렉토리는 파일 설정을 포함할 수 있는 고전 디렉토리이다."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -672,7 +672,7 @@ msgstr "4월"
 #. module: document
 #: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
-msgstr ""
+msgstr "파일"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
@@ -684,14 +684,14 @@ msgstr "디렉토리 컨텐트 타입"
 msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
-msgstr ""
+msgstr "이 그룹의 회원만이 디렉토리 및 파일에 접근 할 수 있습니다."
 
 #. module: document
 #. openerp-web
 #: code:addons/document/static/src/js/document.js:17
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -722,7 +722,7 @@ msgstr "res_config_contents"
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
-msgstr ""
+msgstr "디렉토리 구조"
 
 #. module: document
 #: field:report.document.user,name:0
@@ -732,7 +732,7 @@ msgstr "년도"
 #. module: document
 #: model:ir.model,name:document.model_document_storage
 msgid "Storage Media"
-msgstr ""
+msgstr "저장 매체"
 
 #. module: document
 #: field:document.directory.content,extension:0

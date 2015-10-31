@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-08-03 04:35+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr ""
 #. module: delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
-msgstr ""
+msgstr "우편  배송"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -46,12 +46,12 @@ msgstr "목적지"
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr ""
+msgstr "순 중량"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
+msgstr "배송망 명세"
 
 #. module: delivery
 #: field:stock.move,weight_uom_id:0 field:stock.picking,weight_uom_id:0
@@ -76,7 +76,7 @@ msgstr "체적"
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier!"
-msgstr ""
+msgstr "이 운송회사에 일치하는 배송망이 없습니다!"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -86,7 +86,7 @@ msgstr "그리드 라인"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "운송 서비스를 하고 있는 파트너."
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -102,17 +102,17 @@ msgstr ""
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr ""
+msgstr "송장 발행된 출하"
 
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "확장 가격"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
+msgstr "운송망 목록을 표시할 때 주문 순서를 제공합니다."
 
 #. module: delivery
 #: view:delivery.grid:0 field:delivery.grid,country_ids:0
@@ -132,7 +132,7 @@ msgid ""
 "                country defined by a postal code range.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                특정 지역에 대해 배송 가격표를 생성하려면 클릭하세요.\n              </p><p>\n                배송 가격표는 제품과 다른 물품의 중량에 따라 원가와 판매 가격를 \n                계산 할 수 있습니다. 배송 방법에 따라서 여러 가격표를 정의할 수\n                 있습니다: 나라별, 우편번호 등에 의한 특정 지역별.\n              </p>\n            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -152,7 +152,7 @@ msgstr "금액"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr ""
+msgstr "견적에 추가"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -181,7 +181,7 @@ msgstr "재고 이동"
 #: field:stock.picking.in,carrier_tracking_ref:0
 #: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "운송회사 추적 참조"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0 field:stock.picking.in,weight_net:0
@@ -230,12 +230,12 @@ msgstr "배송 주문"
 msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing"
 " based on delivery order(s)."
-msgstr ""
+msgstr "시세 추가를 하지 않는 경우, 운송 주문를 기반으로 송장을 발행할 때 정확한 가격이 계산됩니다."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "운송 회사"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -262,19 +262,19 @@ msgstr "이름"
 msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
-msgstr ""
+msgstr "주문이 정해진 금액을 초과하면 고객은 무료 배송 혜택을 누릴 수 있습니다."
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr ""
+msgstr "무료 배송 혜택을 받는 주문 금액을 회사가 사용하는 통화로 표시하기"
 
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "주문 합계 금액 이상의 경우 무료"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -286,23 +286,23 @@ msgstr "그리드"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
-msgstr ""
+msgstr "사용중인 필드를 아니오로 설정하면 이를 제거하지 않고 운송망을 숨길 수 있습니다."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
-msgstr ""
+msgstr "우편번호를 기입"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "기본 값"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr ""
+msgstr "정상 가격"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -319,7 +319,7 @@ msgstr "그리드 이름"
 #: field:stock.picking.in,number_of_packages:0
 #: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "패키지 수"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -335,18 +335,18 @@ msgstr "무게"
 msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
-msgstr ""
+msgstr "배송 목적지, 중량, 주문 총액, 기타 등의 배송 가격을 관리하려면 이 상자를 선택합니다."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr ""
+msgstr "가격이 목적지에 따라 확장되는 가격에 달려있다면 비우십시오."
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
-msgstr ""
+msgstr ">="
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -382,7 +382,7 @@ msgstr "원가 가격"
 #: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in Draft State!"
-msgstr ""
+msgstr "기안 상태에서 주문하지 않았습니다!"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
@@ -392,7 +392,7 @@ msgstr "변수"
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "출하 송장을 발행할 때 운송 방법을 사용합니다."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -424,25 +424,25 @@ msgstr "수량"
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr ""
+msgstr "시작 우편번호"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr ""
+msgstr "출하에 기반하여 배송 송장을 계획한다면 필드를 완료합니다."
 
 #. module: delivery
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No Grid Available!"
-msgstr ""
+msgstr "가능한 배송망이 없습니다!"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "%.2f이상인 경우 무료"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
@@ -452,13 +452,13 @@ msgstr "입고예정 배송"
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
-msgstr ""
+msgstr "<="
 
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0 help:stock.picking.in,weight_uom_id:0
 #: help:stock.picking.out,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "무게 측정의 단위"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -470,7 +470,7 @@ msgstr "설명"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
-msgstr ""
+msgstr "사용중인 필드를 아니오로 설정하면 이를 제거하지 않고 운송회사를 숨길 수 있습니다."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -504,12 +504,12 @@ msgstr "운송자 %s (id: %d) 는 배송 그리드가 없습니다."
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr ""
+msgstr "가격 정보"
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "목적지 당 확장 가격"
 
 #. module: delivery
 #: view:delivery.carrier:0 field:delivery.grid,carrier_id:0
@@ -523,7 +523,7 @@ msgstr "운송자"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "운송 방법"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:57
@@ -560,7 +560,7 @@ msgstr "상태"
 #: help:stock.move,weight_uom_id:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "측정 단위는 무게 단위입니다."
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0

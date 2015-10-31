@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2015-08-18 08:38+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -35,12 +35,12 @@ msgstr ""
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr ""
+msgstr "조건이 촉발되고, 존재하면 스케쥴러에 의해 확인할 것입니다. 비어있는 경우 생성과 갱신에서 확인됩니다."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
 msgid "Action Rules"
-msgstr ""
+msgstr "동작 규칙"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -55,7 +55,7 @@ msgstr "담당자:"
 #. module: base_action_rule
 #: help:base.action.rule,server_action_ids:0
 msgid "Examples: email reminders, call object service, etc."
-msgstr ""
+msgstr "예: 이메일 요청자, 호출 서비스 등... "
 
 #. module: base_action_rule
 #: field:base.action.rule,act_followers:0
@@ -65,7 +65,7 @@ msgstr "팔로워 추가"
 #. module: base_action_rule
 #: field:base.action.rule,act_user_id:0
 msgid "Set Responsible"
-msgstr ""
+msgstr "책임 설정"
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_range:0
@@ -73,7 +73,7 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
+msgstr "회의 15분 전에 요청자에게 전송 같이, 촉발 일 전에 지연이 필요하다면 마이너스 숫자를 넣을 수 있습니다."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -93,7 +93,7 @@ msgstr "새로 만들기"
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
 msgid "Delay after trigger date"
-msgstr ""
+msgstr "촉발 일후의 지연"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -113,12 +113,12 @@ msgstr "상태"
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr ""
+msgstr "갱신 필터 전"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Action Rule"
-msgstr ""
+msgstr "액션 규칙"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_id:0
@@ -129,12 +129,12 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Fields to Change"
-msgstr ""
+msgstr "변경할 필드"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "The filter must therefore be available in this page."
-msgstr ""
+msgstr "필터는 결과적으로 이 페이지안에 있어야 합니다."
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_id:0
@@ -149,7 +149,7 @@ msgstr "시간"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "To create a new filter:"
-msgstr ""
+msgstr "새 필터 작성 :"
 
 #. module: base_action_rule
 #: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
@@ -159,7 +159,7 @@ msgstr "활성"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Delay After Trigger Date"
-msgstr ""
+msgstr "촉발 일 후에 지연"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -192,12 +192,12 @@ msgstr "규칙 이름"
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
 #: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
 msgid "Automated Actions"
-msgstr ""
+msgstr "자동화된 액션"
 
 #. module: base_action_rule
 #: help:base.action.rule,sequence:0
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr ""
+msgstr "규칙 목록을 표시할 때 주문 순서를 제공합니다."
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -217,17 +217,17 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
 msgid "Delay type"
-msgstr ""
+msgstr "지연 형식"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Server actions to run"
-msgstr ""
+msgstr "실행하려는 서버 액션"
 
 #. module: base_action_rule
 #: help:base.action.rule,active:0
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "확인하지 않으면 규은 숨겨지고 실행되지 않습니다."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -242,7 +242,7 @@ msgstr "모델"
 #. module: base_action_rule
 #: field:base.action.rule,last_run:0
 msgid "Last Run"
-msgstr ""
+msgstr "마지막 실"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -259,7 +259,7 @@ msgstr "관련된 문서 모델"
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
-msgstr ""
+msgstr "존재하면, 이 조건은 레코드의 갱신 전에 충족해야 합니다."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -284,7 +284,7 @@ msgid ""
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                새로운 자동 액션 규칙을 설정하려면 클릭하세요. \n              </p><p>\n                다양한 화면을 위해서 자동적으로 촉발 액션에 자동화한 액션을 사용하려면:  \n                예를 들어: 생성한 지시로 특정 사용자는 영업팀에 자동으로 지정할 수 있고, 혹은 \n                14일 후 지연 상태을 유지하면 자동으로 알림 이메일을 발생할 수 있습니다.\n              </p>\n            "
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
@@ -304,7 +304,7 @@ msgstr "협력업체"
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_id:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "촉발일"
 
 #. module: base_action_rule
 #: view:base.action.rule:0 field:base.action.rule,server_action_ids:0

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-08-03 03:56+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -21,13 +21,13 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "No order to invoice, create"
-msgstr ""
+msgstr "청구 주문이 없습니다. 작성하기"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:548
 #, python-format
 msgid "Timesheets to Invoice of %s"
-msgstr ""
+msgstr "%s 청구서의 작업표"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -47,7 +47,7 @@ msgstr "송장 발행 대상"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Remaining"
-msgstr ""
+msgstr "남음"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
@@ -57,7 +57,7 @@ msgstr "실 마진율 (%)"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End date passed or prepaid unit consumed"
-msgstr ""
+msgstr "마감일이 지났거나 선불 단위를 소비함"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -72,7 +72,7 @@ msgstr "송장 처리하지 않은 금액"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "⇒ Invoice"
-msgstr ""
+msgstr "⇒ 송장"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
@@ -87,7 +87,7 @@ msgstr "마지막 송장 처리한 원가의 일자"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
-msgstr ""
+msgstr "이 계약 견적의 합계."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
@@ -100,7 +100,7 @@ msgid ""
 "                at a fix price on a contract.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                판매 주문으로 전환될 수 있는 견적서를 작성합니다.\n              </p><p>\n                판매 주문을 사용해서 고정된 계약금액을 청구할 수 있고 모든 것을 추적합니다.\n              </p>\n            "
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -115,12 +115,12 @@ msgstr "취소함"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
-msgstr ""
+msgstr "이 계약에 대해 청구된 작업표 명세의 합계."
 
 #. module: account_analytic_analysis
 #: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
 msgid "Contract expiration reminder ${user.company_id.name}"
-msgstr ""
+msgstr "${user.company_id.name} 계약 만료 알림"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:465
@@ -131,12 +131,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End date is in the next month"
-msgstr ""
+msgstr "종료 날짜는 다음 달에"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr ""
+msgstr "공식을 사용하여 계산 : 기성액 / 총 시간"
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,account_id:0
@@ -153,7 +153,7 @@ msgstr "협력업체"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts that are not assigned to an account manager."
-msgstr ""
+msgstr "계정 관리자에게 할당되지 않은 계약."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -180,7 +180,7 @@ msgstr "종료날짜"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Account Manager"
-msgstr ""
+msgstr "계정 관리자"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
@@ -190,22 +190,22 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expected"
-msgstr ""
+msgstr "예상액/계약액"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Closed contracts"
-msgstr ""
+msgstr "완료된 계약"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theoretical Revenue - Total Costs"
-msgstr ""
+msgstr "공식을 사용하여 계산 : 이론 수익 - 총 비용"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr ""
+msgstr "청구 시간"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_to_invoice:0
@@ -213,14 +213,14 @@ msgstr ""
 #: field:account.analytic.account,remaining_hours_to_invoice:0
 #: field:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Remaining Time"
-msgstr ""
+msgstr "잔여 시간"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid ""
 "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
 "'normal','template'])]}"
-msgstr ""
+msgstr "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', 'normal','template'])]}"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -230,24 +230,24 @@ msgstr "가격리스트"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Worked Time"
-msgstr ""
+msgstr "공식을 사용하여 계산 : 최대 시간 - 총 작업 시간"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
 msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
-msgstr ""
+msgstr "분석 계정(작업표에)으로 시간 수를 보냅니다. 이것은 '일반' 유형의 모든 분개 항목의 수량을 계산합니다."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Nothing to invoice, create"
-msgstr ""
+msgstr "송장 없음, 만들기"
 
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
-msgstr ""
+msgstr "계약 서식 필수 사용"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -259,7 +259,7 @@ msgstr "원가에 따른 송장이라면, 이것은 송장 처리된 마지막 �
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
-msgstr ""
+msgstr "총 근무 시간"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -276,7 +276,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts assigned to a customer."
-msgstr ""
+msgstr "고객에게 할당된 계약."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
@@ -286,7 +286,7 @@ msgstr "월별 시간 요약"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending contracts"
-msgstr ""
+msgstr "계약 보류"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
@@ -296,7 +296,7 @@ msgstr "다음 공식으로 계산함: (실제 마진 / 총 원가) * 100."
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "or view"
-msgstr ""
+msgstr "또는 뷰"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -306,7 +306,7 @@ msgstr "부모"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Units Consumed"
-msgstr ""
+msgstr "소비된 단위"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -318,7 +318,7 @@ msgstr "월"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "Time & Materials to Invoice"
-msgstr ""
+msgstr "시간 및 재료 청구서"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -328,7 +328,7 @@ msgstr "시작 날짜"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expiring soon"
-msgstr ""
+msgstr "곧 만료"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -416,12 +416,12 @@ msgstr "마감됨"
 msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
-msgstr ""
+msgstr "시간(시간/일) 수('일반' 유형의 분개 항목에서)는 분석 계정을 기준으로 청구할 경우 청구할 수 있습니다."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
 msgid "Overdue Quantity"
-msgstr ""
+msgstr "연체 수량"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -431,12 +431,12 @@ msgstr "상태"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
-msgstr ""
+msgstr "이론적 수익"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Renew"
-msgstr ""
+msgstr "갱신하기"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -473,7 +473,7 @@ msgstr "사용자"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Cancelled contracts"
-msgstr ""
+msgstr "취소된 계약"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -486,12 +486,12 @@ msgid ""
 "                    terms and conditions of the contract.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    계약 서식을 작성합니다.\n                </p><p>\n                    서식은 계약/프로젝트를 미리 보여주는 데 사용합니다.\n                    서식은 영업사원에 의해 신속하게 계약 조건을 구성하도록\n                    선택할 수 있습니다.\n                </p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours Summary by User"
-msgstr ""
+msgstr "사용자로 시간 요약"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -510,17 +510,17 @@ msgstr ""
 msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
-msgstr ""
+msgstr "시간(시간/일) 수는 이미 청구한 것에 추가하여 청구할 수 있습니다."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Time (real)"
-msgstr ""
+msgstr "시간 당 수익 (실제)"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expired or consumed"
-msgstr ""
+msgstr "만료 또는 소비"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
@@ -538,17 +538,17 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
 msgid "Total to Invoice"
-msgstr ""
+msgstr "총 청구액"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts not assigned"
-msgstr ""
+msgstr "할당되지 않은 계약"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Customer Contracts"
-msgstr ""
+msgstr "고객 계약"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
@@ -568,7 +568,7 @@ msgstr "다음 공식을 사용하여 계산함: 최고 송장 가격 - 송장 �
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts in progress (open, draft)"
-msgstr ""
+msgstr "진행중인 계약 (개시, 기안)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -578,7 +578,7 @@ msgstr "마지막 송장 일자"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Units Remaining"
-msgstr ""
+msgstr "남은 단위"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -590,12 +590,12 @@ msgid ""
 "                menu instead.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                고객에게 재청구할 수 있는 계약에 대한 작업표와\n                 구매를 여기에서 찾을 수 있습니다.\n                새로운 청구할 활동을 기록하길 원하면\n                대신에 작업표 메뉴를 사용할 수 있습니다.\n              </p>\n            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr ""
+msgstr "청구되지 않은 시간"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -613,28 +613,28 @@ msgid ""
 "Expectation of remaining income for this contract. Computed as the sum of "
 "remaining subtotals which, in turn, are computed as the maximum between "
 "'(Estimation - Invoiced)' and 'To Invoice' amounts"
-msgstr ""
+msgstr "이 계약에 대한 잔여 수익 기대. 잔금 소계의 합으로 계산되고 이는 차례로 '(계약액 - 기성액)'과 '청구하기' 금액 사이의 최대값으로 계산됩니다."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "계약 갱신"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
 msgid " Sum of everything that could be invoiced for this contract."
-msgstr ""
+msgstr " 이 계약에 대해 청구할 수 있는 총 금액."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
-msgstr ""
+msgstr "이론적 이익"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_total:0
 msgid "Total Remaining"
-msgstr ""
+msgstr "총 잔액"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -644,12 +644,12 @@ msgstr "다음 공식으로 계산함: 송장 금액 - 총 원가"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
 msgid "Estimation of Hours to Invoice"
-msgstr ""
+msgstr "청구할 시간 추정"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr ""
+msgstr "고정 가격"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -673,25 +673,25 @@ msgstr "sale.config.settings"
 #. module: account_analytic_analysis
 #: field:sale.config.settings,group_template_required:0
 msgid "Mandatory use of templates."
-msgstr ""
+msgstr "서식 필수 사용."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
 msgid "Contract Template"
-msgstr ""
+msgstr "계약 서식"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
-msgstr ""
+msgstr "이 계정에 대한 총 비용. 이 작업표에 소요된 시간 같은 실제 비용(청구서에서)과 간접 비용을 포함합니다."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
 msgid "Total Estimation"
-msgstr ""
+msgstr "총 평가"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
@@ -715,12 +715,12 @@ msgstr "총 시간"
 #: model:res.groups,comment:account_analytic_analysis.group_template_required
 msgid ""
 "the field template of the analytic accounts and contracts will be required."
-msgstr ""
+msgstr "분석 계정과 계약의 필드 서식이 필요합니다."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0
 msgid "On Timesheets"
-msgstr ""
+msgstr "작업표 상"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-08-03 04:35+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -71,7 +71,7 @@ msgstr "주문 취소"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Order of Day"
-msgstr ""
+msgstr "일 주문"
 
 #. module: purchase
 #: help:purchase.order,message_unread:0
@@ -123,13 +123,13 @@ msgstr "파트너"
 #. module: purchase
 #: field:purchase.report,negociation:0
 msgid "Purchase-Standard Price"
-msgstr ""
+msgstr "구매-표준 가격"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1074
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "이 상품에 대해 공급자가 선택되지 않았습니다!"
 
 #. module: purchase
 #: help:res.company,po_lead:0
@@ -137,7 +137,7 @@ msgid ""
 "Margin of error for supplier lead times. When the systemgenerates Purchase "
 "Orders for procuring products,they will be scheduled that many days earlier "
 "to cope with unexpected supplier delays."
-msgstr ""
+msgstr "공급자 리드 타임에 대한 에러 여유. 상품을 얻기 위해 시스템 발생 구매 주문일 때, 뜻하지 않은 공급 지연을 대처하기 위해 계획할 수 있습니다."
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,price_average:0
@@ -178,7 +178,7 @@ msgstr "주문 확정"
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
 msgid "Alerts by products or supplier"
-msgstr ""
+msgstr "제품 혹은 공급자에 의한 경고"
 
 #. module: purchase
 #: field:purchase.order,name:0 view:purchase.order.line:0
@@ -268,13 +268,13 @@ msgstr "6월"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr ""
+msgstr "구매 주문"
 
 #. module: purchase
 #: help:account.config.settings,group_analytic_account_for_purchases:0
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
-msgstr ""
+msgstr "구매 주문들에 대해 분석 계정을 지정하도록 허용 합니다."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -303,7 +303,7 @@ msgstr "10월"
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
 "seems to be a configuration error!"
-msgstr ""
+msgstr "상품 \"%s\"는 회사가 소매판매로 선언되어 있는데 이것은 구성상 에러이다!"
 
 #. module: purchase
 #: view:product.product:0
@@ -325,7 +325,7 @@ msgstr "견적"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices?"
-msgstr ""
+msgstr "공급자 송장을 발행하기를 원합니까?"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0 view:purchase.report:0
@@ -341,13 +341,13 @@ msgstr "회계 포지션"
 #. module: purchase
 #: field:purchase.config.settings,default_invoice_method:0
 msgid "Default invoicing control method"
-msgstr ""
+msgstr "기본 송장 작성 방법"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:909
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "주문 라인 상태 '%s'는 구매 주문 라인을 삭제 할 수 없습니다."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking_in
@@ -373,7 +373,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0 view:purchase.order.line:0
 msgid "Search Purchase Order"
-msgstr ""
+msgstr "구매 주문 검색"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -383,7 +383,7 @@ msgstr "날짜 참조"
 #. module: purchase
 #: view:purchase.order:0 view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr ""
+msgstr "구매 주문 라인"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -402,7 +402,7 @@ msgid ""
 "                draft supplier invoice based on the lines from this list.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n이곳에서 구매 주문 라인에 기반해 작성한 송장과 \n아직 공급 송장을 수신 못한 모든 구매라인 주문을 추적할 수 있습니다.\n이 목록에서 라인에 기초한 공급자 송장 초안을 발행할 수 있습니다.\n</p>\n            "
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -432,7 +432,7 @@ msgstr "예약"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders that include lines not invoiced."
-msgstr ""
+msgstr "송장 처리하지 않은 라인을 포함한 구매 주문"
 
 #. module: purchase
 #: view:product.product:0 field:product.template,purchase_ok:0
@@ -516,7 +516,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "송장 안한 것"
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,partner_id:0
@@ -580,7 +580,7 @@ msgid ""
 "                the products received and control the supplier invoices.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                구매 주문으로 변경할 견적을 작성하려면 클릭하세요.\n              </p><p>\n                참고, 공급자 등등으로 구매 주문에서 검색하려면 이 메뉴를 사용하세요.\n                공급자, 상품 제어, 공급자 송장 제어에 곤련한 토론을 추적할 수 있습니다.\n              </p>\n            "
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -612,13 +612,13 @@ msgstr "카렌더 뷰"
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr ""
+msgstr "받기가 완료 되었음을 표시합니다."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:590 code:addons/purchase/purchase.py:597
 #, python-format
 msgid "Unable to cancel this purchase order."
-msgstr ""
+msgstr "이 구매 주문을 취소할 수 없습니다."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
@@ -647,7 +647,7 @@ msgstr "주문 라인"
 msgid ""
 "Unique number of the purchase order, computed automatically when the "
 "purchase order is created."
-msgstr ""
+msgstr "구매 주문의 고유 번호, 구매 주문이 생성되면 자동으로 계산됩니다."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -674,7 +674,7 @@ msgstr "가격리스트"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr ""
+msgstr "PO 초안"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1001 code:addons/purchase/purchase.py:1016
@@ -705,7 +705,7 @@ msgstr "주문 날짜"
 #. module: purchase
 #: field:purchase.config.settings,group_uom:0
 msgid "Manage different units of measure for products"
-msgstr ""
+msgstr "상품에 대한 다른 측정의 단위를 관리한다."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -716,12 +716,12 @@ msgstr "초안 인보이스"
 #. module: purchase
 #: help:purchase.order,amount_tax:0
 msgid "The tax amount"
-msgstr ""
+msgstr "세액"
 
 #. module: purchase
 #: field:purchase.order,shipped_rate:0
 msgid "Received Ratio"
-msgstr ""
+msgstr "수령율"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -731,7 +731,7 @@ msgstr "9월"
 #. module: purchase
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
-msgstr ""
+msgstr "공급자 확인 기다리는 중"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -742,7 +742,7 @@ msgstr "견적 요청:"
 #: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4_picking_to_invoice
 msgid "On Incoming Shipments"
-msgstr ""
+msgstr "입고예정 배송"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -768,7 +768,7 @@ msgstr "상품 카테고리"
 #. module: purchase
 #: field:purchase.order,notes:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "이용 약관"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -795,7 +795,7 @@ msgstr "확장 필터..."
 #: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
-msgstr ""
+msgstr "목록에 합칠 여러 주문을 선택해 주세요."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -820,7 +820,7 @@ msgstr "이 주문들을 합치겠습니까 ?"
 #. module: purchase
 #: field:account.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on orders"
-msgstr ""
+msgstr "주문에 다중 분석 계정 사용"
 
 #. module: purchase
 #: view:product.product:0
@@ -838,12 +838,12 @@ msgstr "구매"
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr ""
+msgstr "검증 소요 날짜"
 
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Supplier Features"
-msgstr ""
+msgstr "공급자 특징"
 
 #. module: purchase
 #: report:purchase.order:0 report:purchase.quotation:0
@@ -933,7 +933,7 @@ msgstr "발신 이메일"
 #: code:addons/purchase/purchase.py:455
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
-msgstr ""
+msgstr "구매 주문 라인없이 구매 주문을 확정할 수 없습니다."
 
 #. module: purchase
 #: help:purchase.order,message_ids:0
@@ -951,12 +951,12 @@ msgstr ""
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product"
 " Unit of Measure."
-msgstr ""
+msgstr "상품 측정 단위에서 같은 분류에 속하지 않은 측정 단위를 선택하세요."
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sales Order"
-msgstr ""
+msgstr "열린 판매 주문 선택"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -967,7 +967,7 @@ msgstr "측정 단위"
 #. module: purchase
 #: field:purchase.config.settings,group_purchase_pricelist:0
 msgid "Manage pricelist per supplier"
-msgstr ""
+msgstr "공급자 당 가격을 관리한다"
 
 #. module: purchase
 #: view:board.board:0
@@ -988,7 +988,7 @@ msgstr "주문 승인"
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "이 문서가 생성된 날짜"
 
 #. module: purchase
 #: view:purchase.order:0 view:purchase.order.line:0 view:purchase.report:0
@@ -1003,7 +1003,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.report:0
 msgid "Purchase Orders Statistics"
-msgstr ""
+msgstr "구매 주문 통계"
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,message_unread:0
@@ -1025,7 +1025,7 @@ msgstr "초안으로 설정"
 msgid ""
 "Reference of the document that generated this purchase order request; a "
 "sales order or an internal procurement request."
-msgstr ""
+msgstr "이 구매 주문 요청을 발행한 문서의 참조; 판매 주문 혹은 내부 조달 요구"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1074,7 +1074,7 @@ msgstr "검증한 이"
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,price_standard:0
 msgid "Products Value"
-msgstr ""
+msgstr "상품 값"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1111,12 +1111,12 @@ msgstr "주문서에 대한 인보이스가 생성되었습니다."
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Pre-generate draft invoices based on purchase orders"
-msgstr ""
+msgstr "구매 주문을 기초로 사전-발행한 임시 송장"
 
 #. module: purchase
 #: help:product.template,purchase_ok:0
 msgid "Specify if the product can be selected in a purchase order line."
-msgstr ""
+msgstr "제품이 구매 주문 라인에 선택할 수 있으면 지정하세요."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
@@ -1160,7 +1160,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:319
 #, python-format
 msgid "Please create Invoices."
-msgstr ""
+msgstr "송장을 생성해 주세요"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
@@ -1256,13 +1256,13 @@ msgstr "인보이스 생성"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
 msgid "Purchase Order Line Make Invoice"
-msgstr ""
+msgstr "구매 주문 라인이 송장을 만든다"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1225
 #, python-format
 msgid "PO: %s"
-msgstr ""
+msgstr "PO : %s"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
@@ -1273,7 +1273,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:536
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
-msgstr ""
+msgstr "이 회사에 대한 구매 장부를 정의한다: \"%s\" (id:%d)."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1283,7 +1283,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.config.settings,group_costing_method:0
 msgid "Allows you to compute product cost price based on average cost."
-msgstr ""
+msgstr "평균 가격을 기준으로 제품 가격을 계산하게 허용 합니다."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
@@ -1322,7 +1322,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_double_validation:0
 msgid "Force two levels of approvals"
-msgstr ""
+msgstr "강제로 두 수준 승인 함"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
@@ -1332,7 +1332,7 @@ msgstr "가격 유형"
 #. module: purchase
 #: help:purchase.order,date_approve:0
 msgid "Date on which purchase order has been approved"
-msgstr ""
+msgstr "구매 주문 승인 날짜"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
@@ -1406,7 +1406,7 @@ msgstr "주문 합치기"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on purchase orders"
-msgstr ""
+msgstr "구매 주문에 다중 분석 계정 사용"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1437,7 +1437,7 @@ msgstr ""
 #: view:res.partner:0
 #, python-format
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "공급업체 송장"
 
 #. module: purchase
 #: field:purchase.order,product_id:0 view:purchase.order.line:0
@@ -1450,7 +1450,7 @@ msgstr "상품"
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirmation"
-msgstr ""
+msgstr "확인"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1469,7 +1469,7 @@ msgid ""
 "* The 'Confirmed' status is set automatically as confirm when purchase order in confirm status.                                        \n"
 "* The 'Done' status is set automatically when purchase order is set as done.                                        \n"
 "* The 'Cancelled' status is set automatically when user cancel purchase order."
-msgstr ""
+msgstr "* '초안' 상태는 구매 주문을 초안 상태일 때 자동으로 설정됩니다.\n* '확정' 상태는 구매 주문을 확정 상태일 때 자동으로 확정으로 설정됩니다.\n* '완료' 상태는 구매 주문이 완료로 설정할 때 자동으로 설정됩니다.\n* '취소' 상태는 구매 주문을 취소할 때 자동으로 설정됩니다."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -1539,7 +1539,7 @@ msgstr "구매 메뉴 열기"
 #: code:addons/purchase/purchase.py:1078
 #, python-format
 msgid "No address defined for the supplier"
-msgstr ""
+msgstr "공급자에 대한 주소가 없습니다."
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase
@@ -1770,18 +1770,18 @@ msgid ""
 "Purchase Analysis allows you to easily check and analyse your company "
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
-msgstr ""
+msgstr "구매 분석은 회상의 구매 이력과 성과를 쉽게 점검하고 분석할 수 있도록 해준다. 이 메뉴에서 네고 성과, 공급자의 배송 능력 등을 추적 할 수 있습니다."
 
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "RFQ_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "선택한 공급자는 이 제품을 %s에 판매하고 있습니다."
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
@@ -1796,7 +1796,7 @@ msgstr "예약 목적지"
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} 주문 (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
@@ -1829,7 +1829,7 @@ msgstr "검증한 이"
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
-msgstr ""
+msgstr "배달 소요 날짜"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1854,7 +1854,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr ""
+msgstr "세금없는 금액"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
@@ -1874,7 +1874,7 @@ msgstr "승인 대기 중"
 #. module: purchase
 #: help:purchase.order,amount_total:0
 msgid "The total amount"
-msgstr ""
+msgstr "총액"
 
 #. module: purchase
 #: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
@@ -1895,7 +1895,7 @@ msgstr "초안"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_group
 msgid "Purchase Order Merge"
-msgstr ""
+msgstr "구매 주문 병합"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_email_templates
@@ -1915,7 +1915,7 @@ msgstr "11월"
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Manual Invoices"
-msgstr ""
+msgstr "송장 직접 입력"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1938,7 +1938,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
 msgid "Partner Categories"
-msgstr ""
+msgstr "협력업체 분류"
 
 #. module: purchase
 #: field:purchase.report,state:0
@@ -1948,12 +1948,12 @@ msgstr "주문 상태"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr ""
+msgstr "견적 요청 N°"
 
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Invoicing Settings"
-msgstr ""
+msgstr "송장 설정"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
@@ -1969,7 +1969,7 @@ msgstr "입고에 기초"
 #: code:addons/purchase/purchase.py:1076
 #, python-format
 msgid "No default supplier defined for this product"
-msgstr ""
+msgstr "이 상품에 대해 기본 공급자가 선택되지 않았습니다."
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,warehouse_id:0
@@ -1982,7 +1982,7 @@ msgstr "창고"
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
 "purchase less."
-msgstr ""
+msgstr "선택한 공급자는 최소 수량이 %s %s 에 설정해야지 더 적게 구매할 수 없습니다."
 
 #. module: purchase
 #: report:purchase.order:0 field:purchase.order.line,name:0
@@ -2004,7 +2004,7 @@ msgstr "2월"
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "On Draft Invoices"
-msgstr ""
+msgstr "초안 송장에 의해서"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2066,7 +2066,7 @@ msgstr "결제 조건"
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been validated"
-msgstr ""
+msgstr "이것은 송장이 검증되었음을 가르킵니다."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -2099,4 +2099,4 @@ msgstr ""
 #. module: purchase
 #: view:purchase.report:0
 msgid "Orders"
-msgstr ""
+msgstr "주문"

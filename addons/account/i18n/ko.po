@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-08-03 04:35+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: choijaeho <hwangtog@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr "시스템 결제"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr ""
+msgstr "계정 회계 위상은 같은 계정들에서 오로지 한번만 선언됩니다."
 
 #. module: account
 #: help:account.tax.code,sequence:0
@@ -40,7 +40,7 @@ msgstr "'회계 \\ 보고 \\ 일반 보고 \\ 세금 \\ 세금 보고서' 보고
 #. module: account
 #: view:res.partner:0
 msgid "the parent company"
-msgstr ""
+msgstr "모기업"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -72,7 +72,7 @@ msgstr "\"%s\" 기입 항목이 유효하지 않습니다."
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr ""
+msgstr "내일까지 오래된 수취어음"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
@@ -122,7 +122,7 @@ msgstr "참조"
 msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
-msgstr ""
+msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 지불 기간을 숨길 수 있습니다."
 
 #. module: account
 #: code:addons/account/account.py:650 code:addons/account/account.py:662
@@ -161,7 +161,7 @@ msgid ""
 "You have to set the 'End  of Year Entries Journal' for this Fiscal Year "
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
-msgstr ""
+msgstr "당신은 '개시분개 발생' 에서 개시분개를 생성 후 회계 연도를 위해  '회계연도말 회계처리'을 설정해야 합니다."
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -179,7 +179,7 @@ msgid ""
 "                usually corresponds to the periods of the tax declaration.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                회계기간을 추가하려면 클릭하세요.\n              </p><p>\n                전형적으로 한 회계 기간은 한 달 혹은 분기이다. 이 기간은\n                일반적으로 세금 신고를 위한 기간에 맞춘다.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -231,7 +231,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
 msgid "Belgian Reports"
-msgstr ""
+msgstr "벨기에 보고서"
 
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
@@ -241,7 +241,7 @@ msgstr "검증됨"
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
 msgid "Income View"
-msgstr ""
+msgstr "수입뷰"
 
 #. module: account
 #: help:account.account,user_type:0
@@ -249,12 +249,12 @@ msgid ""
 "Account Type is used for information purpose, to generate country-specific "
 "legal reports, and set the rules to close a fiscal year and generate opening"
 " entries."
-msgstr ""
+msgstr "계정 유형은 정보를 제공 할 목적으로 사용되며, 국가 별 법적 보고서를 생성하기 위해, 회계 기간을 마감하고 엔트리를 생성하는 규칙을 위해 설정된다."
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr ""
+msgstr "다음 환불 안내서 번호"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -298,7 +298,7 @@ msgstr ""
 msgid ""
 "Installs localized accounting charts to match as closely as possible the "
 "accounting needs of your company based on your country."
-msgstr ""
+msgstr "귀하의 국가를 기준으로 귀하 회사에 필요한 회계에 밀접하고 가능하도록 지역화된 회계 도표를 설치합니다."
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -308,7 +308,7 @@ msgstr "계정 조정 취소"
 #. module: account
 #: field:account.config.settings,module_account_budget:0
 msgid "Budget management"
-msgstr ""
+msgstr "예산 관리"
 
 #. module: account
 #: view:product.template:0
@@ -326,7 +326,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,group_multi_currency:0
 msgid "Allow multi currencies"
-msgstr ""
+msgstr "여러 화폐를 허용하다"
 
 #. module: account
 #: code:addons/account/account_invoice.py:77
@@ -347,12 +347,12 @@ msgstr "6월"
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr ""
+msgstr "조정하고자 하는 계정을 선택해야 합니다."
 
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
 msgid "Allows you to use the analytic accounting."
-msgstr ""
+msgstr "분석 회계를 사용하도록 허용하다"
 
 #. module: account
 #: view:account.invoice:0 field:account.invoice,user_id:0
@@ -418,14 +418,14 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement.line,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "수취인 정보를 보낸 사람"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:8
 #, python-format
 msgid "Period :"
-msgstr ""
+msgstr "기간 :"
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -438,7 +438,7 @@ msgstr "도표 양식"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr ""
+msgstr "수정 : 환불 작성, 조정 그리고 새 송장 기안 작성"
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -466,7 +466,7 @@ msgstr "다른 통화 단위로 환산된 금액"
 #. module: account
 #: view:account.journal:0
 msgid "Available Coins"
-msgstr ""
+msgstr "사용 가능한 동전"
 
 #. module: account
 #: field:accounting.report,enable_filter:0
@@ -509,7 +509,7 @@ msgstr "상위 대상"
 #. module: account
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr ""
+msgstr "전표를 표시할 때 이 라인의 순서를 제공함."
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -542,7 +542,7 @@ msgstr "송장 환불"
 #. module: account
 #: report:account.overdue:0
 msgid "Li."
-msgstr ""
+msgstr "소송"
 
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
@@ -585,7 +585,7 @@ msgstr "모두"
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr ""
+msgstr "회계처리상의 소수점 정확성"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -632,18 +632,18 @@ msgstr "주요 순서는 현재 순서와 달라야 합니다 !"
 #: code:addons/account/wizard/account_change_currency.py:70
 #, python-format
 msgid "Current currency is not configured properly."
-msgstr ""
+msgstr "현재 환률이 제대로 구성되지 않았습니다."
 
 #. module: account
 #: field:account.journal,profit_account_id:0
 msgid "Profit Account"
-msgstr ""
+msgstr "이익 계정"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1167
 #, python-format
 msgid "No period found or more than one period found for the given date."
-msgstr ""
+msgstr "기간을 찾을 수 없거나 주어진 날짜 외에 기간이 있습니다."
 
 #. module: account
 #: help:res.partner,last_reconciliation_date:0
@@ -655,12 +655,12 @@ msgid ""
 "the last unreconciled debit/credit entry of this partner was reconciled, "
 "either the user pressed the button \"Nothing more to reconcile\" during the "
 "manual reconciliation process."
-msgstr ""
+msgstr "파트너 회계 항목을 모두 다 조정한 마지막 날짜. 이것은 파트너 측에서 조정한 마지막 날짜와는 다릅니다. 여기에서 이 날짜에 더 이상 조정할 것이 없다는 사실을 표시하는 것입니다. 이것은 두 가지 방법으로 달성할 수 있습니다 : 하나는 이 파트너의 마지막 미조정 차변/대변 항목을 조정하거나 또 하나는 사용자가 수동으로 조정하는 동안에 \"조정 항목이 더 이상 없음\" 단추를 클릭하는 것입니다."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
 msgid "Report of the Sales by Account Type"
-msgstr ""
+msgstr "판매 계정 유형 보고서"
 
 #. module: account
 #: code:addons/account/account.py:3209
@@ -672,14 +672,14 @@ msgstr "판매 분석 장부"
 #: code:addons/account/account.py:1562
 #, python-format
 msgid "Cannot create move with currency different from .."
-msgstr ""
+msgstr "다른 통화로 이동할 수 없습니다 .."
 
 #. module: account
 #: model:email.template,report_name:account.email_template_edi_invoice
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
-msgstr ""
+msgstr "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: account
 #: view:account.period:0 view:account.period.close:0
@@ -738,12 +738,12 @@ msgstr "채권 계정"
 #. module: account
 #: view:account.config.settings:0
 msgid "Configure your company bank accounts"
-msgstr ""
+msgstr "회사 은행 계좌를 구성하세요"
 
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Create Refund"
-msgstr ""
+msgstr "환불 생성"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -771,7 +771,7 @@ msgstr "기입을 생성하시겠습니까?"
 #: code:addons/account/account_invoice.py:1368
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr ""
+msgstr "송장 기성 지급 : %s%s of %s%s (%s%s 남음)."
 
 #. module: account
 #: view:account.invoice:0
@@ -784,17 +784,17 @@ msgstr "송장 인쇄"
 msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr ""
+msgstr "이미 조정한 전표를 %s 할 수 없습니다. 이런 전표는 먼저 조정이 취소되야 하는데, 이를 위해서는 이 전표를 환불해야만 합니다."
 
 #. module: account
 #: view:account.account:0
 msgid "Account code"
-msgstr ""
+msgstr "계정 코드"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children with hierarchy"
-msgstr ""
+msgstr "계층으로 자식을 표시"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -863,7 +863,7 @@ msgstr "공급업체 송장 및 환불"
 #: code:addons/account/account_move_line.py:859
 #, python-format
 msgid "Entry is already reconciled."
-msgstr ""
+msgstr "기입항목은 이미 조정했습니다."
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
@@ -890,7 +890,7 @@ msgstr "이메일로 전송"
 msgid ""
 "Print Report with the currency column if the currency differs from the "
 "company currency."
-msgstr ""
+msgstr "회사 통화가 다른 경우 통화 열을 보고서에 추가하고 인쇄"
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -900,7 +900,7 @@ msgstr ""
 #. module: account
 #: view:account.account:0
 msgid "Account Code and Name"
-msgstr ""
+msgstr "계정 코드와 이름"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -916,7 +916,7 @@ msgstr "9월"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:24
 #, python-format
 msgid "Latest Manual Reconciliation Processed:"
-msgstr ""
+msgstr "지난 수동 조정 진행:"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -936,7 +936,7 @@ msgid ""
 "                    No journal items found.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                    분개항목을 찾을 수 없습니다.\n\n                </p>\n            "
 
 #. module: account
 #: code:addons/account/account.py:1650
@@ -982,12 +982,12 @@ msgstr "기한"
 #. module: account
 #: field:account.config.settings,purchase_journal_id:0
 msgid "Purchase journal"
-msgstr ""
+msgstr "구매 분개"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr ""
+msgstr "지급한 송장"
 
 #. module: account
 #: view:validate.account.move:0 view:validate.account.move.lines:0
@@ -1021,7 +1021,7 @@ msgstr "부채"
 #: code:addons/account/account_invoice.py:906
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
-msgstr ""
+msgstr "이 송장과 관련된 분개에 순서가 정의되야 합니다."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1054,7 +1054,7 @@ msgid ""
 "If the Tax account is a tax code account, this field will contain the taxed "
 "amount.If the tax account is base tax code, this field will contain the "
 "basic amount(without tax)."
-msgstr ""
+msgstr "세금 계정이 세금 코드 계정이면, 이 필드는 징수한 금액을 포함합니다. 세금 계정이 기초 세금 코드이면, 이 필드는 초기 금액(세금없는)을 포함합니다."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1104,7 +1104,7 @@ msgid ""
 "                secondary currency set.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                계정을 추가하려면 클릭하세요.\n              </p><p>\n               다중통화 거래를 할 때, 교환비율 변화에 따라 일정액을 잃거나 얻게 된다. \n               이 메뉴는 얻거나 잃는 것에 대한, 만약 오늘 끝난 거래가 있다면 예측을 제공한다. \n               이것은 두번째 환률을 설정한 계정만이 유효하다.\n              </p>\n            "
 
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
@@ -1114,14 +1114,14 @@ msgstr "계정명."
 #. module: account
 #: field:account.journal,with_last_closing_balance:0
 msgid "Opening With Last Closing Balance"
-msgstr ""
+msgstr "마지막 마감 잔액 열기"
 
 #. module: account
 #: help:account.tax.code,notprintable:0
 msgid ""
 "Check this box if you don't want any tax related to this tax code to appear "
 "on invoices"
-msgstr ""
+msgstr "전표에 나타난 세금코드에 관련한 세금을 원하지 않으면 이 박스를 체크하세요."
 
 #. module: account
 #: field:report.account.receivable,name:0
@@ -1136,7 +1136,7 @@ msgstr "가로 모드"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name|safe} 전표 (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: help:account.fiscalyear.close,fy_id:0
@@ -1158,7 +1158,7 @@ msgstr ""
 #. module: account
 #: help:account.config.settings,company_footer:0
 msgid "Bank accounts as printed in the footer of each printed document"
-msgstr ""
+msgstr "인쇄 무서의 하단에 예금 계정이 "
 
 #. module: account
 #: view:account.tax:0
@@ -1174,7 +1174,7 @@ msgstr "분쟁 중"
 #: code:addons/account/account_invoice.py:1474
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "상대를 먼저 선택해야 합니다."
 
 #. module: account
 #: view:account.journal:0
@@ -1186,7 +1186,7 @@ msgstr "금전등록기"
 #. module: account
 #: field:account.config.settings,sale_refund_journal_id:0
 msgid "Sale refund journal"
-msgstr ""
+msgstr "매출 환불 분개"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -1201,7 +1201,7 @@ msgid ""
 "                goes out of the cash box.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                새로운 현금 기록을 생성하려면 클릭하세요.\n              </p><p>\n                금전등록은 현금장부 안의 현금 항목을 관리할 수 있습니다.\n                이것은 하루 기준의 현금 지불을 손쉽게 따라 갈 수 있도록 제공합니다.\n                현금 금고에 돈을 넣을 수 있고 금고에 넣고 뺄 때 기입항목을 올립니다.\n              </p>\n            "
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
@@ -1219,7 +1219,7 @@ msgstr "기간 시작"
 #. module: account
 #: view:account.tax:0
 msgid "Refunds"
-msgstr ""
+msgstr "환불"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
@@ -1231,7 +1231,7 @@ msgstr "내역서 확정"
 msgid ""
 "Total amount (in Secondary currency) for transactions held in secondary "
 "currency for this account."
-msgstr ""
+msgstr "이 계정에 보조 통화로 개시된 거래의 총계(회사 보조 통화)"
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_dest_id:0
@@ -1415,7 +1415,7 @@ msgstr "연체 대금"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
-msgstr ""
+msgstr "기초잔액"
 
 #. module: account
 #: view:account.invoice:0
@@ -1430,12 +1430,12 @@ msgstr "리포트 옵션"
 #. module: account
 #: field:account.fiscalyear.close.state,fy_id:0
 msgid "Fiscal Year to Close"
-msgstr ""
+msgstr "마감할 회계연도"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_prefix:0
 msgid "Invoice sequence"
-msgstr ""
+msgstr "송장 순서"
 
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
@@ -1457,14 +1457,14 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "송장 상태"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Closing Entries"
-msgstr ""
+msgstr "마감분개 취소"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -1492,7 +1492,7 @@ msgstr "%s (사본)"
 #, python-format
 msgid ""
 "Selected Entry Lines does not have any account move entries in draft state."
-msgstr ""
+msgstr "선택된 항목 명세에는 기안 상태의 항목을 이동할 계정이 없습니다."
 
 #. module: account
 #: report:account.account.balance:0
@@ -1563,22 +1563,22 @@ msgstr "수동 기입에 '초안' 상태 건너뛰기"
 #: code:addons/account/wizard/account_report_common.py:169
 #, python-format
 msgid "Not implemented."
-msgstr ""
+msgstr "구현되지 않았습니다."
 
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Credit Note"
-msgstr ""
+msgstr "대변 주석"
 
 #. module: account
 #: view:account.config.settings:0
 msgid "eInvoicing & Payments"
-msgstr ""
+msgstr "전자 송상 발행 & 지불"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
 msgid "Cost Ledger for Period"
-msgstr ""
+msgstr "기간중 원가원장"
 
 #. module: account
 #: view:account.entries.report:0
@@ -1590,12 +1590,12 @@ msgstr "기입 개수 "
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr ""
+msgstr "활성 필드 체크를 풀면 삭제하지 않고도 회계기간을 숨길 수 있습니다."
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
 msgid "A Temporary table used for Dashboard view"
-msgstr ""
+msgstr "대시보드 뷰에 대한 임시 테이블"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
@@ -1618,7 +1618,7 @@ msgstr "코드"
 #. module: account
 #: field:account.config.settings,company_footer:0
 msgid "Bank accounts footer preview"
-msgstr ""
+msgstr "은행계정 하단 미리보기"
 
 #. module: account
 #: selection:account.account,type:0 selection:account.account.template,type:0
@@ -1641,7 +1641,7 @@ msgstr "재정 위상용 양식"
 #. module: account
 #: view:account.subscription:0
 msgid "Recurring"
-msgstr ""
+msgstr "반복"
 
 #. module: account
 #: report:account.invoice:0
@@ -1661,7 +1661,7 @@ msgstr "과세되지 않음"
 #. module: account
 #: view:account.journal:0
 msgid "Advanced Settings"
-msgstr ""
+msgstr "고급 설정"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -1688,7 +1688,7 @@ msgstr "환급 세금 계정"
 #. module: account
 #: model:ir.model,name:account.model_ir_sequence
 msgid "ir.sequence"
-msgstr ""
+msgstr "ir.sequence"
 
 #. module: account
 #: view:account.bank.statement:0 field:account.bank.statement,line_ids:0
@@ -1725,7 +1725,7 @@ msgid ""
 "                (profit/loss or balance sheet).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                새로운 계정 형식을 선언하려면 클릭하세요.\n              </p><p>\n               계정형식은 어떻게 계정이 장부에서 사용하는지를 결정합니다.\n               계정형식의 연기방법은 연마감을 위하 처리를 결정합니다. 대차대조표와\n               손익계산서 같은 보고서는 분류(이익/손실, 대차대조표를 사용합니다.\n              </p>\n            "
 
 #. module: account
 #: report:account.invoice:0 view:account.invoice:0
@@ -1756,7 +1756,7 @@ msgstr "회계 연도 순서"
 #. module: account
 #: field:account.config.settings,group_analytic_accounting:0
 msgid "Analytic accounting"
-msgstr ""
+msgstr "분석적 회계"
 
 #. module: account
 #: report:account.overdue:0
@@ -1786,7 +1786,7 @@ msgstr "계정 유형별 판매"
 #: model:account.payment.term,name:account.account_payment_term_15days
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15 일"
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -1811,7 +1811,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:864
 #, python-format
 msgid "Some entries are already reconciled."
-msgstr ""
+msgstr "일부 항목은 이미 조정되었습니다."
 
 #. module: account
 #: field:account.tax.code,sum:0
@@ -1828,7 +1828,7 @@ msgstr "해당 마법사는 송장의 통화를 변경합니다."
 msgid ""
 "Select a configuration package to setup automatically your\n"
 "                        taxes and chart of accounts."
-msgstr ""
+msgstr "세금과 계정 도표를 자동으로 설정하는\n                        구성 패키지를 선택합니다.."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -1852,7 +1852,7 @@ msgstr "세금 신고"
 msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
-msgstr ""
+msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 분개 기간을 숨길 수 있습니다."
 
 #. module: account
 #: field:account.report.general.ledger,sortby:0
@@ -1867,7 +1867,7 @@ msgstr "채권 & 채무"
 #. module: account
 #: field:account.config.settings,module_account_payment:0
 msgid "Manage payment orders"
-msgstr ""
+msgstr "지불 순서 관리"
 
 #. module: account
 #: view:account.period:0
@@ -1878,7 +1878,7 @@ msgstr "시간"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,last_closing_balance:0
 msgid "Last Closing Balance"
-msgstr ""
+msgstr "지난 마감 잔액"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
@@ -1908,7 +1908,7 @@ msgstr "고객 참조:"
 #: help:account.tax.template,ref_tax_code_id:0
 #: help:account.tax.template,tax_code_id:0
 msgid "Use this code for the tax declaration."
-msgstr ""
+msgstr "세금 신고에 이 코드 사용."
 
 #. module: account
 #: help:account.period,special:0
@@ -1923,12 +1923,12 @@ msgstr "내역서 초안"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr ""
+msgstr "송장 검증"
 
 #. module: account
 #: field:account.config.settings,module_account_check_writing:0
 msgid "Pay your suppliers by check"
-msgstr ""
+msgstr "수표로 공급업체에 지불"
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
@@ -2046,7 +2046,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_project_account_analytic_line_form
 msgid "Entries By Line"
-msgstr ""
+msgstr "라인별 기입항목"
 
 #. module: account
 #: field:account.vat.declaration,based_on:0
@@ -2072,7 +2072,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,currency_id:0
 msgid "Default company currency"
-msgstr ""
+msgstr "기본 회사 환률"
 
 #. module: account
 #: field:account.invoice,move_id:0 field:account.invoice,move_name:0
@@ -2083,7 +2083,7 @@ msgstr "장부 기입"
 #. module: account
 #: view:account.invoice:0
 msgid "Unpaid"
-msgstr ""
+msgstr "미지급"
 
 #. module: account
 #: view:account.treasury.report:0
@@ -2143,7 +2143,7 @@ msgstr ""
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close Fiscal Year"
-msgstr ""
+msgstr "회계 연도 마감"
 
 #. module: account
 #. openerp-web
@@ -2155,7 +2155,7 @@ msgstr "장부"
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr ""
+msgstr "세금의 회계 위치는 같은 세금이 한번만 선언합니다."
 
 #. module: account
 #: view:account.tax:0 view:account.tax.template:0
@@ -2166,7 +2166,7 @@ msgstr "세금 정의"
 #: view:account.config.settings:0
 #: model:ir.actions.act_window,name:account.action_account_config
 msgid "Configure Accounting"
-msgstr ""
+msgstr "회계 구성"
 
 #. module: account
 #: field:account.invoice.report,uom_name:0
@@ -2185,12 +2185,12 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:8
 #, python-format
 msgid "Good job!"
-msgstr ""
+msgstr "잘했습니다!"
 
 #. module: account
 #: field:account.config.settings,module_account_asset:0
 msgid "Assets management"
-msgstr ""
+msgstr "자산 관리"
 
 #. module: account
 #: view:account.account:0 view:account.account.template:0
@@ -2203,7 +2203,7 @@ msgstr ""
 #: code:addons/account/report/account_partner_ledger.py:274
 #, python-format
 msgid "Payable Accounts"
-msgstr ""
+msgstr "채무 계정"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -2223,24 +2223,24 @@ msgstr "비과세 금액"
 msgid ""
 "If the active field is set to False, it will allow you to hide the tax "
 "without removing it."
-msgstr ""
+msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 세금을 숨길 수 있습니다."
 
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Journal Items related to a sale journal."
-msgstr ""
+msgstr "판매 분개에 관한 분석적 분개 항목."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Italic Text (smaller)"
-msgstr ""
+msgstr "이탤릭체 (더 작은)"
 
 #. module: account
 #: help:account.journal,cash_control:0
 msgid ""
 "If you want the journal should be control at opening/closing, check this "
 "option"
-msgstr ""
+msgstr "분개 개시/마감을 조정하려면 이 확인란을 선택합니다."
 
 #. module: account
 #: view:account.bank.statement:0 view:account.invoice:0
@@ -2266,7 +2266,7 @@ msgstr "회계 연도"
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
 #, python-format
 msgid "Standard Encoding"
-msgstr ""
+msgstr "표준 인코딩"
 
 #. module: account
 #: view:account.journal.select:0 view:project.account.analytic.line:0
@@ -2276,7 +2276,7 @@ msgstr "기입 열기"
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_next:0
 msgid "Next supplier credit note number"
-msgstr ""
+msgstr "다음 공급업체 환불 안내서 번호"
 
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
@@ -2316,7 +2316,7 @@ msgstr "계정 세금 도표"
 #: model:account.payment.term,name:account.account_payment_term_net
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr ""
+msgstr "30일간"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:424
@@ -2327,7 +2327,7 @@ msgstr "'%s' 장부에 분석 장부를 지정해야 합니다!"
 #. module: account
 #: model:res.groups,name:account.group_supplier_inv_check_total
 msgid "Check Total on supplier invoices"
-msgstr ""
+msgstr "공급자 인보이스에서 함계를 체크"
 
 #. module: account
 #: selection:account.invoice,state:0 view:account.invoice.report:0
@@ -2400,7 +2400,7 @@ msgstr "기입 정렬 방식"
 #. module: account
 #: field:account.change.currency,currency_id:0
 msgid "Change to"
-msgstr ""
+msgstr "변경 대상"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2482,7 +2482,7 @@ msgstr "계정 입력줄"
 #. module: account
 #: view:account.addtmpl.wizard:0
 msgid "Create an Account Based on this Template"
-msgstr ""
+msgstr "이 양식을 기반으로 계정을 생성"
 
 #. module: account
 #: code:addons/account/account_invoice.py:940
@@ -2490,7 +2490,7 @@ msgstr ""
 msgid ""
 "Cannot create the invoice.\n"
 "The related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."
-msgstr ""
+msgstr "송장을 만들 수 없습니다.\n총 청구 금액보다 큰 금액으로 계산되는 것이 아마도 관련된 지불 용어가 잘못된 듯합니다. 반올림 문제를 방지하기 위해 지불 용어의 마지막 명세에는 반드시 '잔액' 유형을 사용해야 합니다."
 
 #. module: account
 #: view:account.move:0 model:ir.model,name:account.model_account_move
@@ -2508,7 +2508,7 @@ msgstr "주요 순서"
 msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
-msgstr ""
+msgstr "예금 명세서를 삭제하려면 먼저 관련된 분개 항목 삭제를 취소해야 합니다."
 
 #. module: account
 #: field:account.invoice.report,payment_term:0 view:account.payment.term:0
@@ -2549,12 +2549,12 @@ msgstr "송장의 초안 상태"
 #. module: account
 #: view:product.category:0
 msgid "Account Properties"
-msgstr ""
+msgstr "고정자산 계정"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft refund"
-msgstr ""
+msgstr "초안 환불 생성"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -2564,7 +2564,7 @@ msgstr "협력업체 조정"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Fin. Account"
-msgstr ""
+msgstr "재무 계정"
 
 #. module: account
 #: field:account.tax,tax_code_id:0 view:account.tax.code:0
@@ -2575,7 +2575,7 @@ msgstr "계정 세금 코드"
 #: model:account.payment.term,name:account.account_payment_term_advance
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "30% Advance End 30 Days"
-msgstr ""
+msgstr "30일 종료 30% 진척"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2591,7 +2591,7 @@ msgstr "베이스 코드"
 #. module: account
 #: help:account.invoice.tax,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice tax."
-msgstr ""
+msgstr "전표 세금의 목록에 표시할 때 순서를 제공함."
 
 #. module: account
 #: field:account.tax,base_sign:0 field:account.tax,ref_base_sign:0
@@ -2632,7 +2632,7 @@ msgstr "계정 모델 기입"
 #: code:addons/account/account.py:3210
 #, python-format
 msgid "EXJ"
-msgstr ""
+msgstr "EXJ"
 
 #. module: account
 #: field:product.template,supplier_taxes_id:0
@@ -2642,12 +2642,12 @@ msgstr "공급업체 세금"
 #. module: account
 #: view:res.partner:0
 msgid "Bank Details"
-msgstr ""
+msgstr "은행 상세 내용"
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Cancel CashBox"
-msgstr ""
+msgstr "현금금고 취소"
 
 #. module: account
 #: help:account.invoice,payment_term:0
@@ -2661,7 +2661,7 @@ msgstr "결제 조건을 이용하면, 회계 기입 항목 생성 시에 만기
 #. module: account
 #: field:account.config.settings,purchase_sequence_next:0
 msgid "Next supplier invoice number"
-msgstr ""
+msgstr "다음 공급업체 송장 번호"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
@@ -2681,7 +2681,7 @@ msgstr "이동명"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr ""
+msgstr "계정 이동 명세 조정 (상각)"
 
 #. module: account
 #: model:account.account.type,name:account.conf_account_type_tax
@@ -2707,7 +2707,7 @@ msgstr "분석 계정"
 #: field:account.config.settings,default_purchase_tax:0
 #: field:account.config.settings,purchase_tax:0
 msgid "Default purchase tax"
-msgstr ""
+msgstr "기본 구매 세금"
 
 #. module: account
 #: view:account.account:0 field:account.financial.report,account_ids:0
@@ -2737,7 +2737,7 @@ msgstr "구성 오류!"
 #: code:addons/account/account_bank_statement.py:434
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
-msgstr ""
+msgstr "%s 명세서를 확인했습니다. 분개 항목을 작성했습니다."
 
 #. module: account
 #: field:account.invoice.report,price_average:0
@@ -2787,7 +2787,7 @@ msgstr "참조"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Purchase Tax"
-msgstr ""
+msgstr "구매 세금"
 
 #. module: account
 #: help:account.move.line,tax_code_id:0
@@ -2797,7 +2797,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.model.line:0
 msgid "Wrong credit or debit value in model, they must be positive!"
-msgstr ""
+msgstr "모델에 잘못된 차변 또는 대변이 있습니다. 그들은 양수여야 합니다."
 
 #. module: account
 #: model:process.node,note:account.process_node_reconciliation0
@@ -2813,19 +2813,19 @@ msgstr "자동 조정"
 #. module: account
 #: field:account.invoice,reconciled:0
 msgid "Paid/Reconciled"
-msgstr ""
+msgstr "지불/조정됨"
 
 #. module: account
 #: field:account.tax,ref_base_code_id:0
 #: field:account.tax.template,ref_base_code_id:0
 msgid "Refund Base Code"
-msgstr ""
+msgstr "환불 기초 코드"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 #: model:ir.ui.menu,name:account.menu_bank_statement_tree
 msgid "Bank Statements"
-msgstr ""
+msgstr "예금거래 내역서"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear
@@ -2853,19 +2853,19 @@ msgstr "날짜"
 #. module: account
 #: field:account.chart.template,parent_id:0
 msgid "Parent Chart Template"
-msgstr ""
+msgstr "상위 도표 서식"
 
 #. module: account
 #: field:account.tax,parent_id:0 field:account.tax.template,parent_id:0
 msgid "Parent Tax Account"
-msgstr ""
+msgstr "상위 세금 계정"
 
 #. module: account
 #: view:account.aged.trial.balance:0
 #: model:ir.actions.act_window,name:account.action_account_aged_balance_view
 #: model:ir.ui.menu,name:account.menu_aged_trial_balance
 msgid "Aged Partner Balance"
-msgstr ""
+msgstr "오래된 상대방 잔액"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_entriesreconcile0
@@ -2876,7 +2876,7 @@ msgstr ""
 #. module: account
 #: constraint:account.move.line:0
 msgid "Account and Period must belong to the same company."
-msgstr ""
+msgstr "계정과 기간은 같은 회사에 속해야 한다."
 
 #. module: account
 #: field:account.invoice.line,discount:0
@@ -2893,7 +2893,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line.reconcile,writeoff:0
 msgid "Write-Off amount"
-msgstr ""
+msgstr "상각 금액"
 
 #. module: account
 #: field:account.bank.statement,message_unread:0
@@ -2907,19 +2907,19 @@ msgstr "읽지 않은 메시지"
 msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state."
-msgstr ""
+msgstr "선택한 송장은 '기안' 또는 '견적' 상태가 아니므로 확인할 수 없습니다."
 
 #. module: account
 #: code:addons/account/account.py:1065
 #, python-format
 msgid "You should choose the periods that belong to the same company."
-msgstr ""
+msgstr "같은 회사에 속하는 기간을 선택해야합니다."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
 #: view:report.account.sales:0 view:report.account_type.sales:0
 msgid "Sales by Account"
-msgstr ""
+msgstr "계정별 매출"
 
 #. module: account
 #: code:addons/account/account.py:1425
@@ -2937,7 +2937,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,sale_journal_id:0
 msgid "Sale journal"
-msgstr ""
+msgstr "매출 분개"
 
 #. module: account
 #: code:addons/account/account.py:2321
@@ -2953,7 +2953,7 @@ msgstr ""
 msgid ""
 "This journal already contains items, therefore you cannot modify its company"
 " field."
-msgstr ""
+msgstr "이 장부는 이미 항목을 가지고 있어서, 이 회사 필드를 수정할 수 없습니다."
 
 #. module: account
 #: code:addons/account/account.py:415
@@ -2961,18 +2961,18 @@ msgstr ""
 msgid ""
 "You need an Opening journal with centralisation checked to set the initial "
 "balance."
-msgstr ""
+msgstr "초기 잔액 설정을 집중적으로 점검하기 위해서 장부를 열어야 합니다."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
 msgid "Tax codes"
-msgstr ""
+msgstr "세금 코드"
 
 #. module: account
 #: view:account.account:0
 msgid "Unrealized Gains and losses"
-msgstr ""
+msgstr "미실현 손익"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
@@ -2999,7 +2999,7 @@ msgstr "8월"
 #. module: account
 #: field:accounting.report,debit_credit:0
 msgid "Display Debit/Credit Columns"
-msgstr ""
+msgstr "차변/대변을 표시"
 
 #. module: account
 #: report:account.journal.period.print:0
@@ -3025,12 +3025,12 @@ msgstr ""
 #. module: account
 #: view:account.unreconcile:0 view:account.unreconcile.reconcile:0
 msgid "Unreconcile Transactions"
-msgstr ""
+msgstr "비조정 거래"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,only_one_chart_template:0
 msgid "Only One Chart Template Available"
-msgstr ""
+msgstr "하나의 도표 서식만 사용"
 
 #. module: account
 #: code:addons/account/account_invoice.py:929
@@ -3038,14 +3038,14 @@ msgstr ""
 msgid ""
 "Please verify the price of the invoice!\n"
 "The encoded total does not match the computed total."
-msgstr ""
+msgstr "송장의 가격을 확인하십시오!\n계산된 총계와 입력된 총계가 일치하지 않습니다."
 
 #. module: account
 #: view:account.chart.template:0
 #: field:product.category,property_account_expense_categ:0
 #: field:product.template,property_account_expense:0
 msgid "Expense Account"
-msgstr ""
+msgstr "비용 계정"
 
 #. module: account
 #: field:account.bank.statement,message_summary:0
@@ -3056,7 +3056,7 @@ msgstr "요약"
 #. module: account
 #: help:account.invoice,period_id:0
 msgid "Keep empty to use the period of the validation(invoice) date."
-msgstr ""
+msgstr "유효(전표) 날짜의 시점을 사용하려면 비워두세요."
 
 #. module: account
 #: help:account.bank.statement,account_id:0
@@ -3072,12 +3072,12 @@ msgstr "종료일"
 #. module: account
 #: field:account.invoice.tax,base_amount:0
 msgid "Base Code Amount"
-msgstr ""
+msgstr "기초 코드 총액"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
 msgid "Default Sale Tax"
-msgstr ""
+msgstr "기본 판매 세금"
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -3090,12 +3090,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_accounting
 msgid "Financial Accounting"
-msgstr ""
+msgstr "재무회계"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report_pl
 msgid "Profit And Loss"
-msgstr ""
+msgstr "손익계산서"
 
 #. module: account
 #: view:account.fiscal.position:0 field:account.fiscal.position,name:0
@@ -3121,7 +3121,7 @@ msgstr ""
 #. module: account
 #: field:account.partner.ledger,page_split:0
 msgid "One Partner Per Page"
-msgstr ""
+msgstr "페이지별 파트너 1명"
 
 #. module: account
 #: field:account.account,child_parent_ids:0
@@ -3135,20 +3135,20 @@ msgstr "칠드런"
 #: model:ir.actions.report.xml,name:account.account_account_balance
 #: model:ir.ui.menu,name:account.menu_general_Balance_report
 msgid "Trial Balance"
-msgstr ""
+msgstr "시산표"
 
 #. module: account
 #: code:addons/account/account.py:437
 #, python-format
 msgid "Unable to adapt the initial balance (negative value)."
-msgstr ""
+msgstr "초기 잔액(음수 값)에 적용할 수 없습니다."
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
 #: model:process.process,name:account.process_process_invoiceprocess0
 #: selection:report.invoice.created,type:0
 msgid "Customer Invoice"
-msgstr ""
+msgstr "고객 전표"
 
 #. module: account
 #: code:addons/account/installer.py:115
@@ -3159,38 +3159,38 @@ msgstr ""
 #. module: account
 #: view:account.config.settings:0 view:account.installer:0
 msgid "Date Range"
-msgstr ""
+msgstr "기간 범위"
 
 #. module: account
 #: view:account.period:0
 msgid "Search Period"
-msgstr ""
+msgstr "기간 검색"
 
 #. module: account
 #: view:account.change.currency:0
 msgid "Invoice Currency"
-msgstr ""
+msgstr "송장 통화"
 
 #. module: account
 #: field:accounting.report,account_report_id:0
 #: model:ir.ui.menu,name:account.menu_account_financial_reports_tree
 msgid "Account Reports"
-msgstr ""
+msgstr "계정 보고서"
 
 #. module: account
 #: field:account.payment.term,line_ids:0
 msgid "Terms"
-msgstr ""
+msgstr "기간"
 
 #. module: account
 #: field:account.chart.template,tax_template_ids:0
 msgid "Tax Template List"
-msgstr ""
+msgstr "세금 서식 목록"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_print_sale_purchase_journal
 msgid "Sale/Purchase Journals"
-msgstr ""
+msgstr "매입/매출 분개장"
 
 #. module: account
 #: help:account.account,currency_mode:0
@@ -3212,39 +3212,39 @@ msgstr ""
 #: help:account.chart.template,code_digits:0
 #: help:wizard.multi.charts.accounts,code_digits:0
 msgid "No. of Digits to use for account code"
-msgstr ""
+msgstr "계정 코드에 사용하는 숫자 갯수"
 
 #. module: account
 #: field:res.partner,property_supplier_payment_term:0
 msgid "Supplier Payment Term"
-msgstr ""
+msgstr "공급업체 지불 기간"
 
 #. module: account
 #: view:account.fiscalyear:0
 msgid "Search Fiscalyear"
-msgstr ""
+msgstr "회계년도 검색"
 
 #. module: account
 #: selection:account.tax,applicable_type:0
 msgid "Always"
-msgstr ""
+msgstr "항상"
 
 #. module: account
 #: field:account.config.settings,module_account_accountant:0
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, "
 "etc."
-msgstr ""
+msgstr "전체 회계 특징: 분개장, 법적 문서, 계정 도표 등등 "
 
 #. module: account
 #: view:account.analytic.line:0
 msgid "Total Quantity"
-msgstr ""
+msgstr "총 수량"
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,writeoff_acc_id:0
 msgid "Write-Off account"
-msgstr ""
+msgstr "상각 계정"
 
 #. module: account
 #: field:account.model.line,model_id:0 view:account.subscription:0
@@ -3268,17 +3268,17 @@ msgstr "화면"
 #: code:addons/account/account.py:3465 code:addons/account/account_bank.py:94
 #, python-format
 msgid "BNK"
-msgstr ""
+msgstr "BNK"
 
 #. module: account
 #: field:account.move.line,analytic_lines:0
 msgid "Analytic lines"
-msgstr ""
+msgstr "분석적 명세"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma Invoices"
-msgstr ""
+msgstr "견적서"
 
 #. module: account
 #: model:process.node,name:account.process_node_electronicfile0
@@ -3288,22 +3288,22 @@ msgstr ""
 #. module: account
 #: field:account.move.line,reconcile:0
 msgid "Reconcile Ref"
-msgstr ""
+msgstr "조정 참조"
 
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
 msgid "Company has a chart of accounts"
-msgstr ""
+msgstr "회사는 계정의 도표를 가지고 있습니다"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_code_template
 msgid "Tax Code Template"
-msgstr ""
+msgstr "세금 코드 서식"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_ledger
 msgid "Account Partner Ledger"
-msgstr ""
+msgstr "계정 상대방 원장"
 
 #. module: account
 #: model:email.template,body_html:account.email_template_edi_invoice
@@ -3374,19 +3374,19 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>안녕하세요 ${object.partner_id.name},</p>\n\n    <p>새로운 전표가 있습니다: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>참고</strong><br />\n       &nbsp;&nbsp;전표번호: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;전표 발행일: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;주문 참조: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;연락처: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>직접 Paypal로 지불이 가능합니다:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>궁금한 점이 있으면 망설이지 말고 연락하세요.</p>\n    <p>우리 ${object.company_id.name or 'us'} 회사를 선택해 주셔서 감사합니다!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                전화:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                홈페이지 :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: view:account.period:0
 msgid "Account Period"
-msgstr ""
+msgstr "계정 기간"
 
 #. module: account
 #: help:account.account,currency_id:0
 #: help:account.account.template,currency_id:0
 #: help:account.bank.accounts.wizard,currency_id:0
 msgid "Forces all moves for this account to have this secondary currency."
-msgstr ""
+msgstr "이 계정에서 두번째 환률 가지기 위해 강제로 이동합니다."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move_line
@@ -3399,17 +3399,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_chart_template_form
 msgid "Chart of Accounts Templates"
-msgstr ""
+msgstr "계정들 양식 도표"
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Transactions"
-msgstr ""
+msgstr "거래"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile_reconcile
 msgid "Account Unreconcile Reconcile"
-msgstr ""
+msgstr "조정 비조정 계정"
 
 #. module: account
 #: help:account.account.type,close_method:0
@@ -3425,7 +3425,7 @@ msgstr ""
 #. module: account
 #: view:account.tax.template:0
 msgid "Keep empty to use the expense account"
-msgstr ""
+msgstr "비용 계정을 사용하려면 비워두세요"
 
 #. module: account
 #: field:account.aged.trial.balance,journal_ids:0
@@ -3455,17 +3455,17 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
 msgid "Journals"
-msgstr ""
+msgstr "분개장"
 
 #. module: account
 #: field:account.partner.reconcile.process,to_reconcile:0
 msgid "Remaining Partners"
-msgstr ""
+msgstr "잔여 파트너"
 
 #. module: account
 #: view:account.subscription:0 field:account.subscription,lines_id:0
 msgid "Subscription Lines"
-msgstr ""
+msgstr "명세 구독"
 
 #. module: account
 #: selection:account.analytic.journal,type:0 view:account.config.settings:0
@@ -3478,12 +3478,12 @@ msgstr "구매"
 #. module: account
 #: view:account.installer:0 view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
-msgstr ""
+msgstr "회계 응용프로그램 구성"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
 msgid "Account Tax Declaration"
-msgstr ""
+msgstr "세금 계정 선언"
 
 #. module: account
 #: help:account.bank.statement,name:0
@@ -3506,19 +3506,19 @@ msgstr ""
 #: field:account.bank.statement,balance_start:0
 #: field:account.treasury.report,starting_balance:0
 msgid "Starting Balance"
-msgstr ""
+msgstr "시작 잔액"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_period_close
 #: model:ir.actions.act_window,name:account.action_account_period_tree
 #: model:ir.ui.menu,name:account.menu_action_account_period_close_tree
 msgid "Close a Period"
-msgstr ""
+msgstr "기간 마감"
 
 #. module: account
 #: view:account.bank.statement:0 field:account.cashbox.line,subtotal_opening:0
 msgid "Opening Subtotal"
-msgstr ""
+msgstr "기초 소계"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -3530,7 +3530,7 @@ msgstr ""
 #. module: account
 #: field:account.financial.report,display_detail:0
 msgid "Display details"
-msgstr ""
+msgstr "세부내용을 표시"
 
 #. module: account
 #: report:account.overdue:0
@@ -3568,29 +3568,29 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr ""
+msgstr "비조정 항목"
 
 #. module: account
 #: field:account.tax.code,notprintable:0
 #: field:account.tax.code.template,notprintable:0
 msgid "Not Printable in Invoice"
-msgstr ""
+msgstr "인쇄 불가능한 송장"
 
 #. module: account
 #: report:account.vat.declaration:0
 #: field:account.vat.declaration,chart_tax_id:0
 msgid "Chart of Tax"
-msgstr ""
+msgstr "세금 도표"
 
 #. module: account
 #: view:account.journal:0
 msgid "Search Account Journal"
-msgstr ""
+msgstr "계정 분개 검색"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
 msgid "Pending Invoice"
-msgstr ""
+msgstr "보류 송장"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1034
@@ -3598,17 +3598,17 @@ msgstr ""
 msgid ""
 "Opening Entries have already been generated.  Please run \"Cancel Closing "
 "Entries\" wizard to cancel those entries and then run this wizard."
-msgstr ""
+msgstr "기초 항목이 이미 생성되었습니다. 해당 항목을 취소하려면 \"마감 항목 취소\" 마법사를 실행하십시오. 다음 이 마법사를 실행하십시오."
 
 #. module: account
 #: view:account.invoice.report:0 selection:account.subscription,period_type:0
 msgid "year"
-msgstr ""
+msgstr "년"
 
 #. module: account
 #: field:account.config.settings,date_start:0
 msgid "Start date"
-msgstr ""
+msgstr "시작일"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -3617,14 +3617,14 @@ msgid ""
 "                                    credit note directly or keep it draft,\n"
 "                                    waiting for the document to be issued by\n"
 "                                    your supplier/customer."
-msgstr ""
+msgstr "이 신용보증서를 직접 편집하고 검증할 수 있거나 \n초안으로 남겨서 공급사/거래처가 발행한 \n문서를 대기할 수 있습니다."
 
 #. module: account
 #: view:validate.account.move.lines:0
 msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
-msgstr ""
+msgstr "선택한 분개 기입 항목은 유효성을 검사하고 게시됩니다. 이것은 해당 회계 분야를 더 이상 수정할 수 없다는 것을 의미합니다."
 
 #. module: account
 #: code:addons/account/account_move_line.py:98
@@ -3637,7 +3637,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_transfers
 msgid "Transfers"
-msgstr ""
+msgstr "출하"
 
 #. module: account
 #: field:account.config.settings,expects_chart_of_accounts:0
@@ -3647,23 +3647,23 @@ msgstr ""
 #. module: account
 #: view:account.chart:0
 msgid "Account charts"
-msgstr ""
+msgstr "계정 도표"
 
 #. module: account
 #: view:cash.box.out:0
 #: model:ir.actions.act_window,name:account.action_cash_box_out
 msgid "Take Money Out"
-msgstr ""
+msgstr "현금 인출"
 
 #. module: account
 #: report:account.vat.declaration:0
 msgid "Tax Amount"
-msgstr ""
+msgstr "세액"
 
 #. module: account
 #: view:account.move:0
 msgid "Search Move"
-msgstr ""
+msgstr "이동 검색"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -3685,7 +3685,7 @@ msgstr ""
 #. module: account
 #: field:account.tax.code,name:0 field:account.tax.code.template,name:0
 msgid "Tax Case Name"
-msgstr ""
+msgstr "세금 종류명"
 
 #. module: account
 #: report:account.invoice:0 view:account.invoice:0
@@ -3701,7 +3701,7 @@ msgstr "옵션"
 #. module: account
 #: field:account.aged.trial.balance,period_length:0
 msgid "Period Length (days)"
-msgstr ""
+msgstr "기간 길이(날)"
 
 #. module: account
 #: code:addons/account/account.py:1334
@@ -3714,7 +3714,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
 msgid "Print Sale/Purchase Journal"
-msgstr ""
+msgstr "매입/매출 분개장 인쇄"
 
 #. module: account
 #: view:account.installer:0
@@ -3738,7 +3738,7 @@ msgstr ""
 #: view:account.addtmpl.wizard:0
 #: model:ir.actions.act_window,name:account.action_account_addtmpl_wizard_form
 msgid "Create Account"
-msgstr ""
+msgstr "계정 생성"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
@@ -3754,12 +3754,12 @@ msgstr "세금 코드 금액"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr ""
+msgstr "장부 기입항목을 조정하지 않다"
 
 #. module: account
 #: selection:account.account.type,close_method:0
 msgid "Detail"
-msgstr ""
+msgstr "세부"
 
 #. module: account
 #: help:account.config.settings,default_purchase_tax:0
@@ -3777,7 +3777,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
 msgid "Chart of Accounts"
-msgstr ""
+msgstr "계정들 도표"
 
 #. module: account
 #: view:account.tax.chart:0
@@ -3792,7 +3792,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
 msgid "Reconcilation Process partner by partner"
-msgstr ""
+msgstr "파트너에 의해 파트너 조정 진행 중"
 
 #. module: account
 #: view:account.chart:0
@@ -3836,17 +3836,17 @@ msgstr "날짜"
 #. module: account
 #: view:account.move:0
 msgid "Post"
-msgstr ""
+msgstr "게시"
 
 #. module: account
 #: view:account.unreconcile:0 view:account.unreconcile.reconcile:0
 msgid "Unreconcile"
-msgstr ""
+msgstr "비조정"
 
 #. module: account
 #: view:account.chart.template:0
 msgid "Chart of Accounts Template"
-msgstr ""
+msgstr "계정 양식 도표"
 
 #. module: account
 #: code:addons/account/account.py:2333
@@ -3854,12 +3854,12 @@ msgstr ""
 msgid ""
 "Maturity date of entry line generated by model line '%s' of model '%s' is based on partner payment term!\n"
 "Please define partner on it!"
-msgstr ""
+msgstr "파트너 지불 기간을 기준으로 한 '%s' 모델의 '%s' 모델 명세에 따라 생성된 기입 항목 명세의 만기 날짜\n만기 날짜에 파트너를 정의하십시오 !"
 
 #. module: account
 #: view:account.tax:0
 msgid "Account Tax"
-msgstr ""
+msgstr "세금 계정"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting_budgets
@@ -3883,13 +3883,13 @@ msgstr "예산"
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
 msgid "No Filters"
-msgstr ""
+msgstr "필터 없음"
 
 #. module: account
 #: view:account.invoice.report:0
 #: model:res.groups,name:account.group_proforma_invoices
 msgid "Pro-forma Invoices"
-msgstr ""
+msgstr "견적서"
 
 #. module: account
 #: view:res.partner:0
@@ -3902,17 +3902,17 @@ msgstr "기록"
 msgid ""
 "If not applicable (computed through a Python code), the tax won't appear on "
 "the invoice."
-msgstr ""
+msgstr "해당하지 않다면 (파이썬으로 계산한), 세금은 전표에 나타나지 않습니다."
 
 #. module: account
 #: field:account.config.settings,group_check_supplier_invoice_total:0
 msgid "Check the total of supplier invoices"
-msgstr ""
+msgstr "공급자 전표에서 합계를 체크하세요"
 
 #. module: account
 #: view:account.tax:0 view:account.tax.template:0
 msgid "Applicable Code (if type=code)"
-msgstr ""
+msgstr "적절한 코드(type=code)"
 
 #. module: account
 #: help:account.period,state:0
@@ -3937,12 +3937,12 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:0
 msgid "Search Analytic Lines"
-msgstr ""
+msgstr "분석적 명세 검색"
 
 #. module: account
 #: field:res.partner,property_account_payable:0
 msgid "Account Payable"
-msgstr ""
+msgstr "계정 지급"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:88
@@ -3959,7 +3959,7 @@ msgstr "결제 주문"
 #: help:account.account.template,reconcile:0
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
-msgstr ""
+msgstr "이 계정에서 분개를 조정하려면 이 선택지를 체크하세요"
 
 #. module: account
 #: report:account.invoice:0 field:account.invoice.line,price_unit:0
@@ -3969,7 +3969,7 @@ msgstr "단가"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tree1
 msgid "Analytic Items"
-msgstr ""
+msgstr "분석 기입항목"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -3979,7 +3979,7 @@ msgstr ""
 #. module: account
 #: view:account.state.open:0
 msgid "Open Invoice"
-msgstr ""
+msgstr "송장 열기"
 
 #. module: account
 #: field:account.invoice.tax,factor_tax:0
@@ -3989,12 +3989,12 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,complete_tax_set:0
 msgid "Complete set of taxes"
-msgstr ""
+msgstr "세금의 설정 완료"
 
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Full Reconciliation Date"
-msgstr ""
+msgstr "지난 전체 조정 날짜"
 
 #. module: account
 #: field:account.account,name:0 field:account.account.template,name:0
@@ -4008,12 +4008,12 @@ msgstr "명칭"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr ""
+msgstr "오래된 시산표 계정 보고서"
 
 #. module: account
 #: field:res.company,expects_chart_of_accounts:0
 msgid "Expects a Chart of Accounts"
-msgstr ""
+msgstr "계정의 도표를 기대합니다"
 
 #. module: account
 #: field:account.move.line,date:0
@@ -4030,7 +4030,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_bank_tree
 #: model:ir.ui.menu,name:account.menu_action_bank_tree
 msgid "Setup your Bank Accounts"
-msgstr ""
+msgstr "예금 계정 설정"
 
 #. module: account
 #: xsl:account.transfer:0
@@ -4046,7 +4046,7 @@ msgstr "메시지 및 대화이력"
 #. module: account
 #: help:account.journal,analytic_journal_id:0
 msgid "Journal for analytic entries"
-msgstr ""
+msgstr "분석적 기입항목에 대한 장부"
 
 #. module: account
 #: constraint:account.aged.trial.balance:0 constraint:account.balance.report:0
@@ -4069,7 +4069,7 @@ msgstr ""
 msgid ""
 "Check this box if you don't want any tax related to this tax Code to appear "
 "on invoices."
-msgstr ""
+msgstr "전표에 나타난 세금코드에 관련한 세금을 원하지 않으면 이 박스를 체크하세요."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1069
@@ -4093,12 +4093,12 @@ msgstr "회계"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current year"
-msgstr ""
+msgstr "올해의 기간중 회계처리"
 
 #. module: account
 #: field:account.account,child_consol_ids:0
 msgid "Consolidated Children"
-msgstr ""
+msgstr "통합 정리한 자식"
 
 #. module: account
 #: code:addons/account/account_invoice.py:580
@@ -4117,7 +4117,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:0
 msgid "General Accounting"
-msgstr ""
+msgstr "일반 회계"
 
 #. module: account
 #: help:account.fiscalyear.close,journal_id:0
@@ -4141,12 +4141,12 @@ msgstr "드래프트로 설정"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form
 msgid "Recurring Lines"
-msgstr ""
+msgstr "반복 명세"
 
 #. module: account
 #: field:account.partner.balance,display_partner:0
 msgid "Display Partners"
-msgstr ""
+msgstr "거래처를 표시"
 
 #. module: account
 #: view:account.invoice:0
@@ -4166,40 +4166,40 @@ msgstr "회계 & 재정"
 #. module: account
 #: view:account.invoice.confirm:0
 msgid "Confirm Invoices"
-msgstr ""
+msgstr "전표를 확인"
 
 #. module: account
 #: selection:account.account,currency_mode:0
 msgid "Average Rate"
-msgstr ""
+msgstr "평균 비율"
 
 #. module: account
 #: field:account.balance.report,display_account:0
 #: field:account.common.account.report,display_account:0
 #: field:account.report.general.ledger,display_account:0
 msgid "Display Accounts"
-msgstr ""
+msgstr "계정 표시"
 
 #. module: account
 #: view:account.state.open:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr ""
+msgstr "(전표 'Open' 하면, 이제 조정 할 수 없게 됩니다.)"
 
 #. module: account
 #: field:account.tax,account_analytic_collected_id:0
 msgid "Invoice Tax Analytic Account"
-msgstr ""
+msgstr "송장 세금 분석적 계정"
 
 #. module: account
 #: field:account.chart,period_from:0
 msgid "Start period"
-msgstr ""
+msgstr "기간 시작"
 
 #. module: account
 #: field:account.tax,name:0 field:account.tax.template,name:0
 #: report:account.vat.declaration:0
 msgid "Tax Name"
-msgstr ""
+msgstr "세금 명칭"
 
 #. module: account
 #: view:account.config.settings:0
@@ -4211,20 +4211,20 @@ msgstr "구성"
 #: model:account.payment.term,name:account.account_payment_term
 #: model:account.payment.term,note:account.account_payment_term
 msgid "30 Days End of Month"
-msgstr ""
+msgstr "매월말 30일"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_balance
 #: model:ir.actions.report.xml,name:account.account_analytic_account_balance
 msgid "Analytic Balance"
-msgstr ""
+msgstr "분석 잔액"
 
 #. module: account
 #: help:res.partner,property_payment_term:0
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr ""
+msgstr "이 지불 조건은 판매 주문과 고객 전표 별 기본 하나를 대신해 적용합니다."
 
 #. module: account
 #: view:account.config.settings:0
@@ -4238,27 +4238,27 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
-msgstr ""
+msgstr "사용중인 필드를 아니오로 설정하면, 지우지 않고 계정을 숨길 수 있습니다."
 
 #. module: account
 #: view:account.move.line:0
 msgid "Posted Journal Items"
-msgstr ""
+msgstr "게시한 장부 기입항목"
 
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr ""
+msgstr "후속 조치 없음"
 
 #. module: account
 #: view:account.tax.template:0
 msgid "Search Tax Templates"
-msgstr ""
+msgstr "세금 서식 검색"
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_journal_entries_validation
 msgid "Draft Entries"
-msgstr ""
+msgstr "분개 초안"
 
 #. module: account
 #: help:account.config.settings,decimal_precision:0
@@ -4266,12 +4266,12 @@ msgid ""
 "As an example, a decimal precision of 2 will allow journal entries  like: "
 "9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like:"
 " 0.0231 EUR."
-msgstr ""
+msgstr "예를 들어, 십진 정밀도는 2는 장부 기입 항목에 허용한다: 9.99 EUR, 십진 정밀도 4는 장부 기입 항목에 0.0231 EUR 을 허용한다."
 
 #. module: account
 #: field:account.account,shortcut:0 field:account.account.template,shortcut:0
 msgid "Shortcut"
-msgstr ""
+msgstr "단축키"
 
 #. module: account
 #: view:account.account:0 field:account.account,user_type:0
@@ -4284,7 +4284,7 @@ msgstr ""
 #: field:report.account.receivable,type:0
 #: field:report.account_type.sales,user_type:0
 msgid "Account Type"
-msgstr ""
+msgstr "계정 유형"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_tree
@@ -4304,7 +4304,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
 msgid "Cancel the Selected Invoices"
-msgstr ""
+msgstr "선택한 그 전표들을 취소"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplieranalyticcost0
@@ -4316,21 +4316,21 @@ msgstr ""
 #. module: account
 #: view:account.bank.statement:0
 msgid "Close CashBox"
-msgstr ""
+msgstr "현금금고 닫기"
 
 #. module: account
 #: constraint:account.tax.code.template:0
 msgid ""
 "Error!\n"
 "You cannot create recursive Tax Codes."
-msgstr ""
+msgstr "에러!\n세금 코드를 재귀적으로 생성할 수  없습니다."
 
 #. module: account
 #: constraint:account.period:0
 msgid ""
 "Error!\n"
 "The duration of the Period(s) is/are invalid."
-msgstr ""
+msgstr "에러!\n기간의 지속은 유효하지 않습니다."
 
 #. module: account
 #: field:account.entries.report,month:0 view:account.invoice.report:0
@@ -4349,7 +4349,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
 msgid "Supplier invoice sequence"
-msgstr ""
+msgstr "공급업체 송장 순서"
 
 #. module: account
 #: code:addons/account/account_invoice.py:617
@@ -4370,17 +4370,17 @@ msgstr "상품 UoM"
 #. module: account
 #: field:res.company,paypal_account:0
 msgid "Paypal Account"
-msgstr ""
+msgstr "페이팔 계정"
 
 #. module: account
 #: view:account.entries.report:0
 msgid "Acc.Type"
-msgstr ""
+msgstr "계정 형식"
 
 #. module: account
 #: selection:account.journal,type:0
 msgid "Bank and Checks"
-msgstr ""
+msgstr "예금과 수표"
 
 #. module: account
 #: field:account.account.template,note:0
@@ -4390,29 +4390,29 @@ msgstr "메모"
 #. module: account
 #: selection:account.financial.report,sign:0
 msgid "Reverse balance sign"
-msgstr ""
+msgstr "역 잔액 기호"
 
 #. module: account
 #: selection:account.account.type,report_type:0
 #: code:addons/account/account.py:197
 #, python-format
 msgid "Balance Sheet (Liability account)"
-msgstr ""
+msgstr "대차대조표 (부채 계정)"
 
 #. module: account
 #: help:account.invoice,date_invoice:0
 msgid "Keep empty to use the current date"
-msgstr ""
+msgstr "현재 날짜를 사용하려면 비워두세요"
 
 #. module: account
 #: view:account.bank.statement:0 field:account.cashbox.line,subtotal_closing:0
 msgid "Closing Subtotal"
-msgstr ""
+msgstr "소계 닫기"
 
 #. module: account
 #: field:account.tax,base_code_id:0
 msgid "Account Base Code"
-msgstr ""
+msgstr "기초 코드"
 
 #. module: account
 #: code:addons/account/account_move_line.py:869
@@ -4424,7 +4424,7 @@ msgstr ""
 #. module: account
 #: help:res.company,paypal_account:0
 msgid "Paypal username (usually email) for receiving online payments."
-msgstr ""
+msgstr "온라인 지불을 받기 위한 페이팔 사용자 이름 (일반적으로 이메일)입니다."
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -4446,33 +4446,33 @@ msgstr ""
 #: code:addons/account/report/common_report_header.py:68
 #, python-format
 msgid "All Posted Entries"
-msgstr ""
+msgstr "포스트한 모든 기입항목"
 
 #. module: account
 #: field:report.aged.receivable,name:0
 msgid "Month Range"
-msgstr ""
+msgstr "월 범위"
 
 #. module: account
 #: help:account.analytic.balance,empty_acc:0
 msgid "Check if you want to display Accounts with 0 balance too."
-msgstr ""
+msgstr "계정을 잔액 0으로 표시하려면 체크하세요."
 
 #. module: account
 #: field:account.move.reconcile,opening_reconciliation:0
 msgid "Opening Entries Reconciliation"
-msgstr ""
+msgstr "조정 기초 항목"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:41
 #, python-format
 msgid "End of Fiscal Year Entry"
-msgstr ""
+msgstr "회계연도 기입항목의 끝"
 
 #. module: account
 #: selection:account.move.line,state:0
 msgid "Balanced"
-msgstr ""
+msgstr "균형잡힘"
 
 #. module: account
 #: model:process.node,note:account.process_node_importinvoice0
@@ -4490,27 +4490,27 @@ msgstr ""
 #. module: account
 #: view:account.move:0 view:account.move.line:0
 msgid "Add an internal note..."
-msgstr ""
+msgstr "내부 메모 넣기..."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
 msgid "Set Your Accounting Options"
-msgstr ""
+msgstr "회계 옵션 설정"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart
 msgid "Account chart"
-msgstr ""
+msgstr "계정 도표"
 
 #. module: account
 #: field:account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "지불 참조"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Main Title 1 (bold, underlined)"
-msgstr ""
+msgstr "주 제목 1 (굵게, 밑줄)"
 
 #. module: account
 #: report:account.analytic.account.balance:0 report:account.central.journal:0
@@ -4520,7 +4520,7 @@ msgstr "계정 이름"
 #. module: account
 #: help:account.fiscalyear.close,report_name:0
 msgid "Give name of the new entries"
-msgstr ""
+msgstr "새 분개의 이름을 제시"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_report
@@ -4530,7 +4530,7 @@ msgstr "송장 통계"
 #. module: account
 #: field:account.account,exchange_rate:0
 msgid "Exchange Rate"
-msgstr ""
+msgstr "교환비율"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentorderreconcilation0
@@ -4541,12 +4541,12 @@ msgstr ""
 #: code:addons/account/wizard/account_reconcile.py:122
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr ""
+msgstr "상각 조정"
 
 #. module: account
 #: view:account.account.template:0 view:account.chart.template:0
 msgid "Account Template"
-msgstr ""
+msgstr "계정 양식"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4556,28 +4556,28 @@ msgstr "마감 밸런스"
 #. module: account
 #: field:account.chart.template,visible:0
 msgid "Can be Visible?"
-msgstr ""
+msgstr "보여짐?"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
 msgid "Account Journal Select"
-msgstr ""
+msgstr "계정 장부 선택"
 
 #. module: account
 #: view:account.tax.template:0
 msgid "Credit Notes"
-msgstr ""
+msgstr "대변 주석"
 
 #. module: account
 #: view:account.move.line:0
 #: model:ir.actions.act_window,name:account.action_account_manual_reconcile
 msgid "Journal Items to Reconcile"
-msgstr ""
+msgstr "조정할 장부 기입항목"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "세금 서식"
 
 #. module: account
 #: sql_constraint:account.period:0
@@ -4587,12 +4587,12 @@ msgstr ""
 #. module: account
 #: help:wizard.multi.charts.accounts,currency_id:0
 msgid "Currency as per company's country."
-msgstr ""
+msgstr "회사의 국가 별 환률"
 
 #. module: account
 #: view:account.tax:0
 msgid "Tax Computation"
-msgstr ""
+msgstr "세금 계산"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -4611,20 +4611,20 @@ msgstr ""
 #. module: account
 #: view:account.use.model:0
 msgid "Create Entries From Models"
-msgstr ""
+msgstr "모델에서 기입항목 생성"
 
 #. module: account
 #: field:account.account,reconcile:0
 #: field:account.account.template,reconcile:0
 msgid "Allow Reconciliation"
-msgstr ""
+msgstr "조정을 허용하다"
 
 #. module: account
 #: constraint:account.account:0
 msgid ""
 "Error!\n"
 "You cannot create an account which has parent account of different company."
-msgstr ""
+msgstr "에러!\n다른 회사의 부모 계정을 가진 계정을 생성할 수 없습니다."
 
 #. module: account
 #: code:addons/account/account_invoice.py:665
@@ -4645,47 +4645,47 @@ msgstr ""
 #: code:addons/account/account.py:3212
 #, python-format
 msgid "ECNJ"
-msgstr ""
+msgstr "ECNJ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report
 msgid "Account Analytic Cost Ledger For Journal Report"
-msgstr ""
+msgstr "계정 장부 보고를 위한 원가원장 분석"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_model_form
 msgid "Recurring Models"
-msgstr ""
+msgstr "반복 모델"
 
 #. module: account
 #: view:account.tax:0
 msgid "Children/Sub Taxes"
-msgstr ""
+msgstr "자손/하위 세금"
 
 #. module: account
 #: xsl:account.transfer:0
 msgid "Change"
-msgstr ""
+msgstr "변경"
 
 #. module: account
 #: field:account.journal,type_control_ids:0
 msgid "Type Controls"
-msgstr ""
+msgstr "유형 제어"
 
 #. module: account
 #: help:account.journal,default_credit_account_id:0
 msgid "It acts as a default account for credit amount"
-msgstr ""
+msgstr "대변 금액에 대한 기본 계정으로 작용"
 
 #. module: account
 #: view:account.move.line:0
 msgid "Number (Move)"
-msgstr ""
+msgstr "번호 (이동)"
 
 #. module: account
 #: view:cash.box.out:0
 msgid "Describe why you take money from the cash register:"
-msgstr ""
+msgstr "금전등록기에서 돈을 가져온 이유를 기술하세요."
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -4702,12 +4702,12 @@ msgstr ""
 #. module: account
 #: help:account.config.settings,group_proforma_invoices:0
 msgid "Allows you to put invoices in pro-forma state."
-msgstr ""
+msgstr "견전서 상태에서 전표를 넣는 것을 허용한다."
 
 #. module: account
 #: view:account.journal:0
 msgid "Unit Of Currency Definition"
-msgstr ""
+msgstr "통화의 단위"
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -4715,31 +4715,31 @@ msgstr ""
 msgid ""
 "It adds the currency column on report if the currency differs from the "
 "company currency."
-msgstr ""
+msgstr "회사 통화가 다른 경우 통화 열을 보고서에 추가."
 
 #. module: account
 #: code:addons/account/account.py:3397
 #, python-format
 msgid "Purchase Tax %.2f%%"
-msgstr ""
+msgstr "구매 세금 %.2f%%"
 
 #. module: account
 #: view:account.subscription.generate:0
 #: model:ir.actions.act_window,name:account.action_account_subscription_generate
 #: model:ir.ui.menu,name:account.menu_generate_subscription
 msgid "Generate Entries"
-msgstr ""
+msgstr "분개 발생함"
 
 #. module: account
 #: help:account.vat.declaration,chart_tax_id:0
 msgid "Select Charts of Taxes"
-msgstr ""
+msgstr "세금 도표 검색"
 
 #. module: account
 #: view:account.fiscal.position:0 field:account.fiscal.position,account_ids:0
 #: field:account.fiscal.position.template,account_ids:0
 msgid "Account Mapping"
-msgstr ""
+msgstr "계정 할당"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4749,12 +4749,12 @@ msgstr "확정됨"
 #. module: account
 #: report:account.invoice:0
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "취소한 전표"
 
 #. module: account
 #: view:account.invoice:0
 msgid "My Invoices"
-msgstr ""
+msgstr "내 송장"
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -4764,18 +4764,18 @@ msgstr "새로 만들기"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Sale Tax"
-msgstr ""
+msgstr "매출 세금"
 
 #. module: account
 #: view:account.move:0
 msgid "Cancel Entry"
-msgstr ""
+msgstr "분개 취소"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
 #: field:account.tax.template,ref_tax_code_id:0
 msgid "Refund Tax Code"
-msgstr ""
+msgstr "환급 세금 코드"
 
 #. module: account
 #: view:account.invoice:0
@@ -4785,7 +4785,7 @@ msgstr ""
 #. module: account
 #: field:account.chart.template,property_account_income:0
 msgid "Income Account on Product Template"
-msgstr ""
+msgstr "샹품 양식의 수입 계정"
 
 #. module: account
 #: help:account.journal.period,state:0
@@ -4799,17 +4799,17 @@ msgstr ""
 #: code:addons/account/account.py:3213
 #, python-format
 msgid "MISC"
-msgstr ""
+msgstr "기타"
 
 #. module: account
 #: view:res.partner:0
 msgid "Accounting-related settings are managed on"
-msgstr ""
+msgstr "에서 회계 관련 설정은 조정됩니다"
 
 #. module: account
 #: field:account.fiscalyear.close,fy2_id:0
 msgid "New Fiscal Year"
-msgstr ""
+msgstr "새 회계년도"
 
 #. module: account
 #: view:account.invoice:0 view:account.tax:0 view:account.tax.template:0
@@ -4824,13 +4824,13 @@ msgstr "송장"
 #. module: account
 #: help:account.config.settings,expects_chart_of_accounts:0
 msgid "Check this box if this company is a legal entity."
-msgstr ""
+msgstr "이 회사가 법적실체라면 체크"
 
 #. module: account
 #: model:account.account.type,name:account.conf_account_type_chk
 #: selection:account.bank.accounts.wizard,account_type:0
 msgid "Check"
-msgstr ""
+msgstr "선택"
 
 #. module: account
 #: view:account.aged.trial.balance:0 view:account.analytic.balance:0
@@ -4864,12 +4864,12 @@ msgstr "인보이스됨"
 #. module: account
 #: view:account.move:0
 msgid "Posted Journal Entries"
-msgstr ""
+msgstr "올려진 회계처리"
 
 #. module: account
 #: view:account.use.model:0
 msgid "Use Model"
-msgstr ""
+msgstr "모델 사용"
 
 #. module: account
 #: help:account.invoice,partner_bank_id:0
@@ -4877,7 +4877,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Supplier Refund, otherwise a "
 "Partner bank account number."
-msgstr ""
+msgstr "전표가 지불할 은행 계좌 번호. 거래처 전표 혹은 공급자 환불등에는 기업 은행 계좌, 다른 경우는 상대방 은행 계좌."
 
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
@@ -4903,7 +4903,7 @@ msgstr "결제됨"
 #. module: account
 #: field:account.invoice,tax_line:0
 msgid "Tax Lines"
-msgstr ""
+msgstr "세금 명세"
 
 #. module: account
 #: help:account.move.line,statement_id:0
@@ -4919,32 +4919,32 @@ msgstr ""
 #: code:addons/account/account.py:894
 #, python-format
 msgid "Opening Period"
-msgstr ""
+msgstr "기초 기간"
 
 #. module: account
 #: view:account.move:0
 msgid "Journal Entries to Review"
-msgstr ""
+msgstr "검토 할 회계처리"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round Globally"
-msgstr ""
+msgstr "전체 반올림"
 
 #. module: account
 #: view:account.bank.statement:0 view:account.subscription:0
 msgid "Compute"
-msgstr ""
+msgstr "계산"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Additional notes..."
-msgstr ""
+msgstr "추가 메모..."
 
 #. module: account
 #: field:account.tax,type_tax_use:0
 msgid "Tax Application"
-msgstr ""
+msgstr "세금 응용 프로그램"
 
 #. module: account
 #: field:account.account,active:0 field:account.analytic.journal,active:0
@@ -4957,7 +4957,7 @@ msgstr "활성"
 #. module: account
 #: view:account.bank.statement:0 field:account.journal,cash_control:0
 msgid "Cash Control"
-msgstr ""
+msgstr "현금 제어"
 
 #. module: account
 #: code:addons/account/account_move_line.py:857
@@ -4983,7 +4983,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "송장 번호는 회사마다 고유해야 합니다."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -4993,29 +4993,29 @@ msgstr "계정 타입 별 밸런스"
 #. module: account
 #: view:account.fiscalyear.close:0
 msgid "Generate Fiscal Year Opening Entries"
-msgstr ""
+msgstr "회계 연도 시작 항목 생성"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Accountant"
-msgstr ""
+msgstr "회계담당자"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_treasury_report_all
 msgid ""
 "From this view, have an analysis of your treasury. It sums the balance of "
 "every accounting entries made on liquidity accounts per period."
-msgstr ""
+msgstr "이 뷰에서 재물의 분석을 보여줍니다. 모든 기간별 유동 계정상의 회계 기입항목의 잔액을 더합니다."
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Financial Manager"
-msgstr ""
+msgstr "재무관리자"
 
 #. module: account
 #: field:account.journal,group_invoice_lines:0
 msgid "Group Invoice Lines"
-msgstr ""
+msgstr "그룹 전표 라인"
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -5030,17 +5030,17 @@ msgstr "이동"
 #. module: account
 #: field:account.bank.statement,details_ids:0 view:account.journal:0
 msgid "CashBox Lines"
-msgstr ""
+msgstr "현금보관함 라인들"
 
 #. module: account
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
-msgstr ""
+msgstr "부가세 계정 선언"
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Cancel Statement"
-msgstr ""
+msgstr "내역서 취소"
 
 #. module: account
 #: help:account.config.settings,module_account_accountant:0
@@ -5052,12 +5052,12 @@ msgstr ""
 #. module: account
 #: view:account.period:0
 msgid "To Close"
-msgstr ""
+msgstr "만료"
 
 #. module: account
 #: field:account.treasury.report,date:0
 msgid "Beginning of Period Date"
-msgstr ""
+msgstr "기간의 시작일"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_template_folder
@@ -5067,19 +5067,19 @@ msgstr "서식"
 #. module: account
 #: field:account.invoice.tax,name:0
 msgid "Tax Description"
-msgstr ""
+msgstr "세금 정의"
 
 #. module: account
 #: field:account.tax,child_ids:0
 msgid "Child Tax Accounts"
-msgstr ""
+msgstr "자식 세금 계정"
 
 #. module: account
 #: help:account.tax,price_include:0 help:account.tax.template,price_include:0
 msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
-msgstr ""
+msgstr "귀하의 상품 및 송장에 사용하는 가격이 세금을 포함하도록 하려면 확인란을 선택합니다."
 
 #. module: account
 #: help:account.tax.template,include_base_amount:0
@@ -5112,24 +5112,24 @@ msgstr ""
 #: field:account.vat.declaration,target_move:0
 #: field:accounting.report,target_move:0
 msgid "Target Moves"
-msgstr ""
+msgstr "이동 대상"
 
 #. module: account
 #: code:addons/account/account.py:1430
 #, python-format
 msgid ""
 "Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)"
-msgstr ""
+msgstr "송장에 연결된 이동은 삭제할 수 없습니다. (송장 : %s - 이동 ID : %s)"
 
 #. module: account
 #: view:account.bank.statement:0 help:account.cashbox.line,number_opening:0
 msgid "Opening Unit Numbers"
-msgstr ""
+msgstr "기초 단위 갯수"
 
 #. module: account
 #: field:account.subscription,period_type:0
 msgid "Period Type"
-msgstr ""
+msgstr "기간 유형"
 
 #. module: account
 #: view:account.invoice:0 field:account.invoice,payment_ids:0
@@ -5140,20 +5140,20 @@ msgstr "결제"
 #. module: account
 #: field:account.subscription.line,move_id:0
 msgid "Entry"
-msgstr ""
+msgstr "기입항목"
 
 #. module: account
 #: field:account.tax,python_compute_inv:0
 #: field:account.tax.template,python_compute_inv:0
 msgid "Python Code (reverse)"
-msgstr ""
+msgstr "파이썬 코드 (역)"
 
 #. module: account
 #: field:account.invoice,payment_term:0
 #: model:ir.actions.act_window,name:account.action_payment_term_form
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
 msgid "Payment Terms"
-msgstr ""
+msgstr "지불 기간"
 
 #. module: account
 #: help:account.chart.template,complete_tax_set:0
@@ -5168,7 +5168,7 @@ msgstr ""
 #: field:account.financial.report,children_ids:0
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
-msgstr ""
+msgstr "계정 보고"
 
 #. module: account
 #: field:account.entries.report,year:0 view:account.invoice.report:0
@@ -5182,7 +5182,7 @@ msgstr "년"
 #. module: account
 #: help:account.invoice,sent:0
 msgid "It indicates that the invoice has been sent."
-msgstr ""
+msgstr "송장을 발송한 것으로 표시합니다."
 
 #. module: account
 #: field:account.tax.template,description:0
@@ -5195,7 +5195,7 @@ msgstr "내부 명칭"
 msgid ""
 "Cannot create an automatic sequence for this piece.\n"
 "Put a sequence in the journal definition for automatic numbering or create a sequence manually for this piece."
-msgstr ""
+msgstr "이 조각의 순서를 자동으로 생성할 수 없다면, 자동 숫자를 위해서 장부 정의 안에서 순번를 넣거나 순번을 수동으로 생성해야 합니다."
 
 #. module: account
 #: view:account.invoice:0
@@ -5205,13 +5205,13 @@ msgstr ""
 #. module: account
 #: selection:account.subscription,period_type:0
 msgid "month"
-msgstr ""
+msgstr "월"
 
 #. module: account
 #: view:account.move.line:0
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
-msgstr ""
+msgstr "조정할 다음 파트너"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -5231,17 +5231,17 @@ msgstr "밸런스"
 #: code:addons/account/account.py:194
 #, python-format
 msgid "Profit & Loss (Income account)"
-msgstr ""
+msgstr "이익 및 손실 (수익 계정)"
 
 #. module: account
 #: field:account.journal,allow_date:0
 msgid "Check Date in Period"
-msgstr ""
+msgstr "기간 날짜를 체크"
 
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
 msgid "Accounting Reports"
-msgstr ""
+msgstr "회계보고서"
 
 #. module: account
 #: field:account.move,line_id:0 view:analytic.entries.report:0
@@ -5252,12 +5252,12 @@ msgstr "엔트리"
 #. module: account
 #: view:account.entries.report:0
 msgid "This Period"
-msgstr ""
+msgstr "해당 기간"
 
 #. module: account
 #: view:account.tax.template:0
 msgid "Compute Code (if type=code)"
-msgstr ""
+msgstr "코드 계산 (type=code)"
 
 #. module: account
 #: code:addons/account/account_invoice.py:511
@@ -5272,7 +5272,7 @@ msgstr ""
 #: view:account.model:0 selection:account.tax,type_tax_use:0
 #: view:account.tax.template:0 selection:account.tax.template,type_tax_use:0
 msgid "Sale"
-msgstr ""
+msgstr "매출"
 
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
@@ -5312,12 +5312,12 @@ msgstr "대화 요약 (메시지 개수, ...)을 포함함. 이 요약은 간판
 #. module: account
 #: field:account.tax,child_depend:0 field:account.tax.template,child_depend:0
 msgid "Tax on Children"
-msgstr ""
+msgstr "하위 요소 세금"
 
 #. module: account
 #: field:account.journal,update_posted:0
 msgid "Allow Cancelling Entries"
-msgstr ""
+msgstr "기입항목 취소 허용"
 
 #. module: account
 #: code:addons/account/wizard/account_use_model.py:44
@@ -5325,12 +5325,12 @@ msgstr ""
 msgid ""
 "Maturity date of entry line generated by model line '%s' is based on partner payment term!\n"
 "Please define partner on it!"
-msgstr ""
+msgstr "파트너 지불 기간을 기준으로 한 '%s' 모델 명세에 따라 생성된 기입 항목 명세의 만기 날짜\n만기 날짜에 파트너를 정의하십시오 !"
 
 #. module: account
 #: field:account.tax.code,sign:0
 msgid "Coefficent for parent"
-msgstr ""
+msgstr "상위 요소에 대한 계수"
 
 #. module: account
 #: code:addons/account/account.py:2309
@@ -5341,7 +5341,7 @@ msgstr ""
 #. module: account
 #: report:account.partner.balance:0
 msgid "(Account/Partner) Name"
-msgstr ""
+msgstr "(회계/담당) 이름"
 
 #. module: account
 #: field:account.partner.reconcile.process,progress:0
@@ -5351,7 +5351,7 @@ msgstr "진행"
 #. module: account
 #: field:wizard.multi.charts.accounts,bank_accounts_id:0
 msgid "Cash and Banks"
-msgstr ""
+msgstr "현금과 예금"
 
 #. module: account
 #: model:ir.model,name:account.model_account_installer
@@ -5361,7 +5361,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Recompute taxes and total"
-msgstr ""
+msgstr "세금과 합계 재계산"
 
 #. module: account
 #: code:addons/account/account.py:1110
@@ -5372,24 +5372,24 @@ msgstr ""
 #. module: account
 #: field:account.tax.template,include_base_amount:0
 msgid "Include in Base Amount"
-msgstr ""
+msgstr "기초금액에 포함됨"
 
 #. module: account
 #: field:account.invoice,supplier_invoice_number:0
 msgid "Supplier Invoice Number"
-msgstr ""
+msgstr "공급업체 송장 번호"
 
 #. module: account
 #: help:account.payment.term.line,days:0
 msgid ""
 "Number of days to add before computation of the day of month.If Date=15/01, "
 "Number of Days=22, Day of Month=-1, then the due date is 28/02."
-msgstr ""
+msgstr "월의 일자를 계산하기 전에 날의 수를 추가합니다. 날짜 1월15일, 날의 수 22, 월의 날 1 이면 지불 기일은 2월 28일 입니다."
 
 #. module: account
 #: view:account.payment.term.line:0
 msgid "Amount Computation"
-msgstr ""
+msgstr "계산 총액"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1116
@@ -5400,12 +5400,12 @@ msgstr ""
 #. module: account
 #: view:account.journal:0
 msgid "Entry Controls"
-msgstr ""
+msgstr "기입항목 제어"
 
 #. module: account
 #: view:account.analytic.chart:0 view:project.account.analytic.line:0
 msgid "(Keep empty to open the current situation)"
-msgstr ""
+msgstr "(현재 상태로 열려면 비워두세요)"
 
 #. module: account
 #: field:account.analytic.balance,date1:0
@@ -5419,12 +5419,12 @@ msgstr "기간 시작"
 #. module: account
 #: model:account.account.type,name:account.account_type_asset_view1
 msgid "Asset View"
-msgstr ""
+msgstr "잔산뷰"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
-msgstr ""
+msgstr "계정 공통 계정 보고서"
 
 #. module: account
 #: view:account.analytic.account:0 view:account.bank.statement:0
@@ -5453,35 +5453,35 @@ msgstr ""
 #: field:account.partner.ledger,initial_balance:0
 #: field:account.report.general.ledger,initial_balance:0
 msgid "Include Initial Balances"
-msgstr ""
+msgstr "기초잔액에 포함됨"
 
 #. module: account
 #: view:account.invoice.tax:0
 msgid "Tax Codes"
-msgstr ""
+msgstr "세금 코드"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Customer Refund"
-msgstr ""
+msgstr "고객 환불"
 
 #. module: account
 #: field:account.tax,ref_tax_sign:0 field:account.tax,tax_sign:0
 #: field:account.tax.template,ref_tax_sign:0
 #: field:account.tax.template,tax_sign:0
 msgid "Tax Code Sign"
-msgstr ""
+msgstr "세금 코드 확인"
 
 #. module: account
 #: model:ir.model,name:account.model_report_invoice_created
 msgid "Report of Invoices Created within Last 15 days"
-msgstr ""
+msgstr "최근 15일 이내 작성된 송장 보고서"
 
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
 msgid "End of Year Entries Journal"
-msgstr ""
+msgstr "회계연도말 회계처리"
 
 #. module: account
 #: view:account.invoice:0
@@ -5491,13 +5491,13 @@ msgstr ""
 #. module: account
 #: view:cash.box.in:0
 msgid "Fill in this form if you put money in the cash register:"
-msgstr ""
+msgstr "현금보관함에 돈을 보관하는 경우 이 양식 작성 :"
 
 #. module: account
 #: view:account.payment.term.line:0
 #: field:account.payment.term.line,value_amount:0
 msgid "Amount To Pay"
-msgstr ""
+msgstr "지불할 총액"
 
 #. module: account
 #: help:account.partner.reconcile.process,to_reconcile:0
@@ -5510,25 +5510,25 @@ msgstr ""
 #. module: account
 #: view:account.subscription.line:0
 msgid "Subscription lines"
-msgstr ""
+msgstr "명세 구독"
 
 #. module: account
 #: field:account.entries.report,quantity:0
 msgid "Products Quantity"
-msgstr ""
+msgstr "상품 수량"
 
 #. module: account
 #: view:account.entries.report:0 selection:account.entries.report,move_state:0
 #: view:account.move:0 selection:account.move,state:0 view:account.move.line:0
 msgid "Unposted"
-msgstr ""
+msgstr "게시안됨"
 
 #. module: account
 #: view:account.change.currency:0
 #: model:ir.actions.act_window,name:account.action_account_change_currency
 #: model:ir.model,name:account.model_account_change_currency
 msgid "Change Currency"
-msgstr ""
+msgstr "통화 변경"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingentries0
@@ -5545,14 +5545,14 @@ msgstr "결제 날짜"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,opening_details_ids:0
 msgid "Opening Cashbox Lines"
-msgstr ""
+msgstr "기초 현금보관함 명세"
 
 #. module: account
 #: view:account.analytic.account:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_form
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 msgid "Analytic Accounts"
-msgstr ""
+msgstr "분석 계정"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -5565,12 +5565,12 @@ msgstr ""
 #: field:account.model.line,amount_currency:0
 #: field:account.move.line,amount_currency:0
 msgid "Amount Currency"
-msgstr ""
+msgstr "환률 총액"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round per Line"
-msgstr ""
+msgstr "명세별 반올림"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -5604,7 +5604,7 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Normal Text"
-msgstr ""
+msgstr "일반 텍스트"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -5638,13 +5638,13 @@ msgstr ""
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:56
 #, python-format
 msgid "You must set a period length greater than 0."
-msgstr ""
+msgstr "기간 길이는 0보다 크게 설정해야 합니다."
 
 #. module: account
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr ""
+msgstr "재정 위상 양식"
 
 #. module: account
 #: code:addons/account/account.py:2321
@@ -5654,17 +5654,17 @@ msgstr ""
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "No Analytic Journal!"
-msgstr ""
+msgstr "분개 분석이 없습니다!"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Draft Refund"
-msgstr ""
+msgstr "환불안"
 
 #. module: account
 #: view:account.analytic.chart:0 view:account.chart:0 view:account.tax.chart:0
 msgid "Open Charts"
-msgstr ""
+msgstr "도표 열기"
 
 #. module: account
 #: field:account.central.journal,amount_currency:0
@@ -5674,27 +5674,27 @@ msgstr ""
 #: field:account.print.journal,amount_currency:0
 #: field:account.report.general.ledger,amount_currency:0
 msgid "With Currency"
-msgstr ""
+msgstr "통화 포함"
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Open CashBox"
-msgstr ""
+msgstr "현금보관함 열기"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Automatic formatting"
-msgstr ""
+msgstr "자동 형태"
 
 #. module: account
 #: view:account.move.line.reconcile:0
 msgid "Reconcile With Write-Off"
-msgstr ""
+msgstr "상각으로 조정"
 
 #. module: account
 #: selection:account.payment.term.line,value:0 selection:account.tax,type:0
 msgid "Fixed Amount"
-msgstr ""
+msgstr "정액"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1067
@@ -5705,18 +5705,18 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
 msgid "Account Automatic Reconcile"
-msgstr ""
+msgstr "계정 자동 조정"
 
 #. module: account
 #: view:account.move:0 view:account.move.line:0
 msgid "Journal Item"
-msgstr ""
+msgstr "장부 기입항목"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
 #: model:ir.ui.menu,name:account.menu_wizard_fy_close
 msgid "Generate Opening Entries"
-msgstr ""
+msgstr "개시분개 발생"
 
 #. module: account
 #: help:account.tax,type:0
@@ -5726,7 +5726,7 @@ msgstr ""
 #. module: account
 #: view:account.payment.term.line:0
 msgid "Due Date Computation"
-msgstr ""
+msgstr "지불 기일 계산"
 
 #. module: account
 #: field:report.invoice.created,create_date:0
@@ -5739,25 +5739,25 @@ msgstr "생성일"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journals"
-msgstr ""
+msgstr "분석 장부"
 
 #. module: account
 #: field:account.account,child_id:0
 msgid "Child Accounts"
-msgstr ""
+msgstr "하위 계정"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1128
 #, python-format
 msgid "Move name (id): %s (%s)"
-msgstr ""
+msgstr "이동명 (id) : %s (%s)"
 
 #. module: account
 #: view:account.move.line.reconcile:0
 #: code:addons/account/account_move_line.py:884
 #, python-format
 msgid "Write-Off"
-msgstr ""
+msgstr "상각"
 
 #. module: account
 #: view:account.entries.report:0
@@ -5767,7 +5767,7 @@ msgstr "기입 항목"
 #. module: account
 #: field:res.partner,debit:0
 msgid "Total Payable"
-msgstr ""
+msgstr "채무 합계"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_income
@@ -5801,13 +5801,13 @@ msgstr ""
 #. module: account
 #: report:account.analytic.account.journal:0
 msgid "Account n°"
-msgstr ""
+msgstr "계정 번호"
 
 #. module: account
 #: code:addons/account/account_invoice.py:95
 #, python-format
 msgid "Free Reference"
-msgstr ""
+msgstr "자유 참조"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -5819,23 +5819,23 @@ msgstr ""
 #: code:addons/account/report/account_partner_ledger.py:276
 #, python-format
 msgid "Receivable and Payable Accounts"
-msgstr ""
+msgstr "채권 채무 계정"
 
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
 msgid "Fiscal Mapping"
-msgstr ""
+msgstr "회계 할당"
 
 #. module: account
 #: view:account.config.settings:0
 msgid "Select Company"
-msgstr ""
+msgstr "회서 선"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_state_open
 #: model:ir.model,name:account.model_account_state_open
 msgid "Account State Open"
-msgstr ""
+msgstr "계정 상태 Open"
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -5846,7 +5846,7 @@ msgstr ""
 #: view:account.invoice:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund Invoice"
-msgstr ""
+msgstr "환불 송장"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_entries_report_all
@@ -5854,7 +5854,7 @@ msgid ""
 "From this view, have an analysis of your different financial accounts. The "
 "document shows your debit and credit taking in consideration some criteria "
 "you can choose by using the search tool."
-msgstr ""
+msgstr "이 화면은 다른 재무제표 분석입니다. 문서는 검색 도구를 사용하여 선택할 수 있는  몇가지 기준을 고려하여 차변과 대변을 보여줍니다."
 
 #. module: account
 #: help:account.partner.reconcile.process,progress:0
@@ -5868,7 +5868,7 @@ msgstr ""
 #: field:report.account.sales,period_id:0
 #: field:report.account_type.sales,period_id:0
 msgid "Force Period"
-msgstr ""
+msgstr "포스 기간"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -5884,7 +5884,7 @@ msgid ""
 "                to disclose a certain amount of information.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                계정을 추가하려면 클릭하세요.\n              </p><p>\n              계정은 회사에 관련한 모든 인출과 수입 거래를 등록이 가능한 원장의 부분이다.\n              회사는 보고서를 크게 두 부분으로 보여준다: 대차대조표와 손익계산서(이익과 손실 계정)이다.\n              회사의 연간결산은 일정량의 정보를 제공하도록 법률에 의해 요구하고 있다.\n              </p>\n            "
 
 #. module: account
 #: view:account.invoice.report:0 field:account.invoice.report,nbr:0
@@ -5910,12 +5910,12 @@ msgstr "(업데이트)"
 #: field:account.vat.declaration,filter:0 field:accounting.report,filter:0
 #: field:accounting.report,filter_cmp:0
 msgid "Filter by"
-msgstr ""
+msgstr "필터"
 
 #. module: account
 #: view:account.tax.template:0
 msgid "Compute Code for Taxes Included Prices"
-msgstr ""
+msgstr "가격 포함된 세금에 대한 코드 계산"
 
 #. module: account
 #: help:account.bank.statement,balance_end:0
@@ -5925,19 +5925,19 @@ msgstr ""
 #. module: account
 #: field:account.journal,loss_account_id:0
 msgid "Loss Account"
-msgstr ""
+msgstr "손실 계정"
 
 #. module: account
 #: field:account.tax,account_collected_id:0
 #: field:account.tax.template,account_collected_id:0
 msgid "Invoice Tax Account"
-msgstr ""
+msgstr "송장 세금 계정"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_journal
 #: model:ir.model,name:account.model_account_general_journal
 msgid "Account General Journal"
-msgstr ""
+msgstr "계정 일반 분개장"
 
 #. module: account
 #: help:account.move,state:0
@@ -5947,7 +5947,7 @@ msgid ""
 "journal. In that case, they will behave as journal entries automatically "
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
-msgstr ""
+msgstr "수동으로 작성한 새로운 분개 항목들은 보통 '게시안됨' 상태입니다. 그러나 관련 저널에 그 상태를 건너뛰도록 설정할 수 있습니다. 그 경우에 문서 검증 시스템(송장, 은행 명세서)에 의해 자동으로 생성된 분개 항목으로 작동하고 '게시됨' 상태로 표시될 것입니다."
 
 #. module: account
 #: field:account.payment.term.line,days:0
@@ -5970,7 +5970,7 @@ msgstr "보고서"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr ""
+msgstr "세금 회계 상태 서식"
 
 #. module: account
 #: help:account.tax,name:0
@@ -5998,12 +5998,12 @@ msgstr "고객 환불"
 #. module: account
 #: field:account.account,foreign_balance:0
 msgid "Foreign Balance"
-msgstr ""
+msgstr "외화 잔액"
 
 #. module: account
 #: field:account.journal.period,name:0
 msgid "Journal-Period Name"
-msgstr ""
+msgstr "분개-시점 이름"
 
 #. module: account
 #: field:account.invoice.tax,factor_base:0
@@ -6014,22 +6014,22 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1196
 #, python-format
 msgid "No Piece Number!"
-msgstr ""
+msgstr "단위 갯수가 없습니다!"
 
 #. module: account
 #: help:account.journal,company_id:0
 msgid "Company related to this journal"
-msgstr ""
+msgstr "장부와 관련한 회사"
 
 #. module: account
 #: help:account.config.settings,group_multi_currency:0
 msgid "Allows you multi currency environment"
-msgstr ""
+msgstr "여러 화폐 환경을 허용한다."
 
 #. module: account
 #: view:account.subscription:0
 msgid "Running Subscription"
-msgstr ""
+msgstr "구독 중"
 
 #. module: account
 #: report:account.invoice:0
@@ -6041,7 +6041,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_analytic_entries_report
 #: model:ir.ui.menu,name:account.menu_action_analytic_entries_report
 msgid "Analytic Entries Analysis"
-msgstr ""
+msgstr "분석적 기입 항목 분석"
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
@@ -6058,12 +6058,12 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Entry"
-msgstr ""
+msgstr "분석 분개"
 
 #. module: account
 #: view:res.company:0 field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
-msgstr ""
+msgstr "대금 연체 메시지"
 
 #. module: account
 #: field:account.entries.report,date_created:0
@@ -6073,7 +6073,7 @@ msgstr "생성 날짜"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_line_extended_form
 msgid "account.analytic.line.extended"
-msgstr ""
+msgstr "account.analytic.line.extended"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierreconcilepaid0
@@ -6092,7 +6092,7 @@ msgstr "루트 계정"
 #: view:account.analytic.line:0
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "분석 입력줄"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_model_form
@@ -6110,7 +6110,7 @@ msgstr ""
 #. module: account
 #: field:product.template,taxes_id:0
 msgid "Customer Taxes"
-msgstr ""
+msgstr "고객 세금"
 
 #. module: account
 #: help:account.model,name:0
@@ -6120,18 +6120,18 @@ msgstr ""
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax_rate:0
 msgid "Sales Tax(%)"
-msgstr ""
+msgstr "매출 세금(%)"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1474
 #, python-format
 msgid "No Partner Defined!"
-msgstr ""
+msgstr "정의된 파트너가 없습니다!"
 
 #. module: account
 #: view:account.tax.code:0
 msgid "Reporting Configuration"
-msgstr ""
+msgstr "환경 설정 보고"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
@@ -6148,13 +6148,13 @@ msgstr ""
 #. module: account
 #: field:account.tax,type:0 field:account.tax.template,type:0
 msgid "Tax Type"
-msgstr ""
+msgstr "세금 유형"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_template_form
 msgid "Account Templates"
-msgstr ""
+msgstr "계정 양식"
 
 #. module: account
 #: help:account.config.settings,complete_tax_set:0
@@ -6169,7 +6169,7 @@ msgstr ""
 #. module: account
 #: report:account.vat.declaration:0
 msgid "Tax Statement"
-msgstr ""
+msgstr "세금 명세서"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -6184,22 +6184,22 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children flat"
-msgstr ""
+msgstr "계층으로 하위 요소 표시"
 
 #. module: account
 #: view:account.config.settings:0
 msgid "Bank & Cash"
-msgstr ""
+msgstr "예금과 현금"
 
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
 msgid "Select a fiscal year to close"
-msgstr ""
+msgstr "마감할 회계년도 선택"
 
 #. module: account
 #: help:account.chart.template,tax_template_ids:0
 msgid "List of all the taxes that have to be installed by the wizard"
-msgstr ""
+msgstr "마법사가 설치한 모든 세금의 목록"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_intracom
@@ -6209,7 +6209,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Information addendum"
-msgstr ""
+msgstr "정보 추가"
 
 #. module: account
 #: field:account.chart,fiscalyear:0 view:account.fiscalyear:0
@@ -6219,7 +6219,7 @@ msgstr "회계년도"
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Partial Reconcile Entries"
-msgstr ""
+msgstr "부분 조정 항목"
 
 #. module: account
 #: view:account.aged.trial.balance:0 view:account.analytic.balance:0
@@ -6249,7 +6249,7 @@ msgstr "취소"
 #: model:account.account.type,name:account.data_account_type_receivable
 #: selection:account.entries.report,type:0
 msgid "Receivable"
-msgstr ""
+msgstr "채권"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -6260,7 +6260,7 @@ msgstr ""
 #: code:addons/account/account_invoice.py:640
 #, python-format
 msgid "Invoice line account's company and invoice's company does not match."
-msgstr ""
+msgstr "송장 명세 계정의 회사가 송장 회사와 일치하지 않습니다."
 
 #. module: account
 #: view:account.invoice:0
@@ -6270,7 +6270,7 @@ msgstr "기타 정보"
 #. module: account
 #: field:account.journal,default_credit_account_id:0
 msgid "Default Credit Account"
-msgstr ""
+msgstr "기본 외상 계정"
 
 #. module: account
 #: help:account.analytic.line,currency_id:0
@@ -6286,24 +6286,24 @@ msgstr "사용자 지정"
 #. module: account
 #: field:account.journal,cashbox_line_ids:0
 msgid "CashBox"
-msgstr ""
+msgstr "현금금고"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_cash_equity
 #: model:account.account.type,name:account.conf_account_type_equity
 msgid "Equity"
-msgstr ""
+msgstr "현금자산"
 
 #. module: account
 #: field:account.journal,internal_account_id:0
 msgid "Internal Transfers Account"
-msgstr ""
+msgstr "내부 전송 계정"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:32
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr ""
+msgstr "예금 거래 명세서에 '분개' 필드가 설정되어 있는지 확인하십시오."
 
 #. module: account
 #: selection:account.tax,type:0
@@ -6313,45 +6313,45 @@ msgstr "퍼센트"
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round globally"
-msgstr ""
+msgstr "전체 반올림"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
 msgid "Journal & Partner"
-msgstr ""
+msgstr "분개장 & 거래처"
 
 #. module: account
 #: field:account.automatic.reconcile,power:0
 msgid "Power"
-msgstr ""
+msgstr "파워"
 
 #. module: account
 #: code:addons/account/account.py:3470
 #, python-format
 msgid "Cannot generate an unused journal code."
-msgstr ""
+msgstr "사용하지 않는 장부 코드를 발생시킬 수 없습니다."
 
 #. module: account
 #: view:account.invoice:0
 msgid "force period"
-msgstr ""
+msgstr "강제 기간"
 
 #. module: account
 #: code:addons/account/account.py:3407 code:addons/account/res_config.py:279
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "관리자만 설정을 변경할 수 있습니다"
 
 #. module: account
 #: view:project.account.analytic.line:0
 msgid "View Account Analytic Lines"
-msgstr ""
+msgstr "분석적 명세 계정 화면"
 
 #. module: account
 #: field:account.invoice,internal_number:0
 #: field:report.invoice.created,number:0
 msgid "Invoice Number"
-msgstr ""
+msgstr "송장 번호"
 
 #. module: account
 #: field:account.bank.statement,difference:0
@@ -6363,23 +6363,23 @@ msgstr "오차"
 msgid ""
 "Indicates if the amount of tax must be included in the base amount for the "
 "computation of the next taxes"
-msgstr ""
+msgstr "세금을 다음 세금 계산을 위해 기본 금액에 포함시켜야 할 경우에 표시"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
 msgid "Reconciliation: Go to Next Partner"
-msgstr ""
+msgstr "조정 : 다음 파트너로 이동"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
 #: model:ir.actions.report.xml,name:account.account_analytic_account_inverted_balance
 msgid "Inverted Analytic Balance"
-msgstr ""
+msgstr "분석적 역 잔액"
 
 #. module: account
 #: field:account.tax.template,applicable_type:0
 msgid "Applicable Type"
-msgstr ""
+msgstr "적절한 형식"
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -6389,7 +6389,7 @@ msgid ""
 "dates, for example 50% now and 50% in one month, but if you want to force a "
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
-msgstr ""
+msgstr "결제 조건을 이용하면, 회계 기입 항목 생성 시에 지불기일이 자동 계산됩니다. 결제 조건은 여러 지불기일을 계산 할 수도 있는데, 가령 현재 50%, 한 달 뒤에 나머지 50%와 같은 식입니다. 강제로 지불기일을 결정하려면 결제 조건을 전표상에 설정하지 말아야 합니다. 결제 조건과 만기일을 비워 둘 경우, 직접 결제를 의미합니다. "
 
 #. module: account
 #: code:addons/account/account.py:420
@@ -6420,7 +6420,7 @@ msgstr ""
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "사용자 오류!"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:0
@@ -6431,18 +6431,18 @@ msgstr "무시"
 #: selection:account.account,type:0 selection:account.account.template,type:0
 #: view:account.journal:0
 msgid "Liquidity"
-msgstr ""
+msgstr "유동성"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr ""
+msgstr "분석 장부 기입항목"
 
 #. module: account
 #: field:account.config.settings,has_default_company:0
 msgid "Has default company"
-msgstr ""
+msgstr "기본 회사를 가졌나요"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -6455,7 +6455,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_bank_and_cash
 msgid "Bank and Cash"
-msgstr ""
+msgstr "예금과 현금"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_analytic_entries_report
@@ -6464,7 +6464,7 @@ msgid ""
 "following the analytic account you defined matching your business need. Use "
 "the tool search to analyse information about analytic entries generated in "
 "the system."
-msgstr ""
+msgstr "이 화면에는 귀하의 사업적 필요에 일치하도록 분석된 분석적 계정을 따르는 다른 분석적 계정의 분석이 있습니다. 시스템에서 작성된 분석적 기입 항목에 정보를 분석하는 검색 도구를 사용합니다."
 
 #. module: account
 #: sql_constraint:account.journal:0
@@ -6474,7 +6474,7 @@ msgstr ""
 #. module: account
 #: field:account.account.template,nocreate:0
 msgid "Optional create"
-msgstr ""
+msgstr "선택 사항 만들기"
 
 #. module: account
 #: code:addons/account/account.py:695
@@ -6496,12 +6496,12 @@ msgstr "공급자 환불"
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
-msgstr ""
+msgstr "기입항목 라인"
 
 #. module: account
 #: field:account.move.line,centralisation:0
 msgid "Centralisation"
-msgstr ""
+msgstr "집권화"
 
 #. module: account
 #: view:account.account:0 view:account.account.template:0
@@ -6541,7 +6541,7 @@ msgstr ""
 #. module: account
 #: field:account.installer,has_default_company:0
 msgid "Has Default Company"
-msgstr ""
+msgstr "기본 회사를 가졌나요"
 
 #. module: account
 #: model:ir.model,name:account.model_account_sequence_fiscalyear
@@ -6562,14 +6562,14 @@ msgstr "분석 저널"
 #. module: account
 #: view:account.entries.report:0
 msgid "Reconciled"
-msgstr ""
+msgstr "화해"
 
 #. module: account
 #: constraint:account.payment.term.line:0
 msgid ""
 "Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for"
 " 2%."
-msgstr ""
+msgstr "지불 기간 명세 퍼센트는 0 ~ 1 사이여야 합니다. 예 : 2%는 0.02"
 
 #. module: account
 #: report:account.invoice:0 field:account.invoice.tax,base:0
@@ -6584,24 +6584,24 @@ msgstr "모델명"
 #. module: account
 #: field:account.chart.template,property_account_expense_categ:0
 msgid "Expense Category Account"
-msgstr ""
+msgstr "비용 분류 계정"
 
 #. module: account
 #: sql_constraint:account.tax:0
 msgid "Tax Name must be unique per company!"
-msgstr ""
+msgstr "세금명은 회사별로 유일해야 합니다!"
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Cash Transactions"
-msgstr ""
+msgstr "현금 거래"
 
 #. module: account
 #: view:account.unreconcile:0
 msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
-msgstr ""
+msgstr "거래를 조정하지 않으려면 비활성화할 수 없으므로 거래에 연결된 모든 조치를 확인해야 합니다."
 
 #. module: account
 #: view:account.account.template:0 view:account.bank.statement:0
@@ -6614,19 +6614,19 @@ msgstr "노트"
 #. module: account
 #: model:ir.model,name:account.model_analytic_entries_report
 msgid "Analytic Entries Statistics"
-msgstr ""
+msgstr "분석적 기입 항목 통계"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:148
 #: code:addons/account/account_move_line.py:960
 #, python-format
 msgid "Entries: "
-msgstr ""
+msgstr "기입항목:"
 
 #. module: account
 #: help:res.partner.bank,currency_id:0
 msgid "Currency of the related account journal."
-msgstr ""
+msgstr "관련한 계정 장부의 환률"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -6645,7 +6645,7 @@ msgstr ""
 #: code:addons/account/account.py:196
 #, python-format
 msgid "Balance Sheet (Asset account)"
-msgstr ""
+msgstr "대차대조표 (자산 계정)"
 
 #. module: account
 #: model:process.node,note:account.process_node_draftstatement0
@@ -6660,7 +6660,7 @@ msgstr "총 차변"
 #. module: account
 #: view:account.move.line:0
 msgid "Next Partner Entries to reconcile"
-msgstr ""
+msgstr "조정할 다음 파트너 항목"
 
 #. module: account
 #: report:account.invoice:0
@@ -6687,14 +6687,14 @@ msgstr "파이썬 코드"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current period"
-msgstr ""
+msgstr "현재 기간중 회계처리"
 
 #. module: account
 #: help:account.journal,update_posted:0
 msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
-msgstr ""
+msgstr "이 분개와 관련된 기입 항목을 취소하거나 이 분개와 관련된 송장을 취소할 수 있도록 하려면 확인란을 선택합니다."
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -6709,19 +6709,19 @@ msgstr ""
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 msgid "Cancel Fiscal Year Closing Entries"
-msgstr ""
+msgstr "회계년도 마감분개 취소"
 
 #. module: account
 #: selection:account.account.type,report_type:0
 #: code:addons/account/account.py:195
 #, python-format
 msgid "Profit & Loss (Expense account)"
-msgstr ""
+msgstr "이익 및 손실 (비용 계정)"
 
 #. module: account
 #: field:account.bank.statement,total_entry_encoding:0
 msgid "Total Transactions"
-msgstr ""
+msgstr "총 거래"
 
 #. module: account
 #: code:addons/account/account.py:645
@@ -6732,45 +6732,45 @@ msgstr ""
 #. module: account
 #: field:account.financial.report,style_overwrite:0
 msgid "Financial Report Style"
-msgstr ""
+msgstr "재무보고서 스타일"
 
 #. module: account
 #: selection:account.financial.report,sign:0
 msgid "Preserve balance sign"
-msgstr ""
+msgstr "잔액 기호 유지"
 
 #. module: account
 #: view:account.vat.declaration:0
 #: model:ir.actions.report.xml,name:account.account_vat_declaration
 #: model:ir.ui.menu,name:account.menu_account_vat_declaration
 msgid "Taxes Report"
-msgstr ""
+msgstr "세금 보고서"
 
 #. module: account
 #: selection:account.journal.period,state:0
 msgid "Printed"
-msgstr ""
+msgstr "인쇄됨"
 
 #. module: account
 #: view:account.analytic.line:0
 msgid "Project line"
-msgstr ""
+msgstr "프로젝트 명세"
 
 #. module: account
 #: field:account.invoice.tax,manual:0
 msgid "Manual"
-msgstr ""
+msgstr "수동"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr ""
+msgstr "취소: 환불과 조정을 생성"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
 #, python-format
 msgid "You must set a start date."
-msgstr ""
+msgstr "시작일을 설정해야 합니다."
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -6785,7 +6785,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0 field:account.move,to_check:0
 msgid "To Review"
-msgstr ""
+msgstr "검토 대상"
 
 #. module: account
 #: help:account.partner.ledger,initial_balance:0
@@ -6802,18 +6802,18 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Journal Entries"
-msgstr ""
+msgstr "회계처리"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:156
 #, python-format
 msgid "No period found on the invoice."
-msgstr ""
+msgstr "송장에 기간이 없습니다."
 
 #. module: account
 #: help:account.partner.ledger,page_split:0
 msgid "Display Ledger Report with One partner per page"
-msgstr ""
+msgstr "한 쪽에 한 거래처 원장 보고서 표시"
 
 #. module: account
 #: report:account.general.ledger:0 report:account.general.ledger_landscape:0
@@ -6847,34 +6847,34 @@ msgstr "예"
 #: code:addons/account/report/common_report_header.py:67
 #, python-format
 msgid "All Entries"
-msgstr ""
+msgstr "모든 기입 항목"
 
 #. module: account
 #: constraint:account.move.reconcile:0
 msgid "You can only reconcile journal items with the same partner."
-msgstr ""
+msgstr "같은 거래처인 분개 항목만 조정할 수 있습니다"
 
 #. module: account
 #: view:account.journal.select:0
 msgid "Journal Select"
-msgstr ""
+msgstr "분개장 선택"
 
 #. module: account
 #: view:account.bank.statement:0 code:addons/account/account.py:428
 #: code:addons/account/account.py:440
 #, python-format
 msgid "Opening Balance"
-msgstr ""
+msgstr "기초 잔액"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
 msgid "Account Reconciliation"
-msgstr ""
+msgstr "계정 조정"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr ""
+msgstr "세금 회계 상태"
 
 #. module: account
 #: report:account.general.ledger:0 report:account.general.ledger_landscape:0
@@ -6883,7 +6883,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.account_general_ledger_landscape
 #: model:ir.ui.menu,name:account.menu_general_ledger
 msgid "General Ledger"
-msgstr ""
+msgstr "총계정 원장"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentorderbank0
@@ -6895,13 +6895,13 @@ msgstr ""
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
-msgstr ""
+msgstr "귀하가 분개 기입 항목을 잘 모르거나 회계 전문가에게 '검토받기'를 원하는 경우 확인란을 선택합니다."
 
 #. module: account
 #: field:account.chart.template,complete_tax_set:0
 #: field:wizard.multi.charts.accounts,complete_tax_set:0
 msgid "Complete Set of Taxes"
-msgstr ""
+msgstr "세금의 설정 완료"
 
 #. module: account
 #: view:account.chart.template:0
@@ -6911,7 +6911,7 @@ msgstr "속성"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
 msgid "Account tax chart"
-msgstr ""
+msgstr "계정 세금 도표"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -6928,7 +6928,7 @@ msgstr "합계:"
 msgid ""
 "Configuration error!\n"
 "The currency chosen should be shared by the default accounts too."
-msgstr ""
+msgstr "구성 에러!\n선택한 환률은 또한 기본 계정으로 공유되어야 합니다."
 
 #. module: account
 #: code:addons/account/account.py:2279
@@ -6951,35 +6951,35 @@ msgstr "페이팔 Url"
 #. module: account
 #: field:account.config.settings,module_account_voucher:0
 msgid "Manage customer payments"
-msgstr ""
+msgstr "고객 지불 관리"
 
 #. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
-msgstr ""
+msgstr "해당 송장 보고서를 생성한 문서의 참조."
 
 #. module: account
 #: field:account.tax.code,child_ids:0
 #: field:account.tax.code.template,child_ids:0
 msgid "Child Codes"
-msgstr ""
+msgstr "하위 코드"
 
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid ""
 "Error!\n"
 "The start date of a fiscal year must precede its end date."
-msgstr ""
+msgstr "에러!\n회계연도의 시작일자는 종료일자 앞이어야 합니다."
 
 #. module: account
 #: view:account.tax.template:0
 msgid "Taxes used in Sales"
-msgstr ""
+msgstr "매출 세금"
 
 #. module: account
 #: view:account.period:0
 msgid "Re-Open Period"
-msgstr ""
+msgstr "다시 개시 기간"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
@@ -7045,24 +7045,24 @@ msgstr ""
 #. module: account
 #: view:account.account.template:0
 msgid "Internal notes..."
-msgstr ""
+msgstr "내부 노트..."
 
 #. module: account
 #: constraint:account.account:0
 msgid ""
 "Configuration Error!\n"
 "You cannot define children to an account with internal type different of \"View\"."
-msgstr ""
+msgstr "구성 에러!\n한 계정의 자식을 다른 내부 형식 \"뷰\"로 선언할 수 없습니다."
 
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
 msgid "Accounting Report"
-msgstr ""
+msgstr "회계보고"
 
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account Currency"
-msgstr ""
+msgstr "계정 통화"
 
 #. module: account
 #: report:account.invoice:0
@@ -7072,12 +7072,12 @@ msgstr "세금:"
 #. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
-msgstr ""
+msgstr "세금 퍼센트는 0-1 사이의 비율로 입력합니다."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_report_tree_hierarchy
 msgid "Financial Reports Hierarchy"
-msgstr ""
+msgstr "재무보고서 계층"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
@@ -7087,7 +7087,7 @@ msgstr "월간 매출액"
 #. module: account
 #: view:account.move:0 view:account.move.line:0
 msgid "Analytic Lines"
-msgstr ""
+msgstr "분석적 명세"
 
 #. module: account
 #: field:account.analytic.journal,line_ids:0 field:account.tax.code,line_ids:0
@@ -7097,12 +7097,12 @@ msgstr "입력줄"
 #. module: account
 #: view:account.tax.template:0
 msgid "Account Tax Template"
-msgstr ""
+msgstr "세금 계정 양식"
 
 #. module: account
 #: view:account.journal.select:0
 msgid "Are you sure you want to open Journal Entries?"
-msgstr ""
+msgstr "장부 기입 항목을 열도록 하겠습니까?"
 
 #. module: account
 #: view:account.state.open:0
@@ -7112,7 +7112,7 @@ msgstr "컨트롤을 위한 시작 및 종료 밸런스 설정"
 #. module: account
 #: field:account.chart.template,property_account_expense_opening:0
 msgid "Opening Entries Expense Account"
-msgstr ""
+msgstr "비용 계정 기초 항목"
 
 #. module: account
 #: view:account.invoice:0
@@ -7122,7 +7122,7 @@ msgstr "고객 참조"
 #. module: account
 #: field:account.account.template,parent_id:0
 msgid "Parent Account Template"
-msgstr ""
+msgstr "상위 계정 서식"
 
 #. module: account
 #: report:account.invoice:0
@@ -7133,7 +7133,7 @@ msgstr "가격"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,closing_details_ids:0
 msgid "Closing Cashbox Lines"
-msgstr ""
+msgstr "현금금고 라인 닫기"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7141,27 +7141,27 @@ msgstr ""
 #: field:account.move.line,statement_id:0
 #: model:process.process,name:account.process_process_statementprocess0
 msgid "Statement"
-msgstr ""
+msgstr "예금거래 명세서"
 
 #. module: account
 #: help:account.journal,default_debit_account_id:0
 msgid "It acts as a default account for debit amount"
-msgstr ""
+msgstr "차변 금액에 대한 기본 계정으로 작용"
 
 #. module: account
 #: view:account.entries.report:0
 msgid "Posted entries"
-msgstr ""
+msgstr "게시된 기입 항목"
 
 #. module: account
 #: help:account.payment.term.line,value_amount:0
 msgid "For percent enter a ratio between 0-1."
-msgstr ""
+msgstr "퍼센트를 0-1 사이의 비율로 입력합니다."
 
 #. module: account
 #: view:account.invoice:0
 msgid "Accounting Period"
-msgstr ""
+msgstr "회계기간"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -7171,12 +7171,12 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,purchase_tax_rate:0
 msgid "Purchase tax (%)"
-msgstr ""
+msgstr "구매 세금(%)"
 
 #. module: account
 #: help:res.partner,credit:0
 msgid "Total amount this customer owes you."
-msgstr ""
+msgstr "고객이 지불할 총 금액."
 
 #. module: account
 #: view:account.move.line:0
@@ -7186,7 +7186,7 @@ msgstr "미조정 장부 항목"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
 msgid "Chart Templates"
-msgstr ""
+msgstr "도표 양식"
 
 #. module: account
 #: field:account.journal.period,icon:0
@@ -7201,7 +7201,7 @@ msgstr "OK"
 #. module: account
 #: field:account.chart.template,tax_code_root_id:0
 msgid "Root Tax Code"
-msgstr ""
+msgstr "루트 세금 코드"
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -7209,32 +7209,32 @@ msgid ""
 "Check this box to determine that each entry of this journal won't create a "
 "new counterpart but will share the same counterpart. This is used in fiscal "
 "year closing."
-msgstr ""
+msgstr "이 분개의 각 항목이 같은 상대 항목을 공유하지만 새로운 상대 항목을 작성하지 않게 할려면 확인란을 선택합니다. 이것은 회계년도 결산에 사용됩니다."
 
 #. module: account
 #: field:account.bank.statement,closing_date:0
 msgid "Closed On"
-msgstr ""
+msgstr "마감됨"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "예금거래 내역서 라인"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax:0
 msgid "Default Purchase Tax"
-msgstr ""
+msgstr "기본 구매 세금"
 
 #. module: account
 #: field:account.chart.template,property_account_income_opening:0
 msgid "Opening Entries Income Account"
-msgstr ""
+msgstr "수익 계정 기초 항목"
 
 #. module: account
 #: field:account.config.settings,group_proforma_invoices:0
 msgid "Allow pro-forma invoices"
-msgstr ""
+msgstr "견적서 전표를 허용하다"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7251,17 +7251,17 @@ msgstr ""
 #. module: account
 #: field:account.invoice,reference:0 field:account.invoice.line,invoice_id:0
 msgid "Invoice Reference"
-msgstr ""
+msgstr "송장 참고"
 
 #. module: account
 #: field:account.fiscalyear.close,report_name:0
 msgid "Name of new entries"
-msgstr ""
+msgstr "새 항목의 이름"
 
 #. module: account
 #: view:account.use.model:0
 msgid "Create Entries"
-msgstr ""
+msgstr "기입항목 생성"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
@@ -7271,7 +7271,7 @@ msgstr ""
 #. module: account
 #: help:account.config.settings,currency_id:0
 msgid "Main currency of the company."
-msgstr ""
+msgstr "회사의 주요 통화."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reports
@@ -7289,17 +7289,17 @@ msgstr "경고"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_analytic_open
 msgid "Contracts/Analytic Accounts"
-msgstr ""
+msgstr "계약/분석 계정"
 
 #. module: account
 #: view:account.journal:0 field:res.partner.bank,journal_id:0
 msgid "Account Journal"
-msgstr ""
+msgstr "계정 장부"
 
 #. module: account
 #: field:account.config.settings,tax_calculation_rounding_method:0
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "세금 계산시 반올림 방법"
 
 #. module: account
 #: model:process.node,name:account.process_node_paidinvoice0
@@ -7336,7 +7336,7 @@ msgstr "도메인"
 #. module: account
 #: model:ir.model,name:account.model_account_use_model
 msgid "Use model"
-msgstr ""
+msgstr "모델 사용"
 
 #. module: account
 #: code:addons/account/account.py:1466
@@ -7360,7 +7360,7 @@ msgstr ""
 #. module: account
 #: field:account.financial.report,sign:0
 msgid "Sign on Reports"
-msgstr ""
+msgstr "보고서에 서명"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_analytic_account_tree2
@@ -7384,7 +7384,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_view
 msgid "Root/View"
-msgstr ""
+msgstr "루트/화면"
 
 #. module: account
 #: code:addons/account/account.py:3214
@@ -7401,7 +7401,7 @@ msgstr "프로포마"
 #: selection:account.entries.report,move_line_state:0 view:account.move.line:0
 #: selection:account.move.line,state:0
 msgid "Unbalanced"
-msgstr ""
+msgstr "미조정"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -7417,7 +7417,7 @@ msgstr "이메일 양식"
 #. module: account
 #: view:account.move.line:0
 msgid "Optional Information"
-msgstr ""
+msgstr "선택 정보"
 
 #. module: account
 #: view:account.analytic.line:0 field:account.bank.statement,user_id:0
@@ -7429,7 +7429,7 @@ msgstr "사용자"
 #. module: account
 #: selection:account.account,currency_mode:0
 msgid "At Date"
-msgstr ""
+msgstr "그날에"
 
 #. module: account
 #: help:account.move.line,date_maturity:0
@@ -7441,7 +7441,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_multi_currency
 msgid "Multi-Currencies"
-msgstr ""
+msgstr "다중 통화"
 
 #. module: account
 #: field:account.model.line,date_maturity:0
@@ -7452,18 +7452,18 @@ msgstr "만기 날짜"
 #: code:addons/account/account.py:3201
 #, python-format
 msgid "Sales Journal"
-msgstr ""
+msgstr "매출 분개"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
 msgid "Invoice Tax"
-msgstr ""
+msgstr "송장 세금"
 
 #. module: account
 #: view:account.financial.report:0
 #: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 msgid "Account Reports Hierarchy"
-msgstr ""
+msgstr "계정 보고서 계층"
 
 #. module: account
 #: help:account.account.template,chart_template_id:0
@@ -7478,7 +7478,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Unposted Journal Entries"
-msgstr ""
+msgstr "게시되지 않은 분개 항목"
 
 #. module: account
 #: help:account.invoice.refund,date:0
@@ -7503,7 +7503,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
 msgid "Manual Reconciliation"
-msgstr ""
+msgstr "수동 조정"
 
 #. module: account
 #: report:account.overdue:0
@@ -7521,18 +7521,18 @@ msgstr "받는 사람"
 #: code:addons/account/account.py:1517
 #, python-format
 msgid "Currency Adjustment"
-msgstr ""
+msgstr "환률 조정"
 
 #. module: account
 #: field:account.fiscalyear.close,fy_id:0
 msgid "Fiscal Year to close"
-msgstr ""
+msgstr "마감할 회계연도"
 
 #. module: account
 #: view:account.invoice.cancel:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_cancel
 msgid "Cancel Selected Invoices"
-msgstr ""
+msgstr "선택한 전표들을 취소"
 
 #. module: account
 #: help:account.account.type,report_type:0
@@ -7554,12 +7554,12 @@ msgstr "5월"
 #: code:addons/account/account_invoice.py:827
 #, python-format
 msgid "Global taxes defined, but they are not in invoice lines !"
-msgstr ""
+msgstr "글로벌 세금이 정의되었지만 전표 라인에 있지 않습니다 !"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr ""
+msgstr "계정 도표 서식"
 
 #. module: account
 #: help:account.model.line,sequence:0
@@ -7571,12 +7571,12 @@ msgstr ""
 #. module: account
 #: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount in Currency"
-msgstr ""
+msgstr "통화 잔존 금액"
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_prefix:0
 msgid "Credit note sequence"
-msgstr ""
+msgstr "대변 노트 순서"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
@@ -7584,7 +7584,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_validate_account_moves
 #: view:validate.account.move:0 view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr ""
+msgstr "회계처리를 올린다"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0 view:account.config.settings:0
@@ -7597,7 +7597,7 @@ msgstr "고객"
 #. module: account
 #: field:account.financial.report,name:0
 msgid "Report Name"
-msgstr ""
+msgstr "보고서명"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_cash
@@ -7613,14 +7613,14 @@ msgstr "현금"
 #: field:account.fiscal.position.account,account_dest_id:0
 #: field:account.fiscal.position.account.template,account_dest_id:0
 msgid "Account Destination"
-msgstr ""
+msgstr "계정 목적지"
 
 #. module: account
 #: help:account.invoice.refund,filter_refund:0
 msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
-msgstr ""
+msgstr "이 유형의 환불 기초. 송장을 이미 조정했다면 수정 및 취소할 수 없습니다."
 
 #. module: account
 #: field:account.bank.statement.line,sequence:0
@@ -7636,24 +7636,24 @@ msgstr "순서"
 #. module: account
 #: field:account.config.settings,paypal_account:0
 msgid "Paypal account"
-msgstr ""
+msgstr "페이팔 계정"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
 msgid "Journal Entry Number"
-msgstr ""
+msgstr "분개 기입항목 번호"
 
 #. module: account
 #: view:account.financial.report:0
 msgid "Parent Report"
-msgstr ""
+msgstr "상위 보고서"
 
 #. module: account
 #: constraint:account.account:0 constraint:account.tax.code:0
 msgid ""
 "Error!\n"
 "You cannot create recursive accounts."
-msgstr ""
+msgstr "에러!\n재귀적인 계정을 생성할 수 없습니다."
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in
@@ -7663,7 +7663,7 @@ msgstr ""
 #. module: account
 #: help:account.invoice,move_id:0
 msgid "Link to the automatically generated Journal Items."
-msgstr ""
+msgstr "자동으로 생성된 분개 항목에 연결."
 
 #. module: account
 #: model:ir.model,name:account.model_account_config_settings
@@ -7684,7 +7684,7 @@ msgstr "자산"
 #. module: account
 #: field:account.bank.statement,balance_end:0
 msgid "Computed Balance"
-msgstr ""
+msgstr "계산한 잔액"
 
 #. module: account
 #. openerp-web
@@ -7711,12 +7711,12 @@ msgid ""
 "Day of the month, set -1 for the last day of the current month. If it's "
 "positive, it gives the day of the next month. Set 0 for net days (otherwise "
 "it's based on the beginning of the month)."
-msgstr ""
+msgstr "달의 날짜. -1로 설정하면 해당 달의 말일이 됩니다. 양의 숫자인 경우에는 다음 달의 날짜를 제공합니다. 0으로 설정하면 네트워크 날짜로 설정됩니다.(그렇지 않으면 해당 월의 시작을 기준으로 합니다)"
 
 #. module: account
 #: view:account.move.line.reconcile:0
 msgid "Reconciliation Transactions"
-msgstr ""
+msgstr "조정 거래"
 
 #. module: account
 #: code:addons/account/account_invoice.py:475
@@ -7729,12 +7729,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
 msgid "Legal Reports"
-msgstr ""
+msgstr "정규보고서"
 
 #. module: account
 #: field:account.tax.code,sum_period:0
 msgid "Period Sum"
-msgstr ""
+msgstr "기간 합계"
 
 #. module: account
 #: help:account.tax,sequence:0
@@ -7747,12 +7747,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
 msgid "CashBox Line"
-msgstr ""
+msgstr "현금보관함 라인"
 
 #. module: account
 #: field:account.installer,charts:0
 msgid "Accounting Package"
-msgstr ""
+msgstr "회계 패키지"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -7762,7 +7762,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
 msgid "Partner Ledger"
-msgstr ""
+msgstr "상대방 원장"
 
 #. module: account
 #: selection:account.tax.template,type:0
@@ -7784,28 +7784,28 @@ msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니�
 #. module: account
 #: field:res.company,tax_calculation_rounding_method:0
 msgid "Tax Calculation Rounding Method"
-msgstr ""
+msgstr "세금 계산시 반올림 방법"
 
 #. module: account
 #: field:account.entries.report,move_line_state:0
 msgid "State of Move Line"
-msgstr ""
+msgstr "이동 명세 상태"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 msgid "Account move line reconcile"
-msgstr ""
+msgstr "계정 이동 명세 조정"
 
 #. module: account
 #: view:account.subscription.generate:0
 #: model:ir.model,name:account.model_account_subscription_generate
 msgid "Subscription Compute"
-msgstr ""
+msgstr "계산 구독"
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
 msgid "Open for Unreconciliation"
-msgstr ""
+msgstr "비조정 열기"
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
@@ -7828,7 +7828,7 @@ msgstr "협력업체"
 #. module: account
 #: help:account.change.currency,currency_id:0
 msgid "Select a currency to apply on the invoice"
-msgstr ""
+msgstr "송장에 적용할 통화 선택"
 
 #. module: account
 #: view:account.financial.report:0
@@ -7840,7 +7840,7 @@ msgstr "보고서 유형"
 msgid ""
 "Select Fiscal Year which you want to remove entries for its End of year "
 "entries journal"
-msgstr ""
+msgstr "올해 분개 기입 항목의 끝 항목을 제거하길 원하는 회계년도 선택"
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
@@ -7864,7 +7864,7 @@ msgstr ""
 #. module: account
 #: field:account.account.type,close_method:0
 msgid "Deferral Method"
-msgstr ""
+msgstr "연기 방법"
 
 #. module: account
 #: model:process.node,note:account.process_node_electronicfile0
@@ -7880,28 +7880,28 @@ msgstr ""
 #. module: account
 #: help:account.account,reconcile:0
 msgid "Check this box if this account allows reconciliation of journal items."
-msgstr ""
+msgstr "계정이 장부기입항목의 재조정을 허용하면 이 박스를 체크"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
 msgid "Partner Payment Term"
-msgstr ""
+msgstr "파트너 지불 기간"
 
 #. module: account
 #: help:account.move.reconcile,opening_reconciliation:0
 msgid "Is this reconciliation produced by the opening of a new fiscal year ?."
-msgstr ""
+msgstr "새 회계년도 개시에 따른 조정 생산은?"
 
 #. module: account
 #: view:account.analytic.line:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_line_form
 msgid "Analytic Entries"
-msgstr ""
+msgstr "분석 기입 항목"
 
 #. module: account
 #: view:account.analytic.account:0
 msgid "Associated Partner"
-msgstr ""
+msgstr "관련 상대방"
 
 #. module: account
 #: field:account.invoice,comment:0
@@ -7912,12 +7912,12 @@ msgstr "추가 정보"
 #: field:account.invoice.report,residual:0
 #: field:account.invoice.report,user_currency_residual:0
 msgid "Total Residual"
-msgstr ""
+msgstr "총 잔금"
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Opening Cash Control"
-msgstr ""
+msgstr "기초 현금 제어"
 
 #. module: account
 #: model:process.node,note:account.process_node_invoiceinvoice0
@@ -7944,12 +7944,12 @@ msgstr "상태"
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
 #: model:ir.actions.report.xml,name:account.account_analytic_account_cost_ledger
 msgid "Cost Ledger"
-msgstr ""
+msgstr "원가 원장"
 
 #. module: account
 #: view:account.config.settings:0
 msgid "No Fiscal Year Defined for This Company"
-msgstr ""
+msgstr "해당 회사에 정의된 회계년도가 없습니다"
 
 #. module: account
 #: view:account.invoice:0
@@ -7964,29 +7964,29 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_open_closed_fiscalyear
 msgid "Choose Fiscal Year"
-msgstr ""
+msgstr "회계연도를 선택하세요"
 
 #. module: account
 #: code:addons/account/account.py:3204
 #, python-format
 msgid "Purchase Refund Journal"
-msgstr ""
+msgstr "구매 환불 분개"
 
 #. module: account
 #: code:addons/account/account.py:1304
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "분개에 순서를 정의해야 합니다."
 
 #. module: account
 #: help:account.tax.template,amount:0
 msgid "For Tax Type percent enter % ratio between 0-1."
-msgstr ""
+msgstr "세금 퍼센트는 0-1 사이의 비율로 입력합니다."
 
 #. module: account
 #: view:account.analytic.account:0
 msgid "Current Accounts"
-msgstr ""
+msgstr "현재 계정"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -8026,7 +8026,7 @@ msgstr "기간"
 msgid ""
 "Total amount (in Company currency) for transactions held in secondary "
 "currency for this account."
-msgstr ""
+msgstr "이 계정에 보조 통화로 개시된 거래의 총계(회사 통화)"
 
 #. module: account
 #: report:account.invoice:0
@@ -8037,48 +8037,48 @@ msgstr "순 합계:"
 #: code:addons/account/wizard/account_report_common.py:163
 #, python-format
 msgid "Select a starting and an ending period."
-msgstr ""
+msgstr "시작 및 종료 기간을 선택"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_next:0
 msgid "Next invoice number"
-msgstr ""
+msgstr "다음 송장 번호"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_generic_reporting
 msgid "Generic Reporting"
-msgstr ""
+msgstr "일반보고"
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,journal_id:0
 msgid "Write-Off Journal"
-msgstr ""
+msgstr "상각 분개"
 
 #. module: account
 #: field:account.chart.template,property_account_income_categ:0
 msgid "Income Category Account"
-msgstr ""
+msgstr "수익 분류 계정"
 
 #. module: account
 #: field:account.account,adjusted_balance:0
 msgid "Adjusted Balance"
-msgstr ""
+msgstr "수정 잔액"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Position Templates"
-msgstr ""
+msgstr "재정 위상 양식"
 
 #. module: account
 #: view:account.entries.report:0
 msgid "Int.Type"
-msgstr ""
+msgstr "내부 유형"
 
 #. module: account
 #: field:account.move.line,tax_amount:0
 msgid "Tax/Base Amount"
-msgstr ""
+msgstr "세액/기초액"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:0
@@ -8114,7 +8114,7 @@ msgstr "회사/기관 통화"
 #: field:account.vat.declaration,chart_account_id:0
 #: field:accounting.report,chart_account_id:0
 msgid "Chart of Account"
-msgstr ""
+msgstr "계정 도표"
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
@@ -8131,12 +8131,12 @@ msgstr "재조정 결과"
 #: field:account.bank.statement,balance_end_real:0
 #: field:account.treasury.report,ending_balance:0
 msgid "Ending Balance"
-msgstr ""
+msgstr "마감 잔액"
 
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralized Counterpart"
-msgstr ""
+msgstr "집중 거래상대방"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -8149,17 +8149,17 @@ msgstr ""
 #: field:account.move.line,reconcile_partial_id:0
 #: view:account.move.line.reconcile:0
 msgid "Partial Reconcile"
-msgstr ""
+msgstr "부분 조정"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
 msgid "Account Analytic Inverted Balance"
-msgstr ""
+msgstr "계정 분석 역 잔액"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
 msgid "Account Common Report"
-msgstr ""
+msgstr "계정 공통 보고서"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -8178,7 +8178,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
 msgid "Move bank reconcile"
-msgstr ""
+msgstr "이동 예금 조정"
 
 #. module: account
 #: view:account.config.settings:0
@@ -8190,7 +8190,7 @@ msgstr "적용"
 #: model:ir.actions.act_window,name:account.action_account_type_form
 #: model:ir.ui.menu,name:account.menu_action_account_type_form
 msgid "Account Types"
-msgstr ""
+msgstr "계정 유형들"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1221
@@ -8203,7 +8203,7 @@ msgstr ""
 #. module: account
 #: field:account.account.type,report_type:0
 msgid "P&L / BS Category"
-msgstr ""
+msgstr "손익 / BS 분류"
 
 #. module: account
 #: view:account.automatic.reconcile:0 view:account.move:0
@@ -8215,12 +8215,12 @@ msgstr ""
 #: model:process.node,name:account.process_node_supplierreconciliation0
 #, python-format
 msgid "Reconciliation"
-msgstr ""
+msgstr "조정하기"
 
 #. module: account
 #: view:account.tax.template:0
 msgid "Keep empty to use the income account"
-msgstr ""
+msgstr "수입 계정을 사용하려면 비워두세요"
 
 #. module: account
 #: view:account.invoice:0
@@ -8247,17 +8247,17 @@ msgid ""
 "                and one for miscellaneous information.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                장부에 추가하려면 클릭하세요.\n              </p><p>\n               장부는 매일매일 사업에 관련된 모든 회계 데이터의 거래를 기록하는데 사용한다.\n              </p><p>\n               일반적인 회사는 지불방법(현금, 은행, 수표) 마다 하나의 장부를 사용하고, \n               구매 장부 하나와 판매 장부하나 그리고 기타 정보를 위한 장부를 사용한다.\n              </p>\n            "
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close_state
 msgid "Fiscalyear Close state"
-msgstr ""
+msgstr "회계연도 마감 상태"
 
 #. module: account
 #: field:account.invoice.refund,journal_id:0
 msgid "Refund Journal"
-msgstr ""
+msgstr "환불 분개"
 
 #. module: account
 #: report:account.account.balance:0 report:account.central.journal:0
@@ -8271,13 +8271,13 @@ msgstr ""
 #, python-format
 msgid ""
 "In order to close a period, you must first post related journal entries."
-msgstr ""
+msgstr "기간을 마감하려면 먼저 관련된 분개 기입 항목을 게시해야 합니다."
 
 #. module: account
 #: view:account.entries.report:0 view:board.board:0
 #: model:ir.actions.act_window,name:account.action_company_analysis_tree
 msgid "Company Analysis"
-msgstr ""
+msgstr "기업 분석"
 
 #. module: account
 #: help:account.invoice,account_id:0
@@ -8288,24 +8288,24 @@ msgstr ""
 #: code:addons/account/account.py:3394
 #, python-format
 msgid "Tax %.2f%%"
-msgstr ""
+msgstr "세금 %.2f%%"
 
 #. module: account
 #: field:account.tax.code,parent_id:0 view:account.tax.code.template:0
 #: field:account.tax.code.template,parent_id:0
 msgid "Parent Code"
-msgstr ""
+msgstr "상위 코드"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
 msgid "Payment Term Line"
-msgstr ""
+msgstr "지불 기간 명세"
 
 #. module: account
 #: code:addons/account/account.py:3202
 #, python-format
 msgid "Purchase Journal"
-msgstr ""
+msgstr "구매 분개"
 
 #. module: account
 #: field:account.invoice,amount_untaxed:0
@@ -8315,12 +8315,12 @@ msgstr "소계"
 #. module: account
 #: view:account.vat.declaration:0
 msgid "Print Tax Statement"
-msgstr ""
+msgstr "세금계산서 인쇄"
 
 #. module: account
 #: view:account.model.line:0
 msgid "Journal Entry Model Line"
-msgstr ""
+msgstr "분개 기입항목 모델 라인"
 
 #. module: account
 #: view:account.invoice:0 field:account.invoice,date_due:0
@@ -8338,12 +8338,12 @@ msgstr "공급업체"
 #. module: account
 #: view:account.journal:0
 msgid "Accounts Type Allowed (empty for no control)"
-msgstr ""
+msgstr "허용하는 계정 형식 (비우면 조정 없음)"
 
 #. module: account
 #: view:account.payment.term:0
 msgid "Payment term explanation for the customer..."
-msgstr ""
+msgstr "고객을 위한 지불 조건 설명..."
 
 #. module: account
 #: help:account.move.line,amount_residual:0
@@ -8374,7 +8374,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close
 msgid "Fiscalyear Close"
-msgstr ""
+msgstr "회계연도 마감"
 
 #. module: account
 #: sql_constraint:account.account:0
@@ -8391,12 +8391,12 @@ msgstr ""
 #: view:account.invoice:0
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
 msgid "Unpaid Invoices"
-msgstr ""
+msgstr "미지급된 송장"
 
 #. module: account
 #: field:account.move.line.reconcile,debit:0
 msgid "Debit amount"
-msgstr ""
+msgstr "차변 합계"
 
 #. module: account
 #: view:account.aged.trial.balance:0 view:account.analytic.balance:0
@@ -8416,19 +8416,19 @@ msgstr "확실하십니까?"
 #. module: account
 #: view:account.journal:0
 msgid "Accounts Allowed (empty for no control)"
-msgstr ""
+msgstr "허용하는 계정 (비우면 조정 없음)"
 
 #. module: account
 #: field:account.config.settings,sale_tax_rate:0
 msgid "Sales tax (%)"
-msgstr ""
+msgstr "매출 세금(%)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
 #: model:ir.actions.act_window,name:account.action_account_analytic_chart
 #: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
 msgid "Chart of Analytic Accounts"
-msgstr ""
+msgstr "분석 계정 도표"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -8442,7 +8442,7 @@ msgid ""
 "                entries to automate the postings in the system.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                새로운 반복 항목을 선언하려면 클릭하세요..\n              </p><p>\n                반복 기입은 특정 날짜를 기초로 재발하는, 소비자 혹은 공급자의 서명 등등.\n                이런 항목으로 시스템에서 자동으로 게시하게 생성할 수 있다.\n              </p>\n            "
 
 #. module: account
 #: view:account.journal:0
@@ -8453,7 +8453,7 @@ msgstr "기타"
 #. module: account
 #: help:res.partner,debit:0
 msgid "Total amount you have to pay to this supplier."
-msgstr ""
+msgstr "공급업체에 지불한 총 금액."
 
 #. module: account
 #: model:process.node,name:account.process_node_analytic0
@@ -8465,18 +8465,18 @@ msgstr ""
 #: field:account.analytic.journal,name:0 report:account.general.journal:0
 #: field:account.journal,name:0
 msgid "Journal Name"
-msgstr ""
+msgstr "분개장 이름"
 
 #. module: account
 #: code:addons/account/account_move_line.py:835
 #, python-format
 msgid "Entry \"%s\" is not valid !"
-msgstr ""
+msgstr "기입항목 \"%s\"는 유효하지 않습니다!"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Smallest Text"
-msgstr ""
+msgstr "가장 작은 텍스트"
 
 #. module: account
 #: help:account.config.settings,module_account_check_writing:0
@@ -8495,7 +8495,7 @@ msgstr "송장 발행 & 지불"
 msgid ""
 "Unique number of the invoice, computed automatically when the invoice is "
 "created."
-msgstr ""
+msgstr "송장의 고유 번호. 송장을 작성할 때 자동으로 만들어 집니다."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expense
@@ -8506,7 +8506,7 @@ msgstr "비용"
 #. module: account
 #: help:account.chart,fiscalyear:0
 msgid "Keep empty for all open fiscal years"
-msgstr ""
+msgstr "모든 개시 상태의 회계 년도를 비워두세요."
 
 #. module: account
 #: help:account.move.line,amount_currency:0
@@ -8557,7 +8557,7 @@ msgstr ""
 #: help:account.bank.statement.line,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of bank statement lines."
-msgstr ""
+msgstr "은행 내역 라인의 목록을 표시할 때 순서를 제공함."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_validentries0
@@ -8568,22 +8568,22 @@ msgstr ""
 #: view:account.entries.report:0
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
 msgid "Reconciled entries"
-msgstr ""
+msgstr "조정된 항목"
 
 #. module: account
 #: view:account.tax.code.template:0 view:account.tax.template:0
 msgid "Tax Template"
-msgstr ""
+msgstr "세금 서식"
 
 #. module: account
 #: field:account.invoice.refund,period:0
 msgid "Force period"
-msgstr ""
+msgstr "강제 기간"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
-msgstr ""
+msgstr "파트너 잔액 계정 인쇄"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1132
@@ -8601,7 +8601,7 @@ msgid ""
 "the sign of the balance; e.g.: Expense account. The same applies for "
 "accounts that are typically more credited than debited and that you would "
 "like to print as positive amounts in your reports; e.g.: Income account."
-msgstr ""
+msgstr "일반적으로 더 적립보다 돈이 인출하고 보고서에 부정적인 금액을 인쇄하려면, 잔액의 부호를 남겨둬야 합니다; 예로 비용 계정. 동일하게 대변에 기입하는 계정에 적용됩니다; 예로  소득 계정."
 
 #. module: account
 #: field:res.partner,contract_ids:0
@@ -8622,7 +8622,7 @@ msgstr "알 수 없음"
 #: code:addons/account/account.py:3206
 #, python-format
 msgid "Opening Entries Journal"
-msgstr ""
+msgstr "개시분개를 하다"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
@@ -8639,19 +8639,19 @@ msgstr "은(는) 팔로워임"
 #: view:account.move:0 field:account.move,narration:0
 #: field:account.move.line,narration:0
 msgid "Internal Note"
-msgstr ""
+msgstr "내부 주석"
 
 #. module: account
 #: constraint:account.account:0
 msgid ""
 "Configuration Error!\n"
 "You cannot select an account type with a deferral method different of \"Unreconciled\" for accounts with internal type \"Payable/Receivable\"."
-msgstr ""
+msgstr "구성 에러!\n내부 \"채무/채권\" 유형 계정에 대한 \"미 조정\"의 다른 연기 방법과 계정 유형을 선택 할 수 없습니다."
 
 #. module: account
 #: field:account.config.settings,has_fiscal_year:0
 msgid "Company has a fiscal year"
-msgstr ""
+msgstr "회사가 회계연도를 가집니다"
 
 #. module: account
 #: help:account.tax,child_depend:0 help:account.tax.template,child_depend:0
@@ -8669,27 +8669,27 @@ msgstr ""
 #. module: account
 #: selection:account.tax,applicable_type:0
 msgid "Given by Python Code"
-msgstr ""
+msgstr "파이썬 코드 제공"
 
 #. module: account
 #: field:account.analytic.journal,code:0
 msgid "Journal Code"
-msgstr ""
+msgstr "분개장 코드"
 
 #. module: account
 #: view:account.invoice:0 field:account.move.line,amount_residual:0
 msgid "Residual Amount"
-msgstr ""
+msgstr "잔존 금액"
 
 #. module: account
 #: field:account.invoice,move_lines:0 field:account.move.reconcile,line_id:0
 msgid "Entry Lines"
-msgstr ""
+msgstr "기입항목 라인"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
 msgid "Open Journal"
-msgstr ""
+msgstr "분개 열기"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -8706,13 +8706,13 @@ msgstr ""
 #. module: account
 #: field:account.cashbox.line,pieces:0
 msgid "Unit of Currency"
-msgstr ""
+msgstr "통화의 단위"
 
 #. module: account
 #: code:addons/account/account.py:3203
 #, python-format
 msgid "Sales Refund Journal"
-msgstr ""
+msgstr "매출 환불 분개"
 
 #. module: account
 #: view:account.move:0 view:account.move.line:0
@@ -8736,23 +8736,23 @@ msgstr ""
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close states of Fiscal year and periods"
-msgstr ""
+msgstr "회계연도와 보고기간의 상태를 마감"
 
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr ""
+msgstr "구매 환불 분개"
 
 #. module: account
 #: view:account.analytic.line:0
 msgid "Product Information"
-msgstr ""
+msgstr "상품 정보"
 
 #. module: account
 #: report:account.analytic.account.journal:0 view:account.move:0
 #: view:account.move.line:0 model:ir.ui.menu,name:account.next_id_40
 msgid "Analytic"
-msgstr ""
+msgstr "분석"
 
 #. module: account
 #: model:process.node,name:account.process_node_invoiceinvoice0
@@ -8763,18 +8763,18 @@ msgstr "송장 생성"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
 msgid "Configure Accounting Data"
-msgstr ""
+msgstr "회계 데이터 구성"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax_rate:0
 msgid "Purchase Tax(%)"
-msgstr ""
+msgstr "구매 세금(%)"
 
 #. module: account
 #: code:addons/account/account_invoice.py:908
 #, python-format
 msgid "Please create some invoice lines."
-msgstr ""
+msgstr "송장 명세를 작성해야 합니다."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
@@ -8782,12 +8782,12 @@ msgstr ""
 msgid ""
 "Please check that the field 'Internal Transfers Account' is set on the "
 "payment method '%s'."
-msgstr ""
+msgstr "'%s' 지불 방법에 '내부 전송 계정' 필드가 설정되어 있는지 확인하십시오."
 
 #. module: account
 #: field:account.vat.declaration,display_detail:0
 msgid "Display Detail"
-msgstr ""
+msgstr "세부내용을 표시"
 
 #. module: account
 #: code:addons/account/account.py:3211
@@ -8821,7 +8821,7 @@ msgstr ""
 #: field:account.period,date_stop:0
 #: model:ir.ui.menu,name:account.menu_account_end_year_treatments
 msgid "End of Period"
-msgstr ""
+msgstr "기간 말"
 
 #. module: account
 #: field:account.account,financial_report_ids:0
@@ -8830,12 +8830,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_report
 #: model:ir.ui.menu,name:account.menu_account_reports
 msgid "Financial Reports"
-msgstr ""
+msgstr "재무 보고서"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_liability_view1
 msgid "Liability View"
-msgstr ""
+msgstr "부채 화면"
 
 #. module: account
 #: report:account.account.balance:0
@@ -8858,7 +8858,7 @@ msgstr ""
 #: field:accounting.report,period_from:0
 #: field:accounting.report,period_from_cmp:0
 msgid "Start Period"
-msgstr ""
+msgstr "시간 시작"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
@@ -8868,17 +8868,17 @@ msgstr "중앙 장부"
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
 msgid "Analysis Direction"
-msgstr ""
+msgstr "분석 방향"
 
 #. module: account
 #: field:res.partner,ref_companies:0
 msgid "Companies that refers to partner"
-msgstr ""
+msgstr "거래처 의미인 회사"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Ask Refund"
-msgstr ""
+msgstr "환불 문의"
 
 #. module: account
 #: view:account.move.line:0
@@ -8894,17 +8894,17 @@ msgstr ""
 #: code:addons/account/account.py:2309
 #, python-format
 msgid "Wrong Model!"
-msgstr ""
+msgstr "잘못된 모델!"
 
 #. module: account
 #: field:account.subscription,period_total:0
 msgid "Number of Periods"
-msgstr ""
+msgstr "기간 수"
 
 #. module: account
 #: report:account.overdue:0
 msgid "Document: Customer account statement"
-msgstr ""
+msgstr "문서: 고객 계정 보고서"
 
 #. module: account
 #: view:account.account.template:0
@@ -8914,13 +8914,13 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_prefix:0
 msgid "Supplier credit note sequence"
-msgstr ""
+msgstr "공급업체 환불 안내서 순서"
 
 #. module: account
 #: code:addons/account/wizard/account_state_open.py:37
 #, python-format
 msgid "Invoice is already reconciled."
-msgstr ""
+msgstr "송장이 이미 조정되었습니다."
 
 #. module: account
 #: help:account.config.settings,module_account_payment:0
@@ -8934,20 +8934,20 @@ msgstr ""
 #. module: account
 #: xsl:account.transfer:0
 msgid "Document"
-msgstr ""
+msgstr "서류"
 
 #. module: account
 #: view:account.chart.template:0
 #: field:account.chart.template,property_account_receivable:0
 msgid "Receivable Account"
-msgstr ""
+msgstr "채권 계정"
 
 #. module: account
 #: code:addons/account/account_move_line.py:777
 #: code:addons/account/account_move_line.py:830
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries."
-msgstr ""
+msgstr "항목 조정은 회사에서 동일 항목이어야 합니다."
 
 #. module: account
 #: field:account.account,balance:0 report:account.account.balance:0
@@ -8976,19 +8976,19 @@ msgstr ""
 #. module: account
 #: report:account.account.balance:0 report:account.general.ledger_landscape:0
 msgid "Display Account"
-msgstr ""
+msgstr "계정 표시"
 
 #. module: account
 #: selection:account.account,type:0 selection:account.account.template,type:0
 #: model:account.account.type,name:account.data_account_type_payable
 #: selection:account.entries.report,type:0
 msgid "Payable"
-msgstr ""
+msgstr "채무"
 
 #. module: account
 #: view:account.account:0
 msgid "Account name"
-msgstr ""
+msgstr "계정 이름"
 
 #. module: account
 #: view:board.board:0
@@ -9021,7 +9021,7 @@ msgstr ""
 #: field:account.cashbox.line,number_closing:0
 #: field:account.cashbox.line,number_opening:0
 msgid "Number of Units"
-msgstr ""
+msgstr "단위의 수"
 
 #. module: account
 #: model:process.node,note:account.process_node_manually0
@@ -9047,29 +9047,29 @@ msgstr "유효하지 않은 액션!"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Date / Period"
-msgstr ""
+msgstr "날짜 / 기간"
 
 #. module: account
 #: report:account.central.journal:0
 msgid "A/C No."
-msgstr ""
+msgstr "계정번호."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
 msgid "Bank statements"
-msgstr ""
+msgstr "예금거래 내역서"
 
 #. module: account
 #: constraint:account.period:0
 msgid ""
 "Error!\n"
 "The period is invalid. Either some periods are overlapping or the period's dates are not matching the scope of the fiscal year."
-msgstr ""
+msgstr "에러!\n기간은 무효입니다. 어떤 시점은 겹치거나 시점의 날짜가 회계연도의 범위와 맞지 않습니다."
 
 #. module: account
 #: report:account.overdue:0
 msgid "There is nothing due with this customer."
-msgstr ""
+msgstr "이 고객과 아무 관련이 없습니다."
 
 #. module: account
 #: help:account.tax,account_paid_id:0
@@ -9082,7 +9082,7 @@ msgstr ""
 #: help:account.addtmpl.wizard,cparent_id:0
 msgid ""
 "Creates an account with the selected template under this existing parent."
-msgstr ""
+msgstr "선택한 양식으로 기존 부모 아래 계정을 생성"
 
 #. module: account
 #: report:account.invoice:0
@@ -9092,7 +9092,7 @@ msgstr "소스"
 #. module: account
 #: selection:account.model.line,date_maturity:0
 msgid "Date of the day"
-msgstr ""
+msgstr "오늘의 날짜"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:49
@@ -9117,29 +9117,29 @@ msgstr "보냄"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
 msgid "Common Report"
-msgstr ""
+msgstr "공통 보고서"
 
 #. module: account
 #: field:account.config.settings,default_sale_tax:0
 #: field:account.config.settings,sale_tax:0
 msgid "Default sale tax"
-msgstr ""
+msgstr "기본 판매 세금"
 
 #. module: account
 #: report:account.overdue:0
 msgid "Balance :"
-msgstr ""
+msgstr "잔액"
 
 #. module: account
 #: code:addons/account/account.py:1558
 #, python-format
 msgid "Cannot create moves for different companies."
-msgstr ""
+msgstr "다른 회사에서 이동할 수 없습니다."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
 msgid "Periodic Processing"
-msgstr ""
+msgstr "정기 처리 작업"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -9165,7 +9165,7 @@ msgstr "7월"
 #. module: account
 #: view:account.account:0
 msgid "Chart of accounts"
-msgstr ""
+msgstr "계정 차트"
 
 #. module: account
 #: field:account.subscription.line,subscription_id:0
@@ -9175,7 +9175,7 @@ msgstr "등록"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
 msgid "Account Analytic Balance"
-msgstr ""
+msgstr "계정 분석 잔액"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9197,12 +9197,12 @@ msgstr ""
 #: field:account.vat.declaration,period_to:0
 #: field:accounting.report,period_to:0 field:accounting.report,period_to_cmp:0
 msgid "End Period"
-msgstr ""
+msgstr "종료 기간"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_expense_view1
 msgid "Expense View"
-msgstr ""
+msgstr "비용뷰"
 
 #. module: account
 #: field:account.move.line,date_maturity:0
@@ -9213,13 +9213,13 @@ msgstr "시한"
 #: model:account.payment.term,name:account.account_payment_term_immediate
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Immediate Payment"
-msgstr ""
+msgstr "즉시 결제"
 
 #. module: account
 #: code:addons/account/account.py:1478
 #, python-format
 msgid " Centralisation"
-msgstr ""
+msgstr "중앙집중"
 
 #. module: account
 #: help:account.journal,type:0
@@ -9235,7 +9235,7 @@ msgstr ""
 #: view:account.subscription:0
 #: model:ir.model,name:account.model_account_subscription
 msgid "Account Subscription"
-msgstr ""
+msgstr "계정 구독"
 
 #. module: account
 #: report:account.overdue:0
@@ -9245,7 +9245,7 @@ msgstr ""
 #. module: account
 #: view:account.subscription:0
 msgid "Entry Subscription"
-msgstr ""
+msgstr "기입항목 등록"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9276,43 +9276,43 @@ msgstr "시작일"
 msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
-msgstr ""
+msgstr "송장이 지불되었고 송장의 분개 항목이 하나 또는 여러 지급 분개 항목으로 조정되었음을 나타냅니다."
 
 #. module: account
 #: code:addons/account/account_move_line.py:786
 #, python-format
 msgid "Journal Item '%s' (id: %s), Move '%s' is already reconciled!"
-msgstr ""
+msgstr "분개 기입항목 '%s' (id: %s),  '%s' 이동은 이미 조정되었습니다!"
 
 #. module: account
 #: view:account.invoice:0 view:account.invoice.report:0
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
 msgid "Draft Invoices"
-msgstr ""
+msgstr "전표 초안"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:31
 #, python-format
 msgid "Nothing more to reconcile"
-msgstr ""
+msgstr "더 조정할 것이 없습니다"
 
 #. module: account
 #: view:cash.box.in:0
 #: model:ir.actions.act_window,name:account.action_cash_box_in
 msgid "Put Money In"
-msgstr ""
+msgstr "현금 보관"
 
 #. module: account
 #: selection:account.account.type,close_method:0 view:account.entries.report:0
 #: view:account.move.line:0
 msgid "Unreconciled"
-msgstr ""
+msgstr "비조정됨"
 
 #. module: account
 #: field:account.journal,sequence_id:0
 msgid "Entry Sequence"
-msgstr ""
+msgstr "기입항목 순서"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_tree
@@ -9324,7 +9324,7 @@ msgid ""
 "accounting entries, all new entries should then be made on the following "
 "open period. Close a period when you do not want to record new entries and "
 "want to lock this period for tax related calculation."
-msgstr ""
+msgstr "기간은 회계 항목이 관련 활동을 회계에 대해 기록 되어야 하는 동안 시간의 회계 기간입니다. 월별 기간은 표준이지만, 당신의 국가 또는 회사의 필요에 따라 분기 별 기간을 가질 수 있습니다. 기간 마감하면 새로운 회계 항목을 기록하는 것은 불가능 해집니다. 모든 새로운 항목이 다음 기간에 오픈 해야 합니다. 새로운 항목을 기록하고 세금 관련 계산을 위한이 기간을 잠그려하지 않으면 기간을 닫습니다."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -9335,7 +9335,7 @@ msgstr "보류"
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost_ledger_journal
 #: model:ir.actions.report.xml,name:account.account_analytic_account_quantity_cost_ledger
 msgid "Cost Ledger (Only quantities)"
-msgstr ""
+msgstr "원가 원장(수량만)"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_analyticinvoice0
@@ -9346,12 +9346,12 @@ msgstr ""
 #. module: account
 #: view:account.installer:0
 msgid "Configure your Fiscal Year"
-msgstr ""
+msgstr "회계연도 구성"
 
 #. module: account
 #: field:account.period,name:0
 msgid "Period Name"
-msgstr ""
+msgstr "기간 이름"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:68
@@ -9359,7 +9359,7 @@ msgstr ""
 msgid ""
 "Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state."
-msgstr ""
+msgstr "선택한 송장은 이미 '취소됨'이거나 '마감' 상태이므로 취소할 수 없습니다."
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -9379,12 +9379,12 @@ msgstr ""
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 msgid "Journal Items"
-msgstr ""
+msgstr "장부 기입항목"
 
 #. module: account
 #: view:accounting.report:0
 msgid "Comparison"
-msgstr ""
+msgstr "비교"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1130
@@ -9406,7 +9406,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement.line,name:0
 msgid "OBI"
-msgstr ""
+msgstr "OBI"
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -9418,19 +9418,19 @@ msgstr ""
 #. module: account
 #: field:account.period,special:0
 msgid "Opening/Closing Period"
-msgstr ""
+msgstr "기간 개시/마감"
 
 #. module: account
 #: field:account.account,currency_id:0
 #: field:account.account.template,currency_id:0
 #: field:account.bank.accounts.wizard,currency_id:0
 msgid "Secondary Currency"
-msgstr ""
+msgstr "보조 통화"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr ""
+msgstr "계정 이동 검증"
 
 #. module: account
 #: field:account.account,credit:0 report:account.account.balance:0
@@ -9458,18 +9458,18 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
-msgstr ""
+msgstr "보통 분개장"
 
 #. module: account
 #: view:account.model:0
 msgid "Journal Entry Model"
-msgstr ""
+msgstr "분개 기입항목 모델"
 
 #. module: account
 #: code:addons/account/account.py:1067
 #, python-format
 msgid "Start period should precede then end period."
-msgstr ""
+msgstr "기간 시작은 기간 종료보다 앞서야 합니다."
 
 #. module: account
 #: field:account.invoice,number:0 field:account.move,name:0
@@ -9529,7 +9529,7 @@ msgstr ""
 #: field:account.account,tax_ids:0 view:account.account.template:0
 #: field:account.account.template,tax_ids:0 view:account.chart.template:0
 msgid "Default Taxes"
-msgstr ""
+msgstr "기본 세금"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -9543,28 +9543,28 @@ msgstr "4월"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitloss_toreport0
 msgid "Profit (Loss) to report"
-msgstr ""
+msgstr "이익(손실) 보고서"
 
 #. module: account
 #: view:account.move.line.reconcile.select:0
 msgid "Open for Reconciliation"
-msgstr ""
+msgstr "조정 열기"
 
 #. module: account
 #: field:account.account,parent_left:0
 msgid "Parent Left"
-msgstr ""
+msgstr "윈쪽 상위 요소"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 2 (bold)"
-msgstr ""
+msgstr "제목 2 (굵게)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree2
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "공급업체 송장"
 
 #. module: account
 #: view:account.analytic.line:0 field:account.analytic.line,product_id:0
@@ -9589,12 +9589,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_period
 msgid "Account period"
-msgstr ""
+msgstr "기간 계정"
 
 #. module: account
 #: view:account.subscription:0
 msgid "Remove Lines"
-msgstr ""
+msgstr "명세 제거"
 
 #. module: account
 #: selection:account.account,type:0 selection:account.account.template,type:0
@@ -9612,12 +9612,12 @@ msgstr "내부 유형"
 #. module: account
 #: field:account.subscription.generate,date:0
 msgid "Generate Entries Before"
-msgstr ""
+msgstr "분개 발행 전에"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_running
 msgid "Running Subscriptions"
-msgstr ""
+msgstr "구독 중"
 
 #. module: account
 #: view:account.analytic.balance:0 view:account.analytic.cost.ledger:0
@@ -9657,30 +9657,30 @@ msgstr "종료일"
 #. module: account
 #: field:account.payment.term.line,days2:0
 msgid "Day of the Month"
-msgstr ""
+msgstr "이달의 일자"
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_src_id:0
 #: field:account.fiscal.position.tax.template,tax_src_id:0
 msgid "Tax Source"
-msgstr ""
+msgstr "세금 원본"
 
 #. module: account
 #: view:ir.sequence:0
 msgid "Fiscal Year Sequences"
-msgstr ""
+msgstr "회계연도 순서"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "No detail"
-msgstr ""
+msgstr "세부내용 없음"
 
 #. module: account
 #: field:account.account,unrealized_gain_loss:0
 #: model:ir.actions.act_window,name:account.action_account_gain_loss
 #: model:ir.ui.menu,name:account.menu_unrealized_gains_losses
 msgid "Unrealized Gain or Loss"
-msgstr ""
+msgstr "미실현 손익"
 
 #. module: account
 #: view:account.move:0 view:account.move.line:0
@@ -9691,7 +9691,7 @@ msgstr "상태"
 #: code:addons/account/account_move_line.py:857
 #, python-format
 msgid "Entries are not of the same account or already reconciled ! "
-msgstr ""
+msgstr "기입항목은 같은 계정이 아니거나 이미 조정되었습니다!"
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
@@ -9719,17 +9719,17 @@ msgstr "총계"
 #: code:addons/account/wizard/account_invoice_refund.py:118
 #, python-format
 msgid "Cannot %s draft/proforma/cancel invoice."
-msgstr ""
+msgstr "draft/proforma/cancel 전표를 %s 할 수 없습니다."
 
 #. module: account
 #: field:account.tax,account_analytic_paid_id:0
 msgid "Refund Tax Analytic Account"
-msgstr ""
+msgstr "환급 세금 분석적 계정"
 
 #. module: account
 #: view:account.move.bank.reconcile:0
 msgid "Open for Bank Reconciliation"
-msgstr ""
+msgstr "예금 조정 열기"
 
 #. module: account
 #: field:account.account,company_id:0 report:account.account.balance:0
@@ -9772,12 +9772,12 @@ msgstr "업체"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_subscription_form
 msgid "Define Recurring Entries"
-msgstr ""
+msgstr "반복 기업 정의"
 
 #. module: account
 #: field:account.entries.report,date_maturity:0
 msgid "Date Maturity"
-msgstr ""
+msgstr "만기 날짜"
 
 #. module: account
 #: field:account.invoice.refund,description:0 field:cash.box.in,name:0
@@ -9791,7 +9791,7 @@ msgstr "이유"
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
-msgstr ""
+msgstr "비조정된 항목"
 
 #. module: account
 #: help:account.partner.reconcile.process,today_reconciled:0
@@ -9804,22 +9804,22 @@ msgstr ""
 #. module: account
 #: view:account.fiscalyear:0
 msgid "Create Monthly Periods"
-msgstr ""
+msgstr "월간 기간 생성"
 
 #. module: account
 #: field:account.tax.code.template,sign:0
 msgid "Sign For Parent"
-msgstr ""
+msgstr "상위 요소 기호"
 
 #. module: account
 #: model:ir.model,name:account.model_account_balance_report
 msgid "Trial Balance Report"
-msgstr ""
+msgstr "시산표 보고서"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
 msgid "Draft statements"
-msgstr ""
+msgstr "내역서 초안"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_statemententries0
@@ -9830,25 +9830,25 @@ msgstr ""
 #. module: account
 #: report:account.analytic.account.balance:0
 msgid "Analytic Balance -"
-msgstr ""
+msgstr "분석 잔액 -"
 
 #. module: account
 #: field:account.analytic.balance,empty_acc:0
 msgid "Empty Accounts ? "
-msgstr ""
+msgstr "빈 계정?"
 
 #. module: account
 #: view:account.unreconcile.reconcile:0
 msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disable"
-msgstr ""
+msgstr "거래를 조정하지 않으려면 비활성화할 수 없으므로 거래에 연결된 모든 조치를 확인해야 합니다."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1067
 #, python-format
 msgid "Unable to change tax!"
-msgstr ""
+msgstr "세금을 변경할 수 없습니다!"
 
 #. module: account
 #: constraint:account.bank.statement:0
@@ -9858,12 +9858,12 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Invoice lines"
-msgstr ""
+msgstr "송장 명세"
 
 #. module: account
 #: field:account.chart,period_to:0
 msgid "End period"
-msgstr ""
+msgstr "종료 기간"
 
 #. module: account
 #: sql_constraint:account.journal:0
@@ -9876,18 +9876,18 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr ""
+msgstr "이 보고서에서 고객한테 발행한 전표의 총량의 개요를 확인할 수 있다. 검색하는 도구는 전표 보고서와 필요에 맞게 이 분석에 일치하는 등의 개인화하여 사용할 수 있다."
 
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Go to Next Partner"
-msgstr ""
+msgstr "다음 거래처 가기"
 
 #. module: account
 #: view:account.automatic.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Write-Off Move"
-msgstr ""
+msgstr "상각 이동"
 
 #. module: account
 #: model:process.node,note:account.process_node_paidinvoice0
@@ -9897,17 +9897,17 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,module_account_followup:0
 msgid "Manage customer payment follow-ups"
-msgstr ""
+msgstr "고객 지불 수행 관리"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales
 msgid "Report of the Sales by Account"
-msgstr ""
+msgstr "판매 계정 보고서"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr ""
+msgstr "재정 위상 계정"
 
 #. module: account
 #: report:account.invoice:0 view:account.invoice:0
@@ -9940,7 +9940,7 @@ msgstr "차변"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 3 (bold, smaller)"
-msgstr ""
+msgstr "제목 3 (굵게, 작은)"
 
 #. module: account
 #: view:account.invoice:0 field:account.invoice,invoice_line:0
@@ -9961,7 +9961,7 @@ msgstr "조정된 거래"
 #: code:addons/account/account_invoice.py:929
 #, python-format
 msgid "Bad Total!"
-msgstr ""
+msgstr "잘못된 총계!"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
@@ -9971,17 +9971,17 @@ msgstr "채권 계정"
 #. module: account
 #: report:account.analytic.account.inverted.balance:0
 msgid "Inverted Analytic Balance -"
-msgstr ""
+msgstr "분석적 역 잔액 -"
 
 #. module: account
 #: field:temp.range,name:0
 msgid "Range"
-msgstr ""
+msgstr "범위"
 
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Journal Items related to a purchase journal."
-msgstr ""
+msgstr "구매 분개에 관한 분석적 분개 항목."
 
 #. module: account
 #: help:account.account,type:0
@@ -10011,12 +10011,12 @@ msgstr ""
 #. module: account
 #: view:account.tax.code.template:0
 msgid "Account Tax Code Template"
-msgstr ""
+msgstr "계정 세금 코드 양식"
 
 #. module: account
 #: model:process.node,name:account.process_node_manually0
 msgid "Manually"
-msgstr ""
+msgstr "수동"
 
 #. module: account
 #: help:account.move,balance:0
@@ -10048,12 +10048,12 @@ msgstr "해당 상품에 대한 소득 계정이 정의되지 않았습니다: \
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
 #: view:report.aged.receivable:0
 msgid "Aged Receivable"
-msgstr ""
+msgstr "오래된 수취어음"
 
 #. module: account
 #: field:account.tax,applicable_type:0
 msgid "Applicability"
-msgstr ""
+msgstr "적용성"
 
 #. module: account
 #: help:account.move.line,currency_id:0
@@ -10069,12 +10069,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing_billing
 msgid "Billing"
-msgstr ""
+msgstr "청구"
 
 #. module: account
 #: view:account.account:0 view:account.analytic.account:0
 msgid "Parent Account"
-msgstr ""
+msgstr "상위 계정"
 
 #. module: account
 #: view:report.account.receivable:0
@@ -10084,17 +10084,17 @@ msgstr "타입 별 계정"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
 msgid "Account Analytic Chart"
-msgstr ""
+msgstr "계정 분석 챠트"
 
 #. module: account
 #: help:account.invoice,residual:0
 msgid "Remaining amount due."
-msgstr ""
+msgstr "잔금"
 
 #. module: account
 #: field:account.print.journal,sort_selection:0
 msgid "Entries Sorted by"
-msgstr ""
+msgstr "기입 정렬 방식"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1555
@@ -10107,7 +10107,7 @@ msgstr ""
 #. module: account
 #: view:account.fiscal.position:0 view:account.fiscal.position.template:0
 msgid "Accounts Mapping"
-msgstr ""
+msgstr "계정 할당"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -10136,7 +10136,7 @@ msgstr "11월"
 #: code:addons/account/account_invoice.py:908
 #, python-format
 msgid "No Invoice Lines!"
-msgstr ""
+msgstr "송장 명세가 없습니다!"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_all_a
@@ -10161,18 +10161,18 @@ msgstr ""
 #. module: account
 #: view:account.config.settings:0
 msgid "Install more chart templates"
-msgstr ""
+msgstr "추가 도표 서식 설치"
 
 #. module: account
 #: report:account.general.journal:0
 #: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
-msgstr ""
+msgstr "보통 분개장"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Search Invoice"
-msgstr ""
+msgstr "송장 검색"
 
 #. module: account
 #: report:account.invoice:0 view:account.invoice:0
@@ -10189,7 +10189,7 @@ msgstr "은행 계정"
 #. module: account
 #: field:res.partner,credit:0
 msgid "Total Receivable"
-msgstr ""
+msgstr "채권 합계"
 
 #. module: account
 #: view:account.move.line:0
@@ -10199,7 +10199,7 @@ msgstr "일반 정보"
 #. module: account
 #: view:account.move:0 view:account.move.line:0
 msgid "Accounting Documents"
-msgstr ""
+msgstr "회계 문서"
 
 #. module: account
 #: code:addons/account/account.py:650
@@ -10207,18 +10207,18 @@ msgstr ""
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
 "supplier."
-msgstr ""
+msgstr "고객 혹은 공급자에 설정된 계정은 제거하거나 비활성 할 수 없습니다."
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move_lines
 msgid "Validate Account Move Lines"
-msgstr ""
+msgstr "계정 이동 명세 검증"
 
 #. module: account
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr ""
+msgstr "회계 상태는 파트너에게 사용되는 세금과 계정을 결정합니다."
 
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaidinvoice0
@@ -10234,17 +10234,17 @@ msgstr ""
 #: code:addons/account/wizard/account_change_currency.py:59
 #, python-format
 msgid "New currency is not configured properly."
-msgstr ""
+msgstr "새로운 통화가 제대로 구성되지 않았습니다."
 
 #. module: account
 #: view:account.account.template:0
 msgid "Search Account Templates"
-msgstr ""
+msgstr "계정 서식 검색"
 
 #. module: account
 #: view:account.invoice.tax:0
 msgid "Manual Invoice Taxes"
-msgstr ""
+msgstr "수동 송장 세금"
 
 #. module: account
 #: code:addons/account/account_invoice.py:580
@@ -10255,7 +10255,7 @@ msgstr ""
 #. module: account
 #: field:account.account,parent_right:0
 msgid "Parent Right"
-msgstr ""
+msgstr "오른쪽 상위 요소"
 
 #. module: account
 #. openerp-web
@@ -10291,14 +10291,14 @@ msgstr "내부 메모"
 #: view:ir.sequence:0
 #: model:ir.ui.menu,name:account.menu_action_account_fiscalyear
 msgid "Fiscal Years"
-msgstr ""
+msgstr "회계 연도"
 
 #. module: account
 #: help:account.analytic.journal,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the analytic "
 "journal without removing it."
-msgstr ""
+msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 분석적 분개를 숨길 수 있습니다."
 
 #. module: account
 #: field:account.analytic.line,ref:0
@@ -10309,13 +10309,13 @@ msgstr "참조"
 #: field:account.use.model,model:0
 #: model:ir.model,name:account.model_account_model
 msgid "Account Model"
-msgstr ""
+msgstr "계정 모델"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:292
 #, python-format
 msgid "Loss"
-msgstr ""
+msgstr "손실"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -10329,7 +10329,7 @@ msgstr "2월"
 #. module: account
 #: view:account.bank.statement:0 help:account.cashbox.line,number_closing:0
 msgid "Closing Unit Numbers"
-msgstr ""
+msgstr "단위 숫자 닫기"
 
 #. module: account
 #: field:account.bank.accounts.wizard,bank_account_id:0
@@ -10344,22 +10344,22 @@ msgstr "은행 계정"
 #: model:ir.actions.act_window,name:account.action_account_central_journal
 #: model:ir.model,name:account.model_account_central_journal
 msgid "Account Central Journal"
-msgstr ""
+msgstr "Account Central Journal"
 
 #. module: account
 #: report:account.overdue:0
 msgid "Maturity"
-msgstr ""
+msgstr "만기"
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
 msgid "Future"
-msgstr ""
+msgstr "미래"
 
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr ""
+msgstr "장부 기입항목 찾기"
 
 #. module: account
 #: help:account.tax,base_sign:0 help:account.tax,ref_base_sign:0
@@ -10369,22 +10369,22 @@ msgstr ""
 #: help:account.tax.template,ref_tax_sign:0
 #: help:account.tax.template,tax_sign:0
 msgid "Usually 1 or -1."
-msgstr ""
+msgstr "보통 1 또는 -1."
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Template Account Fiscal Mapping"
-msgstr ""
+msgstr "회계 연결 계정 서식"
 
 #. module: account
 #: field:account.chart.template,property_account_expense:0
 msgid "Expense Account on Product Template"
-msgstr ""
+msgstr "제품 양식상의 비용 계정"
 
 #. module: account
 #: field:res.partner,property_payment_term:0
 msgid "Customer Payment Term"
-msgstr ""
+msgstr "고객 결제 조건"
 
 #. module: account
 #: help:accounting.report,label_filter:0
@@ -10396,7 +10396,7 @@ msgstr ""
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
-msgstr ""
+msgstr "명세별 반올림"
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0

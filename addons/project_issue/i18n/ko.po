@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-08-18 08:38+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -20,19 +20,19 @@ msgstr ""
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
 msgid "Deadly bug"
-msgstr ""
+msgstr "치명적인 버그"
 
 #. module: project_issue
 #: help:project.config.settings,fetchmail_issue:0
 msgid ""
 "Allows you to configure your incoming mail server, and create issues from "
 "incoming emails."
-msgstr ""
+msgstr "받는 메일 서버를 구성하고 받은 메일에서 이슈를 만들 수 있습니다."
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
 msgid "Avg. Delay to Open"
-msgstr ""
+msgstr "평균 운영 지연"
 
 #. module: project_issue
 #: view:project.issue:0 view:project.issue.report:0
@@ -57,7 +57,7 @@ msgstr "열림"
 #. module: project_issue
 #: field:project.issue.report,opening_date:0
 msgid "Date of Opening"
-msgstr ""
+msgstr "개시일"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -92,7 +92,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
 " * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr ""
+msgstr "이슈 칸반 상태는 그것이 영향을 미치는 특별한 상황을 나타냅니다 :\n * 보통은 기본 상태입니다.\n * 차단된 상태는 무언가가 이 이슈의 진행 상태를 방해한다는 뜻입니다.\n * 다음 단계 준비 상태는 이슈가 다음 단계로 이전할 준비가 되었음을 나타냅니다."
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
@@ -102,7 +102,7 @@ msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니�
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
 msgid "Check this field if this project manages issues"
-msgstr ""
+msgstr "이 프로젝트의 이슈를 관리하려면 이 필드 확인"
 
 #. module: project_issue
 #: field:project.issue,day_open:0
@@ -115,12 +115,12 @@ msgstr "개시까지 소요일"
 msgid ""
 "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
-msgstr ""
+msgstr "이 이슈를 이관할 수 없습니다.\n관련 프로젝트가 이관 프로젝트로 설정되어 있지 않습니다.!"
 
 #. module: project_issue
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "오류! 같은 프로젝트로 이관을 할당할 수 없습니다!"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -131,7 +131,7 @@ msgstr "가장 높음"
 #. module: project_issue
 #: help:project.issue,inactivity_days:0
 msgid "Difference in days between last action and current date"
-msgstr ""
+msgstr "최근 동작과 현재 날짜 사이의 일수"
 
 #. module: project_issue
 #: view:project.issue.report:0 field:project.issue.report,day:0
@@ -141,7 +141,7 @@ msgstr "일"
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
 msgid "Days since creation date"
-msgstr ""
+msgstr "작성일 이후 지난 날짜"
 
 #. module: project_issue
 #: field:project.issue,task_id:0 view:project.issue.report:0
@@ -152,7 +152,7 @@ msgstr "과제"
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr ""
+msgstr "단계가 변경된 이슈"
 
 #. module: project_issue
 #: field:project.issue,message_ids:0
@@ -162,7 +162,7 @@ msgstr "메시지"
 #. module: project_issue
 #: field:project.issue,inactivity_days:0
 msgid "Days since last action"
-msgstr ""
+msgstr "마지막 동작 이후 지난 날짜"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
@@ -192,17 +192,17 @@ msgstr "취소됨"
 #. module: project_issue
 #: field:project.issue,description:0
 msgid "Private Note"
-msgstr ""
+msgstr "개인 노트"
 
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
 msgid "Date of Closing"
-msgstr ""
+msgstr "마감일"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Issue Tracker Search"
-msgstr ""
+msgstr "이슈 추적기 검색"
 
 #. module: project_issue
 #: field:project.issue,color:0
@@ -212,7 +212,7 @@ msgstr "컬러 색인"
 #. module: project_issue
 #: field:project.issue.report,working_hours_open:0
 msgid "Avg. Working Hours to Open"
-msgstr ""
+msgstr "운영 기간 중 평균 작업 시간"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -231,7 +231,7 @@ msgstr "대화 요약 (메시지 개수, ...)을 내포함. 이 요약은 간판
 msgid ""
 "If any issue is escalated from the current Project, it will be listed under "
 "the project selected here."
-msgstr ""
+msgstr "현재 프로젝트에서 모든 이슈를 이관받으면 여기에 선택된 프로젝트 아래에 나열됩니다."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -258,7 +258,7 @@ msgstr "담당자:"
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "차단된 이슈"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -268,7 +268,7 @@ msgstr "통계"
 #. module: project_issue
 #: field:project.issue,kanban_state:0
 msgid "Kanban State"
-msgstr ""
+msgstr "칸반 상태"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:378
@@ -302,7 +302,7 @@ msgstr "새로 만들기"
 #. module: project_issue
 #: view:project.project:0
 msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-msgstr ""
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 
 #. module: project_issue
 #: field:project.issue,email_from:0
@@ -341,7 +341,7 @@ msgstr "생성일"
 #: model:ir.actions.act_window,name:project_issue.project_issue_version_action
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_version_act
 msgid "Versions"
-msgstr ""
+msgstr "버전"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -356,7 +356,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
 msgid "Create issues from an incoming email account "
-msgstr ""
+msgstr "받는 메일 계정에서 이슈 생성 "
 
 #. module: project_issue
 #: view:project.issue:0 selection:project.issue,state:0
@@ -376,7 +376,7 @@ msgid ""
 "support or after-sales services. You can track the issues per age. You can "
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
-msgstr ""
+msgstr "프로젝트 이슈 보고서는 사후 서비스나 지원에 대한 품질 분석을 할 수 있습니다. 시간별로 이슈를 추적할 수 있습니다. 이슈에 대해 교환한 이메일의 수와 평균 소요 시간, 이슈 마감과 진행에 필요한 시간을 분석할 수 있습니다."
 
 #. module: project_issue
 #: view:project.issue:0 field:project.issue,stage_id:0
@@ -389,7 +389,7 @@ msgstr "단계"
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 #: view:project.issue.report:0
 msgid "Issues Analysis"
-msgstr ""
+msgstr "이슈 분석"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:532
@@ -422,7 +422,7 @@ msgstr "과제"
 #. module: project_issue
 #: field:project.issue.report,nbr:0
 msgid "# of Issues"
-msgstr ""
+msgstr "이슈"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -442,12 +442,12 @@ msgstr "태그"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Issue Tracker Tree"
-msgstr ""
+msgstr "이슈 추적기 트리"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_01
 msgid "Little problem"
-msgstr ""
+msgstr "작은 문제"
 
 #. module: project_issue
 #: view:project.project:0
@@ -462,7 +462,7 @@ msgstr "날짜 업데이트"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Project:"
-msgstr ""
+msgstr "프로젝트 :"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -477,7 +477,7 @@ msgstr "다음 조치"
 #. module: project_issue
 #: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "차단됨"
 
 #. module: project_issue
 #: field:project.issue,user_email:0
@@ -521,7 +521,7 @@ msgstr "마감됨"
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
 msgid "Avg. Delay to Close"
-msgstr ""
+msgstr "평균 마감 지연"
 
 #. module: project_issue
 #: selection:project.issue,state:0 view:project.issue.report:0
@@ -554,7 +554,7 @@ msgstr "보통"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Category:"
-msgstr ""
+msgstr "분류 :"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -620,7 +620,7 @@ msgstr "생성월"
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
 msgid "Difference in days between creation date and current date"
-msgstr ""
+msgstr "작성일과 현재 날짜 사이의 일수"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -630,7 +630,7 @@ msgstr "1월"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature Tracker Tree"
-msgstr ""
+msgstr "추적기 트리 기능"
 
 #. module: project_issue
 #: help:project.issue,email_from:0
@@ -676,7 +676,7 @@ msgstr "버전"
 #. module: project_issue
 #: field:project.issue.version,name:0
 msgid "Version Number"
-msgstr ""
+msgstr "버전 번호"
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -691,7 +691,7 @@ msgstr "오픈"
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: view:project.issue:0 view:project.project:0
 msgid "Issues"
-msgstr ""
+msgstr "문제"
 
 #. module: project_issue
 #: view:project.issue:0 selection:project.issue,state:0
@@ -707,12 +707,12 @@ msgstr "과제"
 #: model:ir.model,name:project_issue.model_project_issue
 #: view:project.issue.report:0
 msgid "Project Issue"
-msgstr ""
+msgstr "프로젝트 문제"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Add an internal note..."
-msgstr ""
+msgstr "내부 메모 넣기..."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -722,7 +722,7 @@ msgstr ""
 #. module: project_issue
 #: help:project.issue,progress:0
 msgid "Computed as: Time Spent / Total Time."
-msgstr ""
+msgstr "다음과 같이 계산 : 소요 시간/전체 시간."
 
 #. module: project_issue
 #: field:project.project,issue_count:0
@@ -732,7 +732,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "다음 단계에 대한 준비"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -742,7 +742,7 @@ msgstr "10월"
 #. module: project_issue
 #: view:project.issue.report:0 field:project.issue.report,section_id:0
 msgid "Sale Team"
-msgstr ""
+msgstr "영업팀"
 
 #. module: project_issue
 #: view:project.issue:0 view:project.issue.report:0
@@ -758,7 +758,7 @@ msgstr "사안"
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
 msgid "PBCK"
-msgstr ""
+msgstr "PBCK"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -800,7 +800,7 @@ msgstr "이메일 #"
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Created"
-msgstr ""
+msgstr "작성된 이슈"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:511
@@ -822,12 +822,12 @@ msgstr "단계가 변경됨"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature description"
-msgstr ""
+msgstr "기능 설명"
 
 #. module: project_issue
 #: field:project.project,project_escalation_id:0
 msgid "Project Escalation"
-msgstr ""
+msgstr "프로젝트 이관"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_version_action
@@ -839,24 +839,24 @@ msgid ""
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                새 버전을 추가합니다.\n              </p><p>\n                귀하가 이슈에 대한 작업을 할 수 있는\n                상품의 다른 버전을 이곳에서 정의합니다.\n              </p>\n            "
 
 #. module: project_issue
 #: help:project.issue,section_id:0
 msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
-msgstr ""
+msgstr "사례에 속하는 영업팀.                                                  메일 게이트웨이의 이메일 계정과 담당자를 정의합니다."
 
 #. module: project_issue
 #: view:board.board:0
 msgid "My Issues"
-msgstr ""
+msgstr "나의 이슈"
 
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "프로젝트 이슈를 개시하기까지의 소요 일수"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -866,12 +866,12 @@ msgstr "4월"
 #. module: project_issue
 #: view:project.issue:0
 msgid "⇒ Escalate"
-msgstr ""
+msgstr "⇒ 이관"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue created"
-msgstr ""
+msgstr "작성된 이슈"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
@@ -886,7 +886,7 @@ msgstr "ID"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "차단된 이슈"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
@@ -896,12 +896,12 @@ msgstr ""
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
 msgid "Number of Days to close the project issue"
-msgstr ""
+msgstr "프로젝트 이슈를 마감하기까지의 소요 일수"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_close:0
 msgid "Avg. Working Hours to Close"
-msgstr ""
+msgstr "마감까지의 평균 작업 시간"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage

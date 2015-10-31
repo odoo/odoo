@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2015-08-03 04:35+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -36,14 +36,14 @@ msgstr "POP"
 #. module: fetchmail
 #: help:fetchmail.server,priority:0
 msgid "Defines the order of processing, lower values mean higher priority"
-msgstr ""
+msgstr "처리 순서를 정의합니다. 낮은 값은 더 높은 우선 순위를 의미합니다."
 
 #. module: fetchmail
 #: help:fetchmail.server,is_ssl:0
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
-msgstr ""
+msgstr "전용 포트를 통해서 SSL/TLS로 암호화된 연결 (기본값 : IMAPS=993, POP3S=995)"
 
 #. module: fetchmail
 #: field:fetchmail.server,attach:0
@@ -61,7 +61,7 @@ msgid ""
 "Whether a full original copy of each email should be kept for referenceand "
 "attached to each processed message. This will usually double the size of "
 "your message database."
-msgstr ""
+msgstr "각 이메일별로 원본 전체를 복사하는 것은 처리된 메시지별로 참조와 첨부를 보관하는 것입니다. 이것은 메시지 데이타베이스의 크기를 두배로 키우게 됩니다."
 
 #. module: fetchmail
 #: view:base.config.settings:0
@@ -107,7 +107,7 @@ msgstr "POP/IMAP 서버"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Reset Confirmation"
-msgstr ""
+msgstr "확인 취소"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -129,7 +129,7 @@ msgstr "마지막으로 가져온 날짜"
 msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
-msgstr ""
+msgstr "이메일에 의해 작성되거나 갱신된 레코드에 각각의 받은 메일에 대한 작동점으로 서버 동작을 선택합니다."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -188,7 +188,7 @@ msgstr "이름"
 msgid ""
 "Here is what we got instead:\n"
 " %s."
-msgstr ""
+msgstr "Here is what we got instead:\n %s."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -226,7 +226,7 @@ msgstr "활성"
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr ""
+msgstr "첨부파일을 다운로드할 수 있습니다. 사용하지 않으면 받는 메일을 불러오기 전에 모든 첨부파일이 제거됩니다."
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -251,7 +251,7 @@ msgstr "IMAP"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server type POP."
-msgstr ""
+msgstr "서버 유형 POP."
 
 #. module: fetchmail
 #: field:fetchmail.server,password:0
@@ -299,12 +299,12 @@ msgid ""
 "Process each incoming mail as part of a conversation corresponding to this "
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
-msgstr ""
+msgstr "이 문서 유형에 대응하는 대화의 일부분으로 각각의 받는 메일을 처리합니다. 새로운 대화에 대한 새 문서를 만들거나 기존의 대화(문서)에 팔로우 이메일로 첨부합니다."
 
 #. module: fetchmail
 #: field:fetchmail.server,object_id:0
 msgid "Create a New Record"
-msgstr ""
+msgstr "새 레코드 작성"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0

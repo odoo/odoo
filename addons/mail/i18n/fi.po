@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-26 12:00+0000\n"
+"PO-Revision-Date: 2015-10-27 11:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-7/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -54,7 +54,7 @@ msgstr "Aktivoidaan oletuksena kun tilataan."
 #: field:mail.compose.message,vote_user_ids:0
 #: field:mail.message,vote_user_ids:0
 msgid "Votes"
-msgstr ""
+msgstr "Ääniä"
 
 #. module: mail
 #: view:mail.message:0
@@ -96,7 +96,7 @@ msgstr "Luo sähköposti"
 msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
-msgstr ""
+msgstr "Virheellinen lauseke. Lausekkeen täytyy olla oikeanmuotoinen python-dictionary, esim. \"{'kentta': 'arvo'}\""
 
 #. module: mail
 #: view:mail.group:0
@@ -130,7 +130,7 @@ msgstr "Näytä luettevat viestit"
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
-msgstr ""
+msgstr "Lähettäjän sähköpostiosoite. Tämä kenttä asetetaan kun tuleville viesteille ei löydy vastaavaa kumppania."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -315,7 +315,7 @@ msgstr "Lisää seuraajat"
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
-msgstr ""
+msgstr "Viestin louja. Jos tätä ei ole asetettu, viestin lähettäjä (email_from) voi olla osoite, joka ei täsmännyt mihinkään kumppaniin."
 
 #. module: mail
 #. openerp-web
@@ -726,7 +726,7 @@ msgstr "<p>\n                    <b>Ei yksityistä viestiä.</b>\n              
 #. module: mail
 #: model:mail.group,name:mail.group_rd
 msgid "R&D"
-msgstr ""
+msgstr "T&K"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -842,7 +842,7 @@ msgstr ""
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
+msgstr "Python-kirjasto, joka evaluoidaan oletusarvoja varten, kun tätä aliasta varten luodaan uusi tietuetta."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -905,7 +905,7 @@ msgstr ""
 msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
-msgstr ""
+msgstr "Tähän käyttäjään sisäisesti liitetty sähköpostiosoite. Saapuvat sähköpostit näkyy käyttäjän ilmoituksissa."
 
 #. module: mail
 #: field:mail.group,image:0
@@ -937,7 +937,7 @@ msgstr "Sähköpostin haku"
 #. module: mail
 #: field:mail.compose.message,child_ids:0 field:mail.message,child_ids:0
 msgid "Child Messages"
-msgstr ""
+msgstr "Aliviestit"
 
 #. module: mail
 #: field:mail.alias,alias_user_id:0
@@ -960,7 +960,7 @@ msgstr "Viesti"
 #. module: mail
 #: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
 msgid "Id of the followed resource"
-msgstr ""
+msgstr "Seuratun resurssin id"
 
 #. module: mail
 #: field:mail.compose.message,body:0 field:mail.message,body:0
@@ -978,7 +978,7 @@ msgstr "Aliakset"
 msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
-msgstr ""
+msgstr "Kuvaus, joka lisätään tähän alatyyppiin lähetettyihin viesteihin. Jos tyhjä,  viesteihin lisätään nimi."
 
 #. module: mail
 #. openerp-web
@@ -995,7 +995,7 @@ msgstr "Ryhmä"
 #. module: mail
 #: help:mail.compose.message,starred:0 help:mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "Nykyinen käyttäjä on merkannut tähän viestiin linkitetyn huomautuksen tärkeäksi"
 
 #. module: mail
 #: field:mail.group,public:0
@@ -1352,7 +1352,7 @@ msgstr "Aiheet tämän ryhmän keskusteltavaksi..."
 #: code:addons/mail/static/src/xml/mail.xml:124 view:mail.compose.message:0
 #, python-format
 msgid "Followers of"
-msgstr ""
+msgstr "Seuraajat"
 
 #. module: mail
 #: help:mail.mail,auto_delete:0
@@ -1536,7 +1536,7 @@ msgid ""
 "                    No message in this group.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nTässä ryhmässä ei ole viestejä.\n</p>"
 
 #. module: mail
 #. openerp-web
@@ -1688,7 +1688,7 @@ msgstr "Viestin viitteet, kuten tunnisteet aikaisemmista viesteistä"
 #. module: mail
 #: field:mail.compose.message,composition_mode:0
 msgid "Composition mode"
-msgstr ""
+msgstr "Kirjoitustila"
 
 #. module: mail
 #: field:mail.compose.message,model:0 field:mail.followers,res_model:0
@@ -1754,7 +1754,7 @@ msgstr "Lisäkontaktit"
 #. module: mail
 #: help:mail.compose.message,parent_id:0 help:mail.message,parent_id:0
 msgid "Initial thread message."
-msgstr ""
+msgstr "Viestiketjun alkuperäinen viesti"
 
 #. module: mail
 #: model:mail.group,name:mail.group_hr_policies

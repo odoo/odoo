@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-08-03 03:56+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -26,12 +26,12 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Hr Attendance Search"
-msgstr ""
+msgstr "인사 근태 검색"
 
 #. module: hr_attendance
 #: field:hr.employee,last_sign:0
 msgid "Last Sign"
-msgstr ""
+msgstr "마지막 로그인"
 
 #. module: hr_attendance
 #: view:hr.attendance:0 field:hr.employee,state:0
@@ -44,17 +44,17 @@ msgstr "참석"
 #: code:addons/hr_attendance/static/src/js/attendance.js:34
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
+msgstr "마지막 로그인 : %s,<br />%s.<br />로그아웃을 클릭하십시오."
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "오류! 출근(퇴근)은 퇴근(출근)이 있어야 합니다."
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
 msgid "Specifies the reason for Signing In/Signing Out."
-msgstr ""
+msgstr "로그인/로그아웃에 대한 사유를 지정합니다."
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -76,7 +76,7 @@ msgstr ""
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
 msgid "Sign out"
-msgstr ""
+msgstr "로그아웃"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -96,20 +96,20 @@ msgstr "10월"
 #. module: hr_attendance
 #: field:hr.employee,attendance_access:0
 msgid "Attendance Access"
-msgstr ""
+msgstr "근태 접근"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
 #: selection:hr.attendance,action:0 view:hr.employee:0
 #, python-format
 msgid "Sign Out"
-msgstr ""
+msgstr "퇴근"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No records are found for your selection!"
-msgstr ""
+msgstr "선택과 일치하는 기록이 없습니다!"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0 view:hr.attendance.month:0
@@ -138,7 +138,7 @@ msgstr "날짜가 기록됨"
 #: selection:hr.attendance,action:0 view:hr.employee:0
 #, python-format
 msgid "Sign In"
-msgstr ""
+msgstr "출근"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,init_date:0 field:hr.attendance.week,init_date:0
@@ -171,12 +171,12 @@ msgstr "경고"
 #. module: hr_attendance
 #: help:hr.config.settings,group_hr_attendance:0
 msgid "Allocates attendance group to all users."
-msgstr ""
+msgstr "모든 사용자에게 근태 그룹을 할당합니다."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "My Attendance"
-msgstr ""
+msgstr "나의 근태기록"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -197,7 +197,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_error
 msgid "Print Error Attendance Report"
-msgstr ""
+msgstr "근태 보고서 인쇄 오류"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -212,7 +212,7 @@ msgstr "이유"
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 msgid "Print Attendance Report Error"
-msgstr ""
+msgstr "근태 보고서 오류 인쇄"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
@@ -240,7 +240,7 @@ msgstr "나짜"
 #. module: hr_attendance
 #: field:hr.config.settings,group_hr_attendance:0
 msgid "Track attendances for all employees"
-msgstr ""
+msgstr "전직원 근태 기록"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -277,7 +277,7 @@ msgstr "2월"
 #: field:hr.attendance,action_desc:0
 #: model:ir.model,name:hr_attendance.model_hr_action_reason
 msgid "Action Reason"
-msgstr ""
+msgstr "동작 이유"
 
 #. module: hr_attendance
 #: field:hr.attendance.month,year:0
@@ -358,7 +358,7 @@ msgstr "11월"
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr ""
+msgstr "다음 지연, 오류는 자발적인 것으로 간주됩니다."
 
 #. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
@@ -374,7 +374,7 @@ msgstr "종료 날짜"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No Data Available!"
-msgstr ""
+msgstr "데이터가 없습니다!"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -401,7 +401,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/js/attendance.js:36
 #, python-format
 msgid "Click to Sign In at %s."
-msgstr ""
+msgstr "%s에 로그인을 클릭합니다."
 
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
@@ -419,7 +419,7 @@ msgstr "5워"
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
-msgstr ""
+msgstr "귀하는 다른 행사 이전 날짜로 %s을(를) 시도했습니다!\n근태 문제를 해결하기 위해 인사 담당자에게 문의하십시오."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -440,7 +440,7 @@ msgstr "오퍼레이션"
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
+msgstr "(*) 지연값이 음수라면 설정된 것보다 직원이 더 일한 것입니다."
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0 view:hr.attendance.month:0
@@ -452,4 +452,4 @@ msgstr "또는"
 #: help:hr.attendance,action_desc:0
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr ""
+msgstr "초과 근무의 경우에는 로그인/로그아웃에 대한 사유를 지정해야 합니다."

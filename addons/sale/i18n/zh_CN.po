@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-18 03:34+0000\n"
+"PO-Revision-Date: 2015-10-28 09:07+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -452,7 +452,7 @@ msgstr "电话:"
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and '报价单' or '订单'} (编号 ${object.name or 'n/a' })"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -759,7 +759,7 @@ msgstr "税:"
 #: code:addons/sale/sale.py:279
 #, python-format
 msgid "In order to delete a confirmed sales order, you must cancel it before!"
-msgstr ""
+msgstr "删除已确认的销售订单前必须要取消销售订单"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order

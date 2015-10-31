@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-29 05:38+0000\n"
+"PO-Revision-Date: 2015-10-31 08:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-7/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -288,7 +288,7 @@ msgid ""
 "                        \"Name\",'False' as \"Is a Company\",'company_'||company_id\n"
 "                         as \"Related Company/External ID\" from persons) TO \n"
 "                        '/tmp/person.csv' with CSV"
-msgstr ""
+msgstr "copy (select \n                        'person_'||id as \"External ID\",person_name as \n                        \"Name\",'False' as \"Is a Company\",'company_'||company_id\n                         as \"Related Company/External ID\" from persons) TO \n                        '/tmp/person.csv' with CSV"
 
 #. module: base_import
 #. openerp-web
@@ -532,7 +532,7 @@ msgid ""
 "Country/External ID: the ID of this record \n"
 "                        referenced in another application (or the .XML file \n"
 "                        that imported it)"
-msgstr ""
+msgstr "国家/External ID:  用于其他导入XML文件需要引用的 External ID"
 
 #. module: base_import
 #. openerp-web
@@ -1009,7 +1009,7 @@ msgid ""
 "                        different records, you should use the unique\n"
 "                        identifier from the original application and\n"
 "                        map it to the"
-msgstr ""
+msgstr "为了重新生成不同记录之间的关系，\n您要使用原应用的唯一标识符,并且将其映射到"
 
 #. module: base_import
 #. openerp-web
@@ -1030,7 +1030,7 @@ msgid ""
 "                        relative to order. Any additional lines will need an \n"
 "                        addtional row that does not have any information in \n"
 "                        the fields relative to the order."
-msgstr ""
+msgstr "如果您要导入有多条分录的销售订单;对每个分录,您需要在CSV文件中保留一个特定的行.\n第一条分录包含订单表头信息，其它分录不需要订单表头信息。"
 
 #. module: base_import
 #. openerp-web
@@ -1097,7 +1097,7 @@ msgid ""
 "                        settings, you can modify the File Format Options \n"
 "                        (displayed under the Browse CSV file bar after you \n"
 "                        select your file)."
-msgstr ""
+msgstr "默认情况下，导入预览中，逗号是字段分隔符，引号是文本的定界符.\n如果您的CSV文件不是这样设置，您可以修改文件格式选项\n(选择文件后，显示在浏览CSV文件下面)."
 
 #. module: base_import
 #. openerp-web

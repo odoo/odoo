@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-13 10:29+0000\n"
+"PO-Revision-Date: 2015-10-27 11:57+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-7/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -279,7 +279,7 @@ msgid ""
 "                if you invoice sales totally.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                Tässä on jokaisen laskutettavaksi siirrettävissä olevan myyntitilausrivin luettelo. Voit\n                laskuttaa myyntitilaukset osittain, valituin rivein. Et tarvitse tätä luetteloa, jos laskutat suoraan toimitusvahvistuksista tai jos laskutat myyntitilauksen kokonaan.\n              </p>\n            "
 
 #. module: sale
 #: view:sale.order:0
@@ -452,7 +452,7 @@ msgstr "Puh.:"
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -669,7 +669,7 @@ msgid ""
 "* The 'Exception' status is set when the related sales order is set as exception.                     \n"
 "* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr ""
+msgstr "* Tilaksi asetetaan 'Luonnos', kun myyntitilaus on luonnoksena.                     \n* Tilaksi asetetaan 'Vahvistettu', kun myyntitilaus on vahvistettu.                     \n* Tilaksi asetetaan 'Poikkeus', kun myyntitilausen tilaan tehdään poikkeus.                     \n* Tilaksi asetetaan 'Valmis', kun myyntitilausrivi on noudettu.                     \n* Tilaksi asetetaan 'Peruttu', kun käyttäjä peruu kyseisen myyntitilauksen."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:93
@@ -759,7 +759,7 @@ msgstr "Verot:"
 #: code:addons/sale/sale.py:279
 #, python-format
 msgid "In order to delete a confirmed sales order, you must cancel it before!"
-msgstr ""
+msgstr "Jotta voit poistaa vahvistetun myyntitilauksen, sinun on ensin peruttava se!"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -832,7 +832,7 @@ msgstr "Myyntipaikka"
 msgid ""
 "Select a product of type service which is called 'Advance Product'.\n"
 "                You may have to create it and set it as a default value on this field."
-msgstr ""
+msgstr "Valitse palvelutuote \"Advance Product\".\nKo. tuote pitää olla olemassa (tai luo se) ja asettaa se oletusarvoksi tälle kentälle. "
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -1012,7 +1012,7 @@ msgstr "Myyntitilauksen tilauspäivä"
 #: code:addons/sale/sale.py:871
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "Asiakasta ei määritelty!"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -1415,7 +1415,7 @@ msgid ""
 "On demand: A draft invoice can be created from the sales order when needed. \n"
 "On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
 "Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
-msgstr ""
+msgstr "Tarvittaessa: Myyntitilauksesta voidaan luoda laskuluonnos tarpeen vaatiessa. \nToimitusvahvistuksesta: Kun tuotteet on toimitettu, laskuluonnos voidaan luoda toimitusvahvistuksesta. \nEnnen toimitusta: Myyntitilauksesta voidaan luoda laskuluonnos, joka on maksettava ennen kuin tuotteet voidaan toimittaa."
 
 #. module: sale
 #: view:account.invoice.report:0 view:board.board:0
@@ -1485,7 +1485,7 @@ msgstr "Eräitä tilausrivejä"
 #. module: sale
 #: view:res.partner:0
 msgid "sale.group_delivery_invoice_address"
-msgstr ""
+msgstr "sale.group_delivery_invoice_address"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -1508,7 +1508,7 @@ msgid ""
 "Select how you want to invoice this order. This\n"
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
-msgstr ""
+msgstr "Valitse tilauksen laskutustapa.  Luodaan\nlaskuluonnos, jota voi muokata vielä ennen lopullista vahvistamista."
 
 #. module: sale
 #: view:board.board:0
@@ -1535,7 +1535,7 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: help:sale.order,date_confirm:0

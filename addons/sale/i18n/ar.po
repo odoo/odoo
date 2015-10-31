@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-07 21:46+0000\n"
+"PO-Revision-Date: 2015-10-13 05:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -452,7 +452,7 @@ msgstr "هاتف:"
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'عرض سعر' or 'أمر بيع'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -759,7 +759,7 @@ msgstr "الضرائب:"
 #: code:addons/sale/sale.py:279
 #, python-format
 msgid "In order to delete a confirmed sales order, you must cancel it before!"
-msgstr ""
+msgstr "لتتمكن من حذف أمر بيع مؤكد، ينبغي عليك أن تقوم بإلغاءه أولاً!"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1012,7 +1012,7 @@ msgstr "تاريخ أمر من أوامر المبيعات"
 #: code:addons/sale/sale.py:871
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "لم يتم تحديد عميل!"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -1092,7 +1092,7 @@ msgstr "تاريخ إنشاء أمر المبيعات"
 #. module: sale
 #: view:sale.order:0
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "الشروط والأحكام..."
 
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
@@ -1535,7 +1535,7 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -1688,7 +1688,7 @@ msgstr "مؤكد"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "الشروط والأحكام"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
@@ -1806,7 +1806,7 @@ msgstr "الحسابات التحليلية للمبيعات"
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "فتح قائمة المبيعات"
 
 #. module: sale
 #: selection:sale.report,month:0

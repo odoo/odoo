@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-08-03 04:34+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgid ""
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                지불 주문을 만듭니다.\n              </p><p>\n                지불 주문은 공급업체 송장 또는 고객 환불 지급에 대한\n                 지불 요청입니다.\n              </p>\n            "
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -69,7 +69,7 @@ msgstr "회사"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "회계 / 지불"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -100,7 +100,7 @@ msgstr "결제 주문에 추가"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "지불 채우기 명세"
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
@@ -108,7 +108,7 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
+msgstr "이미 지불 주문을 가져왔다면 송장을 취소할 수 없습니다. 다음 지불 주문에서 제거하십시오 : %s."
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
@@ -145,7 +145,7 @@ msgstr "참조"
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr ""
+msgstr "지불 명세 이름은 고유해야 합니다!"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -176,7 +176,7 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
+msgstr "주문 상태에 있는 것은 '기안'입니다.\n  상태가 '확인됨'으로 설정되면 은행에서 확인된 것입니다.\n 상태가 '완료'면 주문은 지불된 것입니다."
 
 #. module: account_payment
 #: view:payment.order:0 selection:payment.order,state:0
@@ -196,12 +196,12 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Structured"
-msgstr ""
+msgstr "정해진 양식에 따라"
 
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import Payment Lines"
-msgstr ""
+msgstr "지불 명세 가져오기"
 
 #. module: account_payment
 #: view:payment.line:0 view:payment.order:0
@@ -242,7 +242,7 @@ msgstr "생성일"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "지불 방식에 대한 예금 또는 현금 분개"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -262,7 +262,7 @@ msgstr "목적지 계정"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "지불 주문 검색"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -298,7 +298,7 @@ msgstr "파트너"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "예금 거래 명세서"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -335,13 +335,13 @@ msgstr "결제 날짜가 지정되지 않으면, 은행이 이 결제 라인을 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
-msgstr ""
+msgstr "지불 채우기 명세 계정"
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "항목 명세에 정의된 파트너가 없습니다."
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -351,7 +351,7 @@ msgstr "결제 모드"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "값 날짜"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -386,7 +386,7 @@ msgstr "주문한 고객 주소"
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr ""
+msgstr "명세서 채우기 :"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
@@ -401,7 +401,7 @@ msgstr "결제 라인"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "장부 기입항목"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -433,7 +433,7 @@ msgstr "합계:"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "실행 날짜"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -443,7 +443,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr ""
+msgstr "지불 채우기"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -463,12 +463,12 @@ msgstr "주문 고객"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "지불 계정"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "송장 참조"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -509,7 +509,7 @@ msgstr "취소"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "대상 예금 계정"
 
 #. module: account_payment
 #: view:payment.line:0 view:payment.order:0
@@ -551,7 +551,7 @@ msgstr "스케줄"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "지불하시겠습니까?"
 
 #. module: account_payment
 #: view:payment.mode:0 field:payment.mode,journal:0
@@ -582,7 +582,7 @@ msgstr "결제"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "지불 주문 / 지불"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -624,7 +624,7 @@ msgstr "주문"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Cancel Payments"
-msgstr ""
+msgstr "지불 취소"
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -635,13 +635,13 @@ msgstr "합계"
 #: code:addons/account_payment/wizard/account_payment_order.py:113
 #, python-format
 msgid "Entry Lines"
-msgstr ""
+msgstr "기입항목 라인"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "지불하기"
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -651,7 +651,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "원하는 날짜"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0

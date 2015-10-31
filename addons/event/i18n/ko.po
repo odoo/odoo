@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-08-03 04:34+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgid ""
 "You can for each event define a minimum registration level. If you do not "
 "enough registrations you are not able to confirm your event. (put 0 to "
 "ignore this rule )"
-msgstr ""
+msgstr "각 일정별로 최소 등록 수준을 정의할 수 있습니다. 충분한 등록 인원이 안될 경우 귀하의 일정을 확정할 수 없습니다(이 규칙을 무시하려면 0을 넣습니다)."
 
 #. module: event
 #: field:event.registration,date_open:0
@@ -125,7 +125,7 @@ msgstr "이벤트 등록"
 #. module: event
 #: model:ir.module.category,description:event.module_category_event_management
 msgid "Helps you manage your Events."
-msgstr ""
+msgstr "이벤트를 관리하는 데 도움이 됩니다."
 
 #. module: event
 #: view:report.event.registration:0
@@ -199,7 +199,7 @@ msgstr "이벤트 확정"
 #. module: event
 #: view:board.board:0 model:ir.actions.act_window,name:event.act_event_view
 msgid "Next Events"
-msgstr ""
+msgstr "다음 일정"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -330,12 +330,12 @@ msgstr "이 일정에 등록"
 msgid ""
 "It will select this default confirmation registration mail value when you "
 "choose this event"
-msgstr ""
+msgstr "이 일정을 선택하면 기본 등록 확정 메일 값을 선택해야 합니다."
 
 #. module: event
 #: view:event.event:0
 msgid "Only"
-msgstr ""
+msgstr "단일"
 
 #. module: event
 #: field:event.event,message_follower_ids:0
@@ -572,7 +572,7 @@ msgid ""
 "You can for each event define a maximum registration level. If you have too "
 "much registrations you are not able to confirm your event. (put 0 to ignore "
 "this rule )"
-msgstr ""
+msgstr "각 일정에 대한 최대 등록 수준을 정의할 수 있습니다. 너무 많은 등록을 한 경우, 당신의 일정을 확인 할 수 없습니다.(이 규칙을 무시하려면 0 입력)"
 
 #. module: event
 #: code:addons/event/event.py:106
@@ -594,7 +594,7 @@ msgstr ""
 msgid ""
 "If you set an email template, each participant will receive this email "
 "announcing the confirmation of the event."
-msgstr ""
+msgstr "귀하가 이메일 서식을 설정하면 각 참가자는 일정의 확정을 알리는 이메일을 받게 됩니다."
 
 #. module: event
 #: view:board.board:0
@@ -647,7 +647,7 @@ msgstr "8월"
 #. module: event
 #: field:event.event,zip:0
 msgid "zip"
-msgstr ""
+msgstr "우편번호"
 
 #. module: event
 #: field:res.partner,event_ids:0 field:res.partner,event_registration_ids:0
@@ -670,7 +670,7 @@ msgid ""
 "The email address of the organizer which is put in the 'Reply-To' of all "
 "emails sent automatically at event or registrations confirmation. You can "
 "also put your email address of your mail gateway if you use one."
-msgstr ""
+msgstr "일정 또는 등록 확인에 자동으로 전송되는 모든 이메일의 '답장'란에 주최자의 이메일 주소가 들어 갑니다. 귀하가 이메일 주소를 하나만 사용하는 경우 귀하의 메일 게이트웨이의 이메일 주소를 넣을 수 있습니다."
 
 #. module: event
 #: help:event.event,message_ids:0 help:event.registration,message_ids:0
@@ -710,7 +710,7 @@ msgstr "사용자"
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr ""
+msgstr "경고 : 해당 일정이 최소 등록 기준에 도달하지 못했습니다. 그래도 확정하길 원하십니까?"
 
 #. module: event
 #: view:event.event:0
@@ -763,7 +763,7 @@ msgstr "등록 확정"
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr ""
+msgstr "이미 '참석함'으로 이 일정에 대한 등록을 설정했습니다. 이 일정을 취소하려면 기안으로 재설정하십시오."
 
 #. module: event
 #: view:res.partner:0
@@ -773,7 +773,7 @@ msgstr "날짜"
 #. module: event
 #: view:event.event:0
 msgid "Email Configuration"
-msgstr ""
+msgstr "이메일 구성"
 
 #. module: event
 #: field:event.type,default_registration_min:0
@@ -796,7 +796,7 @@ msgstr "이벤트 타입"
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
 " each time a registration for this event is confirmed."
-msgstr ""
+msgstr "이 필드에는 이 일정에 대한 등록이 확인될 때마다 자동으로 전송될 이메일 서식이 포함되어 있습니다."
 
 #. module: event
 #: view:event.event:0 view:event.registration:0
@@ -812,7 +812,7 @@ msgstr ""
 #: code:addons/event/event.py:357
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
-msgstr ""
+msgstr "이 동작을 할 수 있는 일정 시작일을 기다려야 합니다."
 
 #. module: event
 #: field:event.event,user_id:0
@@ -985,7 +985,7 @@ msgstr "4월"
 msgid ""
 "It will select this default confirmation event mail value when you choose "
 "this event"
-msgstr ""
+msgstr "이 일정을 선택하면 기본 일정 확정 메일 값을 선택해야 합니다."
 
 #. module: event
 #: view:report.event.registration:0
@@ -1045,7 +1045,7 @@ msgid ""
 "        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n        <p>${object.name}님 안녕하십니까?</p>\n        <p>${object.event_id.name} 행사에 등록해 주셔서 감사합니다.\n        해당 행사가 확정되는데로 더 자세한 정보(예 : 일정, 주제 등...)를 제공하는 이메일을 보내드리겠습니다.</p>\n        <p>참여해 주셔서 감사합니다!</p>\n        <p>다시 한번 감사드립니다.</p>"
 
 #. module: event
 #: help:event.event,reply_to:0
@@ -1054,7 +1054,7 @@ msgid ""
 " to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr ""
+msgstr "주최자의 이메일 주소를 여기에 넣는 것은 일정 또는 등록 확인에 자동으로 전송된 메일의 '답장'란에 있는 것과 같은 효과를 발휘합니다. 귀하가 이메일 주소를 하나만 사용하는 경우 귀하의 메일 게이트웨이의 이메일 주소를 넣을 수 있습니다."
 
 #. module: event
 #: view:event.event:0

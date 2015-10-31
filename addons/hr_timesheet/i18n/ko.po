@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2015-08-03 03:56+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +63,7 @@ msgid ""
 "is an analytic account and the time spent on a project generate costs on the"
 " analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
-msgstr ""
+msgstr "직원은 다른 프로젝트에 소요되는 시간을 기록할 수 있습니다. 프로젝트는 분석 계정과 분석 계정에 비용을 발생시키는 프로젝트 소요 시간입니다. 이 기능은 동시에 출석과 출퇴근부를 기록할 수 있습니다."
 
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
@@ -158,12 +158,12 @@ msgstr ""
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "Please define employee for your user."
-msgstr ""
+msgstr "사용자를 위한 임직원을 정의하십시오."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
 msgid "Costs & Revenues"
-msgstr ""
+msgstr "비용 및 수익"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -233,7 +233,7 @@ msgid ""
 "                customers if required.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                활동을 기록합니다.\n              </p><p>\n                등록하고 매일매일 프로젝트에 작업 시간을 추적할 수 있습니다.\n                프로젝트에 소요된 모든 시간은 분석 회계 및 계약에서는 비용이 됩니다.\n                day. Every time spent on a project will become a cost in the\n                그리고 필요한 경우 고객에서 재청구할 수 있습니다.\n              </p>\n            "
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -244,7 +244,7 @@ msgstr "인쇄"
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
+msgstr "이 프로젝트의 출퇴근부를 관리하려면 이 필드를 선택합니다."
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
@@ -269,7 +269,7 @@ msgstr "시작 날짜"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
 msgid "Please define cost unit for this employee."
-msgstr ""
+msgstr "이 임직원에 대한 비용 단위를 정의하십시오."
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -282,7 +282,7 @@ msgstr ""
 msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
-msgstr ""
+msgstr "프로젝트에 정의된 분석 계정이 없습니다.\n하나를 설정하거나 출퇴근부를 자동으로 채울 수 없습니다."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -295,7 +295,7 @@ msgstr "총 원가"
 msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
-msgstr ""
+msgstr "%s 임직원에 대해 정의된 '분석 분개 항목'이 없습니다.\n선택한 사용자에 대해 임직원을 정의하고 '분석 분개 항목'을 할당하십시오!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -357,7 +357,7 @@ msgstr "프로젝트 별 Sign in / Sign out"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr ""
+msgstr "분석 구조 정의"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:146
@@ -369,7 +369,7 @@ msgstr "퇴근"
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "(Keep empty for current time)"
-msgstr ""
+msgstr "(현재 시간을 빈 채로 유지)"
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0 view:hr.employee:0
@@ -387,7 +387,7 @@ msgstr ""
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr ""
+msgstr "분석 입력줄"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -404,7 +404,7 @@ msgstr "8월"
 msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
-msgstr ""
+msgstr "'%s'에 대해 정의된 분석 분개 항목이 없습니다.\n임직원 양식에 분석 분개 항목을 할당해야 합니다."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -467,7 +467,7 @@ msgstr "목요일"
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0 view:hr.sign.out.project:0
 msgid "Sign In/Out by Project"
-msgstr ""
+msgstr "프로젝트용 출/퇴근"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
@@ -477,7 +477,7 @@ msgstr ""
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0 field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
-msgstr ""
+msgstr "임직원 ID"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
@@ -522,7 +522,7 @@ msgid ""
 "assigned on. A  project is an analytic account and the time spent on a "
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
-msgstr ""
+msgstr "직원은 그들에게 할당된 다른 프로젝트에 소요되는 시간을 기록할 수 있습니다. 프로젝트는 분석 계정과 분석 계정에 비용을 발생시키는 프로젝트 소요 시간입니다. 이 기능은 동시에 출석과 출퇴근부를 기록할 수 있습니다."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -567,7 +567,7 @@ msgstr "(서버 사이트의 로컬 타임)"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr ""
+msgstr "프로젝트용 출근"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -581,7 +581,7 @@ msgstr "2월"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
 msgid "Sign Out By Project"
-msgstr ""
+msgstr "프로젝트용 퇴근"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:150
@@ -619,7 +619,7 @@ msgstr "4월"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "사용자 오류!"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0

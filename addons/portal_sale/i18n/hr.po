@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-05-29 13:15+0000\n"
+"PO-Revision-Date: 2015-10-27 12:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-7/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr "account.config.settings"
 #: model:email.template,subject:portal_sale.email_template_edi_invoice
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} Račun (Ref ${object.number or 'n/a'})"
 
 #. module: portal_sale
 #: view:account.invoice:0
@@ -169,7 +169,7 @@ msgstr "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'dra
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') i 'Ponuda' or 'Narudžba'} (Ref ${object.name or 'n/a' })"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
@@ -209,7 +209,7 @@ msgstr "Računi"
 #. module: portal_sale
 #: view:account.config.settings:0
 msgid "Configure payment acquiring methods"
-msgstr ""
+msgstr "Konfiguracija metode plaćanja stjecatelja"
 
 #. module: portal_sale
 #: model:email.template,body_html:portal_sale.email_template_edi_invoice

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2015-08-13 08:56+0000\n"
+"PO-Revision-Date: 2015-10-30 02:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-7/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -40,51 +40,51 @@ msgid ""
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr ""
+msgstr "코드는 목록 또는 사전이 될 수 있는 테스트 결과에 항상 'result'라는 변수를 설정해야 합니다.\n'result'가 빈 목록이면 테스트에 성공했다는 뜻입니다. 그렇지 않으면 'result' 내부에 무엇이 들었는지\n번역하거나 인쇄할려고 할 것입니다.\n\n귀하의 테스트 결과가 사전이면 'result' 내용을 인쇄할 순서를 선택할 수 있는 'column_order'라는\n변수를 설정해야 합니다.\n\n필요할 경우 당신은 코드에 다음 변수를 사용할 수 있습니다 :\n    * cr: 데이타베이스의 커서\n    * uid: 현재 사용자의 ID\n\n어떤 경우에도 코드는 올바른 들여쓰기와 적절한 파이썬 문장이어야 합니다(필요한 경우).\n\n예 : \n    sql = '''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n          '''\n    cr.execute(sql)\n    result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_02
 msgid "Test 2: Opening a fiscal year"
-msgstr ""
+msgstr "시험 2 : 회계 연도 열기"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
-msgstr ""
+msgstr "판매/구매에서 조정한 송장이 채무 및 채권 계정에 대한 기입 항목을 조정했는지 확인"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr ""
+msgstr "이동 명세가 균형 있는지 같은 날짜와 금액인지 확인"
 
 #. module: account_test
 #: field:accounting.assert.test,name:0
 msgid "Test Name"
-msgstr ""
+msgstr "시험명"
 
 #. module: account_test
 #: report:account.test.assert.print:0
 msgid "Accouting tests on"
-msgstr ""
+msgstr "회계 일관성 검사 시작"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "시험 1 : 균형 검사"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr ""
+msgstr "지불/조정 송장이 '열기' 상태가 아닌지 확인"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr ""
+msgstr "조정된 송장에 속하는 채권 채무 계정을 정의한 조정된 계정 이동 확인"
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -94,7 +94,7 @@ msgstr "시험"
 #. module: account_test
 #: field:accounting.assert.test,desc:0
 msgid "Test Description"
-msgstr ""
+msgstr "시험 설명"
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -104,25 +104,25 @@ msgstr "설명"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06_1
 msgid "Check that there's no move for any account with « View » account type"
-msgstr ""
+msgstr "« 보기 » 계정 유형에 어떤 계정도 이동하지 않았음을 확인"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_08
 msgid "Test 9 : Accounts and partners on account moves"
-msgstr ""
+msgstr "시험 9 : 계정과 계정 이동에 협력업체"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr ""
+msgstr "회계 일관성 검사"
 
 #. module: account_test
 #: code:addons/account_test/report/account_test_report.py:74
 #, python-format
 msgid "The test was passed successfully"
-msgstr ""
+msgstr "성공적으로 시험을 통과했습니다."
 
 #. module: account_test
 #: field:accounting.assert.test,active:0
@@ -132,7 +132,7 @@ msgstr "활성"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "시험 6 : 송장 상태"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
@@ -143,7 +143,7 @@ msgstr ""
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr ""
+msgstr "시험 5.1 : 조정된 송장의 채무 및 채권 회계 내역"
 
 #. module: account_test
 #: field:accounting.assert.test,code_exec:0
@@ -155,22 +155,22 @@ msgstr "파이썬 코드"
 msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
-msgstr ""
+msgstr "마감 잔액 = 시작 잔액 + 예금 거래 내역의 합계인지 예금거래 확인"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 8 : Closing balance on bank statements"
-msgstr ""
+msgstr "시험 8 : 예금계좌의 마감 잔액"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "시험 3: 명세 옮기기"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr ""
+msgstr "시험 5.2 : 조정 송장과 채권/채무 계정"
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -180,12 +180,12 @@ msgstr "표현식"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_04
 msgid "Test 4: Totally reconciled mouvements"
-msgstr ""
+msgstr "시험 4: 완전히 조정된 움직임"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_04
 msgid "Check if the totally reconciled movements are balanced"
-msgstr ""
+msgstr "완전한 조정 이동이 균형있는지 확인"
 
 #. module: account_test
 #: field:accounting.assert.test,sequence:0
@@ -197,7 +197,7 @@ msgstr "순서"
 msgid ""
 "Check if the balance of the new opened fiscal year matches with last year's "
 "balance"
-msgstr ""
+msgstr "새로 시작한 회계연도의 균형이 작년의 균형과 일치하는지 확인"
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -211,24 +211,24 @@ msgid ""
 "                Click to create Accounting Test.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                회계 일관성 검사를 작성합니다.\n              </p>\n            "
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
+msgstr "균형 확인 : 차변 합계 = 대변 합계"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
 msgid "Check that general accounts and partners on account moves are active"
-msgstr ""
+msgstr "일반 계정과 활성화된 협력업체의 이동 계정 확인"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06_1
 msgid "Test 7: « View  » account type"
-msgstr ""
+msgstr "시험 7: « 보기  » 계정 유형"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Code Help"
-msgstr ""
+msgstr "코드 도움말"
