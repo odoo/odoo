@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="invitation_view" name="Invitation View">
+    &lt;!DOCTYPE html&gt;
+    <html>
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="initial-scale=1"/>
+            <title><t t-esc="title or 'Odoo Calendar Invitation'"/></title>
+            <t t-call-assets="calendar.assets_calendar"/>
+        </head>
+        <body class="container o_invitiation_mt40">
+            <div id="wrapwrap">
+                <div class="well col-md-6 col-md-offset-3">
+                    <span class="pull-right"><strong><t t-esc="current_attendee['cn']"/> (<t t-esc="current_attendee['email']"/>)</strong></span>
+                    <span class="pull-left">
+                        <img class="o_invitation_avatar" src='/web/binary/company_logo'/>
+                    </span>
+                    <div class="o_invitation_block text-info">
+                        <h2 class="o_invitation_inline"><strong>Calendar Invitation</strong></h2>
+                        <t t-if="current_attendee['state'] != 'needsAction'">
+                            <i t-attf-class="fa #{'text-success fa-check' if current_attendee['state'] == 'accepted' else 'text-danger fa-close'}"></i>
+                            <span class="text-primary">
+                                <strong t-if="current_attendee['state'] == 'accepted'">Yes I'm going.</strong>
+                                <strong t-if="current_attendee['state'] == 'declined'">No I'm not going.</strong>
+                            </span>
+                        </t>
+                        <div><h3><t t-esc="meeting['event']"/></h3></div>
+                        <div class="row">
+                            <span class="col-md-2 text-muted">When</span>
+                            <span class="col-md-10"> <t t-esc="meeting['when']"/></span>
+                            <t t-if="meeting['where']">
+                                <span class="col-md-2 text-muted">Where</span>
+                                <span class="col-md-10" ><t t-esc="meeting['where']"/></span>
+                            </t>
+                            <span class="col-md-2 text-muted">Who</span>
+                            <span class="col-md-10">
+                                <t t-foreach="attendee" t-as="att">
+                                    <div><i t-attf-class="fa #{'text-success fa-check-circle' if att['status'] == 'accepted' else 'text-danger fa-times-circle'}"/> <t t-esc="att['name']"/></div>
+                                </t>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+    </html>
+</template>
+</odoo>
