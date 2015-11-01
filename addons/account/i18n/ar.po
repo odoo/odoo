@@ -6,6 +6,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # hoxhe aits <hoxhe0@gmail.com>, 2015
 # Khaled Menof <kifcaliph@hotmail.com>, 2015
+# Mahmoud M. Soliman <mahmoud_soliman4@alex-comm.edu.eg>, 2015
 # Mazen Abu Ghali <mabughali@yahoo.com>, 2015
 # Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
@@ -13,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-10-15 10:00+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-27 23:31+0000\n"
+"Last-Translator: Mahmoud M. Soliman <mahmoud_soliman4@alex-comm.edu.eg>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +92,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hello ${object.partner_id.name},</p>\n\n    <p>هناك فاتورة جديدة لك: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;فاتورة رقم<strong>${object.number}</strong><br />\n       &nbsp;&nbsp;إجمالي الفاتورة <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;تاريخ الفاتورة ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;مرجع الطلب ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;معلومات الاتصال: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>يمكنك أيضا الدفع عن طريق Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>إذا كان لديك أي إستفسارات برجاء لا تتردد في الاتصال بنا</p>\n    <p>شكرا لإختياركم  ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -114,7 +115,7 @@ msgstr " المركزية"
 #: code:addons/account/static/src/js/account_widgets.js:521
 #, python-format
 msgid " seconds"
-msgstr ""
+msgstr "ثواني"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -506,7 +507,7 @@ msgid ""
 "                account and the counterpart \"Account Payable\".\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Select the period and the journal you want to fill.\n              </p><p>\n                This view can be used by accountants in order to quickly record\n                entries in Odoo. If you want to record a supplier invoice,\n                start by recording the line of the expense account. Odoo\n                will propose to you automatically the Tax related to this\n                account and the counterpart \"Account Payable\".\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_tree

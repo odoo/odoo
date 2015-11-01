@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Josep Sànchez <papapep@gmx.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-17 16:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-28 14:32+0000\n"
+"Last-Translator: Josep Sànchez <papapep@gmx.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "Núm. de fitxers"
 #: code:addons/document/static/src/js/document.js:19
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: document
 #: code:addons/document/document.py:117 code:addons/document/document.py:307
@@ -46,7 +47,7 @@ msgid ""
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Feu clic per a crear un document nou. \n          </p><p>\n            El repositori de documents us dóna accés a tots els adjunts, com\n            correus, documents de projecte, factures, etc.\n          </p>\n        "
 
 #. module: document
 #: help:document.directory.dctx,expr:0
@@ -87,7 +88,7 @@ msgstr "Abril"
 #: code:addons/document/static/src/js/document.js:7
 #, python-format
 msgid "Attachment(s)"
-msgstr ""
+msgstr "Adjunció(ns)"
 
 #. module: document
 #: view:ir.attachment:document.view_document_file_tree
@@ -128,7 +129,7 @@ msgstr "Companyia"
 #: view:document.configuration:document.view_auto_config_form
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
-msgstr ""
+msgstr "Configureu els directoris"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -227,7 +228,7 @@ msgstr "Directori"
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Directory Configuration"
-msgstr ""
+msgstr "Configuració de directoris"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content
@@ -270,7 +271,7 @@ msgstr "El nom del directori ha de ser únic!"
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 msgid "Document Directory"
-msgstr ""
+msgstr "Directori de documents"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -316,7 +317,7 @@ msgstr "Error d'escriptura en el document!"
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You cannot create recursive directories."
-msgstr ""
+msgstr "S'ha produït un error, no podeu crear directoris recursius."
 
 #. module: document
 #: field:document.directory.dctx,expr:0
@@ -386,7 +387,7 @@ msgstr "Fitxers per mes"
 #: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
 #: view:report.document.user:document.view_files_by_user_graph
 msgid "Files by User"
-msgstr ""
+msgstr "Fitxers per usuari"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_file
@@ -401,7 +402,7 @@ msgstr "Fitxers detallats per usuaris"
 #. module: document
 #: view:ir.attachment:document.view_attach_filter_inherit0
 msgid "Filter on my documents"
-msgstr ""
+msgstr "Filtra els meus documents"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -535,7 +536,7 @@ msgstr "ID model"
 #. module: document
 #: view:ir.attachment:document.view_document_file_form
 msgid "Modification"
-msgstr ""
+msgstr "Modificació"
 
 #. module: document
 #: field:report.document.user,change_date:0
@@ -550,7 +551,7 @@ msgstr "Mes"
 #. module: document
 #: view:ir.attachment:document.view_attach_filter_inherit0
 msgid "My Document(s)"
-msgstr ""
+msgstr "Els meus documents"
 
 #. module: document
 #: field:document.directory,name:0
@@ -579,7 +580,7 @@ msgid ""
 "documents. The virtual folder of a document can be used to manage the files "
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
-msgstr ""
+msgstr "El sistema de gestió documental d'Odoo permet mapejar carpetes virtuals amb documents. La carpeta virtual d'un document es pot utilitzar per a gestionar els fitxers adjuntats a un document, o imprimir i baixar qualsevol informe. Aquesta eina crearà directoris automàticament segons els mòduls instal·lats."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -708,12 +709,12 @@ msgstr "El nom de directori ha de ser únic!"
 #. module: document
 #: sql_constraint:ir.attachment:0
 msgid "The filename must be unique in a directory !"
-msgstr ""
+msgstr "El nom del fitxer ha de ser únic al directori"
 
 #. module: document
 #: help:document.directory.dctx,field:0
 msgid "The name of the field."
-msgstr ""
+msgstr "El nom del camp."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -742,7 +743,7 @@ msgstr "Utilitzeu un domini si voleu aplicar un filtre automàtic en els recurso
 #. module: document
 #: view:report.document.user:document.view_report_document_user_search
 msgid "Users File"
-msgstr ""
+msgstr "Els fitxers de l'usuari"
 
 #. module: document
 #: code:addons/document/document.py:337 code:addons/document/document.py:342
@@ -761,7 +762,7 @@ msgstr "Fitxers virtuals"
 msgid ""
 "When executing this wizard, it will configure your directories automatically"
 " according to modules installed."
-msgstr ""
+msgstr "En executar aquest assistent, es configuraran els vostres  directoris segons els mòduls instal·lats."
 
 #. module: document
 #: field:report.document.user,name:0

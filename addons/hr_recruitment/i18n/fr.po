@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-16 15:51+0000\n"
+"PO-Revision-Date: 2015-10-31 17:42+0000\n"
 "Last-Translator: Benedicte HANET <hanetb@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -160,7 +160,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id.signature | safe}"
-msgstr ""
+msgstr "<p>Cher(e) ${object.partner_name or 'applicant'},</p>\n<p>Félicitation! Votre CV a retenu notre intérêt!\n\nJe vous appellerai dès que possible pour effectuer un interview téléphonique d'une dizaine de minutes et pour également planifier une première rencontre. </p>\n\n<p> Si je n'arrive pas à vous joindre ou si vous manquez mon appel, n'hésitez pas à me rappeler au 001 312 349 3030\n\nSi je ne réponds pas, n'hésitez pas à me laisser un message avec vos disponibilités pour que je puisse vous rappeler au moment le plus adéquat.</p>\n\n<p>Bien à vous,</p>\n\n<br/>\n\n${object.user_id.signature | safe}"
 
 #. module: hr_recruitment
 #: model:email.template,body_html:hr_recruitment.applicant_refuse
@@ -173,7 +173,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
-msgstr ""
+msgstr "<p>Cher ${object.partner_name or 'applicant'},</p>\n\n<p>Nous vous remercion spour l'intérêt porté à notre entreprise et pour votre candidature.\n\nMalheureusement votre profil ne correspond à nos besoins. \n\nLe poste a déjà été pourvu.</p>\n\n<p>Si vous désirez plus de détails, n'hésitez pas à nous contacter.</p>\n\n<p>Bien à vous,</p>\n\n<br/>\n\n${object.user_id and object.user_id.signature | safe or ''}"
 
 #. module: hr_recruitment
 #: model:survey.survey,description:hr_recruitment.recruitment_form
@@ -563,7 +563,7 @@ msgid ""
 "Define a specific contact address for this job position. If you keep it "
 "empty, the default email address will be used which is in human resources "
 "settings"
-msgstr ""
+msgstr "Définissez une adresse email spécifique  pour ce poste. Si vous la laissez vide, l'adresse email par défaut présente dans les paramètres des ressources humaines. sera utilisée "
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
@@ -688,7 +688,7 @@ msgstr "Employé"
 #. module: hr_recruitment
 #: help:hr.applicant,emp_id:0
 msgid "Employee linked to the applicant."
-msgstr ""
+msgstr "Les employés liés aux candidats"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:38
@@ -726,7 +726,7 @@ msgstr "Filtres étendus"
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
 msgid "Extra advantages..."
-msgstr ""
+msgstr "Avantages extra légaux..."
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
@@ -761,7 +761,7 @@ msgstr "Abonnés"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_8
 msgid "Freebies such as tea, coffee and stationery"
-msgstr ""
+msgstr "Incitants tel que thé, café et articles de bureau"
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_1
@@ -771,7 +771,7 @@ msgstr "De quelle université allez vous obtenir votre diplôme?"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_2
 msgid "Getting on with colleagues"
-msgstr ""
+msgstr "S'entendre avec ses collègues"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.degree,sequence:0
@@ -862,7 +862,7 @@ msgstr "Si autre, précisez:"
 msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
-msgstr ""
+msgstr "Si c'est paramétré, un message est posté sur la fiche du candidat qui utilise le modèle lorsque celui-ci est est au stage."
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -994,7 +994,7 @@ msgstr "Masculin"
 msgid ""
 "Manage your CV's and motivation letter related to all applicants.\n"
 "-This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"
-msgstr ""
+msgstr "Gérez vos CV et lettres de motivation envoyées par tous les candidats.\nPour cela, installez le module document_ftp. Cela installera le knowledge management module afin que vous puissiez rechercher du contenu dans tous vos documents (PDF, .DOCx...) via des mots-clés spécifiques."
 
 #. module: hr_recruitment
 #: model:hr.applicant_category,name:hr_recruitment.tag_applicant_manager
@@ -1104,7 +1104,7 @@ msgstr "Aucun objet"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_10
 msgid "No out of hours working"
-msgstr ""
+msgstr "Pas d'heures supplémentaires"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_1
@@ -1139,7 +1139,7 @@ msgstr "Partenaire"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_9
 msgid "Perks such as free parking, gym passes"
-msgstr ""
+msgstr "Avantages tel que parking gratuit, abonnements à la salle de sport"
 
 #. module: hr_recruitment
 #: field:hr.applicant,partner_phone:0
@@ -1233,7 +1233,7 @@ msgstr "Refusé"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_12
 msgid "Regular meetings"
-msgstr ""
+msgstr "Rendez-vous réguliers"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
@@ -1401,7 +1401,7 @@ msgstr "Étape de recrutement"
 msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
-msgstr ""
+msgstr "Etape précédente du stage actuel du candidat. Utilisé pour l'analyse des cas perdus."
 
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_tree
@@ -1425,7 +1425,7 @@ msgstr "Démarrer"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_5
 msgid "State of the art technology"
-msgstr ""
+msgstr "Technologie de pointe"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
@@ -1589,7 +1589,7 @@ msgstr "Bouche à oreille"
 #: code:addons/hr_recruitment/hr_recruitment.py:511
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
-msgstr ""
+msgstr "Vous devez définir un Nom pour ce candidat et spécifier la Position pour laquelle il a postulé"
 
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.view_hr_job_kanban
