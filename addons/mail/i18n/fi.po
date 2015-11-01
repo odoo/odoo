@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-24 07:20+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
+"PO-Revision-Date: 2015-10-27 11:58+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,7 +142,7 @@ msgstr "<p>\nTässä ryhmässä ei ole viestejä.\n</p>"
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
+msgstr "Python-kirjasto, joka evaluoidaan oletusarvoja varten, kun tätä aliasta varten luodaan uusi tietuetta."
 
 #. module: mail
 #: code:addons/mail/mail_message.py:763
@@ -220,7 +220,7 @@ msgstr "Aliaksen sallitut lähettäjät"
 #. module: mail
 #: field:mail.alias,alias_contact:0
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Aliaksen kontaktien tietoturva"
 
 #. module: mail
 #: field:base.config.settings,alias_domain:0
@@ -273,7 +273,7 @@ msgstr "Ja"
 msgid ""
 "Answers do not go in the original document' discussion thread. This has an "
 "impact on the generated message-id."
-msgstr ""
+msgstr "Vastaukset eivät mene alkuperäisen dokumentin keskusteluketjuun. Tämä vaikuttaa luodun viestin id-numeroon."
 
 #. module: mail
 #. openerp-web
@@ -322,13 +322,13 @@ msgstr "Tekijä"
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
-msgstr ""
+msgstr "Viestin louja. Jos tätä ei ole asetettu, viestin lähettäjä (email_from) voi olla osoite, joka ei täsmännyt mihinkään kumppaniin."
 
 #. module: mail
 #: field:mail.compose.message,author_avatar:0
 #: field:mail.message,author_avatar:0
 msgid "Author's Avatar"
-msgstr ""
+msgstr "Laatijan kuva"
 
 #. module: mail
 #: field:mail.group,group_public_id:0
@@ -348,7 +348,7 @@ msgstr "Automaattinen tilaus"
 #. module: mail
 #: view:mail.message.subtype:mail.view_mail_message_subtype_form
 msgid "Auto subscription"
-msgstr ""
+msgstr "Automaattinen seuraaminen"
 
 #. module: mail
 #: help:mail.compose.message,body:0 help:mail.message,body:0
@@ -423,7 +423,7 @@ msgstr "Luo sähköposti"
 #. module: mail
 #: field:mail.compose.message,composition_mode:0
 msgid "Composition mode"
-msgstr ""
+msgstr "Kirjoitustila"
 
 #. module: mail
 #: field:mail.notification,partner_id:0
@@ -469,7 +469,7 @@ msgstr "Luontikuukausi"
 #. module: mail
 #: help:mail.compose.message,starred:0 help:mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "Nykyinen käyttäjä on merkannut tähän viestiin linkitetyn ilmoituksen tärkeäksi"
 
 #. module: mail
 #: help:mail.compose.message,to_read:0 help:mail.message,to_read:0
@@ -528,7 +528,7 @@ msgstr "Kuvaus"
 msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
-msgstr ""
+msgstr "Kuvaus, joka lisätään tähän alatyyppiin lähetettyihin viesteihin. Jos tyhjä,  viesteihin lisätään nimi."
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_group_feeds
@@ -548,7 +548,7 @@ msgstr "Keskustelut"
 #. module: mail
 #: field:res.users,display_groups_suggestions:0
 msgid "Display Groups Suggestions"
-msgstr ""
+msgstr "Näytä ryhmäehdotukset"
 
 #. module: mail
 #. openerp-web
@@ -574,14 +574,14 @@ msgstr "Valmis"
 #: code:addons/mail/static/src/js/mail_followers.js:100
 #, python-format
 msgid "Edit Subscription of "
-msgstr ""
+msgstr "Muokkaa tilausta"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail_followers.xml:40
 #, python-format
 msgid "Edit subscription"
-msgstr ""
+msgstr "Muokkaa tilausta"
 
 #. module: mail
 #: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
@@ -614,7 +614,7 @@ msgstr "Sähköpostiviestit"
 msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
-msgstr ""
+msgstr "Tähän käyttäjään sisäisesti liitetty sähköpostiosoite. Saapuvat sähköpostit näkyy käyttäjän ilmoituksissa."
 
 #. module: mail
 #: help:mail.compose.message,email_from:0 help:mail.message,email_from:0
@@ -626,7 +626,7 @@ msgstr "Lähettäjän sähköpostiosoite. Tämä kenttä asetetaan kun tuleville
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
-msgstr ""
+msgstr "Sähköpostiosoite vastausviesteille"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -636,7 +636,7 @@ msgstr "Sähköpostin ohjattu koostaminen"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Email mass mailing"
-msgstr ""
+msgstr "Sähköpostien massalähetys"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -666,7 +666,7 @@ msgstr "Virhe kommunikoidessa julkaisijan takuupalvelimen kanssa."
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a partner cannot follow twice the same object."
-msgstr ""
+msgstr "Virhe: kumppani ei voi olla saman tietueen seuraajan kahdesti."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -694,7 +694,7 @@ msgstr ""
 #. module: mail
 #: field:ir.attachment,file_type_icon:0
 msgid "File Type Icon"
-msgstr ""
+msgstr "Tiedostotyypin ikoni"
 
 #. module: mail
 #. openerp-web
@@ -726,19 +726,19 @@ msgstr "Seuraajien lomake"
 #: code:addons/mail/static/src/xml/mail.xml:127
 #, python-format
 msgid "Followers of"
-msgstr ""
+msgstr "Seuraajat"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Followers of the document and"
-msgstr ""
+msgstr "Tämän dokumentin seuraajat ja"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:131
 #, python-format
 msgid "Followers of this document"
-msgstr ""
+msgstr "Tämän dokumentin seuraajat"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -761,7 +761,7 @@ msgstr "Lähettäjä"
 #: code:addons/mail/res_users.py:75
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Mene asetusvalikkoon"
 
 #. module: mail
 #: view:mail.group:mail.view_group_search
@@ -813,7 +813,7 @@ msgstr "Piilotettu"
 #. module: mail
 #: help:mail.message.subtype,hidden:0
 msgid "Hide the subtype in the follower options"
-msgstr ""
+msgstr "Piilota alatyyppi seuraajavalinnoista"
 
 #. module: mail
 #: help:mail.group,message_summary:0 help:mail.thread,message_summary:0
@@ -837,12 +837,12 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr ""
+msgstr "Ylätason aliastietueen id (esim. tehtävien luontiin käytettävän aliaksen sisältävä projekti)"
 
 #. module: mail
 #: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
 msgid "Id of the followed resource"
-msgstr ""
+msgstr "Seuratun resurssin id"
 
 #. module: mail
 #: help:mail.group,message_unread:0 help:mail.thread,message_unread:0
@@ -855,27 +855,27 @@ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
-msgstr ""
+msgstr "Jos valittu, kumppanit saavat sähköpostivaroituksen kun heidät lisätään dokumentin seuraajiksi."
 
 #. module: mail
 #: help:base.config.settings,alias_domain:0
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
-msgstr ""
+msgstr "Jos haluat asettaa catchall-sähköpostidomainin (osoite joka vastaanottaa kaikki domainiin saapuvat postit, joilla ei ole vastaanottajaa), joka ohjataan Odoo-palvelimelle, aseta domainin nimi tässä."
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid ""
 "If you want to work only with selected ids, please uncheck the\n"
 "                                list header checkbox."
-msgstr ""
+msgstr "Jos haluat käyttää vain valittuja id:itä, poista valinta listan otsikkorivin valintalaatikosta."
 
 #. module: mail
 #: code:addons/mail/mail_alias.py:144
 #, python-format
 msgid "Inactive Alias"
-msgstr ""
+msgstr "Passiivinen alias"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_inbox_feeds
@@ -886,7 +886,7 @@ msgstr "Saapuneet"
 #. module: mail
 #: help:mail.compose.message,parent_id:0 help:mail.message,parent_id:0
 msgid "Initial thread message."
-msgstr ""
+msgstr "Viestiketjun alkuperäinen viesti."
 
 #. module: mail
 #: code:addons/mail/mail_message.py:177
@@ -899,13 +899,13 @@ msgstr "Virheellinen toiminto!"
 msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
-msgstr ""
+msgstr "Virheellinen lauseke. Lausekkeen täytyy olla oikeanmuotoinen python-dictionary, esim. \"{'kentta': 'arvo'}\""
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:97
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr ""
+msgstr "Kutsu seurata %s:n dokumenttia %s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -964,7 +964,7 @@ msgstr "Viimeksi päivitetty"
 #: help:mail.wizard.invite,partner_ids:0
 msgid ""
 "List of partners that will be added as follower of the current document."
-msgstr ""
+msgstr "Lista tämänhetkiselle dokumentille lisättävistä kumppaneista."
 
 #. module: mail
 #. openerp-web
@@ -1000,12 +1000,12 @@ msgstr "Sähköpostiryhmä"
 #. module: mail
 #: model:ir.actions.server,name:mail.action_mail_redirect
 msgid "Mail Redirection (Document / Inbox)"
-msgstr ""
+msgstr "Sähköpostin uudelleenohjaus (dokumentti / saapuvat viestit)"
 
 #. module: mail
 #: help:mail.mail,notification:0
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr ""
+msgstr "Olemassaolevasta sähköpostiviestistä (mail.message) on lähetetty ilmoitus"
 
 #. module: mail
 #. openerp-web
@@ -1054,7 +1054,7 @@ msgstr "Viestityyppi"
 #. module: mail
 #: help:mail.mail,email_to:0
 msgid "Message recipients (emails)"
-msgstr ""
+msgstr "Viestin vastaanottajat (sähköpostit)"
 
 #. module: mail
 #: help:mail.mail,references:0
@@ -1236,12 +1236,12 @@ msgstr "Kumppanit joille ilmoitettu"
 #. module: mail
 #: field:mail.compose.message,notify:0
 msgid "Notify followers"
-msgstr ""
+msgstr "Ilmoita seuraajille"
 
 #. module: mail
 #: help:mail.compose.message,notify:0
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "Ilmoita tämän dokumentin seuraajille (vain massapostitus)"
 
 #. module: mail
 #. openerp-web
@@ -1430,7 +1430,7 @@ msgstr "Julkinen"
 #. module: mail
 #: model:mail.group,name:mail.group_rd
 msgid "R&D"
-msgstr ""
+msgstr "T&K"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:191
@@ -1599,7 +1599,7 @@ msgstr "Lähetetty"
 #: code:addons/mail/mail_followers.py:155
 #, python-format
 msgid "Sent by %(company)s using %(odoo)s"
-msgstr ""
+msgstr "Lähettänyt %(company)s käyttäen %(odoo)s-järjestelmää"
 
 #. module: mail
 #: field:mail.message.subtype,sequence:0
@@ -1863,7 +1863,7 @@ msgstr "Tuontilatauksessa virhe"
 #. module: mail
 #: field:mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr ""
+msgstr "Käytä aktiivista domainia"
 
 #. module: mail
 #: help:mail.message.subtype,sequence:0
@@ -2047,7 +2047,7 @@ msgstr "lisää."
 #. module: mail
 #: view:base.config.settings:mail.view_general_configuration_mail_alias_domain
 msgid "mycompany.odoo.com"
-msgstr ""
+msgstr "omayritys.odoo.com"
 
 #. module: mail
 #. openerp-web
