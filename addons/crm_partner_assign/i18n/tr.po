@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-10-12 12:56+0000\n"
+"PO-Revision-Date: 2015-10-31 19:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -302,7 +302,7 @@ msgstr "Ayrıntılar"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_contacted
 msgid "Did you contact the lead?"
-msgstr ""
+msgstr "Aday ile temasa geçtinizmi?"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_display_name
@@ -318,7 +318,7 @@ msgstr "Adı Göster"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Do you have contacted the customer?"
-msgstr ""
+msgstr "Müşteril temasa geçtiniz mi?"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
@@ -338,12 +338,12 @@ msgstr "Gelişmiş Filtreler..."
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_partner_id
 msgid "Forward Leads To"
-msgstr ""
+msgstr "Adayları ilet"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_forward_type
 msgid "Forward selected leads to"
-msgstr ""
+msgstr "Seçili adayları ilet"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
@@ -354,7 +354,7 @@ msgstr "İş Ortağı İlet"
 #. module: crm_partner_assign
 #: model:mail.template,subject:crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: ${ctx['partner_id'].name}"
-msgstr ""
+msgstr "İlet: Aday: Fwd: ${ctx['partner_id'].name}"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_partner_latitude
@@ -370,7 +370,7 @@ msgstr "Coğ Boylam"
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Coğrafi Konum"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_res_partner_grade_partner_weight
@@ -401,13 +401,13 @@ msgstr "Yüksek"
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm interested"
-msgstr ""
+msgstr "İlgileniyorum"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm not interested"
-msgstr ""
+msgstr "İlgilenmiyorum"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_id
@@ -423,17 +423,17 @@ msgstr "ID"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_implemented_partner_ids
 msgid "Implementation References"
-msgstr ""
+msgstr "Implementation Referansı"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_assigned_partner_id
 msgid "Implemented by"
-msgstr ""
+msgstr "Uygulayan"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_interested
 msgid "Interested by this lead"
-msgstr ""
+msgstr "İpucu ile ilgileniyorum"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date
@@ -489,7 +489,7 @@ msgstr "Aday"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_link
 msgid "Lead  Single Links"
-msgstr ""
+msgstr "İpucu Tekl Bağlantıları"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_graph
@@ -500,12 +500,12 @@ msgstr "Aday Ataması"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
 msgid "Lead Feedback"
-msgstr ""
+msgstr "Aday Geri Bildirimi"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_location
 msgid "Lead Location"
-msgstr ""
+msgstr "İpucu Konumu"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead
@@ -563,7 +563,7 @@ msgstr "Maksimum Olasılık"
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_partner_filter
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_partner_filter
 msgid "My Assigned Partners"
-msgstr ""
+msgstr "Atanmış İş Ortaklarım"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_name
@@ -593,7 +593,7 @@ msgstr "Vaka açmak için gerekli gün sayısı"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
-msgstr ""
+msgstr "Aday işlendikten sonra, sizin \"Fırsatlar\" menünüzde olacaktır."
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_opening_date
@@ -665,7 +665,7 @@ msgstr "İş Ortağı Düzeyi"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_partner_location
 msgid "Partner Location"
-msgstr ""
+msgstr "İş Ortağı Konumu"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
@@ -783,29 +783,29 @@ msgstr "Konu"
 #: code:addons/crm_partner_assign/crm_lead.py:17
 #, python-format
 msgid "The CRM Channel Interested Action is missing"
-msgstr ""
+msgstr "CRM Kanalı İlgileniyor Faaliyeti yok"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:69
 #, python-format
 msgid "The Forward Email Template is not in the database"
-msgstr ""
+msgstr "İletilen Eposta Şablonu veritabanında yok"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:73
 #, python-format
 msgid "The Portal group cannot be found"
-msgstr ""
+msgstr "Portal grubu bulunamıyor"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_contacted
 msgid "The lead has been contacted"
-msgstr ""
+msgstr "Aday ile temas kuruldu"
 
 #. module: crm_partner_assign
 #: model:crm.stage,name:crm_partner_assign.stage_portal_lead_recycle
 msgid "To Recycle"
-msgstr ""
+msgstr "Çöpe Gönder"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_turnover
@@ -836,28 +836,28 @@ msgstr "Çok Yüksek"
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_comment
 msgid "What are the elements that have led to this decision?"
-msgstr ""
+msgstr "Bu karara yol açan unsurlar nelerdir?"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "What is the next action? When? What is the expected revenue?"
-msgstr ""
+msgstr "Bir sonraki eylem nedir? Ne zaman? Beklenen gelir nedir?"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Why aren't you interested by this lead?"
-msgstr ""
+msgstr "Neden bu ipucu ile ilgilenmiyorsunuz?"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:26
 #, python-format
 msgid "You must contact the lead before saying that you are interested"
-msgstr ""
+msgstr "İlgilendiğinizi söylemeden önce aday ile temasa geçmelisiniz"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid "a single partner: manual selection of partner"
-msgstr ""
+msgstr "tek bir iş ortağı: iş ortağının mauel seçimi"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_assignation
@@ -894,4 +894,4 @@ msgstr "res.partner.grade"
 msgid ""
 "several partners: automatic assignation, using GPS coordinates and partner's"
 " grades"
-msgstr ""
+msgstr "çok sayıda iş ortağı: GPS koordinatları ve  iş ortağının derecelendirmesine göre otomatik görevlendirme, "

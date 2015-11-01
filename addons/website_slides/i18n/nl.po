@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 14:13+0000\n"
+"POT-Creation-Date: 2015-09-21 09:20+0000\n"
+"PO-Revision-Date: 2015-10-29 14:43+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -65,7 +65,7 @@ msgid ""
 "    </tr></tbody>\n"
 "</table>\n"
 "</div>"
-msgstr ""
+msgstr "\n<div style=\"padding:0px; margin:0px;\">\n<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px; background-color:#ffffff\">\n    <tbody><tr>\n        <td style=\"width: 600px; text-align:center\" valign=\"center\">\n            <a href=\"${user.company_id.website}\" style=\"text-decoration:none\">\n                <img alt=\"Odoo\" src=\"${ctx['base_url']}/logo.png\" style=\"display:block; border:none; min-height:60px; margin:0 auto;\">\n            </a>\n        </td>\n    </tr></tbody>\n</table>\n</div>\n<div style=\"padding:0px; margin:0px;\">\n<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px;\">\n    <tbody><tr>\n        <td style=\"width: 600px; text-align:center; color: #ffffff; background-color:#a24689;\" valign=\"center\">\n            <h2 style=\"margin:0px;\">\n                ${user.name} deelde een ${object.slide_type} ${object.name} met u!\n            </h2>\n        </td>\n    </tr><tr>\n        <td style=\"width: 600px; vertical-align:top; text-align:center; background-color:#FFFFF; color:#414141\">\n            <a href=\"${object.website_url}\" style=\"color: #a24689;\">\n                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\"\n                    style=\"height:auto; width:500px; background-color: #cccccc; margin: 16px;\">\n            </a>\n            <p style=\"font-size:24px; font-weight:bold\"><a href=\"${object.website_url}\">${object.name}</a></p>\n            <p style=\"color: #ccc;\">Gepubliceerd op ${object.write_date}</p>\n            <p><a href=\"${object.website_url}\">Klik hier om de ${object.slide_type} te openen.</a></p>\n        </td>\n    </tr></tbody>\n</table>\n</div>\n<div style=\"padding:0px; margin:0px;\">\n<table cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 10px 0px 0px 0px; vertical-align: top;padding: 0px; font-family:arial; font-size:12px; color: #ffffff; background-color:#8f8f8f;\">\n    <tbody><tr>\n        <td style=\"width: 600px; font-size:12px; text-align:center; padding-top:10px; color:#a24689; padding-bottom:5px\">\n            <a href=\"${object.website_url}\" style=\"color:#a24689\">In browser bekijken</a> |\n            <a href=\"/page/contactus\" style=\"color:#a24689\">Contact</a>\n        </td>\n    </tr></tbody>\n</table>\n</div>"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -112,7 +112,7 @@ msgid ""
 "    </tr></tbody>\n"
 "</table>\n"
 "</div>"
-msgstr ""
+msgstr "\n<div style=\"padding:0px; margin:0px;\">\n<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px; background-color:#ffffff\">\n    <tbody><tr>\n        <td style=\"width: 600px; text-align:center\" valign=\"center\">\n            <a href=\"${user.company_id.website}\" style=\"text-decoration:none\">\n                <img alt=\"Odoo\" src=\"${ctx['base_url']}/logo.png\" style=\"display:block; border:none; min-height:60px; margin:0 auto;\">\n            </a>\n        </td>\n    </tr></tbody>\n</table>\n</div>\n<div style=\"padding:0px; margin:0px;\">\n<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px;\">\n    <tbody><tr>\n        <td style=\"width: 600px; text-align:center; color: #ffffff; background-color:#a24689;\" valign=\"center\">\n            <h2 style=\"margin:0px;\">\n                Nieuwe ${object.slide_type} gepubliceerd in ${object.channel_id.name}\n            </h2>\n        </td>\n    </tr><tr>\n        <td style=\"width: 600px; vertical-align:top; text-align:center; background-color:#FFFFF; color:#414141\">\n            <a href=\"${object.website_url}\" style=\"color: #a24689;\">\n                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:500px; background-color: #cccccc; margin: 16px;\">\n            </a>\n            <p style=\"font-size:24px; font-weight:bold\"><a href=\"${object.website_url}\">${object.name}</a></p>\n            <p style=\"color: #ccc;\">Gepubliceerd op ${object.write_date}</p>\n            <p><a href=\"${object.website_url}\">Klik hier om de ${object.slide_type} te openen</a></p>\n        </td>\n    </tr></tbody>\n</table>\n</div>\n<div style=\"padding:0px; margin:0px;\">\n<table cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 10px 0px 0px 0px; vertical-align: top;padding: 0px; font-family:arial; font-size:12px; color: #ffffff; background-color:#8f8f8f;\">\n    <tbody><tr>\n        <td style=\"width: 600px; font-size:12px; text-align:center; padding-top:10px; color:#a24689; padding-bottom:5px\">\n            <a href=\"${object.website_url}\" style=\"color:#a24689\">In browser bekijken</a> |\n            <a href=\"/page/contactus\" style=\"color:#a24689\">Contact</a>\n        </td>\n    </tr></tbody>\n</table>\n</div>"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
@@ -230,7 +230,7 @@ msgstr "<i class=\"fa fa-home\"/> Home"
 msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
 "                                        The social sharing module will be unlocked when a moderator will allow your publication."
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle\"/>\n                                        De module voor delen op sociale media wordt ontgrendeld van zodra een moderator uw publicatie vrijgeeft."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -320,6 +320,12 @@ msgid "A tag must be unique!"
 msgstr "Een label moet uniek zijn!"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction
+msgid "Action Needed"
+msgstr "Vereist actie"
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Actions"
 msgstr "Acties"
@@ -383,7 +389,7 @@ msgstr "Instellingen kanaal"
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
-msgstr ""
+msgstr "Kanaal bevat de gegeven naam, wijzig aub voor het opslaan of publiceren."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
@@ -421,7 +427,7 @@ msgstr "Voorbeeldweergave inhoud"
 msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %serror"
-msgstr ""
+msgstr "Kon geen gegevens ophalen vanaf deze url. Het document of de juiste toegangsrechten zijn niet beschikbaar.\nFoutmelding: %serror"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:269
@@ -439,7 +445,7 @@ msgid ""
 "This is a new open source application in Python/Javascript based on Bootstrap and OpenERP.\n"
 "\n"
 "Download or use online on http://openerp.com"
-msgstr ""
+msgstr "Maak bedrijfsklasse websites met onze super gemakkelijke website bouwer. Gebruik bouwstenen en wijzig alles inline. Profiteer van de out-of-the-box zakelijke functies; e-Commerce, evenementen, blogs, job aankondigingen, klantenreferenties, call-tp-acties, etc.\n\nDit is een nieuwe open source applicatie in Python/Javascript gebaseerd op Bootstrap en Odoo.\n\nDownload of gebruik online op http://openerp.com"
 
 #. module: website_slides
 #. openerp-web
@@ -588,7 +594,7 @@ msgstr "In uw website insluiten"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_embed
 msgid "Embedded Slides View Counter"
-msgstr ""
+msgstr "Ingesloten code opties aantal"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -629,7 +635,7 @@ msgstr "Dia in de kijker"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_promote_strategy
 msgid "Featuring Policy"
-msgstr ""
+msgstr "Beleidsregelsopties"
 
 #. module: website_slides
 #. openerp-web
@@ -704,12 +710,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_unread
-#: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction
+#: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
@@ -732,14 +742,14 @@ msgstr "Infografieken"
 msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
-msgstr ""
+msgstr "Interne serverfout, probeer het later nog een keer of contacteer uw beheerder.\nFoutmelding: %s"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_3
 msgid ""
 "Interview with Guy Christiaens, Finance Manager at Alpinter, about their use of Odoo.\n"
 "Discover more about Odoo at www.odoo.com"
-msgstr ""
+msgstr "Interview met Guy Christiaens, financieel directeur bij Alpinter, over hoe zij Odoo inzetten.\nOntdek meer over Odoo op www.odoo.com"
 
 #. module: website_slides
 #. openerp-web
@@ -848,18 +858,6 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction
-msgid "Need Action"
-msgstr "Vereist actie"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction_counter
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction_counter
-msgid "Need Action Counter"
-msgstr "Aantal vereiste acties"
-
-#. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr "Nieuwe ${object.slide_type} gepubliceerd in ${object.channel_id.name}"
@@ -900,6 +898,12 @@ msgid "Not Published"
 msgstr "Niet gepubliceerd"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
@@ -926,8 +930,8 @@ msgstr "Aantal video's"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr "Aantel vereiste actie berichten"
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_unread_counter
@@ -998,7 +1002,7 @@ msgid ""
 "Odoo's fully-integrated marketing app will help you to attract, convert and close new leads. Check out our three-part video and discover more at www.odoo.com\n"
 "\n"
 "Video made by Miroslava Ganzarcikova and Sophia Eribo."
-msgstr ""
+msgstr "Odoo's volledig geïntegreerde marketingtoepassingen zullen u helpen bij het vinden, omzetten en sluiten van nieuwe verkopen. Bekijk de video van één van onze partners en ontdek meer op www.odoo.com\n\nVideo gemaakt door Miroslava Ganzarcikova en Sophia Eribo."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_9
@@ -1061,7 +1065,7 @@ msgstr "Post"
 msgid ""
 "Post comment with email address (confirmation of email is required in order "
 "to publish comment on website) or please"
-msgstr ""
+msgstr "Plaats reactie met e-mailadres (bevestigen van e-mail is vereist om de reactie te plaatsen op de website) of"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
@@ -1287,7 +1291,7 @@ msgid ""
 "The open source OpenERP Promote tool suggests keywords according to Google most searched terms. Search Engine Optimization tools are ready to use, with no configuration required.\n"
 "\n"
 "Online demo and download: http://openerp.com"
-msgstr ""
+msgstr "De open source Odoo promotie tool suggereert sleutelwoorden aan de hand van de meest gezochte zoektermen in Google. SEO tools zijn klaar om te gebruiken, zonder configuratie.\n\nOnline demo en download: http://openerp.com"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_5
@@ -1506,6 +1510,11 @@ msgstr "Website meta trefwoorden"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_meta_title
 msgid "Website meta title"
 msgstr "Website meta titel"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Write a comment..."
+msgstr "Schrijf een reactie..."
 
 #. module: website_slides
 #. openerp-web

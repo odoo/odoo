@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-10-24 07:05+0000\n"
+"PO-Revision-Date: 2015-10-27 20:50+0000\n"
 "Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -62,7 +62,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "Invitación de ${object.company_id.name} para conectarse a Odoo"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -93,7 +93,7 @@ msgstr "Un correo electrónico ha sido enviado con las credenciales para restabl
 #: code:addons/auth_signup/controllers/main.py:108
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Autenticación Fallida."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -120,7 +120,7 @@ msgstr "Confirmar Contraseña"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Connected"
-msgstr ""
+msgstr "Conectado"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:62
@@ -147,7 +147,7 @@ msgstr "Palabra de ingreso no válida"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Nunca se ha Conectado"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -167,18 +167,18 @@ msgstr "Restablecer contraseña"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
 msgid "Private Profile"
-msgstr ""
+msgstr "Perfil Privado"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr ""
+msgstr "Restablecer Contraseña"
 
 #. module: auth_signup
 #: code:addons/auth_signup/res_users.py:250
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Restablecimiento de contraseña: usuario o correo electrónico no válido"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -188,13 +188,13 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Enviar un Correo de Invitación"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr ""
+msgstr "Registrarse"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
@@ -239,7 +239,7 @@ msgstr "Plantilla de usuario para los nuevos usuarios creados a través del ingr
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "La URL completa para acceder al documento a través del sitio web."
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
@@ -254,12 +254,12 @@ msgstr "Usuarios"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Visible en el Sitio Web"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "Descripción Completa del Sitio Web Asociado"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
@@ -274,28 +274,28 @@ msgstr "URL del Sitio Web"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "Meta descripción del sitio web"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "Meta palabras clave del sitio web"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "Meta título del sitio web"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Su Correo"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "Su Nombre"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -305,7 +305,7 @@ msgstr "base.config.settings"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "ej. Juan Fulano"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_self

@@ -5,18 +5,22 @@
 # Translators:
 # Alex Duan <alex.duan@elico-corp.com>, 2015
 # Connie Xiao <connie.xiao@elico-corp.com>, 2015
+# Dong Wei <fatfox21@gmail.com>, 2015
+# Haorui Wang <yui12349856@live.com>, 2015
 # H_Tang <h_tang@foxmail.com>, 2015
 # jeffery chen fan <jeffery9@gmail.com>, 2015
 # Rona Lin <ssauapw@qq.com>, 2015
 # waveyeung <waveyeung@qq.com>, 2015
+# zhangpeiqing <zpq001@live.com>, 2015
 # 珠海-老天 <liangjia@qq.com>, 2015
+# 钟小华 <mackz@sina.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-23 05:49+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
+"PO-Revision-Date: 2015-10-31 09:04+0000\n"
+"Last-Translator: 钟小华 <mackz@sina.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +94,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * 当用户编辑一个新的且未确认的发票时, 状态为\"草稿\"\n * 当发票还没有发票号时, 状态为\"形式发票\"\n * 当发票有了发票号以后, 状态为\"待支付\".  这个状态一直持续到支付完成.\n * 当发票付款后, 状态自动改为\"已支付\".  相关的凭证可能已核销, 也可能没有.\n * 当用户取消发票后, 状态改为\"已取消\""
+msgstr " * 当用户编辑一个新的且未确认的发票时, 状态为\"草稿\"\n * 当发票还没有发票号时, 状态为\"形式发票\"\n * 当发票有了发票号以后, 状态为\"待支付\".  这个状态一直持续到支付完成.\n * 当发票付款后, 状态自动改为\"已支付\".  相关的凭证可能已调节, 也可能没有.\n * 当用户取消发票后, 状态改为\"已取消\""
 
 #. module: account
 #. openerp-web
@@ -125,7 +129,7 @@ msgstr "${object.company_id.name|safe} 发票 (Ref ${object.number or 'n/a'})"
 #: code:addons/account/models/account_bank_statement.py:320
 #, python-format
 msgid "%d transactions were automatically reconciled."
-msgstr "%d 交易将被自动核销."
+msgstr "%d 交易将被自动调节."
 
 #. module: account
 #: code:addons/account/models/account.py:528
@@ -155,7 +159,7 @@ msgstr ", 如果会计或采购模块已安装"
 #: code:addons/account/models/account_bank_statement.py:321
 #, python-format
 msgid "1 transaction was automatically reconciled."
-msgstr "1 交易将被自动核销"
+msgstr "1 交易将被自动调节"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -195,12 +199,12 @@ msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> 现在安装"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<span class=\"fa\"/> Invite Your Users"
-msgstr "邀请您的用户"
+msgstr "<span class=\"fa\"/> 邀请您的用户"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "<span class=\"o_stat_text\">Invoiced</span>"
-msgstr "已开票"
+msgstr "<span class=\"o_stat_text\">已开票</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -304,7 +308,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Reconcile Bank Statements</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n                                        <strong>核销银行对账单</strong>\n                                    </span>"
+msgstr "<span class=\"panel-title\">\n                                        <strong>核对银行对账单</strong>\n                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -312,7 +316,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Record your Bills</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n                                        <strong>登记账单</strong>\n                                    </span>"
+msgstr "<span class=\"panel-title\">\n                                        <strong>记录账单</strong>\n                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -367,7 +371,7 @@ msgstr "<span>操作</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reconciliation</span>"
-msgstr "<span>核销</span>"
+msgstr "<span>对账</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -447,7 +451,7 @@ msgstr "<strong>清理销售发票:</strong>简易创建, 发票信息完整."
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Comment:</strong>"
-msgstr "<strong>评论:</strong>"
+msgstr "<strong>备注:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -500,7 +504,7 @@ msgstr "<strong>订金支票</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Description:</strong>"
-msgstr "<strong>描述:</strong>"
+msgstr "<strong>说明:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -535,7 +539,7 @@ msgstr "<strong>发票日期:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "<strong>Journals:</strong>"
-msgstr "<strong>账:</strong>"
+msgstr "<strong>日记账:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -554,7 +558,7 @@ msgstr "<strong>下一步:</strong><br/>"
 msgid ""
 "<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of"
 " outstanding payments when creating invoices."
-msgstr "<strong>自动付款核销:</strong> 创建发票时自动生成未清款项."
+msgstr "<strong>自动付款调节:</strong> 创建发票时自动生成未清款项."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -588,31 +592,31 @@ msgstr "<strong>采购</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile Bank Statement</strong>"
-msgstr "<strong>核销付款</strong>"
+msgstr "<strong>核对银行对账单</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Reconcile with existing transaction</strong><br/>\n"
 "                                        In this case, Odoo should automatically match the bank statement with the previously recorded check transaction."
-msgstr "<strong>与已有交易核销</strong><br/>\n                                        这种情况下, Odoo应自动匹配银行对账单和之前的交易记录."
+msgstr "<strong>与已有交易调节</strong><br/>\n                                        这种情况下, Odoo应自动匹配银行对账单和之前的交易记录."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile your Bank Statements</strong>"
-msgstr "<strong>核销银行日记账</strong>"
+msgstr "<strong>核对银行对账单</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Record Bank Statement (or import file)</strong><br/>\n"
 "                                        Depending on the volume of your transactions, you should be recording your bank statement every week to several times a day."
-msgstr "<strong>登记银行日记账 (或导入文件)</strong><br/>\n                                        根据交易量, 你应登记银行日记账每周一次或一日多次."
+msgstr "<strong>记录银行对账单 (或导入文件)</strong><br/>\n                                        根据交易量, 你应登记银行日记账每周一次或一日多次."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Record Bank Statement</strong>"
-msgstr "<strong>登记银行日记账</strong>"
+msgstr "<strong>记录银行对账单</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -631,12 +635,12 @@ msgstr "<strong>减少凭证:</strong> 无需手动创建发票, 登记收付款
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong>"
-msgstr "<strong>备注:</strong>"
+msgstr "<strong>参考:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Revenue Recognition</strong>"
-msgstr "<strong>收入确认</strong>"
+msgstr "<strong>收入识别</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -681,18 +685,18 @@ msgstr "<strong>目标:</strong>"
 msgid ""
 "<strong>Test the following three scenarios in order to assist you in "
 "familiarizing yourself with Odoo:</strong>"
-msgstr ""
+msgstr "<strong>为了能让你尽快的熟悉Odoo，请测试是以下三种场景　</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>There are three different levels of access rights in Odoo:</strong>"
-msgstr ""
+msgstr "<strong>Odoo中有三种不同的登陆权限:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>There is nothing due with this customer.</strong>"
-msgstr ""
+msgstr "<strong>这个客户没有相关业务.</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -704,7 +708,7 @@ msgstr "<strong>总计</strong>"
 msgid ""
 "<strong>Validate the bill</strong><br/> after encoding the products and "
 "taxes."
-msgstr ""
+msgstr "<strong>确认账单</strong><br/> 后于编码产品和"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -714,7 +718,7 @@ msgid ""
 "                payments on a daily basis. You can enter the coins that are in\n"
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
-msgstr ""
+msgstr "现金登记按钮允许你在现金分类账中管理你的现金分录\n这个特征让你用一种简单的方式操作每天的业务，你可以输入钱箱中的硬币数额，\n然后当从钱箱中拿出或者放入金额的时候对分录进行过账"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1206
@@ -726,13 +730,13 @@ msgstr "支付条款的最后一项类型必须是结转余额。 "
 #: code:addons/account/models/account_invoice.py:1209
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
-msgstr ""
+msgstr "付款条款应该只有一行类型余额"
 
 #. module: account
 #: code:addons/account/models/account.py:469
 #, python-format
 msgid "A bank account can anly belong to one journal."
-msgstr ""
+msgstr "一个银行科目只能属于一个分类账"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -740,36 +744,36 @@ msgid ""
 "A bank statement is a summary of all financial transactions\n"
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
-msgstr ""
+msgstr "银行对账单是一段时期内一个银行账号发生的所有交易的汇总\n一般都是定期从银行收到"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account."
-msgstr ""
+msgstr "银行对账单行是银行科目的一次财政交易"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
 msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
-msgstr ""
+msgstr "一条会计分录由几个凭证明细构成，每一条都是一条借或者贷的交易"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
-msgstr ""
+msgstr "分类账用来记录日常业务活动的会计数据的交易事项"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of common taxes and their rates."
-msgstr ""
+msgstr "通用税和税率的列表"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of your customer and suppler payment terms."
-msgstr ""
+msgstr "一张客户和供应商的付款条款列表"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -777,13 +781,13 @@ msgid ""
 "A product in Odoo is something you sell or buy \n"
 "                        whether or not it is goods, consumables, or services.\n"
 "                        Choose how you want to create your products:"
-msgstr ""
+msgstr "Odoo中的产品是用来买卖的货物，耗材或者服务你可以根绝需要选择创建产品："
 
 #. module: account
 #: code:addons/account/models/account_move.py:685
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
-msgstr ""
+msgstr "一次反调节至少２次移动"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:788
@@ -796,7 +800,7 @@ msgstr "选择的分录行早已调节"
 #: code:addons/account/models/account_bank_statement.py:224
 #, python-format
 msgid "A statement cannot be canceled when its lines are reconciled."
-msgstr ""
+msgstr "当某行被调节后的状态不能被取消"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -807,7 +811,7 @@ msgstr "一个税金财政位置在相同的税金上面只能定义一次。"
 #: code:addons/account/models/account_bank_statement.py:388
 #, python-format
 msgid "A transaction can't have a 0 amount."
-msgstr ""
+msgstr "交易不能是零金额"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -815,7 +819,7 @@ msgid ""
 "A typical company may use one journal per payment method (cash,\n"
 "                bank accounts, checks), one purchase journal, one sale journal\n"
 "                and one for miscellaneous information."
-msgstr ""
+msgstr "一个典型的公司可以根据付款方式（现金，银行账户，支票）用一个分类账，\n一个采购分类账，一个销售分类账，和其他杂项分类账"
 
 #. module: account
 #. openerp-web
@@ -847,17 +851,17 @@ msgstr "会计到期的试算表报告"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Account Balances"
-msgstr ""
+msgstr "科目余额"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_cashbox
 msgid "Account Bank Statement Cashbox Details"
-msgstr ""
+msgstr "科目　银行对账单　详细钱箱"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_closebalance
 msgid "Account Bank Statement closing balance"
-msgstr ""
+msgstr "银行账户期末余额"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -915,7 +919,7 @@ msgstr "科目映射"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Account Move Reversal"
-msgstr ""
+msgstr "逆转科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_acc_name
@@ -977,7 +981,7 @@ msgstr "科目统计"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr ""
+msgstr "账户标签"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_form
@@ -1003,7 +1007,7 @@ msgstr "科目模板"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_valuation_account_id
 msgid "Account Template for Stock Valuation"
-msgstr ""
+msgstr "库存估值的科目模板"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_template_form
@@ -1060,23 +1064,23 @@ msgstr "会计分录行调节"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr "会计分录行调节(核销)"
+msgstr "会计分录行对账(销账)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account move reversal"
-msgstr ""
+msgstr "逆转科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_src_id
 msgid "Account on Product"
-msgstr ""
+msgstr "产品上的科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_tag_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template_tag_ids
 msgid "Account tag"
-msgstr ""
+msgstr "科目标签"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_account_id
@@ -1084,7 +1088,7 @@ msgstr ""
 msgid ""
 "Account that will be set on invoice tax lines for invoices. Leave empty to "
 "use the expense account."
-msgstr ""
+msgstr "科目被用来设置在发票的税行上用来开票，留空去用费用科目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_refund_account_id
@@ -1092,17 +1096,17 @@ msgstr ""
 msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
-msgstr ""
+msgstr "用费用类科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
 msgid "Account to Use Instead"
-msgstr ""
+msgstr "用来代替的科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_account_type
 msgid "Account type"
-msgstr ""
+msgstr "科目类型"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -1130,18 +1134,18 @@ msgstr "会计应用程序配置"
 #. module: account
 #: model:web.planner,tooltip_planner:account.planner_account
 msgid "Accounting Configuration: a step-by-step guide."
-msgstr ""
+msgstr "财务配置：一步一步的向导"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr ""
+msgstr "会计仪表盘"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "会计日期"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -1161,7 +1165,7 @@ msgstr "会计报告"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Accounting Settings"
-msgstr ""
+msgstr "财务设置"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1200,7 +1204,7 @@ msgstr "所需行动"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Activate the option in the"
-msgstr ""
+msgstr "激活这个选项在"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_active
@@ -1221,7 +1225,7 @@ msgstr "添加"
 #: model:ir.model.fields,field_description:account.field_account_operation_template_has_second_line
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_form
 msgid "Add a second line"
-msgstr ""
+msgstr "添加第二行"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
@@ -1259,17 +1263,17 @@ msgstr "高级设置"
 #: model:ir.ui.menu,name:account.menu_finance_entries
 #: model:res.groups,name:account.group_account_manager
 msgid "Adviser"
-msgstr ""
+msgstr "顾问"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_include_base_amount
 msgid "Affect Base of Subsequent Taxes"
-msgstr ""
+msgstr "影响后续税收的基础"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_include_base_amount
 msgid "Affect Subsequent Taxes"
-msgstr ""
+msgstr "影响后续税收"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_aged_balance_view
@@ -1287,7 +1291,7 @@ msgid ""
 "then calculates a table of credit balance by start Date. So if you request "
 "an interval of 30 days Odoo generates an analysis of creditors for the past "
 "month, past two months, and so on."
-msgstr ""
+msgstr "账龄表是应收款账的明细表. 打开报表，选择公司名字 , 显示开始日，一个间隔一列(按天). Odoo可以计算出开始日后的贷项余额. 如果你设定没30天一个间隔，odoo将生成过去一个月，过去2个月等等的数据分析."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1302,7 +1306,7 @@ msgstr "到期的试算表"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:297
 #, python-format
 msgid "All"
-msgstr "全选"
+msgstr "全部"
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -1332,7 +1336,7 @@ msgstr "所有分录"
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "All Posted Entries"
-msgstr "所有已登帐分录"
+msgstr "所有已过账分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -1352,7 +1356,7 @@ msgstr "所有科目的"
 msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
 "clean."
-msgstr ""
+msgstr "所有发票和付款匹配，你的账户余额是干净的"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
@@ -1374,7 +1378,7 @@ msgstr "所有手工创建的会计分录通常为“未登帐”状态，但您
 msgid ""
 "All selected journal entries will be validated and posted. You won't be able"
 " to modify them afterwards."
-msgstr ""
+msgstr "所有的会计分录被确认和过账，随后你将不能更改"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:246
@@ -1392,7 +1396,7 @@ msgstr "允许取消分录"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_reconcile
 msgid "Allow Invoices & payments Matching"
-msgstr ""
+msgstr "允许发票和付款匹配"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_reconcile
@@ -1402,12 +1406,12 @@ msgstr "允许调节"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_tax_cash_basis
 msgid "Allow Tax Cash Basis"
-msgstr ""
+msgstr "允许以现金为基础的税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_l10n_us_check_printing
 msgid "Allow check printing and deposits"
-msgstr ""
+msgstr "允许检查打印和保证金"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_multi_currency
@@ -1466,24 +1470,24 @@ msgstr "到期金额"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
 msgid "Amount Signed"
-msgstr ""
+msgstr "签核的总量"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_amount
 msgid "Amount concerned by this matching. Assumed to be always positive"
-msgstr ""
+msgstr "这种匹配的总计，全部设定为正值"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_currency
 msgid "Amount currency"
-msgstr ""
+msgstr "现金总计"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount_currency
 msgid "Amount in Currency"
-msgstr ""
+msgstr "以货币总计"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_amount_type
@@ -1496,7 +1500,7 @@ msgstr "总额类型"
 #: code:addons/account/static/src/xml/account_payment.xml:68
 #, python-format
 msgid "Amount:"
-msgstr ""
+msgstr "总额"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.account:0
@@ -1513,7 +1517,7 @@ msgid ""
 "                balance sheet and the income statement (profit and loss\n"
 "                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
-msgstr ""
+msgstr "一个科目是总账中允许公司记录所有种类的借方和贷方的交易\n公司通过两种主要方式呈现他们的年应收：\n余额表和收入报表（利润和损失），公司的年营收科目法律规定的要披露一定量的公司信息"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -1523,7 +1527,7 @@ msgid ""
 "                the process for the annual closing. Reports such as the Balance\n"
 "                Sheet and the Profit and Loss report use the category\n"
 "                (profit/loss or balance sheet)."
-msgstr ""
+msgstr "一个科目类型被用来决定怎样在分类账中定义一个科目，一个账户类型的递延方法决定年度关账\n例如余额表，利润报表用到这个种类（利润／损失或者余额表）"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -1564,7 +1568,7 @@ msgstr "分析账户"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_analytic
 msgid "Analytic Cost"
-msgstr ""
+msgstr "分析成本"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
@@ -1644,7 +1648,7 @@ msgid ""
 "\n"
 "Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr ""
+msgstr "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n\nRevenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1654,12 +1658,12 @@ msgstr "资产"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
 msgid "Assets management & Revenue recognition"
-msgstr ""
+msgstr "固定资产管理和应收识别"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
 msgid "Associated Account Templates"
-msgstr ""
+msgstr "所带科目模板"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_inbound
@@ -1679,12 +1683,12 @@ msgstr "8月"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Auto-detect"
-msgstr ""
+msgstr "自动检测"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Automate Payments"
-msgstr ""
+msgstr "自动付款"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -1695,7 +1699,7 @@ msgstr "自动格式化"
 #: code:addons/account/models/account_bank_statement.py:326
 #, python-format
 msgid "Automatically reconciled items"
-msgstr ""
+msgstr "自动调节明细"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_price_average
@@ -1706,13 +1710,13 @@ msgstr "平均价格"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Awaiting payments"
-msgstr ""
+msgstr "等待付款"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:156
 #, python-format
 msgid "BILL"
-msgstr ""
+msgstr "账单"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -1738,7 +1742,7 @@ msgstr "余额，基于开账余额和交易计算"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_balance_cash_basis
 msgid "Balance cash basis"
-msgstr ""
+msgstr "以现金为基础的余额"
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -1772,7 +1776,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Refund, otherwise a Partner "
 "bank account number."
-msgstr ""
+msgstr "被支付的发票的银行账号，如果有客户发票或者供应商退款的话是公司的银行账号，相反的就是一个业务伙伴的银行账号"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_bank_journal_form
@@ -1785,7 +1789,7 @@ msgstr "银行帐户"
 #: model:ir.model.fields,field_description:account.field_account_config_settings_bank_account_code_prefix
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_code_prefix
 msgid "Bank Accounts Prefix"
-msgstr ""
+msgstr "银行科目前缀"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_statements_source
@@ -1795,24 +1799,24 @@ msgstr "银行费用"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_yodlee
 msgid "Bank Interface - Sync your bank feeds automatically"
-msgstr ""
+msgstr "银行接口－自动同步银行费用"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_bank_journal_ids
 msgid "Bank Journals"
-msgstr ""
+msgstr "银行分类账"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Bank Operations"
-msgstr ""
+msgstr "银行操作"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1116
 #, python-format
 msgid "Bank Reconciliation"
-msgstr ""
+msgstr "银行同步"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_tree
@@ -1851,12 +1855,12 @@ msgstr "银行对账单"
 #. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Bank Synchronization"
-msgstr ""
+msgstr "银行同步"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Bank account(s)"
-msgstr ""
+msgstr "银行科目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_company_footer
@@ -1876,7 +1880,7 @@ msgstr "银行和现金"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_statement_line_id
 msgid "Bank statement line reconciled with this entry"
-msgstr ""
+msgstr "和这条分录调节的银行对账单行"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -1895,7 +1899,7 @@ msgstr "银行对账单已完全调节。"
 msgid ""
 "Before continuing, you must install the Chart of Account related to your "
 "country (or the generic one if your country is not listed)."
-msgstr ""
+msgstr "在继续之前，你必须安装你所在国家的科目表（或者如果没有你的国家的科目表就用通用的）"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1912,7 +1916,7 @@ msgstr "账单日期"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bill Refund"
-msgstr ""
+msgstr "账单退款"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -1958,7 +1962,7 @@ msgstr "预算管理"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_business_intelligence_menu
 msgid "Business Intelligence"
-msgstr ""
+msgstr "商务智能"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_name
@@ -2135,7 +2139,7 @@ msgstr "草稿／形式发票／取消的发票不能退款"
 msgid ""
 "Cannot refund invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr "已经核销的发票不能退款，发票需要先被法核销，才能退款"
+msgstr "已经调节的发票不能退款，发票需要先被法调节，才能退款"
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -2222,7 +2226,7 @@ msgstr "收入科目的种类"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Change"
-msgstr "更改"
+msgstr "找零"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_chart_template_id
@@ -2288,7 +2292,7 @@ msgstr "检查期末余额"
 msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
-msgstr ""
+msgstr "如果这个科目能够让发票和付款与分类账的匹配就勾选这个框"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_expects_chart_of_accounts
@@ -2383,7 +2387,7 @@ msgstr "点击去创建一个新的现金记录"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_operation_template
 msgid "Click to create a reconciliation model."
-msgstr "点击去创建一个反核销model"
+msgstr "点击去创建一个反调节model"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -2737,7 +2741,7 @@ msgstr "创建供应商"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1861
 #, python-format
 msgid "Create Write-off"
-msgstr "创建核销"
+msgstr "创建销账"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -2761,7 +2765,7 @@ msgstr "创建发票／账单"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:2462
 #, python-format
 msgid "Create writeoff"
-msgstr "创建核销"
+msgstr "创建销账"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3256,7 +3260,7 @@ msgstr "自动检测"
 msgid ""
 "Determines where the tax is selectable. Note : 'None' means a tax can't be "
 "used by itself, however it can still be used in a group."
-msgstr ""
+msgstr "决定税在哪里是可选的。注意：‘没有’意味着税不能被自己用，尽管能够被用在一个组中"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_difference
@@ -3273,7 +3277,7 @@ msgstr "差异科目"
 msgid ""
 "Difference between the computed ending balance and the specified ending "
 "balance."
-msgstr ""
+msgstr "计算出来的期末余额和专门的期末余额之前的差异"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
@@ -3404,7 +3408,7 @@ msgstr "把这个银行账号显示在打印的单据上，如发票或销售订
 msgid ""
 "Document: Customer account statement<br/>\n"
 "                    Date:"
-msgstr ""
+msgstr "文档：科目科目状态<br/>\n日期："
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3507,7 +3511,7 @@ msgstr "截止日期"
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
 "vendor bill/refund."
-msgstr ""
+msgstr "检测到重复的供应商信息，你可能对同一个供应商账单／退款编码了两次"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_invoice_action_report_duplicate
@@ -3658,7 +3662,7 @@ msgstr "汇率分录"
 msgid ""
 "Exchange rates are updated automatically once a day from "
 "<strong>XE.com</strong>. You do not need to setup your own rates."
-msgstr ""
+msgstr "汇率会自动的从<strong>XE.com</strong>一天更新两次，不必自己设置汇率"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_expects_chart_of_accounts
@@ -3866,7 +3870,7 @@ msgstr "固定资产"
 msgid ""
 "Fixed amount will count as a debit if it is negative, as a credit if it is "
 "positive."
-msgstr ""
+msgstr "如果是负的，固定数额将作为一个借方，如果是正的作为贷方"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -3916,7 +3920,7 @@ msgstr "关于Odoo团队,<br/>\n                            Fabien Pinckaers, �
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_currency_id
 msgid "Forces all moves for this account to have this account currency."
-msgstr ""
+msgstr "强制这个科目所有的移动拥有这个科目的币别"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_currency_id
@@ -3936,7 +3940,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced from your "
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr ""
+msgstr "从这个报表中，你可以得到一个总的供应商的发票总额。搜索功能也能用来个性化你的发票报表等，例如根据你的需要匹配分析"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -3944,7 +3948,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr ""
+msgstr "从这个报表中，你可以得到一个总的客户的发票总额。搜索功能也能用来个性化你的发票报表等，例如根据你的需要匹配分析"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_accountant
@@ -3989,45 +3993,45 @@ msgstr "总账报告"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_tax_cash_basis
 msgid "Generate tax cash basis entrie when reconciliating entries"
-msgstr ""
+msgstr "当反调节分录的时候生成以现金为基础的税的分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_reports
 msgid "Get dynamic accounting reports"
-msgstr ""
+msgstr "得到动态的财务报表"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Get started"
-msgstr ""
+msgstr "启动"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_plaid
 msgid ""
 "Get your bank statements from you bank and import them through plaid.com.\n"
 "-that installs the module account_plaid."
-msgstr ""
+msgstr "需要安装模块account_plaid从银行得到银行对账单然后从plaid.com导入"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
 msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .OFX format.\n"
 "This installs the module account_bank_statement_import_ofx."
-msgstr ""
+msgstr "需要安装模块account_bank_statement_import_ofx从银行得到银行对账单然后用.OFX格式导入"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_qif
 msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .QIF format.\n"
 "This installs the module account_bank_statement_import_qif."
-msgstr ""
+msgstr "需要安装模块account_bank_statement_import_qif从银行得到银行对账单然后用.QIF格式导入"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_yodlee
 msgid ""
 "Get your bank statements from your bank and import them through yodlee.com.\n"
 "-that installs the module account_yodlee."
-msgstr ""
+msgstr "拿到你的银行对账单然后用过yodlee.com导入系统这个需要安装模块： account_yodlee"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
@@ -4048,14 +4052,14 @@ msgstr "按序列顺序显示发票税金列表"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_sequence
 msgid "Gives the sequence order when displaying a list of payment term lines."
-msgstr ""
+msgstr "当显示付款条款行目的时候给出序列号"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:225
 #, python-format
 msgid "Go to bank statements"
-msgstr ""
+msgstr "进入银行对账单"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:447
@@ -4116,7 +4120,7 @@ msgstr "有完结的"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr "有反核销分录"
+msgstr "有未调节分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_hide_payment_method
@@ -4235,7 +4239,7 @@ msgstr "如果为空，用预留分录的分类账"
 msgid ""
 "If set, taxes which are computed after this one will be computed based on "
 "the price tax included."
-msgstr ""
+msgstr "如果设置，计算出来的将是价内税"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_analytic
@@ -4243,7 +4247,7 @@ msgstr ""
 msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
-msgstr ""
+msgstr "如果设置，根据这个税计算出来的总额将被赋给发票行的同一个分析科目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_active
@@ -4303,14 +4307,14 @@ msgid ""
 "             summed and eventually this total tax amount will be rounded. If you sell with tax included,\n"
 "             you should choose 'Round per line' because you certainly want the sum of your tax-included line\n"
 "             subtotals to be equal to the total amount with taxes."
-msgstr ""
+msgstr "If you select 'Round per line' : for each tax, the tax amount will first be\n             computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed,\n             leading to the total amount for that tax. If you select 'Round globally': for each tax,\n             the tax amount will be computed for each PO/SO/invoice line, then these amounts will be\n             summed and eventually this total tax amount will be rounded. If you sell with tax included,\n             you should choose 'Round per line' because you certainly want the sum of your tax-included line\n             subtotals to be equal to the total amount with taxes."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_general_ledger_initial_balance
 msgid ""
 "If you selected date, this field allow you to add a row to display the "
 "amount of debit/credit/balance that precedes the filter you've set."
-msgstr ""
+msgstr "一旦你选择了日期，这个字段能够让你添加一行去显示你所过滤的借方／贷方／余额的总额"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -4342,7 +4346,7 @@ msgstr "如果您使用付款条款，到期日会在会计分录产生时自动
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "If you want to be able to send customer statements from Odoo, you must:"
-msgstr ""
+msgstr "如果你需要从Odoo中发送客户状态，你必须"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4351,7 +4355,7 @@ msgid ""
 "                        from Odoo, you first need to record all outstanding transactions \n"
 "                        in the payable and receivable accounts. These would be invoices \n"
 "                        that have not been paid or payments that have not been reconciled."
-msgstr ""
+msgstr "如果你想从Odoo中给客户发送报表，你应该首先记录所有的为完结的应收和应付账户，\n这些是那些还没有被付款的或者已经付款但是还没有被调节的发票"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4364,7 +4368,7 @@ msgid ""
 "If you'd like some assistance on any of the above, please do not hesitate \n"
 "                        to contact our accounting experts by using the \n"
 "                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr ""
+msgstr "如果你需要以上的任何帮助，不要有任何犹豫去联系我们的财务专家，　可以点击上面的 <span class=\"fa fa-question-circle\"/>图标"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -4391,7 +4395,7 @@ msgstr "用左上角\"导入\"键导入，在"
 msgid ""
 "Importing your statements in via a supported file format (QIF, OFX, CODA or "
 "CSV format)"
-msgstr ""
+msgstr "用支持的文件格式导入报表（QIF, OFX, CODA 或者 CSV 格式）"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4420,7 +4424,7 @@ msgstr "要删除银行对账单，必须先取消它以便删除相关分类账
 msgid ""
 "In order to pay multiple invoices at once, they must belong to the same "
 "partner."
-msgstr ""
+msgstr "必须是同一业务伙伴才能同时批量给发票付款"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:128
@@ -4689,7 +4693,7 @@ msgstr "发票和付款匹配"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices &amp; Refunds"
-msgstr "发票&a mp;退款"
+msgstr "发票&amp;退款"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -4762,7 +4766,7 @@ msgstr "提示发票已送出。"
 #, python-format
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
-msgstr "创建核销的时候必须要制定一个科目和分类账"
+msgstr "创建销账的时候必须要制定一个科目和分类账"
 
 #. module: account
 #. openerp-web
@@ -4779,7 +4783,7 @@ msgid ""
 "                            data to import and balances to set. If you plan to do so, \n"
 "                            we recommend you start using Odoo for invoicing and payments \n"
 "                            now, and then move all other accounting transactions at a later time."
-msgstr ""
+msgstr "在一个财政季度中，更改数值是一种很常见的做法。这让您有更少的数据导入和平衡设置。如果你打算这么做，我们建议你开始使用Odoo开开票和付款，然后将在稍后的时间做所有其他会计事务。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4969,7 +4973,7 @@ msgstr "留空使用当前日期"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date
 msgid "Keep empty to use the invoice date."
-msgstr ""
+msgstr "留空用发票日期"
 
 #. module: account
 #: selection:account.payment,payment_difference_handling:0
@@ -4988,7 +4992,7 @@ msgstr "标签"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_description
 msgid "Label on Invoices"
-msgstr ""
+msgstr "发票上的标签"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_last_post
@@ -5065,7 +5069,7 @@ msgstr "最后修改日"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:329
 #, python-format
 msgid "Last Reconciliation :"
-msgstr "最后核销 :"
+msgstr "最后调节 :"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_write_uid
@@ -5197,7 +5201,7 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr ""
+msgstr "上次这个业务伙伴的发票和付款是匹配的。设置为反调节的借方或者反调节的贷方或者你点击\"完成\"按钮"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
@@ -5205,7 +5209,7 @@ msgid ""
 "Last time the invoices & payments matching was performed on this account. It"
 " is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit Or if you click the \"Done\" button."
-msgstr ""
+msgstr "上次这个账户的发票和付款是匹配的。要设置为至少一个反调节的借方和一个反调节的贷方或者你点击\"完成\"按钮"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_last_time_entries_checked
@@ -5345,7 +5349,7 @@ msgstr "公司的主币别"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Manage time &amp; material contracts or fixed-price recurring subscriptions."
-msgstr "管理时间 &amp；材料合同或者定期的固定价格的捐助"
+msgstr "管理工/料计价合同或者固定价格的经常性订阅。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5418,7 +5422,7 @@ msgid ""
 "Means of payment for collecting money. Odoo modules offer various payments "
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
-msgstr ""
+msgstr "意味着用来收钱的付款。Odoo模块提供各种各样的付款处理工具，但是你也可以一直在系统外用手工的付款方式管理付款"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_outbound_payment_method_ids
@@ -5426,7 +5430,7 @@ msgid ""
 "Means of payment for sending money. Odoo modules offer various payments "
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
-msgstr ""
+msgstr "意味着用来付钱的付款。Odoo模块提供各种各样的付款处理工具，但是你也可以一直在系统外用手工的付款方式管理付款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_communication
@@ -5434,64 +5438,64 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment_communication
 #: model:ir.model.fields,field_description:account.field_account_register_payments_communication
 msgid "Memo"
-msgstr ""
+msgstr "备忘录"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:64
 #, python-format
 msgid "Memo:"
-msgstr ""
+msgstr "备忘录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_ids
 msgid "Messages"
-msgstr "消息"
+msgstr "信息"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_message_ids
 #: model:ir.model.fields,help:account.field_account_invoice_message_ids
 msgid "Messages and communication history"
-msgstr "消息和通信历史"
+msgstr "信息和交流历史记录"
 
 #. module: account
 #: selection:account.journal,type:0
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Miscellaneous"
-msgstr ""
+msgstr "杂项"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:157
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #, python-format
 msgid "Miscellaneous Operations"
-msgstr ""
+msgstr "杂项操作"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:81
 #, python-format
 msgid "Modify presets"
-msgstr ""
+msgstr "更改预设置"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr ""
+msgstr "更改：创建退款，调节和创建新的草稿发票"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
 msgid "Monthly Turnover"
-msgstr ""
+msgstr "月周转"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:104
 #, python-format
 msgid "More"
-msgstr ""
+msgstr "更多"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5504,7 +5508,7 @@ msgid ""
 "Most currencies are already created by default. If you plan\n"
 "                        to use some of them, you should check their <strong>Active</strong>\n"
 "                        field."
-msgstr ""
+msgstr "许多币别已经被默认创建。如果你打算用其中的一些，你应该勾选他们的<strong>有效</strong>字段"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -5521,13 +5525,13 @@ msgstr "分录行"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_move_line_ids
 msgid "Move line ids"
-msgstr ""
+msgstr "移动行ids"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1026
 #, python-format
 msgid "Move name (id): %s (%s)"
-msgstr ""
+msgstr "移动名称（id）: %s (%s)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5537,22 +5541,22 @@ msgstr "多币种"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_config_multi_currency
 msgid "Multi-Currencies"
-msgstr ""
+msgstr "多币别"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "My Invoices"
-msgstr ""
+msgstr "我的发票"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "NET ASSETS"
-msgstr ""
+msgstr "净资产"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "NET PROFIT"
-msgstr ""
+msgstr "净利润"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_name
@@ -5577,47 +5581,47 @@ msgstr "名称:"
 #: model:ir.actions.act_window,name:account.act_account_tax_net
 #: model:ir.actions.act_window,name:account.act_account_tax_net_posted
 msgid "Net Tax Lines"
-msgstr ""
+msgstr "净税行"
 
 #. module: account
 #: selection:account.bank.statement,state:0
 msgid "New"
-msgstr ""
+msgstr "新的"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:88
 #, python-format
 msgid "New Operation"
-msgstr ""
+msgstr "新的操作"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Statement"
-msgstr ""
+msgstr "新的报表"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Transactions"
-msgstr ""
+msgstr "新的交易"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1004
 #, python-format
 msgid "New expected payment date: "
-msgstr ""
+msgstr "新的付款预期"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:80
 #, python-format
 msgid "New preset"
-msgstr ""
+msgstr "新的预设"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Next, register any unmatched payments:<br/>"
-msgstr ""
+msgstr "下一步，登记不匹配的付款"
 
 #. module: account
 #: selection:accounting.report,filter_cmp:0
@@ -5627,25 +5631,25 @@ msgstr "无筛选器"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_blocked
 msgid "No Follow-up"
-msgstr ""
+msgstr "没有跟进"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:925
 #, python-format
 msgid "No appropriate payment method enabled on journal %s"
-msgstr ""
+msgstr "分类账%s中没有合适的付款方式"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "No detail"
-msgstr ""
+msgstr "无详情"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:123
 #, python-format
 msgid "No result matching '"
-msgstr ""
+msgstr "无匹配结果"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_fiscalyear_lock_date
@@ -5653,44 +5657,44 @@ msgstr ""
 msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
-msgstr ""
+msgstr "没有包含顾问的用户可以编辑之前到今天的账户。例如用它来做财政年度的锁定"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_code_digits
 #: model:ir.model.fields,help:account.field_wizard_multi_charts_accounts_code_digits
 msgid "No. of Digits to use for account code"
-msgstr ""
+msgstr "科目代码的数字号码"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_code_digits
 msgid "No. of digits to use for account code"
-msgstr ""
+msgstr "科目代码的数字号码"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_assets
 msgid "Non-current Assets"
-msgstr ""
+msgstr "非流动资产"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_liabilities
 msgid "Non-current Liabilities"
-msgstr ""
+msgstr "非流动负债"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "None"
-msgstr ""
+msgstr "没有"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Normal Text"
-msgstr ""
+msgstr "正常文本"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
-msgstr ""
+msgstr "未付"
 
 #. module: account
 #: code:addons/account/wizard/account_report_common.py:28
@@ -5704,7 +5708,7 @@ msgstr "未执行。"
 #: model:ir.model.fields,field_description:account.field_account_account_template_note
 #, python-format
 msgid "Note"
-msgstr ""
+msgstr "注意"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_note
@@ -5712,12 +5716,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_note
 #: model:ir.ui.view,arch_db:account.view_account_template_form
 msgid "Notes"
-msgstr ""
+msgstr "记录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Nothing to Reconcile"
-msgstr ""
+msgstr "没有要调节的"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -5733,7 +5737,7 @@ msgstr "号码"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Number (Move)"
-msgstr ""
+msgstr "数字（移动）"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_needaction_counter
@@ -5744,17 +5748,17 @@ msgstr "动作的序列号"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_number
 msgid "Number of Coins/Bills"
-msgstr ""
+msgstr "货币和账单的数量"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_days
 msgid "Number of Days"
-msgstr ""
+msgstr "天数"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_accounts_code_digits
 msgid "Number of digits in an account code"
-msgstr ""
+msgstr "科目代码的中的数字位数"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_message_needaction_counter
@@ -5783,21 +5787,21 @@ msgstr "10月"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Odoo Accounting has many free extra-features:"
-msgstr ""
+msgstr "Odoo财务有很多免费的额外特性"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
 msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoice(s)."
-msgstr ""
+msgstr "Odoo能让你直接对相应的销售或者采购发票调节结算行"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
 msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoices."
-msgstr ""
+msgstr "Odoo允许调节和销售或者采购发票相关的报表行"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -5806,21 +5810,21 @@ msgid ""
 "                document: invoice, refund, vendor payment, bank statements,\n"
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
-msgstr ""
+msgstr "Odoo会自动的根据会计凭证：发票，退款，供应商付款，银行对账单等等创建会计分录。所以，你应该只对杂项操作手工的记录会计分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Odoo can manage multiple companies, but we suggest to setup everything for "
 "your first company before configuring the other ones."
-msgstr ""
+msgstr "Odoo可以管理多公司，但是我们建议在配置别的公司之前先配置第一个公司"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Odoo has already preconfigured a few taxes according to your "
 "country.<br/>Simply review them and check if you need more."
-msgstr ""
+msgstr "Odoo已经预先设置了一些你所在国家的税，<br/>简单的查看一下是否还需要用到他们"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5828,7 +5832,7 @@ msgid ""
 "Odoo should do most of the reconciliation work automatically, so you'll only"
 " need to review a few of them when a <strong>'Reconcile Items'</strong> "
 "button appears on your Vendor Bills dash."
-msgstr ""
+msgstr "Odoo应该自动的操作大部分的反调节，"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -5837,7 +5841,7 @@ msgid ""
 "                collection of customer payments. Your customer receives the\n"
 "                invoice by email and he can pay online and/or import it\n"
 "                in his own system."
-msgstr ""
+msgstr "Odoo的电子发票能让你快捷的收集客户的付款\n你的客户通过邮件收到发票然后他就可以在线支付或者导入自己的系统"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_confirm_view
@@ -5846,14 +5850,14 @@ msgid ""
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
-msgstr ""
+msgstr "一旦草稿发票被确认，你讲不能更改它\n同时发票被赋予一个序列号，科目表中凭证明细会被创建"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Once you have created your chart of accounts, you will need to update your "
 "account balances."
-msgstr ""
+msgstr "一旦你创建了科目表，你就需要更新你的科目余额"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5861,42 +5865,42 @@ msgid ""
 "Once your bank accounts are registered, you will be able \n"
 "                        to access your statements from the Accounting Dashboard. \n"
 "                        The available methods for synchronization are as follows."
-msgstr ""
+msgstr "一旦你的银行账户被注册，你将可以从快译仪表盘登陆你的报表可用的同步方式如下："
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Once your company information is correct, you should"
-msgstr ""
+msgstr "一旦你的公司信息是正确的，你应该"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "One bank statement for each bank account you hold."
-msgstr ""
+msgstr "一张每个银行你持有账号的银行对账单"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_only_one_chart_template
 msgid "Only One Chart Template Available"
-msgstr ""
+msgstr "只有一个表模板可用"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:311
 #, python-format
 msgid ""
 "Only a draft payment can be posted. Trying to post a payment in state %s."
-msgstr ""
+msgstr "在只有草稿付款能被过账，尽量过账一个在状态 %s的付款"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:699
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "只有管理员能改变设置"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1509
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
-msgstr ""
+msgstr "只能用 ctrl-enter快捷键来确认反调节"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_period_lock_date
@@ -5905,24 +5909,24 @@ msgid ""
 "Only users with the 'Adviser' role can edit accounts prior to and inclusive "
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
-msgstr ""
+msgstr "只有带有顾问角色的用户可以编辑从以前到今天的账户。例如用它来所偶定开启状态的会计年度的期间锁定"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 msgid "Open"
-msgstr ""
+msgstr "打开"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:82
 #, python-format
 msgid "Open Payment"
-msgstr ""
+msgstr "打开付款"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_client_account_menu
 msgid "Open account dashboard menu"
-msgstr ""
+msgstr "打开账户仪表盘菜单"
 
 #. module: account
 #. openerp-web
@@ -5931,27 +5935,27 @@ msgstr ""
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:2033
 #, python-format
 msgid "Open balance"
-msgstr ""
+msgstr "打开余额"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cashbox_line_number
 msgid "Opening Unit Numbers"
-msgstr ""
+msgstr "单开的单位数量"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_form
 msgid "Operation Templates"
-msgstr ""
+msgstr "作业模板"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_nocreate
 msgid "Optional Create"
-msgstr ""
+msgstr "选项创建"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
 msgid "Optional Information"
-msgstr ""
+msgstr "选项信息"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag_ids
@@ -5959,74 +5963,74 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_tag_ids
 #: model:ir.model.fields,help:account.field_account_tax_template_tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
-msgstr ""
+msgstr "你可能想赋予给定义报表的选项标签"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_option
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Options"
-msgstr ""
+msgstr "选项"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_payment_id
 msgid "Originator Payment"
-msgstr ""
+msgstr "发起人付款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_line_id
 msgid "Originator tax"
-msgstr ""
+msgstr "发起人税"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_other_income
 msgid "Other Income"
-msgstr ""
+msgstr "其余营收"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Other Info"
-msgstr ""
+msgstr "其余信息"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:296
 #, python-format
 msgid "OtherAccounts"
-msgstr ""
+msgstr "其余科目"
 
 #. module: account
 #: selection:account.payment.method,payment_type:0
 msgid "Outbound"
-msgstr ""
+msgstr "境外"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_output_categ_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_output_categ_id
 msgid "Output Account for Stock Valuation"
-msgstr ""
+msgstr "库存估值的输出账户"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Outstanding Transactions"
-msgstr ""
+msgstr "未完结交易"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:108
 #, python-format
 msgid "Outstanding credits"
-msgstr ""
+msgstr "未完结贷方"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_outstanding_credits_debits_widget
 msgid "Outstanding credits debits widget"
-msgstr ""
+msgstr "未完结贷方借方组件"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:111
 #, python-format
 msgid "Outstanding debits"
-msgstr ""
+msgstr "未完结借方"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6047,43 +6051,43 @@ msgstr "逾期付款消息"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
-msgstr ""
+msgstr "过期发票，过了付款期"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
 msgid "PDF Reports"
-msgstr ""
+msgstr "PDF报表"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PRO-FORMA"
-msgstr ""
+msgstr "形式发票"
 
 #. module: account
 #: selection:account.invoice,state:0
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
-msgstr ""
+msgstr "已付"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:271
 #, python-format
 msgid "Paid Invoices"
-msgstr ""
+msgstr "已付发票"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:28
 #, python-format
 msgid "Paid on"
-msgstr ""
+msgstr "已付于"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reconciled
 msgid "Paid/Reconciled"
-msgstr ""
+msgstr "已付／调节"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_parent_id
@@ -6093,7 +6097,7 @@ msgstr "上级"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_parent_id
 msgid "Parent Chart Template"
-msgstr ""
+msgstr "上级科目表模板"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_financial_report_search
@@ -6104,7 +6108,7 @@ msgstr "父级报告"
 #: model:ir.model,name:account.model_account_partial_reconcile
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 msgid "Partial Reconcile"
-msgstr ""
+msgstr "部分调节"
 
 #. module: account
 #. openerp-web
@@ -6139,7 +6143,7 @@ msgstr "合作伙伴公司"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_ref
 msgid "Partner Reference"
-msgstr ""
+msgstr "相关业务伙伴"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
@@ -6151,7 +6155,7 @@ msgstr "合作伙伴名称"
 #: model:ir.model.fields,field_description:account.field_account_payment_partner_type
 #: model:ir.model.fields,field_description:account.field_account_register_payments_partner_type
 msgid "Partner type"
-msgstr ""
+msgstr "业务伙伴类型"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_result_selection
@@ -6181,7 +6185,7 @@ msgstr "应付的"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_payable_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Payable Account"
-msgstr ""
+msgstr "应付科目"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -6189,31 +6193,31 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 #: model:ir.ui.view,arch_db:account.view_account_search
 msgid "Payable Accounts"
-msgstr ""
+msgstr "应付科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_debit_limit
 msgid "Payable Limit"
-msgstr ""
+msgstr "应付限值"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_amount
 #: model:ir.model.fields,field_description:account.field_account_payment_amount
 #: model:ir.model.fields,field_description:account.field_account_register_payments_amount
 msgid "Payment Amount"
-msgstr ""
+msgstr "付款总额"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_date
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_date
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_date
 msgid "Payment Date"
-msgstr ""
+msgstr "付款日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_difference_handling
 msgid "Payment Difference"
-msgstr ""
+msgstr "差异付款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_journal_id
@@ -6221,25 +6225,25 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_register_payments_journal_id
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payment Method"
-msgstr ""
+msgstr "付款方式"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:60
 #, python-format
 msgid "Payment Method:"
-msgstr ""
+msgstr "付款方式"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_method
 #: model:ir.model.fields,field_description:account.field_account_journal_outbound_payment_method_ids
 msgid "Payment Methods"
-msgstr ""
+msgstr "付款方式"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference_type
 msgid "Payment Reference"
-msgstr ""
+msgstr "相关付款"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term
@@ -6252,19 +6256,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
 #: model:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Payment Term"
-msgstr ""
+msgstr "付款条款"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
 msgid "Payment Term Line"
-msgstr ""
+msgstr "付款条款行"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Payment Terms"
-msgstr ""
+msgstr "付款条款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_method_id
@@ -6274,57 +6278,57 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_type
 msgid "Payment Type"
-msgstr ""
+msgstr "付款类型"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_difference
 msgid "Payment difference"
-msgstr ""
+msgstr "差异付款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_reference
 msgid "Payment reference"
-msgstr ""
+msgstr "相关付款"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Payment term explanation for the customer..."
-msgstr ""
+msgstr "对客户解释的付款条款"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment term: 15 Days"
-msgstr ""
+msgstr "付款条款：15天"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "Payment term: 30 Net Days"
-msgstr ""
+msgstr "付款条款：30天"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment term: 30% Advance End of Following Month"
-msgstr ""
+msgstr "付款条款：预付30%,下月末结清余款"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term
 msgid "Payment term: End of Following Month"
-msgstr ""
+msgstr "付款条款：下月末"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment term: Immediate Payment"
-msgstr ""
+msgstr "付款条款：立即付款"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_payment_id
 msgid "Payment that created this entry"
-msgstr ""
+msgstr "创建了这条分录的付款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_method_payment_type
 msgid "Payment type"
-msgstr ""
+msgstr "付款类型"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments
@@ -6343,7 +6347,7 @@ msgstr "付款"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Payments Matching"
-msgstr ""
+msgstr "匹配付款"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_payments
@@ -6351,27 +6355,27 @@ msgstr ""
 msgid ""
 "Payments are used to register liquidity movements (send, collect or transfer money).\n"
 "                  You can then process those payments by your own means or by using installed facilities."
-msgstr ""
+msgstr "付款用来登记流动性的（付，收或者转移钱）。\n你可以自己用安装的工具操作这些付款"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Payments to do"
-msgstr ""
+msgstr "要做的付款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_payments_widget
 msgid "Payments widget"
-msgstr ""
+msgstr "付款工具"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_paypal_account
 msgid "Paypal Account"
-msgstr ""
+msgstr "paypal账户"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_paypal_account
 msgid "Paypal account"
-msgstr ""
+msgstr "paypal账户"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_paypal_account
@@ -6379,12 +6383,12 @@ msgid ""
 "Paypal account (email) for receiving online payments (credit card, etc.)\n"
 "             If you set a paypal account, the customer  will be able to pay your invoices or quotations\n"
 "             with a button \"Pay with  Paypal\" in automated emails or through the Odoo portal."
-msgstr ""
+msgstr "用来接收在线付款（信用卡等）的Palpal账户（电子邮件）如果你有设定Paypal账户，客户就可以通过在自动的电子邮件中或者Odoo门户中点击按钮\"paypal付款\"\n来给你的发票或者报价单付款"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_paypal_account
 msgid "Paypal username (usually email) for receiving online payments."
-msgstr ""
+msgstr "用来在线接收付款的Paypal 用户名称（通常是电子邮件）"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -6399,35 +6403,35 @@ msgstr "百分比"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_matched_percentage
 msgid "Percentage Matched"
-msgstr ""
+msgstr "匹配百分比"
 
 #. module: account
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price"
-msgstr ""
+msgstr "价格百分比"
 
 #. module: account
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price Tax Included"
-msgstr ""
+msgstr "含税价的百分比"
 
 #. module: account
 #: selection:account.operation.template,second_amount_type:0
 msgid "Percentage of amount"
-msgstr ""
+msgstr "总额百分比"
 
 #. module: account
 #: selection:account.operation.template,amount_type:0
 msgid "Percentage of balance"
-msgstr ""
+msgstr "余额百分比"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1273
 #, python-format
 msgid "Percentages for Payment Term Line must be between 0 and 100."
-msgstr ""
+msgstr "付款条款行的百分比必须是从0到100"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6442,7 +6446,7 @@ msgstr "期间长度（天数）"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_plaid
 msgid "Plaid Connector"
-msgstr ""
+msgstr "Plaid　接口"
 
 #. module: account
 #: model:ir.model,name:account.model_web_planner
@@ -6453,56 +6457,56 @@ msgstr "计划"
 #: code:addons/account/wizard/pos_box.py:27
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr ""
+msgstr "请检查银行对账单中的分类账"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:29
 #, python-format
 msgid "Please check that the field 'Transfer Account' is set on the company."
-msgstr ""
+msgstr "请检查公司中华设置的'移动账户'字段"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:662
 #, python-format
 msgid "Please create some invoice lines."
-msgstr ""
+msgstr "请创建一些发票行"
 
 #. module: account
 #: code:addons/account/models/account_move.py:133
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "请在分类账中定义序列号"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:660
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
-msgstr ""
+msgstr "请给这张发票相关的分类账定义序列号"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Bank"
-msgstr ""
+msgstr "加上银行"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Fixed Assets"
-msgstr ""
+msgstr "加上固定资产"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Net Profit"
-msgstr ""
+msgstr "加上净利润"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Non-Current Assets"
-msgstr ""
+msgstr "加上非流动资产"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Other Income"
-msgstr ""
+msgstr "加上其余收入"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
@@ -6512,18 +6516,18 @@ msgstr "记账"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Post All Entries"
-msgstr ""
+msgstr "给所有分录过账"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Post Difference In"
-msgstr ""
+msgstr "给差异过账"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr ""
+msgstr "会计分录过账"
 
 #. module: account
 #: selection:account.move,state:0 selection:account.payment,state:0
@@ -6536,50 +6540,50 @@ msgstr "已记账"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr ""
+msgstr "过账会计分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr ""
+msgstr "过账凭证明细"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_bank_account_code_prefix
 #: model:ir.model.fields,field_description:account.field_res_company_bank_account_code_prefix
 msgid "Prefix of the bank accounts"
-msgstr ""
+msgstr "银行科目的前缀"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_cash_account_code_prefix
 msgid "Prefix of the cash accounts"
-msgstr ""
+msgstr "现金科目的前缀"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_cash_account_code_prefix
 msgid "Prefix of the main cash accounts"
-msgstr ""
+msgstr "主现金科目的前缀"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_prepayments
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Prepayments"
-msgstr ""
+msgstr "预付"
 
 #. module: account
 #: selection:account.financial.report,sign:0
 msgid "Preserve balance sign"
-msgstr ""
+msgstr "保持余额标识"
 
 #. module: account
 #: model:ir.model,name:account.model_account_operation_template
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
-msgstr ""
+msgstr "请在发票和付款匹配期间创建会计分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Price"
-msgstr ""
+msgstr "价格"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -6591,7 +6595,7 @@ msgstr "打印"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Print Invoice"
-msgstr ""
+msgstr "打印发票"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -6623,12 +6627,12 @@ msgstr "产品"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_categ_id
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr ""
+msgstr "产品种类"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_qty
 msgid "Product Quantity"
-msgstr ""
+msgstr "场频数量"
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
@@ -6674,7 +6678,7 @@ msgstr "形式"
 msgid ""
 "Programmation error : domain_maker_move_line_amount requires comparator '=' "
 "or '<'"
-msgstr ""
+msgstr "编程错误： domain_maker_move_line_amount requires comparator '='or '<'"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:117
@@ -6682,7 +6686,7 @@ msgstr ""
 msgid ""
 "Programmation error: the expected model for this action is "
 "'account.invoice'. The provided one is '%d'."
-msgstr ""
+msgstr "编程错误：the expected model for this action is　account.invoice'. The provided one is '%d'"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:115
@@ -6690,12 +6694,12 @@ msgstr ""
 msgid ""
 "Programmation error: wizard action executed without active_model or "
 "active_ids in context."
-msgstr ""
+msgstr "编程错误：wizard action executed without active_model or　active_ids in context"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_form
 msgid "Properties"
-msgstr ""
+msgstr "所有权"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -6710,23 +6714,23 @@ msgstr "采购"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
 msgid "Purchase Tax"
-msgstr ""
+msgstr "进项税"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:683
 #, python-format
 msgid "Purchase Tax %.2f%%"
-msgstr ""
+msgstr "进项税%.2f%%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_purchase_tax_rate
 msgid "Purchase Tax(%)"
-msgstr ""
+msgstr "进项税(%)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_purchase_tax_rate
 msgid "Purchase tax (%)"
-msgstr ""
+msgstr "进项税(%)"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -6740,7 +6744,7 @@ msgstr "采购订单"
 #: model:ir.actions.act_window,name:account.action_cash_box_in
 #: model:ir.ui.view,arch_db:account.cash_box_in_form
 msgid "Put Money In"
-msgstr ""
+msgstr "现金入库"
 
 #. module: account
 #: selection:account.tax,amount_type:0
@@ -6758,27 +6762,27 @@ msgstr "数量"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_exchange_journal_id
 msgid "Rate Difference Journal"
-msgstr ""
+msgstr "差别比率日志"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_description
 #: model:ir.model.fields,field_description:account.field_cash_box_in_name
 #: model:ir.model.fields,field_description:account.field_cash_box_out_name
 msgid "Reason"
-msgstr ""
+msgstr "原因"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_receivable
 #: selection:account.account.type,type:0
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Receivable"
-msgstr ""
+msgstr "应收"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_receivable_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Receivable Account"
-msgstr ""
+msgstr "应收账款"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -6787,7 +6791,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_form
 #: model:ir.ui.view,arch_db:account.view_account_search
 msgid "Receivable Accounts"
-msgstr ""
+msgstr "应收款科目"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -6802,7 +6806,7 @@ msgstr "应收与应付科目"
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Receive Money"
-msgstr ""
+msgstr "收款"
 
 #. module: account
 #. openerp-web
@@ -6815,82 +6819,82 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #, python-format
 msgid "Reconcile"
-msgstr "核销"
+msgstr "调节"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "核销分录"
+msgstr "调节分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 msgid "Reconcile With Write-Off"
-msgstr ""
+msgstr "销账式对账"
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:79
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr ""
+msgstr "销账式调节"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tour_bank_statement_reconciliation.js:11
 #, python-format
 msgid "Reconcile the demo bank statement"
-msgstr ""
+msgstr "调节演示银行对账单"
 
 #. module: account
 #: selection:account.payment,state:0
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconciled
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Reconciled"
-msgstr "已核销"
+msgstr "已调节"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Reconciliation"
-msgstr ""
+msgstr "对账"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_operation_template
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
-msgstr ""
+msgstr "对账模块"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 msgid "Reconciliation Transactions"
-msgstr ""
+msgstr "对账交易"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_bank_reconcile
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr ""
+msgstr "与银行对账单对账"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:2159
 #, python-format
 msgid "Reconciling "
-msgstr ""
+msgstr "对账"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Reconciling journal entries"
-msgstr ""
+msgstr "对账会计凭证"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Record Manually"
-msgstr ""
+msgstr "手动记录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Recording invoices"
-msgstr ""
+msgstr "记录发票"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -6913,18 +6917,18 @@ msgstr "参考"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_uom_name
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "参考计量单位"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Reference number"
-msgstr ""
+msgstr "关联单号"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_origin
 #: model:ir.model.fields,help:account.field_account_invoice_origin
 msgid "Reference of the document that produced this invoice."
-msgstr ""
+msgstr "发票上产品的关联单据"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_payment_reference
@@ -6936,7 +6940,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_name
 msgid "Reference/Description"
-msgstr ""
+msgstr "参考/说明"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:809
@@ -7050,7 +7054,7 @@ msgstr "报告"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_name
 msgid "Report Name"
-msgstr ""
+msgstr "报告名称"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -7082,7 +7086,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Reset to Draft"
-msgstr ""
+msgstr "重置为草稿"
 
 #. module: account
 #. openerp-web
@@ -7123,27 +7127,27 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
 #, python-format
 msgid "Reverse Moves"
-msgstr ""
+msgstr "反向移动"
 
 #. module: account
 #: selection:account.financial.report,sign:0
 msgid "Reverse balance sign"
-msgstr ""
+msgstr "反向等号"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Review Fiscal Positions"
-msgstr ""
+msgstr "检查财政情况"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Review Terms"
-msgstr ""
+msgstr "审查条款"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Review existing Taxes"
-msgstr ""
+msgstr "检查现行税务"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7178,7 +7182,7 @@ msgstr "销售"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
 msgid "Sale Tax"
-msgstr ""
+msgstr "营业税"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -7191,17 +7195,17 @@ msgstr "销售"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_sale_tax_rate
 msgid "Sales Tax(%)"
-msgstr ""
+msgstr "销售税(%)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Sales Team"
-msgstr ""
+msgstr "销售团队"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_sale_tax_rate
 msgid "Sales tax (%)"
-msgstr ""
+msgstr "销售税(%)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_user_id
@@ -7239,7 +7243,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Search Invoice"
-msgstr ""
+msgstr "搜索发票"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -7322,7 +7326,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Send by Email"
-msgstr ""
+msgstr "以邮件发送"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7381,7 +7385,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "设为草稿"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_config
@@ -7622,12 +7626,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_amount_type
 #: model:ir.model.fields,field_description:account.field_account_tax_template_amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "税金计算"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_name
 msgid "Tax Description"
-msgstr ""
+msgstr "税说明"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_group_id
@@ -7673,12 +7677,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_search
 msgid "Tax Template"
-msgstr ""
+msgstr "税模板"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_tax_template_ids
 msgid "Tax Template List"
-msgstr ""
+msgstr "税模板列表"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -7848,7 +7852,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "税金模板"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -7905,7 +7909,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:780
 #, python-format
 msgid "The account %s (%s) is not marked as reconciliable !"
-msgstr "科目%s (%s)没有标明是可以反核销的"
+msgstr "科目%s (%s)没有标明是可以反调节的"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_bank_journal_id
@@ -7954,12 +7958,12 @@ msgstr "银行分录的银行科目必须属于同一公司(%s)"
 #: code:addons/account/models/account_bank_statement.py:786
 #, python-format
 msgid "The bank statement line was already reconciled."
-msgstr "银行对账单的这一行已经被核销掉"
+msgstr "银行对账单的这一行已经被调节掉"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr "用来反核销的银行对账单"
+msgstr "用来反调节的银行对账单"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_chart_template_id
@@ -8090,7 +8094,7 @@ msgstr "这张发票的业务伙伴科目"
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr "自动上次这个业务伙伴的发票和付款完全一致。这个业务伙伴至少有一个反核销的借方和贷方"
+msgstr "自动上次这个业务伙伴的发票和付款完全一致。这个业务伙伴至少有一个反调节的借方和贷方"
 
 #. module: account
 #: code:addons/account/models/account_move.py:782
@@ -8175,26 +8179,26 @@ msgstr "没有草稿状态待过账的凭证明细"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:315
 #, python-format
 msgid "There is nothing to reconcile."
-msgstr "没有东西要核销"
+msgstr "没有需要调节的"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1492
 #, python-format
 msgid "There you go, it's all done !"
-msgstr ""
+msgstr "你看一下，全部完成了"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_user_type_id
 msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
-msgstr ""
+msgstr "根据你所在的国家定义类型，这个类型包含科目和他的特性的更多的信息"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "These users handle billing specifically."
-msgstr ""
+msgstr "这些用户专门处理计费"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:101
@@ -8212,59 +8216,59 @@ msgstr "本年度"
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "这个科目将代替当前产品的默认费用科目用来开票"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_template_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "这个科目将被用来代替当前产品的默认销售科目用来开票"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category_property_account_expense_categ_id
 msgid "This account will be used for invoices to value expenses."
-msgstr ""
+msgstr "这个科目将被用来给费用开票"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category_property_account_income_categ_id
 msgid "This account will be used for invoices to value sales."
-msgstr ""
+msgstr "这个科目将被用做销售的收入科目，用来开票"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_payable_id
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr ""
+msgstr "这个科目被用来代替当前业务伙伴的默认的应付科目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
+msgstr "这个科目被用来替代当前业务伙伴的默认的应收科目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_budget
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr ""
+msgstr "这个能够让财务经理管理分析账和交叉预算，一旦主要的预算和一般预算被定义下来，项目经理就可以在每个相应的分析科目上设置金额需要安装 account_budget"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_reports_followup
 msgid ""
 "This allows to automate letters for unpaid invoices, with multi-level recalls.\n"
 "-This installs the module account_reports_followup."
-msgstr ""
+msgstr "能够给未付发票多层次的重新自动发邮件需要安装模块：account_reports_followup"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_batch_deposit
 msgid ""
 "This allows you to group received checks before you deposit them to the bank.\n"
 "-This installs the module account_batch_deposit."
-msgstr ""
+msgstr "能够让你在给银行保证金之前收到支票需要安装模块：module account_batch_deposit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_complete_tax_set
@@ -8272,7 +8276,7 @@ msgid ""
 "This boolean helps you to choose if you want to propose to the user to encode\n"
 "             the sales and purchase rates or use the usual m2o fields. This last choice assumes that\n"
 "             the set of tax defined for the chosen template is complete"
-msgstr ""
+msgstr "这个布尔变量有助于你选择是否要想用户提出建议去'编码销售和采购的比率或者通常使用的多对一字段\n最后的选择用来选择的税的模板已经完成"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_complete_tax_set
@@ -8280,7 +8284,7 @@ msgid ""
 "This boolean helps you to choose if you want to propose to the user to "
 "encode the sale and purchase rates or choose from list of taxes. This last "
 "choice assumes that the set of tax defined on this template is complete"
-msgstr ""
+msgstr "这个布尔变量有助于你选择是否要向用户提出建议去'从税列表中编码销售和采购的比率'最后的选择假定用来选择的定义的税是完成的"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_wizard_multi_charts_accounts_complete_tax_set
@@ -8289,7 +8293,7 @@ msgid ""
 "encode the sales and purchase rates or use the usual m2o fields. This last "
 "choice assumes that the set of tax defined for the chosen template is "
 "complete"
-msgstr ""
+msgstr "这个布尔变量有助于你选择是否要想用户提出建议去'编码销售和采购的比率或者通常使用的多对一字段'最后的选择假定用来选择的定义的税是完成的"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_expects_chart_of_accounts
@@ -8314,7 +8318,7 @@ msgstr "这个字段包含和这个分类账的退款分录的数量相关的信
 #: model:ir.model.fields,help:account.field_account_operation_template_journal_id
 #: model:ir.model.fields,help:account.field_account_operation_template_second_journal_id
 msgid "This field is ignored in a bank statement reconciliation."
-msgstr "这一字段在银行报表的反核销中被忽略掉"
+msgstr "这一字段在银行报表的反调节中被忽略掉"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_date_maturity
@@ -8393,14 +8397,14 @@ msgstr "这个可选字段允许你将一个科目模板链接到不属于同一
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
-msgstr "这个页面显示所有将要被核销的银行交易并且提供一个这样做的整洁的接口"
+msgstr "这个页面显示所有将要被调节的银行交易并且提供一个这样做的整洁的接口"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:153
 #, python-format
 msgid "This payment is registered but not reconciled."
-msgstr "付款被登记但是没有核销"
+msgstr "付款被登记但是没有调节"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_supplier_payment_term_id
@@ -8438,7 +8442,7 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr "这一技术领域可用于报表行创建/导入时间 为了避免稍后再去核销它. 报表行会简洁的创建一个对冲的科目 "
+msgstr "这一技术领域可用于报表行创建/导入时间 为了避免稍后再去调节它. 报表行会简洁的创建一个对冲的科目 "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move
@@ -8452,14 +8456,14 @@ msgstr "这个向导会审核所有选择的会计分录. 一旦分录被审核�
 msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
-msgstr "当核销银行报表或者一个科目的时候，这被用来快捷的创建凭证明细"
+msgstr "当调节银行报表或者一个科目的时候，这被用来快捷的创建凭证明细"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:20
 #, python-format
 msgid "Tip : Hit ctrl-enter to reconcile all the balanced items in the sheet."
-msgstr "提示：用快捷键ctrl-enter来核销表单中的所有余额项"
+msgstr "提示：用快捷键ctrl-enter来调节表单中的所有余额项"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -8493,7 +8497,7 @@ msgstr "当给公司开发票用到税的时候，Odoo用到了“财政位置�
 #: code:addons/account/models/account_move.py:776
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries!"
-msgstr "所有分录的核销都是成对的分录"
+msgstr "所有分录的调节都是成对的分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8729,32 +8733,32 @@ msgstr "未读消息计数器"
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
 #, python-format
 msgid "Unreconcile"
-msgstr "未核销"
+msgstr "反调节"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 msgid "Unreconcile Entries"
-msgstr "未核销分录"
+msgstr "反调节分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
 msgid "Unreconcile Transactions"
-msgstr "未核销交易"
+msgstr "反调节交易"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unreconciled"
-msgstr "未核销"
+msgstr "未调节的"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled Entries"
-msgstr "未核销分录"
+msgstr "未调节的分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unreconciled Journal Items"
-msgstr "凭证明细的反核销"
+msgstr "未调节的日记账项目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed
@@ -8812,7 +8816,7 @@ msgid ""
 "                                one. The credit note will be created, validated and reconciled\n"
 "                                with the current invoice. A new, draft, invoice will be created \n"
 "                                so that you can edit it."
-msgstr "如果你向取消一张发票然后创建一张新的，你就可以使用这个选项当前发票的付款会被创建，确认和核销掉，一张新的草稿状态的发票会被创建，然后你就可以编辑它"
+msgstr "如果你向取消一张发票然后创建一张新的，你就可以使用这个选项当前发票的付款会被创建，确认和调节掉，一张新的草稿状态的发票会被创建，然后你就可以编辑它"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -8820,7 +8824,7 @@ msgid ""
 "Use this option if you want to cancel an invoice you should not\n"
 "                                have issued. The credit note will be created, validated and reconciled\n"
 "                                with the invoice. You will not be able to modify the credit note."
-msgstr "如果你效果取消一个根本不应该产生的发票，你就可以使用这个选项\n                              这张发票的付款会被创建，确认和核销掉。你讲不能更改付款"
+msgstr "如果你效果取消一个根本不应该产生的发票，你就可以使用这个选项\n                              这张发票的付款会被创建，确认和调节掉。你讲不能更改付款"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type_include_initial_balance
@@ -8873,12 +8877,12 @@ msgstr "需要VAT"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #, python-format
 msgid "Validate"
-msgstr "确认"
+msgstr "验证"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr "确认科目移动"
+msgstr "验证科目移动"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8894,7 +8898,7 @@ msgstr "确认"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_value_amount
 msgid "Value"
-msgstr "价格"
+msgstr "值"
 
 #. module: account
 #: selection:account.abstract.payment,partner_type:0
@@ -8972,7 +8976,7 @@ msgstr "供应商"
 #. module: account
 #: selection:account.financial.report,type:0
 msgid "View"
-msgstr "查看"
+msgstr "视图"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -9065,7 +9069,7 @@ msgstr "余额不等于零"
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "With movements"
-msgstr "运动"
+msgstr "有运动"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_search
@@ -9077,27 +9081,27 @@ msgstr "含税"
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 #, python-format
 msgid "Write-Off"
-msgstr "核销"
+msgstr "销账"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_journal_id
 msgid "Write-Off Journal"
-msgstr "核销分类账"
+msgstr "销账分类账"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
 msgid "Write-Off Move"
-msgstr "核销移动"
+msgstr "销账移动"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_writeoff_acc_id
 msgid "Write-Off account"
-msgstr "核销科目"
+msgstr "销账科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff
 msgid "Write-Off amount"
-msgstr "核销数量"
+msgstr "销账金额"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -9108,7 +9112,7 @@ msgstr "在会计分录中错误的借方或者贷方"
 #: code:addons/account/models/account_move.py:774
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled!"
-msgstr "你正在核销一些已经被核销的分录"
+msgstr "你正在调节一些已经被调节的分录"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_blocked
@@ -9174,7 +9178,7 @@ msgstr "在锁定日期之前，您不能添加/修改分录%s “检查公司�
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
-msgstr "已经部分付款的发票不能被取消，需要先反核销部分付款的分录　"
+msgstr "已经部分付款的发票不能被取消，需要先反调节部分付款的分录　"
 
 #. module: account
 #: code:addons/account/models/account.py:162
@@ -9235,7 +9239,7 @@ msgstr "已经过账的分录不能不更改,你只能更改一些非法律强�
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
-msgstr "已经核销的分录不能不更改。你只能更改一些非法律强制项或者必须首先反核销.\n%s."
+msgstr "已经调节的分录不能不更改。你只能更改一些非法律强制项或者必须首先反调节.\n%s."
 
 #. module: account
 #: code:addons/account/models/account.py:96
@@ -9243,7 +9247,7 @@ msgstr "已经核销的分录不能不更改。你只能更改一些非法律强
 msgid ""
 "You cannot have a receivable/payable account that is not reconciliable. "
 "(account code: %s)"
-msgstr ""
+msgstr "你不能有不可以反调节的应收／应付科目(科目号: %s)"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:126
@@ -9293,7 +9297,7 @@ msgstr "你不能用过时的账户"
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
-msgstr ""
+msgstr "你不能在这个分类账中用这个总账，在相关分类账中检查页面'分录控制'"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -9311,7 +9315,7 @@ msgstr "需要设置开始日期"
 #: code:addons/account/models/account_invoice.py:1097
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "需要先选定业务伙伴"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:26
@@ -9332,7 +9336,7 @@ msgid ""
 "You should configure the 'Exchange Rate Journal' in the accounting settings,"
 " to manage automatically the booking of accounting entries related to "
 "differences between exchange rates."
-msgstr ""
+msgstr "你应该在会计设置中配置'汇率科目'，来自动的管理在汇率差异相关的会计分录的预定"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1162
@@ -9341,7 +9345,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "你应该在会计设置中配置'汇率收益科目'，来自动的管理在汇率差异相关的会计分录的预定"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1164
@@ -9350,7 +9354,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "你应该在会计设置中配置'汇率损失科目'，来自动的管理在汇率差异相关的会计分录的预定"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:49
@@ -9359,7 +9363,7 @@ msgstr ""
 msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
-msgstr "你应该已经在你的现金定义了一个'内部科目移动'register's journal!"
+msgstr "你应该已经在你的现金定义了一个'内部科目移动'注册者的账簿!"
 
 #. module: account
 #. openerp-web
@@ -9645,7 +9649,7 @@ msgstr "去描述<br/> 你的经历或者改进建议 !"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:212
 #, python-format
 msgid "to reconcile"
-msgstr "去核销"
+msgstr "待调节"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
