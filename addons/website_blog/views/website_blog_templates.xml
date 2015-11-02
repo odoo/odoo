@@ -134,9 +134,6 @@
                 </div>
 
                 <div t-foreach="blog_posts" t-as="blog_post" class="mb32">
-                    <t t-if="blog_post.author_avatar">
-                        <span t-field="blog_post.author_avatar" class="o_not_editable" t-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' />
-                    </t>
                     <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
                         <h2 t-field="blog_post.name" class="mb4">Untitled Post</h2>
                     </a>
@@ -185,6 +182,20 @@
     </xpath>
 </template>
 
+<!-- Option: Blog Post List: display the author avatar -->
+<template id="opt_blog_post_author_avatar" name="Author avatar"
+        customize_show="True" active="True" inherit_id="website_blog.blog_post_short">
+    <xpath expr="//a[h2]" position="before">
+         <t t-if="blog_post.author_avatar">
+            <div t-field="blog_post.author_avatar" class="o_not_editable o_author_avatar" t-field-options='{"widget": "image", "class": "img-circle pull-right media-object"}' />
+        </t>
+    </xpath>
+</template>
+
+
+
+
+
 <!-- Blog Post Complete -->
 <template id="blog_post_complete" name="Blog Post">
     <t t-call="website_blog.index">
@@ -208,15 +219,6 @@
                 <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
                 <h2 t-field="blog_post.subtitle" placeholder="Subtitle"/>
                 <p class="post-meta text-muted text-center" name="blog_post_data"/>
-                <div>
-                    <t t-if="blog_post.author_avatar">
-                        <span t-field="blog_post.author_avatar" class="o_not_editable" t-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
-                    </t>
-                    <span t-field="blog_post.author_id" style="display: inline-block;" t-options='{
-                        "widget": "contact",
-                        "fields": ["name"]
-                    }'/>
-                </div>
                 <div t-if="blog_post_cover_properties.get('resize_class') == 'cover cover_full'" id="blog_angle_down">
                     <strong><a href="#blog_content" class="fa fa-angle-down fa-3x fa-inverse mt4"/></strong>
                 </div>
@@ -281,6 +283,22 @@
               <t t-set="chatter_mode" t-value="'json'"/>
             </t>
         </section>
+    </xpath>
+</template>
+
+<!-- Options: Blog Post: display the author avatar -->
+<template id="opt_blog_post_author_avatar_display" name="Author Avatar"
+        inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
+    <xpath expr="//p[@name='blog_post_data']" position="after">
+        <div>
+            <t t-if="blog_post.author_avatar">
+                <span t-field="blog_post.author_avatar" class="o_not_editable" t-field-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
+            </t>
+            <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
+                "widget": "contact",
+                "fields": ["name"]
+            }'/>
+        </div>
     </xpath>
 </template>
 
