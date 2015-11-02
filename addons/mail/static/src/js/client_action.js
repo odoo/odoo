@@ -16,7 +16,6 @@ var Model = require('web.Model');
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 var session = require('web.session');
-var Sidebar = require('web.Sidebar');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -144,18 +143,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.searchview = new SearchView(this, dataset, view_id, {}, options);
         this.searchview.on('search_data', this, this.on_search);
 
-        this.sidebar = new Sidebar(this, {
-            sections: [
-                {name: 'action', label: _t('Action')},
-            ],
-            items: {
-                action: [
-                    {label: _t('Unsubscribe'), classname: 'o_mail_chat_button_unsubscribe', callback: this.on_click_button_unsubscribe},
-                    {label: _t('Settings'), classname: 'o_mail_chat_button_settings', callback: this.on_click_button_settings},
-                ],
-            },
-        });
-
         this.composer = new ChatComposer(this, {
             get_channel_info: function () {
                 return { channel_id: self.channel.id };
@@ -169,6 +156,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$buttons.find('button').css({display:"inline-block"});
         this.$buttons.on('click', '.o_mail_chat_button_invite', this.on_click_button_invite);
         this.$buttons.on('click', '.o_mail_chat_button_detach', this.on_click_button_detach);
+        this.$buttons.on('click', '.o_mail_chat_button_unsubscribe', this.on_click_button_unsubscribe);
+        this.$buttons.on('click', '.o_mail_chat_button_settings', this.on_click_button_settings);
         this.$buttons.on('click', '.o_mail_toggle_channels', function () {
             self.$('.o_mail_chat_sidebar').slideToggle(200);
         });
@@ -189,11 +178,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var def1 = this.thread.prependTo(this.$('.o_mail_chat_content'));
         var def2 = this.composer.appendTo(this.$('.o_mail_chat_content'));
         var def3 = this.searchview.appendTo($("<div>"));
-        var def4 = this.sidebar.appendTo($("<div>"));
 
         this.render_sidebar();
 
-        return $.when(def1, def2, def3, def4)
+        return $.when(def1, def2, def3)
             .then(this.set_channel.bind(this, chat_manager.get_channel(default_channel_id)))
             .then(function () {
                 chat_manager.bus.on('new_message', self, self.on_new_message);
@@ -301,15 +289,19 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         }
         var new_channel_scrolltop = this.channels_scrolltop[channel.id];
         this.channel = channel;
+
+        // Update control panel
         this.set("title", channel.name);
+        // Hide 'detach' button in static channels
         this.$buttons
             .find('.o_mail_chat_button_detach')
             .toggle(channel.type !== "static");
+        // Hide 'invite', 'unsubscribe' and 'settings' buttons in static channels and DM
         this.$buttons
-            .find('.o_mail_chat_button_invite')
-            .toggle(channel.type !== "dm" && channel.type !== 'static');
-
+            .find('.o_mail_chat_button_invite, .o_mail_chat_button_unsubscribe, .o_mail_chat_button_settings')
+            .toggle(channel.type !== "static" && channel.type !== "dm");
         this.update_cp();
+
         this.action.context.active_id = channel.id;
         this.action.context.active_ids = [channel.id];
 
@@ -320,7 +312,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             .addClass('o_active');
 
         this.$('.o_chat_composer').toggle(channel.type !== 'static');
-        this.sidebar.$el.toggle(channel.type !== 'static');
 
         return this.fetch_and_render_thread().then(function () {
             self.thread.scroll_to({offset: new_channel_scrolltop});
@@ -388,7 +379,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 $buttons: this.$buttons,
                 $searchview: this.searchview.$el,
                 $searchview_buttons: this.searchview.$buttons.contents(),
-                $sidebar: this.sidebar.$el,
             },
             searchview: this.searchview,
         });
