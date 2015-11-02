@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import lxml
+from datetime import datetime
+from lxml import html
 import random
 
-from datetime import datetime
 from odoo import api, models, fields, _
 from odoo.addons.website.models.website import slug
 from odoo.tools.translate import html_translate
-
+from odoo.tools import html2plaintext
 
 class Blog(models.Model):
     _name = 'blog.blog'
@@ -31,7 +31,6 @@ class Blog(models.Model):
             post_ids.write({'active': vals['active']})
         return res
 
-    @api.model_cr
     @api.multi
     def all_tags(self, min_limit=1):
         req = """
@@ -112,6 +111,9 @@ class BlogPost(models.Model):
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
+    teaser = fields.Text('Teaser', compute='_get_teaser', inverse='_set_teaser')
+    teaser_manual = fields.Text(string='Teaser Content')
+
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
         domain=lambda self: [
@@ -130,75 +132,21 @@ class BlogPost(models.Model):
     visits = fields.Integer('No of Views')
     ranking = fields.Float(compute='_compute_ranking', string='Ranking')
 
-    def html_tag_nodes(self, html, attribute=None, tags=None):
-        """ Processing of html content to tag paragraphs and set them an unique
-        ID.
-        :return result: (html, mappin), where html is the updated html with ID
-                        and mapping is a list of (old_ID, new_ID), where old_ID
-                        is None is the paragraph is a new one. """
-
-        existing_attributes = []
-        mapping = []
-        if not html:
-            return html, mapping
-        if tags is None:
-            tags = ['p']
-        if attribute is None:
-            attribute = 'data-unique-id'
-
-        # form a tree
-        root = lxml.html.fragment_fromstring(html, create_parent='div')
-        if not len(root) and root.text is None and root.tail is None:
-            return html, mapping
-
-        # check all nodes, replace :
-        # - img src -> check URL
-        # - a href -> check URL
-        for node in root.iter():
-            if node.tag not in tags:
-                continue
-            ancestor_tags = [parent.tag for parent in node.iterancestors()]
-
-            old_attribute = node.get(attribute)
-            new_attribute = old_attribute
-            if not new_attribute or (old_attribute in existing_attributes):
-                if ancestor_tags:
-                    ancestor_tags.pop()
-                counter = random.randint(10000, 99999)
-                ancestor_tags.append('counter_%s' % counter)
-                new_attribute = '/'.join(reversed(ancestor_tags))
-                node.set(attribute, new_attribute)
-
-            existing_attributes.append(new_attribute)
-            mapping.append((old_attribute, new_attribute))
-
-        html = lxml.html.tostring(root, pretty_print=False, method='html')
-        # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
-        if html.startswith('<div>') and html.endswith('</div>'):
-            html = html[5:-6]
-        return html, mapping
-
-    # noguess used to be able to call the method with record = None in the create method
-    @api.noguess
-    def _postproces_content(self, record, content=None):
-        if content is None:
-            content = self.content
-        if content is False:
-            return content
-
-        content, mapping = self.html_tag_nodes(content, attribute='data-chatter-id', tags=['p'])
-        if record:  # not creating
-            existing = [x[0] for x in mapping if x[0]]
-            self.env['mail.message'].sudo().search([
-                ('res_id', '=', record.id),
-                ('model', '=', self._name),
-                ('path', 'not in', existing),
-                ('path', '!=', False)
-            ]).sudo().unlink()
-
-        return content
+    @api.multi
+    @api.depends('content', 'teaser_manual')
+    def _get_teaser(self):
+        for blog_post in self:
+            if blog_post.teaser_manual:
+                blog_post.teaser = blog_post.teaser_manual
+            else:
+                content = html2plaintext(blog_post.content).replace('\n', ' ')
+                blog_post.teaser = ' '.join(filter(None, content.split(' '))[:50]) + '...'
 
     @api.multi
+    def _set_teaser(self):
+        for blog_post in self:
+            blog_post.teaser_manual = blog_post.teaser
+
     def _check_for_publication(self, vals):
         if vals.get('website_published'):
             for post in self:
@@ -212,8 +160,6 @@ class BlogPost(models.Model):
 
     @api.model
     def create(self, vals):
-        if 'content' in vals:
-            vals['content'] = self._postproces_content(None, vals['content'])
         post_id = super(BlogPost, self.with_context(mail_create_nolog=True)).create(vals)
         post_id._check_for_publication(vals)
         return post_id
@@ -221,8 +167,6 @@ class BlogPost(models.Model):
     @api.multi
     def write(self, vals):
         self.ensure_one()
-        if 'content' in vals:
-            vals['content'] = self._postproces_content(self, vals['content'])
         if 'website_published' in vals:
             vals['published_date'] = fields.Datetime.now() if vals['website_published'] else False
         result = super(BlogPost, self).write(vals)
