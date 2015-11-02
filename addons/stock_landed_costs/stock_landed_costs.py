@@ -182,13 +182,13 @@ class stock_landed_cost(osv.osv):
             if not cost.valuation_adjustment_lines or not self._check_sum(cr, uid, cost, context=context):
                 raise UserError(_('You cannot validate a landed cost which has no valid valuation adjustments lines. Did you click on Compute?'))
             move_id = self._create_account_move(cr, uid, cost, context=context)
-            quant_dict = {}
             for line in cost.valuation_adjustment_lines:
                 if not line.move_id:
                     continue
                 per_unit = line.final_cost / line.quantity
                 diff = per_unit - line.former_cost_per_unit
                 quants = [quant for quant in line.move_id.quant_ids]
+                quant_dict = {}
                 for quant in quants:
                     if quant.id not in quant_dict:
                         quant_dict[quant.id] = quant.cost + diff
@@ -267,7 +267,8 @@ class stock_landed_cost(osv.osv):
 
                         if digits:
                             value = float_round(value, precision_digits=digits[1], rounding_method='UP')
-                            value = min(value, line.price_unit - value_split)
+                            fnc = min if line.price_unit > 0 else max
+                            value = fnc(value, line.price_unit - value_split)
                             value_split += value
 
                         if valuation.id not in towrite_dict:

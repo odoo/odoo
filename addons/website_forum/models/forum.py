@@ -272,7 +272,7 @@ class Post(models.Model):
     can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights')
     can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
     can_view = fields.Boolean('Can View', compute='_get_post_karma_rights')
-    can_display_biography = fields.Boolean('Can userbiography of the author be viewed', compute='_get_post_karma_rights')
+    can_display_biography = fields.Boolean("Is the author's biography visible from his post", compute='_get_post_karma_rights')
     can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights')
     can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights')
     can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights')
@@ -704,10 +704,11 @@ class Post(models.Model):
         self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
         return True
 
-    @api.one
+    @api.multi
     def get_access_action(self):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the post on the website directly """
+        self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
             'url': '/forum/%s/question/%s' % (self.forum_id.id, self.id),
@@ -827,7 +828,7 @@ class Tags(models.Model):
     posts_count = fields.Integer('Number of Posts', compute='_get_posts_count', store=True)
 
     _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name, forum_id)', "Tag name already exists !"),
     ]
 
     @api.multi

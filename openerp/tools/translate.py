@@ -151,16 +151,8 @@ TRANSLATED_ATTRS = {
     'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title',
 }
 
-def serialize(tag, attrib, content):
-    """ Return a serialized element with the given `tag`, attributes
-        `attrib`, and already-serialized `content`.
-    """
-    elem = etree.tostring(etree.Element(tag, attrib))
-    assert elem.endswith("/>")
-    return "%s>%s</%s>" % (elem[:-2], content, tag) if content else elem
-
 class XMLTranslator(object):
-    """ A sequence of serialized xml items, with some of them to translate
+    """ A sequence of serialized XML/HTML items, with some of them to translate
         (todo) and others already translated (done). The purpose of this object
         is to simplify the handling of phrasing elements (like <b>) that must be
         translated together with their surrounding text.
@@ -177,8 +169,9 @@ class XMLTranslator(object):
             </div>
 
     """
-    def __init__(self, callback):
+    def __init__(self, callback, method):
         self.callback = callback        # callback function to translate terms
+        self.method = method            # serialization method ('xml' or 'html')
         self._done = []                 # translated strings
         self._todo = []                 # todo strings that come after _done
         self.needs_trans = False        # whether todo needs translation
@@ -227,12 +220,12 @@ class XMLTranslator(object):
         ):
             # do not translate the contents of the node
             tail, node.tail = node.tail, None
-            self.done(etree.tostring(node))
+            self.done(etree.tostring(node, method=self.method))
             self.todo(escape(tail or ""))
             return
 
         # process children nodes locally in child_trans
-        child_trans = XMLTranslator(self.callback)
+        child_trans = XMLTranslator(self.callback, self.method)
         child_trans.todo(escape(node.text or ""))
         for child in node:
             child_trans.process(child)
@@ -241,38 +234,61 @@ class XMLTranslator(object):
                 node.tag in TRANSLATED_ELEMENTS and
                 not any(attr.startswith("t-") for attr in node.attrib)):
             # serialize the node element as todo
-            self.todo(serialize(node.tag, node.attrib, child_trans.get_todo()),
+            self.todo(self.serialize(node.tag, node.attrib, child_trans.get_todo()),
                       child_trans.needs_trans)
         else:
             # complete translations and serialize result as done
             for attr in TRANSLATED_ATTRS:
                 if node.get(attr):
                     node.set(attr, self.process_text(node.get(attr)))
-            self.done(serialize(node.tag, node.attrib, child_trans.get_done()))
+            self.done(self.serialize(node.tag, node.attrib, child_trans.get_done()))
 
         # add node tail as todo
         self.todo(escape(node.tail or ""))
 
+    def serialize(self, tag, attrib, content):
+        """ Return a serialized element with the given `tag`, attributes
+            `attrib`, and already-serialized `content`.
+        """
+        if content:
+            elem = etree.tostring(etree.Element(tag, attrib), method='xml')
+            assert elem.endswith("/>")
+            return "%s>%s</%s>" % (elem[:-2], content, tag)
+        else:
+            return etree.tostring(etree.Element(tag, attrib), method=self.method)
+
 
 def xml_translate(callback, value):
     """ Translate an XML value (string), using `callback` for translating text
-    appearing in `value`. If `value` is not XML valid, it is parsed with an HTML
-    parser instead, and some element wrapping is done to make the parsing work.
+        appearing in `value`.
     """
     if not value:
         return value
 
-    trans = XMLTranslator(callback)
+    trans = XMLTranslator(callback, 'xml')
     try:
         root = etree.fromstring(encode(value))
         trans.process(root)
         return trans.get_done()
     except etree.ParseError:
-        wrapped = "<div>%s</div>" % encode(value)
-        root = etree.fromstring(wrapped, etree.HTMLParser(encoding='utf-8'))
-        # html > body > div
-        trans.process(root[0][0])
-        return trans.get_done()[5:-6]
+        # fallback in case it is a translated term...
+        root = etree.fromstring("<div>%s</div>" % encode(value))
+        trans.process(root)
+        return trans.get_done()[5:-6]       # remove tags <div> and </div>
+
+def html_translate(callback, value):
+    """ Translate an HTML value (string), using `callback` for translating text
+        appearing in `value`.
+    """
+    if not value:
+        return value
+
+    trans = XMLTranslator(callback, 'html')
+    wrapped = "<div>%s</div>" % encode(value)
+    root = etree.fromstring(wrapped, etree.HTMLParser(encoding='utf-8'))
+    # html > body > div
+    trans.process(root[0][0])
+    return trans.get_done()[5:-6]           # remove tags <div> and </div>
 
 
 #

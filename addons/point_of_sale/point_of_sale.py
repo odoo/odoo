@@ -42,7 +42,7 @@ class pos_config(osv.osv):
         result = dict()
 
         for record in self.browse(cr, uid, ids, context=context):
-            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed')
+            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed' and not r.rescue)
             result[record.id] = {
                 'current_session_id': session_id,
                 'current_session_state': session_id.state,
@@ -74,7 +74,7 @@ class pos_config(osv.osv):
         result = dict()
 
         for record in self.browse(cr, uid, ids, context=context):
-            result[record.id] = record.session_ids.filtered(lambda r: r.state == 'opened').user_id.name
+            result[record.id] = record.session_ids.filtered(lambda r: r.state == 'opened' and not r.rescue).user_id.name
         return result
 
     _columns = {
@@ -676,27 +676,39 @@ class pos_order(osv.osv):
             'journal':      ui_paymentline['journal_id'],
         }
 
-    def _get_rescue_session(self, cr, uid, order, context=None):
-        """ Find or generate a rescue session """
-        pos_session = self.pool['pos.session']
-        date = order.get('creation_date', time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))
-        closed_session = pos_session.browse(cr, uid, order['pos_session_id'], context=context)
-        rescue_session_ids = pos_session.search(cr, uid, [
-            ('rescue', '=', True), ('config_id', '=', closed_session.config_id.id),
-            ('start_at', '<=', date), ('state', '=', 'opened')
-        ], limit=1, context=context)
-        if not rescue_session_ids:
-            return pos_session.copy(cr, uid, order['pos_session_id'], default={
-                'rescue': True,
+    # This deals with orders that belong to a closed session. In order
+    # to recover from this we:
+    # - assign the order to another compatible open session
+    # - if that doesn't exist, create a new one
+    def _get_valid_session(self, cr, uid, order, context=None):
+        session = self.pool.get('pos.session')
+        closed_session = session.browse(cr, uid, order['pos_session_id'], context=context)
+        open_sessions = session.search(cr, uid, [('state', '=', 'opened'),
+                                                 ('config_id', '=', closed_session.config_id.id),
+                                                 ('user_id', '=', closed_session.user_id.id)],
+                                       limit=1, order="start_at DESC", context=context)
+
+        if open_sessions:
+            return open_sessions[0]
+        else:
+            new_session_id = session.create(cr, uid, {
+                'config_id': closed_session.config_id.id,
             }, context=context)
-        return rescue_session_ids[0]
+            new_session = session.browse(cr, uid, new_session_id, context=context)
+
+            # bypass opening_control (necessary when using cash control)
+            new_session.signal_workflow('open')
+
+            return new_session_id
 
     def _process_order(self, cr, uid, order, context=None):
-        session = self.pool['pos.session'].browse(cr, uid, order['pos_session_id'], context=context)
-        if session.state == 'closed':
-            rescue_session_id = self._get_rescue_session(cr, uid, order, context=context)
-            order['pos_session_id'] = rescue_session_id
-            session = self.pool['pos.session'].browse(cr, uid, rescue_session_id, context=context)
+        session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+
+        if session.state == 'closing_control' or session.state == 'closed':
+            session_id = self._get_valid_session(cr, uid, order, context=context)
+            session = self.pool.get('pos.session').browse(cr, uid, session_id, context=context)
+            order['pos_session_id'] = session_id
+
         order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
         journal_ids = set()
         for payments in order['statement_ids']:
@@ -919,13 +931,17 @@ class pos_order(osv.osv):
             location_id = order.location_id.id
             if order.partner_id:
                 destination_id = order.partner_id.property_stock_customer.id
-            elif picking_type:
-                if not picking_type.default_location_dest_id:
-                    raise UserError(_('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
-                destination_id = picking_type.default_location_dest_id.id
             else:
-                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
+                if (not picking_type) or (not picking_type.default_location_dest_id):
+                    customerloc, supplierloc = self.pool['stock.warehouse']._get_partner_locations(cr, uid, [], context=context)
+                    destination_id = customerloc.id
+                else:
+                    destination_id = picking_type.default_location_dest_id.id
+
+            #All qties negative => Create negative
             if picking_type:
+                pos_qty = all([x.qty >= 0 for x in order.lines])
+                #Check negative quantities
                 picking_id = picking_obj.create(cr, uid, {
                     'origin': order.name,
                     'partner_id': addr.get('delivery',False),
@@ -934,8 +950,8 @@ class pos_order(osv.osv):
                     'company_id': order.company_id.id,
                     'move_type': 'direct',
                     'note': order.note or "",
-                    'location_id': location_id,
-                    'location_dest_id': destination_id,
+                    'location_id': location_id if pos_qty else destination_id,
+                    'location_dest_id': destination_id if pos_qty else location_id,
                 }, context=context)
                 self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
 
@@ -959,6 +975,10 @@ class pos_order(osv.osv):
             if picking_id:
                 picking_obj.action_confirm(cr, uid, [picking_id], context=context)
                 picking_obj.force_assign(cr, uid, [picking_id], context=context)
+                # Mark pack operations as done
+                pick = picking_obj.browse(cr, uid, picking_id, context=context)
+                for pack in pick.pack_operation_ids:
+                    self.pool['stock.pack.operation'].write(cr, uid, [pack.id], {'qty_done': pack.product_qty}, context=context)
                 picking_obj.action_done(cr, uid, [picking_id], context=context)
             elif move_list:
                 move_obj.action_confirm(cr, uid, move_list, context=context)

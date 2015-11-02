@@ -629,7 +629,11 @@ define([
       }
 
       var anchors = [];
-      if (isTextChanged) {
+      // ODOO: adding this branch to modify existing anchor
+      var ancestor_anchor = dom.ancestor(rng.sc, dom.isAnchor);
+      if(ancestor_anchor) {
+          anchors.push($(ancestor_anchor).html(linkText).get(0));
+      } else if (isTextChanged) {
         // Create a new link when text changed.
         var anchor = rng.insertNode($('<A>' + linkText + '</A>')[0]);
         anchors.push(anchor);

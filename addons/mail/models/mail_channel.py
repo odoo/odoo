@@ -145,7 +145,11 @@ class Channel(models.Model):
 
     @api.multi
     def action_unfollow(self):
-        return self.write({'channel_partner_ids': [(3, self.env.user.partner_id.id)]})
+        result = self.write({'channel_partner_ids': [(3, self.env.user.partner_id.id)]})
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info()[0])
+        notification = _('<div class="o_mail_notification">left <a href="#" data-channel-id="%s">#%s</a></div>') % (self.uuid, self.name,)
+        self.message_post(body=notification, message_type="comment", subtype="mail.mt_comment")
+        return result
 
 
     @api.multi
@@ -329,9 +333,10 @@ class Channel(models.Model):
             else:
                 # create a new one
                 channel = self.create({
-                    'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner_id}) for partner_id in partners_to],
+                    'channel_partner_ids': [(4, partner_id) for partner_id in partners_to],
                     'public': 'private',
                     'channel_type': 'chat',
+                    'email_send': False,
                     'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
                 })
                 # broadcast the channel header to the other partner (not me)
@@ -480,8 +485,13 @@ class Channel(models.Model):
     @api.multi
     def channel_join_and_get_info(self):
         self.ensure_one()
+        notification = _('<div class="o_mail_notification">joined <a href="#" data-channel-id="%s">#%s</a></div>') % (self.uuid, self.name,)
+        self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         self.action_follow()
-        return self.channel_info()[0]
+
+        channel_info = self.channel_info()[0]
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
+        return channel_info
 
     @api.model
     def channel_create(self, name, privacy='public'):
@@ -495,6 +505,11 @@ class Channel(models.Model):
         new_channel = self.create({
             'name': name,
             'public': privacy,
-            'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]
+            'email_send': False,
+            'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
-        return new_channel.channel_info()[0]
+        channel_info = new_channel.channel_info()[0]
+        notification = _('<div class="o_mail_notification">created <a href="#" data-channel-id="%s">#%s</a></div>') % (new_channel.uuid, new_channel.name,)
+        new_channel.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
+        return channel_info

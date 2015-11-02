@@ -10,6 +10,9 @@ from openerp.exceptions import AccessError, UserError, ValidationError
 import openerp.addons.decimal_precision as dp
 from openerp import api, fields, models, _
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
@@ -674,10 +677,10 @@ class WizardMultiChartsAccounts(models.TransientModel):
         if not self.chart_template_id.complete_tax_set:
             value = self.sale_tax_rate
             ref_taxs = obj_tax_temp.search([('type_tax_use', '=', 'sale'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
-            ref_taxs.write({'amount': value, 'name': _('Tax %.2f%%') % value})
+            ref_taxs.write({'amount': value, 'name': _('Tax %.2f%%') % value, 'description': '%.2f%%' % value})
             value = self.purchase_tax_rate
             ref_taxs = obj_tax_temp.search([('type_tax_use', '=', 'purchase'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
-            ref_taxs.write({'amount': value, 'name': _('Purchase Tax %.2f%%') % value})
+            ref_taxs.write({'amount': value, 'name': _('Tax %.2f%%') % value, 'description': '%.2f%%' % value})
         return True
 
     @api.multi
@@ -687,6 +690,11 @@ class WizardMultiChartsAccounts(models.TransientModel):
         all the provided information to create the accounts, the banks, the journals, the taxes, the
         accounting properties... accordingly for the chosen company.
         '''
+        if len(self.env['account.account'].search([('company_id', '=', self.company_id.id)])) > 0:
+            # We are in a case where we already have some accounts existing, meaning that user has probably
+            # created its own accounts and does not need a coa, so skip installation of coa.
+            _logger.info('Could not install chart of account since some accounts already exists for the company (%s)', (self.company_id.id,))
+            return {}
         if not self.env.user._is_admin():
             raise AccessError(_("Only administrators can change the settings"))
         ir_values_obj = self.env['ir.values']

@@ -153,6 +153,15 @@ def onchange(*args):
         when one of the given fields is modified. The method is invoked on a
         pseudo-record that contains the values present in the form. Field
         assignments on that record are automatically sent back to the client.
+
+        The method may return a dictionary for changing field domains and pop up
+        a warning message, like in the old API::
+
+            return {
+                'domain': {'other_id': [('partner_id', '=', partner_id)]},
+                'warning': {'title': "Warning", 'message': "What is this?"},
+            }
+
     """
     return lambda method: decorate(method, '_onchange', args)
 
@@ -871,9 +880,11 @@ class Environment(object):
         return bool(self.all.todo)
 
     def get_todo(self):
-        """ Return a pair `(field, records)` to recompute. """
-        for field, recs_list in self.all.todo.iteritems():
-            return field, recs_list[0]
+        """ Return a pair ``(field, records)`` to recompute.
+            The field is such that none of its dependencies must be recomputed.
+        """
+        field = min(self.all.todo, key=self.registry.field_sequence)
+        return field, self.all.todo[field][0]
 
     def check_cache(self):
         """ Check the cache consistency. """

@@ -432,7 +432,7 @@ var PlannerHelpMixin = {
         } else if (menu === 'planner') {
             if (this.dialog) this.show_dialog();
         } else if (menu === 'support') {
-            window.open('https://www.odoo.com/pricing?noredirect=1', '_blank');
+            window.open('https://www.odoo.com/buy', '_blank');
         }
     },
 }

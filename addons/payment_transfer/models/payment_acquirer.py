@@ -1,4 +1,4 @@
-# -*- coding: utf-'8' "-*-"
+# -*- coding: utf-8 -*-
 
 from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.osv import osv
@@ -16,7 +16,7 @@ class TransferPaymentAcquirer(osv.Model):
 
     def _get_providers(self, cr, uid, context=None):
         providers = super(TransferPaymentAcquirer, self)._get_providers(cr, uid, context=context)
-        providers.append(['transfer', 'Wire Transfer'])
+        providers.append(['transfer', _('Wire Transfer')])
         return providers
 
     def transfer_get_form_action_url(self, cr, uid, id, context=None):

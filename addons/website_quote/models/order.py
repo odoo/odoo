@@ -217,7 +217,9 @@ class sale_order(osv.osv):
         options = []
         for option in quote_template.options:
             if pricelist_id:
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], option.product_id.id, 1, context=context)[pricelist_id]
+                uom_context = context.copy()
+                uom_context['uom'] = option.uom_id.id
+                price = pricelist_obj.price_get(cr, uid, [pricelist_id], option.product_id.id, 1, context=uom_context)[pricelist_id]
             else:
                 price = option.price_unit
             options.append((0, 0, {
@@ -235,11 +237,12 @@ class sale_order(osv.osv):
         data = {
             'order_line': lines,
             'website_description': quote_template.website_description,
-            'note': quote_template.note,
             'options': options,
             'validity_date': date,
             'require_payment': quote_template.require_payment
         }
+        if quote_template.note:
+            data['note'] = quote_template.note
         return {'value': data}
 
     def recommended_products(self, cr, uid, ids, context=None):
@@ -250,17 +253,17 @@ class sale_order(osv.osv):
             products += line.product_id.product_tmpl_id.recommended_products(context=context)
         return products
 
-    def get_access_action(self, cr, uid, id, context=None):
+    def get_access_action(self, cr, uid, ids, context=None):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the online quote if exists. """
-        quote = self.browse(cr, uid, id, context=context)
+        quote = self.browse(cr, uid, ids[0], context=context)
         if not quote.template_id:
-            return super(sale_order, self).get_access_action(cr, uid, id, context=context)
+            return super(sale_order, self).get_access_action(cr, uid, ids, context=context)
         return {
             'type': 'ir.actions.act_url',
-            'url': '/quote/%s' % id,
+            'url': '/quote/%s' % quote.id,
             'target': 'self',
-            'res_id': id,
+            'res_id': quote.id,
         }
 
     def action_quotation_send(self, cr, uid, ids, context=None):
@@ -405,6 +408,10 @@ class sale_order_option(osv.osv):
         if product.description_sale:
             self.name += '\n' + product.description_sale
         self.uom_id = product.product_tmpl_id.uom_id
+        if product and self.order_id.pricelist_id:
+            partner_id = self.order_id.partner_id.id
+            pricelist = self.order_id.pricelist_id.id
+            self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
 
 
 class product_template(osv.Model):

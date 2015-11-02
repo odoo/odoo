@@ -11,7 +11,7 @@ import threading
 
 import openerp
 from .. import SUPERUSER_ID
-from openerp.tools import assertion_report, lazy_property, classproperty, config
+from openerp.tools import assertion_report, lazy_property, classproperty, config, topological_sort
 from openerp.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -100,6 +100,25 @@ class Registry(Mapping):
             for fname in fnames:
                 fields.append(model_fields[fname])
         return fields
+
+    @lazy_property
+    def field_sequence(self):
+        """ Return a function mapping a field to an integer. The value of a
+            field is guaranteed to be strictly greater than the value of the
+            field's dependencies.
+        """
+        # map fields on their dependents
+        dependents = {
+            field: set(dep for dep, _ in model._field_triggers[field] if dep != field)
+            for model in self.itervalues()
+            for field in model._fields.itervalues()
+        }
+        # sort them topologically, and associate a sequence number to each field
+        mapping = {
+            field: num
+            for num, field in enumerate(reversed(topological_sort(dependents)))
+        }
+        return mapping.get
 
     def clear_manual_fields(self):
         """ Invalidate the cache for manual fields. """
@@ -225,6 +244,10 @@ class Registry(Mapping):
                     "[Cache: # %s]",
                     r, c)
         return r, c
+
+    def in_test_mode(self):
+        """ Test whether the registry is in 'test' mode. """
+        return self.test_cr is not None
 
     def enter_test_mode(self):
         """ Enter the 'test' mode, where one cursor serves several requests. """

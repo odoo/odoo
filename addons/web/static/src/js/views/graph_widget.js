@@ -86,8 +86,8 @@ return Widget.extend({
         if (!this.data.length) {
             this.$el.append(QWeb.render('GraphView.error', {
                 title: _t("No data to display"),
-                description: _t("No data available for this chart.  " +
-                    "Try to add some records, or make sure that" +
+                description: _t("No data available for this chart. " +
+                    "Try to add some records, or make sure that " +
                     "there is no active filter in the search bar."),
             }));
         } else {
@@ -158,7 +158,7 @@ return Widget.extend({
         var chart = nv.models.multiBarChart();
         chart.options({
           delay: 250,
-          transitionDuration: 10,
+          transition: 10,
           showLegend: true,
           showXAxis: true,
           showYAxis: true,
@@ -212,7 +212,7 @@ return Widget.extend({
         var chart = nv.models.pieChart();
         chart.options({
           delay: 250,
-          transitionDuration: 100,
+          transition: 100,
           color: d3.scale.category10().range(),
         });
 

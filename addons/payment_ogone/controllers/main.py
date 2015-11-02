@@ -37,7 +37,7 @@ class OgoneController(http.Controller):
         new_id = acquirer.s2s_process(data)
         return new_id
 
-    @http.route(['/payment/ogone/s2s/create'], type='http', auth='public')
+    @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"])
     def ogone_s2s_create(self, **post):
         acquirer_id = int(post.get('acquirer_id'))
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)

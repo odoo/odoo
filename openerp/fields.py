@@ -3,7 +3,7 @@
 
 """ High-level objects for fields. """
 
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
@@ -15,7 +15,7 @@ import xmlrpclib
 from openerp.tools import float_round, frozendict, html_sanitize, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
-from openerp.tools.translate import xml_translate
+from openerp.tools.translate import html_translate
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -566,10 +566,12 @@ class Field(object):
 
     def _inverse_related(self, records):
         """ Inverse the related field ``self`` on ``records``. """
+        # store record values, otherwise they may be lost by cache invalidation!
+        record_value = {record: record[self.name] for record in records}
         for record in records:
             other, field = self.traverse_related(record)
             if other:
-                other[field.name] = record[self.name]
+                other[field.name] = record_value[record]
 
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field ``self``. """
@@ -948,25 +950,37 @@ class Field(object):
         """
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
+
+        # group triggers by model and path to reduce the number of calls to search()
+        bymodel = defaultdict(lambda: defaultdict(list))
         for field, path in records._field_triggers[self]:
-            if path and field.store:
-                if path == 'id':
-                    target = records
-                else:
-                    # don't move this line to function top, see log
-                    env = records.env(user=SUPERUSER_ID, context={'active_test': False})
-                    target = env[field.model_name].search([(path, 'in', records.ids)])
-                if target:
-                    spec.append((field, target._ids))
-                    # recompute field on target in the environment of records,
-                    # and as user admin if required
-                    if field.compute_sudo:
-                        target = target.with_env(records.env(user=SUPERUSER_ID))
+            bymodel[field.model_name][path].append(field)
+
+        for model_name, bypath in bymodel.iteritems():
+            for path, fields in bypath.iteritems():
+                if path and any(field.store for field in fields):
+                    # process stored fields
+                    stored = set(field for field in fields if field.store)
+                    fields = set(fields) - stored
+                    if path == 'id':
+                        target = records
                     else:
-                        target = target.with_env(records.env)
-                    target._recompute_todo(field)
-            else:
-                spec.append((field, None))
+                        # don't move this line to function top, see log
+                        env = records.env(user=SUPERUSER_ID, context={'active_test': False})
+                        target = env[model_name].search([(path, 'in', records.ids)])
+                    if target:
+                        for field in stored:
+                            spec.append((field, target._ids))
+                            # recompute field on target in the environment of
+                            # records, and as user admin if required
+                            if field.compute_sudo:
+                                target = target.with_env(records.env(user=SUPERUSER_ID))
+                            else:
+                                target = target.with_env(records.env)
+                            target._recompute_todo(field)
+                # process non-stored fields
+                for field in fields:
+                    spec.append((field, None))
 
         return spec
 
@@ -1233,9 +1247,9 @@ class Html(_String):
 
     def _setup_attrs(self, model, name):
         super(Html, self)._setup_attrs(model, name)
-        # Translated sanitized html fields must use xml_translate or a callable.
+        # Translated sanitized html fields must use html_translate or a callable.
         if self.translate and not callable(self.translate) and self.sanitize:
-            self.translate = xml_translate
+            self.translate = html_translate
 
     _column_sanitize = property(attrgetter('sanitize'))
     _related_sanitize = property(attrgetter('sanitize'))

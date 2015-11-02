@@ -70,7 +70,7 @@ class AccountMoveLineReconcileWriteoff(models.TransientModel):
     writeoff_acc_id = fields.Many2one('account.account', string='Write-Off account', required=True, domain=[('deprecated', '=', False)])
     date_p = fields.Date(string='Date', default=fields.Date.context_today)
     comment = fields.Char(required=True, default='Write-off')
-    analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain=[('parent_id', '!=', False)])
+    analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
 
     @api.multi
     def trans_rec_addendum(self):

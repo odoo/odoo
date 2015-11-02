@@ -78,40 +78,40 @@ var TopBarContent = Widget.extend({
             }
         });
     },
-        rename_page: function() {
-            var self = this;
-            var context = website.get_context();
-            self.mo_id = self.getMainObject().id;
+    rename_page: function() {
+        var self = this;
+        var context = base.get_context();
+        self.mo_id = self.getMainObject().id;
 
-            openerp.jsonRpc('/web/dataset/call_kw', 'call', {
-                model: 'website',
-                method: 'page_search_dependencies',
-                args: [self.mo_id],
-                kwargs: {
-                    context: context
-                },
-            }).then(function (deps) {
-                website.prompt({
-                    id: "editor_rename_page",
-                    window_title: _t("Rename Page"),
-                    dependencies: deps,
-                }, 'website.rename_page').then(function (val, field, $dialog) {
-                    openerp.jsonRpc('/web/dataset/call_kw', 'call', {
-                        model: 'website',
-                        method: 'rename_page',
-                        args: [
-                            self.mo_id,
-                            val,
-                        ],
-                        kwargs: {
-                            context: context
-                        },
-                    }).then(function (new_name) {
-                        window.location = "/page/" + encodeURIComponent(new_name);
-                    });
+        ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+            model: 'website',
+            method: 'page_search_dependencies',
+            args: [self.mo_id],
+            kwargs: {
+                context: context
+            },
+        }).then(function (deps) {
+            website.prompt({
+                id: "editor_rename_page",
+                window_title: _t("Rename Page"),
+                dependencies: deps,
+            }, 'website.rename_page').then(function (val, field, $dialog) {
+                ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+                    model: 'website',
+                    method: 'rename_page',
+                    args: [
+                        self.mo_id,
+                        val,
+                    ],
+                    kwargs: {
+                        context: context
+                    },
+                }).then(function (new_name) {
+                    window.location = "/page/" + encodeURIComponent(new_name);
                 });
             });
-        },
+        });
+    },
     delete_page: function() {
         var self = this;
         var context = base.get_context();

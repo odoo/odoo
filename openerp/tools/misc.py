@@ -12,6 +12,7 @@ from contextlib import contextmanager
 import subprocess
 import logging
 import os
+import passlib.utils
 import socket
 import sys
 import threading
@@ -1157,3 +1158,10 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         elif currency_obj and currency_obj.position == 'before':
             res = '%s %s' % (currency_obj.symbol, res)
     return res
+
+def _consteq(str1, str2):
+    """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
+        known length only, because length difference is optimized. """
+    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
+
+consteq = getattr(passlib.utils, 'consteq', _consteq)

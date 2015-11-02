@@ -249,7 +249,7 @@ Common ORM methods
     <reference/orm/oldapi>`::
 
         >>> self.browse([7, 18, 12])
-        res.partner(7, 18, 12])
+        res.partner(7, 18, 12)
 
 :meth:`~openerp.models.Model.exists`
     Returns a new recordset containing only the records which exist in the

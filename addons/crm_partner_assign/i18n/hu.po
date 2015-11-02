@@ -3,13 +3,14 @@
 # * crm_partner_assign
 # 
 # Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-14 09:06+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-21 18:18+0000\n"
+"Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +53,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n            \n<p>Hello,</p>\n\n\n<p>A területén várható üzleti kilátások miatt keressük meg. Ezért, a következő érdeklődéseket hozzárendeltük ${ctx['partner_id'].name}:</p>\n\n<ol>\n% érdeklődés ebben ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Kérjük vegye fel a kapcsolatot a <a href=\"${object.get_portal_url()}\">Partner Portálon</a> további részletekért. Mindegyik érdeklődésnél a bal felső sarokban két gomb van, melyet meg kell nyomnia miután felvette a kapcsolatot az érdekléődéssel: \"Engem érdekel\" & \"Engem nem érdekel\".</p>\n% else:\n<p>\n    Még nincs Portál elérése az adatbázisunkban. Kérjük vegye fel a kapcsolatot \n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email és a fiók gazdával %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n</p>\n% endif\n<p>Az érdeklődés egy másik partnerhez kerül, ha nem veszi fel a kapcsolatot 20 napon belül.</p>\n\n<p>Köszönjük,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nUI: Úgy látszik nem lett kiosztva fiók gazda, kérjük vegye fel velünk a kapcsolatot.\n% endif\n            "
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_nbr
@@ -68,20 +69,20 @@ msgstr "# esélyek száma"
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:30
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
-msgstr ""
+msgstr "<p>Érdekelt vagyok ebben az érdeklődésben.</p>"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:35
 #, python-format
 msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
-msgstr ""
+msgstr "<p>Nem vagyok érdekelt ebben az érdeklődésben. Kapcsolatba léptem az érdeklődővel.</p>"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:37
 #, python-format
 msgid ""
 "<p>I am not interested by this lead. I have not contacted the lead.</p>"
-msgstr ""
+msgstr "<p>Nem érdekel ez az érdeklődés. Nem léptem kapcsolatba az érdeklődővel.</p>"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
@@ -89,7 +90,7 @@ msgstr ""
 msgid ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">É </span>\n                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">D </span>"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
@@ -98,7 +99,7 @@ msgid ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
 "                                <span class=\"oe_grey\">) </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">K </span>\n                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">NY </span>\n                                <span class=\"oe_grey\">) </span>"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_activation
@@ -122,12 +123,12 @@ msgstr "Dátum hozzárendelés"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Assign Month"
-msgstr ""
+msgstr "Hozzárendelési hónap"
 
 #. module: crm_partner_assign
 #: model:ir.actions.server,name:crm_partner_assign.action_assign_salesman_according_assigned_partner
 msgid "Assign salesman of assigned partner"
-msgstr ""
+msgstr "Rendeljen hozzá egy értékesítőt a hozzárendelt partnerhez"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_date_assign
@@ -158,7 +159,7 @@ msgstr "Hozzárendelt partner"
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Automatic Assignation"
-msgstr ""
+msgstr "Automatikus hozzárendelés"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_forward_to_partner_body
@@ -173,7 +174,7 @@ msgstr "Átlagos valószínűség"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
 msgid "Avg. of Probability"
-msgstr ""
+msgstr "Átl. valószínűség"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
@@ -302,7 +303,7 @@ msgstr "Részletek"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_contacted
 msgid "Did you contact the lead?"
-msgstr ""
+msgstr "Felvetted a kapcsolatot az érdeklődővel?"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_display_name
@@ -313,12 +314,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_display_name
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Név megjelenítése"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Do you have contacted the customer?"
-msgstr ""
+msgstr "Felvetted a kapcsolatot az ügyféllel?"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
@@ -338,12 +339,12 @@ msgstr "Kiterjesztett szűrők"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_partner_id
 msgid "Forward Leads To"
-msgstr ""
+msgstr "Érdeklődés továbbítása ide"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_forward_type
 msgid "Forward selected leads to"
-msgstr ""
+msgstr "Kiválasztott érdeklődések továbbítása ide"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
@@ -354,7 +355,7 @@ msgstr "A partnernek továbbküldve"
 #. module: crm_partner_assign
 #: model:mail.template,subject:crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: ${ctx['partner_id'].name}"
-msgstr ""
+msgstr "Fw: Érdeklődés: ${ctx['partner_id'].name}"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_partner_latitude
@@ -370,7 +371,7 @@ msgstr "Földrajzi hosszúság"
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Földrajzi elhelyezkedés"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_res_partner_grade_partner_weight
@@ -401,13 +402,13 @@ msgstr "Magas"
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm interested"
-msgstr ""
+msgstr "Engem érdekel"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm not interested"
-msgstr ""
+msgstr "Engem nem érdekel"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_id
@@ -423,22 +424,22 @@ msgstr "ID"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_implemented_partner_ids
 msgid "Implementation References"
-msgstr ""
+msgstr "Kivitelezési hivatkozások"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_assigned_partner_id
 msgid "Implemented by"
-msgstr ""
+msgstr "Végrehajtotta"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_interested
 msgid "Interested by this lead"
-msgstr ""
+msgstr "Érdekel ez az érdeklődés"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date
 msgid "Invoice Account Date"
-msgstr ""
+msgstr "Számla főkönyvi számla kelte"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation___last_update
@@ -449,7 +450,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation___last_update
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Utoljára frissítve ekkor"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_write_uid
@@ -489,7 +490,7 @@ msgstr "Érdeklődő"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_link
 msgid "Lead  Single Links"
-msgstr ""
+msgstr "Édeklődés közvetlen kapcsolatai"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_graph
@@ -500,12 +501,12 @@ msgstr "Lehetőség hozzárendelés"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
 msgid "Lead Feedback"
-msgstr ""
+msgstr "Visszajelzés érdeklődésről"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_location
 msgid "Lead Location"
-msgstr ""
+msgstr "Érdeklődés helyszíne"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead
@@ -541,13 +542,13 @@ msgstr "Szint"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_name
 msgid "Level Name"
-msgstr ""
+msgstr "Szint neve"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_partner_weight
 msgid "Level Weight"
-msgstr ""
+msgstr "Szint súlyozása"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -563,7 +564,7 @@ msgstr "Max. valószínűség"
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_partner_filter
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_partner_filter
 msgid "My Assigned Partners"
-msgstr ""
+msgstr "Általam hozzárendelt partnerek"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_name
@@ -593,7 +594,7 @@ msgstr "Napok száma az eset megnyitásáig"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
-msgstr ""
+msgstr "Miután az érdeklődést feldolgoztuk, az átkerül a \"Lehetőségek\" menübe"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_opening_date
@@ -665,7 +666,7 @@ msgstr "Partner szint"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_partner_location
 msgid "Partner Location"
-msgstr ""
+msgstr "Partner helyszín"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
@@ -701,7 +702,7 @@ msgstr "Partnerkapcsolat dátuma"
 #. module: crm_partner_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_partner_assign_tree
 msgid "Partnerships"
-msgstr ""
+msgstr "Partnerkapcsolat"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_planned_revenue
@@ -760,13 +761,13 @@ msgstr "Sorszám"
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:84
 #, python-format
 msgid "Set an email address for the partner %s"
-msgstr ""
+msgstr "Állítson be egy email címet  ehhez a partnerhez: %s"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:82
 #, python-format
 msgid "Set an email address for the partner(s): %s"
-msgstr ""
+msgstr "Állítson be egy email címet  ehhez a partner(ek)hez: %s"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_stage_id
@@ -783,29 +784,29 @@ msgstr "Tárgy"
 #: code:addons/crm_partner_assign/crm_lead.py:17
 #, python-format
 msgid "The CRM Channel Interested Action is missing"
-msgstr ""
+msgstr "A CMR csatorna érdeklődés művelet hiányzik"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:69
 #, python-format
 msgid "The Forward Email Template is not in the database"
-msgstr ""
+msgstr "A továbítás email sablon nincs az adatbázisban"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:73
 #, python-format
 msgid "The Portal group cannot be found"
-msgstr ""
+msgstr "A portál csoport nem található"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_contacted
 msgid "The lead has been contacted"
-msgstr ""
+msgstr "Az érdeklődővel felvettük a kapcsolatot"
 
 #. module: crm_partner_assign
 #: model:crm.stage,name:crm_partner_assign.stage_portal_lead_recycle
 msgid "To Recycle"
-msgstr ""
+msgstr "Újrahasznosításra"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_turnover
@@ -836,48 +837,48 @@ msgstr "Nagyon magas"
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_comment
 msgid "What are the elements that have led to this decision?"
-msgstr ""
+msgstr "Milyen összetavők vezettek el ehhez a döntéshez?"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "What is the next action? When? What is the expected revenue?"
-msgstr ""
+msgstr "Mi következő művelet? Mikor? Mi lesz a várható árbevétel?"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Why aren't you interested by this lead?"
-msgstr ""
+msgstr "Miért nem érdekel ez az érdeklődés?"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:26
 #, python-format
 msgid "You must contact the lead before saying that you are interested"
-msgstr ""
+msgstr "Mielőtt érdekelne az érdeklődés, fel kell venni vele a kapcsolatot"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid "a single partner: manual selection of partner"
-msgstr ""
+msgstr "Egy önálló partner: partner kézi kiválasztása"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_assignation
 msgid "crm.lead.assignation"
-msgstr ""
+msgstr "crm.lead.assignation"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_channel_interested
 msgid "crm.lead.channel.interested"
-msgstr ""
+msgstr "crm.lead.channel.interested"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "crm.lead.forward.to.partner"
-msgstr ""
+msgstr "crm.lead.forward.to.partner"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
 msgid "e.g. Gold Partner"
-msgstr ""
+msgstr "pl. Arany fokozatú partner"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_res_partner_activation
@@ -894,4 +895,4 @@ msgstr "res.partner.grade"
 msgid ""
 "several partners: automatic assignation, using GPS coordinates and partner's"
 " grades"
-msgstr ""
+msgstr "egyes partnerek: automatikus hozzárendelés, GPS koordináták és partnerek fokozatai használatával"

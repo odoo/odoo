@@ -26,6 +26,7 @@
             <field name="name">Belgian PCMN</field>
             <field name="transfer_account_id" ref="trans"/>
             <field name="currency_id" ref="base.EUR"/>
+            <field name="spoken_languages" eval="'nl_BE'"/>
         </record>
         <record id="trans" model="account.account.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>

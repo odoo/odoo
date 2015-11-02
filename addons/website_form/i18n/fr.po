@@ -3,13 +3,15 @@
 # * website_form
 # 
 # Translators:
+# Frédéric LIETART <stuff@thelinuxfr.org>, 2015
+# Sylvain GROS-DESORMEAUX <sylvain.grodes@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 10:19+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-10-09 21:22+0000\n"
+"Last-Translator: Sylvain GROS-DESORMEAUX <sylvain.grodes@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,10 +20,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form.js:208
+#, python-format
+msgid "'%s' is not a correct date"
+msgstr "'%s' n'est pas une date correcte"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form.js:203
+#, python-format
+msgid "'%s' is not a correct datetime"
+msgstr "'%s' n'est pas une date et une heure correcte"
+
+#. module: website_form
 #: code:addons/website_form/controllers/main.py:205
 #, python-format
 msgid "<p>Attached files : </p>"
-msgstr ""
+msgstr "<p>Fichiers attachés: </p>"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_access
@@ -33,7 +49,7 @@ msgstr ""
 #: code:addons/website_form/static/src/xml/website_form.xml:21
 #, python-format
 msgid "An error has occured, the form has not been sent."
-msgstr ""
+msgstr "Une erreur s'est produite, le formulaire n'a pas été envoyé."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields_website_form_blacklisted
@@ -49,7 +65,7 @@ msgstr ""
 #: code:addons/website_form/controllers/main.py:48
 #, python-format
 msgid "Custom infos"
-msgstr ""
+msgstr "Informations personnalisées"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_website_form_access
@@ -87,7 +103,7 @@ msgstr ""
 #: code:addons/website_form/controllers/main.py:49
 #, python-format
 msgid "Metadata"
-msgstr ""
+msgstr "Métadonnées"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model
@@ -99,7 +115,7 @@ msgstr "Modèles"
 #: code:addons/website_form/static/src/xml/website_form.xml:14
 #, python-format
 msgid "Please fill in the form correctly."
-msgstr ""
+msgstr "Merci de remplir correctement le formulaire."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_website_form_default_field_id
@@ -111,7 +127,7 @@ msgstr ""
 #: code:addons/website_form/static/src/xml/website_form.xml:7
 #, python-format
 msgid "The form has been sent successfully."
-msgstr ""
+msgstr "Le formulaire a été envoyé avec succès."
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
@@ -121,4 +137,4 @@ msgstr "Site Web"
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_website_website_form_enable_metadata
 msgid "Write metadata"
-msgstr ""
+msgstr "Enregistrer les métadonnées"

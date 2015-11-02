@@ -57,9 +57,12 @@ class TestMailFollowers(TestMail):
         self.assertEqual(set(specific[self.group_public.id][0][2]['subtype_ids'][0][2]), set([self.mt_mg_nodef.id]))
 
     def test_message_is_follower(self):
+        qty_followed_before = len(self.group_pigs.sudo(self.user_employee).search([('message_is_follower', '=', True)]))
         self.assertFalse(self.group_pigs.sudo(self.user_employee).message_is_follower)
         self.group_pigs.message_subscribe_users(user_ids=[self.user_employee.id])
+        qty_followed_after = len(self.group_pigs.sudo(self.user_employee).search([('message_is_follower', '=', True)]))
         self.assertTrue(self.group_pigs.sudo(self.user_employee).message_is_follower)
+        self.assertEqual(qty_followed_before + 1, qty_followed_after)
 
     def test_followers_subtypes_default(self):
         self.group_pigs.message_subscribe_users(user_ids=[self.user_employee.id])

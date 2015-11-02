@@ -19,4 +19,5 @@ class MassMailingConfiguration(osv.TransientModel):
             (1, 'Allow the use of a pop-up snippet on website to encourage visitors to sign up on a mass mailing list')
             ], string="Website Pop-up",
             implied_group="mass_mailing.group_website_popup_on_exit"),
+        'module_mass_mailing_themes': fields.boolean("Mass mailing themes"),
     }

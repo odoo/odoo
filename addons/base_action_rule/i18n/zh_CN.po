@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-10 00:57+0000\n"
+"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"PO-Revision-Date: 2015-10-22 07:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -86,6 +86,11 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: base_action_rule
+#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
+msgid "Check this box if this contact is a customer."
+msgstr ""
+
+#. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid "Click to setup a new automated action rule."
 msgstr ""
@@ -153,7 +158,7 @@ msgstr "延迟类型"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_display_name
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_domain
@@ -227,6 +232,11 @@ msgid ""
 " the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr "在同一个\"搜索\"视图，选择菜单中的\"保存现有的过滤条件\"，输入名称（例如：创建于01/01/2012)并且勾选\"共享给其他用户\"的选项。"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
+msgid "Is a Customer"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_date_action_last
@@ -368,6 +378,21 @@ msgstr "状态"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_name
 msgid "Subject"
 msgstr "主题"
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_done
+msgid "Test lead in state 'done'"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_draft
+msgid "Test lead in state 'draft'"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_open
+msgid "Test lead in state 'open'"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id

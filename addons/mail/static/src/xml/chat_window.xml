@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+
+    <t t-name="mail.ChatWindow">
+        <div class="o_chat_window">
+            <div class="o_chat_header">
+                <span class="o_chat_title">
+                    <t t-esc="widget.title"/>
+                </span>
+                <span>
+                    <a href="#" class="o_chat_window_close fa fa-close"></a>
+                </span>
+            </div>
+            <div class="o_chat_content">
+            </div>
+            <div class="o_chat_input">
+                <input t-att-placeholder="widget.placeholder"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -10,8 +10,9 @@
         <field name="arch" type="xml">
             <form string="Asset category">
                 <group>
-                    <div class="oe_title oe_inline">
-                        <label for="name" class="oe_edit_only"/>
+                    <div class="oe_title">
+                        <label for="name" string="Asset Type" class="oe_edit_only" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                        <label for="name" string="Deferred Revenue Type" class="oe_edit_only" attrs="{'invisible': [('type','==','purchase')]}"/>
                         <h1>
                             <field name="name" placeholder="e.g. Computers"/>
                         </h1>
@@ -127,7 +128,7 @@
                                 <label for="partner_id" string="Vendor" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             </div>
                             <field name="partner_id" string="Partner" nolabel="1"/>
-                            <field name="invoice_id" string="Invoice"/>
+                            <field name="invoice_id" string="Invoice" options="{'no_create': True}"/>
                         </group>
                     </group>
                     <notebook colspan="4">

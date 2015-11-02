@@ -129,7 +129,7 @@ class res_partner_category(osv.Model):
     }
     _parent_store = True
     _parent_order = 'name'
-    _order = 'parent_left'
+    _order = 'parent_left, name'
 
 
 class res_partner_title(osv.osv):
@@ -269,7 +269,8 @@ class res_partner(osv.Model, format_address):
 
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
-        help="This field holds the image used as avatar for this contact, limited to 1024x1024px")
+        help="This field holds the image used as avatar for this contact, limited to 1024x1024px",
+        default=lambda self: self._get_default_image(False, True))
     image_medium = openerp.fields.Binary("Medium-sized image",
         compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
         help="Medium-sized image of this contact. It is automatically "\
@@ -597,6 +598,8 @@ class res_partner(osv.Model, format_address):
             name = name.replace('\n\n','\n')
             if context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
+            if context.get('html_format'):
+                name = name.replace('\n', '<br/>')
             res.append((record.id, name))
         return res
 

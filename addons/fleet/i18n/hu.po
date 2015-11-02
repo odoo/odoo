@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-09-19 21:52+0000\n"
+"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"PO-Revision-Date: 2015-09-30 20:06+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -19,13 +19,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:374
+#: code:addons/fleet/fleet.py:373
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr "%s %s flottához hozzáadva!"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:650
+#: code:addons/fleet/fleet.py:649
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr "%s szerződés(eket) szükséges megújítani és/vagy lezárni!"
@@ -490,7 +490,7 @@ msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2864
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2863
 msgid "Current state of the vehicle"
 msgstr "Ennek a gépjárműnek a jelenlegi állapota"
 
@@ -585,7 +585,7 @@ msgid "Driver of the vehicle"
 msgstr "A gépjármú vezetője"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:391
+#: code:addons/fleet/fleet.py:390
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "Autóvezető: ettől '%s' eddig '%s'"
@@ -618,7 +618,7 @@ msgid "Emissions"
 msgstr "Kibocsátás"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:29
+#: code:addons/fleet/fleet.py:31
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
 msgstr "Gépjármű kilóméter óraállást nem szabad törölni."
@@ -839,7 +839,7 @@ msgstr "Hibrid"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2813
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2812
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
@@ -1000,7 +1000,7 @@ msgid "License Plate"
 msgstr "Rendszám tábla"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:398
+#: code:addons/fleet/fleet.py:397
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr "Rendszám tábla: ettől '%s' eddig '%s'"
@@ -1080,17 +1080,17 @@ msgid "Manual"
 msgstr "Kézi"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_medium
+msgid "Medium-sized image"
+msgstr "Közepes méretű kép"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_medium
 msgid ""
 "Medium-sized logo of the brand. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr "Közepes-méretű logó a gyártmányról. Automatikusan átméretezett 128x128px képre, a méretarány megtartásával. A forma nézetekben használja ezt a mezőt és egyes kanban nézetben."
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_medium
-msgid "Medium-sized photo"
-msgstr "Közepes méretű fotó"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_ids
@@ -1108,7 +1108,7 @@ msgid "Miles"
 msgstr "Mérföld"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2846
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2845
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
 msgid "Model"
@@ -1137,12 +1137,12 @@ msgid "Model of a vehicle"
 msgstr "Egy gépjármű modellje"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2846
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2845
 msgid "Model of the vehicle"
 msgstr "Egy gépjármű modellje"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:387
+#: code:addons/fleet/fleet.py:386
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "Modell: ettől '%s' eddig '%s'"
@@ -1186,8 +1186,8 @@ msgid "No"
 msgstr "Nem"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:386 code:addons/fleet/fleet.py:390
-#: code:addons/fleet/fleet.py:394 code:addons/fleet/fleet.py:397
+#: code:addons/fleet/fleet.py:385 code:addons/fleet/fleet.py:389
+#: code:addons/fleet/fleet.py:393 code:addons/fleet/fleet.py:396
 #, python-format
 msgid "None"
 msgstr "Nem"
@@ -1446,7 +1446,7 @@ msgid "Refueling Details"
 msgstr "Tankolás részletei"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:721
+#: code:addons/fleet/fleet.py:720
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 #, python-format
@@ -1573,16 +1573,16 @@ msgstr "Szerződés beállítása folyamatban"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_small
-msgid "Smal-sized photo"
-msgstr "Kis-méretű fotó"
+msgid "Small-sized image"
+msgstr "Kis méretű kép"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_small
 msgid ""
-"Small-sized photo of the brand. It is automatically resized as a 64x64px "
+"Small-sized logo of the brand. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "Kis-méretű fotó a márkáról. Automatikusan átméretezve 64x64px képpé, az arány megtartása mellett. Ezt a mezőt ott használja ahol a kis képre van szüksége."
+msgstr "Kis-méretű logó a márkáról. Automatikusan átméretezve 64x64px képpé, az arány megtartása mellett. Ezt a mezőt ott használja ahol a kis képre van szüksége."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -1600,7 +1600,7 @@ msgid "Starter Replacement"
 msgstr "Önindító csere"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2864
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2863
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_tree
 msgid "State"
 msgstr "Állapot"
@@ -1611,7 +1611,7 @@ msgid "State name already exists"
 msgstr "Állam/megye név már létezik"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:395
+#: code:addons/fleet/fleet.py:394
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "Állam/megye: ettől '%s' eddig '%s'"
@@ -1775,7 +1775,7 @@ msgstr "Gépjármű motorjára írt egyedi motorszám (VIN/SN szám)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2879
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2878
 msgid "Unit"
 msgstr "Egység"
 

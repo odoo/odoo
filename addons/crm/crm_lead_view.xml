@@ -47,7 +47,6 @@
                 <form string="Sales Tags">
                     <group>
                         <field name="name"/>
-                        <field name="team_id"/>
                         <field name="color"/>
                     </group>
                 </form>
@@ -60,7 +59,6 @@
             <field name="arch" type="xml">
                 <tree string="Sales Tags">
                     <field name="name"/>
-                    <field name="team_id"/>
                     <field name="color"/>
                 </tree>
             </field>
@@ -108,9 +106,6 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
-                    <button name="action_set_won" string="Mark Won"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}"/>
                     <button name="action_set_lost" string="Mark Lost"
                             type="object" class="oe_highlight"
                             attrs="{'invisible': [('active', '=', False)]}"/>
@@ -374,7 +369,7 @@
                             help="No salesperson"/>
                     <separator />
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
-                    <filter string="Archived" domain="[('active', '=', False)]"/>
+                    <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                     <separator />
                     <filter string="Followup" name="activities"
                         domain="[('date_action', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
@@ -383,15 +378,15 @@
                             name='not_opt_out' domain="[('opt_out', '=', False)]"
                             help="Leads that did not ask not to be included in mass mailing campaigns"/>
                     <group expand="0" string="Group By">
-                        <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Sales Team" domain="[]" context="{'group_by':'team_id'}"/>
-                        <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Salesperson" name="groupby_salesperson" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Sales Team" name="groupby_team" domain="[]" context="{'group_by':'team_id'}"/>
+                        <filter string="Stage" name="groupby_stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter name="customer" string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
-                        <filter string="Source"  domain="[]" context="{'group_by':'source_id'}"/>
-                        <filter string="Channel"  domain="[]" context="{'group_by':'medium_id'}"/>
-                        <filter string="Creation Month" domain="[]" context="{'group_by':'create_date'}"/>
-                        <filter string="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Campaign" name="groupby_campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
+                        <filter string="Source" name="groupby_source" domain="[]" context="{'group_by':'source_id'}"/>
+                        <filter string="Channel" name="groupby_channel" domain="[]" context="{'group_by':'medium_id'}"/>
+                        <filter string="Creation Month" name="groupby_createmonth" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter string="Expected Closing" name="groupby_expectclosing" domain="[]" context="{'group_by':'date_deadline'}"/>
                     </group>
                 </search>
             </field>

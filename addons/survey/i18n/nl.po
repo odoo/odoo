@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-14 14:13+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-09-30 17:16+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,22 +65,22 @@ msgstr "<i class=\"fa fa-2x\">123..</i>"
 msgid ""
 "<i class=\"fa fa-bar-chart\"/>\n"
 "                    Graph"
-msgstr ""
+msgstr "<i class=\"fa fa-bar-chart\"/>\n                    Grafiek"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_choice
 msgid "<i class=\"fa fa-bar-chart-o\"/> Graph"
-msgstr ""
+msgstr "<i class=\"fa fa-bar-chart-o\"/> Grafiek"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_choice
 msgid "<i class=\"fa fa-bar-chart-o\"/> Pie Chart"
-msgstr ""
+msgstr "<i class=\"fa fa-bar-chart-o\"/> Taartgrafiek"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-check-square-o fa-lg\"/> answer"
-msgstr ""
+msgstr "<i class=\"fa fa-check-square-o fa-lg\"/> antwoord"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -139,7 +139,7 @@ msgid ""
 "<span class=\"label label-default only_left_radius filter-all\">All "
 "surveys</span><span class=\"label label-primary only_right_radius filter-"
 "finished\">Finished surveys</span>"
-msgstr ""
+msgstr "<span class=\"label label-default only_left_radius filter-all\">Alle enquêtes</span><span class=\"label label-primary only_right_radius filter-finished\">Voltooide enquêtes</span>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_number
@@ -167,7 +167,7 @@ msgid ""
 "<span class=\"label label-primary only_left_radius filter-all\">All "
 "surveys</span><span class=\"label label-default only_right_radius filter-"
 "finished\">Finished surveys</span>"
-msgstr ""
+msgstr "<span class=\"label label-primary only_left_radius filter-all\">Alle enquêtes</span><span class=\"label label-default only_right_radius filter-finished\">Voltooide enquêtes</span>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.no_result
@@ -176,7 +176,7 @@ msgid ""
 "                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
-msgstr ""
+msgstr "<span>\n                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n                        </span>\n                        Sorry, nog niemand heeft deze enquête beantwoord"
 
 #. module: survey
 #: constraint:survey.label:0
@@ -198,7 +198,7 @@ msgstr "Een lange omschrijving van het doel van de enquête"
 msgid ""
 "A positive score indicates a correct choice; a negative or null score "
 "indicates a wrong answer"
-msgstr ""
+msgstr "Een positieve score geeft een correcte keuze aan; een negatieve of nul score geeft een fout antwoord aan"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -224,6 +224,11 @@ msgstr "Een token moet uniek zijn"
 #: model:survey.page,title:survey.feedback_1
 msgid "About your Odoo usage"
 msgstr "Over uw Odoo gebruik"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction
+msgid "Action Needed"
+msgstr "Vereist actie"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_active_domain
@@ -295,7 +300,7 @@ msgstr "Antwoorden"
 msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
-msgstr ""
+msgstr "Antwoorden gaan niet naar de discussie van het originele document. Dit heeft gevolgen voor het gegenereerde bericht-id."
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -322,7 +327,7 @@ msgstr "Schrijver van het bericht. Als deze niet ingesteld is, kan email_from ee
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "Avatar van auteur"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_body
@@ -332,7 +337,7 @@ msgstr "Automatisch opgeschoonde HTML-inhoud"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
 msgid "Back to Survey"
-msgstr ""
+msgstr "Terug naar enquête"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_4
@@ -582,7 +587,7 @@ msgstr "Ontwerp enquête"
 msgid ""
 "Design easily your survey, send invitations to answer by email and analyse "
 "answers."
-msgstr ""
+msgstr "Ontwerp gemakkelijk uw enquêtes, verzend uitnodigingen om te beantwoord per e-mail en analyseer antwoorden."
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_2
@@ -661,7 +666,7 @@ msgstr "Email sjabloon"
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
-msgstr ""
+msgstr "E-mailadres van de verzender. Dit veld is ingesteld wanneer er geen overeenkomende relatie wordt gevonden en vervangt het author_id veld in de chatter."
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
@@ -692,7 +697,7 @@ msgstr "Extra voorgestelde modules zijn relevant"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_starred_partner_ids
 msgid "Favorited By"
-msgstr ""
+msgstr "Favoriet op"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
@@ -785,7 +790,7 @@ msgstr "Ik neem deel aan discussies en forums"
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_1
 msgid "I use Github, like all official Odoo projects"
-msgstr ""
+msgstr "Ik gebruik Github, zoals alle officiële Odoo projecten"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_2
@@ -825,10 +830,14 @@ msgid "Identification token"
 msgstr "Identificatie token"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_needaction
 #: model:ir.model.fields,help:survey.field_survey_survey_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_users_can_go_back
@@ -862,7 +871,7 @@ msgstr "Indien andere, specifieer:"
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
 msgid "If you do not contribute or develop in Odoo, skip this page."
-msgstr ""
+msgstr "Sla deze pagina over indien u niet bijdraagt of ontwikkelt in Odoo."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -1113,7 +1122,7 @@ msgstr "Minimum waarde"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Lines Text Box"
-msgstr ""
+msgstr "Meerdere lijnen tekstvak"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1143,15 +1152,9 @@ msgstr "Verkrijg naam van het gerelateerde document."
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_needaction
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_needaction_partner_ids
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_needaction
 msgid "Need Action"
 msgstr "Vereist actie"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
@@ -1176,12 +1179,12 @@ msgstr "Nee, ik heb het juist getest"
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
 msgid "Nobody has replied to your survey yet."
-msgstr ""
+msgstr "Nog niemand heeft gereageerd op uw enquête."
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_user_input
 msgid "Nobody has replied to your surveys yet."
-msgstr ""
+msgstr "Nog niemand heeft gereageerd op uw enquêtes."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.notopen
@@ -1214,6 +1217,11 @@ msgid "Number"
 msgstr "Nummer"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_column_nb
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Number of columns"
@@ -1226,8 +1234,8 @@ msgstr "Aantal voltooide enquêtes"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_sent_survey
@@ -1242,7 +1250,7 @@ msgstr "Aantal gestarte enquêtes"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Aantal ongelezen berichten"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1273,7 +1281,7 @@ msgstr "Minstens één e-mail is fout: %s"
 #. module: survey
 #: model:ir.actions.client,name:survey.action_client_survey_menu
 msgid "Open Survey Menu"
-msgstr ""
+msgstr "Open enquête menu"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
@@ -1640,7 +1648,7 @@ msgstr "Toon commentaar veld"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Single Line Text Box"
-msgstr ""
+msgstr "Enkele regel tekstvak"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_skipped
@@ -1662,7 +1670,7 @@ msgid ""
 "Something went wrong while contacting survey server. <strong class=\"text-"
 "danger\">Your answers have probably not been recorded.</strong> Try "
 "refreshing."
-msgstr ""
+msgstr "Er ging iets mis tijdens het contacteren van de enquête server. <strong class=\"text-danger\">Uw antwoorden zijn waarschijnlijk niet bewaard.</strong> Probeer te vernieuwen."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
@@ -1947,7 +1955,7 @@ msgstr "Er zijn te veel menu's. Het is te complex om te begrijpen"
 msgid ""
 "These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties."
-msgstr ""
+msgstr "Deze vragen hebben betrekking op de gebuikersvriendelijkheid en toegankelijkheid van Odoo. Probeer uw eerste ervaringen met Odoo te herinneren en \nuw moeilijheden te beschrijven."
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_2
@@ -2033,7 +2041,7 @@ msgstr "Deze enquête is alleen open voor geregistreerde mensen. Alsjeblieft"
 #. module: survey
 #: model:survey.survey,description:survey.feedback_form
 msgid "This survey should take less than five minutes."
-msgstr ""
+msgstr "Deze enquête duurt normaal minder dan vijf minuten."
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_2
@@ -2068,12 +2076,12 @@ msgstr "Helemaal niet akkoord"
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstructthe tracking and to generate statistics on the model."
-msgstr ""
+msgstr "Traceringswaardes worden bewaard in een apart model. Dit veld staat de reconstructie van traceringen toe en staat toe statistieken te genereren op het model."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_tracking_value_ids
 msgid "Tracking values"
-msgstr ""
+msgstr "Traceringswaardes"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_message_type
@@ -2104,7 +2112,7 @@ msgstr "Ongelezen berichten"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Teller ongelezen berichten"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_use_active_domain
@@ -2202,7 +2210,7 @@ msgstr "Wat denkt u van de configuratiewizard?"
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_1
 msgid "What do you think about the documentation available on doc.odoo.com?"
-msgstr ""
+msgstr "Wat denkt u over de documentatie beschikbaar op doc.odoo.com?"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_5
@@ -2270,7 +2278,7 @@ msgid ""
 "You can create surveys for different purposes: customer opinion, services "
 "feedback, recruitment interviews, employee's periodical evaluations, "
 "marketing campaigns, etc."
-msgstr ""
+msgstr "U kan enquêtes aanmaken voor verschillende doeleinden: klanten hun mening, diensten feedback, aanwervingsinterviews, periodieke personeelsbeoordelingen, marketing campagnes, etc."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -2301,7 +2309,7 @@ msgstr "U heeft een score van"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "ans"
-msgstr ""
+msgstr "antw"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.auth_required
@@ -2328,4 +2336,4 @@ msgstr "controleer uw antwoorden"
 #: code:addons/survey/static/src/js/tour_test_survey.js:10
 #, python-format
 msgid "try to create and fill survey"
-msgstr ""
+msgstr "probeer een enquête aan te maken en in te vullen"

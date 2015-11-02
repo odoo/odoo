@@ -10,7 +10,7 @@
   </xpath>
 </template>
 
-<template id="optional_products" inherit_id="website_sale.cart" name="Optional products">
+<template id="optional_products" inherit_id="website_sale.cart_lines" name="Optional products">
   <xpath expr="//table[@id='cart_products']/tbody//td[@id='td-qty']/div" position="attributes">
     <attribute name="t-if">not line.linked_line_id</attribute>
   </xpath>
@@ -59,7 +59,7 @@
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
-                      "from_currency": "website.currency_id",
+                      "from_currency": "product.company_id.currency_id",
                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                    }'/>
                   <span class="oe_price" style="white-space: nowrap;"
@@ -67,7 +67,7 @@
                     t-field="product.price"
                     t-field-options='{
                        "widget": "monetary",
-                       "from_currency": "website.currency_id",
+                       "from_currency": "product.company_id.currency_id",
                        "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                    }'/>
                 </td>
@@ -107,7 +107,7 @@
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
-                      "from_currency": "website.currency_id",
+                      "from_currency": "product.company_id.currency_id",
                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                    }'/><br/>
                   <span class="oe_price" style="white-space: nowrap;"

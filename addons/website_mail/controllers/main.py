@@ -157,7 +157,7 @@ class WebsiteMail(http.Controller):
                 'body': msg.body,
                 'date': msg.date,
                 'author': msg.author_id.name,
-                'image_url': request.website.image_url(msg.author_id, 'image_small')
+                'image_url': '/mail/%s/%s/avatar/%s' % (msg.model, msg.res_id, msg.author_id.id)
             }
             return data
         except Exception:

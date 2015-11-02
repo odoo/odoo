@@ -23,11 +23,11 @@ class hr_payslip_line(osv.osv):
             payslip_line.slip_id.employee_id.address_home_id.id
         if credit_account:
             if payslip_line.salary_rule_id.register_id.partner_id or \
-                    payslip_line.salary_rule_id.account_credit.type in ('receivable', 'payable'):
+                    payslip_line.salary_rule_id.account_credit.internal_type in ('receivable', 'payable'):
                 return partner_id
         else:
             if payslip_line.salary_rule_id.register_id.partner_id or \
-                    payslip_line.salary_rule_id.account_debit.type in ('receivable', 'payable'):
+                    payslip_line.salary_rule_id.account_debit.internal_type in ('receivable', 'payable'):
                 return partner_id
         return False
 

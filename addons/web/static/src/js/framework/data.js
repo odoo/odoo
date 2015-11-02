@@ -736,7 +736,7 @@ var BufferedDataSet = DataSetStatic.extend({
     default_get: function(fields, options) {
         var self = this;
         return this._super(fields, options).done(function(res) {
-            self.last_default_get = res;
+            self.last_default_get = _.clone(res);
         });
     },
     get_cache: function (id) {
@@ -812,7 +812,7 @@ var BufferedDataSet = DataSetStatic.extend({
         _.each(ids, function (id) {
             self.get_cache(id).to_delete = true;
         });
-        this.set_ids(_.without(this.ids, _.pluck(_.filter(this.cache, function (c) {return c.to_delete;}), 'id')));
+        this.set_ids(_.difference(this.ids, _.pluck(_.filter(this.cache, function (c) {return c.to_delete;}), 'id')));
         this.trigger("dataset_changed", ids, callback, error_callback);
         return $.async_when({result: true}).done(callback);
     },
@@ -925,7 +925,8 @@ var BufferedDataSet = DataSetStatic.extend({
         // and this breaks the assumptions of other methods (that the data
         // for new and altered records is both in the cache and in the change
         // or to_create collection)
-        this._update_cache(id, {'from_read': {}});
+        this.get_cache(id).from_read = {};
+        this._update_cache(id);
     },
     call_button: function (method, args) {
         this.evict_record(args[0][0]);

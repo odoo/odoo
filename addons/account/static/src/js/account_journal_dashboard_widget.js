@@ -27,10 +27,6 @@ var JournalDashboardGraph = kanban_widgets.AbstractField.extend({
                         margin: {'left': 0, 'right': 0, 'top': 0, 'bottom': 0},
                         showYAxis: false,
                         showLegend: false,
-                        tooltips: true,
-                        tooltipContent: function(key, x, y, e, graph) {
-                            return self.create_tooltip(x, y, e);
-                        },
                     });
                     self.chart.xAxis
                         .tickFormat(function(d) {
@@ -55,11 +51,7 @@ var JournalDashboardGraph = kanban_widgets.AbstractField.extend({
                         .y(function(d) { return d.value })
                         .showValues(false)
                         .showYAxis(false)
-                        .margin({'left': 0, 'right': 0, 'top': 0, 'bottom': 40})
-                        .tooltips(true)
-                        .tooltipContent(function(key, x, y, e, graph) {
-                            return self.create_tooltip(x, y, e);
-                        });
+                        .margin({'left': 0, 'right': 0, 'top': 0, 'bottom': 40});
 
                     self.chart.xAxis.axisLabel(self.data[0].title);
                     self.chart.yAxis.tickFormat(d3.format(',.2f'));
@@ -92,23 +84,6 @@ var JournalDashboardGraph = kanban_widgets.AbstractField.extend({
                 $(v).attr('class', $(v).attr('class') + ' ' + bar_classes[k]);
             });
         }
-    },
-
-    create_tooltip: function(x, y, e){
-        var header = _.findWhere(e.series.values, {x: x})
-        header = header && header.name || x;
-
-        var $tooltip = $('<div>').addClass('o_tooltip');
-
-        $('<b>')
-            .addClass('o_tooltip_title')
-            .html(header)
-            .appendTo($tooltip)
-        $('<div>')
-            .addClass('o_tooltip_content')
-            .html('Balance ' + y)
-            .appendTo($tooltip)
-        return $tooltip[0].outerHTML;
     },
 
     destroy: function(){

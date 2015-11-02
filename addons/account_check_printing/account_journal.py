@@ -24,7 +24,8 @@ class AccountJournal(models.Model):
         if self.check_next_number < self.check_sequence_id.number_next_actual:
             raise ValidationError(_("The last check number was %s. In order to avoid a check being rejected "
                 "by the bank, you can only use a greater number." % self.check_sequence_id.number_next_actual))
-        self.check_sequence_id.sudo().number_next_actual = self.check_next_number
+        if self.check_sequence_id:
+            self.check_sequence_id.sudo().number_next_actual = self.check_next_number
 
     check_manual_sequencing = fields.Boolean('Manual Numbering', default=False,
         help="Check this option if your pre-printed checks are not numbered.")

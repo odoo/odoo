@@ -363,7 +363,7 @@ class website_sale(http.Controller):
         return request.redirect("/shop/cart")
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
-    def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None, display=True):
+    def cart_update_json(self, product_id, line_id=None, add_qty=None, set_qty=None, display=True):
         order = request.website.sale_get_order(force_create=1)
         if order.state != 'draft':
             request.website.sale_reset()
@@ -375,9 +375,14 @@ class website_sale(http.Controller):
             return {}
         if not display:
             return None
+
+        order = request.website.sale_get_order()
         value['cart_quantity'] = order.cart_quantity
-        value['website_sale.total'] = request.website._render("website_sale.total", {
-                'website_sale_order': request.website.sale_get_order()
+        value['website_sale.cart_lines'] = request.website._render("website_sale.cart_lines", {
+                'website_sale_order': order,
+                'compute_currency': lambda price: request.registry['res.currency']._compute(request.cr, request.uid,
+                    order.company_id.currency_id, order.pricelist_id.currency_id, price, context=request.context),
+                'suggested_products': order.with_context(pricelist=order.pricelist_id.id)._cart_accessories()
             })
         return value
 
@@ -798,13 +803,16 @@ class website_sale(http.Controller):
         # find an already existing transaction
         tx = request.website.sale_get_transaction()
         if tx:
-            if tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
+            tx_id = tx.id
+            if tx.reference != order.name:
+                tx = False
+                tx_id = False
+            elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
                 tx.write({
                     'acquirer_id': acquirer_id,
                     'amount': order.amount_total,
                 })
-            tx_id = tx.id
-        else:
+        if not tx:
             tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
                 'acquirer_id': acquirer_id,
                 'type': 'form',

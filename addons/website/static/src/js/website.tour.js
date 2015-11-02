@@ -1,3 +1,11 @@
+odoo.define('website.tour.cancel', function (require) {
+'use strict';
+
+var Tour = require('web.Tour');
+Tour.autoRunning = false;
+
+});
+
 odoo.define('website.tour', function (require) {
 'use strict';
 
@@ -24,5 +32,7 @@ website.TopBar.include({
         return this._super();
     }
 });
+
+base.ready().then(Tour.running);
 
 });

@@ -87,6 +87,7 @@ response = request.website.render("website.template_partner_post", values)
         <div class="container">
             <div class="row">
                 <form class="form-horizontal" action="/website/action/website.action_partner_post" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Recipient</label>
                         <div class="col-sm-10">

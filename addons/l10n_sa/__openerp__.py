@@ -13,7 +13,7 @@ This initially includes chart of accounts of USA translated to Arabic.
 In future this module will include some payroll rules for ME .
 """,
     'website': 'http://www.dvit.me',
-    'depends': ['account'],  # TODO: should also depend on multilang
+    'depends': ['account', 'l10n_multilang'],
     'data': [
         'account.chart.template.xml',
         'account.account.template.csv',
@@ -24,4 +24,5 @@ In future this module will include some payroll rules for ME .
     'test': [],
     'installable': True,
     'auto_install': False,
+    'post_init_hook': 'load_translations',
 }

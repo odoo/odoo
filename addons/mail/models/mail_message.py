@@ -150,12 +150,18 @@ class Message(models.Model):
     def set_message_needaction(self, partner_ids=None):
         if not partner_ids:
             partner_ids = [self.env.user.partner_id.id]
+        if set(partner_ids) == set([self.env.user.partner_id.id]):
+            # a user should be able to mark a message as needaction for him
+            self = self.sudo()
         return self.write({'needaction_partner_ids': [(4, pid) for pid in partner_ids]})
 
     @api.multi
     def set_message_done(self, partner_ids=None):
         if not partner_ids:
             partner_ids = [self.env.user.partner_id.id]
+        if set(partner_ids) == set([self.env.user.partner_id.id]):
+            # a user should be able to mark a message as done for him
+            self = self.sudo()
         return self.write({'needaction_partner_ids': [(3, pid) for pid in partner_ids]})
 
     @api.multi
@@ -167,10 +173,12 @@ class Message(models.Model):
             :param bool create_missing: create notifications for missing entries
                 (i.e. when acting on displayed messages not notified)
         """
+        # a user should always be able to star a message he can read
+        self.check_access_rule('read')
         if starred:
-            self.write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
         else:
-            self.write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
         return starred
 
     #------------------------------------------------------
@@ -836,23 +844,14 @@ class Message(models.Model):
             partners = self_sudo.partner_ids
 
         # remove author from notified partners
-        if self_sudo.author_id:
+        if not self._context.get('mail_notify_author', False) and self_sudo.author_id:
             partners = partners - self_sudo.author_id
 
         # update message
         self.write({'channel_ids': [(6, 0, channels.ids)], 'needaction_partner_ids': [(6, 0, partners.ids)]})
 
-        # notify partners
-        # TDE TODO: model-dependant ? (like customer -> always email ?)
-        email_channels = channels.filtered(lambda channel: channel.email_send)
-        self.env['res.partner'].sudo().search([
-            '|',
-            ('id', 'in', partners.ids),
-            ('channel_ids', 'in', email_channels.ids),
-            ('email', '!=', self_sudo.author_id and self_sudo.author_id.email or self.email_from),
-            ('notify_email', '!=', 'none')]
-        )._notify(self, force_send=force_send, user_signature=user_signature)
         # notify partners and channels
+        partners._notify(self, force_send=force_send, user_signature=user_signature)
         channels._notify(self)
 
         # Discard cache, because child / parent allow reading and therefore

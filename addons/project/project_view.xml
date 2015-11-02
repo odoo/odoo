@@ -44,7 +44,6 @@
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator/>
                         <filter string="Last Message" name="group_message_last_post" context="{'group_by':'message_last_post:week'}"/>
-                        <filter string="Assignation Month" context="{'group_by':'date_start:month'}" help="Creation Date"/>
                     </group>
                 </search>
             </field>
@@ -396,8 +395,6 @@
                     <field name="planned_hours" invisible="context.get('set_visible',False)" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)"/>
-                    <field name="date_start" groups="project.group_time_work_estimation_tasks"/>
-                    <field name="date_end" groups="project.group_time_work_estimation_tasks"/>
                 </tree>
             </field>
         </record>

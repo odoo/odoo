@@ -171,6 +171,7 @@ class ImLivechatChannel(models.Model):
             'channel_type': 'livechat',
             'name': ', '.join([anonymous_name, user.name]),
             'public': 'public',
+            'email_send': False,
         })
         return mail_channel.sudo().with_context(im_livechat_operator_partner_id=operator_partner_id).channel_info()[0]
 
@@ -198,7 +199,7 @@ class ImLivechatChannel(models.Model):
         if country_code:
             country_ids = self.env['res.country'].sudo().search([('code', '=', country_code)])
             if country_ids:
-                country_id = country_ids[0]
+                country_id = country_ids[0].id
         # extract url
         url = request.httprequest.headers.get('Referer') or request.httprequest.base_url
         # find the match rule for the given country and url

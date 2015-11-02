@@ -132,7 +132,7 @@ Tour.register({
         },
         {
             waitFor:   '#editable_area > section .row > div:first:has( font:last:containsExact(Bat) )',
-            element:   '.note-air-popover button[data-event="undo"]',
+            element:   '.note-image-popover button[data-event="undo"]',
             title:     "undo",
         },
         {

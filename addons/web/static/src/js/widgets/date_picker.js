@@ -48,7 +48,7 @@ var DateWidget = Widget.extend({
     set_value: function(value) {
         this.set({'value': value});
         this.$input.val((value)? this.format_client(value) : '');
-        this.picker.setValue(value);
+        this.picker.setValue(this.format_client(value));
     },
     get_value: function() {
         return this.get('value');

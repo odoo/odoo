@@ -1,3 +1,4 @@
+import base64
 from operator import itemgetter
 import psycopg2
 import werkzeug
@@ -8,6 +9,8 @@ from openerp import SUPERUSER_ID
 from openerp import http
 from openerp.exceptions import AccessError
 from openerp.http import request
+
+from openerp.addons.web.controllers.main import binary_content
 
 
 class MailController(http.Controller):
@@ -115,7 +118,7 @@ class MailController(http.Controller):
         if not record_sudo:
             # record does not seem to exist -> redirect to login
             return self._redirect_to_messaging()
-        record_action = record_sudo.get_access_action()[0]
+        record_action = record_sudo.get_access_action()
 
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
@@ -208,6 +211,26 @@ class MailController(http.Controller):
         except:
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
+
+    @http.route('/mail/<string:res_model>/<int:res_id>/avatar/<int:partner_id>', type='http', auth='public')
+    def avatar(self, res_model, res_id, partner_id):
+        headers = [[('Content-Type', 'image/png')]]
+        content = 'R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='  # default image is one white pixel
+        if res_model in request.env:
+            try:
+                # if the current user has access to the document, get the partner avatar as sudo()
+                request.env[res_model].browse(res_id).check_access_rule('read')
+                if partner_id in request.env[res_model].browse(res_id).sudo().exists().message_ids.mapped('author_id').ids:
+                    status, headers, content = binary_content(model='res.partner', id=partner_id, field='image_medium', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+                    if status == 304:
+                        return werkzeug.wrappers.Response(status=304)
+            except AccessError:
+                pass
+        image_base64 = base64.b64decode(content)
+        headers.append(('Content-Length', len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status = str(status)
+        return response
 
     @http.route('/mail/needaction', type='json', auth='user')
     def needaction(self):

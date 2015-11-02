@@ -19,9 +19,6 @@
             id="menu_product_in_config_stock" name="Products"
             parent="stock.menu_stock_config_settings" sequence="4"/>
         <menuitem
-            id="menu_packs_config" name="Packs"
-            parent="stock.menu_stock_config_settings" sequence="5" groups="base.group_no_one"/>
-        <menuitem
             action="product.product_uom_form_action" id="menu_stock_uom_form_action"
             parent="menu_stock_config_settings" sequence="35" groups="product.group_uom"/>
 
@@ -188,7 +185,8 @@
             <field name="name">stock.production.lot.form</field>
             <field name="model">stock.production.lot</field>
             <field name="arch" type="xml">
-                <form string="Serial Number">
+                <form string="Serial Number / Lots">
+                    <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_traceability" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
                     </div>
@@ -216,6 +214,7 @@
                              </field>
                         </page>
                     </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -223,7 +222,7 @@
             <field name="name">stock.production.lot.tree</field>
             <field name="model">stock.production.lot</field>
             <field name="arch" type="xml">
-                <tree string="Serial Number">
+                <tree string="Serial Number / Lots">
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="product_id"/>
@@ -247,7 +246,7 @@
         </record>
 
         <record id="action_production_lot_form" model="ir.actions.act_window">
-            <field name="name">Serial Numbers</field>
+            <field name="name">Serial Numbers / Lots</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.production.lot</field>
             <field name="view_type">form</field>
@@ -518,7 +517,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
+        <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_stock_manager"
             parent="menu_warehouse_config" sequence="2"/>
 
         <record id="view_warehouse" model="ir.ui.view">
@@ -599,7 +598,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" groups="stock.group_locations"
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" groups="stock.group_stock_manager"
             parent="menu_warehouse_config" sequence="1"/>
 
         <!--
@@ -762,10 +761,10 @@
                                 <field name="lot_id" invisible="context.get('only_create', False)"
                                        domain="[('product_id','=', parent.product_id)]"
                                        context="{'product_id': parent.product_id}"/>
-                                <field name="qty_todo" invisible="not context.get('show_reserved') or context.get('serial')" readonly="1"/>
+                                <field name="qty_todo" invisible="not context.get('show_reserved') or context.get('serial') or context.get('state_done')" readonly="1"/>
                                 <field name="qty" invisible="context.get('serial')"/>
-                                <button name="do_minus" type="object" icon="fa-minus-square" attrs="{'invisible': [('qty', '&lt;=', 0.99)]}" invisible="not context.get('show_reserved')"/>
-                                <button name="do_plus" type="object" icon="fa-plus-square" attrs="{'invisible': [('plus_visible', '=', False)]}" invisible="not context.get('show_reserved')"/>
+                                <button name="do_minus" type="object" icon="fa-minus-square" attrs="{'invisible': [('qty', '&lt;=', 0.99)]}" invisible="not context.get('show_reserved') or context.get('state_done')"/>
+                                <button name="do_plus" type="object" icon="fa-plus-square" attrs="{'invisible': [('plus_visible', '=', False)]}" invisible="not context.get('show_reserved') or context.get('state_done')"/>
                                 <field name="plus_visible" invisible="1"/>
                             </tree>
                         </field>
@@ -778,7 +777,19 @@
             </field>
         </record>
 
-
+        <record id="view_pack_operation_lot_lot_form" model="ir.ui.view">
+            <field name="name">stock.pack.operation.lots.form</field>
+            <field name="model">stock.pack.operation.lot</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="lot_id"/>
+                        <field name="qty"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
         <record id="view_picking_form" model="ir.ui.view">
             <field name="name">stock.picking.form</field>
@@ -2068,9 +2079,11 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Package">
+                    <header>
+                        <button name="unpack" string="Unpack" type="object" groups="base.group_no_one"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="unpack" string="Unpack" type="object" groups="base.group_no_one"/>
                             <button class="oe_stat_button" name="%(action_picking_tree_all)d"
                             string="Package Transfers" type="action"
                             widget="statinfo" icon="fa-dropbox"/>
@@ -2158,9 +2171,7 @@
             </field>
         </record>
         <menuitem id="menu_package" name="Packages" parent="menu_stock_inventory_control" action="action_package_view" groups="stock.group_tracking_lot" sequence="102"/>
-        <menuitem id="menu_package_config" name="Packages" parent="menu_packs_config" action="action_package_view" groups="stock.group_tracking_lot" sequence="2"/>
         <menuitem id="menu_packagings" name="Packagings" parent="stock.menu_warehouse_report" action="product.action_packaging_view" groups="product.group_stock_packaging" sequence="3"/>
-        <menuitem id="menu_packagings_config" name="Packagings" parent="menu_packs_config" action="product.action_packaging_view" groups="product.group_stock_packaging" sequence="3"/>
 
 
 

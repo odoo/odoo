@@ -1186,10 +1186,10 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
     render: function () {
         var self = this;
         this.$current.html(
-            QWeb.render('ListView.rows', _.extend({
+            QWeb.render('ListView.rows', _.extend({}, this, {
                     render_cell: function () {
                         return self.render_cell.apply(self, arguments); }
-                }, this)));
+                })));
         this.pad_table_to(4);
     },
     pad_table_to: function (count) {

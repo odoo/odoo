@@ -37,7 +37,7 @@ class ir_ui_menu(osv.osv):
             lambda menu: not menu.groups_id or menu.groups_id & groups)
 
         # take apart menus that have an action
-        action_menus = menus.filtered('action')
+        action_menus = menus.filtered(lambda m: m.action and m.action.exists())
         folder_menus = menus - action_menus
         visible = self.browse()
 
