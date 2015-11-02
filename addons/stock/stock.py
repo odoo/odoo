@@ -2992,111 +2992,101 @@ class stock_inventory(osv.osv):
             ['filter', 'product_id', 'lot_id', 'partner_id', 'package_id']),
     ]
 
-class stock_inventory_line(osv.osv):
+from openerp import fields, models, api
+class StockInventoryLine(models.Model):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
     _order = "inventory_id, location_name, product_code, product_name, prodlot_name"
 
-    def _get_product_name_change(self, cr, uid, ids, context=None):
-        return self.pool.get('stock.inventory.line').search(cr, uid, [('product_id', 'in', ids)], context=context)
+    @api.multi
+    @api.depends('product_id.name', 'product_id.default_code')
+    def _get_product_name_change(self):
+        return self.env['stock.inventory.line'].search([('product_id', 'in', self.ids)]).ids
 
-    def _get_location_change(self, cr, uid, ids, context=None):
-        return self.pool.get('stock.inventory.line').search(cr, uid, [('location_id', 'in', ids)], context=context)
+    @api.multi
+    @api.depends('location_id.name', 'location_id.active')
+    def _get_location_change(self):
+        return self.env['stock.inventory.line'].search([('location_id', 'in', self.ids)]).ids
 
-    def _get_prodlot_change(self, cr, uid, ids, context=None):
-        return self.pool.get('stock.inventory.line').search(cr, uid, [('prod_lot_id', 'in', ids)], context=context)
+    @api.multi
+    @api.depends('prod_lot_id.name')
+    def _get_prodlot_change(self):
+        return self.env['stock.inventory.line'].search([('prod_lot_id', 'in', self.ids)]).ids
 
-    def _get_theoretical_qty(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        quant_obj = self.pool["stock.quant"]
-        uom_obj = self.pool["product.uom"]
-        for line in self.browse(cr, uid, ids, context=context):
-            quant_ids = self._get_quants(cr, uid, line, context=context)
-            quants = quant_obj.browse(cr, uid, quant_ids, context=context)
-            tot_qty = sum([x.qty for x in quants])
+    @api.depends('product_uom_id')
+    def _get_theoretical_qty(self):
+        for line in self:
+            quant_ids = line._get_quants()
+            tot_qty = sum([x.qty for x in quant_ids])
             if line.product_uom_id and line.product_id.uom_id.id != line.product_uom_id.id:
-                tot_qty = uom_obj._compute_qty_obj(cr, uid, line.product_id.uom_id, tot_qty, line.product_uom_id, context=context)
-            res[line.id] = tot_qty
-        return res
+                tot_qty = self.env["product.uom"]._compute_qty_obj(line.product_id.uom_id, tot_qty, line.product_uom_id)
+            line.theoretical_qty = tot_qty
 
-    _columns = {
-        'inventory_id': fields.many2one('stock.inventory', 'Inventory', ondelete='cascade', select=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, select=True),
-        'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'package_id': fields.many2one('stock.quant.package', 'Pack', select=True),
-        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'product_qty': fields.float('Checked Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
-        'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
-        'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
-        'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
-        'theoretical_qty': fields.function(_get_theoretical_qty, type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
-                                           store={'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['location_id', 'product_id', 'package_id', 'product_uom_id', 'company_id', 'prod_lot_id', 'partner_id'], 20),},
-                                           readonly=True, string="Theoretical Quantity"),
-        'partner_id': fields.many2one('res.partner', 'Owner'),
-        'product_name': fields.related('product_id', 'name', type='char', string='Product Name', store={
-                                                                                            'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
-                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20),}),
-        'product_code': fields.related('product_id', 'default_code', type='char', string='Product Code', store={
-                                                                                            'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
-                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20),}),
-        'location_name': fields.related('location_id', 'complete_name', type='char', string='Location Name', store={
-                                                                                            'stock.location': (_get_location_change, ['name', 'location_id', 'active'], 20),
-                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['location_id'], 20),}),
-        'prodlot_name': fields.related('prod_lot_id', 'name', type='char', string='Serial Number Name', store={
-                                                                                            'stock.production.lot': (_get_prodlot_change, ['name'], 20),
-                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['prod_lot_id'], 20),}),
-    }
+    inventory_id = fields.Many2one('stock.inventory', 'Inventory', ondelete='cascade', select=True)
+    location_id = fields.Many2one('stock.location', 'Location', required=True, select=True)
+    product_id = fields.Many2one('product.product', 'Product', required=True, select=True)
+    package_id = fields.Many2one('stock.quant.package', 'Pack', select=True)
+    product_uom_id = fields.Many2one('product.uom', 'Product Unit of Measure', required=True, default=lambda self=None: self.env.ref('product.product_uom_unit').id)
+    product_qty = fields.Float('Checked Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), default=0)
+    company_id = fields.Many2one(related='inventory_id.company_id', relation='res.company', string='Company', store=True, select=True, readonly=True)
+    prod_lot_id = fields.Many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]")
+    state = fields.Selection(related='inventory_id.state', string='Status', readonly=True)
+    theoretical_qty = fields.Float(compute="_get_theoretical_qty", digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True, string="Theoretical Quantity")
+    partner_id = fields.Many2one('res.partner', 'Owner')
+    product_name = fields.Char(related='product_id.name', string='Product Name', store=True)
+    product_code = fields.Char(related='product_id.default_code', string='Product Code', store=True)
+    # location_name = fields.Char(related='location_id.name', string='Location Name', store=True)
+    location_name = fields.Char(related='location_id.complete_name', string='Location Name', store=True)
+    prodlot_name = fields.Char(related='prod_lot_id.name', string='Serial Number Name', store=True)
 
-    _defaults = {
-        'product_qty': 0,
-        'product_uom_id': lambda self, cr, uid, ctx=None: self.pool['ir.model.data'].get_object_reference(cr, uid, 'product', 'product_uom_unit')[1]
-    }
-
-    def create(self, cr, uid, values, context=None):
-        if context is None:
-            context = {}
-        product_obj = self.pool.get('product.product')
+    @api.model
+    def create(self, values):
+        product_obj = self.env['product.product']
         if 'product_id' in values and not 'product_uom_id' in values:
-            values['product_uom_id'] = product_obj.browse(cr, uid, values.get('product_id'), context=context).uom_id.id
-        return super(stock_inventory_line, self).create(cr, uid, values, context=context)
+            values['product_uom_id'] = product_obj.browse(values.get('product_id')).uom_id.id
+        return super(StockInventoryLine, self).create(values)
 
-    def _get_quants(self, cr, uid, line, context=None):
-        quant_obj = self.pool["stock.quant"]
-        dom = [('company_id', '=', line.company_id.id), ('location_id', '=', line.location_id.id), ('lot_id', '=', line.prod_lot_id.id),
-                        ('product_id','=', line.product_id.id), ('owner_id', '=', line.partner_id.id), ('package_id', '=', line.package_id.id)]
-        quants = quant_obj.search(cr, uid, dom, context=context)
+    @api.multi
+    def _get_quants(self):
+        quant_obj = self.env["stock.quant"]
+        dom = [('company_id', '=', self.company_id.id), ('location_id', '=', self.location_id.id), ('lot_id', '=', self.prod_lot_id.id),
+                        ('product_id', '=', self.product_id.id), ('owner_id', '=', self.partner_id.id), ('package_id', '=', self.package_id.id)]
+        quants = quant_obj.search(dom)
         return quants
 
-    def onchange_createline(self, cr, uid, ids, location_id=False, product_id=False, uom_id=False, package_id=False, prod_lot_id=False, partner_id=False, company_id=False, context=None):
-        quant_obj = self.pool["stock.quant"]
-        uom_obj = self.pool["product.uom"]
+    @api.multi
+    def onchange_createline(self, location_id=False, product_id=False, uom_id=False, package_id=False, prod_lot_id=False, partner_id=False, company_id=False):
+        quant_obj = self.env["stock.quant"]
+        uom_obj = self.env["product.uom"]
         res = {'value': {}}
         # If no UoM already put the default UoM of the product
         if product_id:
-            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            uom = self.pool['product.uom'].browse(cr, uid, uom_id, context=context)
+            product = self.env['product.product'].browse(product_id)
+            uom = self.env['product.uom'].browse(uom_id)
             if product.uom_id.category_id.id != uom.category_id.id:
                 res['value']['product_uom_id'] = product.uom_id.id
-                res['domain'] = {'product_uom_id': [('category_id','=',product.uom_id.category_id.id)]}
+                res['domain'] = {'product_uom_id': [('category_id', '=', product.uom_id.category_id.id)]}
                 uom_id = product.uom_id.id
         # Calculate theoretical quantity by searching the quants as in quants_get
         if product_id and location_id:
-            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            product = self.env['product.product'].browse(product_id)
             if not company_id:
-                company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+                company_id = self.env.user.company_id.id
             dom = [('company_id', '=', company_id), ('location_id', '=', location_id), ('lot_id', '=', prod_lot_id),
-                        ('product_id','=', product_id), ('owner_id', '=', partner_id), ('package_id', '=', package_id)]
-            quants = quant_obj.search(cr, uid, dom, context=context)
-            th_qty = sum([x.qty for x in quant_obj.browse(cr, uid, quants, context=context)])
+                        ('product_id', '=', product_id), ('owner_id', '=', partner_id), ('package_id', '=', package_id)]
+            quants = quant_obj.search(dom)
+            th_qty = sum([x.qty for x in quants])
             if product_id and uom_id and product.uom_id.id != uom_id:
-                th_qty = uom_obj._compute_qty(cr, uid, product.uom_id.id, th_qty, uom_id)
+                th_qty = uom_obj._compute_qty(product.uom_id.id, th_qty, uom_id)
             res['value']['theoretical_qty'] = th_qty
             res['value']['product_qty'] = th_qty
         return res
 
-    def _resolve_inventory_line(self, cr, uid, inventory_line, context=None):
-        stock_move_obj = self.pool.get('stock.move')
-        quant_obj = self.pool.get('stock.quant')
+    @api.model
+    def _resolve_inventory_line(self, inventory_line):
+        print "inventory_line.theoretical_qty - inventory_line.product_qty >>>>", inventory_line.theoretical_qty, inventory_line.product_qty
+        stock_move_obj = self.env['stock.move']
+        quant_obj = self.env['stock.quant']
         diff = inventory_line.theoretical_qty - inventory_line.product_qty
         if not diff:
             return
@@ -3111,7 +3101,7 @@ class stock_inventory_line(osv.osv):
             'state': 'confirmed',
             'restrict_lot_id': inventory_line.prod_lot_id.id,
             'restrict_partner_id': inventory_line.partner_id.id,
-         }
+        }
         inventory_location_id = inventory_line.product_id.property_stock_inventory.id
         if diff < 0:
             #found more than expected
@@ -3123,47 +3113,49 @@ class stock_inventory_line(osv.osv):
             vals['location_id'] = inventory_line.location_id.id
             vals['location_dest_id'] = inventory_location_id
             vals['product_uom_qty'] = diff
-        move_id = stock_move_obj.create(cr, uid, vals, context=context)
-        move = stock_move_obj.browse(cr, uid, move_id, context=context)
+        move = stock_move_obj.create(vals)
+        # move = stock_move_obj.browse(cr, uid, move_id, context=context)
         if diff > 0:
             domain = [('qty', '>', 0.0), ('package_id', '=', inventory_line.package_id.id), ('lot_id', '=', inventory_line.prod_lot_id.id), ('location_id', '=', inventory_line.location_id.id)]
             preferred_domain_list = [[('reservation_id', '=', False)], [('reservation_id.inventory_id', '!=', inventory_line.inventory_id.id)]]
-            quants = quant_obj.quants_get_preferred_domain(cr, uid, move.product_qty, move, domain=domain, preferred_domain_list=preferred_domain_list)
-            quant_obj.quants_reserve(cr, uid, quants, move, context=context)
+            quants = quant_obj.quants_get_preferred_domain(move.product_qty, move, domain=domain, preferred_domain_list=preferred_domain_list)
+            quant_obj.quants_reserve(quants, move)
         elif inventory_line.package_id:
-            stock_move_obj.action_done(cr, uid, move_id, context=context)
-            quants = [x.id for x in move.quant_ids]
-            quant_obj.write(cr, uid, quants, {'package_id': inventory_line.package_id.id}, context=context)
-            res = quant_obj.search(cr, uid, [('qty', '<', 0.0), ('product_id', '=', move.product_id.id),
-                                    ('location_id', '=', move.location_dest_id.id), ('package_id', '!=', False)], limit=1, context=context)
+            move.action_done()
+            quants = move.quant_ids
+            quants.write({'package_id': inventory_line.package_id.id})
+            res = quant_obj.search([('qty', '<', 0.0), ('product_id', '=', move.product_id.id),
+                                    ('location_id', '=', move.location_dest_id.id), ('package_id', '!=', False)], limit=1)
             if res:
                 for quant in move.quant_ids:
-                    if quant.location_id.id == move.location_dest_id.id: #To avoid we take a quant that was reconcile already
-                        quant_obj._quant_reconcile_negative(cr, uid, quant, move, context=context)
-        return move_id
+                    if quant.location_id.id == move.location_dest_id.id:  # To avoid we take a quant that was reconcile already
+                        quant_obj._quant_reconcile_negative(quant, move)
+        return move
 
     # Should be left out in next version
-    def restrict_change(self, cr, uid, ids, theoretical_qty, context=None):
+    @api.multi
+    @api.onchange('theoretical_qty')
+    def restrict_change(self):
         return {}
 
-    # Should be left out in next version
-    def on_change_product_id(self, cr, uid, ids, product, uom, theoretical_qty, context=None):
+    @api.multi
+    @api.onchange('product_id', 'theoretical_qty', 'product_uom_id')
+    def on_change_product_id(self):
         """ Changes UoM
         @param location_id: Location id
         @param product: Changed product_id
         @param uom: UoM product
         @return:  Dictionary of changed values
         """
-        if not product:
+        if not self.product_id:
             return {'value': {'product_uom_id': False}}
-        obj_product = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        return {'value': {'product_uom_id': uom or obj_product.uom_id.id}}
+        return {'value': {'product_uom_id': self.product_uom_id or self.product_id.uom_id.id}}
+
 
 
 #----------------------------------------------------------
 # Stock Warehouse
 #----------------------------------------------------------
-from openerp import fields, models, api
 class StockWarehouse(models.Model):
     _name = "stock.warehouse"
     _description = "Warehouse"
