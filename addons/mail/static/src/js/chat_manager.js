@@ -357,6 +357,17 @@ var chat_manager = {
         });
     },
 
+    mark_all_as_read: function () {
+        MessageModel.call('mark_all_as_read', [[]], {}).then(function (ids) {
+            _.each(messages, function (msg) {
+                remove_message_from_channel("channel_inbox", msg);
+                chat_manager.bus.trigger('update_message', msg);
+            });
+            needaction_counter = 0;
+            chat_manager.bus.trigger('update_needaction', needaction_counter);
+        });
+    },
+
     get_channels: function () {
         return _.clone(channels);
     },
