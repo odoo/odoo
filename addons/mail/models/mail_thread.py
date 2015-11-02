@@ -1620,8 +1620,10 @@ class MailThread(models.AbstractModel):
         # 1: Handle content subtype: if plaintext, converto into HTML
         if content_subtype == 'plaintext':
             body = tools.plaintext2html(body)
-        else:
-            body = tools.html_keep_url(body)
+        # TMP: do not rewrite URLs in html because it creates errors. A fix is
+        # pending in 9, so this code is temporarily deactivated.
+        # else:
+        #     body = tools.html_keep_url(body)
 
         # 2: Private message: add recipients (recipients and author of parent message) - current author
         #   + legacy-code management (! we manage only 4 and 6 commands)
