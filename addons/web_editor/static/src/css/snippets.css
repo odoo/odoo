@@ -405,23 +405,27 @@
 }
 .oe_overlay .oe_overlay_options {
   position: absolute;
-  left: 50% !important;
-  text-align: center;
-  top: -20px;
+  width: 100%;
+  top: -35px;
   z-index: 1002;
 }
 .oe_overlay .oe_overlay_options > .btn-group {
-  left: -50%;
-  white-space: nowrap;
+  display: -ms-flexbox;
+  display: -moz-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  justify-content: center;
 }
-.oe_overlay .oe_overlay_options > .btn-group > a {
+.oe_overlay .oe_overlay_options > .btn-group > * {
   cursor: pointer;
-  display: inline-block;
-  float: none;
-  margin: 0 -3px;
-}
-.oe_overlay .oe_overlay_options > .btn-group > div {
-  float: left;
+  -ms-flex: 0 0 auto;
+  -moz-flex: 0 0 auto;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
 }
 .oe_overlay .oe_overlay_options .btn, .oe_overlay .oe_overlay_options a {
   cursor: pointer;
