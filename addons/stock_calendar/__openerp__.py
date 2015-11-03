@@ -50,7 +50,6 @@
         'views/resource_views.xml',
     ],
     'test': [
-        'test/orderpoint_calendar.yml'
     ],
     'installable': True,
     'application': False,
