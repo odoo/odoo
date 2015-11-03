@@ -12,7 +12,6 @@ Odoo E-Commerce
         """,
     'depends': ['website', 'sale', 'payment', 'website_payment', 'website_portal_sale', 'website_mail', 'rating'],
     'data': [
-        'data/data.xml',
         'data/crm_team_data.xml',
         'data/ir_actions_data.xml',
         'data/product_style_data.xml',
