@@ -2,4 +2,10 @@ import ir_http
 import rating
 import product
 import sale_order
-import payment
+import sale_order_line
+import payment_transaction
+import res_country_group
+import res_partner
+import website
+import website_config_settings
+import website_pricelist
