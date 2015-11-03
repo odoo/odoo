@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherited_pos_order_view_form_inherit_pos_restaurant" model="ir.ui.view">
+        <field name="name">pos.order.form.view.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='order_fields']" position="inside">
+                <field name="table_id"/>
+                <field name="customer_count"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

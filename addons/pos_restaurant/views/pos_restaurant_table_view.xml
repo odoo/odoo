@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="restaurant_table_view_form" model="ir.ui.view">
+        <field name="name">Restaurant Table</field>
+        <field name="model">restaurant.table</field>
+        <field name="arch" type="xml">
+            <form string="Restaurant Table">
+                <group col="2">
+                    <field name="name" />
+                    <field name="floor_id" />
+                    <field name="seats" />
+                </group>
+                <group col="4" string="Appearance">
+                    <field name="shape" />
+                    <field name="color" />
+                    <field name="position_h" />
+                    <field name="position_v" />
+                    <field name="width" />
+                    <field name="height" />
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>
