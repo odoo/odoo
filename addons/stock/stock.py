@@ -2548,7 +2548,7 @@ class stock_move(osv.osv):
                                                     dest_package_id=quant_dest_package_id, context=context)
                     if redo_false_quants:
                         move_rec = self.pool['stock.move'].browse(cr, uid, move, context=context)
-                        false_quants_move = [(x, x.qty) for x in move_rec.reserved_quant_ids if not x.lot_id]
+                        false_quants_move = [x for x in move_rec.reserved_quant_ids if not x.lot_id]
 
     def action_done(self, cr, uid, ids, context=None):
         """ Process completely the moves given as ids and if all moves are done, it will finish the picking.
