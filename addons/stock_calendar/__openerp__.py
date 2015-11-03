@@ -3,7 +3,6 @@
 
 {
     'name': 'Calendars on Orderpoints',
-    'version': '1.0',
     'summary': 'Calendars ',
     'description': """
         The stock_calendar module handles minimum stock rules (=orderpoints / reordering rules) differently by
@@ -37,21 +36,12 @@
         It is also possible to put exceptions for days when there is none.
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'images': [],
     'depends': ['purchase', 'resource'],
     'category': 'Warehouse Management',
-    'sequence': 16,
-    'demo': [
-
-    ],
     'data': [
         'views/stock_calendar_view.xml'
     ],
     'test': [
         'test/orderpoint_calendar.yml'
-    ],
-    'installable': True,
-    'application': False,
-    'auto_install': False,
-    'qweb': [],
+    ]
 }
