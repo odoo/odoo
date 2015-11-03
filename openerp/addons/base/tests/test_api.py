@@ -263,7 +263,20 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.models')
     def test_60_cache(self):
         """ Check the record cache behavior """
-        partners = self.env['res.partner'].search([('child_ids', '!=', False)])
+        Partners = self.env['res.partner']
+        pids = []
+        data = {
+            'partner One': ['Partner One - One', 'Partner One - Two'],
+            'Partner Two': ['Partner Two - One'],
+            'Partner Three': ['Partner Three - One'],
+        }
+        for p in data:
+            pids.append(Partners.create({
+                'name': p,
+                'child_ids': [(0, 0, {'name': c}) for c in data[p]],
+            }).id)
+
+        partners = Partners.search([('id', 'in', pids)])
         partner1, partner2 = partners[0], partners[1]
         children1, children2 = partner1.child_ids, partner2.child_ids
         self.assertTrue(children1)

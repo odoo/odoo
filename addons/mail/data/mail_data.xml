@@ -121,13 +121,15 @@
             <td style="padding:0px 10px 5px 5px;font-size: 14px;">
                 ${object.body | safe}
                 % if ctx.get('tracking'):
+                    <ul>
                     % for tracking in ctx['tracking']
-                        ${tracking[0]} : ${tracking[1]} -> ${tracking[2]}
+                        <li>${tracking[0]} : ${tracking[1]} -> ${tracking[2]}</li>
                     % endfor
+                    </ul>
                 % endif
             </td>
-        </tr>
-    </tbody></table>
+        </tr></tbody>
+    </table>
 </div>
 <div style="padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
     <table cellspacing="0" cellpadding="0" style="width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit">

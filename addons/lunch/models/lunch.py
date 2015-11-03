@@ -142,7 +142,7 @@ class LunchOrderLine(models.Model):
                               readonly=True, store=True)
     note = fields.Text('Note')
     price = fields.Float(related='product_id.price', readonly=True, store=True,
-                         digits_compute=dp.get_precision('Account'))
+                         digits=dp.get_precision('Account'))
     state = fields.Selection([('new', 'New'),
                               ('confirmed', 'Received'),
                               ('ordered', 'Ordered'),
@@ -192,7 +192,7 @@ class LunchProduct(models.Model):
     name = fields.Char('Product', required=True)
     category_id = fields.Many2one('lunch.product.category', 'Category', required=True)
     description = fields.Text('Description')
-    price = fields.Float('Price', digits_compute=dp.get_precision('Account'))
+    price = fields.Float('Price', digits=dp.get_precision('Account'))
     supplier = fields.Many2one('res.partner', 'Vendor')
 
 

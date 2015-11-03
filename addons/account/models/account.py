@@ -390,7 +390,7 @@ class AccountJournal(models.Model):
         if vals.get('type') in ('bank', 'cash'):
             # For convenience, the name can be inferred from account number
             if not vals.get('name') and 'bank_acc_number' in vals:
-                vals['name'] = _('Bank') + ' ' + vals['bank_acc_number']
+                vals['name'] = vals['bank_acc_number']
 
             # If no code provided, loop to find next available journal code
             if not vals.get('code'):

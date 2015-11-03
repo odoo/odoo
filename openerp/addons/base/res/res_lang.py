@@ -212,6 +212,11 @@ class lang(osv.osv):
         if isinstance(ids, (int, long)):
              ids = [ids]
 
+        if 'code' in vals:
+            for rec in self.browse(cr, uid, ids, context):
+                if rec.code != vals['code']:
+                    raise UserError(_("Language code cannot be modified."))
+
         if vals.get('active') == False:
             users = self.pool.get('res.users')
             for current_id in ids:

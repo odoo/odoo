@@ -738,9 +738,10 @@ var FieldPercentPie = common.AbstractField.extend({
                 .donut(true) 
                 .showLegend(false)
                 .showLabels(false)
-                .tooltips(false)
                 .color(['#7C7BAD','#DDD'])
                 .donutRatio(0.62);
+
+            chart.tooltip.enabled(false);
    
             d3.select(svg)
                 .datum([{'x': 'value', 'y': value}, {'x': 'complement', 'y': 100 - value}])
@@ -778,12 +779,13 @@ var FieldBarChart = common.AbstractField.extend({
                 .width(width)
                 .height(height)
                 .margin({top: 0, right: 0, bottom: 0, left: 0})
-                .tooltips(false)
                 .showValues(false)
                 .transition(350)
                 .showXAxis(false)
                 .showYAxis(false);
-   
+
+            chart.tooltip.enabled(false);
+
             d3.select(svg)
                 .datum([{key: 'values', values: value}])
                 .transition()
