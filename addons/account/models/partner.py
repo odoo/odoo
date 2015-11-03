@@ -380,7 +380,7 @@ class ResPartner(models.Model):
                     GROUP BY p.last_time_entries_checked
                 ) as s
                 WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
-            """ % (self.id,))
+            """, (self.id,))
         self.has_unreconciled_entries = self.env.cr.rowcount == 1
 
     @api.multi
