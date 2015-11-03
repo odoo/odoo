@@ -5,13 +5,11 @@
             <field name="name">Assigned</field>
             <field eval="10" name="probability"/>
             <field eval="12" name="sequence"/>
-            <field name="type">lead</field>
         </record>
         <record model="crm.stage" id="stage_portal_lead_recycle">
             <field name="name">To Recycle</field>
             <field eval="5" name="probability"/>
             <field eval="11" name="sequence"/>
-            <field name="type">lead</field>
         </record>
         <record id="email_template_lead_forward_mail" model="mail.template">
             <field name="name">Lead Mass Mail</field>
