@@ -1042,6 +1042,7 @@ class mail_thread(osv.AbstractModel):
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
         rcpt_tos = \
              ','.join([decode_header(message, 'Delivered-To'),
+                       decode_header(message, 'X-Original-To'),
                        decode_header(message, 'To'),
                        decode_header(message, 'Cc'),
                        decode_header(message, 'Resent-To'),
