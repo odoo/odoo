@@ -286,8 +286,7 @@ def html_translate(callback, value):
     trans = XMLTranslator(callback, 'html')
     wrapped = "<div>%s</div>" % encode(value)
     root = etree.fromstring(wrapped, etree.HTMLParser(encoding='utf-8'))
-    # html > body > div
-    trans.process(root[0][0])
+    trans.process(root[0][0])               # html > body > div
     return trans.get_done()[5:-6]           # remove tags <div> and </div>
 
 

@@ -723,7 +723,7 @@ var ActionManager = Widget.extend({
 
         return this.ir_actions_common({
             widget: function () {
-                return new ClientWidget(self, action);
+                return new ClientWidget(self, action, options);
             },
             action: action,
             klass: 'oe_act_client',

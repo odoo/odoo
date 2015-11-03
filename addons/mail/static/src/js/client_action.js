@@ -16,7 +16,6 @@ var Model = require('web.Model');
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 var session = require('web.session');
-var Sidebar = require('web.Sidebar');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -119,11 +118,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
     },
 
-    init: function(parent, action) {
+    init: function(parent, action, options) {
         this._super.apply(this, arguments);
         this.action_manager = parent;
         this.domain = [];
         this.action = action;
+        this.options = options || {};
         this.channels_scrolltop = {};
     },
 
@@ -138,23 +138,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         };
         var dataset = new data.DataSetSearch(this, 'mail.message');
         var view_id = (this.action && this.action.search_view_id && this.action.search_view_id[0]) || false;
-        var default_channel_id = this.action.context.active_id ||
+        var default_channel_id = this.options.active_id ||
+                                 this.action.context.active_id ||
                                  this.action.params.default_active_id ||
                                  'channel_inbox';
         this.searchview = new SearchView(this, dataset, view_id, {}, options);
         this.searchview.on('search_data', this, this.on_search);
-
-        this.sidebar = new Sidebar(this, {
-            sections: [
-                {name: 'action', label: _t('Action')},
-            ],
-            items: {
-                action: [
-                    {label: _t('Unsubscribe'), classname: 'o_mail_chat_button_unsubscribe', callback: this.on_click_button_unsubscribe},
-                    {label: _t('Settings'), classname: 'o_mail_chat_button_settings', callback: this.on_click_button_settings},
-                ],
-            },
-        });
 
         this.composer = new ChatComposer(this, {
             get_channel_info: function () {
@@ -169,13 +158,20 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$buttons.find('button').css({display:"inline-block"});
         this.$buttons.on('click', '.o_mail_chat_button_invite', this.on_click_button_invite);
         this.$buttons.on('click', '.o_mail_chat_button_detach', this.on_click_button_detach);
+        this.$buttons.on('click', '.o_mail_chat_button_unsubscribe', this.on_click_button_unsubscribe);
+        this.$buttons.on('click', '.o_mail_chat_button_settings', this.on_click_button_settings);
         this.$buttons.on('click', '.o_mail_toggle_channels', function () {
             self.$('.o_mail_chat_sidebar').slideToggle(200);
         });
 
         this.thread.on('redirect', this, this.on_redirect);
         this.thread.on('redirect_to_channel', this, function (channel_id) {
-            this.set_channel(chat_manager.get_channel(channel_id));
+            var channel = chat_manager.get_channel(channel_id);
+            if (channel.id === channel_id) {
+                this.set_channel(channel);
+            } else {
+                chat_manager.join_channel(channel_id);
+            }
         });
         this.thread.on('load_more_messages', this, this.load_more_messages);
         this.thread.on('mark_as_read', this, function (message_id) {
@@ -189,11 +185,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var def1 = this.thread.prependTo(this.$('.o_mail_chat_content'));
         var def2 = this.composer.appendTo(this.$('.o_mail_chat_content'));
         var def3 = this.searchview.appendTo($("<div>"));
-        var def4 = this.sidebar.appendTo($("<div>"));
 
         this.render_sidebar();
 
-        return $.when(def1, def2, def3, def4)
+        return $.when(def1, def2, def3)
             .then(this.set_channel.bind(this, chat_manager.get_channel(default_channel_id)))
             .then(function () {
                 chat_manager.bus.on('new_message', self, self.on_new_message);
@@ -219,7 +214,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 self.last_search_val = _.escape(request.term);
                 self.do_search_channel(self.last_search_val).done(function(result){
                     result.push({
-                        'label':  _.str.sprintf('<strong>'+_t("Create %s")+'</strong>', '<em>"'+self.last_search_val+'"</em>'),
+                        'label':  _.str.sprintf('<strong>'+_t("Create %s")+'</strong>', '<em>"#'+self.last_search_val+'"</em>'),
                         'value': '_create',
                     });
                     response(result);
@@ -301,15 +296,19 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         }
         var new_channel_scrolltop = this.channels_scrolltop[channel.id];
         this.channel = channel;
+
+        // Update control panel
         this.set("title", channel.name);
+        // Hide 'detach' button in static channels
         this.$buttons
             .find('.o_mail_chat_button_detach')
             .toggle(channel.type !== "static");
+        // Hide 'invite', 'unsubscribe' and 'settings' buttons in static channels and DM
         this.$buttons
-            .find('.o_mail_chat_button_invite')
-            .toggle(channel.type !== "dm" && channel.type !== 'static');
-
+            .find('.o_mail_chat_button_invite, .o_mail_chat_button_unsubscribe, .o_mail_chat_button_settings')
+            .toggle(channel.type !== "static" && channel.type !== "dm");
         this.update_cp();
+
         this.action.context.active_id = channel.id;
         this.action.context.active_ids = [channel.id];
 
@@ -320,7 +319,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             .addClass('o_active');
 
         this.$('.o_chat_composer').toggle(channel.type !== 'static');
-        this.sidebar.$el.toggle(channel.type !== 'static');
 
         return this.fetch_and_render_thread().then(function () {
             self.thread.scroll_to({offset: new_channel_scrolltop});
@@ -388,7 +386,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 $buttons: this.$buttons,
                 $searchview: this.searchview.$el,
                 $searchview_buttons: this.searchview.$buttons.contents(),
-                $sidebar: this.sidebar.$el,
             },
             searchview: this.searchview,
         });

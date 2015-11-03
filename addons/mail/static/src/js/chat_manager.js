@@ -9,7 +9,7 @@ var session = require('web.session');
 var web_client = require('web.web_client');
 
 var _t = core._t;
-var LIMIT = 20;
+var LIMIT = 100;
 var preview_msg_max_size = 50;
 
 var MessageModel = new Model('mail.message', session.context);
@@ -22,6 +22,7 @@ var channels = [];
 var emojis = [];
 var emoji_substitutions = {};
 var needaction_counter = 0;
+var discuss_ids = {};
 
 // Message and channel manipulation helpers
 //----------------------------------------------------------------------------------
@@ -376,6 +377,10 @@ var chat_manager = {
         return needaction_counter;
     },
 
+    get_discuss_ids: function () {
+        return discuss_ids;
+    },
+
     detach_channel: function (channel) {
         return ChannelModel.call("channel_minimize", [channel.uuid, true]);
     },
@@ -454,6 +459,10 @@ function init () {
         });
     });
 
+    var ir_model = new Model("ir.model.data");
+    var load_menu_id = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_menu_root_chat"]);
+    var load_action_id = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_action_client_chat"]);
+
     bus.on('notification', null, function (notification) {
         var model = notification[0][1];
         if (model === 'ir.needaction') {
@@ -498,7 +507,11 @@ function init () {
         }
     });
 
-    return $.when(load_channels, load_emojis).then(function () {
+    return $.when(load_menu_id, load_action_id, load_channels, load_emojis).then(function (menu_id, action_id) {
+        discuss_ids = {
+            menu_id: menu_id,
+            action_id: action_id,
+        };
         bus.start_polling();
         return chat_manager;
     });

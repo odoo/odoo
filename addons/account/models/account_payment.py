@@ -120,8 +120,8 @@ class account_register_payments(models.TransientModel):
         invoices = self.env[active_model].browse(active_ids)
         if any(invoice.state != 'open' for invoice in invoices):
             raise UserError(_("You can only register payments for open invoices"))
-        if any(inv.partner_id != invoices[0].partner_id for inv in invoices):
-            raise UserError(_("In order to pay multiple invoices at once, they must belong to the same partner."))
+        if any(inv.commercial_partner_id != invoices[0].commercial_partner_id for inv in invoices):
+            raise UserError(_("In order to pay multiple invoices at once, they must belong to the same commercial partner."))
         if any(MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type] for inv in invoices):
             raise UserError(_("You cannot mix customer invoices and vendor bills in a single payment."))
         if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
@@ -132,7 +132,7 @@ class account_register_payments(models.TransientModel):
             'amount': abs(total_amount),
             'currency_id': invoices[0].currency_id.id,
             'payment_type': total_amount > 0 and 'inbound' or 'outbound',
-            'partner_id': invoices[0].partner_id.id,
+            'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
         })
         return rec

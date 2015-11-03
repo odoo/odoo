@@ -23,6 +23,7 @@
                 <t t-set="channel_title">Channels</t>
             </t>
             <t t-call="mail.chat.SidebarItems">
+                <t t-set="display_hash">true</t>
                 <t t-set="input_placeholder">Add a channel</t>
             </t>
 
@@ -41,6 +42,7 @@
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="input_placeholder">Add a channel</t>
+                <t t-set="display_hash">true</t>
             </t>
         </div>
     </t>
@@ -76,6 +78,7 @@
             </div>
         </t>
         <div t-if="!disable_add_channel" class="o_mail_add_channel" t-attf-data-type="#{channel_type}">
+            <span t-if="display_hash">#</span>
             <input type="text" t-attf-placeholder="#{input_placeholder}"/>
         </div>
     </t>
@@ -84,8 +87,10 @@
     <t t-name="mail.chat.ControlButtons">
         <div>
             <button type="button" class="btn btn-primary btn-sm o_mail_toggle_channels visible-xs-inline" t-att-title='_t("Toggle Channels")'>Channels</button>
-            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_invite" t-att-title='_t("Invite people")'>Invite</button>
-            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_detach hidden-xs" t-att-title='_t("Detach the conversation")'>Detach</button>
+            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite" t-att-title='_t("Invite people")'>Invite</button>
+            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_detach hidden-xs" t-att-title='_t("Detach the conversation")'>Detach</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_unsubscribe" t-att-title='_t("Unsubscribe from channel")'>Unsubscribe</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_settings" t-att-title='_t("Open channel settings")'>Settings</button>
         </div>
     </t>
 
