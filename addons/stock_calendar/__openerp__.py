@@ -45,7 +45,9 @@
 
     ],
     'data': [
-        'stock_calendar_view.xml'
+        'views/stock_views.xml',
+        'views/procurement_views.xml',
+        'views/resource_views.xml',
     ],
     'test': [
         'test/orderpoint_calendar.yml'
