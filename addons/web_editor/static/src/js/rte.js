@@ -420,14 +420,10 @@ var RTE = Widget.extend({
         });
     },
 
-    saveElement: function ($el, context) {
-        // remove multi edition
-        if ($el.data('oe-model')) {
-            var key =  $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression');
-            if (this.__saved[key]) return true;
-            this.__saved[key] = true;
-        }
-        // escape text nodes for xml saving
+    /**
+     * Get HTML cloned element with text nodes escaped for XML storage
+     */
+    getEscapedElement: function($el) {
         var escaped_el = $el.clone();
         var to_escape = escaped_el.find('*').addBack();
         to_escape = to_escape.not(to_escape.filter('object,iframe,script,style,[data-oe-model][data-oe-model!="ir.ui.view"]').find('*').addBack());
@@ -436,7 +432,17 @@ var RTE = Widget.extend({
                 this.nodeValue = $('<div />').text(this.nodeValue).html();
             }
         });
-        var markup = escaped_el.prop('outerHTML');
+        return escaped_el;
+    },
+
+    saveElement: function ($el, context) {
+        // remove multi edition
+        if ($el.data('oe-model')) {
+            var key =  $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression');
+            if (this.__saved[key]) return true;
+            this.__saved[key] = true;
+        }
+        var markup = this.getEscapedElement($el).prop('outerHTML');
 
         return ajax.jsonRpc('/web/dataset/call', 'call', {
             model: 'ir.ui.view',
