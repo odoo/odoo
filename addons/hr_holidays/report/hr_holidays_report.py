@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import tools
-from openerp.osv import fields,osv
+from odoo import fields, models, tools
 
-class hr_holidays_remaining_leaves_user(osv.osv):
+
+class HrHolidaysRemainingLeavesUser(models.Model):
     _name = "hr.holidays.remaining.leaves.user"
     _description = "Total holidays by type"
     _auto = False
-    _columns = {
-        'name': fields.char('Employee'),
-        'no_of_leaves': fields.integer('Remaining leaves'),
-        'user_id': fields.many2one('res.users', 'User'),
-        'leave_type': fields.char('Leave Type'),
-        }
+
+    name = fields.Char('Employee')
+    no_of_leaves = fields.Integer('Remaining leaves')
+    user_id = fields.Many2one('res.users', 'User')
+    leave_type = fields.Char('Leave Type')
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'hr_holidays_remaining_leaves_user')

@@ -3,138 +3,102 @@
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 
-
-import datetime
-import logging
-import time
-
 from dateutil.relativedelta import relativedelta
 
-from openerp import tools
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-
-_logger = logging.getLogger(__name__)
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
-class hr_employee(osv.Model):
+class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    def _set_remaining_days(self, cr, uid, empl_id, name, value, arg, context=None):
-        if value:
-            employee = self.browse(cr, uid, empl_id, context=context)
-            diff = value - employee.remaining_leaves
-            type_obj = self.pool.get('hr.holidays.status')
-            holiday_obj = self.pool.get('hr.holidays')
+    remaining_leaves = fields.Float(compute='_compute_remaining_days', string='Remaining Legal Leaves', inverse='_inverse_remaining_days', help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave request. Total based on all the leave types without overriding limit.')
+    current_leave_state = fields.Selection([('draft', 'New'), ('confirm', 'Waiting Approval'),
+        ('refuse', 'Refused'), ('validate1', 'Waiting Second Approval'),
+        ('validate', 'Approved'), ('cancel', 'Cancelled')],
+        compute='_compute_leave_status', string="Current Leave Status")
+    current_leave_id = fields.Many2one('hr.holidays.status', compute='_compute_leave_status', string="Current Leave Type")
+    leave_date_from = fields.Date(compute='_compute_leave_status', string='From Date')
+    leave_date_to = fields.Date(compute='_compute_leave_status', string='To Date')
+    leaves_count = fields.Integer(compute='_compute_leaves_count', string='Number of Leaves')
+    show_leaves = fields.Boolean(compute='_compute_show_leaves', string="Able to see Remaining Leaves")
+    is_absent_totay = fields.Boolean(compute='_compute_absent_employee', search='_search_absent_employee', string="Absent Today")
+
+    def _remaining_leaves_count(self):
+        leaves = self.env['hr.holidays'].read_group([('state', '=', 'validate'),
+            ('holiday_status_id.limit', '=', False), ('employee_id', 'in', self.ids)],
+            ['number_of_days', 'employee_id'], ['employee_id'])
+        leaves = dict([(leave['employee_id'][0], leave['number_of_days']) for leave in leaves])
+        return {employee.id: leaves.get(employee.id, 0) for employee in self}
+
+    def _inverse_remaining_days(self):
+        if self.remaining_leaves:
             # Find for holidays status
-            status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
-            if len(status_ids) != 1 :
-                raise osv.except_osv(_('Warning!'),_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
-            status_id = status_ids and status_ids[0] or False
-            if not status_id:
+            status = self.env['hr.holidays.status'].search([('limit', '=', False)])
+            if len(status) != 1:
+                raise UserError(_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status)))
+            diff = self.remaining_leaves - self._remaining_leaves_count().get(self.id)
+            if diff < 0:
+                raise UserError(_('You cannot reduce validated allocation requests'))
+            elif diff == 0:
                 return False
-            if diff > 0:
-                leave_id = holiday_obj.create(cr, uid, {'name': _('Allocation for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
-            elif diff < 0:
-                raise osv.except_osv(_('Warning!'), _('You cannot reduce validated allocation requests'))
-            else:
-                return False
+            leave = self.env['hr.holidays'].create({'name': _('Allocation for %s') % self.name, 'employee_id': self.id, 'holiday_status_id': status.id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff})
             for sig in ('confirm', 'validate', 'second_validate'):
-                holiday_obj.signal_workflow(cr, uid, [leave_id], sig)
+                leave.signal_workflow(sig)
             return True
         return False
 
-    def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
-        cr.execute("""SELECT
-                sum(h.number_of_days) as days,
-                h.employee_id
-            from
-                hr_holidays h
-                join hr_holidays_status s on (s.id=h.holiday_status_id)
-            where
-                h.state='validate' and
-                s.limit=False and
-                h.employee_id in %s
-            group by h.employee_id""", (tuple(ids),))
-        res = cr.dictfetchall()
-        remaining = {}
-        for r in res:
-            remaining[r['employee_id']] = r['days']
-        for employee_id in ids:
-            if not remaining.get(employee_id):
-                remaining[employee_id] = 0.0
-        return remaining
+    def _compute_remaining_days(self):
+        remaining_leaves = self._remaining_leaves_count()
+        for employee in self:
+            employee.remaining_leaves = remaining_leaves[employee.id]
 
-    def _get_leave_status(self, cr, uid, ids, name, args, context=None):
-        holidays_obj = self.pool.get('hr.holidays')
-        holidays_id = holidays_obj.search(cr, uid,
-           [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')),
-           ('date_to','>=',time.strftime('%Y-%m-%d %H:%M:%S')),('type','=','remove'),('state','not in',('cancel','refuse'))],
-           context=context)
-        result = {}
-        for id in ids:
-            result[id] = {
-                'current_leave_state': False,
-                'current_leave_id': False,
-                'leave_date_from':False,
-                'leave_date_to':False,
-            }
-        for holiday in self.pool.get('hr.holidays').browse(cr, uid, holidays_id, context=context):
-            result[holiday.employee_id.id]['leave_date_from'] = holiday.date_from
-            result[holiday.employee_id.id]['leave_date_to'] = holiday.date_to
-            result[holiday.employee_id.id]['current_leave_state'] = holiday.state
-            result[holiday.employee_id.id]['current_leave_id'] = holiday.holiday_status_id.id
-        return result
+    @api.depends('current_leave_id', 'leave_date_from', 'leave_date_to')
+    def _compute_leave_status(self):
+        holidays = self.env['hr.holidays'].search([
+            ('date_from', '<=', fields.Datetime.now()),
+            ('date_to', '>=', fields.Datetime.now()), ('type', '=', 'remove'),
+            ('state', 'not in', ('cancel', 'refuse')),
+            ('employee_id', 'in', self.ids)])
+        for holiday in holidays:
+            employee = holiday.employee_id
+            employee.leave_date_from = holiday.date_from
+            employee.leave_date_to = holiday.date_to
+            employee.current_leave_state = holiday.state
+            employee.current_leave_id = holiday.holiday_status_id.id
 
-    def _leaves_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        leaves = self.pool['hr.holidays'].read_group(cr, uid, [
-            ('employee_id', 'in', ids),
-            ('holiday_status_id.limit', '=', False), ('state', '=', 'validate')], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
-        res.update(dict([(leave['employee_id'][0], leave['number_of_days']) for leave in leaves ]))
-        return res
+    def _compute_leaves_count(self):
+        remaining_leaves = self._remaining_leaves_count()
+        for employee in self.filtered(lambda e: e.id in remaining_leaves):
+            employee.leaves_count = remaining_leaves[employee.id]
 
-    def _show_approved_remaining_leave(self, cr, uid, ids, name, args, context=None):
-        if self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
-            return dict([(employee_id, True) for employee_id in ids])
-        return dict([(employee.id, True) for employee in self.browse(cr, uid, ids, context=context) if employee.user_id.id == uid])
+    def _compute_show_leaves(self):
+        if self.env['res.users'].browse(self.env.uid).has_group('base.group_hr_user'):
+            for employee in self:
+                employee.show_leaves = True
+        else:
+            for employee in self.filtered(lambda e: e.user_id == self.env.user):
+                employee.show_leaves = True
 
-    def _absent_employee(self, cr, uid, ids, field_name, arg, context=None):
-        today_date = datetime.datetime.utcnow().date()
-        today_start = today_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT) # get the midnight of the current utc day
-        today_end = (today_date + relativedelta(hours=23, minutes=59, seconds=59)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        data = self.pool['hr.holidays'].read_group(cr, uid,
-            [('employee_id', 'in', ids), ('state', 'not in', ['cancel', 'refuse']),
-             ('date_from', '<=', today_end), ('date_to', '>=', today_start), ('type', '=', 'remove')],
-            ['employee_id'], ['employee_id'], context=context)
-        result = dict.fromkeys(ids, False)
-        for d in data:
-            if d['employee_id_count'] >= 1:
-                result[d['employee_id'][0]] = True
-        return result
+    def _compute_absent_employee(self):
+        today_date = fields.Date.from_string(fields.Date.today())
+        today_start = fields.Datetime.to_string(today_date)
+        today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
+        leaves = self.env['hr.holidays'].read_group([
+            ('employee_id', 'in', self.ids),
+            ('state', 'not in', ['cancel', 'refuse']), ('type', '=', 'remove')],
+            ('date_from', '<=', today_end), ('date_to', '>=', today_start),
+            ['employee_id'], ['employee_id'])
+        leaves = dict([(leave['employee_id'][0], leave['employee_id_count']) for leave in leaves])
+        for employee in self:
+            employee.is_absent_totay = leaves.get(employee.id)
 
-    def _search_absent_employee(self, cr, uid, obj, name, args, context=None):
-        today_date = datetime.datetime.utcnow().date()
-        today_start = today_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT) # get the midnight of the current utc day
-        today_end = (today_date + relativedelta(hours=23, minutes=59, seconds=59)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        holiday_ids = self.pool['hr.holidays'].search_read(cr, uid, [
+    def _search_absent_employee(self, obj, name):
+        today_date = fields.Date.from_string(fields.Date.today())
+        today_start = fields.Datetime.to_string(today_date)
+        today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
+        holidays = self.env['hr.holidays'].search([
             ('state', 'not in', ['cancel', 'refuse']),
-            ('date_from', '<=', today_end),
-            ('date_to', '>=', today_start),
-            ('type', '=', 'remove')], ['employee_id'], context=context)
-        absent_employee_ids = [holiday['employee_id'][0] for holiday in holiday_ids if holiday['employee_id']]
-        return [('id', 'in', absent_employee_ids)]
-
-    _columns = {
-        'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave request. Total based on all the leave types without overriding limit.'),
-        'current_leave_state': fields.function(
-            _get_leave_status, multi="leave_status", string="Current Leave Status", type="selection",
-            selection=[('draft', 'New'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
-                       ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')]),
-        'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type", type='many2one', relation='hr.holidays.status'),
-        'leave_date_from': fields.function(_get_leave_status, multi='leave_status', type='date', string='From Date'),
-        'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),
-        'leaves_count': fields.function(_leaves_count, type='integer', string='Number of Leaves'),
-        'show_leaves': fields.function(_show_approved_remaining_leave, type='boolean', string="Able to see Remaining Leaves"),
-        'is_absent_totay': fields.function(_absent_employee, fnct_search=_search_absent_employee, type="boolean", string="Absent Today", default=False)
-    }
+            ('date_from', '<=', today_end), ('date_to', '>=', today_start),
+            ('type', '=', 'remove'), ('employee_id', '!=', False)])
+        return [('id', 'in', holidays.mapped('employee_id').ids)]

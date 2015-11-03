@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Graph report -->
         <record id="view_evaluation_report_graph" model="ir.ui.view">
@@ -98,18 +97,18 @@
                             <label for="number_of_days_temp" string="Duration"/>
                             <div>
                                 <div attrs="{'invisible': [('type', '=', 'add')]}">
-                                    <field name="date_from" on_change="onchange_date_from(date_to, date_from)" attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
-                                    <label string="-" class="oe_inline"/>
-                                    <field name="date_to" on_change="onchange_date_to(date_to, date_from)"  attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
+                                    <field name="date_from" attrs="{'required':[('type', '=', 'remove')]}" class="o_raw"/>
+                                    <label string="-" class="o_raw"/>
+                                    <field name="date_to" attrs="{'required':[('type', '=', 'remove')]}" class="o_raw"/>
                                 </div>
                                 <div>
-                                    <field name="number_of_days_temp" class="oe_inline"/> days
+                                    <field name="number_of_days_temp" class="o_raw"/> days
                                 </div>
                             </div>
                         </group>
                         <group>
-                            <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="base.group_hr_user" context="{'employee_id':employee_id}" />
-                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" on_change="onchange_employee(employee_id)" groups="base.group_hr_user"/>
+                            <field name="holiday_type" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="base.group_hr_user" context="{'employee_id':employee_id}" />
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','=','employee')]}"/>
                             <field name="department_id" groups="base.group_hr_user" attrs="{'readonly':['|','|' ,('type','=','add'),('holiday_type','=','category'),('state','=', 'validate')],'invisible':[('holiday_type','=','category')]}"/>
                             <field name="payslip_status" groups="base.group_hr_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
@@ -159,8 +158,8 @@
                     <field name="holiday_type"/>
                     <field name="holiday_status_id"/>
                     <field name="name" readonly="1"/>
-                    <field name="date_from" required="1" on_change="onchange_date_from(date_to, date_from)"/>
-                    <field name="date_to" required="1" on_change="onchange_date_to(date_to, date_from)"/>
+                    <field name="date_from" required="1"/>
+                    <field name="date_to" required="1"/>
                     <field name="number_of_days_temp" string="Allocated Days" sum="Remaining Days"/>
                     <field name="state"/>
                     <button name="toggle_payslip_status" field_name="payslip_status" type="object"
@@ -545,5 +544,4 @@
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
-    </data>
-</openerp>
+</odoo>

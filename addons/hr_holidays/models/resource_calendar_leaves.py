@@ -3,17 +3,11 @@
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 
-
-import logging
-
-from openerp.osv import fields, osv
-
-_logger = logging.getLogger(__name__)
+from odoo import fields, models
 
 
-class resource_calendar_leaves(osv.osv):
+class ResourceCalendarLeaves(models.Model):
     _inherit = "resource.calendar.leaves"
     _description = "Leave Detail"
-    _columns = {
-        'holiday_id': fields.many2one("hr.holidays", "Leave Request"),
-    }
+
+    holiday_id = fields.Many2one("hr.holidays", "Leave Request")
