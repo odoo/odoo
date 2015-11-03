@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from odoo import api, fields, models
 
 
@@ -13,17 +12,6 @@ class ResourceCalendarLeaves(models.Model):
 
 class ResourceCalendar(models.Model):
     _inherit = "resource.calendar"
-
-    next_day = fields.Datetime(compute='_compute_calculate_next_day', string='Next day it should trigger')
-
-    #Could remove this as it does not help a lot
-    @api.multi
-    def _compute_calculate_next_day(self, fields, names):
-        res = {}
-        for calend in self:
-            sched_date = calend.id.schedule_days_get_date(1, day_date=datetime.utcnow(), compute_leaves=True)
-            res[calend.id] = fields.Datetime.to_string(sched_date)
-        return res
 
     # Keep as it takes into account times
     @api.multi
