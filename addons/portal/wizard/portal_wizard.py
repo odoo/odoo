@@ -140,8 +140,8 @@ class wizard_user(osv.osv_memory):
                     wizard_user.user_id.write({'active': True, 'groups_id': [(4, portal.id)]})
                     # prepare for the signup process
                     wizard_user.user_id.partner_id.signup_prepare()
+                    self._send_email(cr, uid, wizard_user.id, context)
                 wizard_user.refresh()
-                self._send_email(cr, uid, wizard_user.id, context)
             else:
                 # remove the user (if it exists) from the portal group
                 if wizard_user.user_id and (portal in wizard_user.user_id.groups_id):

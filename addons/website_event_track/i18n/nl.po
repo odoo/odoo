@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 14:13+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-10-29 14:42+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +53,7 @@ msgstr "<span id=\"search_number\">0</span> gevonden"
 msgid ""
 "<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
 "                                    different topics. Most topics are accepted in lightning talks."
-msgstr ""
+msgstr "<strong>Lightning Talks</strong>. Dit zijn 30 minuten durende presentaties over veel\nverschillende onderwerpen. De meeste onderwerpen zijn geaccepteerd in lightning talks."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
@@ -65,7 +65,7 @@ msgstr "<strong>Deelnemen op Twitter</strong>"
 msgid ""
 "<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 "                                    alocated in slots of 60 minutes."
-msgstr ""
+msgstr "<strong>Reguliere gesprekken</strong>. Dit zijn standaard gesprekken met dia's,\ntoegewezen in blokken van 60 minuten."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
@@ -78,6 +78,11 @@ msgstr "Een technische uitleg van Odoo als een CMS en een eCommerce platform voo
 #: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid "About The Author"
 msgstr "Over de auteur"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
+msgid "Action Needed"
+msgstr "Vereist actie"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -120,7 +125,7 @@ msgstr "Toepassing"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_allowed_track_tag_ids
 msgid "Available Track Tags"
-msgstr ""
+msgstr "Beschikbare parallelsessie labels"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type1
@@ -141,7 +146,7 @@ msgstr "Geannuleerd"
 #: model:ir.actions.act_window,help:website_event_track.action_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid "Click to add a track."
-msgstr ""
+msgstr "Klik om een parallelsessie toe te voegen."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_color
@@ -361,7 +366,7 @@ msgstr "Hoe automatische testen ontwikkelen in de Odoo web client."
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track3
 msgid "How to develop real time apps, the website live chat module explained."
-msgstr ""
+msgstr "Hoe real-time apps te ontwikkelen, de website live chat module uitleg"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track2
@@ -385,10 +390,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_image
@@ -527,16 +536,6 @@ msgid "Morning break"
 msgstr "Ochtendpauze"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
-msgid "Need Action"
-msgstr "Vereist actie"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
-msgid "Need Action Counter"
-msgstr "Teller vereiste acties"
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
 msgid "New Certification Program (valid from Oct. 2013)."
 msgstr "Nieuw certificeringsprogramma (geldig vanaf Okt. 2013)."
@@ -549,18 +548,18 @@ msgstr "Nieuwe Paypal modules (portaal, afhandeling, termijnen)"
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
 msgid "New Track"
-msgstr ""
+msgstr "Nieuwe parallelsessie"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_event_track
 msgid "New Track Created"
-msgstr ""
+msgstr "Nieuwe parallelsessie aangemaakt"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:79
 #, python-format
 msgid "New Track Proposal"
-msgstr ""
+msgstr "Nieuwe parallelsessie voorgesteld"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:184
@@ -575,9 +574,14 @@ msgid "No tracks found!"
 msgstr "Geen parallelsessies gevonden!"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr "Aantel vereiste actie berichten"
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread_counter
@@ -702,7 +706,7 @@ msgid "Responsible"
 msgstr "Verantwoordelijke"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8620
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8532
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr "Zaal"
@@ -716,7 +720,7 @@ msgstr "Reeks"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_show_tracks
 msgid "Show Tracks on Website"
-msgstr ""
+msgstr "Toon parallelsessies op website"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type2
@@ -852,7 +856,7 @@ msgstr "De kunst van een Odoo demo maken."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "De volledige URL om het document te kunnen raadplegen via de website."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track29
@@ -902,7 +906,7 @@ msgstr "Parallelsessie omschrijving"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
 msgid "Track Location"
-msgstr ""
+msgstr "Parallelsessie locatie"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag
@@ -927,21 +931,21 @@ msgstr "Parallelsessies"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_show_track_proposal
 msgid "Tracks Proposals"
-msgstr ""
+msgstr "Parallelsessie voorstellen"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid ""
 "Tracks define the agenda of your event. These can be a talk, a round table, "
 "a meeting, etc."
-msgstr ""
+msgstr "Parallelsessies definiëren de agenda van uw evenement. Deze kunnen een babbel zijn, een ronde tafel, een meeting, etc."
 
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track
 msgid ""
 "Tracks define the agenda of your event. These can bea talk, a round table, a"
 " meeting, etc."
-msgstr ""
+msgstr "Parallelsessies definiëren de agenda van uw evenement. Deze kunnen een babbel zijn, een ronde tafel, een meeting, etc."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_unread
@@ -1038,7 +1042,7 @@ msgstr "Uw telefoon"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Inspiring Business Talk"
-msgstr ""
+msgstr "bv. inspirerende zakelijke babbels"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor

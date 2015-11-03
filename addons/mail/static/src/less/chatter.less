@@ -29,6 +29,8 @@
 
             .o_composer_input {
                 width: 100%;
+                .box-sizing(content-box);
+                resize: vertical;
                 margin-bottom: 5px;
             }
         }
@@ -42,7 +44,7 @@
 .o_followers {
     float: right;
     @media (max-width: @screen-xs-max) {
-        display: none; // Hide the followers in mobile
+        display: none !important; // Hide the followers in mobile
     }
 
     .o_followers_actions {

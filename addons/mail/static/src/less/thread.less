@@ -44,6 +44,9 @@
             opacity: @mail-thread-side-date-opacity;
         }
 
+        .o_mail_redirect {
+            cursor: pointer;
+        }
 
         .o_thread_message_core {
             .o-flex(1, 1, auto);
@@ -52,8 +55,9 @@
                 font-style: italic;
             }
 
-            .o_mail_redirect {
-                cursor: pointer;
+            .o_mail_notification {
+                font-style: italic;
+                color: gray;
             }
 
             > p {
@@ -68,6 +72,9 @@
                 .text-muted();
                 .o_mail_mailto, .o_mail_mailto:hover {
                     .text-muted();
+                }
+                .o_channel_redirect {
+                    color: gray;
                 }
             }
 

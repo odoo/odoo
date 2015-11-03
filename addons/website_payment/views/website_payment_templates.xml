@@ -36,8 +36,8 @@
                         </div>
                     </div>
                     <h1>Payment Methods</h1>
-                    <h4>Add a new payment method:</h4>
-                    <div class="row">
+                    <h4 t-if="acquirers">Add a new payment method:</h4>
+                    <div t-if="acquirers" class="row">
                         <div class="col-md-6">
                             <div t-if="error_message" class="alert alert-danger">
                               <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>

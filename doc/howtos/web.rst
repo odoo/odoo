@@ -1973,7 +1973,7 @@ Read-Write Field
 Read-only fields, which only display content and don't allow the
 user to modify it can be useful, but most fields in Odoo also allow editing.
 This makes the field classes more complicated, mostly because fields are
-supposed to handle both and editable and non-editable mode, those modes are
+supposed to handle both editable and non-editable mode, those modes are
 often completely different (for design and usability purpose) and the fields
 must be able to switch between modes at any moment.
 
@@ -2216,7 +2216,7 @@ the most useful being:
                 }
             });
 
-            instance.web.form.custom_widgets.add('coordinates', 'local.WidgetCoordinates');
+            instance.web.form.custom_widgets.add('coordinates', 'instance.oepetstore.WidgetCoordinates');
 
         .. code-block:: xml
 
@@ -2280,13 +2280,13 @@ the most useful being:
                 },
             });
 
-            instance.web.form.custom_widgets.add('coordinates', 'local.WidgetCoordinates');
+            instance.web.form.custom_widgets.add('coordinates', 'instance.oepetstore.WidgetCoordinates');
 
         .. code-block:: xml
 
             <t t-name="WidgetCoordinates">
                 <iframe width="400" height="300"
-                    t-att-src="https://maps.google.com/?ie=UTF8&amp;ll={{latitude}},{{longitude}}&amp;output=embed">
+                    t-attf-src="https://maps.google.com/?ie=UTF8&amp;ll={{latitude}},{{longitude}}&amp;output=embed">
                 </iframe>
                 <button>Get My Current Coordinate</button>
             </t>

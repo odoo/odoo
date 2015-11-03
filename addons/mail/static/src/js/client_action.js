@@ -156,7 +156,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             },
         });
 
-        this.composer = new ChatComposer(this);
+        this.composer = new ChatComposer(this, {
+            get_channel_info: function () {
+                return { channel_id: self.channel.id };
+            },
+        });
         this.thread = new ChatThread(this, {
             no_content_helper: this.action.help,
         });
@@ -165,8 +169,14 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$buttons.find('button').css({display:"inline-block"});
         this.$buttons.on('click', '.o_mail_chat_button_invite', this.on_click_button_invite);
         this.$buttons.on('click', '.o_mail_chat_button_detach', this.on_click_button_detach);
+        this.$buttons.on('click', '.o_mail_toggle_channels', function () {
+            self.$('.o_mail_chat_sidebar').slideToggle(200);
+        });
 
         this.thread.on('redirect', this, this.on_redirect);
+        this.thread.on('redirect_to_channel', this, function (channel_id) {
+            this.set_channel(chat_manager.get_channel(channel_id));
+        });
         this.thread.on('load_more_messages', this, this.load_more_messages);
         this.thread.on('mark_as_read', this, function (message_id) {
             chat_manager.mark_as_read(message_id);
@@ -292,10 +302,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var new_channel_scrolltop = this.channels_scrolltop[channel.id];
         this.channel = channel;
         this.set("title", channel.name);
-        this.$buttons.toggle(channel.type !== "static");
+        this.$buttons
+            .find('.o_mail_chat_button_detach')
+            .toggle(channel.type !== "static");
         this.$buttons
             .find('.o_mail_chat_button_invite')
-            .toggle(channel.type !== "dm");
+            .toggle(channel.type !== "dm" && channel.type !== 'static');
 
         this.update_cp();
         this.action.context.active_id = channel.id;
@@ -315,6 +327,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             if (!config.device.touch) {
                 self.composer.focus();
             }
+            if (config.device.size_class === config.device.SIZES.XS) {
+                self.$('.o_mail_chat_sidebar').hide();
+            }
+
             self.action_manager.do_push_state({
                 action: self.action.id,
                 active_id: self.channel.id,
@@ -332,6 +348,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                     var msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), channel.name);
                     self.do_notify(_t("Unsubscribed"), msg);
                 }
+                delete self.channels_scrolltop[channel.id];
             });
     },
 
@@ -339,12 +356,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         return {
             display_load_more: !chat_manager.all_history_loaded(this.channel, this.domain),
             display_needactions: this.channel.display_needactions,
+            channel_id: this.channel.id,
         };
     },
 
     fetch_and_render_thread: function () {
         var self = this;
-        return chat_manager.fetch(this.channel, this.domain).then(function(result) {
+        return chat_manager.get_messages({channel_id: this.channel.id, domain: this.domain}).then(function(result) {
             self.thread.render(result, self.get_thread_rendering_options());
         });
     },

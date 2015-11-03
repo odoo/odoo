@@ -148,8 +148,9 @@ class AccountInvoice(models.Model):
                     continue
                 # get the payment value in invoice currency
                 if payment.currency_id and amount_currency != 0:
-                    amount_to_show = amount_currency
+                    amount_to_show = -amount_currency
                 else:
+                    self.with_context(date=payment.date)
                     amount_to_show = payment.company_id.currency_id.compute(-amount, self.currency_id)
                 info['content'].append({
                     'name': payment.name,

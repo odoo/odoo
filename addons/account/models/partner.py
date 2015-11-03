@@ -402,7 +402,7 @@ class ResPartner(models.Model):
     @api.one
     def _get_company_currency(self):
         if self.company_id:
-            self.currency_id = self.company_id.currency_id
+            self.currency_id = self.sudo().company_id.currency_id
         else:
             self.currency_id = self.env.user.company_id.currency_id
 

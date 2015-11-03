@@ -225,11 +225,19 @@
                           Your transaction is waiting confirmation.
                           <span t-if='tx_post_msg' t-raw="tx_post_msg"/>
                       </div>
+                      <div class="alert alert-warning alert-dismissable" t-if="message==4 and quotation.state != 'sent'">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                          This order has already been 
+                            <t t-if="quotation.state=='cancel'">cancelled</t>
+                            <t t-if="quotation.state not in ('cancel','draft')">validated</t>
+                          ! You can <a href="#discussion">contact us</a> for
+                          any question.
+                      </div>
 
                       <!-- modal relative to the actions Accept/Reject/Cancel -->
                       <div class="modal fade" id="modalaccept" role="dialog" aria-hidden="true">
                         <div class="modal-dialog" t-if="not quotation.require_payment and not need_payment">
-                           <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" class="js_accept_json modal-content js_website_submit_form">
+                           <form id="accept" method="POST" t-att-data-order-id="quotation.id" t-att-data-token="quotation.access_token" class="js_accept_json modal-content js_website_submit_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>

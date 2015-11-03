@@ -197,6 +197,7 @@ class SaleOrder(models.Model):
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
+            'note': self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note,
         }
 
         if self.partner_id.user_id:
@@ -228,8 +229,8 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
-        journal_ids = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.company_id.id)], limit=1)
-        if not journal_ids:
+        journal_id = self.env['account.invoice'].default_get(['journal_id'])['journal_id']
+        if not journal_id:
             raise UserError(_('Please define an accounting sale journal for this company.'))
         invoice_vals = {
             'name': self.client_order_ref or '',
@@ -238,7 +239,7 @@ class SaleOrder(models.Model):
             'reference': self.client_order_ref or self.name,
             'account_id': self.partner_invoice_id.property_account_receivable_id.id,
             'partner_id': self.partner_invoice_id.id,
-            'journal_id': journal_ids[0].id,
+            'journal_id': journal_id,
             'currency_id': self.pricelist_id.currency_id.id,
             'comment': self.note,
             'payment_term_id': self.payment_term_id.id,
@@ -498,7 +499,6 @@ class SaleOrderLine(models.Model):
             line.price_reduce = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
     @api.multi
-    @api.onchange('order_id', 'product_id')
     def _compute_tax_id(self):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
@@ -714,8 +714,10 @@ class SaleOrderLine(models.Model):
             name += '\n' + product.description_sale
         vals['name'] = name
 
+        self._compute_tax_id()
+
         if self.order_id.pricelist_id and self.order_id.partner_id:
-            vals['price_unit'] = product.price
+            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price(product.price, product.taxes_id, self.tax_id)
         self.update(vals)
         return {'domain': domain}
 
@@ -733,7 +735,7 @@ class SaleOrderLine(models.Model):
                 pricelist=self.order_id.pricelist_id.id,
                 uom=self.product_uom.id
             )
-            self.price_unit = product.price
+            self.price_unit = self.env['account.tax']._fix_tax_included_price(product.price, product.taxes_id, self.tax_id)
 
     @api.multi
     def unlink(self):

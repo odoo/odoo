@@ -77,7 +77,7 @@ class sale_quote(http.Controller):
                     context=render_ctx)
         return request.website.render('website_quote.so_quotation', values)
 
-    @http.route(['/quote/accept/<int:order_id>'], type='http', auth="public", website=True, methods=['POST'])
+    @http.route(['/quote/accept'], type='json', auth="public", website=True)
     def accept(self, order_id, token=None, signer=None, sign=None, **post):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
@@ -85,6 +85,8 @@ class sale_quote(http.Controller):
             return request.website.render('website.404')
         if order.require_payment:
             return request.website.render('website.404')
+        if order.state != 'sent':
+            return False
         attachments=sign and [('signature.png', sign.decode('base64'))] or []
         order_obj.action_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
         message = _('Order signed by %s') % (signer,)
@@ -97,6 +99,8 @@ class sale_quote(http.Controller):
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
             return request.website.render('website.404')
+        if order.state != 'sent':
+            return werkzeug.utils.redirect("/quote/%s/%s?message=4" % (order_id, token))
         request.registry.get('sale.order').action_cancel(request.cr, SUPERUSER_ID, [order_id])
         message = post.get('decline_message')
         if message:

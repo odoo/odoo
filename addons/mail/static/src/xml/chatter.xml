@@ -52,11 +52,6 @@
             </t>
         </t>
 
-        <!-- Replace the input by a textarea -->
-        <t t-jquery=".o_composer_input" t-operation="replace">
-            <textarea class="o_composer_input" placeholder="Write something"/>
-        </t>
-
         <!-- Add a button to open the full composer dialog -->
         <t t-jquery=".o_composer_buttons" t-operation="append">
             <button class="btn btn-sm btn-icon fa fa-pencil-square-o o_composer_button_full_composer" type="button"/>

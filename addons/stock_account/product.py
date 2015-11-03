@@ -107,7 +107,6 @@ class product_template(osv.osv):
         """ Changes the Standard Price of Product and creates an account move accordingly."""
         location_obj = self.pool.get('stock.location')
         move_obj = self.pool.get('account.move')
-        move_line_obj = self.pool.get('account.move.line')
         if context is None:
             context = {}
         user_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
@@ -126,35 +125,31 @@ class product_template(osv.osv):
                     qty = prod_variant.qty_available
                     if qty:
                         # Accounting Entries
-                        move_vals = {
-                            'journal_id': datas['stock_journal'],
-                            'company_id': location.company_id.id,
-                        }
-                        move_id = move_obj.create(cr, uid, move_vals, context=context)
-    
-                        if diff*qty > 0:
-                            amount_diff = qty * diff
-                            debit_account_id = datas['stock_account_input']
-                            credit_account_id = datas['property_stock_valuation_account_id']
+                        amount_diff = abs(diff * qty)
+                        if diff * qty > 0:
+                            debit_account_id = datas['expense'].id
+                            credit_account_id = datas['stock_valuation'].id
                         else:
-                            amount_diff = qty * -diff
-                            debit_account_id = datas['property_stock_valuation_account_id']
-                            credit_account_id = datas['stock_account_output']
-    
-                        move_line_obj.create(cr, uid, {
-                                        'name': _('Standard Price changed'),
+                            debit_account_id = datas['stock_valuation'].id
+                            credit_account_id = datas['expense'].id
+
+                        lines = [(0, 0, {'name': _('Standard Price changed'),
                                         'account_id': debit_account_id,
                                         'debit': amount_diff,
                                         'credit': 0,
-                                        'move_id': move_id,
-                                        }, context=context)
-                        move_line_obj.create(cr, uid, {
+                                        }),
+                                 (0, 0, {
                                         'name': _('Standard Price changed'),
                                         'account_id': credit_account_id,
                                         'debit': 0,
                                         'credit': amount_diff,
-                                        'move_id': move_id
-                                        }, context=context)
+                                        })]
+                        move_vals = {
+                            'journal_id': datas['stock_journal'].id,
+                            'company_id': location.company_id.id,
+                            'line_ids': lines,
+                        }
+                        move_id = move_obj.create(cr, uid, move_vals, context=context)
                         move_obj.post(cr, uid, [move_id], context=context)
             self.write(cr, uid, rec_id, {'standard_price': new_price})
         return True

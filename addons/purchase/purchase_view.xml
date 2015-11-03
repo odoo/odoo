@@ -200,7 +200,7 @@
                                     <field name="qty_invoiced" invisible="not context.get('show_purchase', False)"/>
                                     <field name="product_uom" groups="product.group_uom"/>
                                     <field name="price_unit"/>
-                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]"/>
+                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                                 <form string="Purchase Order Line">
@@ -505,7 +505,7 @@
                     </div>
                 </div>
                 <field name="uom_po_id" position="after">
-                    <field name="purchase_method" widget="radio" groups="base.group_no_one"/>
+                    <field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"/>
                 </field>
             </field>
         </record>

@@ -59,7 +59,7 @@
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
-                      "from_currency": "website.currency_id",
+                      "from_currency": "product.company_id.currency_id",
                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                    }'/>
                   <span class="oe_price" style="white-space: nowrap;"
@@ -67,7 +67,7 @@
                     t-field="product.price"
                     t-field-options='{
                        "widget": "monetary",
-                       "from_currency": "website.currency_id",
+                       "from_currency": "product.company_id.currency_id",
                        "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                    }'/>
                 </td>
@@ -107,7 +107,7 @@
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
-                      "from_currency": "website.currency_id",
+                      "from_currency": "product.company_id.currency_id",
                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                    }'/><br/>
                   <span class="oe_price" style="white-space: nowrap;"

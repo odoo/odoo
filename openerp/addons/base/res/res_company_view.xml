@@ -20,9 +20,6 @@
                             <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
                         </h3>
                     </div>
-                    <group col="4">
-                        <field name="parent_id"  groups="base.group_multi_company"/>
-                    </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <group>
@@ -45,6 +42,7 @@
                                     <field name="email"/>
                                     <field name="vat"/>
                                     <field name="company_registry"/>
+                                    <field name="parent_id"  groups="base.group_multi_company"/>
                                 </group>
                             </group>
                         </page>

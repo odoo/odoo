@@ -2046,7 +2046,7 @@ msgid ""
 "------------------------------------------------------------------------------------------------------------------\n"
 "    Reporting / Accounting / **Follow-ups Analysis\n"
 "\n"
-msgstr ""
+msgstr "\nMódulo para automatizar cartas de facturas impagadas, con rellamadas multi-nivel\n=========================================================================\n\nPuede definir los múltiples niveles de rellamada en el menú:\nYou can define your multiple levels of recall through the menu:\n---------------------------------------------------------------\n    Configuracion / Seguimiento / Niveles de seguimiento\n    \nUna vez esté definido puede imprimir las rellamadas automáticamente todos los días simplemente haciendo click en el menú:\n------------------------------------------------------------------------------------------------------\n    Seguimiento de pagos / Enviar emails y cartas\n\nGenerará un PDF / enviar emails / establecer diferentes acciones acordes a los diferentes niveles o rellamadas definidos. Puede definir diferentes políticas para diferentes compañías.\n\nNote que si desea verificar el nivel de seguimiento para un cliente/entrada contable puede hacerlo desde el menú:\n------------------------------------------------------------------------------------------------------------------\n    Informes / Contabilidad / **Análisis de seguimiento\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -2097,7 +2097,7 @@ msgid ""
 "description provided by the CODA configuration tables is based upon the CODA\n"
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
-msgstr ""
+msgstr "\nMódulo para importar extractos de cuenta CODA\n=============================================\n\nSe puede utilizar para archivos planos CODA en formato V2 de las cuentas bancarias belgas\n-----------------------------------------------------------------------------------------\n     * Soporte CODA v1.\n     * Soporte v2.2 CODA.\n     * Soporte de Moneda Extranjera.\n     * Soporte para todos los tipos de registro de datos (0, 1, 2, 3, 4, 8, 9).\n     * De análisis y registro de todos los códigos de transacción y formato estructurado\n       Comunicaciones.\n     * La asignación automática Diario Financiero a través de los parámetros de configuración de CODA.\n     * Soporte para múltiples revistas por Número de cuenta bancaria.\n     * Soporte para múltiples cuentas de diferentes cuentas bancarias en un solo\n       Archivo de CODA.\n     * Soporte para 'analizar sólo' Cuentas bancarias CODA (definida como type = 'info' en\n       los registros de configuración de cuenta bancaria CODA).\n     * Multi-idioma CODA análisis, el análisis de datos de configuración proporcionados por ES,\n       NL, FR.\n\nLa lectura mecánica Archivos CODA se analiza y se almacena en formato legible para las personas en\nDeclaraciones CODA Banco. También extractos de cuenta se generan contienen un subconjunto de\nla información Coda (sólo aquellas líneas de transacción que son requeridos para la\ncreación de los registros de Contabilidad Financiera). La Declaración de CODA Bank es un\nobjeto, por tanto, queda una representación fidedigna del original 'sólo lectura',\nArchivo CODA mientras que el estado de cuenta bancario conseguirá modificado según se requiera por la contabilidad\nlos procesos de negocio.\n\nCODA Cuentas bancarias configurados como tipo 'Info' sólo generará declaraciones CODA Banco.\n\nUna eliminación de un objeto en los resultados del procesamiento de CODA en la eliminación de la\nobjetos asociados. La eliminación de un archivo que contiene múltiples CODA Banco\nFormularon también eliminará dichos estados asociados.\n\nEn lugar de un ajuste manual de los estados de cuenta bancarios generados, también puede\nreimportación del CODA después de actualizar la base de datos de OpenERP con la información que\nfaltaba para permitir la conciliación automática.\n\nObservación sobre el soporte CODA V1:\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nEn algunos casos, un código de transacción, categoría transacción o estructurada\ncódigo de comunicación se ha dado un nuevo o más clara descripción de CODA V2.The\ndescripción proporcionada por las tablas de configuración de CODA se basa en la CODA\nEspecificaciones V2.2.\nSi es necesario, puede ajustar manualmente las descripciones en el menú de configuración de CODA.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -4868,12 +4868,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_report
 msgid "Account Report"
-msgstr ""
+msgstr "Informe financiero"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_reports
 msgid "Account Reports"
-msgstr ""
+msgstr "Informes de cuentas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_cash_basis
@@ -4904,7 +4904,7 @@ msgstr "Tests de consistencia de contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports
 msgid "Accounting Reports"
-msgstr ""
+msgstr "Informes contables"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant
@@ -5901,7 +5901,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr ""
+msgstr "Bélgica - Importar extractos bancarios CODA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
@@ -6795,7 +6795,7 @@ msgstr "Comprador de componentes"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_compute
 msgid "Compute"
-msgstr ""
+msgstr "Calcular"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -7691,7 +7691,7 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr ""
+msgstr "Estimado Señor / Señora,\n\nNuestros registros indican que algunos de los pagos en su cuenta todavía debe. Encuentre detalles a continuación.\nSi ya se ha pagado la cantidad, por favor ignore este aviso. De lo contrario, por favor enviar la cantidad total se indica a continuación.\nSi tiene cualquier pregunta relacionada con su cuenta, por favor póngase en contacto con nosotros.\n\nGracias de antemano por su colaboración.\nAtentamente,"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -11632,13 +11632,13 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Misc"
-msgstr ""
+msgstr "Misc."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Varios"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -12509,7 +12509,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_diagram
 msgid "OpenERP Web Diagram"
-msgstr ""
+msgstr "Diagrama para web"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
@@ -12801,14 +12801,14 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "Partner Tag"
-msgstr ""
+msgstr "Etiqueta de empresa"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model:ir.model,name:base.model_res_partner_category
 #: model:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Partner Tags"
-msgstr ""
+msgstr "Etiquetas de empresa"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_title_form
@@ -12899,7 +12899,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_followup
 msgid "Payment Follow-up Management"
-msgstr ""
+msgstr "Gestión de seguimientos de pago"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment
@@ -13202,7 +13202,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_print
 msgid "Print Invoice"
-msgstr ""
+msgstr "Imprimir factura"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_print_docsaway
@@ -15293,7 +15293,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_category_id
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 msgid "Tags"
-msgstr ""
+msgstr "Etiquetas"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form

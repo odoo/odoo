@@ -1883,7 +1883,7 @@ msgstr "Modelo del recurso seguido"
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_res_model
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
-msgstr ""
+msgstr "Modelo al que aplica el subtipo. Si no está establecido, este subtipo aplica a todos los modelos."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -1911,7 +1911,7 @@ msgstr "Nombre obtenido del documento relacionado."
 msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
-msgstr ""
+msgstr "Nombre a usar para el archivo del informe generado (se pueden utilizar aquí expresiones de campos)\nLa extensión puede ser omitida y se rellenará automáticamente desde el tipo de informe."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction
@@ -2113,7 +2113,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
 #: model:ir.model.fields,field_description:mail.field_res_users_opt_out
 msgid "Opt-Out"
-msgstr ""
+msgstr "No acepta recibir mensajes"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_force_thread_id
@@ -2123,7 +2123,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr ""
+msgstr "ID opcional de un hilo (registro) al que todos los mensajes entrantes serán adjuntados, incluso si no fueron respuestas del mismo. Si se establece, se deshabilitará completamente la creación de nuevos registros."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_mail_server_id
@@ -2131,7 +2131,7 @@ msgstr ""
 msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
-msgstr ""
+msgstr "Servidor de salida preferido opcional. Si no está establecido, se usará el de mayor prioridad."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_report_template
@@ -2237,7 +2237,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:35
@@ -2280,19 +2280,19 @@ msgstr "Complete por favor la información del contacto"
 #: code:addons/mail/static/src/js/many2many_tags_email.js:68
 #, python-format
 msgid "Please complete partner's informations and Email"
-msgstr ""
+msgstr "Por favor rellene la información del contacto y su Email"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Please set the Base Model before setting the action details."
-msgstr ""
+msgstr "Establezca por favor el modelo base antes de establecer los detalles de la acción"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/composer.js:252
 #, python-format
 msgid "Please, wait while the file is uploading."
-msgstr ""
+msgstr "Por favor, espere mientras el archivo se sube."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_contact
@@ -2426,7 +2426,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_partner_id
 msgid "Related Partner"
-msgstr ""
+msgstr "Partner Relacionado"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_relation_field
@@ -2472,7 +2472,7 @@ msgstr "Responder A"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_report_name
 #: model:ir.model.fields,field_description:mail.field_mail_template_report_name
 msgid "Report Filename"
-msgstr ""
+msgstr "Fichero del Informe"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -2540,7 +2540,7 @@ msgstr "Grupos de busqueda"
 msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
-msgstr ""
+msgstr "Seleccione el campo objetivo del modelo de documentado relacionado.\nSi es un campo de asociación, podrá seleccionar un campo objetivo en el destino de la asociación."
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -2655,7 +2655,7 @@ msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "Imagen de tamaño pequeño de este contacto. Se redimensiona automáticamente a 64x64 px, con el ratio de aspecto preservado. Use este campo donde se requiera una imagen pequeña."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_small
@@ -2668,7 +2668,7 @@ msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "Foto pequeña del grupo. Automáticamente se redimensionará a 64x64px, manteniendo el ratio de aspecto. Use este campo cuando una imagen pequeña sea necesaria."
 
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
@@ -2821,7 +2821,7 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr ""
+msgstr "El propietario de los registros creados al recibir emails en este alias. Si el campo no está establecido, el sistema tratará de encontrar el propietario adecuado basado en la dirección del emisor (De), o usará la cuenta de Administrador si no se encuentra un usuario para esa dirección."
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:642
@@ -3069,7 +3069,7 @@ msgstr "Cuando se selecciona un campo de relación como primer campo, este campo
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
-msgstr ""
+msgstr "Cuando un campo de asociación se selecciona como primer campo, este campo muestra el modelo de documento al que apunta la relación."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log
