@@ -27,7 +27,6 @@ actions(Sign in/Sign out) performed by them.
     ],
     'demo': ['data/hr_attendance_demo.xml'],
     'installable': True,
-    'auto_install': False,
     #web
     'qweb': ["static/src/xml/attendance_templates.xml"],
 }
