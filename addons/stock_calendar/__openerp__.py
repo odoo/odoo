@@ -40,8 +40,5 @@
     'category': 'Warehouse Management',
     'data': [
         'views/stock_calendar_view.xml'
-    ],
-    'test': [
-        'test/orderpoint_calendar.yml'
     ]
 }
