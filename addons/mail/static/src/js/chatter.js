@@ -105,7 +105,7 @@ var Followers = form_common.AbstractField.extend({
         // event: click on 'edit_subtype(pencil)' button to edit subscription
         this.$el.on('click', '.o_edit_subtype', self.on_edit_subtype);
         this.$el.on('click', '.o_remove_follower', self.on_remove_follower);
-        this.$el.on('click', 'a[data-partner]', self.on_follower_clicked);
+        this.$el.on('click', '.o_mail_redirect', self.on_click_redirect);
     },
 
     on_edit_subtype: function (event) {
@@ -167,24 +167,11 @@ var Followers = form_common.AbstractField.extend({
         }
     },
 
-    on_follower_clicked: function  (event) {
+    on_click_redirect: function (event) {
         event.preventDefault();
-        var partner_id = $(event.target).data('partner');
-        var state = {
-            'model': 'res.partner',
-            'id': partner_id,
-            'title': this.record_name
-        };
-        web_client.action_manager.do_push_state(state);
-        var action = {
-            type:'ir.actions.act_window',
-            view_type: 'form',
-            view_mode: 'form',
-            res_model: 'res.partner',
-            views: [[false, 'form']],
-            res_id: partner_id,
-        };
-        this.do_action(action);
+        var res_id = $(event.target).data('oe-id');
+        var res_model = $(event.target).data('oe-model');
+        this.trigger('redirect', res_model, res_id);
     },
 
     read_value: function () {
@@ -697,7 +684,6 @@ var Chatter = form_common.AbstractField.extend({
     template: 'mail.Chatter',
 
     events: {
-        "click .o_mail_redirect": "on_click_redirect",
         "click .o_chatter_button_new_message": "on_open_composer_new_message",
         "click .o_chatter_button_log_note": "on_open_composer_log_note",
     },
@@ -717,6 +703,7 @@ var Chatter = form_common.AbstractField.extend({
         this.followers = this.field_manager.fields.message_follower_ids;
         if (this.followers) {
             this.$('.o_chatter_topbar').append(this.followers.$el);
+            this.followers.on('redirect', this, this.on_redirect);
         }
 
         this.thread = new ChatThread(this, {
@@ -728,6 +715,8 @@ var Chatter = form_common.AbstractField.extend({
         this.thread.on('toggle_star_status', this, function (message_id) {
             chat_manager.toggle_star_status(message_id);
         });
+        this.thread.on('redirect', this, this.on_redirect);
+        this.thread.on('redirect_to_channel', this, this.on_channel_redirect);
 
         var def1 = this._super.apply(this, arguments);
         var def2 = this.thread.appendTo(this.$el);
@@ -778,15 +767,31 @@ var Chatter = form_common.AbstractField.extend({
         }
     },
 
-    on_click_redirect: function (event) {
+    on_channel_redirect: function (channel_id) {
+        event.preventDefault();
+        var self = this;
+        var def;
+        var channel = chat_manager.get_channel(channel_id);
+        // If not registered to 'channel' yet, do it
+        if (channel.id !== channel_id) {
+            def = chat_manager.join_channel(channel_id);
+        }
+        $.when(def).then(function () {
+            // Execute Discuss client action with 'channel' as default channel
+            var discuss_ids = chat_manager.get_discuss_ids();
+            self.do_action(discuss_ids.action_id, {active_id: channel_id});
+        });
+    },
+
+    on_redirect: function (res_model, res_id) {
         event.preventDefault();
         this.do_action({
             type:'ir.actions.act_window',
             view_type: 'form',
             view_mode: 'form',
-            res_model: $(event.target).data('oe-model'),
+            res_model: res_model,
             views: [[false, 'form']],
-            res_id: $(event.target).data('oe-id'),
+            res_id: res_id,
         });
     },
 

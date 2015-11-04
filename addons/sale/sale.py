@@ -162,6 +162,7 @@ class SaleOrder(models.Model):
             return 'sale.mt_order_sent'
         return super(SaleOrder, self)._track_subtype(init_values)
 
+    @api.multi
     @api.onchange('partner_shipping_id')
     def onchange_partner_shipping_id(self):
         """
@@ -598,7 +599,7 @@ class SaleOrderLine(models.Model):
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
         ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True, default='no')
-    price_unit = fields.Float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), default=0.0)
+    price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'), default=0.0)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
     price_tax = fields.Monetary(compute='_compute_amount', string='Taxes', readonly=True, store=True)
@@ -607,20 +608,20 @@ class SaleOrderLine(models.Model):
     price_reduce = fields.Monetary(compute='_get_price_reduce', string='Price Reduce', readonly=True, store=True)
     tax_id = fields.Many2many('account.tax', string='Taxes')
 
-    discount = fields.Float(string='Discount (%)', digits_compute=dp.get_precision('Discount'), default=0.0)
+    discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict', required=True)
-    product_uom_qty = fields.Float(string='Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
+    product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom = fields.Many2one('product.uom', string='Unit of Measure', required=True)
 
     qty_delivered_updateable = fields.Boolean(compute='_compute_qty_delivered_updateable', string='Can Edit Delivered', readonly=True, default=True)
-    qty_delivered = fields.Float(string='Delivered', copy=False, digits_compute=dp.get_precision('Product Unit of Measure'), default=0.0)
+    qty_delivered = fields.Float(string='Delivered', copy=False, digits=dp.get_precision('Product Unit of Measure'), default=0.0)
     qty_to_invoice = fields.Float(
         compute='_get_to_invoice_qty', string='To Invoice', store=True, readonly=True,
-        digits_compute=dp.get_precision('Product Unit of Measure'), default=0.0)
+        digits=dp.get_precision('Product Unit of Measure'), default=0.0)
     qty_invoiced = fields.Float(
         compute='_get_invoice_qty', string='Invoiced', store=True, readonly=True,
-        digits_compute=dp.get_precision('Product Unit of Measure'), default=0.0)
+        digits=dp.get_precision('Product Unit of Measure'), default=0.0)
 
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', readonly=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)

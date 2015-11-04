@@ -698,7 +698,7 @@
                         </group>
                         <group string="Hardware Proxy / PosBox" >
                             <field name="proxy_ip" />
-                            <field name="iface_print_via_proxy" string="Receipt Printer"/>
+                            <field name="iface_print_via_proxy" string="Receipt Printer" on_change="onchange_iface_print_via_proxy(iface_print_via_proxy)"/>
                             <field name="iface_scan_via_proxy" string="Barcode Scanner"/>
                             <field name="iface_electronic_scale" />
                             <field name="iface_cashdrawer" />

@@ -1430,6 +1430,7 @@ class function(_column):
     def to_field_args(self):
         args = super(function, self).to_field_args()
         args['store'] = bool(self.store)
+        args['company_dependent'] = False
         if self._type in ('float',):
             args['digits'] = self._digits_compute or self._digits
         elif self._type in ('binary',):

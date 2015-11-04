@@ -122,7 +122,7 @@ class crm_team(osv.Model):
 
     def action_your_pipeline(self, cr, uid, context=None):
         IrModelData = self.pool['ir.model.data']
-        action = IrModelData.xmlid_to_object(cr, uid, 'crm.crm_lead_opportunities_tree_view').read(['name', 'help', 'res_model', 'target', 'context', 'type'])
+        action = IrModelData.xmlid_to_object(cr, uid, 'crm.crm_lead_opportunities_tree_view').read(['name', 'help', 'res_model', 'target', 'domain', 'context', 'type', 'search_view_id'])
         if not action:
             action = {}
         else:

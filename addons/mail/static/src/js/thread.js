@@ -83,7 +83,7 @@ var Thread = Widget.extend({
 
     on_channel_redirect: function (event) {
         event.preventDefault();
-        var channel_id = $(event.target).data('channel-id');
+        var channel_id = $(event.target).data('oe-id');
         this.trigger('redirect_to_channel', channel_id);
     },
 

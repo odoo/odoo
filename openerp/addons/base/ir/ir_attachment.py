@@ -149,7 +149,7 @@ class ir_attachment(osv.osv):
                 r = os.path.getsize(full_path)
             else:
                 r = open(full_path,'rb').read().encode('base64')
-        except IOError:
+        except (IOError, OSError):
             _logger.info("_read_file reading %s", full_path, exc_info=True)
         return r
 
