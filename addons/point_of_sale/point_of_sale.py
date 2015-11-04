@@ -74,7 +74,7 @@ class pos_config(osv.osv):
         result = dict()
 
         for record in self.browse(cr, uid, ids, context=context):
-            result[record.id] = record.session_ids.filtered(lambda r: r.state == 'opened' and not r.rescue).user_id.name
+            result[record.id] = record.session_ids.filtered(lambda r: r.state == 'opened').user_id.name
         return result
 
     _columns = {
