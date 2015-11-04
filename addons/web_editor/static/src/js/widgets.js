@@ -597,7 +597,13 @@ rte.Class.include({
     init: function (EditorBar) {
         this._super.apply(this, arguments);
         computeFonts();
-    }
+    },
+    onEnableEditableArea: function ($editable) {
+        if ($editable.data('oe-type') === "monetary") {
+            $editable.attr('contenteditable', false);
+            $editable.find('.oe_currency_value').attr('contenteditable', true);
+        }
+    },
 });
 
 /* list of font icons to load by editor. The icons are displayed in the media editor and

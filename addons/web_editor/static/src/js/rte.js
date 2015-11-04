@@ -546,7 +546,12 @@ var RTE = Widget.extend({
             if (dom.isImg($target[0])) {
                 $target.trigger('mousedown'); // for activate selection on picture
             }
+
+            rte.onEnableEditableArea($editable);
         }
+    },
+
+    onEnableEditableArea: function ($editable) {
     },
 
     onMouseup: function (event) {
