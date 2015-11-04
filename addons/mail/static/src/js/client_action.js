@@ -204,6 +204,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                     query.is_displayed = query.is_displayed || channel.id === self.channel.id;
                 });
                 chat_manager.bus.on('update_needaction', self, self.on_update_needaction);
+                chat_manager.bus.on('unsubscribe_from_channel', self, self.render_sidebar);
             });
     },
 

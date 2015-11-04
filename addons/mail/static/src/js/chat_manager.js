@@ -487,18 +487,21 @@ function init () {
             // new message in a channel
             var message = notification[1];
             var channel_id = message.channel_ids[0];
-            // fetch the channel info if not done already
             var channel = _.findWhere(channels, {id: channel_id});
-            var channel_ready;
-            if (!channel) {
-                channel_ready = chat_manager.join_channel(channel_id, { autoswitch: false });
-            }
-            $.when(channel_ready).then(function () {
+            if (channel) {
                 add_message(message, { channel_id: channel_id, show_notification: true });
-            });
+            }
         }
         if (model === 'res.partner') {
             var chat_session = notification[1];
+            if (chat_session.info === "unsubscribe") {
+                var channel = _.findWhere(channels, {id: chat_session.id});
+                if (channel) {
+                    channels = _.without(channels, channel);
+                }
+                chat_manager.bus.trigger("unsubscribe_from_channel", chat_session.id);
+                return;
+            }
             if ((chat_session.channel_type === "channel") && (chat_session.public === "private") && (chat_session.state === "open")) {
                 add_channel(chat_session, {autoswitch: false});
                 if (!chat_session.is_minimized) {
@@ -507,7 +510,7 @@ function init () {
             }
             // partner specific change (open a detached window for example)
             if ((chat_session.state === "open") || (chat_session.state === "folded")) {
-                add_channel(chat_session, {autoswitch: false, silent: true, hidden: true});
+                add_channel(chat_session, {autoswitch: false});
                 if (chat_session.is_minimized) {
                     chat_manager.bus.trigger("open_chat", chat_session);
                 }
