@@ -10,7 +10,7 @@
                     <group name="name">
                         <field name="name" widget="radio"/>
                     </group>
-                    <group string="Assign these opportunities to">
+                    <group string="Assign this opportunity to">
                         <field name="user_id" on_change="on_change_user(user_id, team_id, context)"/>
                         <field name="team_id" widget="selection"/>
                     </group>
@@ -54,7 +54,7 @@
                         <field name="name" class="oe_inline" widget="radio"/>
                         <field name="deduplicate" class="oe_inline" on_change="on_change_deduplicate(deduplicate, context)"/>
                     </group>
-                    <group string="Assign opportunities to">
+                    <group string="Assign these opportunities to">
                         <field name="team_id"/>
                         <field name="user_ids" widget="many2many_tags"/>
                         <!-- Uncomment me in trunk -->
