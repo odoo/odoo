@@ -185,8 +185,9 @@ class website(orm.Model):
         :returns: pricelist recordset
         """
         isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
+        user_id = self.pool['res.users'].browse(cr, uid, request.uid or uid, context=context)
         pl_ids = self._get_pl(cr, uid, isocountry, show_visible,
-                              request.website.user_id.partner_id.property_product_pricelist.id,
+                              user_id.partner_id.property_product_pricelist.id,
                               request.session.get('website_sale_current_pl'),
                               request.website.website_pricelist_ids)
         return self.pool['product.pricelist'].browse(cr, uid, pl_ids, context=context)
