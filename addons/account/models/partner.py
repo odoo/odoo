@@ -229,18 +229,6 @@ class ResPartner(models.Model):
     _description = 'Partner'
 
     @api.multi
-    def onchange_state(self, state_id):
-        res = super(ResPartner, self).onchange_state(state_id=state_id)
-        res['value']['property_account_position_id'] = self.env['account.fiscal.position']._get_fpos_by_region(
-               country_id=self.env.context.get('country_id'), state_id=state_id, zipcode=self.env.context.get('zip'))
-        return res
-
-    @api.onchange('country_id', 'zip')
-    def _onchange_country_id(self):
-        self.property_account_position_id = self.env['account.fiscal.position']._get_fpos_by_region(
-                country_id=self.country_id.id, state_id=self.state_id.id, zipcode=self.zip)
-
-    @api.multi
     def _credit_debit_get(self):
         tables, where_clause, where_params = self.env['account.move.line']._query_get()
         where_params = [tuple(self.ids)] + where_params

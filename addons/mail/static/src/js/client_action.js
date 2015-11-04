@@ -163,6 +163,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$buttons.on('click', '.o_mail_toggle_channels', function () {
             self.$('.o_mail_chat_sidebar').slideToggle(200);
         });
+        this.$buttons.on('click', '.o_mail_chat_button_mark_read', chat_manager.mark_all_as_read);
+
 
         this.thread.on('redirect', this, this.on_redirect);
         this.thread.on('redirect_to_channel', this, function (channel_id) {
@@ -306,7 +308,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         // Hide 'invite', 'unsubscribe' and 'settings' buttons in static channels and DM
         this.$buttons
             .find('.o_mail_chat_button_invite, .o_mail_chat_button_unsubscribe, .o_mail_chat_button_settings')
-            .toggle(channel.type !== "static" && channel.type !== "dm");
+            .toggle(channel.type !== "dm" && channel.type !== 'static');
+
+        this.$buttons
+            .find('.o_mail_chat_button_mark_read')
+            .toggle(channel.id === "channel_inbox");
+
         this.update_cp();
 
         this.action.context.active_id = channel.id;
@@ -479,7 +486,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var current_channel_id = this.channel.id;
         if ((current_channel_id === "channel_starred" && !message.is_starred) ||
             (current_channel_id === "channel_inbox" && !message.is_needaction)) {
-            chat_manager.fetch(this.channel, this.domain).then(function (messages) {
+            chat_manager.get_messages({channel_id: this.channel.id, domain: this.domain}).then(function (messages) {
                 var options = self.get_thread_rendering_options();
                 self.thread.remove_message_and_render(message.id, messages, options);
             });

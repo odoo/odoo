@@ -386,6 +386,8 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         for order in self:
             order.state = 'sale'
+            if self.env.context.get('send_email'):
+                self.force_quotation_send()
             order.order_line._action_procurement_create()
             if not order.project_id:
                 for line in order.order_line:

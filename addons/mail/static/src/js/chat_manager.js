@@ -35,7 +35,7 @@ function add_message (data, options) {
     if (!msg) {
         msg = make_message(data);
         // Keep the array ordered by date when inserting the new message
-        messages.splice(_.sortedIndex(messages, msg, 'date'), 0, msg);
+        messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
         if (options.channel_id) {
             var channel = _.findWhere(channels, {id: options.channel_id});
             if (channel.hidden) {
@@ -353,6 +353,17 @@ var chat_manager = {
             remove_message_from_channel("channel_inbox", message);
             chat_manager.bus.trigger('update_message', message);
             needaction_counter = needaction_counter - 1;
+            chat_manager.bus.trigger('update_needaction', needaction_counter);
+        });
+    },
+
+    mark_all_as_read: function () {
+        MessageModel.call('mark_all_as_read', [[]], {}).then(function (ids) {
+            _.each(messages, function (msg) {
+                remove_message_from_channel("channel_inbox", msg);
+                chat_manager.bus.trigger('update_message', msg);
+            });
+            needaction_counter = 0;
             chat_manager.bus.trigger('update_needaction', needaction_counter);
         });
     },
