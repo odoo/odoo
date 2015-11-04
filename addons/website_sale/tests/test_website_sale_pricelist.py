@@ -1,4 +1,6 @@
-from openerp.tests.common import TransactionCase
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.tests.common import TransactionCase
 from mock import patch
 
 
@@ -12,7 +14,7 @@ class TestWebsitePriceList(TransactionCase):
         super(TestWebsitePriceList, self).setUp()
         self.website = self.registry('website').browse(self.cr, self.uid, 1)
         self.website.pricelist_id = self.registry('ir.model.data').xmlid_to_res_id(self.cr, self.uid, 'product.list0')
-        self.patcher = patch('openerp.addons.website_sale.models.website.website.get_pricelist_available', wraps=self._get_pricelist_available)
+        self.patcher = patch('odoo.addons.website_sale.models.website.Website.get_pricelist_available', wraps=self._get_pricelist_available)
         self.mock_get_pricelist_available = self.patcher.start()
 
     def get_pl(self, show, current_pl, country):

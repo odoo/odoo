@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record model="ir.ui.view" id="product_pricelist_view">
-        <field name="name">product.pricelist.website.form</field>
+        <field name="name">product.pricelist.form.inherit.website.sale</field>
         <field name="model">product.pricelist</field>
         <field name="inherit_id" ref="product.product_pricelist_view"/>
         <field name="arch" type="xml">
@@ -12,7 +12,7 @@
     </record>
 
     <record model="ir.ui.view" id="product_template_form_view">
-        <field name="name">product.template.product.website.form</field>
+        <field name="name">product.template.form.inherit.website.sale</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
@@ -48,7 +48,7 @@
         </field>
     </record>
     <record id="variants_tree_view" model="ir.ui.view">
-        <field name="name">variants.template.tree</field>
+        <field name="name">variants.template.tree.inherit.website.sale</field>
         <field name="model">product.attribute.value</field>
         <field name="inherit_id" ref="product.variants_tree_view"/>
         <field name="arch" type="xml">
@@ -58,7 +58,7 @@
         </field>
     </record>
     <record id="attribute_tree_view" model="ir.ui.view">
-        <field name="name">product.attribute.tree.type</field>
+        <field name="name">product.attribute.tree.inherit.website.sale</field>
         <field name="model">product.attribute</field>
         <field name="inherit_id" ref="product.attribute_tree_view"></field>
         <field name="arch" type="xml">
@@ -94,7 +94,7 @@
         <field name="arch" type="xml">
             <tree string="Product Public Categories">
                 <field name="sequence" invisible="1"/>
-                <field name="complete_name"/>
+                <field name="display_name" string="Name"/>
             </tree>
         </field>
     </record>
@@ -155,7 +155,7 @@
     </record>
 
     <record model="ir.ui.view" id="inherits_website_sale_country_group_form">
-        <field name="name">website_sale.country_group.form</field>
+        <field name="name">res.country.group.form.inherit.website.sale</field>
         <field name="model">res.country.group</field>
         <field name="inherit_id" ref="base.view_country_group_form"/>
         <field name="arch" type="xml">

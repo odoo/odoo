@@ -5,7 +5,7 @@ from openerp.http import request
 import openerp.addons.website_sale.controllers.main
 
 
-class website_sale(openerp.addons.website_sale.controllers.main.website_sale):
+class website_sale(openerp.addons.website_sale.controllers.main.WebsiteSale):
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True)
     def payment(self, **post):
