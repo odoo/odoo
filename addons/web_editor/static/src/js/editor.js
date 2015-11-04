@@ -120,8 +120,7 @@ editor.Class = Widget.extend({
         });
     },
     rte_changed: function () {
-        // todo: use !rte.history.getEditableHasUndo().length (but phantomjs unknow error)
-        this.$('button[data-action=save]').prop('disabled', !$('.o_dirty').length);
+        this.$('button[data-action=save]').prop('disabled', !rte.history.getEditableHasUndo().length);
     },
     save: function () {
         return this.rte.save().then(function () {

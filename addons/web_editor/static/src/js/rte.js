@@ -51,10 +51,6 @@ var History = function History ($editable) {
         
         $editable.trigger("content_changed");
 
-        if (!oSnap.bookmark || oSnap.event === "blur") {
-            return;
-        }
-
         try {
             var r = oSnap.editable.innerHTML === "" ? range.create(oSnap.editable, 0) : range.createFromBookmark(oSnap.editable, oSnap.bookmark);
             r.select();
@@ -105,7 +101,7 @@ var History = function History ($editable) {
             pos--;
         }
         this.applySnap(aUndo[Math.max(--pos,0)]);
-        while (pos && (aUndo[pos].event === "blur" || aUndo[pos].event === "activate")) {
+        while (pos && (aUndo[pos].event === "blur" || (aUndo[pos+1].editable ===  aUndo[pos].editable && aUndo[pos+1].contents ===  aUndo[pos].contents))) {
             this.applySnap(aUndo[--pos]);
         }
     };
@@ -132,8 +128,8 @@ var History = function History ($editable) {
     this.redo = function () {
         if (!aUndo[pos+1]) { return; }
         this.applySnap(aUndo[++pos]);
-        while (aUndo[pos+1] && (aUndo[pos].event === "blur" || aUndo[pos].event === "activate" || aUndo[pos].event === "undo")) {
-            this.applySnap(aUndo[Math.max(++pos,aUndo.length-1)]);
+        while (aUndo[pos+1] && aUndo[pos].event === "active") {
+            this.applySnap(aUndo[pos++]);
         }
     };
     this.hasRedo = function () {
