@@ -268,6 +268,7 @@ var ImageDialog = Widget.extend({
         this.accept = this.options.accept || this.options.document ? "*/*" : "image/*";
         this.domain = this.options.domain || ['|', ['mimetype', '=', false], ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]];
         this.parent = parent;
+        this.old_media = media;
         this.media = media;
         this.images = [];
         this.page = 0;
