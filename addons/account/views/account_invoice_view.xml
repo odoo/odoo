@@ -394,6 +394,7 @@
                                 <tree string="Invoice Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"/>
+                                    <field name="origin" invisible="1"/>
                                     <field name="name"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
@@ -446,7 +447,7 @@
                             </group>
                             <field name="comment" placeholder="Terms and conditions..."/>
                         </page>
-                        <page string="Other Info">
+                        <page string="Other Info" name="other_info">
                             <group>
                                 <group>
                                     <field name="journal_id" groups="account.group_account_user"
