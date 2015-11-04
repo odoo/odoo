@@ -486,7 +486,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var current_channel_id = this.channel.id;
         if ((current_channel_id === "channel_starred" && !message.is_starred) ||
             (current_channel_id === "channel_inbox" && !message.is_needaction)) {
-            chat_manager.fetch(this.channel, this.domain).then(function (messages) {
+            chat_manager.get_messages({channel_id: this.channel.id, domain: this.domain}).then(function (messages) {
                 var options = self.get_thread_rendering_options();
                 self.thread.remove_message_and_render(message.id, messages, options);
             });
