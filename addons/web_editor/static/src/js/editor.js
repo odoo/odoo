@@ -93,6 +93,7 @@ editor.Class = Widget.extend({
                 return _t('This document is not saved!');
             }
         };
+        this.$('button[data-action="save"]').prop('disabled', true);
         return this._super();
     },
     display_placeholder: function () {
