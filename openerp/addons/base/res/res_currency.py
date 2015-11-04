@@ -21,7 +21,6 @@
 
 import re
 import time
-from datetime import datetime
 import math
 
 from openerp import api, fields as fields2
@@ -45,7 +44,7 @@ class res_currency(osv.osv):
             context = {}
         res = {}
 
-        date = context.get('date') or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        date = context.get('date') or time.strftime('%Y-%m-%d %H:%M:%S')
         for id in ids:
             cr.execute('SELECT rate FROM res_currency_rate '
                        'WHERE currency_id = %s '
