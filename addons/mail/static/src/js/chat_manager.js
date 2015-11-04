@@ -35,7 +35,7 @@ function add_message (data, options) {
     if (!msg) {
         msg = make_message(data);
         // Keep the array ordered by date when inserting the new message
-        messages.splice(_.sortedIndex(messages, msg, 'date'), 0, msg);
+        messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
         if (options.channel_id) {
             var channel = _.findWhere(channels, {id: options.channel_id});
             if (channel.hidden) {
