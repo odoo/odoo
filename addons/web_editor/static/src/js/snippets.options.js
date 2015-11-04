@@ -504,6 +504,7 @@ var many2one = Option.extend({
         this.$target.attr('data-oe-many2one-id', this.ID).data('oe-many2one-id', this.ID);
 
         this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
+        this.$target.trigger('content_changed');
 
         if (self.$target.data('oe-type') === "contact") {
             $('[data-oe-contact-options]')
