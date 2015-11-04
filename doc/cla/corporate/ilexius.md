@@ -13,3 +13,4 @@ Sebastian Koch s.koch@ilexius.de https://github.com/ilexius
 List of contributors:
 
 Sebastian Koch s.koch@ilexius.de https://github.com/ilexius
+Thomas Bach t.bach@ilexius.de https://github.com/ilexius
