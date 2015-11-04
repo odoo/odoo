@@ -31,7 +31,9 @@ class event_config_settings(osv.TransientModel):
             (1, 'Schedule emails to attendees and subscribers')
             ], "Email Scheduling",
             help='You will be able to configure emails, and to schedule them to be automatically sent to the attendees on subscription and/or attendance',
-            implied_group='event.group_email_scheduling'),            
+            implied_group='event.group_email_scheduling'),
+        'module_event_barcode': fields.boolean("Scan badges to confirm attendances",
+            help="Install the event_barcode module"),
     }
 
     def set_default_auto_confirmation(self, cr, uid, ids, context=None):
