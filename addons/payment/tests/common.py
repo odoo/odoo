@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp.tests import common
+from odoo.tests import common
 
 
 class PaymentAcquirerCommon(common.TransactionCase):
@@ -10,14 +10,10 @@ class PaymentAcquirerCommon(common.TransactionCase):
         self.payment_acquirer = self.registry('payment.acquirer')
         self.payment_transaction = self.registry('payment.transaction')
 
-        self.currency_euro_id = self.registry('res.currency').search(
-            self.cr, self.uid, [('name', '=', 'EUR')], limit=1)[0]
-        self.currency_euro = self.registry('res.currency').browse(
-            self.cr, self.uid, self.currency_euro_id)
-        self.country_belgium_id = self.registry('res.country').search(
-            self.cr, self.uid, [('code', 'like', 'BE')], limit=1)[0]
-        self.country_france_id = self.registry('res.country').search(
-            self.cr, self.uid, [('code', 'like', 'FR')], limit=1)[0]
+        self.currency_euro = self.env['res.currency'].search([('name', '=', 'EUR')], limit=1)
+        self.currency_euro_id = self.currency_euro.id
+        self.country_belgium_id = self.env['res.country'].search([('code', 'like', 'BE')], limit=1).id
+        self.country_france_id = self.env['res.country'].search([('code', 'like', 'FR')], limit=1).id
 
         # dict partner values
         self.buyer_values = {
@@ -44,8 +40,8 @@ class PaymentAcquirerCommon(common.TransactionCase):
         }
 
         # test partner
-        self.buyer_id = self.registry('res.partner').create(
-            self.cr, self.uid, {
+        self.buyer_id = self.env['res.partner'].create(
+            {
                 'name': 'Norbert Buyer',
                 'lang': 'en_US',
                 'email': 'norbert.buyer@example.com',
@@ -56,4 +52,4 @@ class PaymentAcquirerCommon(common.TransactionCase):
                 'zip': '1000',
                 'country_id': self.country_belgium_id,
             }
-        )
+        ).id

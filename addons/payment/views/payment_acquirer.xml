@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Payment menu in settings -->
         <menuitem
@@ -216,7 +215,7 @@
                                     <field name="currency_id" options="{'no_open': True, 'no_create': True}" class="oe_inline" />
                                 </div>
                                 <field name="fees"/>
-                                <field name="partner_id" on_change="on_change_partner_id(partner_id)"/>
+                                <field name="partner_id"/>
                                 <label for="partner_details" string="Customer Details"/>
                                 <div name="partner_details">
                                     <field name="partner_name" placeholder="Name" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
@@ -361,5 +360,5 @@
             id='payment_method_menu'
             parent='root_payment_menu'/>
 
-    </data>
-</openerp>
+</odoo>
+
