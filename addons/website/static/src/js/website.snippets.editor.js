@@ -29,6 +29,45 @@ var preventParentEmpty = {
     on_remove: function () {
         this._super();
         this.hide_remove_button();
+
+        var src = this.$bg.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
+        if (this.$bg.hasClass('oe_custom_bg')) {
+            this.$el.find('li[data-choose_image]').data("background", src).attr("data-background", src);
+        }
+    },
+    background: function(type, value) {
+        if (value && value.length) {
+            this.$bg.css("background-image", 'url(' + value + ')');
+            this.$bg.addClass("oe_img_bg");
+        } else {
+            this.$bg.css("background-image", "");
+            this.$bg.removeClass("oe_img_bg").removeClass("oe_custom_bg");
+        }
+    },
+    choose_image: function(type, value, $li) {
+        if(type !== "click") return;
+
+        var self = this;
+        var $image = $('<img class="hidden"/>');
+        $image.attr("src", value);
+        $image.appendTo(self.$bg);
+
+        var _editor = new editor.MediaDialog(null, $image[0]);
+        _editor.appendTo(document.body);
+        _editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
+
+        _editor.on('saved', self, function () {
+            var value = $image.attr("src");
+            $image.remove();
+            self.$el.find('li[data-choose_image]').data("background", value).attr("data-background", value);
+            self.background(type, value,$li);
+            self.$bg.addClass('oe_custom_bg');
+            self.$bg.trigger("snippet-option-change", [self]);
+            self.set_active();
+        });
+        _editor.on('cancel', self, function () {
+            $image.remove();
+        });
     },
 };
 
