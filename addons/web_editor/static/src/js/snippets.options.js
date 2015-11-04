@@ -461,7 +461,7 @@ var many2one = Option.extend({
             return;
         }
         if (isNaN(+name)) {
-            if (this.Model === "res.partner") {
+            if (this.Model !== "res.partner") {
                 domain.push(['name', 'ilike', name]);
             } else {
                 domain.push('|', ['name', 'ilike', name], ['email', 'ilike', name]);
