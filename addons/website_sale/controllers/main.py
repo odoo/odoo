@@ -615,9 +615,6 @@ class website_sale(http.Controller):
                 partner_id = order.partner_id.id
 
         # save partner informations
-        if billing_info.get('country_id'):
-            billing_info['property_account_position_id'] = request.registry['account.fiscal.position']._get_fpos_by_region(
-                   cr, SUPERUSER_ID, billing_info['country_id'], billing_info.get('state_id') or False, billing_info.get('zip'), billing_info.get('vat') and True or False)
         if partner_id and request.website.partner_id.id != partner_id:
             orm_partner.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
