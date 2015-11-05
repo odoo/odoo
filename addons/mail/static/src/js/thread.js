@@ -132,7 +132,8 @@ var Thread = Widget.extend({
     remove_message_and_render: function (message_id, messages, options) {
         var self = this;
         this.$('.o_thread_message[data-message-id=' + message_id + ']').fadeOut({
-            done: function () { self.render(messages, options); }
+            done: function () { self.render(messages, options); },
+            duration: 200,
         });
     },
 
