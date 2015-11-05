@@ -556,7 +556,7 @@ class PurchaseOrderLine(models.Model):
     def onchange_product_id(self):
         result = {}
         if not self.product_id:
-            return {}
+            return result
 
         if self.product_id.uom_id.category_id.id != self.product_uom.category_id.id:
             self.product_uom = self.product_id.uom_po_id
@@ -591,6 +591,7 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.currency_id.compute(price_unit, self.order_id.currency_id)
         self.price_unit = price_unit
 
+        return result
 
 
 class ProcurementRule(models.Model):
