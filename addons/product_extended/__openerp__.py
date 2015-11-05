@@ -4,7 +4,7 @@
 {
     "name" : "Product extension to track sales and purchases",
     "author" : "Odoo S.A.",
-    "depends" : ["product", "purchase", "sale", "mrp", "stock_account"],
+    "depends" : ["product", "purchase", "sale", "mrp"],
     "category" : "Generic Modules/Inventory Control",
     "description": """
 Product extension. This module adds:
