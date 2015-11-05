@@ -412,6 +412,8 @@ class hr_department(osv.osv):
             context = {}
         if not ids:
             return []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:

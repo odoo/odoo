@@ -231,7 +231,7 @@ class Partner(osv.osv):
             s = 4
             if partner_data.member_lines:
                 for mline in partner_data.member_lines:
-                    if mline.date_to >= today:
+                    if mline.date_to >= today and mline.date_from <= today:
                         if mline.account_invoice_line and mline.account_invoice_line.invoice_id:
                             mstate = mline.account_invoice_line.invoice_id.state
                             if mstate == 'paid':

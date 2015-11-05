@@ -426,7 +426,7 @@
             // escape text nodes for xml saving
             var escaped_el = $el.clone();
             var to_escape = escaped_el.find('*').addBack();
-            to_escape = to_escape.not(to_escape.filter('script,style,[data-oe-model][data-oe-model!="ir.ui.view"]').find('*').addBack());
+            to_escape = to_escape.not(to_escape.filter('object,iframe,script,style,[data-oe-model][data-oe-model!="ir.ui.view"]').find('*').addBack());
             to_escape.contents().each(function(){
                 if(this.nodeType == 3) {
                     this.nodeValue = $('<div />').text(this.nodeValue).html();

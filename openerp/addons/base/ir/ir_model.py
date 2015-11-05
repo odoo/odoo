@@ -423,21 +423,8 @@ class ir_model_fields(osv.osv):
         # if set, *one* column can be renamed here
         column_rename = None
 
-        # field patches {model: {field_name: {prop_name: prop_value, ...}, ...}, ...}
-        patches = defaultdict(lambda: defaultdict(dict))
-
-        # static table of properties
-        model_props = [ # (our-name, fields.prop, set_fn)
-            ('field_description', 'string', tools.ustr),
-            ('required', 'required', bool),
-            ('readonly', 'readonly', bool),
-            ('domain', 'domain', eval),
-            ('size', 'size', int),
-            ('on_delete', 'ondelete', str),
-            ('translate', 'translate', bool),
-            ('select_level', 'index', lambda x: bool(int(x))),
-            ('selection', 'selection', eval),
-        ]
+        # names of the models to patch
+        patched_models = set()
 
         if vals and ids:
             checked_selection = False # need only check it once, so defer
@@ -481,12 +468,7 @@ class ir_model_fields(osv.osv):
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
                 if obj is not None and field is not None:
-                    # find out which properties (per model) we need to update
-                    for field_name, prop_name, func in model_props:
-                        if field_name in vals:
-                            prop_value = func(vals[field_name])
-                            if getattr(field, prop_name) != prop_value:
-                                patches[obj][final_name][prop_name] = prop_value
+                    patched_models.add(obj._name)
 
         # These shall never be written (modified)
         for column_name in ('model_id', 'model', 'state'):
@@ -495,16 +477,17 @@ class ir_model_fields(osv.osv):
 
         res = super(ir_model_fields,self).write(cr, user, ids, vals, context=context)
 
+        self.pool.clear_manual_fields()
+
         if column_rename:
             obj, rename = column_rename
             cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % rename)
-            # This is VERY risky, but let us have this feature:
-            # we want to change the key of field in obj._fields and obj._columns
-            field = obj._pop_field(rename[1])
-            obj._add_field(rename[2], field)
+
+        if column_rename or patched_models:
+            # setup models, this will reload all manual fields in registry
             self.pool.setup_models(cr, partial=(not self.pool.ready))
 
-        if patches:
+        if patched_models:
             # We have to update _columns of the model(s) and then call their
             # _auto_init to sync the db with the model. Hopefully, since write()
             # was called earlier, they will be in-sync before the _auto_init.
@@ -514,20 +497,12 @@ class ir_model_fields(osv.osv):
                 select=vals.get('select_level', '0'),
                 update_custom_fields=True,
             )
-
-            for obj, model_patches in patches.iteritems():
-                for field_name, field_patches in model_patches.iteritems():
-                    # update field properties, and adapt corresponding column
-                    field = obj._fields[field_name]
-                    attrs = dict(field._attrs, **field_patches)
-                    obj._add_field(field_name, field.new(**attrs))
-
-                # update database schema
-                self.pool.setup_models(cr, partial=(not self.pool.ready))
+            for model_name in patched_models:
+                obj = self.pool[model_name]
                 obj._auto_init(cr, ctx)
                 obj._auto_end(cr, ctx) # actually create FKs!
 
-        if column_rename or patches:
+        if column_rename or patched_models:
             RegistryManager.signal_registry_change(cr.dbname)
 
         return res

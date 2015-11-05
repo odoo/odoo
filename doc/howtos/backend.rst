@@ -787,13 +787,6 @@ method should simply set the value of the field to compute on every record in
             for record in self:
                 record.name = str(random.randint(1, 1e6))
 
-Our compute method is very simple: it loops over ``self`` and performs the same
-operation on every record. We can make it slightly simpler by using the
-decorator :func:`~openerp.api.one` to automatically loop on the collection::
-
-        @api.one
-        def _compute_name(self):
-            self.name = str(random.randint(1, 1e6))
 
 Dependencies
 ------------
@@ -812,10 +805,10 @@ field whenever some of its dependencies have been modified::
         name = fields.Char(compute='_compute_name')
         value = fields.Integer()
 
-        @api.one
         @api.depends('value')
         def _compute_name(self):
-            self.name = "Record with value %s" % self.value
+            for record in self:
+                self.name = "Record with value %s" % self.value
 
 .. exercise:: Computed fields
 

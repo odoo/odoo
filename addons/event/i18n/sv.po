@@ -3,14 +3,16 @@
 # * event
 # 
 # Translators:
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:07+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-27 09:02+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +29,7 @@ msgid ""
 "        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n        <p>Hej ${object.name},</p>\n        <p>Evenemanget ${object.event_id.name} som du registrerade dig till är bekräftat och kommer hållas ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} till ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n        För ytterligare information vänligen kontakta evenemangsavdelningen.</p>\n        <p>Tack för ditt deltagande!</p>\n        <p>Vänliga hälsningar</p>"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration
@@ -704,7 +706,7 @@ msgstr "Deltog"
 #. module: event
 #: field:event.registration,date_closed:0
 msgid "Attended Date"
-msgstr ""
+msgstr "Datum för deltagande"
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -715,7 +717,7 @@ msgstr "Deltog på evenemanget"
 #. module: event
 #: field:event.event,seats_available:0
 msgid "Available Seats"
-msgstr ""
+msgstr "Tilgängliga platser"
 
 #. module: event
 #: view:event.confirm:event.view_event_confirm
@@ -750,7 +752,7 @@ msgstr "Om markerad så är den här kontakten en talare."
 #: code:addons/event/event.py:219
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Stängningsdatum kan inte ställas in att vara före startdatumet."
 
 #. module: event
 #: field:event.event,company_id:0 field:event.registration,company_id:0
@@ -762,7 +764,7 @@ msgstr "Företag"
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on Business Applications"
-msgstr ""
+msgstr "Konferens för affärstillämpning"
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -831,7 +833,7 @@ msgstr "Nuvarande registreringar"
 #: help:event.event,message_last_post:0
 #: help:event.registration,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum för senast publicerade meddelandet i loggen."
 
 #. module: event
 #: field:event.type,default_registration_max:0
@@ -841,12 +843,12 @@ msgstr "Största antal registrerade som standard"
 #. module: event
 #: field:event.type,default_registration_min:0
 msgid "Default Minimum Registration"
-msgstr ""
+msgstr "Minsta registrering som standard"
 
 #. module: event
 #: field:event.type,default_reply_to:0
 msgid "Default Reply-To"
-msgstr ""
+msgstr "Svara till som standard"
 
 #. module: event
 #: view:event.event:event.view_event_form field:event.event,description:0
@@ -909,7 +911,7 @@ msgstr "Evenemangsbekräftelse"
 #: field:event.event,email_confirmation_id:0
 #: field:event.type,default_email_event:0
 msgid "Event Confirmation Email"
-msgstr ""
+msgstr "Bekräftelse e-post för evenemang"
 
 #. module: event
 #: field:report.event.registration,event_date:0
@@ -919,7 +921,7 @@ msgstr "Evenemangsdatum"
 #. module: event
 #: view:event.event:event.view_event_form
 msgid "Event Description..."
-msgstr ""
+msgstr "Beskrivning av evenemanget..."
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -929,12 +931,12 @@ msgstr "Evenemangsdetaljer"
 #. module: event
 #: view:report.event.registration:event.view_report_event_registration_search
 msgid "Event Month"
-msgstr ""
+msgstr "Månad för evenemanget"
 
 #. module: event
 #: field:event.event,name:0
 msgid "Event Name"
-msgstr ""
+msgstr "Namn för evenemanget"
 
 #. module: event
 #: view:event.event:event.view_event_calendar
@@ -953,7 +955,7 @@ msgstr "Evenemangsregistrering"
 #: code:addons/event/event.py:348
 #, python-format
 msgid "Event Registration confirmed."
-msgstr ""
+msgstr "Evenemangsregistreringen bekräftad."
 
 #. module: event
 #: field:report.event.registration,user_id:0
@@ -1119,7 +1121,7 @@ msgstr ""
 #: field:event.event,message_last_post:0
 #: field:event.registration,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Senast meddelandedatum"
 
 #. module: event
 #: field:event.confirm,write_uid:0 field:event.event,write_uid:0
@@ -1151,12 +1153,12 @@ msgstr "Chef"
 #. module: event
 #: field:report.event.registration,seats_max:0
 msgid "Max Seats"
-msgstr ""
+msgstr "Max antal platser"
 
 #. module: event
 #: field:event.event,seats_max:0
 msgid "Maximum Available Seats"
-msgstr ""
+msgstr "Maximalt antal platser"
 
 #. module: event
 #: field:event.event,message_ids:0 field:event.registration,message_ids:0
@@ -1230,7 +1232,7 @@ msgstr "Antal deltagare"
 #. module: event
 #: field:event.event,seats_used:0
 msgid "Number of Participations"
-msgstr ""
+msgstr "Antal deltagare"
 
 #. module: event
 #: field:report.event.registration,nbregistration:0
@@ -1365,7 +1367,7 @@ msgstr ""
 #. module: event
 #: field:event.event,seats_reserved:0
 msgid "Reserved Seats"
-msgstr ""
+msgstr "Reserverade platser"
 
 #. module: event
 #: view:event.event:event.view_event_search

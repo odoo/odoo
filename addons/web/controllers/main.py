@@ -33,7 +33,6 @@ import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 from openerp.modules import get_module_resource
-from openerp.service import model as service_model
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
@@ -451,8 +450,8 @@ def content_disposition(filename):
     version = int((request.httprequest.user_agent.version or '0').split('.')[0])
     if browser == 'msie' and version < 9:
         return "attachment; filename=%s" % escaped
-    elif browser == 'safari':
-        return u"attachment; filename=%s" % filename
+    elif browser == 'safari' and version < 537:
+        return u"attachment; filename=%s" % filename.encode('ascii', 'replace')
     else:
         return "attachment; filename*=UTF-8''%s" % escaped
 
@@ -934,10 +933,7 @@ class DataSet(http.Controller):
         if method.startswith('_'):
             raise Exception("Access Denied: Underscore prefixed methods cannot be remotely called")
 
-        @service_model.check
-        def checked_call(__dbname, *args, **kwargs):
-            return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
-        return checked_call(request.db, *args, **kwargs)
+        return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
 
     @http.route('/web/dataset/call', type='json', auth="user")
     def call(self, model, method, args, domain_id=None, context_id=None):

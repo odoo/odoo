@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2015-07-17 08:20+0000\n"
+"PO-Revision-Date: 2015-10-16 07:58+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -99,7 +99,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>Hej ${object.partner_id.name},</p>\n\n    <p>Här är din ${object.state in ('draft', 'sent') and 'offert' or 'orderbekräftelse'} från ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENSER</strong><br />\n       &nbsp;&nbsp;Ordernummer: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Ordertotal: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Orderdatum: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Er referens: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Er kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    <% set signup_url = object.get_signup_url() %>\n    % if signup_url:\n    <p>\n    Du kan komma åt detta dokument och betala via vår kundportal:\n    </p>\n        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Offert' or 'Order'}</a>\n    % endif\n\n    % if object.paypal_url:\n    <br/>\n    <p>Det är även möjligt att betala direkt via Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>Tveka inte att kontakta oss om det finns någon fråga.</p>\n    <p>Tack för att ni väljer ${object.company_id.name or 'oss'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        % endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: website_quote
 #: model:email.template,report_name:website_quote.email_template_edi_sale
@@ -113,26 +113,26 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'd
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Offert' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: website_quote
 #: view:website:website_quote.optional_products
 #: view:website:website_quote.pricing
 msgid "% discount"
-msgstr ""
+msgstr "% rabatt"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 #: view:website:website_quote.so_template
 msgid "&times;"
-msgstr ""
+msgstr "&times;"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid ""
 ",\n"
 "                                  for an amount of"
-msgstr ""
+msgstr ",\n                                  för en summa av"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -140,7 +140,7 @@ msgid ""
 ":\n"
 "                                this content will appear on the quotation only if this\n"
 "                                product is put on the quote."
-msgstr ""
+msgstr ":\n                                detta innehåll visas bara om denna\n                                produkt bifogas offerten."
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -148,7 +148,7 @@ msgid ""
 ":\n"
 "                                this content will appear on the quotation only if this\n"
 "                                product is used in the quote."
-msgstr ""
+msgstr ":\n                                detta innehåll visas bara om denna\n                                produkt bifogas offerten."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -614,7 +614,7 @@ msgstr "Godkänn"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Accept Order"
-msgstr ""
+msgstr "Acceptera offerten"
 
 #. module: website_quote
 #: model:product.template,name:website_quote.product_product_quote_3_product_template
@@ -626,17 +626,17 @@ msgstr ""
 #. module: website_quote
 #: field:sale.order,amount_undiscounted:0
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Summa före rabatt"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Ask Changes"
-msgstr ""
+msgstr "Be om ändringar"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Bill To:"
-msgstr ""
+msgstr "Fakturera:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -656,12 +656,12 @@ msgstr "Kontakta oss"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Contact us for new quote."
-msgstr ""
+msgstr "Kontakta oss för en förnyad offert."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Contact us to get a new quote."
-msgstr ""
+msgstr "Kontakta odd för en förnyad offert"
 
 #. module: website_quote
 #: field:sale.order.option,create_uid:0 field:sale.quote.line,create_uid:0
@@ -679,7 +679,7 @@ msgstr "Skapad den"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Customer:"
-msgstr ""
+msgstr "Kund:"
 
 #. module: website_quote
 #: field:sale.order,website_description:0 field:sale.order.option,name:0
@@ -693,12 +693,12 @@ msgstr "Beskrivning"
 #. module: website_quote
 #: field:product.template,quote_description:0
 msgid "Description for the quote"
-msgstr ""
+msgstr "Beskrivning av offerten"
 
 #. module: website_quote
 #: field:product.template,website_description:0
 msgid "Description for the website"
-msgstr ""
+msgstr "Beskrivning av webbplatsen"
 
 #. module: website_quote
 #: field:sale.order.option,discount:0 field:sale.quote.line,discount:0
@@ -709,44 +709,44 @@ msgstr "Rabatt (%)"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Draw your signature"
-msgstr ""
+msgstr "Skriv din signatur"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Edit Template"
-msgstr ""
+msgstr "Ändra mall"
 
 #. module: website_quote
 #: field:sale.order,validity_date:0
 msgid "Expiry Date"
-msgstr ""
+msgstr "Utgångsdatum"
 
 #. module: website_quote
 #: view:website:sale.report_saleorder_document
 msgid "Expiry Date:"
-msgstr ""
+msgstr "Utgångsdatum:"
 
 #. module: website_quote
 #: view:website:website_quote.quotation_toolbar
 msgid "Feedback"
-msgstr ""
+msgstr "Återkoppling"
 
 #. module: website_quote
 #: model:product.template,name:website_quote.product_product_quote_1_product_template
 #: model:product.template,name:website_quote.product_template_quote_1
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_1
 msgid "Functional Training"
-msgstr ""
+msgstr "Funktionell träning"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
 msgid "Heading 1"
-msgstr ""
+msgstr "Rubrik 1"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
 msgid "Heading 2"
-msgstr ""
+msgstr "Rubrik 2"
 
 #. module: website_quote
 #: view:website:website_quote.chatter
@@ -758,7 +758,7 @@ msgstr "Historik"
 msgid ""
 "I agree that by signing this proposal, I\n"
 "                                  accept it on the behalf of"
-msgstr ""
+msgstr "Jag accepterar att bekräfta denna offert, \nå företagets vägnar"
 
 #. module: website_quote
 #: field:sale.order.option,id:0 field:sale.quote.line,id:0
@@ -769,12 +769,12 @@ msgstr "ID"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Incl. tax)"
-msgstr ""
+msgstr "ink moms)"
 
 #. module: website_quote
 #: view:website:website_quote.navigation_menu
 msgid "Introduction"
-msgstr ""
+msgstr "Introduktion"
 
 #. module: website_quote
 #: field:sale.order.option,write_uid:0 field:sale.quote.line,write_uid:0
@@ -1012,7 +1012,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Ship To:"
-msgstr ""
+msgstr "Leverera till:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1131,7 +1131,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Validate Order"
-msgstr ""
+msgstr "Godkänn order"
 
 #. module: website_quote
 #: view:sale.order:website_quote.sale_order_form_quote
@@ -1156,7 +1156,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Order"
-msgstr ""
+msgstr "Din beställning"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation

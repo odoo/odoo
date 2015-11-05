@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:54+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-19 09:20+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgid ""
 "                projects in order to track the invoicing progress.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nhấp chuột để thêm một hợp đồng.\n              </p><p>\n                Bạn có thể tìm thấy ở đấy các hợp đông liên quan đến dự án\n                của khách hàng để theo dõi tiến trình xuất hóa đơn.\n              </p>\n            "
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:56
@@ -36,7 +36,7 @@ msgstr ""
 msgid ""
 "<p class=\"oe_view_nocontent_create\">Record your timesheets for the project"
 " '%s'.</p>"
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">Ghi nhận bảng chấm công cho dự án '%s'.</p>"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
@@ -46,7 +46,7 @@ msgid ""
 "                If you want to record new jobs to invoice, you should use the timesheet menu instead.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                Bạn có thể tìm thấy ở đấy các bảng chấm công và mua hàng mà bạn đã thực hiện cho hợp đồng mà có thể xuất lại hóa đơn cho khách hàng.\n                Nếu bạn muốn ghi nhận công việc mới cần xuất hóa đơn, bạn nên sử menu bảng chấm công để thay thế.\n              </p>\n            "
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:59
@@ -54,12 +54,12 @@ msgstr ""
 msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
 "defined in the contract.</p>"
-msgstr ""
+msgstr "<p>Bảng chấm công trên dự án này có thể được xuất hóa đơn cho %s, tùy thuộc vào điều khoản trên hợp đồng.</p>"
 
 #. module: project_timesheet
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_form_inherit_account_id
 msgid "Analytic Account/Project"
-msgstr ""
+msgstr "Dự án/Tài khoản quản trị"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_account_analytic_line
@@ -70,7 +70,7 @@ msgstr ""
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_search_account_inherit
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_tree_inherit_account_id
 msgid "Analytic account/project"
-msgstr ""
+msgstr "Dự án/Tài khoản quản trị"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -89,7 +89,7 @@ msgstr "Tháng Tám"
 #: code:addons/project_timesheet/project_timesheet.py:97
 #, python-format
 msgid "Bad Configuration!"
-msgstr ""
+msgstr "Lỗi cấu hình!"
 
 #. module: project_timesheet
 #: view:project.project:project_timesheet.project_invoice_search
@@ -99,12 +99,12 @@ msgstr ""
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "Hợp đồng cần gia hạn"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
 msgid "Customer Projects"
-msgstr ""
+msgstr "Dự án khách hàng"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
@@ -157,13 +157,13 @@ msgstr "Hành động không hợp lệ!"
 #: code:addons/project_timesheet/project_timesheet.py:321
 #, python-format
 msgid "Invalid Analytic Account!"
-msgstr ""
+msgstr "Tài khoản quản trị không hợp lệ!"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
 msgid "Invoice Tasks"
-msgstr ""
+msgstr "Hóa đơn nhiệm vụ"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing
@@ -220,21 +220,13 @@ msgstr "Đối tác"
 #: code:addons/project_timesheet/project_timesheet.py:83
 #, python-format
 msgid "Please define employee for user \"%s\". You must create one."
-msgstr ""
+msgstr "Vui lòng xác định nhân viên cho người dùng \"%s\". Bạn phải tạo một nhân viên."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:91
 #, python-format
 msgid ""
 "Please define journal on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:87
-#, python-format
-msgid ""
-"Please define product and product category property account on the related employee.\n"
 "Fill in the HR Settings tab of the employee form."
 msgstr ""
 
@@ -243,8 +235,16 @@ msgstr ""
 #, python-format
 msgid ""
 "Please define product and product category property account on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
+"Fill in the HR Settings of the employee form."
 msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:87
+#, python-format
+msgid ""
+"Please define product and product category property account on the related employee.\n"
+"Fill in the HR Settings tab of the employee form."
+msgstr "Vui lòng xác định sản phẩm và định khoản theo nhóm sản phẩm trên nhân viên có liên quan.\nĐiền dữ liệu trên tab Thiết lập nhân sự trên form nhân viên."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -269,7 +269,7 @@ msgstr "Tháng Chín"
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
 msgid "Sign in / Sign out by Project"
-msgstr ""
+msgstr "Đăng nhập / Đăng xuất theo dự án"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task
@@ -286,7 +286,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
 #: view:report.timesheet.task.user:project_timesheet.view_task_hour_per_month_graph
 msgid "Task Hours Per Month"
-msgstr ""
+msgstr "Số giờ trên tháng"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
@@ -323,11 +323,11 @@ msgstr "Năm"
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
-msgstr ""
+msgstr "Bạn không thể xóa một đối tác mà được gán tới một dự án, nhưng bạn có thể bỏ chọn trường Có hiệu lực."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:321
 #, python-format
 msgid ""
 "You cannot select a Analytic Account which is in Close or Cancelled state."
-msgstr ""
+msgstr "Bạn không thể chọn một Tài khoản quản trị mà có trạng thái Đóng hoặc Hủy bỏ."

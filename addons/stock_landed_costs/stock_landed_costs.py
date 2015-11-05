@@ -25,6 +25,7 @@ from openerp.exceptions import Warning
 from openerp.tools import float_compare, float_round
 from openerp.tools.translate import _
 import product
+from openerp import SUPERUSER_ID
 
 
 class stock_landed_cost(osv.osv):
@@ -201,21 +202,20 @@ class stock_landed_cost(osv.osv):
             if not cost.valuation_adjustment_lines or not self._check_sum(cr, uid, cost, context=context):
                 raise osv.except_osv(_('Error!'), _('You cannot validate a landed cost which has no valid valuation lines.'))
             move_id = self._create_account_move(cr, uid, cost, context=context)
-            quant_dict = {}
             for line in cost.valuation_adjustment_lines:
                 if not line.move_id:
                     continue
                 per_unit = line.final_cost / line.quantity
                 diff = per_unit - line.former_cost_per_unit
                 quants = [quant for quant in line.move_id.quant_ids]
+                quant_dict = {}
                 for quant in quants:
                     if quant.id not in quant_dict:
                         quant_dict[quant.id] = quant.cost + diff
                     else:
                         quant_dict[quant.id] += diff
                 for key, value in quant_dict.items():
-                    print value
-                    quant_obj.write(cr, uid, key, {'cost': value}, context=context)
+                    quant_obj.write(cr, SUPERUSER_ID, key, {'cost': value}, context=context)
                 qty_out = 0
                 for quant in line.move_id.quant_ids:
                     if quant.location_id.usage != 'internal':
@@ -286,7 +286,8 @@ class stock_landed_cost(osv.osv):
 
                         if digits:
                             value = float_round(value, precision_digits=digits[1], rounding_method='UP')
-                            value = min(value, line.price_unit - value_split)
+                            fnc = min if line.price_unit > 0 else max
+                            value = fnc(value, line.price_unit - value_split)
                             value_split += value
 
                         if valuation.id not in towrite_dict:

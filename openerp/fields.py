@@ -548,13 +548,15 @@ class Field(object):
 
     def _inverse_related(self, records):
         """ Inverse the related field ``self`` on ``records``. """
+        # store record values, otherwise they may be lost by cache invalidation!
+        record_value = {record: record[self.name] for record in records}
         for record in records:
             other = record
             # traverse the intermediate fields, and keep at most one record
             for name in self.related[:-1]:
                 other = other[name][:1]
             if other:
-                other[self.related[-1]] = record[self.name]
+                other[self.related[-1]] = record_value[record]
 
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field ``self``. """

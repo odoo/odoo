@@ -3,14 +3,15 @@
 # * sale
 # 
 # Translators:
+# Aleksander <provaleks@provendo.no>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 08:00+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-21 10:41+0000\n"
+"Last-Translator: Aleksander <provaleks@provendo.no>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-8/language/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,14 +123,14 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Tilbud' or 'Ordre'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -365,7 +366,7 @@ msgstr ""
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
+msgstr "Lar deg velge og vedlikeholder forskjellige måleenheter for produkter."
 
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
@@ -652,7 +653,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Dato for siste melding på denne posten."
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -791,7 +792,7 @@ msgstr "Avvik"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Utvidede filtre"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
@@ -883,7 +884,7 @@ msgstr "Gruppering av fakturaer"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Inneholder meldings-sammendrag (antall meldinger, ...). Dette sammendraget er i HTML-format, slik at det det kan bli satt rett inn i kanban-visninger."
 
 #. module: sale
 #: code:addons/sale/res_config.py:100
@@ -1022,7 +1023,7 @@ msgstr ""
 #: code:addons/sale/sale.py:1224
 #, python-format
 msgid "Invoice paid"
-msgstr ""
+msgstr "Faktura betalt"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1060,7 +1061,7 @@ msgstr "Fakturastatistikk"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Invoicing Process"
-msgstr ""
+msgstr "Faktureringsprosess"
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -1080,7 +1081,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Siste meldingsdato"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
@@ -1137,7 +1138,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Ny e-post"
 
 #. module: sale
 #: code:addons/sale/sale.py:1048
@@ -1217,7 +1218,7 @@ msgstr "Ordrelinjer til fakturering"
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
-msgstr ""
+msgstr "Ordremåned"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
@@ -1242,7 +1243,7 @@ msgstr "Ordrereferanse må være unik pr. firma!"
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "Ordrestatus"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1747,7 +1748,7 @@ msgstr "Forsendelsesavvik"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Shipping address:"
-msgstr ""
+msgstr "Leveringsadresse:"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1799,12 +1800,12 @@ msgstr "Avgifter"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Vilkår og betingelser"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "Vilkår og betingelser..."
 
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
@@ -1968,7 +1969,7 @@ msgstr "Totalt inkl. avg."
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "Totalsum uten avgift"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
@@ -2080,12 +2081,12 @@ msgstr "Advarsel!"
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Meldinger fra Nettsted"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Historikk for kommuniksjon på nettsted"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0

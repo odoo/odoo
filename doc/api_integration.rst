@@ -94,6 +94,26 @@ Configuration
 If you already have an Odoo server installed, you can just use its
 parameters
 
+.. warning::
+
+    For Odoo Online instances (<domain>.odoo.com), users are created without a
+    *local* password (as a person you are logged in via the Odoo Online
+    authentication system, not by the instance itself). To use XML-RPC on Odoo
+    Online instances, you will need to set a password on the user account you
+    want to use:
+
+    * Log in your instance with an administrator account
+    * Go to :menuselection:`Settings --> Users --> Users`
+    * Click on the user you want to use for XML-RPC access
+    * Click the :guilabel:`Change Password` button
+    * Set a :guilabel:`New Password` value then click
+      :guilabel:`Change Password`.
+
+    The *server url* is the instance's domain (e.g.
+    *https://mycompany.odoo.com*), the *database name* is the name of the
+    instance (e.g. *mycompany*). The *username* is the configured user's login
+    as shown by the *Change Password* screen.
+
 .. rst-class:: setup doc-aside
 
 .. switcher::
@@ -125,6 +145,9 @@ parameters
                       db = <insert database name>,
                 username = "admin",
                 password = <insert password for your admin user (default: admin)>;
+
+demo
+''''
 
 To make exploration simpler, you can also ask https://demo.odoo.com for a test
 database:

@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-31 03:26+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-19 10:27+0000\n"
+"Last-Translator: Mateus Cerqueira Lopes <mateus1@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -550,7 +550,7 @@ msgstr "Data Final"
 
 #. module: project
 #: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
+msgid "Error ! Task end-date must be greater than task start-date"
 msgstr "Erro! A data final deve ser maior do que a data inicial"
 
 #. module: project
@@ -560,7 +560,7 @@ msgstr "Erro! Você não pode criar tarefas recursivas."
 
 #. module: project
 #: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
+msgid "Error! project start-date must be lower than project end-date."
 msgstr "Erro! A data inicial do projeto precisa ser menor que a data final."
 
 #. module: project
@@ -690,7 +690,7 @@ msgid ""
 "- Employees Only: employees see all tasks or issues\n"
 "- Followers Only: employees see only the followed tasks or issues; if portal\n"
 "   is activated, portal users see the followed tasks or issues."
-msgstr ""
+msgstr "Detém visibilidade das tarefas ou questões que pertencem ao projeto atual:\n- Público: toda a gente vê tudo; Se portal é ativado, os usuários do portal\n    ver todas as tarefas ou questões; Se portal anônimo é ativado, os visitantes\n    ver todas as tarefas ou problemas\n- Portal (Portal disponível somente se estiver instalado): empregados ver tudo;\n    Se portal é ativado, os usuários do portal ver as tarefas ou questões seguido por\n    eles ou por alguém da sua empresa\n- Employees Only: empregados ver todas as tarefas ou problemas\n- Só Seguidores: empregados ver apenas as tarefas seguidas ou questões; Se portal\n    é ativado, os usuários do portal ver as tarefas ou problemas seguidos."
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -843,7 +843,7 @@ msgstr "Última atualização em"
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to new pads (for example: http://etherpad.com/).\n"
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
 msgstr "Permite personalizar a empresa que a instalação Pad deve ser usado para conectar-se a novos pads (por exemplo: http://etherpad.com/).\n-Instala o módulo pad."
 
@@ -1451,7 +1451,7 @@ msgstr "Delegação de Tarefa"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr ""
+msgstr "Tarefa de Tubulação"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -1582,14 +1582,14 @@ msgstr "O tipo de documento criado no recebimento de e-mail pelo apelido de e-ma
 msgid ""
 "This allows you to transfer the entries under tasks defined for Project Management to the timesheet line entries for particular date and user, with the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
-msgstr ""
+msgstr "Isso permite que você transfira as entradas em tarefas definidas para Gerenciamento de Projetos para as entradas da linha de quadro de horários especial data e do usuário para, com o efeito de criar, editar e excluir qualquer maneiras.\n-Este Instala o project_timesheet módulo."
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
 msgid ""
 "This feature automatically creates project tasks from service products in sale orders. More precisely, tasks are created for procurement lines with product of type 'Service', procurement method 'Make to Order', and supply method 'Manufacture'.\n"
 "-This installs the module sale_service."
-msgstr ""
+msgstr "Este recurso cria automaticamente tarefas de projeto de produtos de serviços em ordens de venda. Mais precisamente, as tarefas são criadas para as linhas de adjudicação de contratos com o produto do tipo 'Serviço', método de aquisição \"sob encomenda\", eo método de fornecimento 'Fabricação'.\n-Este Instala o sale_service módulo."
 
 #. module: project
 #: help:project.task,active:0
@@ -1616,8 +1616,10 @@ msgstr "Este estágio fica dobrado na visão kanban quando não tem nenhum regis
 
 #. module: project
 #: help:project.config.settings,time_unit:0
-msgid "This will set the unit of measure used in projects and tasks."
-msgstr "Define a unidade de medida utilizada em projetos e tarefas."
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"Changing the unit will only impact new entries."
+msgstr ""
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -1704,7 +1706,7 @@ msgstr "Usabilidade"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Use Tasks"
-msgstr ""
+msgstr "Utilize as Tarefas"
 
 #. module: project
 #: field:project.config.settings,module_pad:0

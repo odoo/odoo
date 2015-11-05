@@ -1,0 +1,67 @@
+-   |
+    YAML Import menuitem scenario:
+    Check that !menuitem import works with YAML.
+
+-   |
+    Given a standard three level menuitem structure including:
+
+    A top level menu item (no parent no action)
+-
+    !menuitem {
+        id: test_menu_top,
+        name: "Test Menu Top",
+    }
+-   >
+    An intermediary menu item (parent, but no action)
+-
+    !menuitem {
+        id: test_menu_sub,
+        parent: test_menu_top,
+        name: "Test Menu Sub",
+    }
+
+-   >
+    A leaf menu item (parent and action)
+-
+    !menuitem {
+        id: test_menu_action,
+        name: "Test Menu Action",
+        parent: test_menu_sub,
+        action: base.open_module_tree,
+    }
+
+-   >
+    Another leaf menu item (parent and action) in another menu structure with
+    dotted parent id
+-
+    !menuitem {
+        id: test_menu_action_2,
+        name: "Test Menu Action 2",
+        parent: base.menu_management,
+        action: base.open_module_tree,
+        sequence: 93,
+    }
+
+-   >
+    Then these menu items should be present and properly configured.
+-
+    !assert { model: ir.ui.menu, id: test_menu_top, string: menu item "top" is properly configured }:
+        - name == 'Test Menu Top'
+        - parent_id.name == False
+        - action == False
+-
+    !assert { model: ir.ui.menu, id: test_menu_sub, string: menu item "sub" is properly configured }:
+        - name == 'Test Menu Sub'
+        - parent_id.name == 'Test Menu Top'
+        - action == False
+-
+    !assert { model: ir.ui.menu, id: test_menu_action, string: menu item "action" is properly configured  }:
+        - name == 'Test Menu Action'
+        - parent_id.name == 'Test Menu Sub'
+        - action.name == 'Local Modules'
+-
+    !assert { model: ir.ui.menu, id: test_menu_action_2, string: menu item "action_2" is properly configured  }:
+        - name == 'Test Menu Action 2'
+        - sequence == 93
+        - parent_id.name == 'Modules'
+        - action.name == 'Local Modules'

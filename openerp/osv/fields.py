@@ -56,19 +56,8 @@ from openerp import SUPERUSER_ID, registry
 @contextmanager
 def _get_cursor():
     # yield a valid cursor from any environment or create a new one if none found
-    from openerp.api import Environment
-    from openerp.http import request
-    try:
-        request.env     # force request's env to be computed
-    except RuntimeError:
-        pass    # ignore if not in a request
-    for env in Environment.envs:
-        if not env.cr.closed:
-            yield env.cr
-            break
-    else:
-        with registry().cursor() as cr:
-            yield cr
+    with registry().cursor() as cr:
+        yield cr
 
 EMPTY_DICT = frozendict()
 
@@ -385,6 +374,7 @@ class html(text):
     def to_field_args(self):
         args = super(html, self).to_field_args()
         args['sanitize'] = self._sanitize
+        args['strip_style'] = self._strip_style
         return args
 
 import __builtin__
@@ -1409,6 +1399,7 @@ class function(_column):
     def to_field_args(self):
         args = super(function, self).to_field_args()
         args['store'] = bool(self.store)
+        args['company_dependent'] = False
         if self._type in ('float',):
             args['digits'] = self._digits_compute or self._digits
         elif self._type in ('selection', 'reference'):

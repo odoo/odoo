@@ -101,5 +101,12 @@
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
 
+    <record model="ir.rule" id="report_project_task_user_report_comp_rule">
+        <field name="name">Task Analysis multi-company</field>
+        <field name="model_id" ref="model_report_project_task_user"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
 </data>
 </openerp>

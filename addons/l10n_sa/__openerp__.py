@@ -3,7 +3,6 @@
 {
     'name': 'Saudi Arabia - Accounting',
     'version': '1.1',
-    'sequence': 1,
     'author': 'DVIT.ME',
     'category': 'Localization/Account Charts',
     'description': """

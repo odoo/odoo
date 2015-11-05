@@ -317,6 +317,10 @@ class sale_order_option(osv.osv):
         if product.description_sale:
             self.name += '\n' + product.description_sale
         self.uom_id = product.product_tmpl_id.uom_id
+        if product and self.order_id.pricelist_id:
+            partner_id = self.order_id.partner_id.id
+            pricelist = self.order_id.pricelist_id.id
+            self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
 
 
 class product_template(osv.Model):

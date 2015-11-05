@@ -130,7 +130,7 @@
             // TODO: link nodes with same content
             node.className += ' oe_translatable_text';
             node.setAttribute('data-oe-translation-view-id', view_id);
-            var content = node.childNodes[0].data.trim();
+            var content = $(node).html().trim();
             var trans = this.translations.filter(function (t) {
                 return t.res_id === view_id && t.value.trim() === content;
             });
@@ -160,7 +160,7 @@
                 }
                 trans[data.oeTranslationViewId].push({
                     initial_content: self.getInitialContent(this),
-                    new_content: $node.text(),
+                    new_content: $node.html(),
                     translation_id: data.oeTranslationId || null
                 });
             });
