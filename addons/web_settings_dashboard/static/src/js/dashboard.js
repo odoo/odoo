@@ -72,6 +72,7 @@ var DashboardInvitations = Widget.extend({
         'click .o_web_settings_dashboard_invitations': 'send_invitations',
         'click .o_web_settings_dashboard_access_rights': 'on_access_rights_clicked',
         'click .o_web_settings_dashboard_user': 'on_user_clicked',
+        'click .o_web_settings_dashboard_more': 'on_more',
     },
     init: function(parent, data){
         this.data = data;
@@ -128,6 +129,20 @@ var DashboardInvitations = Widget.extend({
             views: [[this.data.user_form_view_id, 'form']],
             res_id: user_id,
         }
+        this.do_action(action,{
+            on_reverse_breadcrumb: function(){ return self.reload();}
+        });
+    },
+    on_more: function(e) {
+        e.preventDefault();
+        var action = {
+            type: 'ir.actions.act_window',
+            view_type: 'form',
+            view_mode: 'tree,form',
+            res_model: 'res.users',
+            domain: [['log_ids', '=', false]],
+            views: [[false, 'list'], [false, 'form']],
+        };
         this.do_action(action,{
             on_reverse_breadcrumb: function(){ return self.reload();}
         });

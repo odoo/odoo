@@ -12,6 +12,6 @@ class PlannerInventory(models.Model):
         return planner
 
     def _prepare_planner_inventory_data(self):
+        # TDE note: void method kept (stable version), probably to remove in master
         return {
-            'uom_menu_id': self.env.ref('stock.menu_stock_uom_form_action').id
         }

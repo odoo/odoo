@@ -92,7 +92,7 @@ class SaleOrderLine(models.Model):
 
     product_packaging = fields.Many2one('product.packaging', string='Packaging', default=False)
     route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)])
-    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', string='Product Template')
+    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', string='Product Template', readonly=True)
 
     @api.multi
     @api.depends('product_id')
@@ -119,7 +119,6 @@ class SaleOrderLine(models.Model):
             self.product_packaging = False
             return {}
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        self.product_tmpl_id = self.product_id.product_tmpl_id
         if self.product_id.type == 'product':
             product = self.product_id.with_context(
                 lang=self.order_id.partner_id.lang,

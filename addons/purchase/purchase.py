@@ -556,28 +556,11 @@ class PurchaseOrderLine(models.Model):
     def onchange_product_id(self):
         result = {}
         if not self.product_id:
-            return {}
+            return result
 
         if self.product_id.uom_id.category_id.id != self.product_uom.category_id.id:
             self.product_uom = self.product_id.uom_po_id
         result['domain'] = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-
-        seller = self.product_id._select_seller(
-            self.product_id,
-            partner_id=self.partner_id,
-            quantity=self.product_qty,
-            date=self.order_id.date_order and self.order_id.date_order[:10],
-            uom_id=self.product_uom)
-
-        fpos = self.order_id.fiscal_position_id
-        self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
-
-        price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, self.product_id.supplier_taxes_id, self.taxes_id) if seller else 0.0
-        if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
-            price_unit = seller.currency_id.compute(price_unit, self.order_id.currency_id)
-        self.price_unit = price_unit
-        if seller or not self.date_planned:
-            self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         product_lang = self.product_id.with_context({
             'lang': self.partner_id.lang,
@@ -586,6 +569,29 @@ class PurchaseOrderLine(models.Model):
         self.name = product_lang.display_name
         if product_lang.description_purchase:
             self.name += '\n' + product_lang.description_purchase
+
+        seller = self.product_id._select_seller(
+            self.product_id,
+            partner_id=self.partner_id,
+            quantity=self.product_qty,
+            date=self.order_id.date_order and self.order_id.date_order[:10],
+            uom_id=self.product_uom)
+
+        if seller or not self.date_planned:
+            self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
+        if not seller:
+            return result
+
+        fpos = self.order_id.fiscal_position_id
+        self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
+
+        price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, self.product_id.supplier_taxes_id, self.taxes_id) if seller else 0.0
+        if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
+            price_unit = seller.currency_id.compute(price_unit, self.order_id.currency_id)
+        self.price_unit = price_unit
+
+        return result
 
 
 class ProcurementRule(models.Model):
