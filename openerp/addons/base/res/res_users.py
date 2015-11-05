@@ -346,9 +346,9 @@ class res_users(osv.osv):
         if values.get('active') == False:
             for current_id in ids:
                 if current_id == SUPERUSER_ID:
-                    raise UserError(_("You cannot unactivate the admin user."))
+                    raise UserError(_("You cannot deactivate the admin user."))
                 elif current_id == uid:
-                    raise UserError(_("You cannot unactivate the user you're currently logged in as."))
+                    raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
         if ids == [uid]:
             for key in values.keys():
