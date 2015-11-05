@@ -39,8 +39,8 @@ class WebSettingsDashboard(http.Controller):
                 'installed_apps': installed_apps
             },
             'users_info': {
-                'active_users': counts[True],
-                'pending_count': counts[False],
+                'active_users': counts.get(True, 0),
+                'pending_count': counts.get(False, 0),
                 'pending_users': pending_users,
                 'user_form_view_id': request.env['ir.model.data'].xmlid_to_res_id("base.view_users_form"),
             },
