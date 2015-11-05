@@ -34,6 +34,12 @@ class sale_configuration(osv.TransientModel):
             (1, 'Allow discounts on sales order lines')
             ], "Discount",
             implied_group='sale.group_discount_per_so_line'),
+        'group_display_incoterm':fields.selection([
+            (0, 'No incoterm on reports'),
+            (1, 'Show incoterms on sale orders and invoices')
+            ], "Incoterms",
+            implied_group='sale.group_display_incoterm',
+            help="The printed reports will display the incoterms for the sale orders and the related invoices"),
         'module_sale_margin': fields.selection([
             (0, 'Salespeople do not need to view margins when quoting'),
             (1, 'Display margins on quotations and sales orders')

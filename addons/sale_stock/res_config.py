@@ -27,12 +27,6 @@ class SaleConfiguration(models.TransientModel):
         (1, 'Choose specific routes on sales order lines (advanced)')
         ], "Order Routing",
         implied_group='sale_stock.group_route_so_lines')
-    group_display_incoterm = fields.Selection([
-        (0, 'No incoterm on reports'),
-        (1, 'Show incoterms on sale orders and invoices')
-        ], "Incoterms",
-        implied_group='sale.group_display_incoterm',
-        help="The printed reports will display the incoterms for the sale orders and the related invoices")
 
     @api.multi
     def get_default_sale_config(self):
