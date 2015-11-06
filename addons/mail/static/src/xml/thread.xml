@@ -84,7 +84,7 @@
                         on <a class="o_mail_redirect" href="#" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id"><t t-esc="message.record_name"/></a>
                     </t>
                     <t t-if="message.origin_id &amp;&amp; (message.origin_id !== options.channel_id)">
-                        (in channel <a class="o_channel_redirect" t-att-data-oe-id="message.origin_id" href="#"><t t-esc="message.origin_name"/>)</a>
+                        (from <a class="o_channel_redirect" t-att-data-oe-id="message.origin_id" href="#"><t t-esc="message.origin_name"/>)</a>
                     </t>
                 </p>
                 <t t-if="message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0">
