@@ -1574,6 +1574,10 @@ class BaseModel(object):
             for x in itertools.chain(resprint, resaction, resrelate):
                 x['string'] = x['name']
 
+            if context.get("toolbar_hide_actions"):
+                resaction = filter(lambda x: not x.get('xml_id') in context["toolbar_hide_actions"], resaction)
+                resrelate = filter(lambda x: not x.get('xml_id') in context["toolbar_hide_actions"], resrelate)
+
             result['toolbar'] = {
                 'print': resprint,
                 'action': resaction,
