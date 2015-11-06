@@ -213,9 +213,6 @@ function make_channel (data, options) {
         channel.name = data.direct_partner[0].name;
         channel.status = data.direct_partner[0].im_status;
     }
-    if ((channel.type === 'public') || (channel.type === 'private')) {
-        channel.name = '#' + channel.name;
-    }
     return channel;
 }
 
@@ -365,6 +362,15 @@ var chat_manager = {
             });
             needaction_counter = 0;
             chat_manager.bus.trigger('update_needaction', needaction_counter);
+        });
+    },
+
+    unstar_all: function () {
+        MessageModel.call('unstar_all', [[]], {}).then(function (ids) {
+            _.each(messages, function (msg) {
+                remove_message_from_channel("channel_starred", msg);
+                chat_manager.bus.trigger('update_message', msg);
+            });
         });
     },
 

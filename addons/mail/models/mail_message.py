@@ -177,6 +177,13 @@ class Message(models.Model):
             self = self.sudo()
         return self.write({'needaction_partner_ids': [(3, pid) for pid in partner_ids]})
 
+    @api.model
+    def unstar_all(self):
+        partner_id = self.env.user.partner_id.id
+
+        starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
+        starred_messages.write({'starred_partner_ids': [(3, partner_id)]})
+
     @api.multi
     def set_message_starred(self, starred):
         """ Set messages as (un)starred. Technically, the notifications related

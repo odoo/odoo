@@ -73,7 +73,7 @@
         <t t-foreach="channels" t-as="channel">
             <div t-if="channel.type === channel_type" class="o_mail_chat_channel_item" t-att-data-channel-id="channel.id">
                 <span><i t-if="display_status" t-att-class="'o_user_status fa ' + (channel.status == 'online' ? 'fa-circle' : 'fa-circle-o')"/></span>
-                <t t-esc="channel.name"/>
+                <span t-if="display_hash" class="o_mail_hash">#</span> <t t-esc="channel.name"/>
                 <span class="fa fa-times pull-right o_mail_partner_unpin" t-att-title="_t('Close')" t-att-data-channel-id="channel.id"/>
             </div>
         </t>
@@ -90,6 +90,7 @@
             <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite" t-att-title='_t("Invite people")'>Invite</button>
             <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_detach hidden-xs" t-att-title='_t("Detach the conversation")'>Detach</button>
             <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_mark_read" t-att-title='_t("Mark all as read")'>Mark all read</button>
+            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_unstar_all" t-att-title='_t("Unstar all messages")'>Unstar all</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_unsubscribe" t-att-title='_t("Unsubscribe from channel")'>Unsubscribe</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_settings" t-att-title='_t("Open channel settings")'>Settings</button>
         </div>
