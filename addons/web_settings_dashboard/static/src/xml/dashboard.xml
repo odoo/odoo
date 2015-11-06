@@ -66,6 +66,10 @@
                         <t t-foreach="pending_users" t-as="pending">
                             <a href="#"><div class="o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/></div></a>
                         </t>
+                        <t t-if="pending_users.length &lt; widget.data.pending_count">
+                            <br/>
+                            <a href="#"><div class="o_web_settings_dashboard_more"><t t-esc="widget.data.pending_count - pending_users.length"/> more</div></a>
+                        </t>
                     </t>
                 </small>
             </div>
