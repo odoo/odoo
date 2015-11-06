@@ -238,13 +238,13 @@ class AccountMoveLine(models.Model):
 
             for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
                 amount -= partial_line.amount
-                #getting the date of the matched item to compute the amount_residual in currency
-                date = partial_line.credit_move_id.date if partial_line.debit_move_id == line else partial_line.debit_move_id.date
                 if line.currency_id:
                     if partial_line.currency_id and partial_line.currency_id == line.currency_id:
                         amount_residual_currency -= partial_line.amount_currency
                     else:
-                        amount_residual_currency -= line.company_id.currency_id.with_context(date=date).compute(partial_line.amount, line.currency_id)
+                        # The date should be the date of the AML related to the invoice. This
+                        # provides a fixed date for the currency rate.
+                        amount_residual_currency -= line.company_id.currency_id.with_context(date=line.date).compute(partial_line.amount, line.currency_id)
 
             #computing the `reconciled` field. As we book exchange rate difference on each partial matching,
             #we can only check the amount in company currency

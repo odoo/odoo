@@ -137,21 +137,33 @@ class AccountInvoice(models.Model):
         if self.payment_move_line_ids:
             info = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
             for payment in self.payment_move_line_ids:
-                if self.type in ('out_invoice', 'in_refund'):
-                    amount = sum([p.amount for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
-                    amount_currency = sum([p.amount_currency for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
-                elif self.type in ('in_invoice', 'out_refund'):
-                    amount = sum([p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
-                    amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
                 #we don't take into account the movement created due to a change difference
                 if payment.currency_id and payment.move_id.rate_diff_partial_rec_id:
                     continue
+
+                amount_to_show = 0.0
                 # get the payment value in invoice currency
-                if payment.currency_id and amount_currency != 0:
-                    amount_to_show = -amount_currency
-                else:
-                    self.with_context(date=payment.date)
-                    amount_to_show = payment.company_id.currency_id.compute(-amount, self.currency_id)
+                if payment.currency_id and self.type in ['out_invoice', 'in_refund']:
+                    amount_to_show = -sum([p.amount_currency for p in payment.matched_debit_ids \
+                                        if p.debit_move_id in self.move_id.line_ids])
+                elif payment.currency_id and self.type in ['in_invoice', 'out_refund']:
+                    amount_to_show = -sum([p.amount_currency for p in payment.matched_credit_ids \
+                                        if p.credit_move_id in self.move_id.line_ids])
+
+                if amount_to_show == 0.0:
+                    # The amount is converted into the currency of the invoice, at the date of the
+                    # account move lines of the invoice. This ensures a computation at a coherent
+                    # currency rate
+                    curr = payment.company_id.currency_id
+                    if self.type in ['out_invoice', 'in_refund']:
+                        amount_to_show = -sum([curr.with_context(date=p.debit_move_id.date).compute(p.amount, self.currency_id) \
+                                            for p in payment.matched_debit_ids \
+                                            if p.debit_move_id in self.move_id.line_ids])
+                    elif self.type in ['in_invoice', 'out_refund']:
+                        amount_to_show = -sum([curr.with_context(date=p.credit_move_id.date).compute(p.amount, self.currency_id) \
+                                            for p in payment.matched_credit_ids \
+                                            if p.credit_move_id in self.move_id.line_ids])
+
                 info['content'].append({
                     'name': payment.name,
                     'journal_name': payment.journal_id.name,
