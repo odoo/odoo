@@ -46,33 +46,15 @@ class Config(models.Model):
         else:
             config_formula = '=oe_settings("%s";"%s";"%s";"%s")' % (url, self.env.cr.dbname, self.env.user.login, self.env.user.password)
 
-        request = '''<feed xmlns="http://www.w3.org/2005/Atom"
-      xmlns:batch="http://schemas.google.com/gdata/batch"
-      xmlns:gs="http://schemas.google.com/spreadsheets/2006">
-  <id>https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full</id>
-  <entry>
-    <batch:id>A1</batch:id>
-    <batch:operation type="update"/>
-    <id>https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R1C1</id>
-    <link rel="edit" type="application/atom+xml"
-      href="https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R1C1"/>
-    <gs:cell row="1" col="1" inputValue="{formula}"/>
-  </entry>
-  <entry>
-    <batch:id>A2</batch:id>
-    <batch:operation type="update"/>
-    <id>https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R60C15</id>
-    <link rel="edit" type="application/atom+xml"
-      href="https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R60C15"/>
-    <gs:cell row="60" col="15" inputValue="{config}"/>
-  </entry>
-</feed>''' .format(key=spreadsheet_key, formula=cgi.escape(formula, quote=True), config=cgi.escape(config_formula, quote=True))
+        template = self.env.ref('google_spreadsheet.sheets_api_request_format')
+        feed = etree.fromstring(template.arch_base).findall('{http://www.w3.org/2005/Atom}feed')[0]
+        request = etree.tostring(feed).format(key=spreadsheet_key,
+                                              formula=cgi.escape(formula, quote=True),
+                                              config=cgi.escape(config_formula, quote=True))
 
         try:
-            req = urllib2.Request(
-                'https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?%s' % (spreadsheet_key, werkzeug.url_encode({'v': 3, 'access_token': access_token})),
-                data=request,
-                headers={'content-type': 'application/atom+xml', 'If-Match': '*'})
+            req = urllib2.Request('https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?%s' % (spreadsheet_key, werkzeug.url_encode({'v': 3, 'access_token': access_token})),
+                                  data=request, headers={'content-type': 'application/atom+xml', 'If-Match': '*'})
             urllib2.urlopen(req, timeout=TIMEOUT)
         except (urllib2.HTTPError, urllib2.URLError):
             _logger.warning("An error occured while writting the formula on the Google Spreadsheet.")
