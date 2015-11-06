@@ -13,6 +13,47 @@
             </field>
         </record>
 
+        <record id="view_order_form_portal_sale" model="ir.ui.view">
+            <field name="name">sale.order.form.portal_sale</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="groups_id" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr='//field[@name="order_line"]/form//field[@name="procurement_ids"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/form//field[@name="product_id"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/form//field[@name="qty_delivered_updateable"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/form//label[@for="qty_delivered"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/form//field[@name="qty_delivered"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/form//label[@for="qty_invoiced"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/form//field[@name="qty_invoiced"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/form//field[@name="price_unit"]' position="attributes">
+                        <attribute name="attrs">{}</attribute>
+                    </xpath>
+                    <xpath expr='//field[@name="order_line"]/form//field[@name="tax_id"]' position="attributes">
+                        <attribute name="attrs">{}</attribute>
+                    </xpath>
+                    <xpath expr='//field[@name="order_line"]/tree//field[@name="procurement_ids"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/tree//field[@name="product_id"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/tree//field[@name="qty_delivered_updateable"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/tree//field[@name="qty_delivered"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/tree//field[@name="qty_invoiced"]' position="replace"/>
+                    <xpath expr='//field[@name="order_line"]/tree//field[@name="price_unit"]' position="attributes">
+                        <attribute name="attrs">{}</attribute>
+                    </xpath>
+                    <xpath expr='//field[@name="order_line"]/tree//field[@name="tax_id"]' position="attributes">
+                        <attribute name="attrs">{}</attribute>
+                    </xpath>
+                    <xpath expr='//field[@name="order_line"]/kanban//field[@name="product_id"]' position="replace">
+                        <field name="name"/>
+                    </xpath>
+                    <xpath expr='//field[@name="order_line"]/kanban/templates/t/div//span/t' position="replace">
+                        <t t-esc="record.name.value"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
         <!--
             Override the original action to set another help field and/or
             another context field, more suited for portal members
