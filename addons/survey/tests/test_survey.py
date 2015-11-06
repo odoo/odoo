@@ -7,10 +7,10 @@ from collections import Counter
 from itertools import product
 from urlparse import urljoin
 
-from openerp import _
-from openerp.exceptions import UserError
-from openerp.tests.common import TransactionCase
-from openerp.addons.website.models.website import slug
+from odoo import _
+from odoo.exceptions import UserError
+from odoo.tests.common import TransactionCase
+from odoo.addons.website.models.website import slug
 
 
 class TestSurvey(TransactionCase):
@@ -123,8 +123,7 @@ class TestSurvey(TransactionCase):
             'title': "S0", 'stage_id': self.Stage.search([('sequence', '=', 1)]).id,
             'page_ids': [(0, 0, {'title': "P0", 'question_ids': [(0, 0, {'question': "Q0", 'type': 'free_text'})]})]})
         action = correct_survey.action_send_survey()
-        templates = self.env['ir.model.data'].get_object_reference('survey', 'email_template_survey')
-        template_id = templates[1] if len(templates) > 0 else False
+        template_id = self.env.ref('survey.email_template_survey').id
         ctx = dict(self.env.context)
         ctx.update({
             'default_model': 'survey.survey',
@@ -204,14 +203,14 @@ class TestSurvey(TransactionCase):
             'partner_id': self.survey_user.partner_id.id,
             'user_input_line_ids': [(0, 0, {
                 'skipped': False, 'answer_type': 'free_text', 'value_free_text': "Test Answer",
-                'survey_id': self.survey1.id, 'page_id': self.page1, 'question_id': question.id})]})
+                'survey_id': self.survey1.id, 'page_id': self.page1.id, 'question_id': question.id})]})
 
         input_public = self.UserInput.sudo(self.user_public).create({
             'survey_id': self.survey1.id,
             'partner_id': self.survey_user.partner_id.id,
             'user_input_line_ids': [(0, 0, {
                 'skipped': False, 'answer_type': 'free_text', 'value_free_text': "Test Answer",
-                'survey_id': self.survey1.id, 'page_id': self.page1, 'question_id': question.id})]})
+                'survey_id': self.survey1.id, 'page_id': self.page1.id, 'question_id': question.id})]})
 
         answers = [input_portal.user_input_line_ids[0], input_public.user_input_line_ids[0]]
         expected_values = {'answer_type': 'free_text', 'value_free_text': "Test Answer"}
