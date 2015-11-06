@@ -523,6 +523,10 @@ class calendar_alarm_manager(osv.AbstractModel):
                 'message': message,
                 'duration_minutes': alarm.duration_minutes,
                 'timer': delta,
+                'all_day': event.allday,
+                'duration': event.duration,
+                'start': event.start,
+                'stop': event.stop,
                 'notify_at': alert['notify_at'].strftime(DEFAULT_SERVER_DATETIME_FORMAT),
             }]
 

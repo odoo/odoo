@@ -1,17 +1,18 @@
 odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
+var bus = require('bus.bus').bus
 var core = require('web.core');
 var CalendarView = require('web_calendar.CalendarView');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
+var formats = require('web.formats');
 var form_common = require('web.form_common');
 var Model = require('web.DataModel');
 var Notification = require('web.notification').Notification;
 var WebClient = require('web.WebClient');
 var widgets = require('web_calendar.widgets');
 var WebWidget = require('web.Widget');
-var bus = require('bus.bus').bus
 
 var FieldMany2ManyTags = core.form_widget_registry.get('many2many_tags');
 var _t = core._t;
@@ -209,11 +210,31 @@ var calendarAlarmManager = WebWidget.extend({
         var message = notification[1];
         if (message.event_id && channel[1] === "calendar.alarm"){
             if(self.getParent().$(".eid_" + message.event_id).length === 0) {
+                var display_message = this.prepare_message(message);
                 setTimeout(function() {
-                    self.getParent().notification_manager.display(new CalendarNotification(self.getParent().notification_manager, message.title, message.message, message.event_id));
+                    self.getParent().notification_manager.display(new CalendarNotification(self.getParent().notification_manager, message.title, display_message, message.event_id));
                 }, message.timer * 1000);
             }
         }
+    },
+    prepare_message: function(message) {
+        /* Prepare message and display datetime values in client's timezone */
+        var display_message;
+        if (message.all_day) {
+            display_message = _.str.sprintf(_t("AllDay , %s"), formats.format_value(message.start, {type: 'datetime'}));
+        } else {
+            var start_date = formats.format_value(message.start, {type: 'date'});
+            var start_time = formats.format_value(message.start, {type: 'time'});
+            var end_time_moment = moment(message.start).add(message.duration, 'hours');
+            var end_date = formats.format_value(end_time_moment, {type: 'date'});
+            var end_time = formats.format_value(end_time_moment.format("YYYY-MM-DD HH:mm:ss"), {type: 'time'});
+            if (message.duration < 24) {
+                display_message = _.str.sprintf(_t("%s at (%s To %s)"), start_date, start_time, end_time);
+            } else {
+                display_message = _.str.sprintf(_t("%s at %s To\n %s at %s"), start_date, start_time, end_date, end_time);
+            }
+        }
+        return display_message;
     }
 });
 
