@@ -19,7 +19,7 @@ python:
   - "2.7"
 
 env:
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0"
+  - VERSION="8.0" ODOO_REPO="Vauxoo/odoo" LINT_CHECK="0"
 
 virtualenv:
   system_site_packages: true
@@ -30,7 +30,7 @@ before_install:
 
 install:
   - ln -s ${HOME}/build/${ODOO_REPO} ${HOME}/${ODOO_REPO#*/}-${VERSION}
-  - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
+  - git clone --depth=1 https://github.com/Vauxoo/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - pip install -r ${HOME}/maintainer-quality-tools/travis/requirements.txt
   - pip install -q QUnitSuite flake8 coveralls pylint
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
