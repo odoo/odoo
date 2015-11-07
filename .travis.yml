@@ -39,7 +39,7 @@ install:
   - cp ${HOME}/maintainer-quality-tools/cfg/.coveragerc .
 
 script:
-  - SERVER_PATH=${HOME}/${ODOO_REPO#*/}-${VERSION}
+  - export SERVER_PATH=${HOME}/${ODOO_REPO#*/}-${VERSION}
   - export TRAVIS_BUILD_DIR=${SERVER_PATH}/openerp/addons
   - travis_run_tests
 
