@@ -8,8 +8,8 @@ declaration.
 
 Signed,
 
-Cyril Vinh-Tung cyril@invitu.com https://github.com/invitu
+Cyril Vinh-Tung contact@invitu.com https://github.com/invitu
 
 List of contributors:
-Cyril Vinh-Tung cyril@invitu.com https://github.com/invitu
+Cyril Vinh-Tung contact@invitu.com https://github.com/invitu
 
