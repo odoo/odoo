@@ -3,6 +3,7 @@
 # * barcodes
 # 
 # Translators:
+# Clo <clo@odoo.com>, 2015
 # Sylvain GROS-DESORMEAUX <sylvain.grodes@gmail.com>, 2015
 # Symons Xavier <xsy@openerp.com>, 2015
 msgid ""
@@ -10,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-10-29 14:16+0000\n"
-"Last-Translator: Sylvain GROS-DESORMEAUX <sylvain.grodes@gmail.com>\n"
+"PO-Revision-Date: 2015-11-02 10:13+0000\n"
+"Last-Translator: Clo <clo@odoo.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,13 +24,13 @@ msgstr ""
 #: code:addons/barcodes/barcodes.py:223
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr ""
+msgstr " '*' n'est pas un modèle de code-barres Regex. Vouliez-vous indiquer '.*' ?"
 
 #. module: barcodes
 #: code:addons/barcodes/barcodes.py:221
 #, python-format
 msgid ": a rule can only contain one pair of braces."
-msgstr ""
+msgstr ": une règle ne peut contenir qu'une paire de bretelles."
 
 #. module: barcodes
 #: code:addons/barcodes/barcodes.py:217
@@ -50,7 +51,7 @@ msgid ""
 "                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
-msgstr ""
+msgstr "<i>La nomenclature des codes-barres</i> défini comment les codes-barres sont reconnus et catégorisés.\n                                Lorsqu'un code-barres est scanné, il est associé à la <i>première</i> règle avec un modèle \ncorrespondant. La syntaxe du modèle est celui de l'expression régulière, et un code-barres est associé\n                                si l'expression régulière correspond à un préfixe du code-barres."
 
 #. module: barcodes
 #: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -72,7 +73,7 @@ msgstr "Toujours"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr ""
+msgstr "Une identification interne pour cette règle de nomenclature du code-barres"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_name
@@ -192,7 +193,7 @@ msgid ""
 "                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases, \n"
 "                                the barcode field on the associated records <i>must</i> show these digits as \n"
 "                                zeroes."
-msgstr ""
+msgstr "Les modèles peuvent aussi définir comment les valeur numériques telles que le poids ou le prix, peuvent être\n                                encodées dans le code-barres. Ils sont indiqués par le <code>{NNN}</code> où les N's\n                                définissent où les chiffres du numéro sont encodés. Les flotteurs sont également pris en charge avec les\n                                decimales indiquées avec les D's, tel que <code>{NNNDD}</code>. Dans ces cas, \n                                le champs du code-barres sur les enregistrements associés <i>doivent</i> montrer ces chiffres commes \n                                zéros."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_name
@@ -261,7 +262,7 @@ msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
 "setting determines if a UPC/EAN barcode should be automatically converted in"
 " one way or another when trying to match a rule with the other encoding."
-msgstr ""
+msgstr "Les codes UPC peuvent être converti en EAN en mettant un zéro comme préfix. Ce réglage détermine si un code-barre UPC/EAN devrait être automatiquement converti dans un sens ou dans l'autre en essayant de correspondre à une règle avec l'autre encodage."
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
@@ -277,7 +278,7 @@ msgstr "Conversion UPC/EAN"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
-msgstr ""
+msgstr "Utilisé pour commander des règles telles que les règles avec une séquence similaire correspondent en premier"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
@@ -287,7 +288,7 @@ msgstr "Valeur du dernier code-barres scanné"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
 msgid "barcode.nomenclature"
-msgstr ""
+msgstr "barcode.nomenclature"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_rule
@@ -297,4 +298,4 @@ msgstr "barcode.rule"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "barcodes.barcode_events_mixin"
-msgstr ""
+msgstr "barcodes.barcode_events_mixin"

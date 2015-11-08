@@ -5,13 +5,14 @@
 # Translators:
 # hoxhe aits <hoxhe0@gmail.com>, 2015
 # Mazen Abu Ghali <mabughali@yahoo.com>, 2015
+# Sadig Adam <sadig41@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-29 14:47+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-04 08:43+0000\n"
+"Last-Translator: Sadig Adam <sadig41@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +86,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr ""
+msgstr "* تستخدم الحالة `مسودة`  عندما يكود المستخدم فاتورة جديدة غير مصدقة\n* تستخدم الحالة 'Pro-forma' عندما لاتحتوي الفاتورة علي رقم للفاتورة\n* تستخدم الحالة  `مفتوح` عندما ينشء المستخدم فاتورة ويولد لها رقما. وتظل في حالة مفتوحة  حتي يدفع المستخدم الفاتورة\n* تستخدم حالة `مدفوعة` تلقائيا عند دفع الفاتورة. وقد تكون أو لاتكون مدخلات دفتر اليومية الموافقة لها  ذات صلة\n* تستخم حالة `ملغاة` عندما يلغي المستخدم فاتورة"
 
 #. module: account
 #. openerp-web
@@ -1190,7 +1191,7 @@ msgstr "مقابلة الحسابات"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_needaction
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "الاجراء المطلوب"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3878,13 +3879,13 @@ msgstr "المتابعون"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_channel_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "المتابعون (القنوات)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "المتابعون (الشرماء)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_sign
@@ -4211,7 +4212,7 @@ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتب�
 #: model:ir.model.fields,help:account.field_account_bank_statement_message_needaction
 #: model:ir.model.fields,help:account.field_account_invoice_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "عند التفعيل، توجد رسالة جديدة"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_nocreate
@@ -4726,7 +4727,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_is_follower
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "متابع"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
@@ -5734,7 +5735,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "عدد الاجراءات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_number
@@ -5755,13 +5756,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_message_needaction_counter
 #: model:ir.model.fields,help:account.field_account_invoice_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "عدد الرسائل الواجب اجراءها"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_message_unread_counter
 #: model:ir.model.fields,help:account.field_account_invoice_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "عدد الرسائل غير المقروءة"
 
 #. module: account
 #. openerp-web
@@ -7582,7 +7583,7 @@ msgstr "تحركات الهدف"
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
-msgstr ""
+msgstr "الضريبة"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:680
