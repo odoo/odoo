@@ -118,6 +118,15 @@ class mail_notification(osv.Model):
             # Do not send to partners having same email address than the author (can cause loops or bounce effect due to messy database)
             if message.author_id and message.author_id.email == partner.email:
                 continue
+            if message.type == 'email':
+                    if partner.email in message.email_to:
+                        continue
+            if message.type == 'email':
+                    if partner.email in message.email_cc:
+                        continue
+            if message.type == 'email':
+                    if partner.email in message.email_bcc:
+                        continue            
             # Partner does not want to receive any emails or is opt-out
             if partner.notify_email == 'none':
                 continue
