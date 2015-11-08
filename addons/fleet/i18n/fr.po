@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2015-09-26 18:29+0000\n"
+"PO-Revision-Date: 2015-10-14 17:59+0000\n"
 "Last-Translator: Florian Hatat\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/fleet/fleet.py:387
 #, python-format
 msgid "%s %s has been added to the fleet!"
-msgstr ""
+msgstr "%s %s a été ajouté à la flotte!"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:663
@@ -74,7 +74,7 @@ msgid ""
 "                contracts (fixed or recurring) and fuel logs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Cliquez pour créer un nouveau coût.\n              </p><p>\n                Odoo vous permet de gérer les coûts de vos différents véhicules. Les coûts sont créés automatiquement à partir des services, des contrats (fixes ou récurrents) et des journaux de consommation de carburant.\n              </p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_act
@@ -87,7 +87,7 @@ msgid ""
 "                field.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Cliquez pour créer un nouveau journal de consommation de carburant.\n              </p><p>\n                Ici vous pouvez saisir les ravitaillements en carburant pour tous vos véhicules. Vous pouvez également filtrer les rapports de consommations par véhicule en utilisant le champ de recherche.\n              </p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_act
@@ -112,7 +112,7 @@ msgid ""
 "                the search field.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Cliquez pour créer un nouveau journal odométrique.\n              </p>\n              <p>\n                Ici vous pouvez ajouter des journaux odométrique pour tous vos véhicules. Vous pouvez également afficher les valeurs odométriques pour un véhicule en particulier en utilisant le champ de recherche.\n              </p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_act
@@ -125,7 +125,7 @@ msgid ""
 "                repair, fixed maintenance, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliquer pour ajouter une nouvelle intervention. \n</p>\n<p>Odoo vous aide à suivre toutes les interventions faites \nsur votre véhicule. Les interventions peuvent être de plusieur types: \nréparations occasionnelles, maintenances planifiées, etc.</p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_act
@@ -152,7 +152,7 @@ msgid ""
 "                renewed.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliquer pour ajouter un véhicule. \n</p><p>\nVous pourrez gérer votre parc de véhicules en suivant les contrats, les entretiens, les coût fixes ou récurrents, le kilométrage et la consommation d'essence de chaque véhicule.\n</p><p>\nOdoo vous préviendra quand les entretiens doivent être effectuées et quand les contrats doivent être renouvelés.</p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_act
@@ -179,7 +179,7 @@ msgid ""
 "          costs, sort them by type and by vehicle.\n"
 "        </p>\n"
 "      "
-msgstr ""
+msgstr "p>\n          Odoo vous aide à gérer les coûts pour différents véhicules\n          Les coût sont généralement créer depuis les services et les contrats et apparaissent ici.\n        </p>\n        <p>\n          Grâce à différents filtres, Odoo peut afficher uniquement les coûts réels, \n          triés par type et par véhicule.\n        </p>\n      "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
@@ -194,17 +194,17 @@ msgstr "Remplacement du condenseur de l'air climatisé"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_3
 msgid "A/C Diagnosis"
-msgstr ""
+msgstr "Diagnostic de la climatisation"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_4
 msgid "A/C Evaporator Replacement"
-msgstr ""
+msgstr "Remplacement de l'évaporateur de la climatisation"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_5
 msgid "A/C Recharge"
-msgstr ""
+msgstr "Recharge de la climatisation"
 
 #. module: fleet
 #: field:fleet.vehicle,acquisition_date:0
@@ -268,7 +268,7 @@ msgstr "Créer automatiquement"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_8
 msgid "Ball Joint Replacement"
-msgstr ""
+msgstr "Remplacement du join à rotule"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_9
@@ -338,7 +338,7 @@ msgstr "Taux d'emissions de CO2 du véhicule"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
 msgid "Calculation Benefit In Kind"
-msgstr ""
+msgstr "Calculer l'avantage en nature"
 
 #. module: fleet
 #: field:fleet.vehicle,car_value:0
@@ -499,7 +499,7 @@ msgstr "Détail des dépenses"
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 msgid "Cost Subtype"
-msgstr ""
+msgstr "Sous-type de coût"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
@@ -514,7 +514,7 @@ msgstr "Coût associé à un véhicule"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 msgid "Cost that is paid only once at the creation of the contract"
-msgstr ""
+msgstr "Coût unitaire à payer lors de la conclusion du contrat"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,cost_subtype_id:0
@@ -636,7 +636,7 @@ msgstr "Diesel"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_17
 msgid "Door Window Motor/Regulator Replacement"
-msgstr ""
+msgstr "Remplacement Moteur / Régulateur de la fenêtre de porte"
 
 #. module: fleet
 #: field:fleet.vehicle,doors:0
@@ -693,7 +693,7 @@ msgstr "Inspéction de la couroie de distribution"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_19
 msgid "Engine Coolant Replacement"
-msgstr ""
+msgstr "Remplacement du liquide refroidissement du moteur"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
@@ -708,12 +708,12 @@ msgstr "Remplacement de la couroie de distribution"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
 msgid "Entry into service tax"
-msgstr ""
+msgstr "Taxe de mise en circulation"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
 msgid "Exhaust Manifold Replacement"
-msgstr ""
+msgstr "Remplacement du collecteur d’échappement"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -730,7 +730,7 @@ msgstr "Abonnés"
 #. module: fleet
 #: help:fleet.vehicle.cost,cost_type:0
 msgid "For internal purpose only"
-msgstr ""
+msgstr "Pour usage interne seulement"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,cost_frequency:0
@@ -751,7 +751,7 @@ msgstr "Coût du carburant par mois"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_22
 msgid "Fuel Injector Replacement"
-msgstr ""
+msgstr "Remplacement de l'injecteur de carburant"
 
 #. module: fleet
 #: field:fleet.vehicle,fuel_logs_count:0 field:fleet.vehicle,log_fuel:0
@@ -798,7 +798,7 @@ msgstr "Coût"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 msgid "Generated Recurring Costs"
-msgstr ""
+msgstr "Coûts récurrents générés"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_search
@@ -817,7 +817,7 @@ msgstr "Alertes à traiter"
 #. module: fleet
 #: field:fleet.vehicle,contract_renewal_overdue:0
 msgid "Has Contracts Overdued"
-msgstr ""
+msgstr "Contrats en retard"
 
 #. module: fleet
 #: field:fleet.vehicle,contract_renewal_due_soon:0
@@ -832,7 +832,7 @@ msgstr "Remplacement du joint de culasse"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_25
 msgid "Heater Blower Motor Replacement"
-msgstr ""
+msgstr "Remplacement du ventilateur du radiateur"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_26
@@ -847,7 +847,7 @@ msgstr "Remplacement du radiateur de chauffage"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_28
 msgid "Heater Hose Replacement"
-msgstr ""
+msgstr "Remplacement du tuyau du radiateur"
 
 #. module: fleet
 #: help:fleet.vehicle,message_summary:0
@@ -1224,7 +1224,7 @@ msgstr "Kilomètrage"
 #. module: fleet
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_graph
 msgid "Odometer Values Per Vehicle"
-msgstr ""
+msgstr "Kilomètrage par véhicule"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
@@ -1255,7 +1255,7 @@ msgstr "Remplacement de la pompe à huile"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_omnium
 msgid "Omnium"
-msgstr ""
+msgstr "Omnium"
 
 #. module: fleet
 #: model:ir.actions.client,name:fleet.action_fleet_menu
@@ -1317,7 +1317,7 @@ msgstr "Remplacement du tuyau de direction assistée"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_36
 msgid "Power Steering Pump Replacement"
-msgstr ""
+msgstr "Remplacement de la pompe de direction assistée"
 
 #. module: fleet
 #: help:fleet.vehicle,power:0
@@ -1419,7 +1419,7 @@ msgstr "Machiner les rotors"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_39
 msgid "Rotate Tires"
-msgstr ""
+msgstr "Permuter les pneus"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_40
@@ -1434,7 +1434,7 @@ msgstr "Nombre de places"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
 msgid "Sedan"
-msgstr ""
+msgstr "Berline"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
@@ -1492,7 +1492,7 @@ msgstr "Détails des interventions"
 #: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_search
 #: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_tree
 msgid "Services Logs"
-msgstr ""
+msgstr "Journal des services"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_services
@@ -1525,7 +1525,7 @@ msgstr "Pneu hivers/contacte"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_41
 msgid "Spark Plug Replacement"
-msgstr ""
+msgstr "Remplacement des bougies d'allumage"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_42
@@ -1581,7 +1581,7 @@ msgstr "Tags"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_3
 msgid "Tax roll"
-msgstr ""
+msgstr "Rôle d'imposition"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
@@ -1602,7 +1602,7 @@ msgstr "Conditions et clauses"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
 msgid "Thermostat Replacement"
-msgstr ""
+msgstr "Remplacement du thermostat"
 
 #. module: fleet
 #: help:fleet.vehicle.model.brand,image:0
@@ -1649,27 +1649,27 @@ msgstr "Total des dépenses (hors TVA)"
 #. module: fleet
 #: field:fleet.vehicle,contract_renewal_total:0
 msgid "Total of contracts due or overdue minus one"
-msgstr ""
+msgstr "Total de contrat arrivés à échéance ou échus moins un"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
 msgid "Touring Assistance"
-msgstr ""
+msgstr "Touring Assistance"
 
 #. module: fleet
 #: field:fleet.vehicle,transmission:0
 msgid "Transmission"
-msgstr ""
+msgstr "Transmission"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_47
 msgid "Transmission Filter Replacement"
-msgstr ""
+msgstr "Remplacement du filtre de la transmission"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_48
 msgid "Transmission Fluid Replacement"
-msgstr ""
+msgstr "Remplacement du liquide de transmission"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_49
@@ -1821,7 +1821,7 @@ msgstr "Coûts des véhicules"
 #. module: fleet
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
 msgid "Vehicles odometers"
-msgstr ""
+msgstr "Relevés kilomètriques des véhicules"
 
 #. module: fleet
 #: view:fleet.vehicle.model:fleet.fleet_vehicle_model_form
@@ -1857,12 +1857,12 @@ msgstr "Remplacement du roulement de roue"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_53
 msgid "Windshield Wiper(s) Replacement"
-msgstr ""
+msgstr "Remplacement des essuies-glaces()"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 msgid "Write here all other information relative to this contract"
-msgstr ""
+msgstr "Ecrivez ici toutes les autres informations concernant ce contrat"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,notes:0
@@ -1872,12 +1872,12 @@ msgstr "Ecrivez ici toutes les informations supplémentaires concernant ce contr
 #. module: fleet
 #: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
 msgid "Write here any other information"
-msgstr ""
+msgstr "Écrivez ici toute autre information"
 
 #. module: fleet
 #: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
 msgid "Write here any other information related to the service completed."
-msgstr ""
+msgstr "Écrivez ici toute autre information relative au service effectué"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search

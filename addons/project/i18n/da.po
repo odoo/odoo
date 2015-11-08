@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-09-19 11:55+0000\n"
-"Last-Translator: Hans Henrik Gabelgaard <hhg@gabelgaard.org>\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-19 08:29+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-8/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +66,7 @@ msgid ""
 "                Click to add a new tag.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik for at oprette en ny kategori.\n             </p>\n            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -192,7 +192,7 @@ msgstr "Tilknytnings dato"
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr ""
+msgstr "Tildelingsmåned"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -548,8 +548,8 @@ msgstr "Slut dato"
 
 #. module: project
 #: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr "Fejl! Opgave slutdato skal være større end opgave startdato"
+msgid "Error ! Task end-date must be greater than task start-date"
+msgstr ""
 
 #. module: project
 #: constraint:project.task:0
@@ -558,8 +558,8 @@ msgstr "Fejl! Du kan ikke oprette rekursive opgaver."
 
 #. module: project
 #: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr "Fejl! projekt-startdato skal være lavere end projekt-slutdato."
+msgid "Error! project start-date must be lower than project end-date."
+msgstr ""
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -841,7 +841,7 @@ msgstr "Sidst opdateret den"
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to new pads (for example: http://etherpad.com/).\n"
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
 
@@ -1614,8 +1614,10 @@ msgstr "Denne fase er folded i kanban viewet når der ikke er nogen poster i fas
 
 #. module: project
 #: help:project.config.settings,time_unit:0
-msgid "This will set the unit of measure used in projects and tasks."
-msgstr "Dette definerer enheden brugt på projekter og opgaver."
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"Changing the unit will only impact new entries."
+msgstr ""
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -1817,7 +1819,7 @@ msgstr "eller"
 #: code:addons/project/project.py:878
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "opgaver"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0

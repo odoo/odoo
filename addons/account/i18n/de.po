@@ -7,13 +7,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Rudolf Schnapka <rs@techno-flex.de>, 2015
 # Stefan Reisich <nafex@gmx.net>, 2015
+# Thomas A. Jaeger, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-10-15 12:15+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-10-20 04:50+0000\n"
+"Last-Translator: Thomas A. Jaeger\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-8/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +91,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hallo ${object.partner_id.name},</p>\n\n    <p>Eine neue Rechnung steht für Sie bereit: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>ECKDATEN</strong><br />\n       &nbsp;&nbsp;Rechnungs Nummer: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Rechnungstotal: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Rechnungsdatum: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Auftragsreferenz: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Ihr Kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Bezahlen Sie direkt mit Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Bei Fragen stehen wir Ihnen gerne zur Verfügung.</p>\n    <p>Danke für Ihr Vertrauen. ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -113,7 +114,7 @@ msgstr " Zusammenfassung"
 #: code:addons/account/static/src/js/account_widgets.js:521
 #, python-format
 msgid " seconds"
-msgstr ""
+msgstr "Sekunden"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -1610,7 +1611,7 @@ msgstr "Anwenden"
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
 msgid "Apply automatically this fiscal position if the conditions match."
-msgstr ""
+msgstr "Diese Steuerposition automatisch verwenden, wenn die Bedingungen stimmen."
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
@@ -1622,14 +1623,14 @@ msgstr "Nur anwenden, wenn der Partner eine UstID hat."
 msgid ""
 "Apply when the shipping or invoicing country is in this country group, and "
 "no position matches the country directly."
-msgstr ""
+msgstr "Wird verwendet, wenn das Land der Lieferungs- oder Rechnungsadresse in dieser Ländergruppe ist, aber keine Position dem Land entspricht."
 
 #. module: account
 #: help:account.fiscal.position,country_id:0
 msgid ""
 "Apply when the shipping or invoicing country matches. Takes precedence over "
 "positions matching on a country group."
-msgstr ""
+msgstr "Wird verwendet, wenn das Land der Lieferungs- oder Rechnungsadresse übereinstimmt. Hat Vorrang vor Positionen, die auf eine Ländergruppe zutreffen würden."
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -2587,7 +2588,7 @@ msgstr "Wähle Geschäftsjahr"
 #: code:addons/account/static/src/js/account_widgets.js:1297
 #, python-format
 msgid "Choose counterpart"
-msgstr ""
+msgstr "Wähle das Gegenkonto"
 
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
@@ -2997,7 +2998,7 @@ msgstr "Gegenbuchung"
 #. module: account
 #: field:account.fiscal.position,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
@@ -3055,7 +3056,7 @@ msgstr "Gutschrift anlegen"
 #: code:addons/account/static/src/js/account_widgets.js:1294
 #, python-format
 msgid "Create Write-off"
-msgstr ""
+msgstr "Abschreibung erstellen"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -5962,7 +5963,7 @@ msgstr "Keinen Wert eintragen, wenn das Datum der Rechnung verwendet werden soll
 #: code:addons/account/static/src/js/account_widgets.js:1299
 #, python-format
 msgid "Keep open"
-msgstr ""
+msgstr "Offen halten"
 
 #. module: account
 #. openerp-web
@@ -8366,7 +8367,7 @@ msgstr "Runden per  Zeile"
 #: code:addons/account/account_bank_statement.py:899
 #, python-format
 msgid "Rounding error from currency conversion"
-msgstr ""
+msgstr "Rundungsdifferenz bei der Währungsumrechnung"
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -9188,7 +9189,7 @@ msgstr "Lieferanten"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "TIN:"
-msgstr ""
+msgstr "USt-ID-Nr."
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
@@ -9664,14 +9665,14 @@ msgstr "Dieser Geschäftspartner, wird als Debitor oder Kreditor bei der Buchung
 msgid ""
 "The company of the gain exchange rate account must be the same than the "
 "company selected."
-msgstr ""
+msgstr "Das Unternehmen des Währungsgewinnkontos muss dem gewählten Unternehmen entsprechen."
 
 #. module: account
 #: constraint:account.config.settings:0
 msgid ""
 "The company of the loss exchange rate account must be the same than the "
 "company selected."
-msgstr ""
+msgstr "Das Unternehmen des Währungsverlustkontos muss dem gewählten Unternehmen entsprechen."
 
 #. module: account
 #: help:account.tax,type:0
@@ -9705,7 +9706,7 @@ msgstr "Die Steuerzuordnung steuert die zu benutzenden Steuern und Konten für d
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "The fiscal year is created when installing a Chart of Account."
-msgstr ""
+msgstr "Das Geschäftsjahr wird während der Installation eines Kontenplans erstellt."
 
 #. module: account
 #: constraint:account.aged.trial.balance:0 constraint:account.balance.report:0
@@ -10023,24 +10024,24 @@ msgstr "Aktuelles Jahr"
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "In der Faktura wird statt dem Standardkonto dieses Konto für die Spesenverrechnung des vorliegenden Produktes benutzt."
 
 #. module: account
 #: help:product.template,property_account_income:0
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "In der Faktura wird statt dem Standardkonto dieses Konto für den Verkaufsumsatz des vorliegenden Produktes benutzt."
 
 #. module: account
 #: help:product.category,property_account_expense_categ:0
 msgid "This account will be used for invoices to value expenses."
-msgstr ""
+msgstr "In der Faktura wird dieses Konto für die Spesenverrechnung benutzt."
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
 msgid "This account will be used for invoices to value sales."
-msgstr ""
+msgstr "In der Faktura wird dieses Konto für den Verkaufsumsatz benutzt."
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -10371,7 +10372,7 @@ msgstr "Der Assistent wird alle Buchungen für eine bestimmtes Journal innerhalb
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
 msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
-msgstr ""
+msgstr "Tip: Benutze ctrl-enter um alle offenen Posten auszugleichen. "
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -11143,7 +11144,7 @@ msgstr "Sie können nicht in eine abgeschlossenen Periode %s des Journals %s buc
 msgid ""
 "You can not cancel closing entries if the 'End of Year Entries Journal' "
 "period is closed."
-msgstr ""
+msgstr "Sie können Abschlussbuchungen nicht löschen, wenn die Periode des Abschluss-Journals geschlossen ist."
 
 #. module: account
 #: code:addons/account/account.py:1057
@@ -11750,4 +11751,4 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr ""
+msgstr "Sehr geehrte Damen und Herren,\n\nunsere Aufzeichnungen zeigen, dass einige Zahlungen auf Ihrem Konto noch unbeglichen sind. Details finden Sie unten.\nWurde der Betrag zwischenzeitlich bezahlt, betrachten Sie diese Nachricht als gegenstandslos. Ansonsten weisen Sie den unten angegeben Betrag zur Zahlung an uns an. Wenn Sie Fragen zu Ihrem Konto haben, sprechen Sie uns bitte an.\n\nVielen Dank für Ihre Kooperation.\n\nMit freundlichen Grüßen"

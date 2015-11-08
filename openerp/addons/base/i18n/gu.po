@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-08 14:50+0000\n"
-"PO-Revision-Date: 2015-09-18 10:16+0000\n"
-"Last-Translator: Ranjit Pillai <rpi@odoo.com>\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-19 09:06+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Gujarati (http://www.transifex.com/odoo/odoo-8/language/gu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1790,6 +1790,17 @@ msgid ""
 "\n"
 "* In a module, so that administrators and users of OpenERP who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa
+msgid ""
+"\n"
+"Odoo Arabic localization for most arabic countries and Saudi Arabia.\n"
+"\n"
+"This initially includes chart of accounts of USA translated to Arabic.\n"
+"\n"
+"In future this module will include some payroll rules for ME .\n"
 msgstr ""
 
 #. module: base
@@ -4768,6 +4779,11 @@ msgid "After Amount"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_aftersale
+msgid "After-Sale Services"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.al
 msgid "Albania"
 msgstr ""
@@ -5008,6 +5024,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_association
+#: model:ir.ui.menu,name:base.menu_association
+#: model:ir.ui.menu,name:base.menu_report_association
 msgid "Association"
 msgstr ""
 
@@ -5052,6 +5070,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
+#: model:res.groups,name:base.group_hr_attendance
 msgid "Attendances"
 msgstr ""
 
@@ -5250,6 +5269,11 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_action_res_bank_form
 #: view:res.bank:base.view_res_bank_tree field:res.partner,bank_ids:0
 msgid "Banks"
+msgstr ""
+
+#. module: base
+#: help:res.partner,ean13:0 help:res.users,ean13:0
+msgid "BarCode"
 msgstr ""
 
 #. module: base
@@ -6173,6 +6197,10 @@ msgstr "વિઝાર્ડ  ની રૂપરેખા(કન્ફિગ�
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
 #: model:ir.ui.menu,name:base.menu_config
+#: model:ir.ui.menu,name:base.menu_definitions
+#: model:ir.ui.menu,name:base.menu_event_config
+#: model:ir.ui.menu,name:base.menu_marketing_config_association
+#: model:ir.ui.menu,name:base.menu_marketing_config_root
 #: model:ir.ui.menu,name:base.menu_reporting_config
 #: view:res.company:base.view_company_form
 #: view:res.config:base.res_config_view_base
@@ -6445,6 +6473,7 @@ msgstr ""
 
 #. module: base
 #: field:ir.logging,create_date:0 field:ir.ui.view,create_date:0
+#: field:res.partner,create_date:0 field:res.users,create_date:0
 msgid "Create Date"
 msgstr ""
 
@@ -6614,13 +6643,11 @@ msgstr ""
 #: field:res.country.group,create_date:0 field:res.country.state,create_date:0
 #: field:res.currency,create_date:0 field:res.currency.rate,create_date:0
 #: field:res.font,create_date:0 field:res.groups,create_date:0
-#: field:res.lang,create_date:0 field:res.partner,create_date:0
-#: field:res.partner.bank,create_date:0
+#: field:res.lang,create_date:0 field:res.partner.bank,create_date:0
 #: field:res.partner.bank.type,create_date:0
 #: field:res.partner.bank.type.field,create_date:0
 #: field:res.partner.category,create_date:0
 #: field:res.partner.title,create_date:0 field:res.request.link,create_date:0
-#: field:res.users,create_date:0
 #: field:wizard.ir.model.menu.create,create_date:0
 #: field:workflow,create_date:0 field:workflow.activity,create_date:0
 #: field:workflow.transition,create_date:0
@@ -6902,6 +6929,11 @@ msgid "Date Format"
 msgstr "તારીખ સ્વરૂપણ"
 
 #. module: base
+#: field:ir.attachment,write_date:0
+msgid "Date Modified"
+msgstr ""
+
+#. module: base
 #: selection:ir.property,type:0
 msgid "DateTime"
 msgstr "દિવસ અને સમય"
@@ -6935,6 +6967,19 @@ msgstr "દિવસ:%  (દિવસ)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "દિવસો"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
 
 #. module: base
 #: field:ir.mail_server,smtp_debug:0
@@ -7132,6 +7177,11 @@ msgid "Display"
 msgstr ""
 
 #. module: base
+#: model:res.groups,name:base.group_website_publisher
+msgid "Display Editor Bar on Website"
+msgstr ""
+
+#. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Display an option on related documents to run this sever action"
 msgstr ""
@@ -7179,9 +7229,14 @@ msgid "Djibouti"
 msgstr ""
 
 #. module: base
+#: model:res.groups,name:base.group_mono_salesteams
+msgid "Do Not Use Sales Teams"
+msgstr ""
+
+#. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
 msgid "Doctor"
-msgstr ""
+msgstr "ડોક્ટર"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document
@@ -7272,12 +7327,12 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Dutch (BE) / Nederlands (BE)"
-msgstr ""
+msgstr "ડચ(BE) / નેધરલેંડ્સ(BE)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Dutch / Nederlands"
-msgstr ""
+msgstr "ડચ / નેધરલેંડ્સ"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -7285,7 +7340,7 @@ msgid "Dynamic expression builder"
 msgstr ""
 
 #. module: base
-#: field:res.partner,ean13:0
+#: field:res.partner,ean13:0 field:res.users,ean13:0
 msgid "EAN13"
 msgstr ""
 
@@ -7322,7 +7377,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.eg
 msgid "Egypt"
-msgstr ""
+msgstr "ઇજીપ્ટ"
 
 #. module: base
 #: model:res.country,name:base.sv
@@ -7699,12 +7754,12 @@ msgstr ""
 #: field:res.company,fax:0 field:res.partner,fax:0
 #, python-format
 msgid "Fax"
-msgstr ""
+msgstr "ફેક્સ"
 
 #. module: base
 #: view:res.partner:base.view_partner_form
 msgid "Fax:"
-msgstr ""
+msgstr "ફેક્સ:"
 
 #. module: base
 #: field:res.bank,state:0 field:res.company,state_id:0
@@ -7789,7 +7844,7 @@ msgstr ""
 #. module: base
 #: field:base.language.export,data:0 field:base.language.import,data:0
 msgid "File"
-msgstr ""
+msgstr "ફાઇલ"
 
 #. module: base
 #: field:ir.attachment,datas:0
@@ -7914,7 +7969,7 @@ msgstr ""
 #. module: base
 #: field:res.company,font:0
 msgid "Font"
-msgstr ""
+msgstr "ફોન્ટ"
 
 #. module: base
 #: field:res.font,name:0
@@ -8031,7 +8086,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.fr
 msgid "France"
-msgstr ""
+msgstr "ફ્રાન્સ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
@@ -8192,7 +8247,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "German / Deutsch"
-msgstr ""
+msgstr "જર્મન / ડ્યુઇશ"
 
 #. module: base
 #: model:res.country,name:base.de
@@ -8238,7 +8293,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
 msgid "Gold"
-msgstr ""
+msgstr "સોનું"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_analytics
@@ -8279,7 +8334,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gr
 msgid "Greece"
-msgstr ""
+msgstr "ગ્રીસ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr
@@ -8294,7 +8349,7 @@ msgstr "ગ્રીક / Ελληνικά"
 #. module: base
 #: model:res.country,name:base.gl
 msgid "Greenland"
-msgstr ""
+msgstr "ગ્રીનલેન્ડ"
 
 #. module: base
 #: model:res.country,name:base.gd
@@ -8471,7 +8526,7 @@ msgstr ""
 #: view:ir.actions.server:base.view_server_action_form
 #: selection:ir.translation,type:0
 msgid "Help"
-msgstr ""
+msgstr "મદદ"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -8594,7 +8649,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.hk
 msgid "Hong Kong"
-msgstr ""
+msgstr "હોંગ કોંગ"
 
 #. module: base
 #: help:ir.mail_server,smtp_host:0
@@ -8734,12 +8789,12 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
 msgid "IT Services"
-msgstr ""
+msgstr "આઇટી સર્વિસ"
 
 #. module: base
 #: model:res.country,name:base.is
 msgid "Iceland"
-msgstr ""
+msgstr "આઇસલેન્ડ"
 
 #. module: base
 #: field:ir.module.module,icon_image:0 field:ir.ui.menu,icon:0
@@ -8919,6 +8974,11 @@ msgid "Implementation"
 msgstr "અમલીકરણ"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_import_crm
+msgid "Import & Synchronize"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
 msgid "Import / Export"
 msgstr "આયાત / નિકાસ"
@@ -8981,7 +9041,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.id
 msgid "Indonesia"
-msgstr ""
+msgstr "ઇન્ડોનેશિયા"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9308,6 +9368,11 @@ msgid "Invoice on Timesheets"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_invoiced
+msgid "Invoicing"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
 msgid "Invoicing & Payments"
 msgstr ""
@@ -9320,12 +9385,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ir
 msgid "Iran"
-msgstr ""
+msgstr "ઈરાન"
 
 #. module: base
 #: model:res.country,name:base.iq
 msgid "Iraq"
-msgstr ""
+msgstr "ઇરાક"
 
 #. module: base
 #: model:res.country,name:base.ie
@@ -9351,7 +9416,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.il
 msgid "Israel"
-msgstr ""
+msgstr "ઇઝરાયેલ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue
@@ -9366,7 +9431,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.it
 msgid "Italy"
-msgstr ""
+msgstr "ઇટાલી"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it
@@ -9381,7 +9446,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.jm
 msgid "Jamaica"
-msgstr ""
+msgstr "જમૈકા"
 
 #. module: base
 #: model:res.country,name:base.jp
@@ -9523,7 +9588,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.kw
 msgid "Kuwait"
-msgstr ""
+msgstr "કુવૈત"
 
 #. module: base
 #: model:res.country,name:base.kg
@@ -9590,11 +9655,16 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.la
 msgid "Laos"
-msgstr ""
+msgstr "લાઓસ"
 
 #. module: base
 #: field:ir.ui.view,write_date:0
 msgid "Last Modification Date"
+msgstr ""
+
+#. module: base
+#: field:ir.attachment,write_uid:0
+msgid "Last Modification User"
 msgstr ""
 
 #. module: base
@@ -9751,6 +9821,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_project_issue
 msgid "Lead to Issue"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_lead
+msgid "Leads & Opportunities"
 msgstr ""
 
 #. module: base
@@ -10061,12 +10136,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.my
 msgid "Malaysia"
-msgstr ""
+msgstr "મલેશિયા"
 
 #. module: base
 #: model:res.country,name:base.mv
 msgid "Maldives"
-msgstr ""
+msgstr "માલદીવ"
 
 #. module: base
 #: model:res.country,name:base.ml
@@ -10077,6 +10152,16 @@ msgstr ""
 #: model:res.country,name:base.mt
 msgid "Malta"
 msgstr "માલ્ટા"
+
+#. module: base
+#: model:res.groups,name:base.group_multi_salesteams
+msgid "Manage Sales Teams"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_website_designer
+msgid "Manage Website and qWeb view"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
@@ -10111,7 +10196,9 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:res.groups,name:base.group_hr_manager
 #: model:res.groups,name:base.group_sale_manager
+#: model:res.groups,name:base.group_tool_manager
 msgid "Manager"
 msgstr "વ્યવસ્થાપક"
 
@@ -10131,12 +10218,14 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
 msgid "Manufacturer"
-msgstr ""
+msgstr "ઉત્પાદક"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
+#: model:ir.ui.menu,name:base.menu_mrp_config
+#: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
-msgstr ""
+msgstr "ઉત્પાદન"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_operations
@@ -10174,6 +10263,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
 #: model:ir.module.module,shortdesc:base.module_marketing
+#: model:ir.ui.menu,name:base.marketing_menu
+#: model:ir.ui.menu,name:base.marketing_reporting_menu
 msgid "Marketing"
 msgstr "પ્રચાર"
 
@@ -10292,7 +10383,7 @@ msgstr ""
 #. module: base
 #: field:ir.logging,message:0
 msgid "Message"
-msgstr ""
+msgstr "સંદેશ"
 
 #. module: base
 #: view:res.users:base.view_users_form
@@ -10307,7 +10398,7 @@ msgstr "રીત"
 #. module: base
 #: model:res.country,name:base.mx
 msgid "Mexico"
-msgstr ""
+msgstr "મેક્સિકો"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx
@@ -10488,7 +10579,7 @@ msgstr ""
 #: field:ir.module.module.dependency,module_id:0 report:ir.module.reference:0
 #: field:ir.translation,module:0
 msgid "Module"
-msgstr ""
+msgstr "મોડ્યુલ"
 
 #. module: base
 #: view:ir.module.category:base.view_module_category_form
@@ -10576,12 +10667,12 @@ msgstr "મોલ્ડવિયા"
 #. module: base
 #: model:res.country,name:base.mc
 msgid "Monaco"
-msgstr ""
+msgstr "મોનાકો"
 
 #. module: base
 #: model:res.country,name:base.mn
 msgid "Mongolia"
-msgstr ""
+msgstr "મંગોલિયા"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -10626,12 +10717,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ma
 msgid "Morocco"
-msgstr ""
+msgstr "મોરોક્કો"
 
 #. module: base
 #: model:res.country,name:base.mz
 msgid "Mozambique"
-msgstr ""
+msgstr "મોઝામ્બિક"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_mister
@@ -10744,12 +10835,12 @@ msgstr "નૌરુ"
 #. module: base
 #: model:res.country,name:base.np
 msgid "Nepal"
-msgstr ""
+msgstr "નેપાળ"
 
 #. module: base
 #: model:res.country,name:base.nl
 msgid "Netherlands"
-msgstr ""
+msgstr "નેધરલેન્ડ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl
@@ -10780,7 +10871,7 @@ msgstr ""
 #. module: base
 #: field:change.password.user,new_passwd:0
 msgid "New Password"
-msgstr ""
+msgstr "નવું પાસવર્ડ"
 
 #. module: base
 #: selection:ir.actions.act_url,target:0
@@ -10925,7 +11016,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.no
 msgid "Norway"
-msgstr ""
+msgstr "નોર્વે"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no
@@ -11055,6 +11146,11 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
 msgid "Office Supplies"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_hr_user
+msgid "Officer"
 msgstr ""
 
 #. module: base
@@ -11227,6 +11323,11 @@ msgid "Operation Forbidden"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_opportunity
+msgid "Opportunities"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
 msgid "Opportunity to Quotation"
 msgstr ""
@@ -11375,7 +11476,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.pa
 msgid "Panama"
-msgstr ""
+msgstr "પનામા"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pa
@@ -11466,6 +11567,11 @@ msgstr "ભાગીદાર"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_partner_assign
 msgid "Partner Assignation & Geolocation"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_partner_mass_mail
+msgid "Partner Mass Mailing"
 msgstr ""
 
 #. module: base
@@ -11573,6 +11679,11 @@ msgid "Payment Acquirer: Transfer Implementation"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_sales_followup
+msgid "Payment Follow-up"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_followup
 msgid "Payment Follow-up Management"
 msgstr ""
@@ -11625,7 +11736,7 @@ msgstr ""
 #. module: base
 #: view:res.partner:base.view_res_partner_filter
 msgid "Persons"
-msgstr ""
+msgstr "વ્યક્તિઓ"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -11640,7 +11751,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ph
 msgid "Philippines"
-msgstr ""
+msgstr "ફિલિપાઇન્સ"
 
 #. module: base
 #: code:addons/base/res/res_company.py:163 field:res.bank,phone:0
@@ -11900,6 +12011,11 @@ msgid "Product extension to track sales and purchases"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_product
+msgid "Products"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
 msgstr ""
@@ -11917,10 +12033,13 @@ msgstr ""
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_prof
 msgid "Professor"
-msgstr ""
+msgstr "પ્રોફેસર"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_project_management
+#: model:ir.ui.menu,name:base.menu_main_pm
+#: model:ir.ui.menu,name:base.menu_project_config
+#: model:ir.ui.menu,name:base.menu_project_report
 msgid "Project"
 msgstr ""
 
@@ -12013,6 +12132,11 @@ msgid "Puerto Rico"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.next_id_73
+msgid "Purchase"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_analytic_plans
 msgid "Purchase Analytic Plans"
 msgstr ""
@@ -12034,6 +12158,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_purchase_management
+#: model:ir.ui.menu,name:base.menu_purchase_root
 msgid "Purchases"
 msgstr "ખરીદીઓ"
 
@@ -12066,7 +12191,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.qa
 msgid "Qatar"
-msgstr ""
+msgstr "કતાર"
 
 #. module: base
 #: field:ir.values,key2:0
@@ -12160,7 +12285,7 @@ msgstr ""
 #. module: base
 #: field:ir.actions.server,id_object:0
 msgid "Record"
-msgstr ""
+msgstr "રેકોર્ડ"
 
 #. module: base
 #: code:addons/models.py:4769
@@ -12203,6 +12328,11 @@ msgstr ""
 #: view:ir.rule:base.view_rule_form view:ir.rule:base.view_rule_tree
 msgid "Record rules"
 msgstr "રેકોર્ડ નિયમો"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_case_job_req_main
+msgid "Recruitment"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
@@ -12321,7 +12451,7 @@ msgstr "દરેક X નુ પુનરાવર્તન કરો."
 #: model:ir.module.module,shortdesc:base.module_report
 #: model:ir.module.module,summary:base.module_report
 msgid "Report"
-msgstr ""
+msgstr "અહેવાલ"
 
 #. module: base
 #: view:res.company:base.view_company_form
@@ -12648,7 +12778,9 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_management
 #: model:ir.ui.menu,name:base.menu_base_partner
-#: model:ir.ui.menu,name:base.menu_sales
+#: model:ir.ui.menu,name:base.menu_sale_config
+#: model:ir.ui.menu,name:base.menu_sale_config_sales
+#: model:ir.ui.menu,name:base.menu_sales model:ir.ui.menu,name:base.next_id_64
 msgid "Sales"
 msgstr "વેચાણ"
 
@@ -12705,6 +12837,11 @@ msgstr "સેન મરિનો"
 #. module: base
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
+msgstr "સાઉદી અરેબિયા"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa
+msgid "Saudi Arabia - Accounting"
 msgstr ""
 
 #. module: base
@@ -12791,6 +12928,16 @@ msgstr "સુરક્ષા"
 #: view:ir.mail_server:base.ir_mail_server_form
 msgid "Security and Authentication"
 msgstr "સલામતી અને પ્રમાણીકરણ"
+
+#. module: base
+#: model:res.groups,name:base.group_sale_salesman
+msgid "See Own Leads"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_sale_salesman_all_leads
+msgid "See all Leads"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:306
@@ -13063,7 +13210,7 @@ msgstr ""
 #. module: base
 #: field:res.users,signature:0
 msgid "Signature"
-msgstr ""
+msgstr "હસ્તાક્ષર"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_signup
@@ -13083,7 +13230,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sg
 msgid "Singapore"
-msgstr ""
+msgstr "સિંગાપુર"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg
@@ -13125,7 +13272,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sk
 msgid "Slovakia"
-msgstr ""
+msgstr "સ્લોવેકિયા"
 
 #. module: base
 #: model:res.country,name:base.si
@@ -13384,6 +13531,11 @@ msgid "Sri Lanka"
 msgstr "શ્રીલંકા"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_project_config_project
+msgid "Stages"
+msgstr ""
+
+#. module: base
 #: selection:ir.sequence,implementation:0
 msgid "Standard"
 msgstr "પ્રમાણભૂત"
@@ -13490,7 +13642,7 @@ msgstr ""
 #. module: base
 #: view:res.request.link:base.res_request_link_search_view
 msgid "Subject"
-msgstr ""
+msgstr "વિષય"
 
 #. module: base
 #: view:ir.ui.menu:base.edit_menu_access
@@ -13535,6 +13687,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
+#: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: view:res.partner:base.view_res_partner_filter
 msgid "Suppliers"
 msgstr ""
@@ -13558,6 +13711,16 @@ msgstr "સુરીનેમ"
 #: model:ir.module.module,shortdesc:base.module_survey
 msgid "Survey"
 msgstr "મોજણી"
+
+#. module: base
+#: model:res.groups,name:base.group_survey_manager
+msgid "Survey / Manager"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_survey_user
+msgid "Survey / User"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey_crm
@@ -13587,7 +13750,7 @@ msgstr "સ્વિડીશ / svenska"
 #. module: base
 #: model:res.country,name:base.ch
 msgid "Switzerland"
-msgstr ""
+msgstr "સ્વિટ્ઝર્લૅન્ડ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch
@@ -13697,7 +13860,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.tw
 msgid "Taiwan"
-msgstr ""
+msgstr "તાઇવાન"
 
 #. module: base
 #: model:res.country,name:base.tj
@@ -13707,7 +13870,7 @@ msgstr "તાજીકિસ્તાન"
 #. module: base
 #: model:res.country,name:base.tz
 msgid "Tanzania"
-msgstr ""
+msgstr "તાંઝાનિયા"
 
 #. module: base
 #: field:ir.actions.server,crud_model_id:0
@@ -13770,12 +13933,18 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
+#: view:res.users:base.user_groups_view
 msgid "Technical Settings"
 msgstr ""
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_17
+msgid "Telecom sector"
 msgstr ""
 
 #. module: base
@@ -13832,7 +14001,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.th
 msgid "Thailand"
-msgstr ""
+msgstr "થાઇલેન્ડ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_th
@@ -14418,7 +14587,7 @@ msgstr ""
 #. module: base
 #: view:ir.model.fields:base.view_model_fields_search
 msgid "Translate"
-msgstr ""
+msgstr "અનુવાદ"
 
 #. module: base
 #: selection:ir.translation,state:0
@@ -14497,12 +14666,12 @@ msgstr "ટ્રિનિદાદ અને ટોબેગો"
 #. module: base
 #: model:res.country,name:base.tn
 msgid "Tunisia"
-msgstr ""
+msgstr "ટ્યુનિશિયા"
 
 #. module: base
 #: model:res.country,name:base.tr
 msgid "Turkey"
-msgstr ""
+msgstr "તુર્કી"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr
@@ -14517,7 +14686,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
-msgstr ""
+msgstr "તુર્કમેનિસ્તાન"
 
 #. module: base
 #: model:res.country,name:base.tc
@@ -14615,7 +14784,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ua
 msgid "Ukraine"
-msgstr ""
+msgstr "યુક્રેન"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14890,7 +15059,8 @@ msgstr ""
 #: field:change.password.user,user_id:0 view:ir.cron:base.ir_cron_view_search
 #: field:ir.cron,user_id:0 view:ir.filters:base.ir_filters_view_search
 #: field:ir.filters,user_id:0 field:ir.ui.view.custom,user_id:0
-#: field:ir.values,user_id:0 model:res.groups,name:base.group_sale_salesman
+#: field:ir.values,user_id:0 model:res.groups,name:base.group_document_user
+#: model:res.groups,name:base.group_tool_user
 #: view:res.users:base.view_users_search field:workflow.instance,uid:0
 msgid "User"
 msgstr "વપરાશકર્તા"
@@ -14965,7 +15135,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.uz
 msgid "Uzbekistan"
-msgstr ""
+msgstr "ઉઝબેકિસ્તાન"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
@@ -15012,7 +15182,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ve
 msgid "Venezuela"
-msgstr ""
+msgstr "વેનેઝુએલા"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ve
@@ -15027,7 +15197,7 @@ msgstr "આવૃત્તિ"
 #. module: base
 #: model:res.country,name:base.vn
 msgid "Vietnam"
-msgstr ""
+msgstr "વિયેતનામ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_vn
@@ -15184,6 +15354,12 @@ msgstr ""
 #, python-format
 msgid "Warning!"
 msgstr "ચેતવણી!"
+
+#. module: base
+#: code:addons/models.py:5803 code:addons/models.py:5856
+#, python-format
+msgid "Warnings"
+msgstr ""
 
 #. module: base
 #: view:base.module.upgrade:base.view_base_module_upgrade_install
@@ -15541,7 +15717,7 @@ msgstr "Xor"
 #. module: base
 #: model:res.country,name:base.ye
 msgid "Yemen"
-msgstr ""
+msgstr "યમન"
 
 #. module: base
 #: view:res.users:base.view_users_simple_form
@@ -15667,7 +15843,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.yu
 msgid "Yugoslavia"
-msgstr ""
+msgstr "યુગોસ્લાવિયા"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:69
@@ -15939,7 +16115,7 @@ msgstr ""
 #. module: base
 #: view:ir.attachment:base.view_attachment_form
 msgid "on"
-msgstr ""
+msgstr "ના"
 
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
@@ -16036,6 +16212,44 @@ msgid "test_convert"
 msgstr ""
 
 #. module: base
+#: model:res.groups,comment:base.group_hr_user
+msgid "the user will be able to approve document created by employees."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_user
+msgid ""
+"the user will be able to manage his own human resources stuff (leave "
+"request, timesheets, ...), if he is linked to an employee in the system."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_hr_manager
+msgid ""
+"the user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr ""
+
+#. module: base
+#: model:res.groups,comment:base.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
+msgstr ""
+
+#. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "time: Python time module"
 msgstr ""
@@ -16078,7 +16292,7 @@ msgstr ""
 #: code:addons/base/ir/ir_fields.py:145
 #, python-format
 msgid "yes"
-msgstr ""
+msgstr "હા"
 
 #. module: base
 #: model:res.country,name:base.ax

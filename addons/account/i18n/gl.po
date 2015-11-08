@@ -360,7 +360,7 @@ msgid ""
 "                for miscellaneous operations.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPrema para crear unha entrada no diario.\n</p><p>\nUnha entrada nun diario consiste en varios apuntes nese diario, cada un dos cuais pode corresponder a unha tarxeta de débito ou unha operación de crédito.\n</p><p>\nOdoo creará automáticamente un apunte no diario por cada documento financieiro: factura, reembolso, pagamento a proveedores, extractos de contas, etc. Polo que únicamente se deberían realizar entradas de asentos manuais so para operacións adicionais fora do habitual.\n</p> "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -375,7 +375,7 @@ msgid ""
 "                goes out of the cash box.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPrema para crear un novo rexistro de caixa.\n</p><p>\nOs rexistros de caixa permiten xestionar entradas de efectivo nos seus diarios de caixa. Esta función proporciónalle unha maneira sinxela de revisa-los pagamentos en efectivo diariamente. Pode introduci-las moedas que hai na sua caixa rexistradora, e despois realizar rexistros cando o diñeiro entra ou sae da caixa.\n</p> "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_statement_operation_template
@@ -471,7 +471,7 @@ msgid ""
 "                refunds and reconcile them directly from the related supplier invoice.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPrema para rexistrar unha factura rectificativa de provedor.\n</p><p>\nEn vez de crea-la factura rectificativa de provedor manualmente,\npode xerala e conciliala directamente desde a factura de provedor\nrelacionada.\n</p> "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear
@@ -574,12 +574,12 @@ msgstr "Un período é un intervalo de tempo fiscal durante o cal débense rexis
 #: code:addons/account/account_bank_statement.py:736
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr ""
+msgstr "Algún dos apuntes contables seleccionados xa foi conciliado."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr ""
+msgstr "Unha posición fiscal de imposto so se podería definir unha única vez nos mesmos impuestos."
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -631,12 +631,12 @@ msgstr "Informe de balance de comprobación de vencementos"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
 msgid "Account Analytic Balance"
-msgstr ""
+msgstr "Contabilidade. Saldo analítico"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
 msgid "Account Analytic Chart"
-msgstr ""
+msgstr "Contabilidade. Plano analítico"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger
@@ -651,7 +651,7 @@ msgstr "Contabilidade. Libro de custos analíticos para informe diario"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
 msgid "Account Analytic Inverted Balance"
-msgstr ""
+msgstr "Contabilidade. Saldo analítico invertido"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
@@ -672,12 +672,12 @@ msgstr "Código base conta"
 #: model:ir.actions.act_window,name:account.action_account_central_journal
 #: model:ir.model,name:account.model_account_central_journal
 msgid "Account Central Journal"
-msgstr ""
+msgstr "Diario contable central"
 
 #. module: account
 #: view:account.account:account.view_account_form
 msgid "Account Code and Name"
-msgstr ""
+msgstr "Código e nome da conta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -697,18 +697,18 @@ msgstr "Informe de Conta Común de Empresa"
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
 msgid "Account Common Report"
-msgstr ""
+msgstr "Contabilidade. Informe común"
 
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account Currency"
-msgstr ""
+msgstr "Moeda da conta"
 
 #. module: account
 #: field:account.fiscal.position.account,account_dest_id:0
 #: field:account.fiscal.position.account.template,account_dest_id:0
 msgid "Account Destination"
-msgstr ""
+msgstr "Conta destino"
 
 #. module: account
 #: view:account.move:account.view_move_form
@@ -727,7 +727,7 @@ msgstr "Contabilidade. Diario xeral"
 #: view:account.journal:account.view_account_journal_tree
 #: field:res.partner.bank,journal_id:0
 msgid "Account Journal"
-msgstr ""
+msgstr "Diario contable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
@@ -737,7 +737,7 @@ msgstr "Contabilidade. Seleccionar diario"
 #. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
-msgstr ""
+msgstr "Liña de asento"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -750,7 +750,7 @@ msgstr "Mapeo de contas"
 #: field:account.use.model,model:0
 #: model:ir.model,name:account.model_account_model
 msgid "Account Model"
-msgstr ""
+msgstr "Modelo de asento"
 
 #. module: account
 #: model:ir.model,name:account.model_account_model_line
@@ -782,7 +782,7 @@ msgstr "Conta de Pagos"
 #. module: account
 #: view:account.period:account.view_account_period_form
 msgid "Account Period"
-msgstr ""
+msgstr "Período contable"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_journal
@@ -793,7 +793,7 @@ msgstr "Diario de Contas"
 #. module: account
 #: view:product.category:account.view_category_property_form
 msgid "Account Properties"
-msgstr ""
+msgstr "Propiedades da conta"
 
 #. module: account
 #: field:res.partner,property_account_receivable:0
@@ -803,7 +803,7 @@ msgstr "Conta de Ventas"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
 msgid "Account Reconciliation"
-msgstr ""
+msgstr "Contabilidade. Conciliación"
 
 #. module: account
 #: view:account.financial.report:account.view_account_financial_report_form
@@ -812,19 +812,19 @@ msgstr ""
 #: field:account.financial.report,children_ids:0
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
-msgstr ""
+msgstr "Informe financieiro"
 
 #. module: account
 #: field:accounting.report,account_report_id:0
 #: model:ir.ui.menu,name:account.menu_account_financial_reports_tree
 msgid "Account Reports"
-msgstr ""
+msgstr "Informes de contas"
 
 #. module: account
 #: view:account.financial.report:account.view_account_report_tree_hierarchy
 #: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 msgid "Account Reports Hierarchy"
-msgstr ""
+msgstr "Xerarquía de informes contables"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -849,7 +849,7 @@ msgstr "Estadísticas da conta"
 #: view:account.subscription:account.view_subscription_search
 #: model:ir.model,name:account.model_account_subscription
 msgid "Account Subscription"
-msgstr ""
+msgstr "Asento periódico"
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -874,18 +874,18 @@ msgstr "Código impuesto contable"
 #: view:account.tax.code.template:account.view_tax_code_template_form
 #: view:account.tax.code.template:account.view_tax_code_template_tree
 msgid "Account Tax Code Template"
-msgstr ""
+msgstr "Padrón de códigos de impostos contables"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
 msgid "Account Tax Declaration"
-msgstr ""
+msgstr "Declaración de contas de impostos"
 
 #. module: account
 #: view:account.tax.template:account.view_account_tax_template_form
 #: view:account.tax.template:account.view_account_tax_template_tree
 msgid "Account Tax Template"
-msgstr ""
+msgstr "Padrón de  impostos"
 
 #. module: account
 #: view:account.account.template:account.view_account_template_form
@@ -904,7 +904,7 @@ msgstr "Plantillas de contas"
 #. module: account
 #: view:website:account.report_agedpartnerbalance
 msgid "Account Total"
-msgstr ""
+msgstr "Total da conta"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -930,14 +930,14 @@ msgid ""
 "Account Type is used for information purpose, to generate country-specific "
 "legal reports, and set the rules to close a fiscal year and generate opening"
 " entries."
-msgstr ""
+msgstr "O tipo de conta é empregado con propósito informativo, para xerar informes legais específicos de cada país, e establecer as reglas para pechar un exercicio fiscal e xera-los apuntes de apertura."
 
 #. module: account
 #: field:account.financial.report,account_type_ids:0
 #: model:ir.actions.act_window,name:account.action_account_type_form
 #: model:ir.ui.menu,name:account.menu_action_account_type_form
 msgid "Account Types"
-msgstr ""
+msgstr "Tipos de conta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -957,7 +957,7 @@ msgstr "Contabilidade Declaración IVE"
 #. module: account
 #: constraint:account.move.line:0
 msgid "Account and Period must belong to the same company."
-msgstr ""
+msgstr "Conta e período deben pertencer á mesma compañía."
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart
@@ -972,22 +972,22 @@ msgstr "Plans de contas"
 #. module: account
 #: view:account.account:account.view_account_form
 msgid "Account code"
-msgstr ""
+msgstr "Código contable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 msgid "Account move line reconcile"
-msgstr ""
+msgstr "Conciliar apuntes contables"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr ""
+msgstr "Conciliar apuntes contables (desaxuste)"
 
 #. module: account
 #: view:account.account:account.view_account_form
 msgid "Account name"
-msgstr ""
+msgstr "Nome da conta"
 
 #. module: account
 #: view:website:account.report_analyticjournal
@@ -997,17 +997,17 @@ msgstr "Conta nº"
 #. module: account
 #: model:ir.model,name:account.model_account_period
 msgid "Account period"
-msgstr ""
+msgstr "Período contable"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_vat
 msgid "Account tax"
-msgstr ""
+msgstr "Conta de impostos"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
 msgid "Account tax chart"
-msgstr ""
+msgstr "Contabilidade. Plan de impostos"
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
@@ -1022,7 +1022,7 @@ msgstr "Conta usada neste diario"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Accountant"
-msgstr ""
+msgstr "Contable"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_config
@@ -1036,7 +1036,7 @@ msgstr "Contabilidade"
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "Contabilidade e finanzas"
 
 #. module: account
 #: view:account.installer:account.view_account_configuration_installer
@@ -1048,7 +1048,7 @@ msgstr "Configuración da Aplicación de Contas"
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_form
 msgid "Accounting Documents"
-msgstr ""
+msgstr "Documentos contables"
 
 #. module: account
 #: view:res.partner.bank:account.view_partner_bank_form_inherit
@@ -1058,17 +1058,17 @@ msgstr "Información Contable"
 #. module: account
 #: field:account.installer,charts:0
 msgid "Accounting Package"
-msgstr ""
+msgstr "Paquete contable"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Accounting Period"
-msgstr ""
+msgstr "Período contable"
 
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
 msgid "Accounting Report"
-msgstr ""
+msgstr "Informe contable"
 
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
@@ -1078,7 +1078,7 @@ msgstr "Informes contables"
 #. module: account
 #: view:res.partner:account.view_partner_property_form
 msgid "Accounting-related settings are managed on"
-msgstr ""
+msgstr "A configuración relativa á contabilidade xestiónase en"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -1096,23 +1096,23 @@ msgstr "Contas"
 #. module: account
 #: view:account.journal:account.view_account_journal_form
 msgid "Accounts Allowed (empty for no control)"
-msgstr ""
+msgstr "Contas permitidas (baleiro para ningún control)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr ""
+msgstr "Contabilidade. Posición fiscal"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
 #: view:account.fiscal.position.template:account.view_account_position_template_form
 msgid "Accounts Mapping"
-msgstr ""
+msgstr "Mapeo de contas"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
 msgid "Accounts Type Allowed (empty for no control)"
-msgstr ""
+msgstr "Tipo de contas permitidas (baleiro para ningún control)"
 
 #. module: account
 #: view:report.account.receivable:account.view_crm_case_user_form
@@ -7769,23 +7769,23 @@ msgstr "Proforma"
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 msgid "Proforma Invoices"
-msgstr ""
+msgstr "Facturas proforma"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 msgid "Proforma/Open/Paid Invoices"
-msgstr ""
+msgstr "Facturas proforma/abertas/pagas"
 
 #. module: account
 #: field:account.partner.reconcile.process,progress:0
 #: view:website:account.report_generalledger
 msgid "Progress"
-msgstr ""
+msgstr "Progreso"
 
 #. module: account
 #: view:account.analytic.line:account.account_analytic_line_extended_form
 msgid "Project line"
-msgstr ""
+msgstr "Liña de proxecto"
 
 #. module: account
 #: view:account.chart.template:account.view_account_chart_template_form
@@ -7809,7 +7809,7 @@ msgstr "Compra"
 #: code:addons/account/account.py:3187
 #, python-format
 msgid "Purchase Journal"
-msgstr ""
+msgstr "Diario de compras"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -7820,38 +7820,38 @@ msgstr "Aboamento de compra"
 #: code:addons/account/account.py:3189
 #, python-format
 msgid "Purchase Refund Journal"
-msgstr ""
+msgstr "Diario de aboamentos de compra"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart
 msgid "Purchase Tax"
-msgstr ""
+msgstr "Imposto de compra"
 
 #. module: account
 #: code:addons/account/account.py:3382
 #, python-format
 msgid "Purchase Tax %.2f%%"
-msgstr ""
+msgstr "Imposto de compra %.2f%%"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax_rate:0
 msgid "Purchase Tax(%)"
-msgstr ""
+msgstr "Imposto de compra (%)"
 
 #. module: account
 #: field:account.config.settings,purchase_journal_id:0
 msgid "Purchase journal"
-msgstr ""
+msgstr "Diario de compras"
 
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr ""
+msgstr "Diario de aboamentos de compra"
 
 #. module: account
 #: field:account.config.settings,purchase_tax_rate:0
 msgid "Purchase tax (%)"
-msgstr ""
+msgstr "Imposto de compra (%)"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -7862,7 +7862,7 @@ msgstr "Compras"
 #: view:cash.box.in:account.cash_box_in_form
 #: model:ir.actions.act_window,name:account.action_cash_box_in
 msgid "Put Money In"
-msgstr ""
+msgstr "Poñer diñeiro"
 
 #. module: account
 #: field:account.tax,python_compute:0 selection:account.tax,type:0
@@ -7892,7 +7892,7 @@ msgstr "Cantidade"
 #. module: account
 #: field:temp.range,name:0
 msgid "Range"
-msgstr ""
+msgstr "Rango"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -7903,12 +7903,12 @@ msgstr "Re-Abrir"
 #. module: account
 #: view:account.period:account.view_account_period_form
 msgid "Re-Open Period"
-msgstr ""
+msgstr "Reabrir período"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "Real Closing Balance"
-msgstr ""
+msgstr "Saldo de peche real"
 
 #. module: account
 #: field:account.invoice.refund,description:0 field:cash.box.in,name:0
@@ -7927,7 +7927,7 @@ msgstr "Por cobrar"
 #: view:account.chart.template:account.view_account_chart_template_seacrh
 #: field:account.chart.template,property_account_receivable:0
 msgid "Receivable Account"
-msgstr ""
+msgstr "Conta a cobrar"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -7964,7 +7964,7 @@ msgstr "Contas a cobrar e pagar"
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 msgid "Recompute taxes and total"
-msgstr ""
+msgstr "Recalcular impostos e total"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
@@ -7994,7 +7994,7 @@ msgstr "Conciliar asentos"
 #. module: account
 #: field:account.move.line,reconcile_ref:0
 msgid "Reconcile Ref"
-msgstr ""
+msgstr "Referencia de conciliación"
 
 #. module: account
 #: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
@@ -8012,18 +8012,18 @@ msgstr "Desfase conciliación"
 #: code:addons/account/static/src/js/account_tour_bank_statement_reconciliation.js:8
 #, python-format
 msgid "Reconcile the demo bank statement"
-msgstr ""
+msgstr "Concilia-lol extracto bancario demo"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Reconciled"
-msgstr ""
+msgstr "Conciliado"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
 msgid "Reconciled entries"
-msgstr ""
+msgstr "Asentos conciliados"
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -8042,7 +8042,7 @@ msgstr "Transaccións Conciliadas"
 #: model:ir.ui.menu,name:account.periodical_processing_reconciliation
 #, python-format
 msgid "Reconciliation"
-msgstr ""
+msgstr "Conciliación"
 
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1

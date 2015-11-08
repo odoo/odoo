@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-20 08:53+0000\n"
+"PO-Revision-Date: 2015-10-14 18:00+0000\n"
 "Last-Translator: Florian Hatat\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgid ""
 "                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 Cliquez pour créer un approvisionnement.\n              </p>\n              <p>\n                Les <b>ordres d'approvisionnement</b> représentent le besoin d'une certaine quantité de produits, à un moment donné, à un emplacement donné.\n              </p>\n              <p>\n                Les <b>commandes de vente</b> sont typiquement à l'origine d'ordres d'approvisionnement (mais ce sont des document distincts). \n                <br/>Suivant les paramètres d'approvisionnement et la configuration du produit, le système d'approvisionnement essaiera de satisfaire les besoins en réservant le produits à partir des stocks, en commandant les produits à un fournisseur, ou en passant un ordre de fabrication, etc.\n              </p>\n              <p>\n                Une <b>exception d'approvisionnement</b> apparaît lorsque le système ne trouve pas de solution pour réaliser l'approvisionnement. Certaines exceptions se résoudront d'elles-mêmes automatiquement, mais d'autres nécessiteront un intervention manuelle (Celles qui sont identifiées par une erreur spécifique dans le <i>chatter</i>).\n              </p>\n            "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -58,7 +58,7 @@ msgid ""
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Cliquez pour créer un ordre d'approvisionnement.\n              </p><p>\n                Un <b>ordre d'approvisionnement</b> permet d'enregistrer le besoin d'un article\n                précis à un emplacement précis. Les ordres d'approvisionnements sont généralement\n                créés automatiquement depuis <i>les ventes, les règles de flux tirés ou\n                les règles de stock minimum</i>.\n              </p><p>\n                Lorsqu'un ordre d'approvisionnement est confirmé, il crée\n                automatiquement les opérations nécessaire pour répondre au besoin : proposition\n                de commande d'achat, ordre de fabrication, etc.\n              </p>\n            "
 
 #. module: procurement
 #: field:procurement.rule,action:0
@@ -107,7 +107,7 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but"
 " can be manually set by the procurement manager to force an unusual "
 "behavior."
-msgstr ""
+msgstr "Règle choisie pour le réapprovisionnement. Habituellement choisie par le système, mais peut être définie manuellement par le manager des approvisionnements pour forcer un comportement inhabituel."
 
 #. module: procurement
 #: field:procurement.order,company_id:0 field:procurement.rule,company_id:0
@@ -117,7 +117,7 @@ msgstr "Société"
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Calculer tous les approvisionnement en arrière-plan."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -191,7 +191,7 @@ msgstr "Fixe"
 #. module: procurement
 #: field:procurement.rule,group_id:0
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Groupe d'approvisionnement fixé"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -212,7 +212,7 @@ msgstr "Regrouper par"
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr ""
+msgstr "Approvisionnements de groupes"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -275,7 +275,7 @@ msgstr "En retard"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Leave Empty"
-msgstr ""
+msgstr "Laisser vide"
 
 #. module: procurement
 #: view:res.company:procurement.mrp_company
@@ -301,7 +301,7 @@ msgstr "Nom"
 #: code:addons/procurement/procurement.py:212
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "Pas de règle correspondant à cet approvisionnement"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -402,22 +402,22 @@ msgstr "UdV de l'article"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Déployer"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Option de déploiement"
 
 #. module: procurement
 #: field:procurement.rule,group_propagation_option:0
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Déploiement du groupe d'approvisionnement"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Pull Rule"
-msgstr ""
+msgstr "Règle de flux tiré"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_tree
@@ -432,7 +432,7 @@ msgstr "Quantité"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr ""
+msgstr "Reconfirmer l'approvisionnement"
 
 #. module: procurement
 #: field:procurement.group,name:0
@@ -516,7 +516,7 @@ msgstr "Résumé"
 #. module: procurement
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr ""
+msgstr "Ce champ remplira l'origine du colisage et le nom de ses mouvements"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view

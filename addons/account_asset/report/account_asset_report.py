@@ -52,9 +52,7 @@ class asset_asset_report(osv.osv):
                     dl.name as name,
                     dl.depreciation_date as depreciation_date,
                     a.purchase_date as purchase_date,
-                    (CASE WHEN (select min(d.id) from account_asset_depreciation_line as d
-                                left join account_asset_asset as ac ON (ac.id=d.asset_id)
-                                where a.id=ac.id) = min(dl.id)
+                    (CASE WHEN dlmin.id = min(dl.id)
                       THEN a.purchase_value
                       ELSE 0
                       END) as gross_value,
@@ -76,10 +74,11 @@ class asset_asset_report(osv.osv):
                     a.company_id as company_id
                 from account_asset_depreciation_line dl
                     left join account_asset_asset a on (dl.asset_id=a.id)
+                    left join (select min(d.id) as id,ac.id as ac_id from account_asset_depreciation_line as d inner join account_asset_asset as ac ON (ac.id=d.asset_id) group by ac_id) as dlmin on dlmin.ac_id=a.id
                 group by 
                     dl.amount,dl.asset_id,dl.depreciation_date,dl.name,
                     a.purchase_date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
-                    a.purchase_value, a.id, a.salvage_value
+                    a.purchase_value, a.id, a.salvage_value, dlmin.id
         )""")
 	
 

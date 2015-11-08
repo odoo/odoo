@@ -98,13 +98,13 @@ msgid ""
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr ""
+msgstr " * \"Mustandi\"- staatust kasutatakse, kui kasutaja koostab uut ja kinnitamata arvet.\n * \"Pro-forma\" kui arve on ettemaksu ootav arve, sel ei ole arve numbrit.\n * \"Avatud\"-staatust kasutatakse arvetel, mil on küll number, aga mis ootavad tasumist.\n * \"Tasutud\"-staatus seatakse automaatselt, kui arve on tasutud. Vastavad raamatu kanded võivad olla kooskõlastatud või ka mitte.\n * \"Tühistatud\"-staatust kasutatakse pärast arve tühistamist."
 
 #. module: account
 #: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
-msgstr ""
+msgstr "Tsentraliseerimine"
 
 #. module: account
 #. openerp-web
@@ -116,7 +116,7 @@ msgstr ""
 #. module: account
 #: field:analytic.entries.report,nbr:0
 msgid "# Entries"
-msgstr ""
+msgstr "Kandeid"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
@@ -128,12 +128,12 @@ msgstr "# numbrit"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Entries"
-msgstr ""
+msgstr "Kannete arv"
 
 #. module: account
 #: field:account.invoice.report,nbr:0
 msgid "# of Invoices"
-msgstr ""
+msgstr "Arvete arv"
 
 #. module: account
 #: field:account.entries.report,nbr:0
@@ -143,7 +143,7 @@ msgstr "# detaile"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Products Qty"
-msgstr ""
+msgstr "Toodete kogus"
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -153,20 +153,20 @@ msgstr "Kande nr."
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name|safe} Arve (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1861
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (koopia)"
 
 #. module: account
 #: code:addons/account/account.py:635 code:addons/account/account.py:786
 #: code:addons/account/account.py:787
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (koopia)"
 
 #. module: account
 #: view:website:account.report_partnerbalance
@@ -178,13 +178,13 @@ msgstr "(Konto/partneri) nimi"
 msgid ""
 "(If you do not select a specific fiscal year, all open fiscal years will be "
 "selected.)"
-msgstr ""
+msgstr "(Kui Sa ei vali finantsaastat, valitakse kõik lahtised finantsaastad.)"
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid ""
 "(If you do not select a specific period, all open periods will be selected)"
-msgstr ""
+msgstr "(Kui Sa ei vali perioodi, valitakse kõik lahtisedperioodid.)"
 
 #. module: account
 #: view:account.state.open:account.view_account_state_open
@@ -2248,7 +2248,7 @@ msgstr "Kassa"
 #: view:account.bank.statement:account.view_bank_statement_form2
 #: field:account.journal,cash_control:0
 msgid "Cash Control"
-msgstr ""
+msgstr "Sularaha kontroll"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -3155,7 +3155,7 @@ msgstr "Loo sissekanded"
 #: field:validate.account.move.lines,create_uid:0
 #: field:wizard.multi.charts.accounts,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Loonud"
 
 #. module: account
 #: field:account.account,create_date:0
@@ -4313,7 +4313,7 @@ msgstr ""
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "Features"
-msgstr ""
+msgstr "Võimalused"
 
 #. module: account
 #: selection:report.account.sales,month:0
