@@ -3,12 +3,13 @@
 # * auth_signup
 # 
 # Translators:
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-10-30 12:30+0000\n"
+"PO-Revision-Date: 2015-11-02 13:41+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +57,7 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>Побарано е ресетирање на лозинка за Odoo налог поврзан со овој е-маил.</p>\n\n<p>Можете да ја промените вашата лозинка следејќи го <a href=\"${object.signup_url}\">овој линк</a>, кој ќе остане валиден во тековните 24 часа. </p>\n\n<p>Забелешка: Ако не сте го побарале ова, слободно можете да го игнорирате овој е-маил.</p>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -68,14 +69,14 @@ msgstr "${object.company_id.name} покана за поврзување на Od
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr ""
+msgstr "<strong>За овој корисник е побарано ресетирање на лозинка. Испратена е Е-маил порака со следниот линк:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>Испратена е Е-маил порака со следниот линк за претплата:</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -92,7 +93,7 @@ msgstr "Беше испратен e-mail со акредитиви за ресе
 #: code:addons/auth_signup/controllers/main.py:108
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Авентикацијата беше неуспешна."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -104,7 +105,7 @@ msgstr "Назад кон Најава"
 #: code:addons/auth_signup/res_users.py:277
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Неможе да се испрати e-mail: Корисникот %s нема e-mail адреса."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -119,7 +120,7 @@ msgstr "Потврди лозинка"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Connected"
-msgstr ""
+msgstr "Поврзан"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:62
@@ -166,7 +167,7 @@ msgstr "Ресетирај лозинка"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
 msgid "Private Profile"
-msgstr ""
+msgstr "Приватен профил"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -177,7 +178,7 @@ msgstr "Ресетирај лозинка"
 #: code:addons/auth_signup/res_users.py:250
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Ресетирај лозинка: неважечко корисничко име или емаил адреса"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -238,7 +239,7 @@ msgstr "Урнек корисник за новите корисници кре�
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "Целосната URL адреса за пристап на документот преку веб страната."
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password

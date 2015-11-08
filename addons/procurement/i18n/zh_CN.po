@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-10-22 07:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-06 06:51+0000\n"
+"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,14 +22,14 @@ msgstr ""
 msgid ""
 "<b>Procurement Orders</b> represent the need for a certain quantity of "
 "products, at a given time, in a given location."
-msgstr ""
+msgstr "<b>补货单</b>代表着一个给定位置在一个给定时间内的产品的数量的需求"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
 "                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
-msgstr ""
+msgstr "<b>销售订单</b>是一个典型的补货单（但却是不同的文档）\n　　　　　　　　　　　　　　　<br/>依赖于补货参数和产品的配置，补货引擎会试着通过保留库存，给供应商下订单或者传递一张生产订单等等来满足需求"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
@@ -38,7 +38,7 @@ msgid ""
 "fulfill a procurement. Some exceptions will resolve themselves "
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
-msgstr ""
+msgstr "一个<b>补货异常</b发生在：当系统找不到一种方式来完成补货的时候>有些异常会自行修复，但是其余的需要人工干预（这些会在chatter中被标识为特定的错误信息）"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -49,7 +49,7 @@ msgid ""
 "                product at a specific location. Procurement orders are usually\n"
 "                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
-msgstr ""
+msgstr "一个<b>补货订单</b>被用来记录一个特定位置的特定产品的需求\n补货订单可以从<i>销售订单，拉物流规则或者\n最小库存规则来自动触发产生"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
@@ -110,14 +110,14 @@ msgstr "为正式的需求选择规则，通常是由系统选择的，但可以
 msgid ""
 "Click to create a Procurement order in exception state, or remove the filter"
 " on the search bar to display all the procurements."
-msgstr ""
+msgstr "点击来创建一张异常状态的补货订单，或者通过移除右上角搜索栏位中的过滤来显示所有的补货"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid "Click to create a procurement order."
-msgstr ""
+msgstr "点击创建一张补货单"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
@@ -266,7 +266,7 @@ msgstr "确认后, 会出现新消息."
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
-msgstr ""
+msgstr "如果路径是全局的"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
@@ -509,7 +509,7 @@ msgstr "计算需求"
 #. module: procurement
 #: model:ir.actions.server,name:procurement.procurement_order_server_action
 msgid "Run Procurements"
-msgstr ""
+msgstr "跑需求"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -612,12 +612,12 @@ msgid ""
 "When the procurement order is confirmed, it automatically\n"
 "                creates the necessary operations to fullfil the need: purchase\n"
 "                order proposition, manufacturing order, etc."
-msgstr ""
+msgstr "当补货单被确认时，它会自动创建必要的操作来完成需求：采购订单或者生产订单"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
-msgstr ""
+msgstr "例如：买"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view

@@ -3,13 +3,14 @@
 # * payment_adyen
 # 
 # Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-10-29 08:19+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-07 16:44+0000\n"
+"Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr "; nem talált rendelést"
 #. module: payment_adyen
 #: model:payment.acquirer,cancel_msg:payment_adyen.payment_acquirer_adyen
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Mégse,</i> A fizetése visszavont.</span>"
+msgstr "<span><i>Mégse,</i> A fizetése elutasítva.</span>"
 
 #. module: payment_adyen
 #: model:payment.acquirer,done_msg:payment_adyen.payment_acquirer_adyen
@@ -65,19 +66,19 @@ msgstr "Adyen"
 #: code:addons/payment_adyen/models/adyen.py:169
 #, python-format
 msgid "Adyen: feedback error"
-msgstr ""
+msgstr "Adyen: visszajelzési hiba"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:131
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
-msgstr ""
+msgstr "Adyen: érvénytelen merchantSig, fogadott %s, kiszámított %s"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:119
 #, python-format
 msgid "Adyen: received data for reference %s"
-msgstr ""
+msgstr "Adyen: fogadott adat ehhez a referenciához %s"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:112
@@ -85,12 +86,12 @@ msgstr ""
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
 "(%s)"
-msgstr ""
+msgstr "Adyen: beérkeztetett adat hiányzó hivatkozással (%s) vagy hiányzó pspReference (%s)"
 
 #. module: payment_adyen
 #: model:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
 msgid "How to configure your Adyen account?"
-msgstr ""
+msgstr "Hogyan állítsa be a Adyen számla fiókját?"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_merchant_account
@@ -122,4 +123,4 @@ msgstr "Külső HMAC kulcs"
 msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
-msgstr ""
+msgstr "Át lesz irányítva az Adyen weboldalra miután a fizetés gombra kattintott."

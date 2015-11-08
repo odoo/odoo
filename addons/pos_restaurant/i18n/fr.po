@@ -3,6 +3,7 @@
 # * pos_restaurant
 # 
 # Translators:
+# Clo <clo@odoo.com>, 2015
 # Lucas Deliege <lud@odoo.com>, 2015
 # Melanie Bernard <mbe@odoo.com>, 2015
 msgid ""
@@ -10,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:39+0000\n"
-"PO-Revision-Date: 2015-10-30 13:42+0000\n"
-"Last-Translator: Melanie Bernard <mbe@odoo.com>\n"
+"PO-Revision-Date: 2015-11-02 15:39+0000\n"
+"Last-Translator: Clo <clo@odoo.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,14 +25,14 @@ msgstr ""
 msgid ""
 "A background image used to display a floor layout in the point of sale "
 "interface"
-msgstr ""
+msgstr "Une image de fond d'écran est utilisée pour afficher la mise en place de  la salle dans l'interface du point de vente"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
-msgstr ""
+msgstr "Un plan de salle représente le lieu où les clients sont servi, vous pouvez y \ndéfinir les positions des tables."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_active
@@ -208,7 +209,7 @@ msgid ""
 "                Proxy where the printer can be found, and a list of product categories.\n"
 "                An Order Printer will only print updates for prodcuts belonging to one of\n"
 "                its categories."
-msgstr ""
+msgstr "Chaque Imprimante a une adresse IP qui défini le proxy de la PosBox/Hardware\noù l'imprimante se situe, et une liste de catégories de produits.\nUn imprimante n'imprimera uniquement que les mises à jours des produits appartenant à sa propre catégorie."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
@@ -268,7 +269,7 @@ msgstr "ID"
 msgid ""
 "If false, the table is deactivated and will not be available in the point of"
 " sale"
-msgstr ""
+msgstr "Si faux, la table est désactivée et ne sera pas disponible sur le point de vente"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor___last_update
@@ -346,7 +347,7 @@ msgstr "Commander imprimantes"
 msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "                order updates in the kitchen/bar when the waiter updates the order."
-msgstr ""
+msgstr "Les imprimantes des commandes sont utilisées par les restaurants et les bars pour imprimer les mises à jours des commandes en cuisine/bar lorsque le serveur change la commande."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_iface_orderline_notes
@@ -517,19 +518,19 @@ msgstr "L'adresse IP ou le nom d'hôte du proxy de l'imprimante"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_customer_count
 msgid "The amount of customers that have been served by this order."
-msgstr ""
+msgstr "La quantité de clients qui ont été servis par cette commande."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_background_color
 msgid ""
 "The background color of the floor layout, (must be specified in a html-"
 "compatible format)"
-msgstr ""
+msgstr "La couleur d'arrière-plan du plan de la salle, doit être spécifié dans une format compatible avec l'html"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_seats
 msgid "The default number of customer served at this table."
-msgstr ""
+msgstr "Le nombre par défaut de clients servis à cette table."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_table_ids
@@ -549,13 +550,13 @@ msgstr "Les étages du restaurant servis par ce Point de Vente"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_table_id
 msgid "The table where this order was served"
-msgstr ""
+msgstr "La table où cette commande a été servie"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_color
 msgid ""
 "The table's color, expressed as a valid 'background' CSS property value"
-msgstr ""
+msgstr "La couleur de la table, exprimée dans une valeur valide CSS d'arrière-plan"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_height
@@ -567,30 +568,30 @@ msgstr "La hauteur de la table en pixels"
 msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
-msgstr ""
+msgstr "La position horizontale de la table du côté gauche jusqu'à son centre, en pixels"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr ""
+msgstr "La position verticale de la table du haut jusqu'à son centre, en pixels"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_width
 msgid "The table's width in pixels"
-msgstr ""
+msgstr "La largeur de la table en pixels"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:90
 #, python-format
 msgid "This floor has no tables yet, use the"
-msgstr ""
+msgstr "Cet étage n'a pas encore de tables, utilisez le"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
 msgid "Used to sort Floors"
-msgstr ""
+msgstr "Utilisé pour trier le étages."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -636,7 +637,7 @@ msgstr "à table"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:91
 #, python-format
 msgid "button in the editing toolbar to create new tables."
-msgstr ""
+msgstr "bouton dans la barre d'édition pour créer de nouvelles tables."
 
 #. module: pos_restaurant
 #. openerp-web
