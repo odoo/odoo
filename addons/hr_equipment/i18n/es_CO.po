@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2015-10-30 22:48+0000\n"
+"PO-Revision-Date: 2015-11-07 16:34+0000\n"
 "Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -71,12 +71,12 @@ msgstr "Alias"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Alias del Contacto de Seguridad"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_alias_domain
 msgid "Alias Domain"
-msgstr ""
+msgstr "Alias del Dominio"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_name
@@ -86,12 +86,12 @@ msgstr "Seudónimo"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_domain
 msgid "Alias domain"
-msgstr "Seudónimo del dominio"
+msgstr "Alias del dominio"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "Modelo con Alias"
 
 #. module: hr_equipment
 #: sql_constraint:hr.equipment:0
@@ -338,14 +338,14 @@ msgstr "Editar…"
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
 msgid "Email Alias"
-msgstr ""
+msgstr "Alias de Correo"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_id
 msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create new maintenance request for this equipment category."
-msgstr ""
+msgstr "Alias de correo para esta categoría de equipo, Los correos nuevos automáticamente crearán una petición de mantenimiento para esta categoría de equipo."
 
 #. module: hr_equipment
 #: selection:hr.equipment,equipment_assign_to:0
@@ -468,7 +468,7 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr ""
+msgstr "ID del registro padre que tiene el alias. (ejemplo: el proyecto que guarda el alias para la creación de tareas)"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread
@@ -727,7 +727,7 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference is not"
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr ""
+msgstr "El modelo padre que tiene el alias. El modelo que guarda la referencia al alias no es necesariamente el modelo dado por alias_model_id (ejemplo: proyecto (modelo padre) y tarea (modelo))"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
@@ -741,7 +741,7 @@ msgid ""
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document\n"
-msgstr ""
+msgstr "Política para enviar un mensaje en el documento usando la pasarela de correo.\n- todos: todos pueden enviar\n- asociados: sólo asociados autenticados\n- seguidores: sólo los seguidores del documento relacionado\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -801,7 +801,7 @@ msgstr "Solicitud Hecha"
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
 msgid "Requests Alias"
-msgstr ""
+msgstr "Alias de Solicitudes"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
@@ -911,7 +911,7 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr ""
+msgstr "El modelo (Tipo de Documento de Odoo) al que corresponde este alias. Cualquier correo entrante que no sea respuesta a un registro existente, causará la creación de un nuevo registro de este modelo (ej. una Tarea de Proyecto)."
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_name
@@ -927,7 +927,7 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr ""
+msgstr "El propietario de los registros creados al recibir correos en este alias. Si este campo no está marcado, el sistema tratará de encontrar el propietario adecuado basado en el correo del remotente (De), o usará la cuenta de administrador si no se encuentra un usuario para esa dirección."
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
@@ -978,7 +978,7 @@ msgstr "Contador de Mensajes no Leídos"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_equipment_alias_prefix
 msgid "Use the following alias to report internal equipment issue"
-msgstr ""
+msgstr "Usar el siguiente alias para informar las incidencias del equipo interno"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_equipment_assign_to
