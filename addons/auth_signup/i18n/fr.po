@@ -3,13 +3,14 @@
 # * auth_signup
 # 
 # Translators:
+# Clo <clo@odoo.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-10-14 20:08+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-02 08:36+0000\n"
+"Last-Translator: Clo <clo@odoo.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>Une demande de réinitialisation de mot de passe a été effectuée pour le compte Odoo lié à cette adresse.</p>\n\n<p>Vous pouvez changer votre mot de passe en suivant <a href=\"${object.signup_url}\">ce lien</a>, qui sera valide pendant 24 heures.</p>\n\n<p>Remarque : si vous n'avez pas effectué cette demande, vous pouvez simplement ignorer ce message.</p>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -68,14 +69,14 @@ msgstr "${object.company_id.name} vous invite à vous connecter à Odoo"
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr ""
+msgstr "<strong>Une réinitialisation du mot de passe a été demandée pour cet utilisateur. Un courriel lui a été envoyé, contenant le lien suivant :</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>Une invitation a été envoyée par courriel. Elle contient le lien suivant pour s'abonner :</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -92,7 +93,7 @@ msgstr "Un courriel a été envoyé avec les informations pour recréez votre mo
 #: code:addons/auth_signup/controllers/main.py:108
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Authentification échouée."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -104,7 +105,7 @@ msgstr "Retour à la page d'authentification"
 #: code:addons/auth_signup/res_users.py:277
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Impossible d'envoyer l'e-mail : l'utilisateur %s n'a pas d'adresse e-mail."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -119,7 +120,7 @@ msgstr "Confirmez le mot de passe"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Connected"
-msgstr ""
+msgstr "Connecté"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:62
@@ -166,7 +167,7 @@ msgstr "Réinitialisation du mot de passe"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
 msgid "Private Profile"
-msgstr ""
+msgstr "Profil privé"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -177,7 +178,7 @@ msgstr "Réinitialiser le mot de passe"
 #: code:addons/auth_signup/res_users.py:250
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Veuillez réinitialiser votre mot de passe: nom d'utilisation ou adresse email non valide"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -258,12 +259,12 @@ msgstr "Visible sur le site web"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "Description complète du site web partenaire"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
 msgid "Website Partner Short Description"
-msgstr ""
+msgstr "Description courte du site web partenaire"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url

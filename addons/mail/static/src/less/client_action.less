@@ -15,9 +15,10 @@
     .o-flex-flow(row, nowrap);
 
     .o_mail_chat_sidebar {
-        .o-flex(0, 0, 200px);
+        .o-flex(0, 0, 220px);
         overflow: auto;
         padding: 8px 0;
+        font-weight: 300;
 
         @media (max-width: @screen-xs-max) {
             flex: none;
@@ -25,32 +26,30 @@
         }
 
         .o_mail_sidebar_title {
-            .o-webclient-padding(@top: 5px, @bottom: 5px);
             .o-flex-display();
+            padding: 5px 8px 5px @odoo-horizontal-padding;
             align-items: center;
             justify-content: space-between;
             h4 {
                 text-transform: uppercase;
             }
             .o_add {
-                padding: 8px;
+                padding: 6px;
             }
         }
         .o_mail_chat_channel_item {
             width: 100%;
-            .o-webclient-padding(@top: 5px, @bottom: 5px);
-            padding-left: 1.5*@odoo-horizontal-padding; // larger padding than titles
+            padding: 5px 8px 5px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
             > .badge {
                 margin: 0;
             }
             .o_mail_partner_unpin {
-                padding: 2px 8px;
+                padding: 2px 6px;
             }
         }
         .o_mail_add_channel {
             width: 100%;
-            .o-webclient-padding(@top: 5px, @bottom: 5px);
-            padding-left: 1.5*@odoo-horizontal-padding; // larger padding than titles
+            padding: 5px 8px 5px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
             position: relative;
 
             > input {
@@ -109,8 +108,8 @@
 @sidebar-icon-opacity: 0.6;
 .o_mail_chat {
     .o_mail_chat_sidebar {
-        background-color: @gray;
-        color: @gray-lighter;
+        background-color: darken(@gray, 8%);
+        color: lighten(@gray, 50%);
 
         .o_mail_chat_channel_item {
             overflow: hidden;
@@ -118,13 +117,13 @@
             cursor: pointer;
 
             &:hover {
-                background-color: darken(@gray, 8%);;
+                background-color: darken(@gray, 12%);;
                 .o_mail_partner_unpin {
                     opacity: @sidebar-icon-opacity;
                 }
             }
             &.o_active {
-                background-color: @gray-dark;
+                background-color: darken(@gray, 15%);
             }
             .o_mail_partner_unpin {
                 opacity: 0;

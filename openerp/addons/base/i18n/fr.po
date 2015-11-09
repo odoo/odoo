@@ -9,6 +9,7 @@
 # Lucas Deliege <lud@odoo.com>, 2015
 # Martin Malorni <mmalorni@gmail.com>, 2015
 # Martin Trigaux, 2015
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2015
 # Symons Xavier <xsy@openerp.com>, 2015
 msgid ""
@@ -16,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-16 16:01+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-06 18:39+0000\n"
+"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -125,7 +126,7 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 "    "
-msgstr "\n\nVue d'ensemble:\n---------\n\n* Plan comptable et modèle des Taxes pour les entreprises Japonaises.\n* Ceci ne couvre probablement pas tous les comptes nécessaires pour une entreprise. On peut ajouter / supprimer / modifier des comptes fondés sur ce modèle.\n\nNote:\n-----\n\n* Les positions fiscales, taxes et impôts ont été ajoutés pour répondre aux exigences spéciales qui pourraient résulter de la mise en œuvre du Point de Vente (POS). [1] On peut ne pas avoir besoin de les utiliser dans des circonstances normales.\n\n[1] Voir https://github.com/odoo/odoo/pull/6470 ."
+msgstr "\n\nVue d'ensemble:\n---------\n\n* Plan comptable et modèle des taxes pour les entreprises japonaises.\n* Ceci ne couvre probablement pas tous les comptes nécessaires pour une entreprise. On peut ajouter / supprimer / modifier des comptes basés sur ce modèle.\n\nNote:\n-----\n\n* Les positions fiscales, taxes et impôts ont été ajoutés pour répondre aux exigences spéciales qui pourraient résulter de la mise en œuvre du point de vente (POS). [1] On peut ne pas avoir besoin de les utiliser dans des circonstances normales.\n\n[1] Voir https://github.com/odoo/odoo/pull/6470 ."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_deferred_revenue
@@ -138,7 +139,7 @@ msgid ""
 "Keeps track of the revenue recognition installments, and creates corresponding journal entries.\n"
 "\n"
 "    "
-msgstr "\n\nIdentification des Revenus\n===================\nGérer l'identification des revenus sur les ventes de produits.\nAssure le suivi des versements, et crée les entrées de journal correspondantes."
+msgstr "\n\nReconnaissance des revenus\n===========================\nGérer la reconnaissance des revenus sur les ventes de produits.\nAssure le suivi des versements, et crée les entrées de journal correspondantes."
 
 #. module: base
 #: code:addons/base/res/res_config.py:360
@@ -306,14 +307,14 @@ msgstr "\nPermet d'utiliser un code python pour définir les taxes"
 msgid ""
 "\n"
 "        Automate calls transfers, logs and emails"
-msgstr "\nAutomate des transferts d'appel, des journaux et des courriels"
+msgstr "\nAutomatise des transferts d'appel, des journaux et des courriels"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
 msgid ""
 "\n"
 "        Enable a cache on products for a lower POS loading time."
-msgstr "\nActiver un cache sur les produits pour diminuer le temps de chargement de POS"
+msgstr "\nActiver un cache sur les produits pour diminuer le temps de chargement du POS"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -384,7 +385,7 @@ msgid ""
 "        The calendars we use are on weekly basis.  It is possible however to have a start date and end date for e.g. the Tuesday delivery.\n"
 "        It is also possible to put exceptions for days when there is none.\n"
 "    "
-msgstr "\nLe module stock_calendar gère des règles minimales de stock (= réapprovisionnements / règles de ré-ordonnancement) de façon différenciée prenant en compte les calendriers d'achat et de livraison.\nNormalement, l'ordonnanceur passe en revue tous les réapprovisionnements et crée un approvisionnement avec une quantité tenant compte du stock courant et des  mouvements de stocks prévus. \nC'est un problème pour les entreprises qui travaillent avec des produits frais\ncar si on commande les produits nécessaires sur 2 semaines et qu'ils arrivent le lendemain, deux semaines après ils ne seront plus frais. Un calendrier de livraison a donc été ajouté au réapprovisionnement. Les futurs mouvements de stock comptabilisés (ils représentent les besoins) seront limités à ceux nécessaires pour aller jusqu'à la deuxième livraison prévue sur le calendrier.\nAinsi, avec des livraisons hebdomadaires le mardi et le vendredi, une commande du lundi sera livrée le mardi, elle comprendra  ce qui est nécessaire pour aller jusqu'au vendredi.\n\nCeci ne convient pas si on souhaite créer un ordre d'achat seulement avant la date de la livraison et si les besoins futurs peuvent changer (sinon on risque de commander trop) . Pour cela, il a été ajouté un calendrier d'achat et le réapprovisionnement ne sera déclenché que lorsque le planificateur sera exécuté dans l'intervalle donné par le calendrier d'achat. (la  date de dernière exécution permet de vérifier que cela n'a pas déjà été déclenché pour cette période)\n\nCependant, il peut y avoir parfois des doubles commandes: supposons que l'on doive commander deux fois le vendredi : un ordre d'achat pour le lundi et un ordre d'achat pour le mardi. On aura alors besoin de deux ordres en même temps.\nPour gérer cela on place un groupe d'approvisionnement sur la ligne de calendrier et sur la ligne de calendrier d'achat à faire, on vérifiera la ligne de livraison correspondante. Sur le groupe d'achat, on peut commander sa propagation vers l'achat et il est ainsi possible d'avoir une commande pour le lundi et le mardi.\n\nAvec les réapprovisionnements normaux, dans le système les dates mises sur le bon de commande sont fondées sur les délais des produit/entreprise.\nCela ne correspond pas à ce qui est fait avec les calendriers, ainsi les dates d'achat/livraison seront réglées selon les calendriers aussi.\n\nLes calendriers sont utilisés sur une base hebdomadaire. Il est cependant possible de caler une date de début et date de fin sur la livraison du mardi.\nIl est également possible de mettre des exceptions pour les jours où il n'y a personne."
+msgstr "\nLe module stock_calendar gère des règles minimales de stock (= réapprovisionnements / règles de ré-ordonnancement) de façon différenciée prenant en compte les calendriers d'achat et de livraison.\nNormalement, l'ordonnanceur passe en revue tous les réapprovisionnements et crée un approvisionnement avec une quantité tenant compte du stock courant et des mouvements de stocks prévus. \nC'est un problème pour les entreprises qui travaillent avec des produits frais car si on commande les produits nécessaires sur 2 semaines et qu'ils arrivent le lendemain, deux semaines après ils ne seront plus frais. Un calendrier de livraison a donc été ajouté au réapprovisionnement. Les futurs mouvements de stock comptabilisés (ils représentent les besoins) seront limités à ceux nécessaires pour aller jusqu'à la deuxième livraison prévue sur le calendrier.\nAinsi, avec des livraisons hebdomadaires le mardi et le vendredi, une commande du lundi sera livrée le mardi, elle comprendra ce qui est nécessaire pour aller jusqu'au vendredi.\n\nCeci ne convient pas si on souhaite créer un ordre d'achat seulement avant la date de la livraison et si les besoins futurs peuvent changer (sinon on risque de commander trop). Pour cela, il a été ajouté un calendrier d'achat et le réapprovisionnement ne sera déclenché que lorsque le planificateur sera exécuté dans l'intervalle donné par le calendrier d'achat (la date de dernière exécution permet de vérifier que cela n'a pas déjà été déclenché pour cette période).\n\nCependant, il peut y avoir parfois des doubles commandes: supposons que l'on doive commander deux fois le vendredi : un ordre d'achat pour le lundi et un ordre d'achat pour le mardi. On aura alors besoin de deux ordres en même temps.\nPour gérer cela on place un groupe d'approvisionnement sur la ligne de calendrier et sur la ligne de calendrier d'achat à faire, on vérifiera la ligne de livraison correspondante. Sur le groupe d'achat, on peut commander sa propagation vers l'achat et il est ainsi possible d'avoir une commande pour le lundi et le mardi.\n\nAvec les réapprovisionnements normaux, dans le système les dates mises sur le bon de commande sont fondées sur les délais des produit/entreprise.\nCela ne correspond pas à ce qui est fait avec les calendriers, ainsi les dates d'achat/livraison seront réglées selon les calendriers aussi.\n\nLes calendriers sont utilisés sur une base hebdomadaire. Il est cependant possible de caler une date de début et date de fin sur la livraison du mardi.\nIl est également possible de mettre des exceptions pour les jours où il n'y a personne."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode
@@ -441,7 +442,7 @@ msgid ""
 "        - Copy translations for COA, Tax, Tax Code and Fiscal Position from\n"
 "          templates to target objects.\n"
 "    "
-msgstr "\n    * Support de plusieurs langues pour le plan comptable, les taxes, les codes des taxes, les modèles de journaux comptables, le tableau des comptes analytiques et les journaux analytiques.\n    * Changement de l'assistant de configuration :\n    - Copie des traductions pour le plans comptable, les taxes, les codes de taxes et les position fiscales à partir des  modèles pour les objets ciblés.\n    "
+msgstr "\n* Support de plusieurs langues pour le plan comptable, les taxes, les codes des taxes, les modèles de journaux comptables, le tableau des comptes analytiques et les journaux analytiques.\n* Changement de l'assistant de configuration :\n- Copie des traductions pour le plan comptable, les taxes, les codes de taxes et les positions fiscales à partir des modèles pour les objets ciblés.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_cash_basis
@@ -450,7 +451,7 @@ msgid ""
 "    Add an option on tax to allow them to be cash based, meaning that during reconciliation, if there is a tax with\n"
 "    cash basis involved, a new journal entry will be create containing those taxes value.\n"
 "    "
-msgstr "\nAjout d'une option sur la gestion des taxes pour autoriser le paiement en espèces. En conséquence lors de la réconciliation, \npour les taxes payées en espèces, une nouvelle entrée de journal sera crée contenant leur valeur."
+msgstr "\nAjoute une option sur la gestion des taxes pour autoriser le paiement en espèces. En conséquence lors de la réconciliation, pour les taxes payées en espèces, une nouvelle entrée de journal sera crée contenant leur valeur."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -475,7 +476,7 @@ msgid ""
 "\n"
 "    Gantt view for Leaves Dashboard\n"
 "    "
-msgstr "\nVue Gantt pour les Feuilles du Tableau de bord"
+msgstr "\nVue Gantt pour le tableau de bord des congés"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -512,7 +513,7 @@ msgid ""
 "It gives the Administrator user access to all accounting features such as journal items and the chart of accounts.\n"
 "\n"
 "It assigns manager and user access rights to the Administrator for the accounting application and only user rights to the Demo user.\n"
-msgstr "\nDroits d'accès sur la Comptabilité\n========================\nL'Administrateur a accès à toutes les fonctionnalités de comptabilité tels que les articles de journaux et le plan comptable.\n\nL'utilisateur Demo n'a que des droits utilisateur.\n"
+msgstr "\nDroits d'accès sur la Comptabilité\n===============================\nL'administrateur a accès à toutes les fonctionnalités de la comptabilité tels que les écritures comptables et le plan comptable.\n\nL'utilisateur demo n'a que des droits utilisateur.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_contract_dashboard
@@ -524,7 +525,7 @@ msgid ""
 "1) Analyse the recurrent revenue and other metrics for contracts\n"
 "2) Analyse the contracts modifications by salesman and compute their value.\n"
 "    "
-msgstr "\nComptabilité, Tableau de Bord des Contrats\n========================\nAjout de tableaux de bord pour :\n1) Analyser les revenus récurrents et autres paramètres pour les contrats\n2) Analyser les modifications des contrats par vendeur et calculer leur valeur."
+msgstr "\nTableau de bord de la comptabilité par contrats\n============================================\nAjout de tableaux de bord pour :\n1) Analyser les revenus récurrents et autres paramètres pour les contrats\n2) Analyser les modifications des contrats par vendeur et calculer leur valeur."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_account
@@ -720,7 +721,7 @@ msgid ""
 "    * Requested Date (will be used as the expected date on pickings)\n"
 "    * Commitment Date\n"
 "    * Effective Date\n"
-msgstr "\nAjouter une information de date supplémentaire aux ordres de vente.\n===================================================\n\nOn peut ajouter les dates supplémentaires suivantes à un ordre de commande commande :\n------------------------------------------------------------\n    * La date demandée (sera utilisée comme date prévue pour la préparation)\n    * La date d'engagement\n    * La date effective\n"
+msgstr "\nAjouter une information de date supplémentaire aux ordres de vente\n===============================================================\n\nOn peut ajouter les dates supplémentaires suivantes à un ordre de ventes :\n-------------------------------------------------------------------------------------------------------\n* La date demandée (sera utilisée comme date prévue pour la préparation)\n* La date d'engagement\n* La date effective\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -757,7 +758,7 @@ msgid ""
 "Add timesheet support on issue in the frontend.\n"
 "==================================================================================================\n"
 "    "
-msgstr "\nAjout des feuilles de temps dans l'interface de gestion des incidents\n================================================== ================================================"
+msgstr "\nAjout le support des feuilles de temps dans l'interface de gestion des incidents\n================================================== ===================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_portal_sale
