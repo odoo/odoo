@@ -150,7 +150,7 @@ class Channel(models.Model):
     @api.multi
     def action_unfollow(self):
         result = self.write({'channel_partner_ids': [(3, self.env.user.partner_id.id)]})
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info()[0])
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info('unsubscribe')[0])
         notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
         self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         return result
@@ -251,7 +251,7 @@ class Channel(models.Model):
         return notifications
 
     @api.multi
-    def channel_info(self):
+    def channel_info(self, extra_info = False):
         """ Get the informations header for the current channels
             :returns a list of channels values
             :rtype : list(dict)
@@ -272,6 +272,8 @@ class Channel(models.Model):
                 'channel_type': channel.channel_type,
                 'public': channel.public,
             }
+            if extra_info:
+                info['info'] = extra_info
             # add the partner for 'direct mesage' channel
             if channel.channel_type == 'chat':
                 info['direct_partner'] = channel.sudo().channel_partner_ids.filtered(lambda p: p.id != self.env.user.partner_id.id).read(['id', 'name', 'im_status'])

@@ -127,6 +127,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.channels_scrolltop = {};
     },
 
+    willStart: function () {
+        return chat_manager.is_ready;
+    },
+
     start: function() {
         var self = this;
 
@@ -164,6 +168,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             self.$('.o_mail_chat_sidebar').slideToggle(200);
         });
         this.$buttons.on('click', '.o_mail_chat_button_mark_read', chat_manager.mark_all_as_read);
+        this.$buttons.on('click', '.o_mail_chat_button_unstar_all', chat_manager.unstar_all);
 
 
         this.thread.on('redirect', this, this.on_redirect);
@@ -200,6 +205,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                     query.is_displayed = query.is_displayed || channel.id === self.channel.id;
                 });
                 chat_manager.bus.on('update_needaction', self, self.on_update_needaction);
+                chat_manager.bus.on('unsubscribe_from_channel', self, self.render_sidebar);
             });
     },
 
@@ -314,6 +320,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             .find('.o_mail_chat_button_mark_read')
             .toggle(channel.id === "channel_inbox");
 
+        this.$buttons
+            .find('.o_mail_chat_button_unstar_all')
+            .toggle(channel.id === "channel_starred");
+
         this.update_cp();
 
         this.action.context.active_id = channel.id;
@@ -362,6 +372,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             display_load_more: !chat_manager.all_history_loaded(this.channel, this.domain),
             display_needactions: this.channel.display_needactions,
             channel_id: this.channel.id,
+            squash_close_messages: this.channel.type !== 'static',
         };
     },
 
@@ -369,7 +380,21 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var self = this;
         return chat_manager.get_messages({channel_id: this.channel.id, domain: this.domain}).then(function(result) {
             self.thread.render(result, self.get_thread_rendering_options());
+            self.update_button_status(result.length === 0);
         });
+    },
+
+    update_button_status: function (disabled) {
+        if (this.channel.id === "channel_inbox") {
+            this.$buttons
+                .find('.o_mail_chat_button_mark_read')
+                .toggleClass('disabled', disabled);
+        }
+        if (this.channel.id === "channel_starred") {
+            this.$buttons
+                .find('.o_mail_chat_button_unstar_all')
+                .toggleClass('disabled', disabled);
+        }
     },
 
     load_more_messages: function () {
@@ -488,7 +513,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             (current_channel_id === "channel_inbox" && !message.is_needaction)) {
             chat_manager.get_messages({channel_id: this.channel.id, domain: this.domain}).then(function (messages) {
                 var options = self.get_thread_rendering_options();
-                self.thread.remove_message_and_render(message.id, messages, options);
+                self.thread.remove_message_and_render(message.id, messages, options).then(function () {
+                    self.update_button_status(messages.length === 0);
+                });
             });
         } else if (_.contains(message.channel_ids, current_channel_id)) {
             this.fetch_and_render_thread();
