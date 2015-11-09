@@ -166,7 +166,7 @@ var Query = Class.extend({
             offset: this._offset,
             lazy: this._lazy,
             limit: this._limit,
-            orderby: instance.web.serialize_sort(this._order_by) || false
+            orderby: serialize_sort(this._order_by) || false
         }),
         this._model.call('fields_get', {
             allfields: grouping,
