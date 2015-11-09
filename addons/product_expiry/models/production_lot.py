@@ -12,7 +12,8 @@ class StockProductionLot(models.Model):
     use_date = fields.Datetime(string='Best before Date',
         help='This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet.')
     removal_date = fields.Datetime(string='Removal Date',
-        help='This is the date on which the goods with this Serial Number should be removed from the stock.')
+        help='This is the date on which the goods with this Serial Number should be taken out of the stock (delivered, consumed, scraped...). '
+             'When a Stock Location is configured for FEFO procurements (First Expired, First Out), the goods will be reserved based on this date.')
     alert_date = fields.Datetime(string='Alert Date',
         help="This is the date on which an alert should be notified about the goods with this Serial Number.")
 
