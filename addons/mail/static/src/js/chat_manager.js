@@ -524,10 +524,11 @@ function init () {
             action_id: action_id,
         };
         bus.start_polling();
-        return chat_manager;
     });
 }
 
-return init();
+chat_manager.is_ready = init();
+
+return chat_manager;
 
 });

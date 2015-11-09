@@ -106,10 +106,12 @@ core.bus.on('web_client_ready', null, function () {
         });
     });
 
-    _.each(chat_manager.get_channels(), function (channel) {
-        if (channel.is_detached) {
-            open_chat(channel);
-        }
+    chat_manager.is_ready.then(function() {
+        _.each(chat_manager.get_channels(), function (channel) {
+            if (channel.is_detached) {
+                open_chat(channel);
+            }
+        });
     });
 });
 

@@ -12,7 +12,6 @@ var data = require('web.data');
 var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
 var session = require('web.session');
-var web_client = require('web.web_client');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -694,6 +693,10 @@ var Chatter = form_common.AbstractField.extend({
         this.model = this.view.dataset.model;
         this.res_id = undefined;
         this.context = this.options.context || {};
+    },
+
+    willStart: function () {
+        return chat_manager.is_ready;
     },
 
     start: function () {

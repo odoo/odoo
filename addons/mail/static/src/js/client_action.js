@@ -127,6 +127,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.channels_scrolltop = {};
     },
 
+    willStart: function () {
+        return chat_manager.is_ready;
+    },
+
     start: function() {
         var self = this;
 
