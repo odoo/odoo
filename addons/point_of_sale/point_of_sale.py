@@ -27,6 +27,7 @@ from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools import float_is_zero
 from openerp.tools.translate import _
+from openerp.tools import float_round
 
 import openerp.addons.decimal_precision as dp
 import openerp.addons.product.product
@@ -864,15 +865,23 @@ class pos_order(osv.osv):
                 if line.product_id and line.product_id.type == 'service':
                     continue
 
+                product = line.product_id
+
+                if product.uos_id:
+                    coeff = 1.0 / product.uos_coeff if product.uos_coeff else 1.0
+                    uom_qty = float_round(line.qty * coeff, precision_rounding=product.uos_id.rounding)
+                else:
+                    uom_qty = line.qty
+
                 move_list.append(move_obj.create(cr, uid, {
                     'name': line.name,
-                    'product_uom': line.product_id.uom_id.id,
-                    'product_uos': line.product_id.uom_id.id,
+                    'product_uom': product.uom_id.id,
+                    'product_uos': product.uos_id.id if product.uos_id else product.uom_id.id,
                     'picking_id': picking_id,
                     'picking_type_id': picking_type.id, 
-                    'product_id': line.product_id.id,
+                    'product_id': product.id,
                     'product_uos_qty': abs(line.qty),
-                    'product_uom_qty': abs(line.qty),
+                    'product_uom_qty': abs(uom_qty),
                     'state': 'draft',
                     'location_id': location_id if line.qty >= 0 else destination_id,
                     'location_dest_id': destination_id if line.qty >= 0 else location_id,
@@ -1044,7 +1053,7 @@ class pos_order(osv.osv):
                 inv_name = product_obj.name_get(cr, uid, [line.product_id.id], context=context)[0][1]
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
                                                                line.product_id.id,
-                                                               line.product_id.uom_id.id,
+                                                               line.product_id.uos_id.id if line.product_id.uos_id else line.product_id.uom_id.id,
                                                                line.qty, partner_id = order.partner_id.id,
                                                                fposition_id=order.partner_id.property_account_position.id)['value'])
                 if not inv_line.get('account_analytic_id', False):
