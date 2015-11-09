@@ -57,7 +57,7 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 "                  Nhấp chuột để tạo mới một dự án.\n"
 "                </p><p>\n"
 "                  Dự án được sử dụng để tổ chức các hoạt động; lập kế hoạch\n"
-"                  nhiệm vụ, theo dõi phát sinh, xuất hóa đơn dựa trên chấm công.\n"
+"                  tác vụ, theo dõi phát sinh, xuất hóa đơn dựa trên chấm công.\n"
 "                  Bạn có thể định nghĩa dự án nội bộ(Nghiên cứu & Phát triển, Tăng kỹ năng bán hàng),\n"
 "                  dự án riêng tư (Công việc hàng ngày) hoặc các dự án của khách hàng.\n"
 "                </p><p>\n"
@@ -89,12 +89,12 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "              </p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Bấm để tạo mới một trạng thái trong kênh nhiệm vụ.\n"
+"                Bấm để tạo mới một trạng thái trong kênh tác vụ.\n"
 "              </p><p>\n"
 "                Định nghĩa các bước mà sẽ được sử dụng trong dự án từ việc tạo\n"
-"                nhiệm vụ, cho đến lúc đóng một nhiệm vụ hoặc một vấn đề phát sinh.\n"
+"                tác vụ, cho đến lúc đóng một tác vụ hoặc một vấn đề phát sinh.\n"
 "                Bạn sẽ sử dụng các trạng thái này để theo dõi tiến trình\n"
-"                xử lý và giải quyết các nhiệm vụ hoặc phát sinh.\n"
+"                xử lý và giải quyết các tác vụ hoặc phát sinh.\n"
 "              </p>\n"
 "            "
 
@@ -108,9 +108,9 @@ msgid "<p>\n"
 "                </p>\n"
 "            "
 msgstr "<p>\n"
-"                    Phân hệ quản lý dự án của Odoo cho phép bạn quản lý các kênh nhiệm vụ\n"
+"                    Phân hệ quản lý dự án của Odoo cho phép bạn quản lý các kênh tác vụ\n"
 "                    để khiến cho mọi thứ được hoàn thành một cách hiệu quả. Bạn có\n"
-"                    theo dõi các tiến trình, thảo luận trên các nhiệm vụ, đính kèm các tài liệu, vân vân.\n"
+"                    theo dõi các tiến trình, thảo luận trên các tác vụ, đính kèm các tài liệu, vân vân.\n"
 "                </p>\n"
 "            "
 
@@ -163,22 +163,22 @@ msgstr "Alias Model"
 #. module: project
 #: field:project.config.settings,group_manage_delegation_task:0
 msgid "Allow task delegation"
-msgstr "Cho phép ủy thác nhiệm vụ"
+msgstr "Cho phép ủy thác tác vụ"
 
 #. module: project
 #: help:project.config.settings,group_time_work_estimation_tasks:0
 msgid "Allows you to compute Time Estimation on tasks."
-msgstr "Cho phép bạn tính toán Dự kiến Thời gian cho các nhiệm vụ"
+msgstr "Cho phép bạn tính toán Dự kiến Thời gian cho các tác vụ"
 
 #. module: project
 #: help:project.config.settings,group_tasks_work_on_tasks:0
 msgid "Allows you to compute work on tasks."
-msgstr "Cho phép bạn tính toán các công việc trên các nhiệm vụ"
+msgstr "Cho phép bạn tính toán các công việc trên các tác vụ"
 
 #. module: project
 #: help:project.config.settings,group_manage_delegation_task:0
 msgid "Allows you to delegate tasks to other users."
-msgstr "Cho phép bạn ủy thác nhiệm vụ cho người dùng khác"
+msgstr "Cho phép bạn ủy thác tác vụ cho người dùng khác"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_analysis
@@ -347,7 +347,7 @@ msgstr "Công ty"
 #. module: project
 #: help:project.task,delay_hours:0
 msgid "Computed as difference between planned hours by the project manager and the total hours of the task."
-msgstr "Được tính toán bằng sự chênh lệch giữa số giờ dự kiến của chủ nhiệm dự án và tổng số giờ thực tế hoàn thành nhiệm vụ."
+msgstr "Được tính toán bằng sự chênh lệch giữa số giờ dự kiến của chủ nhiệm dự án và tổng số giờ thực tế hoàn thành tác vụ."
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -357,7 +357,7 @@ msgstr "Được tính bằng: Thời gian đã tiêu thụ + Thời gian còn l
 #. module: project
 #: help:project.task,effective_hours:0
 msgid "Computed using the sum of the task work done."
-msgstr "Được tính bằng tổng số nhiệm vụ đã hoàn thành"
+msgstr "Được tính bằng tổng số tác vụ đã hoàn thành"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_config_settings
@@ -573,12 +573,12 @@ msgstr "Ngày kết thúc"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater than task start-date"
-msgstr "Lỗi ! Ngày kết thúc của nhiệm vụ phải lớn hơn ngày bắt đầu"
+msgstr "Lỗi ! Ngày kết thúc của tác vụ phải lớn hơn ngày bắt đầu"
 
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr "Lỗi! Bạn không thể tạo các nhiệm vụ có tính chu kỳ (lặp đi lặp lại)"
+msgstr "Lỗi! Bạn không thể tạo các tác vụ có tính chu kỳ (lặp đi lặp lại)"
 
 #. module: project
 #: constraint:project.project:0
@@ -588,17 +588,17 @@ msgstr "Lỗi! Ngày bắt đầu của dự án phải nhỏ hơn ngày kết t
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
 msgid "Estimated time for you to validate the work done by the user to whom you delegate this task"
-msgstr "Thời gian dự kiến để bạn xác nhận công việc được hoàn thành bởi một ngời dùng, người mà bạn ủy thắc nhiệm vụ này"
+msgstr "Thời gian dự kiến để bạn xác nhận công việc được hoàn thành bởi một ngời dùng, người mà bạn ủy thắc tác vụ này"
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
 msgid "Estimated time to close this task by the delegated user"
-msgstr "Thời gian dự kiến để đóng nhiệm vụ này bởi người được ủy thác"
+msgstr "Thời gian dự kiến để đóng tác vụ này bởi người được ủy thác"
 
 #. module: project
 #: help:project.task,planned_hours:0
 msgid "Estimated time to do the task, usually set by the project manager when the task is in draft state."
-msgstr "Thời gian dự kiến để đóng nhiệm vụ này, thường được thiết lập bởi chủ nhiệm dự án khi một nhiệm vụ đang trong trạng thái dự thảo."
+msgstr "Thời gian dự kiến để đóng tác vụ này, thường được thiết lập bởi chủ nhiệm dự án khi một tác vụ đang trong trạng thái dự thảo."
 
 #. module: project
 #: view:report.project.task.user:project.view_task_project_user_search
@@ -618,7 +618,7 @@ msgstr "Đóng trong khung nhìn Kanban"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Follow this project to automatically track the events associated to tasks and issues of this project."
-msgstr "Theo dõi dự án này để tự động theo dõi các sự kiện liên quan đến nhiệm vụ và các vấn đề phát sinh của dự án."
+msgstr "Theo dõi dự án này để tự động theo dõi các sự kiện liên quan đến tác vụ và các vấn đề phát sinh của dự án."
 
 #. module: project
 #: field:project.project,message_follower_ids:0
@@ -639,7 +639,7 @@ msgstr "Khung nhìn Gantt"
 #. module: project
 #: field:project.config.settings,module_sale_service:0
 msgid "Generate tasks from sale orders"
-msgstr "Tạo các nhiệm vụ từ hợp đồng bán hàng"
+msgstr "Tạo các tác vụ từ hợp đồng bán hàng"
 
 #. module: project
 #: help:project.project,sequence:0
@@ -649,7 +649,7 @@ msgstr "Chỉ ra thứ tự sắp xếp khi hiển thị danh sách dự án."
 #. module: project
 #: help:project.task,sequence:0
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr "Chỉ ra thứ tự sắp xếp khi hiển thị danh sách nhiệm vụ."
+msgstr "Chỉ ra thứ tự sắp xếp khi hiển thị danh sách tác vụ."
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -701,9 +701,9 @@ msgstr "Holds visibility of the tasks or issues that belong to the current proje
 "- Portal (only available if Portal is installed): employees see everything;\n"
 "   if portal is activated, portal users see the tasks or issues followed by\n"
 "   them or by someone of their company\n"
-"- Employees Only: toàn bộ nhân viên sẽ thấy các nhiệm vụ và phát sinh\n"
-"- Followers Only: nhân viên chỉ nhìn thấy nhiệm vụ/phát sinh mà họ theo dõi; nếu kích hoạt portal,\n"
-"   người dùng portal cũng chỉ thấy những nhiệm vụ / phát sinh mà họ theo dõi."
+"- Employees Only: toàn bộ nhân viên sẽ thấy các tác vụ và phát sinh\n"
+"- Followers Only: nhân viên chỉ nhìn thấy tác vụ/phát sinh mà họ theo dõi; nếu kích hoạt portal,\n"
+"   người dùng portal cũng chỉ thấy những tác vụ / phát sinh mà họ theo dõi."
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -738,7 +738,7 @@ msgstr "If checked new messages require your attention."
 #. module: project
 #: help:account.analytic.account,use_tasks:0
 msgid "If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"
-msgstr "Nếu bạn đánh dấu vào trường này, hợp đồng này sẽ có khả dụng trong menu dự án và bạn có thể theo quản lý nhiệm vụ hoặc theo dõi phát sinh."
+msgstr "Nếu bạn đánh dấu vào trường này, hợp đồng này sẽ có khả dụng trong menu dự án và bạn có thể theo quản lý tác vụ hoặc theo dõi phát sinh."
 
 #. module: project
 #: help:project.project,active:0
@@ -748,7 +748,7 @@ msgstr "Nếu không đánh dấu trường này, nó sẽ cho phép bạn ẩn 
 #. module: project
 #: help:project.task,progress:0
 msgid "If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time"
-msgstr "Nếu một nhiệm vụ có tiến độ là 99,99% bạn nên đóng tác vụ này lại khi mà nó đã kết thúc hoặc xem xét lại thời gian"
+msgstr "Nếu một tác vụ có tiến độ là 99,99% bạn nên đóng tác vụ này lại khi mà nó đã kết thúc hoặc xem xét lại thời gian"
 
 #. module: project
 #: help:project.task.type,case_default:0
@@ -965,17 +965,17 @@ msgstr "Dự án mới dựa trên bản mẫu có sẵn"
 #: view:project.task.delegate:project.view_project_task_delegate
 #: field:project.task.delegate,new_task_description:0
 msgid "New Task Description"
-msgstr "Miêu tả nhiệm vụ mới"
+msgstr "Miêu tả tác vụ mới"
 
 #. module: project
 #: help:project.task.delegate,state:0
 msgid "New state of your own task. Pending will be reopened automatically when the delegated task is closed"
-msgstr "Trạng thới mới của dự án. Trạng thái Chờ sẽ được mở lại một cách tự động khi một nhiệm vụ ủy thắc được đóng"
+msgstr "Trạng thới mới của dự án. Trạng thái Chờ sẽ được mở lại một cách tự động khi một tác vụ ủy thắc được đóng"
 
 #. module: project
 #: help:project.task.delegate,name:0
 msgid "New title of the task delegated to the user"
-msgstr "Tiêu đề của nhiệm vụ ủy thác"
+msgstr "Tiêu đề của tác vụ ủy thác"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -988,7 +988,7 @@ msgstr "Bình thường"
 #. module: project
 #: field:project.task,active:0
 msgid "Not a Template Task"
-msgstr "Không phải là một nhiệm vụ mẫu"
+msgstr "Không phải là một tác vụ mẫu"
 
 #. module: project
 #: field:project.task,notes:0
@@ -998,12 +998,12 @@ msgstr "Ghi chú"
 #. module: project
 #: help:report.project.task.user,opening_days:0
 msgid "Number of Days to Open the task"
-msgstr "Số ngày để mở nhiệm vụ"
+msgstr "Số ngày để mở tác vụ"
 
 #. module: project
 #: help:report.project.task.user,closing_days:0
 msgid "Number of Days to close the task"
-msgstr "Số ngày để đóng nhiệm vụ"
+msgstr "Số ngày để đóng tác vụ"
 
 #. module: project
 #: field:project.project,doc_count:0
@@ -1064,7 +1064,7 @@ msgstr "Đang chờ"
 #. module: project
 #: help:project.project,progress_rate:0
 msgid "Percent of tasks closed according to the total of tasks todo."
-msgstr "Phần trăm các nhiệm vụ đã đóng trên tổng số các nhiệm vụ cần thực hiện"
+msgstr "Phần trăm các tác vụ đã đóng trên tổng số các tác vụ cần thực hiện"
 
 #. module: project
 #: field:project.task.delegate,planned_hours:0
@@ -1168,7 +1168,7 @@ msgstr "Giai đoạn Dự án"
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "Project Task Delegate"
-msgstr "Ủy thác nhiệm vụ dự án"
+msgstr "Ủy thác tác vụ dự án"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
@@ -1254,7 +1254,7 @@ msgstr "Sẵn sàng cho trạng thái kế tiếp"
 #. module: project
 #: field:project.config.settings,module_project_timesheet:0
 msgid "Record timesheet lines per tasks"
-msgstr "Ghi nhận chi tiết chấm công cho các nhiệm vụ"
+msgstr "Ghi nhận chi tiết chấm công cho các tác vụ"
 
 #. module: project
 #: help:project.task.delegate,new_task_description:0
@@ -1386,12 +1386,12 @@ msgstr "Tổng số giờ dự kiến của tất cả nhệm vụ liên quan t�
 #. module: project
 #: help:project.project,effective_hours:0
 msgid "Sum of spent hours of all tasks related to this project and its child projects."
-msgstr "Tổng số giờ đã sử dụng của tất cả nhiệm vụ liên quan tới dự án này và các dự án con của nó."
+msgstr "Tổng số giờ đã sử dụng của tất cả tác vụ liên quan tới dự án này và các dự án con của nó."
 
 #. module: project
 #: help:project.project,total_hours:0
 msgid "Sum of total hours of all tasks related to this project and its child projects."
-msgstr "Tổng số giờ của tất cả nhiệm vụ liên quan tới dự án này và dự án con của nó."
+msgstr "Tổng số giờ của tất cả tác vụ liên quan tới dự án này và dự án con của nó."
 
 #. module: project
 #: field:project.project,message_summary:0
@@ -1452,7 +1452,7 @@ msgstr "Tác vụ được tạo"
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
 msgid "Task Delegate"
-msgstr "Ủy thác nhiệm vụ"
+msgstr "Ủy thác tác vụ"
 
 #. module: project
 #: model:res.groups,name:project.group_delegate_task
@@ -1513,7 +1513,7 @@ msgstr "Tác vụ được tạo"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Task summary..."
-msgstr "Tóm tắt nhiệm vụ"
+msgstr "Tóm tắt tác vụ"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1548,13 +1548,13 @@ msgstr "Tác vụ"
 #: view:report.project.task.user:project.view_task_project_user_graph
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr "Phân tích nhiệm vụ"
+msgstr "Phân tích tác vụ"
 
 #. module: project
 #: field:project.project,type_ids:0
 #: view:project.task.type:project.task_type_search
 msgid "Tasks Stages"
-msgstr "trạng thái nhiệm vụ"
+msgstr "trạng thái tác vụ"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
@@ -1609,7 +1609,7 @@ msgstr "This field is computed automatically and have the same behavior than the
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid "This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc."
-msgstr "Báo cáo này cho phép bạn phân tích hiệu quả của dự án và người dùng Bạn có thể phân tích số lượng nhiệm vụ, số giờ đã sử dụng so với số giờ dự kiến, số ngày trung bình để mở hoặc đóng một nhiệm vụ,..."
+msgstr "Báo cáo này cho phép bạn phân tích hiệu quả của dự án và người dùng Bạn có thể phân tích số lượng tác vụ, số giờ đã sử dụng so với số giờ dự kiến, số ngày trung bình để mở hoặc đóng một tác vụ,..."
 
 #. module: project
 #: help:project.task.type,fold:0
@@ -1627,7 +1627,7 @@ msgstr "This will set the unit of measure used in projects and tasks.\n"
 #: help:res.company,project_time_mode_id:0
 msgid "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
-msgstr "Trường này sẽ thiết lập đơn vị đo lường được sử dụng trong dự án và nhiệm vụ.\n"
+msgstr "Trường này sẽ thiết lập đơn vị đo lường được sử dụng trong dự án và tác vụ.\n"
 "Nếu bạn sử dụng bảng chấm công liên kết tới dự án (phân hệ project_timesheet), đừng quên thiết lập đúng đơn vị đo lường trong hồ sơ nhân viên."
 
 #. module: project
@@ -1674,7 +1674,7 @@ msgstr "Tổng thời gian"
 #. module: project
 #: help:project.task,remaining_hours:0
 msgid "Total remaining time, can be re-estimated periodically by the assignee of the task."
-msgstr "Tổng thời gian còn lại, có thể được dự kiến lại một cách định kỳ bởi người được phân công nhiệm vụ."
+msgstr "Tổng thời gian còn lại, có thể được dự kiến lại một cách định kỳ bởi người được phân công tác vụ."
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
@@ -1722,7 +1722,7 @@ msgstr "Email Người dùng"
 #: help:project.task.delegate,project_id:0
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
-msgstr "Người dùng mà bạn muấn ủy thác cho nhiệm vụ này"
+msgstr "Người dùng mà bạn muấn ủy thác cho tác vụ này"
 
 #. module: project
 #: field:project.task.delegate,state:0
@@ -1781,7 +1781,7 @@ msgstr "Khối lượng công việc"
 #: code:addons/project/project.py:173
 #, python-format
 msgid "You cannot delete a project containing tasks. You can either delete all the project's tasks and then delete the project or simply deactivate the project."
-msgstr "Bạn không thể xóa một dự án có chứa nhiệm vụ. Hoặc bạn có thể xóa tất cả các nhiệm vụ rồi xóa dự án. Hay đơn giản hơn, bạn có thể giải hoạt dự án này."
+msgstr "Bạn không thể xóa một dự án có chứa tác vụ. Hoặc bạn có thể xóa tất cả các tác vụ rồi xóa dự án. Hay đơn giản hơn, bạn có thể giải hoạt dự án này."
 
 #. module: project
 #: code:addons/project/project.py:436
@@ -1814,7 +1814,7 @@ msgstr "hoặc"
 #: code:addons/project/project.py:887
 #, python-format
 msgid "tasks"
-msgstr "nhiệm vụ"
+msgstr "tác vụ"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0
