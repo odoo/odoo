@@ -117,6 +117,17 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.undo_mark_as_read(msgs_ids, channel);
             });
         },
+        "click .o_mail_open_channels": function () {
+            this.do_action({
+                name: _t('Public Channels'),
+                type: 'ir.actions.act_window',
+                res_model: "mail.channel",
+                views: [[false, 'kanban'], [false, 'form']],
+                domain: [['public', '!=', 'private']],
+            }, {
+                on_reverse_breadcrumb: this.on_reverse_breadcrumb,
+            });
+        },
     },
 
     on_attach_callback: function () {

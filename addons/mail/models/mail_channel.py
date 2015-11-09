@@ -83,6 +83,13 @@ class Channel(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete="restrict", required=True,
         help="The email address associated with this group. New emails received will automatically create new topics.")
+    is_subscribed = fields.Boolean(
+        'Is Subscribed', compute='_compute_is_subscribed')
+
+    @api.one
+    @api.depends('channel_partner_ids')
+    def _compute_is_subscribed(self):
+        self.is_subscribed = self.env.user.partner_id in self.channel_partner_ids
 
     @api.one
     @api.depends('image')

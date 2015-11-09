@@ -67,7 +67,7 @@
         </t>
         <t t-if="!disable_add_channel || !empty">
             <div class="o_mail_sidebar_title">
-                <h4><t t-esc="channel_title"/></h4>
+                <h4 t-att-class="channel_type == 'public' ? 'o_mail_open_channels' : ''"><t t-esc="channel_title"/></h4>
                 <span t-if="!disable_add_channel" class="fa fa-plus o_add" t-att-title="_t('Add')" t-attf-data-type="#{channel_type}"/>
             </div>
         </t>
