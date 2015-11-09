@@ -293,7 +293,7 @@
                       </t>
                       <t t-if="a.type == 'color'">
                         <t t-foreach="a.value_ids" t-as="v">
-                          <label t-attf-style="background-color:#{v.color or v.name}"
+                          <label t-attf-style="background-color:#{v.html_color or v.name}"
                               t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
                               <input type="checkbox"
                                   name="attrib"
@@ -515,7 +515,7 @@
           <ul class="list-inline">
               <t t-set="inc" t-value="0"/>
               <li t-foreach="variant_id.value_ids" t-as="value_id">
-                  <label t-attf-style="background-color:#{value_id.color or value_id.name}"
+                  <label t-attf-style="background-color:#{value_id.html_color or value_id.name}"
                       t-attf-class="css_attribute_color #{'active' if not inc else ''}">
                     <input type="radio" class="js_variant_change"
                       t-att-checked="'checked' if not inc else ''"
