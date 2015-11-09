@@ -48,6 +48,8 @@ class sale_order(osv.Model):
             return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', action_xmlid, context=context)
         return super(sale_order, self).get_formview_action(cr, uid, id, context=context)
 
+    def check_positive_amount(self, amount):
+        return amount > 0
 
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'

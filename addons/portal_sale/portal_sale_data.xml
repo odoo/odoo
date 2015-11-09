@@ -41,8 +41,9 @@
        % endif
     </p>
 
-    <% set signup_url = object.get_signup_url() %>
-    % if signup_url and object.amount_total > 0 :
+    % set signup_url = object.get_signup_url()
+    % set amount = object.check_positive_amount(object.amount_total)
+    % if signup_url and amount:
     <p>
     You can access this document and pay online via our Customer Portal:
     </p>
@@ -50,7 +51,7 @@
            href="${signup_url}">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>
     % endif
 
-    % if object.paypal_url and object.amount_total > 0 :
+    % if object.paypal_url and amount:
     <br/>
     <p>It is also possible to directly pay with Paypal:</p>
         <a style="margin-left: 120px;" href="${object.paypal_url}">
@@ -117,7 +118,7 @@
        % endif
     </p>  
 
-    <% set signup_url = object.get_signup_url() %>
+    % set signup_url = object.get_signup_url()
     % if signup_url:
     <p>
     You can access the invoice document and pay online via our Customer Portal:
