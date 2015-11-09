@@ -8,7 +8,7 @@ declaration.
 
 Signed,
 
-Pascal Zenklusen pascal.zenklusen@braintec-grou.com https://github.com/BT-pzenklusen
+Pascal Zenklusen pascal.zenklusen@braintec-group.com https://github.com/BT-pzenklusen
 
 List of contributors:
 
