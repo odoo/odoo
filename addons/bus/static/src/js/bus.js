@@ -112,6 +112,9 @@ var CrossTabBus = bus.Bus.extend({
         tab_manager.register_tab(function () {
             self.is_master = true;
             self.start_polling();
+        }, function () {
+            self.is_master = false;
+            self.stop_polling();
         });
 
         on("storage", this.on_storage.bind(this));
@@ -197,8 +200,9 @@ var tab_manager = {
     isMaster: false,
     id: new Date().getTime() + ':' + (Math.random() * 1000000000 | 0),
 
-    register_tab: function (callback) {
-        this.callback = callback;
+    register_tab: function (is_master_callback, is_no_longer_master) {
+        this.is_master_callback = is_master_callback;
+        this.is_no_longer_master = is_no_longer_master || function () {};
 
         var peers = getItem(tab_manager.peersKey, {});
         peers[tab_manager.id] = new Date().getTime();
@@ -244,7 +248,6 @@ var tab_manager = {
             tab_manager.start_election();
         }
         if (tab_manager.isMaster) {
-            localStorage[tab_manager.heartbeatKey] = current;
             //walk through all peers and kill old
             var cleanedPeers = {};
             for (var peerName in peers) {
@@ -253,8 +256,20 @@ var tab_manager = {
                 }
             }
 
-            setItem(tab_manager.peersKey, cleanedPeers);
-            pollPeriod = 1500;
+            if (parseInt(heartbeatValue) !== tab_manager.last_heartbeat) {
+                // someone else is also master...
+                // it should not happen, except in some race condition situation.
+                tab_manager.isMaster = false;
+                tab_manager.last_heartbeat = 0;
+                peers[tab_manager.id] = current;
+                setItem(tab_manager.peersKey, peers);
+                tab_manager.is_no_longer_master();
+            } else {
+                tab_manager.last_heartbeat = current;
+                localStorage[tab_manager.heartbeatKey] = current;
+                setItem(tab_manager.peersKey, cleanedPeers);
+                pollPeriod = 1500;
+            }
         } else {
             //update own heartbeat
             peers[tab_manager.id] = current;
@@ -286,9 +301,10 @@ var tab_manager = {
         if (newMaster === tab_manager.id) {
             //we're next in queue. Electing as master
             setItem(tab_manager.masterKey, tab_manager.id);
-            setItem(tab_manager.heartbeatKey, new Date().getTime());
+            tab_manager.last_heartbeat = new Date().getTime();
+            setItem(tab_manager.heartbeatKey, tab_manager.last_heartbeat);
             tab_manager.isMaster = true;
-            tab_manager.callback();
+            tab_manager.is_master_callback();
 
             //removing master peer from queue
             delete peers[newMaster];
