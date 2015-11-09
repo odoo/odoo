@@ -85,7 +85,7 @@ class Message(models.Model):
     # recipients
     partner_ids = fields.Many2many('res.partner', string='Recipients')
     needaction_partner_ids = fields.Many2many(
-        'res.partner', 'mail_message_res_partner_needaction_rel', string='Need Action')
+        'res.partner', 'mail_message_res_partner_needaction_rel', string='Partners with Need Action')
     needaction = fields.Boolean(
         'Need Action', compute='_get_needaction', search='_search_needaction',
         help='Need Action')
@@ -154,6 +154,19 @@ class Message(models.Model):
             # a user should be able to mark a message as needaction for him
             self = self.sudo()
         return self.write({'needaction_partner_ids': [(4, pid) for pid in partner_ids]})
+
+    @api.multi
+    def mark_all_as_read(self):
+        user_id = self.env.user.partner_id.id
+
+        # possibly horribly inefficient method:
+        # it does one db request for the search, and one for each message in
+        # the result set to remove the current user from the relation.
+        # unread_messages = self.search([('needaction_partner_ids', 'in', user_id)])
+        # unread_messages.write({'needaction_partner_ids': [(3, user_id)]})
+
+        # a much faster way to do this is in pure sql:
+        self.env.cr.execute("DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s", [(user_id,)])
 
     @api.multi
     def set_message_done(self, partner_ids=None):

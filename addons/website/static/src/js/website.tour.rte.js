@@ -58,7 +58,8 @@ Tour.register({
             onload: function () {
                 $("#wrap p:first").replaceWith('<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
                         <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
-                        useful to your <a href="/999">readers</a>.</p> <input placeholder="test translate placeholder"/>');
+                        useful to your <a href="/999">readers</a>.</p> <input placeholder="test translate placeholder"/>\
+                        <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>');
                 $("#wrap img").attr("title", "test translate image title");
             }
         },
@@ -100,6 +101,13 @@ Tour.register({
             element:   'input:first',
         },
         {
+            title:     "translate text with special char",
+            onload: function () {
+                $('#wrap input + p').find(':last').prepend('&lt;{translated}&gt;')
+                  .closest('[data-oe-translation-id]').addClass('o_dirty').trigger('keyup');
+            },
+        },
+        {
             title:     "translate placeholder",
             element:   '.modal.web_editor-dialog input:first',
             sampleText: 'test french placeholder',
@@ -118,6 +126,10 @@ Tour.register({
             title:     "check: content is translated",
             waitNot:   'button[data-action=save]',
             waitFor:   '#wrap p font:first:contains(translated french text)',
+        },
+        {
+            title:     "check: content with special char is translated",
+            waitFor:   "#wrap input + p:contains(<{translated}><b></b> is an HTML\xa0tag & )",
         },
         {
             title:     "check: placeholder translation",

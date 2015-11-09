@@ -73,14 +73,12 @@
                 .o_mail_mailto, .o_mail_mailto:hover {
                     .text-muted();
                 }
-                .o_channel_redirect {
-                    color: gray;
-                }
             }
 
             .o_thread_message_star, .o_thread_message_needaction {
                 cursor: pointer;
                 opacity: 0;
+                padding: 4px;
                 &.fa-star {
                     opacity: @mail-thread-icon-opacity;
                     color: gold;
@@ -97,12 +95,7 @@
             }
         }
 
-        border-bottom: 1px solid transparent;
-        border-top: 1px solid transparent;
         &.o_thread_selected_message {
-            border-bottom: 1px solid @gray-lighter;
-            border-top: 1px solid @gray-lighter;
-
             .o_thread_message_side_date {
                 opacity: @mail-thread-side-date-opacity;
             }

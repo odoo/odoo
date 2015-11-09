@@ -7,6 +7,7 @@ import uuid
 from openerp import _, api, fields, models, modules, tools
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import UserError
+from openerp.osv import expression
 
 from openerp.addons.bus.models.bus_presence import AWAY_TIMER
 
@@ -141,14 +142,17 @@ class Channel(models.Model):
 
     @api.multi
     def action_follow(self):
-        return self.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]})
+        self.ensure_one()
+        channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: cp.partner_id == self.env.user.partner_id)
+        if not channel_partner:
+            return self.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]})
 
     @api.multi
     def action_unfollow(self):
         result = self.write({'channel_partner_ids': [(3, self.env.user.partner_id.id)]})
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info()[0])
-        notification = _('<div class="o_mail_notification">left <a href="#" data-channel-id="%s">#%s</a></div>') % (self.uuid, self.name,)
-        self.message_post(body=notification, message_type="comment", subtype="mail.mt_comment")
+        notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
+        self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         return result
 
 
@@ -485,7 +489,7 @@ class Channel(models.Model):
     @api.multi
     def channel_join_and_get_info(self):
         self.ensure_one()
-        notification = _('<div class="o_mail_notification">joined <a href="#" data-channel-id="%s">#%s</a></div>') % (self.uuid, self.name,)
+        notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
         self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         self.action_follow()
 
@@ -509,7 +513,22 @@ class Channel(models.Model):
             'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
         channel_info = new_channel.channel_info()[0]
-        notification = _('<div class="o_mail_notification">created <a href="#" data-channel-id="%s">#%s</a></div>') % (new_channel.uuid, new_channel.name,)
+        notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (new_channel.id, new_channel.name,)
         new_channel.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
         return channel_info
+
+    @api.model
+    def get_mention_suggestions(self, search, limit=8):
+        """ Return 'limit'-first channels' id, name and public fields such that the name matches a
+            'search' string. Exclude channels of type chat (DM), and private channels the current
+            user isn't registered to. """
+        domain = expression.AND([
+                        [('name', 'ilike', search)],
+                        [('channel_type', '!=', 'chat')],
+                        expression.OR([
+                            [('public', '!=', 'private')],
+                            [('channel_partner_ids', 'in', [self.env.user.partner_id.id])]
+                        ])
+                    ])
+        return self.search_read(domain, ['id', 'name', 'public'], limit=limit)

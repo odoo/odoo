@@ -73,7 +73,7 @@ class StockMove(models.Model):
     def _prepare_procurement_from_move(self, move):
         res = super(StockMove, self)._prepare_procurement_from_move(move)
         if res and move.procurement_id and move.procurement_id.property_ids:
-            res['property_ids'] = [(6, 0, self.property_ids.ids)]
+            res['property_ids'] = [(6, 0, move.procurement_id.property_ids.ids)]
         return res
 
     @api.model

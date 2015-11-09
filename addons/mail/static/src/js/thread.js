@@ -83,7 +83,7 @@ var Thread = Widget.extend({
 
     on_channel_redirect: function (event) {
         event.preventDefault();
-        var channel_id = $(event.target).data('channel-id');
+        var channel_id = $(event.target).data('oe-id');
         this.trigger('redirect_to_channel', channel_id);
     },
 
@@ -132,7 +132,8 @@ var Thread = Widget.extend({
     remove_message_and_render: function (message_id, messages, options) {
         var self = this;
         this.$('.o_thread_message[data-message-id=' + message_id + ']').fadeOut({
-            done: function () { self.render(messages, options); }
+            done: function () { self.render(messages, options); },
+            duration: 200,
         });
     },
 
