@@ -504,6 +504,9 @@ class email_template(osv.osv):
 
             # Add report in attachments: generate once for all template_res_ids
             if template.report_template:
+                # Fix : Force report to use res ids and not active_ids
+                if ctx and 'active_ids' in ctx:
+                    del ctx['active_ids']
                 for res_id in template_res_ids:
                     attachments = []
                     report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=ctx)
