@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-07 03:54+0000\n"
-"PO-Revision-Date: 2015-10-07 03:54+0000\n"
+"POT-Creation-Date: 2015-11-09 14:55+0000\n"
+"PO-Revision-Date: 2015-11-09 14:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -302,7 +302,7 @@ msgid "Category of project's task, issue, ..."
 msgstr "Category of project's task, issue, ..."
 
 #. module: project
-#: code:addons/project/project.py:930
+#: code:addons/project/project.py:933
 #, python-format
 msgid "Child task still open.\n"
 "Please cancel or complete child task first."
@@ -433,17 +433,17 @@ msgstr "Ngày"
 #: help:project.project,message_last_post:0
 #: help:project.task,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "Date of the last message posted on the record."
+msgstr "Ngày mà thông điệp cuối cùng được post vào bản ghi."
 
 #. module: project
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Assign"
-msgstr "Days to Assign"
+msgstr "Số ngày để Phân công"
 
 #. module: project
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
-msgstr "Days to Close"
+msgstr "Ngày để đóng"
 
 #. module: project
 #: field:project.task,date_deadline:0
@@ -487,7 +487,7 @@ msgid "Delegated To"
 msgstr "Được ủy thác cho"
 
 #. module: project
-#: code:addons/project/project.py:947
+#: code:addons/project/project.py:950
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Bạn cần chỉ ra người được ủy thác"
@@ -738,12 +738,12 @@ msgstr "If checked new messages require your attention."
 #. module: project
 #: help:account.analytic.account,use_tasks:0
 msgid "If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"
-msgstr "Nếu bạn đánh dấu vào trường này, hợp đồng này sẽ có khả dụng trong menu dự án và bạn có thể theo quản lý tác vụ hoặc theo dõi phát sinh."
+msgstr "Nếu bạn đánh dấu vào trường này, hợp đồng này sẽ khả dụng trong trình đơn Dự án và bạn có thể theo quản lý tác vụ hoặc theo dõi vấn đề phát sinh."
 
 #. module: project
 #: help:project.project,active:0
 msgid "If the active field is set to False, it will allow you to hide the project without removing it."
-msgstr "Nếu không đánh dấu trường này, nó sẽ cho phép bạn ẩn dự án mà không xóa nó. without removing it."
+msgstr "Nếu không đánh dấu trường này, nó sẽ cho phép bạn ẩn dự án mà không cần xóa nó."
 
 #. module: project
 #: help:project.task,progress:0
@@ -821,7 +821,7 @@ msgstr "Thông điệp cuối"
 #: field:project.project,message_last_post:0
 #: field:project.task,message_last_post:0
 msgid "Last Message Date"
-msgstr "Last Message Date"
+msgstr "Ngày thông điệp cuối"
 
 #. module: project
 #: field:project.task,write_date:0
@@ -903,13 +903,13 @@ msgstr "Trộn"
 #: field:project.project,message_ids:0
 #: field:project.task,message_ids:0
 msgid "Messages"
-msgstr "Messages"
+msgstr "Thông điệp"
 
 #. module: project
 #: help:project.project,message_ids:0
 #: help:project.task,message_ids:0
 msgid "Messages and communication history"
-msgstr "Messages and communication history"
+msgstr "Lịch sử Thông điệp và Thông tin liên lạc"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -988,7 +988,7 @@ msgstr "Bình thường"
 #. module: project
 #: field:project.task,active:0
 msgid "Not a Template Task"
-msgstr "Không phải là một tác vụ mẫu"
+msgstr "Không phải là một Tác vụ mẫu"
 
 #. module: project
 #: field:project.task,notes:0
@@ -1059,7 +1059,7 @@ msgstr "Đối tác"
 #: selection:project.project,state:0
 #: selection:project.task.delegate,state:0
 msgid "Pending"
-msgstr "Đang chờ"
+msgstr "Đang treo"
 
 #. module: project
 #: help:project.project,progress_rate:0
@@ -1085,7 +1085,7 @@ msgid "Planning"
 msgstr "Kế hoạch"
 
 #. module: project
-#: code:addons/project/project.py:1244
+#: code:addons/project/project.py:1247
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Vui lòng xóa dự án liên kết với tài khoản này trước"
@@ -1224,8 +1224,8 @@ msgstr "Provides management of issues/bugs in projects.\n"
 #: help:project.config.settings,module_project_issue_sheet:0
 msgid "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
-msgstr "Provides timesheet support for the issues/bugs management in project.\n"
-"-This installs the module project_issue_sheet."
+msgstr "Cung cấp khả năng quản lý lỗi hay các vấn đề phát sinh trong dự án.\n"
+"-Cái này sẽ cài phân hệ project_issue_sheet."
 
 #. module: project
 #: code:addons/project/project.py:201
@@ -1349,7 +1349,7 @@ msgstr "Tên Giai đoạn"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Giai đoạn được thay đổi"
+msgstr "Giai đoạn đã thay đổi"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -1564,18 +1564,18 @@ msgstr "Tác vụ theo người dùng và dự án"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Team"
-msgstr "Đội / Nhóm"
+msgstr "Thành viên dự án"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
 #: selection:project.project,state:0
 msgid "Template"
-msgstr "Mẫu"
+msgstr "Mẫu dự án"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_template_project
 msgid "Templates of Projects"
-msgstr "Templates of Projects"
+msgstr "Mẫu các dự án"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_testing
@@ -1711,7 +1711,7 @@ msgstr "Use integrated collaborative note pads on task"
 #. module: project
 #: model:res.groups,name:project.group_project_user
 msgid "User"
-msgstr "Người dùng"
+msgstr "Người sử dụng"
 
 #. module: project
 #: field:project.task,user_email:0
@@ -1741,8 +1741,8 @@ msgstr "Validation Task Title"
 
 #. module: project
 #: code:addons/project/project.py:436
-#: code:addons/project/project.py:930
-#: code:addons/project/project.py:1244
+#: code:addons/project/project.py:933
+#: code:addons/project/project.py:1247
 #, python-format
 msgid "Warning!"
 msgstr "Cảnh báo!"
@@ -1811,7 +1811,7 @@ msgid "or"
 msgstr "hoặc"
 
 #. module: project
-#: code:addons/project/project.py:887
+#: code:addons/project/project.py:890
 #, python-format
 msgid "tasks"
 msgstr "tác vụ"
