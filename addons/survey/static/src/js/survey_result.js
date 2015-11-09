@@ -148,7 +148,7 @@ if(!$('.js_surveyresult').length) {
         }
     });
     // toggle finished/all surveys filter
-    $('span.filter-finished').click(function(){
+    $('span.filter-finished').click(function(event){
         event.preventDefault();
         if(document.URL.indexOf("?") == -1){
             window.location.href = document.URL + '?' + encodeURI('finished');
