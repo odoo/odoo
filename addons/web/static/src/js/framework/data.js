@@ -256,7 +256,7 @@ var Query = Class.extend({
 });
 
 var QueryGroup = Class.extend({
-    init: function (model, grouping_fields, read_group_group) {
+    init: function (model, grouping_fields, read_group_group, fields_get) {
         // In cases where group_by_no_leaf and no group_by, the result of
         // read_group has aggregate fields but no __context or __domain.
         // Create default (empty) values for those so that things don't break
