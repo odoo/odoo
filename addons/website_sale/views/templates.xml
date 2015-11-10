@@ -1234,7 +1234,7 @@
 
 <template id="payment_sale_note" inherit_id="payment" name="Display Sale Note" customize_show="True" active="False">
   <xpath expr="//t[@id='acquirers_list']" position="before">
-    <t t-set="sale_note" t-value="website_sale_order.get_salenote(website_sale_order.partner_id.id)"/>
+    <t t-set="sale_note" t-value="website_sale_order.note"/>
     <t t-if="sale_note and sale_note != ''">
       <div class="oe_accept_cgv_button">
         <label><input type="checkbox" checked="checked" id="checkbox_cgv"/> <t t-esc="sale_note"/></label>
