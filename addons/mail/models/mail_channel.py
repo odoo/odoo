@@ -387,6 +387,8 @@ class Channel(models.Model):
         # add the person in the channel, and pin it (or unpin it)
         channel = self.search([('uuid', '=', uuid)])
         channel_partners = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)])
+        if not pinned:
+            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel.channel_info('unsubscribe')[0])
         if channel_partners:
             channel_partners.write({'is_pinned': pinned})
 

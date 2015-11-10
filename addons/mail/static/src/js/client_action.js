@@ -166,7 +166,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             },
         });
         this.thread = new ChatThread(this, {
-            no_content_helper: this.action.help,
+            display_help: true
         });
 
         this.$buttons = $(QWeb.render("mail.chat.ControlButtons", {}));
@@ -344,7 +344,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             }
 
             // Update control panel
-            self.set("title", channel.name);
+            self.set("title", '#' + channel.name);
             // Hide 'detach' button in static channels
             self.$buttons
                 .find('.o_mail_chat_button_detach')

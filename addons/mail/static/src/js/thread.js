@@ -82,14 +82,22 @@ var Thread = Widget.extend({
         event.preventDefault();
         var res_id = $(event.target).data('oe-id');
         var res_model = $(event.target).data('oe-model');
-        this.trigger('redirect', res_model, res_id);
+        this._redirect({model:res_model, id: res_id});
     },
 
     on_channel_redirect: function (event) {
         event.preventDefault();
         var channel_id = $(event.target).data('oe-id');
-        this.trigger('redirect_to_channel', channel_id);
+        this._redirect({channel_id: channel_id});
     },
+
+    _redirect: _.debounce(function (options) {
+        if ('channel_id' in options) {
+            this.trigger('redirect_to_channel', options.channel_id);
+        } else {
+            this.trigger('redirect', options.model, options.id);
+        }
+    }, 200, true),
 
     on_click_show_more: function () {
         this.trigger('load_more_messages');
