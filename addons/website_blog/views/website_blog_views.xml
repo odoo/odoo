@@ -10,6 +10,7 @@
             <field name="arch" type="xml">
                 <tree string="Blogs">
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -19,6 +20,11 @@
             <field name="arch" type="xml">
                 <form string="Blog">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" confirm="(Un)archiving a blog automatically (un)archives its posts. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <group>
                             <field name="name"/>
                         </group>
@@ -38,6 +44,7 @@
             <field name="arch" type="xml">
                 <tree string="Blog Posts">
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                     <field name="blog_id"/>
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
@@ -53,6 +60,9 @@
                 <form string="Blog Post">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
                             <button class="oe_stat_button" name="website_publish_button"
                                 type="object" icon="fa-globe">
                                 <field name="website_published" widget="website_button"/>
@@ -88,6 +98,7 @@
             <field name="model">blog.post</field>
             <field name="arch" type="xml">
                 <search string="Blog Post">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="name" string="Content" filter_domain="['|', ('name','ilike',self), ('content','ilike',self)]"/>
                     <field name="write_uid"/>
                     <field name="blog_id"/>
@@ -114,6 +125,16 @@
             </field>
         </record>
         <menuitem id="menu_page" parent="menu_website_blog_root" name="Blog Posts" action="action_blog_post" sequence="10"/>
+
+        <record id="blog_blog_view_search" model="ir.ui.view">
+            <field name="name">blog.blog.search</field>
+            <field name="model">blog.blog</field>
+            <field name="arch" type="xml">
+                <search string="Blog">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
 
         <record model="ir.actions.act_window" id="action_blog_blog">
             <field name="name">Blogs</field>

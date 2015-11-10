@@ -240,6 +240,8 @@
             <field name="arch" type="xml">
                 <search string="Search Procurement">
                     <filter string="Global" name="route_false" domain="[('route_id','=',False)]" help="If the route is global"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>
@@ -251,6 +253,7 @@
             <field name="arch" type="xml">
                 <tree string="Procurement Rules">
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                     <field name="action"/>
                     <field name='company_id' groups="base.group_multi_company"/>
                 </tree>
@@ -263,13 +266,17 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Procurement Rule">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" placeholder="e.g. Buy"/></h1>
                     </div>
                     <group name="general">
                         <group>
-                            <field name="active"/>
                             <field name="action"/>
                         </group>
                         <group>

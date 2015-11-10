@@ -13,6 +13,8 @@
             <field name="arch" type="xml">
                 <search string="Salesteams Search">
                     <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="code"/>
@@ -50,6 +52,11 @@
             <field name="arch" type="xml">
                 <form string="Sales Team">
                     <sheet>
+                      <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Sales team"/>
                             <h1>
@@ -87,9 +94,6 @@
                                 </field>
                             </page>
                             <page string="More Info" name="more_info" groups="base.group_no_one">
-                                <group>
-                                    <field name="active"/>
-                                </group>
                                 <group string="Company" groups="base.group_multi_company">
                                     <field name="company_id" options="{'no_create': True}"/>
                                 </group>
@@ -112,6 +116,7 @@
             <field name="arch" type="xml">
                 <tree string="Sales Team">
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                     <field name="code"/>
                     <field name="user_id"/>
                 </tree>

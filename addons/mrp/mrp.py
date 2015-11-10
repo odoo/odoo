@@ -51,6 +51,7 @@ class mrp_workcenter(osv.osv):
     _description = 'Work Center'
     _inherits = {'resource.resource':"resource_id"}
     _columns = {
+        'active': fields.boolean('Active'),
         'note': fields.text('Description', help="Description of the Work Center. Explain here what's a cycle according to this Work Center."),
         'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operations this Work Center can do in parallel. If this Work Center represents a team of 5 workers, the capacity per cycle is 5."),
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
@@ -67,6 +68,7 @@ class mrp_workcenter(osv.osv):
         'product_id': fields.many2one('product.product','Work Center Product', help="Fill this product to easily track your production costs in the analytic accounting."),
     }
     _defaults = {
+        'active': True,
         'capacity_per_cycle': 1.0,
         'resource_type': 'material',
      }
