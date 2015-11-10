@@ -46,7 +46,6 @@ class ir_ui_menu(osv.osv):
         model_fname = {
             'ir.actions.act_window': 'res_model',
             'ir.actions.report.xml': 'model',
-            'ir.actions.wizard': 'model',
             'ir.actions.server': 'model_id',
         }
         for menu in action_menus:
@@ -317,7 +316,6 @@ class ir_ui_menu(osv.osv):
         'action': fields.reference('Action', selection=[
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
-                ('ir.actions.wizard', 'ir.actions.wizard'),
                 ('ir.actions.act_url', 'ir.actions.act_url'),
                 ('ir.actions.server', 'ir.actions.server'),
                 ('ir.actions.client', 'ir.actions.client'),
