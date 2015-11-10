@@ -226,19 +226,20 @@ class base_action_rule(osv.osv):
 
         def make_create():
             """ Instanciate a create method that processes action rules. """
-            def create(self, cr, uid, vals, context=None):
-                # prepare the action registry if necessary
-                action = self.pool['base.action.rule']._with_todo(cr, uid, context)
+            @openerp.api.model
+            def create(self, vals):
+                # introduce the action todo if necessary
+                action = self.env['base.action.rule']._with_todo()
 
                 # call original method
-                new_id = create.origin(self, cr, uid, vals, context=action._context)
-                record = self.browse(cr, uid, new_id, context=action._context)
+                record = create.origin(self.with_context(action._context), vals)
 
                 # process actions if this method introduced the todo
                 action._prepare(record, ['on_create', 'on_create_or_write'])
-                if context != action._context:
+                if self._context != action._context:
                     action._finalize()
-                return new_id
+
+                return record.with_context(self._context)
 
             return create
 
@@ -248,19 +249,20 @@ class base_action_rule(osv.osv):
             # Note: we patch method _write() instead of write() in order to
             # catch updates made by field recomputations.
             #
-            def _write(self, cr, uid, ids, vals, context=None):
-                # prepare the action registry if necessary
-                action = self.pool['base.action.rule']._with_todo(cr, uid, context)
+            @openerp.api.multi
+            def _write(self, vals):
+                # introduce the action todo if necessary
+                action = self.env['base.action.rule']._with_todo()
 
                 # check preconditions
-                records = self.browse(cr, uid, ids, context=action._context)
+                records = self.with_context(action._context)
                 action._prepare(records, ['on_write', 'on_create_or_write'], list(vals))
 
                 # call original method
                 _write.origin(records, vals)
 
                 # process actions if this method introduced the todo
-                if context != action._context:
+                if self._context != action._context:
                     action._finalize()
                 return True
 
@@ -268,12 +270,13 @@ class base_action_rule(osv.osv):
 
         def make_unlink():
             """ Instanciate an unlink method that processes action rules. """
-            def unlink(self, cr, uid, ids, context=None, **kwargs):
-                # prepare the action registry if necessary
-                action = self.pool['base.action.rule']._with_todo(cr, uid, context)
+            @openerp.api.multi
+            def unlink(self, **kwargs):
+                # introduce the action todo if necessary
+                action = self.env['base.action.rule']._with_todo()
 
                 # execute actions on the records that satisfy them
-                records = self.browse(cr, uid, ids, context=action._context)
+                records = self.with_context(action._context)
                 action._prepare(records, ['on_unlink'])
                 action._finalize()
 
