@@ -1,21 +1,19 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* analytic_user_function
+#	* analytic_user_function
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-08 08:49+0000\n"
-"PO-Revision-Date: 2014-09-08 15:55+0700\n"
-"Last-Translator: Leo Tran <leo.tran@tvtmarine.com>\n"
-"Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
-"com>\n"
+"POT-Creation-Date: 2015-11-10 04:07+0000\n"
+"PO-Revision-Date: 2015-11-10 04:07+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: Vietnam\n"
-"X-Generator: Poedit 1.5.4\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,account_id:0
@@ -29,19 +27,23 @@ msgid "Analytic Line"
 msgstr "Phát sinh quản trị"
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
-msgid ""
-"Define a specific service (e.g. Senior Consultant)\n"
-"                            and price for some users to use these data "
-"instead\n"
-"                            of the default values when invoicing the "
-"customer."
-msgstr ""
-"Định nghĩa một dịch vụ cụ thể (ví dụ: Tư vấn viên cao cấp)\n"
-"                            và giá cho một vài người dùng để sử dụng dữ liệu "
-"đó\n"
-"                            thay cho giá trị mặc định khi tạo hóa đơn cho "
-"khách hàng."
+#: field:analytic.user.funct.grid,create_uid:0
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,create_date:0
+msgid "Created on"
+msgstr "Tạo vào"
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid "Define a specific service (e.g. Senior Consultant)\n"
+"                            and price for some users to use these data instead\n"
+"                            of the default values when invoicing the customer."
+msgstr "Định nghĩa một dịch vụ cụ thể (ví dụ: Tư vấn viên cao cấp)\n"
+"                            và giá cho một vài người dùng để sử dụng dữ liệu đó\n"
+"                            thay cho giá trị mặc định khi tạo hóa đơn cho khách hàng."
 
 #. module: analytic_user_function
 #: code:addons/analytic_user_function/analytic_user_function.py:108
@@ -51,28 +53,44 @@ msgid "Error!"
 msgstr "Lỗi!"
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
+#: field:analytic.user.funct.grid,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
 msgid "Invoice Price Rate per User"
 msgstr "Tỷ lệ giá hóa đơn trên người dùng"
 
 #. module: analytic_user_function
-#: view:analytic.user.funct.grid:0
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_form
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_tree
 msgid "Invoicing Data"
 msgstr "Dữ liệu xuất hóa đơn"
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
-msgid ""
-"OpenERP will recursively search on parent accounts\n"
-"                            to check if specific conditions are defined for "
-"a\n"
+#: field:analytic.user.funct.grid,write_uid:0
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_date:0
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid "Odoo will recursively search on parent accounts\n"
+"                            to check if specific conditions are defined for a\n"
 "                            specific user. This allows to set invoicing\n"
 "                            conditions for a group of contracts."
-msgstr ""
-"Hệ thống tự động tìm kiếm đệ quy trên tài khoản cha\n"
-"                            để kiểm tra nếu điều kiện cụ thể được xác định "
-"cho một người dùng cụ thể\n"
-"                            Việc này cho phép thiết lập điệu kiện xuất hóa "
+msgstr "Odoo will recursively search on parent accounts\n"
+"                            to check if specific conditions are defined for a\n"
+"                            specific user. This allows to set invoicing\n"
+"                            conditions for a group of contracts."
+msgstr "Hệ thống tự động tìm kiếm đệ quy trên tài khoản cha\n"
+"                            để kiểm tra nếu có điều kiện được xác định"
+"                            cho một người dùng cụ thể. Việc này cho phép thiết lập điệu kiện xuất hóa "
 "đơn cho một nhóm hợp đồng."
 
 #. module: analytic_user_function
@@ -100,8 +118,7 @@ msgstr "Dịch vụ"
 #: code:addons/analytic_user_function/analytic_user_function.py:138
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-msgstr ""
-"Không có tài khoản chi phí được xác định cho sản phẩm này: \"%s\" (id:%d)"
+msgstr "Không có tài khoản chi phí được xác định cho sản phẩm này: \"%s\" (id:%d)"
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
@@ -122,3 +139,24 @@ msgstr "Người dùng"
 #: field:account.analytic.account,user_product_ids:0
 msgid "Users/Products Rel."
 msgstr "Liên kết Người sử dụng/Sản phẩm"
+
+#. module: analytic_user_function
+#: view:hr.analytic.timesheet:analytic_user_function.hr_timesheet_line_form_inherit
+#: view:hr.analytic.timesheet:analytic_user_function.hr_timesheet_line_tree_inherit
+#: view:hr_timesheet_sheet.sheet:analytic_user_function.hr_timesheet_sheet_form_inherit1
+msgid "[('type','=','normal'),('state', '<>', 'close')]"
+msgstr "[('type','=','normal'),('state', '<>', 'close')]"
+
+#. module: analytic_user_function
+#: view:hr.analytic.timesheet:analytic_user_function.hr_timesheet_line_form_inherit
+#: view:hr.analytic.timesheet:analytic_user_function.hr_timesheet_line_tree_inherit
+#: view:hr_timesheet_sheet.sheet:analytic_user_function.hr_timesheet_sheet_form_inherit
+#: view:hr_timesheet_sheet.sheet:analytic_user_function.hr_timesheet_sheet_form_inherit1
+msgid "on_change_account_id(account_id, user_id, unit_amount)"
+msgstr "on_change_account_id(account_id, user_id, unit_amount)"
+
+#. module: analytic_user_function
+#: view:hr_timesheet_sheet.sheet:analytic_user_function.hr_timesheet_sheet_form_inherit1
+msgid "{'default_use_timesheets': 1}"
+msgstr "{'default_use_timesheets': 1}"
+
