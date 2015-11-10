@@ -119,15 +119,29 @@ class website_hr_recruitment(http.Controller):
 
         applicant_id = env['hr.applicant'].create(value).id
         if post['ufile']:
-            attachment_value = {
-                'name': post['ufile'].filename,
-                'res_name': value['partner_name'],
-                'res_model': 'hr.applicant',
-                'res_id': applicant_id,
-                'datas': base64.encodestring(post['ufile'].read()),
-                'datas_fname': post['ufile'].filename,
-            }
-            env['ir.attachment'].create(attachment_value)
+            self.create_attachment(applicant_id, value['partner_name'], post)
         return request.render("website_hr_recruitment.thankyou", {})
+
+    def create_attachment(self, applicant_id, partner_name, post):
+        """
+        :type post: dict
+        :param post: Contains the field named 'ufile' used for
+        the 'name', 'datas' and 'datas_fname' of the 'ir.attachment'
+        :type partner_name: char
+        :param partner_name: name of the partner used for the 'res_name'
+        of the 'ir.attachment'
+        :type applicant_id: integer
+        :param applicant_id: id of an hr.applicant used for the 'res_id'
+        """
+        env = request.env(user=SUPERUSER_ID)
+        attachment_value = {
+            'name': post['ufile'].filename,
+            'res_name': partner_name,
+            'res_model': 'hr.applicant',
+            'res_id': applicant_id,
+            'datas': base64.encodestring(post['ufile'].read()),
+            'datas_fname': post['ufile'].filename,
+        }
+        env['ir.attachment'].create(attachment_value)
 
 # vim :et:
