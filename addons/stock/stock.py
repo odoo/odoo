@@ -451,7 +451,7 @@ class stock_quant(osv.osv):
             Make sure the quants aren't found twice => all the domains of preferred_domain_list should be orthogonal
         '''
         context = context or {}
-        domain = domain or [('qty', '>', 0.0)]
+        domain = list(domain) or [('qty', '>', 0.0)]
         quants = [(None, qty)]
         if ops:
             restrict_lot_id = lot_id
@@ -2345,6 +2345,7 @@ class stock_move(osv.osv):
         main_domain = {}
         todo_moves = []
         operations = set()
+        self.do_unreserve(cr, uid, [x.id for x in self.browse(cr, uid, ids, context=context) if x.reserved_quant_ids and x.state in ['confirmed', 'waiting', 'assigned']], context=context)
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting', 'assigned'):
                 continue
