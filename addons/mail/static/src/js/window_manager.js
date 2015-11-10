@@ -106,10 +106,20 @@ core.bus.on('web_client_ready', null, function () {
         });
     });
 
-    _.each(chat_manager.get_channels(), function (channel) {
-        if (channel.is_detached) {
-            open_chat(channel);
-        }
+    chat_manager.bus.on('unsubscribe_from_channel', null, function (channel_id) {
+        _.each(chat_sessions, function (session) {
+            if (channel_id === session.id) {
+                close_chat(session);
+            }
+        });
+    });
+
+    chat_manager.is_ready.then(function() {
+        _.each(chat_manager.get_channels(), function (channel) {
+            if (channel.is_detached) {
+                open_chat(channel);
+            }
+        });
     });
 });
 

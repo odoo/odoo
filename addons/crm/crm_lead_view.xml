@@ -44,7 +44,7 @@
             <field name="name">crm.lead.tag.form</field>
             <field name="model">crm.lead.tag</field>
             <field name="arch" type="xml">
-                <form string="Sales Tags">
+                <form string="Lead Tags">
                     <group>
                         <field name="name"/>
                         <field name="color"/>
@@ -57,7 +57,7 @@
             <field name="name">crm.lead.tag.tree</field>
             <field name="model">crm.lead.tag</field>
             <field name="arch" type="xml">
-                <tree string="Sales Tags">
+                <tree string="Lead Tags">
                     <field name="name"/>
                     <field name="color"/>
                 </tree>
@@ -65,7 +65,7 @@
         </record>
 
         <record id="crm_lead_tag_action" model="ir.actions.act_window">
-            <field name="name">Sales Tags</field>
+            <field name="name">Lead Tags</field>
             <field name="res_model">crm.lead.tag</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_lead_tag_tree"/>
@@ -82,7 +82,7 @@
         </record>
 
         <menuitem action="crm_lead_tag_action"
-            id="menu_crm_lead_categ" name="Tags"
+            id="menu_crm_lead_categ" name="Lead Tags"
             parent="base.menu_crm_config_lead" sequence="1" groups="base.group_no_one"/>
 
         <!--

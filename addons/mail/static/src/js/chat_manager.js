@@ -213,9 +213,6 @@ function make_channel (data, options) {
         channel.name = data.direct_partner[0].name;
         channel.status = data.direct_partner[0].im_status;
     }
-    if ((channel.type === 'public') || (channel.type === 'private')) {
-        channel.name = '#' + channel.name;
-    }
     return channel;
 }
 
@@ -368,6 +365,15 @@ var chat_manager = {
         });
     },
 
+    unstar_all: function () {
+        MessageModel.call('unstar_all', [[]], {}).then(function (ids) {
+            _.each(messages, function (msg) {
+                remove_message_from_channel("channel_starred", msg);
+                chat_manager.bus.trigger('update_message', msg);
+            });
+        });
+    },
+
     get_channels: function () {
         return _.clone(channels);
     },
@@ -487,18 +493,21 @@ function init () {
             // new message in a channel
             var message = notification[1];
             var channel_id = message.channel_ids[0];
-            // fetch the channel info if not done already
             var channel = _.findWhere(channels, {id: channel_id});
-            var channel_ready;
-            if (!channel) {
-                channel_ready = chat_manager.join_channel(channel_id, { autoswitch: false });
-            }
-            $.when(channel_ready).then(function () {
+            if (channel) {
                 add_message(message, { channel_id: channel_id, show_notification: true });
-            });
+            }
         }
         if (model === 'res.partner') {
             var chat_session = notification[1];
+            if (chat_session.info === "unsubscribe") {
+                var channel = _.findWhere(channels, {id: chat_session.id});
+                if (channel) {
+                    channels = _.without(channels, channel);
+                }
+                chat_manager.bus.trigger("unsubscribe_from_channel", chat_session.id);
+                return;
+            }
             if ((chat_session.channel_type === "channel") && (chat_session.public === "private") && (chat_session.state === "open")) {
                 add_channel(chat_session, {autoswitch: false});
                 if (!chat_session.is_minimized) {
@@ -507,7 +516,7 @@ function init () {
             }
             // partner specific change (open a detached window for example)
             if ((chat_session.state === "open") || (chat_session.state === "folded")) {
-                add_channel(chat_session, {autoswitch: false, silent: true, hidden: true});
+                add_channel(chat_session, {autoswitch: false});
                 if (chat_session.is_minimized) {
                     chat_manager.bus.trigger("open_chat", chat_session);
                 }
@@ -524,10 +533,11 @@ function init () {
             action_id: action_id,
         };
         bus.start_polling();
-        return chat_manager;
     });
 }
 
-return init();
+chat_manager.is_ready = init();
+
+return chat_manager;
 
 });

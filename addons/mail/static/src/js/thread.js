@@ -46,6 +46,7 @@ var Thread = Widget.extend({
             default_username: _t('Anonymous'),
             display_document_link: true,
             display_avatar: true,
+            squash_close_messages: true,
         });
     },
 
@@ -54,6 +55,7 @@ var Thread = Widget.extend({
         if (this.options.display_order === ORDER.DESC) {
             msgs.reverse();
         }
+        options = _.extend({}, this.options, options);
 
         // Hide avatar and info of a message if that message and the previous
         // one are both comments wrote by the same author at the same minute
@@ -63,6 +65,8 @@ var Thread = Widget.extend({
                 prev_msg.message_type !== 'comment' || msg.message_type !== 'comment' ||
                 (prev_msg.author_id[0] !== msg.author_id[0])) {
                 msg.display_author = true;
+            } else {
+                msg.display_author = !options.squash_close_messages;
             }
             prev_msg = msg;
         });
@@ -131,10 +135,12 @@ var Thread = Widget.extend({
      */
     remove_message_and_render: function (message_id, messages, options) {
         var self = this;
+        var done = $.Deferred();
         this.$('.o_thread_message[data-message-id=' + message_id + ']').fadeOut({
-            done: function () { self.render(messages, options); },
+            done: function () { self.render(messages, options); done.resolve();},
             duration: 200,
         });
+        return done;
     },
 
     /**
