@@ -17,6 +17,7 @@
     </t>
 
     <t t-name="mail.ChatThread.Content">
+        <t t-if="options.messages_separator_position == 'top'" t-call="mail.MessagesSeparator"/>
         <t t-set="current_day" t-value="0"/>
         <t t-foreach="messages" t-as="message">
             <div t-if="current_day != message.date.split(' ')[0]" class="o_thread_date_separator">
@@ -101,6 +102,15 @@
                     <t t-call="mail.Attachment"/>
                 </t>
             </div>
+        </div>
+        <t t-if="options.messages_separator_position == message.id">
+            <t t-call="mail.MessagesSeparator"/>
+        </t>
+    </t>
+
+    <t t-name="mail.MessagesSeparator">
+        <div class="o_thread_new_messages_separator">
+            <span class="o_thread_separator_label">New messages</span>
         </div>
     </t>
 

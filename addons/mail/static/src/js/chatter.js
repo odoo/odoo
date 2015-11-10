@@ -776,7 +776,7 @@ var Chatter = form_common.AbstractField.extend({
         var def;
         var channel = chat_manager.get_channel(channel_id);
         // If not registered to 'channel' yet, do it
-        if (channel.id !== channel_id) {
+        if (!channel) {
             def = chat_manager.join_channel(channel_id);
         }
         $.when(def).then(function () {
