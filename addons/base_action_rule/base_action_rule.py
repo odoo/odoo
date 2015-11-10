@@ -33,6 +33,39 @@ def get_datetime(date_str):
         date_str = date_str + " 00:00:00"
     return datetime.strptime(date_str, DEFAULT_SERVER_DATETIME_FORMAT)
 
+class ActionJobs(object):
+    """ Maintain a todo/done list for actions to execute on records. The list is
+        such that a given job (action, record) is done at most once.
+    """
+    def __init__(self):
+        self._todo = {}                                     # {action: records}
+        self._done = {}                                     # {action: records}
+        self._vals = defaultdict(lambda: defaultdict(dict)) # {action: {id: vals}}
+
+    def __nonzero__(self):
+        return bool(self._todo)
+
+    def peek(self):
+        """ Retrieve an action to do on records. """
+        action, records = next(self._todo.iteritems())
+        return action, records, self._vals[action]
+
+    def todo(self, action, records, values):
+        """ Mark as todo the records for which the action has not been done yet. """
+        records -= self._done.get(action) or records.browse()
+        if records:
+            self._todo[action] = self._todo.get(action, records) | records
+            action_vals = self._vals[action]
+            for id, vals in values.iteritems():
+                action_vals[id].update(vals)
+
+    def done(self, action, records):
+        """ Mark the records as done for the action. """
+        remain = self._todo.pop(action) - records
+        if remain:
+            self._todo[action] = remain
+        self._done[action] = self._done.get(action, records) | records
+
 
 class base_action_rule(osv.osv):
     """ Base Action Rules """
@@ -173,12 +206,15 @@ class base_action_rule(osv.osv):
     @openerp.api.model
     def _with_todo(self):
         """ Return ``self`` with an action todo in its context. """
-        return self if '__action_todo' in self._context else self.with_context(__action_todo={})
+        if '__action_jobs' in self._context:
+            return self
+        else:
+            return self.with_context(__action_jobs=ActionJobs())
 
     @openerp.api.model
     def _prepare(self, records, kinds, fields=None):
         """ Populate the action todo for the given records. """
-        todo = self._context['__action_todo']
+        jobs = self._context['__action_jobs']
         # retrieve the action rules to possibly execute
         domain = [('model', '=', records._name), ('kind', 'in', kinds)]
         actions = self.with_context(active_test=True).search(domain)
@@ -186,28 +222,26 @@ class base_action_rule(osv.osv):
         for action in actions.with_context(self._context):
             records1 = action._filter(records, action.filter_pre_id, action.filter_pre_domain)
             if records1:
-                records0, record_vals = todo.get(action) or (records.browse(), {})
                 # read old values if required
+                record_vals = {}
                 if fields:
                     for vals in records1.read(fields):
                         record_vals[vals.pop('id')] = vals
                 # add those records in the action todo
-                todo[action] = records0 | records1, record_vals
+                jobs.todo(action, records1, record_vals)
 
     @openerp.api.model
     def _finalize(self):
         """ Process all actions in the action todo. """
-        todo = self._context['__action_todo']
-        while todo:
-            action, (records, record_vals) = next(todo.iteritems())
+        jobs = self._context['__action_jobs']
+        while jobs:
+            action, records, record_vals = jobs.peek()
             # check postconditions, and execute action on the records that satisfy them
             records1 = action._filter(records, action.filter_id, action.filter_domain)
             if records1:
                 action.with_context(old_values=record_vals)._process(records1)
             # remove records from todo
-            records0, record_vals = todo.pop(action)
-            if not(records0 <= records):
-                todo[action] = records0 - records, record_vals
+            jobs.done(action, records)
 
     def _register_hook(self, cr):
         """ Patch models that should trigger action rules based on creation,
