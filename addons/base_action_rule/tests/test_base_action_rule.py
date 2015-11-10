@@ -104,7 +104,6 @@ class base_action_rule_test(common.TransactionCase):
         Check that creating a lead with a line executes rules on both records.
         """
         lead = self.create_lead(line_ids=[(0, 0, {'name': "Line"})])
-        self.assertEqual(lead.state, 'draft')
         self.assertEqual(lead.user_id, self.user_demo)
         self.assertEqual(len(lead.line_ids), 1)
         self.assertEqual(lead.line_ids.user_id, self.user_demo)

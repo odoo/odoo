@@ -171,6 +171,46 @@ class base_action_rule(osv.osv):
 
         return True
 
+    @openerp.api.model
+    def _with_todo(self):
+        """ Return ``self`` with an action todo in its context. """
+        return self if '__action_todo' in self._context else self.with_context(__action_todo={})
+
+    @openerp.api.model
+    def _prepare(self, records, kinds, fields=None):
+        """ Populate the action todo for the given records. """
+        todo = self._context['__action_todo']
+        # retrieve the action rules to possibly execute
+        domain = [('model', '=', records._name), ('kind', 'in', kinds)]
+        actions = self.with_context(active_test=True).search(domain)
+        # check preconditions and populate todo list
+        for action in actions.with_context(self._context):
+            ids = action._filter(action, action.filter_pre_id, records.ids, domain=action.filter_pre_domain)
+            if ids:
+                records1 = records.browse(ids)
+                records0, record_vals = todo.get(action) or (records.browse(), {})
+                # read old values if required
+                if fields:
+                    for vals in records1.read(fields):
+                        record_vals[vals.pop('id')] = vals
+                # subscribe those records for post-processing
+                todo[action] = records0 | records1, record_vals
+
+    @openerp.api.model
+    def _finalize(self):
+        """ Process all actions in the action todo. """
+        todo = self._context['__action_todo']
+        while todo:
+            action, (records, record_vals) = next(todo.iteritems())
+            # check postconditions, and execute action on the records that satisfy them
+            ids = action._filter(action, action.filter_id, records.ids, domain=action.filter_domain)
+            if ids:
+                action.with_context(old_values=record_vals)._process(action, ids)
+            # remove records from todo
+            records0, record_vals = todo.pop(action)
+            if not(records0 <= records):
+                todo[action] = records0 - records, record_vals
+
     def _register_hook(self, cr):
         """ Patch models that should trigger action rules based on creation,
         modification, deletion of records and form onchanges.
@@ -187,24 +227,17 @@ class base_action_rule(osv.osv):
         def make_create():
             """ Instanciate a create method that processes action rules. """
             def create(self, cr, uid, vals, context=None):
-                # avoid loops or cascading actions
-                if context and context.get('action'):
-                    return create.origin(self, cr, uid, vals, context=context)
+                # prepare the action registry if necessary
+                action = self.pool['base.action.rule']._with_todo(cr, uid, context)
 
-                # call original method with a modified context
-                context = dict(context or {}, action=True)
-                new_id = create.origin(self, cr, uid, vals, context=context)
+                # call original method
+                new_id = create.origin(self, cr, uid, vals, context=action._context)
+                record = self.browse(cr, uid, new_id, context=action._context)
 
-                # as it is a new record, we do not consider the actions that have a prefilter
-                action_model = self.pool.get('base.action.rule')
-                action_dom = [('model', '=', self._name),
-                              ('kind', 'in', ['on_create', 'on_create_or_write'])]
-                action_ids = action_model.search(cr, uid, action_dom, context=dict(context, active_test=True))
-
-                # check postconditions, and execute actions on the records that satisfy them
-                for action in action_model.browse(cr, uid, action_ids, context=context):
-                    if action_model._filter(cr, uid, action, action.filter_id, [new_id], domain=action.filter_domain, context=context):
-                        action_model._process(cr, uid, action, [new_id], context=context)
+                # process actions if this method introduced the todo
+                action._prepare(record, ['on_create', 'on_create_or_write'])
+                if context != action._context:
+                    action._finalize()
                 return new_id
 
             return create
@@ -216,39 +249,19 @@ class base_action_rule(osv.osv):
             # catch updates made by field recomputations.
             #
             def _write(self, cr, uid, ids, vals, context=None):
-                # avoid loops or cascading actions
-                if context and context.get('action'):
-                    return _write.origin(self, cr, uid, ids, vals, context=context)
-
-                # modify context
-                context = dict(context or {}, action=True)
-                ids = [ids] if isinstance(ids, (int, long, str)) else ids
-
-                # retrieve the action rules to possibly execute
-                action_model = self.pool.get('base.action.rule')
-                action_dom = [('model', '=', self._name),
-                              ('kind', 'in', ['on_write', 'on_create_or_write'])]
-                action_ids = action_model.search(cr, uid, action_dom, context=context)
-                actions = action_model.browse(cr, uid, action_ids, context=context)
+                # prepare the action registry if necessary
+                action = self.pool['base.action.rule']._with_todo(cr, uid, context)
 
                 # check preconditions
-                pre_ids = {}
-                for action in actions:
-                    pre_ids[action] = action_model._filter(cr, uid, action, action.filter_pre_id, ids, domain=action.filter_pre_domain, context=context)
-
-                # read old values before the update
-                old_values = {}
-                for old_vals in self.read(cr, uid, ids, list(vals), context=context):
-                    old_values[old_vals.pop('id')] = old_vals
+                records = self.browse(cr, uid, ids, context=action._context)
+                action._prepare(records, ['on_write', 'on_create_or_write'], list(vals))
 
                 # call original method
-                _write.origin(self, cr, uid, ids, vals, context=context)
+                _write.origin(records, vals)
 
-                # check postconditions, and execute actions on the records that satisfy them
-                for action in actions:
-                    post_ids = action_model._filter(cr, uid, action, action.filter_id, pre_ids[action], domain=action.filter_domain, context=context)
-                    if post_ids:
-                        action_model._process(cr, uid, action, post_ids, context=dict(context, old_values=old_values))
+                # process actions if this method introduced the todo
+                if context != action._context:
+                    action._finalize()
                 return True
 
             return _write
@@ -256,28 +269,16 @@ class base_action_rule(osv.osv):
         def make_unlink():
             """ Instanciate an unlink method that processes action rules. """
             def unlink(self, cr, uid, ids, context=None, **kwargs):
-                if context and context.get('action'):
-                    return unlink.origin(self, cr, uid, ids, context=context)
+                # prepare the action registry if necessary
+                action = self.pool['base.action.rule']._with_todo(cr, uid, context)
 
-                # modify context
-                context = dict(context or {}, action=True)
-                ids = [ids] if isinstance(ids, (int, long, str)) else ids
-
-                # retrieve the action rules to possibly execute
-                action_model = self.pool.get('base.action.rule')
-                action_dom = [('model', '=', self._name),
-                              ('kind', '=', 'on_unlink')]
-                action_ids = action_model.search(cr, uid, action_dom, context=context)
-                actions = action_model.browse(cr, uid, action_ids, context=context)
-
-                # check conditions, and execute actions on the records that satisfy them
-                for action in actions:
-                    pre_ids = action_model._filter(cr, uid, action, action.filter_id, ids, domain=action.filter_domain, context=context)
-                    if pre_ids:
-                        action_model._process(cr, uid, action, pre_ids, context=context)
+                # execute actions on the records that satisfy them
+                records = self.browse(cr, uid, ids, context=action._context)
+                action._prepare(records, ['on_unlink'])
+                action._finalize()
 
                 # call original method
-                return unlink.origin(self, cr, uid, ids, context=context, **kwargs)
+                return unlink.origin(records, **kwargs)
 
             return unlink
 
