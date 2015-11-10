@@ -4415,10 +4415,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         }));
         this.on('edit:after', this, this.proxy('_after_edit'));
         this.on('save:before cancel:before', this, this.proxy('_before_unedit'));
-
-        this.records
-            .bind('add', this.proxy("changed_records"))
-            .bind('remove', this.proxy("changed_records"));
         this.on('save:after', this, this.proxy("changed_records"));
     },
     start: function () {
