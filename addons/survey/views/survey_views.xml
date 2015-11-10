@@ -114,6 +114,7 @@
                 <form string="Survey">
                     <field name="id" invisible="1"/>
                     <field name="tot_start_survey" invisible="1"/>
+                    <field name="is_closed" invisible="1"/>
                     <header groups="base.group_survey_manager">
                         <button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>
                         <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
@@ -124,7 +125,7 @@
                         <field name="stage_id" widget="statusbar" clickable="True" />
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
+                        <div class="oe_button_box" name="button_box" attrs="{'invisible': [('is_closed', '=', False)]}">
                             <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
@@ -164,6 +165,7 @@
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
                 <tree string="Survey">
+                    <field name="active" invisible="1"/>
                     <field name="title" />
                     <field name="stage_id" />
                     <field name="tot_sent_survey" string="Invitations sent" />
@@ -222,6 +224,15 @@
                         </div>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+        <record id="survey_survey_view_search" model="ir.ui.view">
+            <field name="name">survey.survey.search</field>
+            <field name="model">survey.survey</field>
+            <field name="arch" type="xml">
+                <search string="Survey">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 

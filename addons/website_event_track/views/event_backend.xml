@@ -75,6 +75,8 @@
                     <field name="state"/>
                     <field name="speaker_ids"/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>
@@ -95,6 +97,9 @@
                     </header>
                     <sheet string="Track">
                         <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
                             <field name="website_url" invisible="1"/>
                             <button class="oe_stat_button" name="website_publish_button"
                                 type="object" icon="fa-globe">
@@ -145,6 +150,7 @@
             <field name="arch" type="xml">
                 <tree string="Event Track">
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                     <field name="event_id"/>
                 </tree>
             </field>

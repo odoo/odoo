@@ -47,6 +47,7 @@ class Forum(models.Model):
 
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
+    active = fields.Boolean(default=True)
     faq = fields.Html('Guidelines', default=_get_default_faq, translate=True)
     description = fields.Text(
         'Description',
@@ -153,6 +154,14 @@ class Forum(models.Model):
     @api.model
     def create(self, values):
         return super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
+
+    @api.multi
+    def write(self, vals):
+        res = super(Forum, self).write(vals)
+        if 'active' in vals:
+            # archiving/unarchiving a forum does it on its posts, too
+            self.env['forum.post'].with_context(active_test=False).search([('forum_id', 'in', self.ids)]).write({'active': vals['active']})
+        return res
 
     @api.model
     def _tag_to_write_vals(self, tags=''):
@@ -500,6 +509,10 @@ class Post(models.Model):
                     body, subtype = _('Question Edited'), 'website_forum.mt_question_edit'
                     obj_id = post
                 obj_id.message_post(body=body, subtype=subtype)
+        if 'active' in vals:
+            answers = self.env['forum.post'].with_context(active_test=False).search([('parent_id', 'in', self.ids)])
+            if answers:
+                answers.write({'active': vals['active']})
         return res
 
     @api.multi

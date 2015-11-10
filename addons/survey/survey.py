@@ -185,6 +185,7 @@ class survey_survey(osv.Model):
             help="This message will be displayed when survey is completed"),
         'quizz_mode': fields.boolean(string='Quiz mode'),
         'active': fields.boolean(string="Active"),
+        'is_closed': fields.related('stage_id', 'closed', type='boolean'),
     }
 
     def _default_stage(self, cr, uid, context=None):

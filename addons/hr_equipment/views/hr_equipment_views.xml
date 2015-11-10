@@ -17,6 +17,8 @@
                 <filter string="My Requests" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <group  expand='0' string='Group by...'>
                     <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' domain="[]" context="{'group_by' : 'category_id'}"/>
@@ -38,9 +40,12 @@
                     <field name="stage_id" widget="statusbar" clickable="true" readonly="1"/>
                 </header>
                 <sheet>
-                    <div class="oe_right">
-                        <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
                     </div>
+                    <field name="kanban_state" widget="kanban_state_selection"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Subject"/>
                         <h1>
@@ -54,7 +59,6 @@
                             <field name="category_id" groups="base.group_hr_manager"/>
                             <field name="request_date" groups="base.group_no_one"/>
                             <field name="close_date" groups="base.group_no_one"/>
-                            <field name="active" invisible="1"/>
                         </group>
                         <group>
                             <field name="user_id" string="Repair Responsible"/>
@@ -139,6 +143,7 @@
             <tree string="maintenance Request" decoration-bf="message_needaction==True">
                 <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
+                <field name="active" invisible="1"/>
                 <field name="request_date" groups="base.group_no_one"/>
                 <field name="employee_id"/>
                 <field name="user_id"/>
@@ -201,6 +206,9 @@
             <form string="Equipments">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
                         <button name="%(hr_equipment_request_action_from_equipment)d"
                             type="action"
                             class="oe_stat_button"
@@ -318,6 +326,7 @@
             <tree string="Assign To Employee"  decoration-bf="message_needaction==True">
                 <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
+                <field name="active" invisible="1"/>
                 <field name="employee_id" string="Employee"/>
                 <field name="department_id" string="Department"/>
                 <field name="assign_date" groups="base.group_no_one"/>
@@ -346,6 +355,8 @@
                 <filter string="My Equipments" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <group  expand='0' string='Group by...'>
                     <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' domain="[]" context="{'group_by': 'category_id'}"/>

@@ -282,6 +282,7 @@ class hr_department(osv.osv):
     _columns = {
         'name': fields.char('Department Name', required=True),
         'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
+        'active': fields.boolean('Active'),
         'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
         'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),
@@ -293,6 +294,7 @@ class hr_department(osv.osv):
     }
 
     _defaults = {
+        'active': True,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.department', context=c),
     }
 

@@ -191,6 +191,9 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
                             <button name="return_action_to_open"
                                 type="object"
                                 class="oe_stat_button"
@@ -296,6 +299,7 @@
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
                 <tree string="Vehicle" decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue" decoration-danger="contract_renewal_overdue">
+                    <field name="active" invisible="1"/>
                     <field name="license_plate" />
                     <field name="model_id" />
                     <field name="driver_id" />
@@ -322,6 +326,8 @@
                     <field name="location"/>
                     <field name="state_id" />
                     <filter name="alert_true" domain="['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]" string="Has Alert(s)"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="1" string="Group By">
                         <filter name="groupby_status" context="{'group_by' : 'state_id'}" string="Status"/>
                         <filter name="groupby_model" context="{'group_by' : 'model_id'}" string="Model"/>
@@ -424,6 +430,11 @@
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <group col="2">
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
@@ -504,6 +515,7 @@
             <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
                 <tree string="Contract logs" decoration-warning="days_left>0 and days_left&lt;15" decoration-danger="days_left==0" decoration-muted="state=='closed'">
+                    <field name="active" invisible="1"/>
                     <field name="start_date" />
                     <field name="expiration_date" />
                     <field name="days_left" invisible="1"/>
@@ -527,6 +539,16 @@
                     <field name="vehicle_id" type="row"/>
                     <field name="cost_amount" type="measure"/>
                 </graph>
+            </field>
+        </record>
+
+        <record id="fleet_vehicle_log_contract_view_search" model="ir.ui.view">
+            <field name="name">fleet.vehicle.log.contract.search</field>
+            <field name="model">fleet.vehicle.log.contract</field>
+            <field name="arch" type="xml">
+                <search string="Vehicles Contracts">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 
