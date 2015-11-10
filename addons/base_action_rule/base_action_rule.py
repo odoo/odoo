@@ -104,11 +104,11 @@ class base_action_rule(osv.osv):
     def onchange_kind(self, cr, uid, ids, kind, context=None):
         clear_fields = []
         if kind in ['on_create', 'on_create_or_write', 'on_unlink']:
-            clear_fields = ['filter_pre_id', 'trg_date_id', 'trg_date_range', 'trg_date_range_type']
+            clear_fields = ['filter_pre_id', 'filter_pre_domain', 'trg_date_id', 'trg_date_range', 'trg_date_range_type']
         elif kind in ['on_write', 'on_create_or_write']:
             clear_fields = ['trg_date_id', 'trg_date_range', 'trg_date_range_type']
         elif kind == 'on_time':
-            clear_fields = ['filter_pre_id']
+            clear_fields = ['filter_pre_id', 'filter_pre_domain']
         return {'value': dict.fromkeys(clear_fields, False)}
 
     def onchange_filter_pre_id(self, cr, uid, ids, filter_pre_id, context=None):
