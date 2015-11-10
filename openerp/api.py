@@ -35,8 +35,11 @@ __all__ = [
     'Environment',
     'Meta', 'guess', 'noguess',
     'model', 'multi', 'one',
-    'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
-    'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
+    'cr', 'cr_context',
+    'cr_uid', 'cr_uid_context',
+    'cr_uid_id', 'cr_uid_id_context',
+    'cr_uid_ids', 'cr_uid_ids_context',
+    'cr_uid_records', 'cr_uid_records_context',
     'constrains', 'depends', 'onchange', 'returns',
 ]
 
