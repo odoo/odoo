@@ -256,16 +256,21 @@ class res_users(osv.Model):
     def action_reset_password(self, cr, uid, ids, context=None):
         """ create signup token for each user, and send their signup url by email """
         # prepare reset password signup
+        create_mode = bool(context.get('create_user'))
         res_partner = self.pool.get('res.partner')
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context)]
-        res_partner.signup_prepare(cr, uid, partner_ids, signup_type="reset", expiration=now(days=+1), context=context)
+
+        # no time limit for initial invitation, only for reset password
+        expiration = False if create_mode else now(days=+1)
+
+        res_partner.signup_prepare(cr, uid, partner_ids, signup_type="reset", expiration=expiration, context=context)
 
         if not context:
             context = {}
 
         # send email to users with their signup url
         template = False
-        if context.get('create_user'):
+        if create_mode:
             try:
                 # get_object() raises ValueError if record does not exist
                 template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'set_password_email')
