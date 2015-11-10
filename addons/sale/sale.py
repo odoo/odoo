@@ -539,7 +539,7 @@ class sale_order(osv.osv):
                     continue
                 elif (line.state in states):
                     lines.append(line.id)
-            created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
+            created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines, context=context)
             if created_lines:
                 invoices.setdefault(o.partner_invoice_id.id or o.partner_id.id, []).append((o, created_lines))
         if not invoices:
