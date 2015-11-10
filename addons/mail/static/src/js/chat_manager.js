@@ -238,18 +238,19 @@ function remove_message_from_channel (channel_id, message) {
 
 // options: domain, load_more
 function fetch_from_channel (channel, options) {
+    options = options || {};
     var domain =
         (channel.id === "channel_inbox") ? [['needaction', '=', true]] :
         (channel.id === "channel_starred") ? [['starred', '=', true]] :
                                             [['channel_ids', 'in', channel.id]];
+    var cache = get_channel_cache(channel, options.domain);
 
-    options = options || {};
     if (options.domain) {
         domain = new data.CompoundDomain(domain, options.domain || []);
     }
     if (options.load_more) {
         var min_message_id = _.chain(messages)
-            .filter(function (msg) { return _.contains(msg.channel_ids, channel.id); })
+            .filter(function (msg) { return _.contains(cache.message_ids, msg.id); })
             .pluck("id")
             .min()
             .value();
@@ -258,8 +259,6 @@ function fetch_from_channel (channel, options) {
     }
 
     return MessageModel.call('message_fetch', [domain], {limit: LIMIT}).then(function (msgs) {
-        var cache = get_channel_cache(channel, options.domain);
-
         cache.message_ids = _.uniq(cache.message_ids.concat(_.pluck(msgs, 'id')));
         if (!cache.all_history_loaded) {
             cache.all_history_loaded =  msgs.length < LIMIT;
