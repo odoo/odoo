@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import pytz
+import calendar
 import time
 
 from datetime import datetime, timedelta
@@ -120,6 +121,10 @@ class ir_sequence(models.Model):
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda s: s.env['res.company']._company_default_get('ir.sequence'))
     use_date_range = fields.Boolean('Use subsequences per date_range')
+    date_range_type = fields.Selection(
+        [('year', 'Year'), ('fiscalyear', 'Fiscal year'), ('month', 'Month'), ('week', 'Week'), ('day', 'Day')],
+        'Type of date range', required=True, default='year',
+        help="Type of date range that will be automatically create if doesn't exist.")
     date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_id', 'Subsequences')
 
     def init(self, cr):
@@ -187,7 +192,7 @@ class ir_sequence(models.Model):
             number_next = _update_nogap(self, self.number_increment)
         return self.get_next_char(number_next)
 
-    def get_next_char(self, number_next):
+    def get_next_char(self, number_next, date_from=None, date_to=None):
         def _interpolate(s, d):
             if s:
                 return s % d
@@ -199,6 +204,16 @@ class ir_sequence(models.Model):
                 t = datetime.strptime(self.env.context.get('ir_sequence_date'), '%Y-%m-%d')
             else:
                 t = now
+
+            if date_from:
+                range_date_from = fields.Date.from_string(date_from)
+            else:
+                range_date_from = now
+            if date_to:
+                range_date_to = fields.Date.from_string(date_to)
+            else:
+                range_date_to = now
+
             sequences = {
                 'year': '%Y', 'month': '%m', 'day': '%d', 'y': '%y', 'doy': '%j', 'woy': '%W',
                 'weekday': '%w', 'h24': '%H', 'h12': '%I', 'min': '%M', 'sec': '%S'
@@ -207,6 +222,8 @@ class ir_sequence(models.Model):
             for key, sequence in sequences.iteritems():
                 res[key] = now.strftime(sequence)
                 res['range_' + key] = t.strftime(sequence)
+                res['range_from_' + key] = range_date_from.strftime(sequence)
+                res['range_to_' + key] = range_date_to.strftime(sequence)
 
             return res
 
@@ -219,9 +236,31 @@ class ir_sequence(models.Model):
         return interpolated_prefix + '%%0%sd' % self.padding % number_next + interpolated_suffix
 
     def _create_date_range_seq(self, date):
-        year = fields.Date.from_string(date).strftime('%Y')
-        date_from = '{}-01-01'.format(year)
-        date_to = '{}-12-31'.format(year)
+        date = fields.Date.from_string(date)
+        if self.date_range_type == 'year':
+            date_from = date.replace(month=1, day=1)
+            date_to = date.replace(month=12, day=31)
+        elif self.date_range_type == 'fiscalyear':
+            fiscalyear_last_month = self.env.user.company_id.fiscalyear_last_month if hasattr(self.env.user.company_id, 'fiscalyear_last_month') else 12
+            fiscalyear_last_day = self.env.user.company_id.fiscalyear_last_day if hasattr(self.env.user.company_id, 'fiscalyear_last_day') else 31
+            date_to = date.replace(month=fiscalyear_last_month, day=fiscalyear_last_day)
+            if date > date_to:
+                date_to = date_to.replace(year=date_to.year + 1)
+            date_from = date_to + timedelta(days=1)
+            date_from = date_from.replace(year=date_from.year - 1)
+        elif self.date_range_type == 'month':
+            date_from = date.replace(day=1)
+            date_to = date.replace(day=calendar.monthrange(date.year, date.month)[1])
+        elif self.date_range_type == 'week':
+            weekday = date.weekday()
+            date_from = date + timedelta(days=-weekday)
+            date_to = date + timedelta(days=6-weekday)
+        elif self.date_range_type == 'day':
+            date_from = date
+            date_to = date
+        else:
+            date_from = date.replace(month=1, day=1)
+            date_to = date.replace(month=12, day=31)
         date_range = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '>=', date), ('date_from', '<=', date_to)], order='date_from desc')
         if date_range:
             date_to = datetime.strptime(date_range.date_from, '%Y-%m-%d') + timedelta(days=-1)
@@ -345,7 +384,7 @@ class ir_sequence_date_range(models.Model):
             number_next = _select_nextval(self.env.cr, 'ir_sequence_%03d_%03d' % (self.sequence_id.id, self.id))
         else:
             number_next = _update_nogap(self, self.sequence_id.number_increment)
-        return self.sequence_id.get_next_char(number_next)
+        return self.sequence_id.get_next_char(number_next, self.date_from, self.date_to)
 
     @api.multi
     def _alter_sequence(self, number_increment=None, number_next=None):
