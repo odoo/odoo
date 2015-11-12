@@ -119,57 +119,61 @@ class base_action_rule(osv.osv):
         ir_filter = self.pool['ir.filters'].browse(cr, uid, filter_id, context=context)
         return {'value': {'filter_domain': ir_filter.domain}}
 
-    def _get_eval_context(self, cr, uid, context=None):
+    @openerp.api.model
+    def _get_actions(self, records, kinds):
+        """ Return the actions of the given kinds for records' model. """
+        domain = [('model', '=', records._name), ('kind', 'in', kinds)]
+        actions = self.with_context(active_test=True).search(domain)
+        return actions.with_env(self.env)
+
+    @openerp.api.model
+    def _get_eval_context(self):
         """ Prepare the context used when evaluating python code
         :returns: dict -- evaluation context given to (safe_)eval """
         return {
             'datetime': DT,
             'dateutil': dateutil,
             'time': time,
-            'uid': uid,
-            'user': self.pool['res.users'].browse(cr, uid, uid, context=context),
+            'uid': self.env.uid,
+            'user': self.env.user,
         }
 
-    def _filter(self, cr, uid, action, action_filter, record_ids, domain=False, context=None):
-        """ Filter the list record_ids that satisfy the domain or the action filter. """
-        if record_ids and (domain is not False or action_filter):
-            eval_context = self._get_eval_context(cr, uid, context=context)
-            if domain is not False:
-                new_domain = [('id', 'in', record_ids)] + eval(domain, eval_context)
-                ctx = context
-            elif action_filter:
-                assert action.model == action_filter.model_id, "Filter model different from action rule model"
-                new_domain = [('id', 'in', record_ids)] + eval(action_filter.domain, eval_context)
-                ctx = dict(context or {})
-                ctx.update(eval(action_filter.context))
-            record_ids = self.pool[action.model].search(cr, uid, new_domain, context=ctx)
-        return record_ids
+    @openerp.api.model
+    def _filter(self, records, action_filter, action_domain):
+        """ Filter the records that satisfy the given filter or domain. """
+        if action_filter and records:
+            eval_context = self._get_eval_context()
+            domain = [('id', 'in', records.ids)] + eval(action_filter.domain, eval_context)
+            ctx = eval(action_filter.context)
+            return records.with_context(**ctx).search(domain).with_env(records.env)
+        elif action_domain and records:
+            eval_context = self._get_eval_context()
+            domain = [('id', 'in', records.ids)] + eval(action_domain, eval_context)
+            return records.search(domain)
+        else:
+            return records
 
-    def _process(self, cr, uid, action, record_ids, context=None):
-        """ process the given action on the records """
-        model = self.pool[action.model_id.model]
+    @openerp.api.multi
+    def _process(self, records):
+        """ Process the action ``self`` on ``records``. """
         # modify records
         values = {}
-        if 'date_action_last' in model._fields:
-            values['date_action_last'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        if action.act_user_id and 'user_id' in model._fields:
-            values['user_id'] = action.act_user_id.id
+        if 'date_action_last' in records._fields:
+            values['date_action_last'] = openerp.fields.Datetime.now()
+        if self.act_user_id and 'user_id' in records._fields:
+            values['user_id'] = self.act_user_id.id
         if values:
-            model.write(cr, uid, record_ids, values, context=context)
+            records.write(values)
 
-        if action.act_followers and hasattr(model, 'message_subscribe'):
-            follower_ids = map(int, action.act_followers)
-            model.message_subscribe(cr, uid, record_ids, follower_ids, context=context)
+        # subscribe followers
+        if self.act_followers and hasattr(records, 'message_subscribe'):
+            records.message_subscribe(self.act_followers.ids)
 
         # execute server actions
-        if action.server_action_ids:
-            server_action_ids = map(int, action.server_action_ids)
-            for record in model.browse(cr, uid, record_ids, context):
-                action_server_obj = self.pool.get('ir.actions.server')
-                ctx = dict(context, active_model=model._name, active_ids=[record.id], active_id=record.id)
-                action_server_obj.run(cr, uid, server_action_ids, context=ctx)
-
-        return True
+        if self.server_action_ids:
+            for record in records:
+                ctx = {'active_model': record._name, 'active_ids': record.ids, 'active_id': record.id}
+                self.server_action_ids.with_context(**ctx).run()
 
     def _register_hook(self, cr):
         """ Patch models that should trigger action rules based on creation,
@@ -186,26 +190,24 @@ class base_action_rule(osv.osv):
 
         def make_create():
             """ Instanciate a create method that processes action rules. """
-            def create(self, cr, uid, vals, context=None):
+            @openerp.api.model
+            def create(self, vals):
                 # avoid loops or cascading actions
-                if context and context.get('action'):
-                    return create.origin(self, cr, uid, vals, context=context)
+                if self._context.get('action'):
+                    return create.origin(self, vals)
 
                 # call original method with a modified context
-                context = dict(context or {}, action=True)
-                new_id = create.origin(self, cr, uid, vals, context=context)
+                record = create.origin(self.with_context(action=True), vals)
 
-                # as it is a new record, we do not consider the actions that have a prefilter
-                action_model = self.pool.get('base.action.rule')
-                action_dom = [('model', '=', self._name),
-                              ('kind', 'in', ['on_create', 'on_create_or_write'])]
-                action_ids = action_model.search(cr, uid, action_dom, context=dict(context, active_test=True))
+                # retrieve the action rules to possibly execute
+                actions = record.env['base.action.rule']._get_actions(record, ['on_create', 'on_create_or_write'])
 
                 # check postconditions, and execute actions on the records that satisfy them
-                for action in action_model.browse(cr, uid, action_ids, context=context):
-                    if action_model._filter(cr, uid, action, action.filter_id, [new_id], domain=action.filter_domain, context=context):
-                        action_model._process(cr, uid, action, [new_id], context=context)
-                return new_id
+                for action in actions:
+                    if action._filter(record, action.filter_id, action.filter_domain):
+                        action._process(record)
+
+                return record.with_env(self.env)
 
             return create
 
@@ -215,69 +217,63 @@ class base_action_rule(osv.osv):
             # Note: we patch method _write() instead of write() in order to
             # catch updates made by field recomputations.
             #
-            def _write(self, cr, uid, ids, vals, context=None):
+            @openerp.api.multi
+            def _write(self, vals):
                 # avoid loops or cascading actions
-                if context and context.get('action'):
-                    return _write.origin(self, cr, uid, ids, vals, context=context)
+                if self._context.get('action'):
+                    return _write.origin(self, vals)
 
                 # modify context
-                context = dict(context or {}, action=True)
-                ids = [ids] if isinstance(ids, (int, long, str)) else ids
+                records = self.with_context(action=True)
 
                 # retrieve the action rules to possibly execute
-                action_model = self.pool.get('base.action.rule')
-                action_dom = [('model', '=', self._name),
-                              ('kind', 'in', ['on_write', 'on_create_or_write'])]
-                action_ids = action_model.search(cr, uid, action_dom, context=context)
-                actions = action_model.browse(cr, uid, action_ids, context=context)
+                actions = records.env['base.action.rule']._get_actions(records, ['on_write', 'on_create_or_write'])
 
                 # check preconditions
-                pre_ids = {}
-                for action in actions:
-                    pre_ids[action] = action_model._filter(cr, uid, action, action.filter_pre_id, ids, domain=action.filter_pre_domain, context=context)
+                pre = {
+                    action: action._filter(records, action.filter_pre_id, action.filter_pre_domain)
+                    for action in actions
+                }
 
                 # read old values before the update
-                old_values = {}
-                for old_vals in self.read(cr, uid, ids, list(vals), context=context):
-                    old_values[old_vals.pop('id')] = old_vals
+                old_values = {
+                    old_vals.pop('id'): old_vals
+                    for old_vals in records.read(list(vals))
+                }
 
                 # call original method
-                _write.origin(self, cr, uid, ids, vals, context=context)
+                _write.origin(records, vals)
 
                 # check postconditions, and execute actions on the records that satisfy them
-                for action in actions:
-                    post_ids = action_model._filter(cr, uid, action, action.filter_id, pre_ids[action], domain=action.filter_domain, context=context)
-                    if post_ids:
-                        action_model._process(cr, uid, action, post_ids, context=dict(context, old_values=old_values))
+                for action in actions.with_context(old_values=old_values):
+                    post = action._filter(pre[action], action.filter_id, action.filter_domain)
+                    if post:
+                        action._process(post)
                 return True
 
             return _write
 
         def make_unlink():
             """ Instanciate an unlink method that processes action rules. """
-            def unlink(self, cr, uid, ids, context=None, **kwargs):
-                if context and context.get('action'):
-                    return unlink.origin(self, cr, uid, ids, context=context)
+            @openerp.api.multi
+            def unlink(self, **kwargs):
+                if self._context.get('action'):
+                    return unlink.origin(self, **kwargs)
 
                 # modify context
-                context = dict(context or {}, action=True)
-                ids = [ids] if isinstance(ids, (int, long, str)) else ids
+                records = self.with_context(action=True)
 
                 # retrieve the action rules to possibly execute
-                action_model = self.pool.get('base.action.rule')
-                action_dom = [('model', '=', self._name),
-                              ('kind', '=', 'on_unlink')]
-                action_ids = action_model.search(cr, uid, action_dom, context=context)
-                actions = action_model.browse(cr, uid, action_ids, context=context)
+                actions = records.env['base.action.rule']._get_actions(records, ['on_unlink'])
 
                 # check conditions, and execute actions on the records that satisfy them
                 for action in actions:
-                    pre_ids = action_model._filter(cr, uid, action, action.filter_id, ids, domain=action.filter_domain, context=context)
-                    if pre_ids:
-                        action_model._process(cr, uid, action, pre_ids, context=context)
+                    pre = action._filter(records, action.filter_id, action.filter_domain)
+                    if pre:
+                        action._process(pre)
 
                 # call original method
-                return unlink.origin(self, cr, uid, ids, context=context, **kwargs)
+                return unlink.origin(self, **kwargs)
 
             return unlink
 
