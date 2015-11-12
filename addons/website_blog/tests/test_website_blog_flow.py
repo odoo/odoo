@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-
-from openerp.addons.website_blog.tests.common import TestWebsiteBlogCommon
+from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 
 
 class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
