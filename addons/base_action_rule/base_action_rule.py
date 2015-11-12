@@ -139,16 +139,31 @@ class base_action_rule(osv.osv):
         }
 
     @openerp.api.model
-    def _filter(self, records, action_filter, action_domain):
-        """ Filter the records that satisfy the given filter or domain. """
-        if action_filter and records:
+    def _filter_pre(self, records):
+        """ Filter the records that satisfy the precondition of action ``self``. """
+        if self.filter_pre_id and records:
             eval_context = self._get_eval_context()
-            domain = [('id', 'in', records.ids)] + eval(action_filter.domain, eval_context)
-            ctx = eval(action_filter.context)
+            domain = [('id', 'in', records.ids)] + eval(self.filter_pre_id.domain, eval_context)
+            ctx = eval(self.filter_pre_id.context)
             return records.with_context(**ctx).search(domain).with_env(records.env)
-        elif action_domain and records:
+        elif self.filter_pre_domain and records:
             eval_context = self._get_eval_context()
-            domain = [('id', 'in', records.ids)] + eval(action_domain, eval_context)
+            domain = [('id', 'in', records.ids)] + eval(self.filter_pre_domain, eval_context)
+            return records.search(domain)
+        else:
+            return records
+
+    @openerp.api.model
+    def _filter_post(self, records):
+        """ Filter the records that satisfy the postcondition of action ``self``. """
+        if self.filter_id and records:
+            eval_context = self._get_eval_context()
+            domain = [('id', 'in', records.ids)] + eval(self.filter_id.domain, eval_context)
+            ctx = eval(self.filter_id.context)
+            return records.with_context(**ctx).search(domain).with_env(records.env)
+        elif self.filter_domain and records:
+            eval_context = self._get_eval_context()
+            domain = [('id', 'in', records.ids)] + eval(self.filter_domain, eval_context)
             return records.search(domain)
         else:
             return records
@@ -204,7 +219,7 @@ class base_action_rule(osv.osv):
 
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions:
-                    if action._filter(record, action.filter_id, action.filter_domain):
+                    if action._filter_post(record):
                         action._process(record)
 
                 return record.with_env(self.env)
@@ -231,7 +246,7 @@ class base_action_rule(osv.osv):
 
                 # check preconditions
                 pre = {
-                    action: action._filter(records, action.filter_pre_id, action.filter_pre_domain)
+                    action: action._filter_pre(records)
                     for action in actions
                 }
 
@@ -246,7 +261,7 @@ class base_action_rule(osv.osv):
 
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions.with_context(old_values=old_values):
-                    post = action._filter(pre[action], action.filter_id, action.filter_domain)
+                    post = action._filter_post(pre[action])
                     if post:
                         action._process(post)
                 return True
@@ -268,7 +283,7 @@ class base_action_rule(osv.osv):
 
                 # check conditions, and execute actions on the records that satisfy them
                 for action in actions:
-                    pre = action._filter(records, action.filter_id, action.filter_domain)
+                    pre = action._filter_post(records)
                     if pre:
                         action._process(pre)
 
