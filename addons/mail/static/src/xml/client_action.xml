@@ -10,11 +10,14 @@
     </t>
     <t t-name="mail.chat.Sidebar">
         <div class="o_mail_chat_sidebar">
-            <div class="o_mail_chat_channel_item" data-channel-id="channel_inbox">
+            <div t-attf-class="o_mail_chat_channel_item #{(active_channel_id == 'channel_inbox') ? 'o_active': ''}"
+                 data-channel-id="channel_inbox">
                 @ Inbox
+                <t t-set="counter" t-value="needaction_counter"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
             </div>
-            <div class="o_mail_chat_channel_item" data-channel-id="channel_starred">
+            <div t-attf-class="o_mail_chat_channel_item #{(active_channel_id == 'channel_starred') ? 'o_active': ''}"
+                 data-channel-id="channel_starred">
                 <span class="fa fa-star-o"/> Starred
             </div>
 
@@ -47,8 +50,8 @@
         </div>
     </t>
     <t t-name="mail.chat.SidebarNeedaction">
-        <span t-attf-class="o_mail_sidebar_needaction badge pull-right #{(!needaction_counter ? 'hide' : '')}">
-            <t t-esc="needaction_counter"/>
+        <span t-attf-class="o_mail_sidebar_needaction badge pull-right #{(!counter ? 'hide' : '')}">
+            <t t-esc="counter"/>
         </span>
     </t>
     <t t-name="mail.chat.SidebarTitle">
@@ -71,15 +74,29 @@
     </t>
     <t t-name="mail.chat.SidebarItems">
         <t t-foreach="channels" t-as="channel">
-            <div t-if="channel.type === channel_type" class="o_mail_chat_channel_item" t-att-data-channel-id="channel.id">
+            <t t-set="counter" t-value="channel.needaction_counter"/>
+            <div t-if="channel.type === channel_type" t-att-data-channel-id="channel.id"
+                 t-attf-class="o_mail_chat_channel_item #{channel.unread_counter ? ' o_unread_message' : ''} #{(active_channel_id == channel.id) ? 'o_active': ''}">
                 <span><i t-if="display_status" t-att-class="'o_user_status fa ' + (channel.status == 'online' ? 'fa-circle' : 'fa-circle-o')"/></span>
                 <span t-if="display_hash" class="o_mail_hash">#</span> <t t-esc="channel.name"/>
-                <span class="fa fa-times pull-right o_mail_partner_unpin" t-att-title="_t('Close')" t-att-data-channel-id="channel.id"/>
+                <t t-call="mail.chat.SidebarNeedaction"/>
+                <span t-attf-class="fa fa-times pull-right o_mail_partner_unpin #{counter ? 'hide' : ''}"
+                      t-att-title="_t('Close')" t-att-data-channel-id="channel.id"/>
             </div>
         </t>
         <div t-if="!disable_add_channel" class="o_mail_add_channel" t-attf-data-type="#{channel_type}">
             <span t-if="display_hash">#</span>
             <input type="text" t-attf-placeholder="#{input_placeholder}"/>
+        </div>
+    </t>
+
+    <t t-name="mail.chat.UndoSnackbar">
+        <div class="alert alert-dismissible o_mail_snackbar" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&amp;times;</span>
+            </button>
+            <t t-esc="nb_needactions"/> message(s) marked as read.
+            <a href="#" class="alert-link o_snackbar_undo">Undo</a>
         </div>
     </t>
 

@@ -387,6 +387,8 @@ class Channel(models.Model):
         # add the person in the channel, and pin it (or unpin it)
         channel = self.search([('uuid', '=', uuid)])
         channel_partners = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)])
+        if not pinned:
+            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel.channel_info('unsubscribe')[0])
         if channel_partners:
             channel_partners.write({'is_pinned': pinned})
 
@@ -396,6 +398,7 @@ class Channel(models.Model):
         if self.channel_message_ids.ids:
             last_message_id = self.channel_message_ids.ids[0] # zero is the index of the last message
             self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({'seen_message_id': last_message_id})
+            return last_message_id
 
     @api.multi
     def channel_invite(self, partner_ids):

@@ -37,7 +37,7 @@ function add_message (data, options) {
         // Keep the array ordered by date when inserting the new message
         messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
         if (options.channel_id) {
-            var channel = _.findWhere(channels, {id: options.channel_id});
+            var channel = chat_manager.get_channel(options.channel_id);
             if (channel.hidden) {
                 channel.hidden = false;
                 chat_manager.bus.trigger('new_channel', channel);
@@ -117,8 +117,8 @@ function make_message (data) {
     }
     var real_channels = _.without(msg.channel_ids, 'channel_inbox', 'channel_starred');
     var origin = real_channels.length ? real_channels[0] : undefined;
-    var channel;
-    if (origin && (channel = _.findWhere(channels, {id: origin}))) {
+    var channel = origin && chat_manager.get_channel(origin);
+    if (channel) {
         msg.origin_id = origin;
         msg.origin_name = channel.name;
     }
@@ -165,7 +165,7 @@ function post_document_message (model_name, res_id, data) {
 
 function add_channel (data, options) {
     options = typeof options === "object" ? options : {};
-    var channel = _.findWhere(channels, {id: data.id});
+    var channel = chat_manager.get_channel(data.id);
     if (channel) {
         if (channel.is_folded !== (data.state === "folded")) {
             channel.is_folded = (data.state === "folded");
@@ -197,6 +197,9 @@ function make_channel (data, options) {
         autoswitch: 'autoswitch' in options ? options.autoswitch : true,
         hidden: options.hidden,
         display_needactions: options.display_needactions,
+        needaction_counter: data.message_needaction_counter || 0,
+        unread_counter: data.message_unread_counter || 0,
+        last_seen_message_id: data.seen_message_id,
         cache: {'[]': {
             all_history_loaded: false,
             loaded: false,
@@ -238,18 +241,19 @@ function remove_message_from_channel (channel_id, message) {
 
 // options: domain, load_more
 function fetch_from_channel (channel, options) {
+    options = options || {};
     var domain =
         (channel.id === "channel_inbox") ? [['needaction', '=', true]] :
         (channel.id === "channel_starred") ? [['starred', '=', true]] :
                                             [['channel_ids', 'in', channel.id]];
+    var cache = get_channel_cache(channel, options.domain);
 
-    options = options || {};
     if (options.domain) {
         domain = new data.CompoundDomain(domain, options.domain || []);
     }
     if (options.load_more) {
         var min_message_id = _.chain(messages)
-            .filter(function (msg) { return _.contains(msg.channel_ids, channel.id); })
+            .filter(function (msg) { return _.contains(cache.message_ids, msg.id); })
             .pluck("id")
             .min()
             .value();
@@ -258,8 +262,6 @@ function fetch_from_channel (channel, options) {
     }
 
     return MessageModel.call('message_fetch', [domain], {limit: LIMIT}).then(function (msgs) {
-        var cache = get_channel_cache(channel, options.domain);
-
         cache.message_ids = _.uniq(cache.message_ids.concat(_.pluck(msgs, 'id')));
         if (!cache.all_history_loaded) {
             cache.all_history_loaded =  msgs.length < LIMIT;
@@ -300,6 +302,126 @@ function fetch_document_messages (ids, options) {
     }
 }
 
+var channel_seen = _.throttle(function (channel) {
+    return ChannelModel.call('channel_seen', [[channel.id]]).then(function (last_seen_message_id) {
+        channel.last_seen_message_id = last_seen_message_id;
+    });
+}, 3000);
+
+// Notification handlers
+// ---------------------------------------------------------------------------------
+function on_notification (notification) {
+    var model = notification[0][1];
+    if (model === 'ir.needaction') {
+        // new message in the inbox
+        on_needaction_notification(notification[1]);
+    } else if (model === 'mail.channel') {
+        // new message in a channel
+        on_channel_notification(notification[1]);
+    } else if (model === 'res.partner') {
+        // channel joined/left, message marked as read/(un)starred, chat open/closed
+        on_partner_notification(notification[1]);
+    }
+}
+
+function on_needaction_notification (message) {
+    message = add_message(message, { channel_id: 'channel_inbox', show_notification: true} );
+    needaction_counter++;
+    var channel = chat_manager.get_channel(message.channel_ids[0]);
+    if (channel) {
+        channel.needaction_counter++;
+    }
+    chat_manager.bus.trigger('update_needaction', needaction_counter);
+}
+
+function on_channel_notification (message) {
+    var channel = chat_manager.get_channel(message.channel_ids[0]);
+    if (channel) {
+        channel.unread_counter++;
+        add_message(message, { channel_id: channel.id, show_notification: true });
+    }
+}
+
+function on_partner_notification (data) {
+    if (data.info === "unsubscribe") {
+        channels = _.without(channels, chat_manager.get_channel(data.id));
+        chat_manager.bus.trigger("unsubscribe_from_channel", data.id);
+    } else if (data.type === 'toggle_star') {
+        on_toggle_star_notification(data);
+    } else if (data.type === 'mark_as_read') {
+        on_mark_as_read_notification(data);
+    } else if (data.type === 'mark_as_unread') {
+        on_mark_as_unread_notification(data);
+    } else {
+        on_chat_session_notification(data);
+    }
+}
+
+function on_toggle_star_notification (data) {
+    _.each(data.message_ids, function (msg_id) {
+        var message = _.findWhere(messages, { id: msg_id });
+        if (message) {
+            message.is_starred = data.starred;
+            if (!message.is_starred) {
+                remove_message_from_channel("channel_starred", message);
+            }
+            chat_manager.bus.trigger('update_message', message);
+        }
+    });
+}
+
+function on_mark_as_read_notification (data) {
+    _.each(data.message_ids, function (msg_id) {
+        var message = _.findWhere(messages, { id: msg_id });
+        if (message) {
+            remove_message_from_channel("channel_inbox", message);
+            chat_manager.bus.trigger('update_message', message);
+        }
+    });
+    if (data.channel_ids.length) {
+        _.each(data.channel_ids, function (channel_id) {
+            var channel = chat_manager.get_channel(channel_id);
+            if (channel) {
+                channel.needaction_counter -= data.message_ids.length;
+            }
+        });
+    } else {
+        _.each(channels, function (channel) {
+            channel.needaction_counter = 0;
+        });
+    }
+    needaction_counter -= data.message_ids.length;
+    chat_manager.bus.trigger('update_needaction', needaction_counter);
+}
+
+function on_mark_as_unread_notification (data) {
+    _.each(data.channel_ids, function (channel_id) {
+        var channel = chat_manager.get_channel(channel_id);
+        if (channel) {
+            channel.needaction_counter += data.message_ids.length;
+        }
+    });
+    needaction_counter += data.message_ids.length;
+    chat_manager.bus.trigger('update_needaction', needaction_counter);
+}
+
+function on_chat_session_notification (chat_session) {
+    if ((chat_session.channel_type === "channel") && (chat_session.public === "private") && (chat_session.state === "open")) {
+        add_channel(chat_session, {autoswitch: false});
+        if (!chat_session.is_minimized) {
+            web_client.do_notify(_t("Private Channel"), _t("You have been invited to: ") + chat_session.name);
+        }
+    }
+    // partner specific change (open a detached window for example)
+    if ((chat_session.state === "open") || (chat_session.state === "folded")) {
+        add_channel(chat_session, {autoswitch: false});
+        if (chat_session.is_minimized) {
+            chat_manager.bus.trigger("open_chat", chat_session);
+        }
+    } else if (chat_session.state === "closed") {
+        chat_manager.bus.trigger("close_chat", chat_session);
+    }
+}
 
 // Public interface
 //----------------------------------------------------------------------------------
@@ -336,42 +458,28 @@ var chat_manager = {
     toggle_star_status: function (message_id) {
         var msg = _.findWhere(messages, { id: message_id });
 
-        return MessageModel.call('set_message_starred', [[message_id], !msg.is_starred]).then(function () {
-            msg.is_starred = !msg.is_starred;
-            if (!msg.is_starred) {
-                remove_message_from_channel("channel_starred", msg);
-            }
-            chat_manager.bus.trigger('update_message', msg);
-        });
+        return MessageModel.call('set_message_starred', [[message_id], !msg.is_starred]);
+    },
+    unstar_all: function () {
+        return MessageModel.call('unstar_all', [[]], {});
     },
     mark_as_read: function (message_id) {
-        return MessageModel.call('set_message_done', [[message_id]]).then(function () {
-            var message = _.findWhere(messages, { id: message_id });
-            remove_message_from_channel("channel_inbox", message);
-            chat_manager.bus.trigger('update_message', message);
-            needaction_counter = needaction_counter - 1;
-            chat_manager.bus.trigger('update_needaction', needaction_counter);
-        });
+        return MessageModel.call('set_message_done', [[message_id]]);
     },
-
-    mark_all_as_read: function () {
-        MessageModel.call('mark_all_as_read', [[]], {}).then(function (ids) {
-            _.each(messages, function (msg) {
-                remove_message_from_channel("channel_inbox", msg);
-                chat_manager.bus.trigger('update_message', msg);
-            });
-            needaction_counter = 0;
-            chat_manager.bus.trigger('update_needaction', needaction_counter);
-        });
+    mark_all_as_read: function (channel) {
+        if ((!channel && needaction_counter) || (channel && channel.needaction_counter)) {
+            return MessageModel.call('mark_all_as_read', channel ? [[channel.id]] : [[]]);
+        }
+        return $.when();
     },
-
-    unstar_all: function () {
-        MessageModel.call('unstar_all', [[]], {}).then(function (ids) {
-            _.each(messages, function (msg) {
-                remove_message_from_channel("channel_starred", msg);
-                chat_manager.bus.trigger('update_message', msg);
-            });
-        });
+    undo_mark_as_read: function (message_ids, channel) {
+        return MessageModel.call('mark_as_unread', [message_ids, [channel.id]]);
+    },
+    mark_channel_as_seen: function (channel) {
+        if (channel.unread_counter > 0) {
+            channel.unread_counter = 0;
+            channel_seen(channel);
+        }
     },
 
     get_channels: function () {
@@ -379,7 +487,7 @@ var chat_manager = {
     },
 
     get_channel: function (id) {
-        return _.findWhere(channels, {id: id}) || channels[0];
+        return _.findWhere(channels, {id: id});
     },
 
     all_history_loaded: function (channel, domain) {
@@ -436,11 +544,11 @@ var chat_manager = {
         });
     },
     close_chat_session: function (channel_id) {
-        var channel = _.findWhere(channels, {id: channel_id});
+        var channel = this.get_channel(channel_id);
         ChannelModel.call("channel_fold", [], {uuid : channel.uuid, state : "closed"});
     },
     fold_channel: function (channel_id) {
-        var channel = _.findWhere(channels, {id: channel_id});
+        var channel = this.get_channel(channel_id);
         return ChannelModel.call("channel_fold", [], {uuid : channel.uuid}).then(function () {
             channel.is_folded = !channel.is_folded;
         });
@@ -480,52 +588,7 @@ function init () {
     var load_menu_id = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_menu_root_chat"]);
     var load_action_id = ir_model.call("xmlid_to_res_id", ["mail.mail_channel_action_client_chat"]);
 
-    bus.on('notification', null, function (notification) {
-        var model = notification[0][1];
-        if (model === 'ir.needaction') {
-            // new message in the inbox
-            var message = notification[1];
-            message = add_message(message, { channel_id: 'channel_inbox', show_notification: true} );
-            needaction_counter = needaction_counter + 1;
-            chat_manager.bus.trigger('update_needaction', needaction_counter);
-        }
-        if (model === 'mail.channel') {
-            // new message in a channel
-            var message = notification[1];
-            var channel_id = message.channel_ids[0];
-            var channel = _.findWhere(channels, {id: channel_id});
-            if (channel) {
-                add_message(message, { channel_id: channel_id, show_notification: true });
-            }
-        }
-        if (model === 'res.partner') {
-            var chat_session = notification[1];
-            if (chat_session.info === "unsubscribe") {
-                var channel = _.findWhere(channels, {id: chat_session.id});
-                if (channel) {
-                    channels = _.without(channels, channel);
-                }
-                chat_manager.bus.trigger("unsubscribe_from_channel", chat_session.id);
-                return;
-            }
-            if ((chat_session.channel_type === "channel") && (chat_session.public === "private") && (chat_session.state === "open")) {
-                add_channel(chat_session, {autoswitch: false});
-                if (!chat_session.is_minimized) {
-                    web_client.do_notify(_t("Private Channel"), _t("You have been invited to: ") + chat_session.name);
-                }
-            }
-            // partner specific change (open a detached window for example)
-            if ((chat_session.state === "open") || (chat_session.state === "folded")) {
-                add_channel(chat_session, {autoswitch: false});
-                if (chat_session.is_minimized) {
-                    chat_manager.bus.trigger("open_chat", chat_session);
-                }
-            }
-            if (chat_session.state === "closed") {
-                chat_manager.bus.trigger("close_chat", chat_session);
-            }
-        }
-    });
+    bus.on('notification', null, on_notification);
 
     return $.when(load_menu_id, load_action_id, load_channels, load_emojis).then(function (menu_id, action_id) {
         discuss_ids = {

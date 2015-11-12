@@ -32,6 +32,7 @@ return Widget.extend({
         this.$input = this.$('.o_chat_input input');
 
         this.thread = new ChatThread(this, {
+            channel_id: this.channel_id,
             display_avatar: false,
             display_needactions: false,
             display_stars: this.options.display_stars,
