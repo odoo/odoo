@@ -121,7 +121,11 @@ class base_action_rule(osv.osv):
 
     @openerp.api.model
     def _get_actions(self, records, kinds):
-        """ Return the actions of the given kinds for records' model. """
+        """ Return the actions of the given kinds for records' model. The
+        returned actions' context contain an object to manage processing.
+        """
+        if '__action_done' not in self._context:
+            self = self.with_context(__action_done={})
         domain = [('model', '=', records._name), ('kind', 'in', kinds)]
         actions = self.with_context(active_test=True).search(domain)
         return actions.with_env(self.env)
@@ -170,7 +174,15 @@ class base_action_rule(osv.osv):
 
     @openerp.api.multi
     def _process(self, records):
-        """ Process the action ``self`` on ``records``. """
+        """ Process action ``self`` on the ``records`` that have not been done yet. """
+        # filter out the records on which self has already been done, then mark
+        # remaining records as done (to avoid recursive processing)
+        action_done = self._context['__action_done']
+        records -= action_done.setdefault(self, records.browse())
+        if not records:
+            return
+        action_done[self] |= records
+
         # modify records
         values = {}
         if 'date_action_last' in records._fields:
@@ -207,20 +219,15 @@ class base_action_rule(osv.osv):
             """ Instanciate a create method that processes action rules. """
             @openerp.api.model
             def create(self, vals):
-                # avoid loops or cascading actions
-                if self._context.get('action'):
-                    return create.origin(self, vals)
-
-                # call original method with a modified context
-                record = create.origin(self.with_context(action=True), vals)
-
                 # retrieve the action rules to possibly execute
-                actions = record.env['base.action.rule']._get_actions(record, ['on_create', 'on_create_or_write'])
+                actions = self.env['base.action.rule']._get_actions(self, ['on_create', 'on_create_or_write'])
+
+                # call original method
+                record = create.origin(self.with_env(actions.env), vals)
 
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions:
-                    if action._filter_post(record):
-                        action._process(record)
+                    action._process(action._filter_post(record))
 
                 return record.with_env(self.env)
 
@@ -234,21 +241,12 @@ class base_action_rule(osv.osv):
             #
             @openerp.api.multi
             def _write(self, vals):
-                # avoid loops or cascading actions
-                if self._context.get('action'):
-                    return _write.origin(self, vals)
-
-                # modify context
-                records = self.with_context(action=True)
-
                 # retrieve the action rules to possibly execute
-                actions = records.env['base.action.rule']._get_actions(records, ['on_write', 'on_create_or_write'])
+                actions = self.env['base.action.rule']._get_actions(self, ['on_write', 'on_create_or_write'])
+                records = self.with_env(actions.env)
 
-                # check preconditions
-                pre = {
-                    action: action._filter_pre(records)
-                    for action in actions
-                }
+                # check preconditions on records
+                pre = {action: action._filter_pre(records) for action in actions}
 
                 # read old values before the update
                 old_values = {
@@ -261,9 +259,7 @@ class base_action_rule(osv.osv):
 
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions.with_context(old_values=old_values):
-                    post = action._filter_post(pre[action])
-                    if post:
-                        action._process(post)
+                    action._process(action._filter_post(pre[action]))
                 return True
 
             return _write
@@ -272,20 +268,13 @@ class base_action_rule(osv.osv):
             """ Instanciate an unlink method that processes action rules. """
             @openerp.api.multi
             def unlink(self, **kwargs):
-                if self._context.get('action'):
-                    return unlink.origin(self, **kwargs)
-
-                # modify context
-                records = self.with_context(action=True)
-
                 # retrieve the action rules to possibly execute
-                actions = records.env['base.action.rule']._get_actions(records, ['on_unlink'])
+                actions = self.env['base.action.rule']._get_actions(self, ['on_unlink'])
+                records = self.with_env(actions.env)
 
                 # check conditions, and execute actions on the records that satisfy them
                 for action in actions:
-                    pre = action._filter_post(records)
-                    if pre:
-                        action._process(pre)
+                    action._process(action._filter_post(pre[action]))
 
                 # call original method
                 return unlink.origin(self, **kwargs)
