@@ -6,9 +6,6 @@ from openerp import api, fields, models, _
 # ----------------------------------------------------------
 # Work Centers
 # ----------------------------------------------------------
-# capacity_hour : capacity per hour. default: 1.0.
-#          Eg: If 5 concurrent operations at one time: capacity = 5 (because 5 employees)
-# unit_per_cycle : how many units are produced for one cycle
 
 
 class MrpWorkcenter(models.Model):
@@ -16,30 +13,42 @@ class MrpWorkcenter(models.Model):
     _description = 'Work Center'
     _inherits = {'resource.resource': "resource_id"}
 
-    note = fields.Text(string='Description', help="Description of the Work Center. Explain here what's a cycle according to this Work Center.")
-    capacity_per_cycle = fields.Float(string='Capacity per Cycle', default=1.0, help="Number of operations this Work Center can do in parallel. If this Work Center represents a team of 5 workers, the capacity per cycle is 5.")
-    time_cycle = fields.Float(string='Time for 1 cycle (hour)', help="Time in hours for doing one cycle.")
-    time_start = fields.Float(string='Time before prod.', help="Time in hours for the setup.")
-    time_stop = fields.Float(string='Time after prod.', help="Time in hours for the cleaning.")
-    costs_hour = fields.Float(string='Cost per hour', help="Specify Cost of Work Center per hour.")
-    costs_hour_account_id = fields.Many2one('account.analytic.account', string='Hour Account',
-                                            help="Fill this only if you want automatic analytic accounting entries on production orders.")
-    costs_cycle = fields.Float(string='Cost per cycle', help="Specify Cost of Work Center per cycle.")
-    costs_cycle_account_id = fields.Many2one('account.analytic.account', string='Cycle Account',
-                                             help="Fill this only if you want automatic analytic accounting entries on production orders.")
-    costs_general_account_id = fields.Many2one('account.account', string='General Account', domain=[('deprecated', '=', False)])
-    resource_id = fields.Many2one('resource.resource', string='Resource', ondelete='cascade', required=True)
-    product_id = fields.Many2one('product.product', string='Work Center Product', help="Fill this product to easily track your production costs in the analytic accounting.")
-    resource_type = fields.Selection([('user', 'Human'), ('material', 'Material')], string='Resource Type', required=True, default='material')
 
-    @api.onchange('product_id')
-    def on_change_product_cost(self):
-        if self.product_id:
-            self.costs_hour = self.product_id.standard_price
+    note = fields.Text(string='Description', help="Description of the Work Center. ")
+    capacity = fields.Float(string='Capacity', default=1.0, help="Number of pieces work center can produce in parallel.")
+    time_start = fields.Float(string='Time before prod.', help="Time in minutes for the setup.")
+    sequence = fields.Integer(required=True, default=1, help="Gives the sequence order when displaying a list of work centers.")
+    time_stop = fields.Float(string='Time after prod.', help="Time in minutes for the cleaning.")
+    resource_id = fields.Many2one('resource.resource', string='Resource', ondelete='cascade', required=True)
+    order_ids = fields.One2many('mrp.production.work.order', 'workcenter_id', string="Orders")
+    routing_line_ids = fields.One2many('mrp.routing.workcenter', 'workcenter_id', "Routing Lines")
+    nb_orders = fields.Integer('Computed Orders', compute='_compute_orders')
+    color = fields.Integer('Color')
+    count_ready_order = fields.Integer(compute='_compute_orders', string="Total Ready Orders")
+    count_progress_order = fields.Integer(compute='_compute_orders', string="Total Running Orders")
+    stage_id = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'In Progress')], string='Status', default="normal", store=True, compute="_compute_stages")
 
     @api.multi
-    @api.constrains('capacity_per_cycle')
-    def _check_capacity_per_cycle(self):
+    @api.depends('order_ids', 'order_ids.state')
+    def _compute_stages(self):
+        for workcenter in self:
+            if workcenter.count_progress_order:
+                workcenter.stage_id = 'done'
+            else:
+                workcenter.stage_id = 'normal'
+
+
+    @api.depends('order_ids')
+    def _compute_orders(self):
+        WorkcenterLine = self.env['mrp.production.work.order']
+        for workcenter in self:
+            workcenter.nb_orders = WorkcenterLine.search_count([('workcenter_id', '=', workcenter.id), ('state', '!=', 'done')]) #('state', 'in', ['pending', 'startworking'])
+            workcenter.count_ready_order = WorkcenterLine.search_count([('workcenter_id', '=', workcenter.id), ('state', '=', 'ready')])
+            workcenter.count_progress_order = WorkcenterLine.search_count([('workcenter_id', '=', workcenter.id), ('state', '=', 'progress')])
+
+    @api.multi
+    @api.constrains('capacity')
+    def _check_capacity(self):
         for obj in self:
-            if obj.capacity_per_cycle <= 0.0:
-                raise ValueError(_('The capacity per cycle must be strictly positive.'))
+            if obj.capacity <= 0.0:
+                raise ValueError(_('The capacity must be strictly positive.'))

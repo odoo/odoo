@@ -148,6 +148,10 @@ class stock_config_settings(osv.osv_memory):
             implied_group='stock.group_stock_multi_locations'),
         'group_stock_multi_warehouses': fields.boolean('Manage several warehouses',
             implied_group='stock.group_stock_multi_warehouses'),
+        'module_mrp_plm': fields.selection([
+        (0, "No product lifecycle management"),
+        (1, "Manage engineering changes, versions and documents")
+        ], string="PLM"),
     }
 
     def onchange_adv_location(self, cr, uid, ids, group_stock_adv_location, context=None):

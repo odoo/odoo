@@ -29,8 +29,15 @@ class ChangeProductionQty(models.TransientModel):
         return res
 
     def _update_product_to_produce(self, production, qty):
-        for move in production.move_created_ids:
-            move.write({'product_uom_qty': qty})
+        production_move = production.move_finished_ids.filtered(lambda x:x.product_id.id == production.product_id.id and x.state not in ('done', 'cancel'))
+        if production_move:
+            production_move.write({'product_uom_qty': qty})
+        else:
+            production._make_production_produce_line()
+            production_move = production.move_finished_ids.filtered(lambda x : x.state not in ('done', 'cancel') and production.product_id.id == x.product_id.id)
+            production_move.write({'product_uom_qty': qty})
+
+
 
     @api.multi
     def change_prod_qty(self):
@@ -49,26 +56,26 @@ class ChangeProductionQty(models.TransientModel):
         MrpProduction = self.env['mrp.production']
         for wizard_qty in self:
             production = MrpProduction.browse(record_id)
+            produced = sum(production.move_finished_ids.mapped('quantity_done'))
+            if wizard_qty.product_qty < produced:
+                raise UserError(_("You have already produced %d qty , Please give update quantity more then %d ")%(produced, produced))
             production.write({'product_qty': wizard_qty.product_qty})
-            production.action_compute()
-
-            for move in production.move_line_ids:
+            #production.action_compute() 
+            #TODO: Do we still need to change the quantity of a production order?
+            production_move = production.move_finished_ids.filtered(lambda x : x.state not in ('done', 'cancel') and production.product_id.id == x.product_id.id)
+            for move in production.move_raw_ids:
                 bom_point = production.bom_id
                 if not bom_point:
                     bom_point = MrpBom._bom_find(product=production.product_id)
                     if not bom_point:
                         raise UserError(_("Cannot find bill of material for this production."))
                     production.write({'bom_id': bom_point.id})
-
                 if not bom_point:
                     raise UserError(_("Cannot find bill of material for this production."))
-
-                factor = production.product_qty * production.product_uom_id.factor / bom_point.product_uom_id.factor
-                product_details, workcenter_details = bom_point.explode(production.product_id, factor / bom_point.product_qty, [])
-                for r in product_details:
-                    if r['product_id'] == move.product_id.id:
-                        move.write({'product_uom_qty': r['product_qty']})
-            if production.move_prod_id:
-                production.move_prod_id.write({'product_uom_qty':  wizard_qty.product_qty})
-            self._update_product_to_produce(production, wizard_qty.product_qty)
+                factor = (production.product_qty - production.qty_produced) * production.product_uom_id.factor / bom_point.product_uom_id.factor
+                production.bom_id.explode(factor / production.bom_id.product_qty, production._update_move)
+            self._update_product_to_produce(production, production.product_qty - production.qty_produced)
+            moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            moves.do_unreserve()
+            moves.action_assign()
         return {}

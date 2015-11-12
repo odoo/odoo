@@ -467,7 +467,7 @@ class stock_quant(osv.osv):
                 domain += [('package_id', '=', False)]
             domain += [('location_id', '=', ops.location_id.id)]
         else:
-            restrict_lot_id = move.restrict_lot_id.id
+            restrict_lot_id = move.restrict_lot_id.id or lot_id
             location = move.location_id
             domain += [('owner_id', '=', move.restrict_partner_id.id)]
             domain += [('location_id', 'child_of', move.location_id.id)]
@@ -1746,17 +1746,46 @@ class stock_picking(models.Model):
                 raise UserError(_('Please process some quantities to put in the pack first!'))
         return package_id
 
+    def button_scrap(self, cr, uid, ids, context=None):
+        picking = self.browse(cr, uid, ids, context=context)
+        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'stock.stock_scrap_form_view2')
+        return {
+            'name': _('Scrap'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.scrap',
+            'view_id': view_id,
+            'type': 'ir.actions.act_window',
+            'context': {'default_picking_id': ids[0], 'product_ids': picking.pack_operation_product_ids.mapped('product_id').ids},
+            'target': 'new',
+        }
+
 
 class stock_production_lot(osv.osv):
     _name = 'stock.production.lot'
     _inherit = ['mail.thread']
     _description = 'Lot/Serial'
+
+    def _product_uom(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for lot in self.browse(cr, uid, ids, context=context):
+            res[lot.id] = lot.product_id.uom_id.id
+        return res
+
+    def _product_qty(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for lot in self.browse(cr, uid, ids, context=context):
+            res[lot.id] = sum(lot.quant_ids.mapped('qty'))
+        return res
+
     _columns = {
         'name': fields.char('Serial Number', required=True, help="Unique Serial Number"),
         'ref': fields.char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's serial number"),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', 'in', ['product', 'consu'])]),
         'quant_ids': fields.one2many('stock.quant', 'lot_id', 'Quants', readonly=True),
         'create_date': fields.datetime('Creation Date'),
+        'product_uom': fields.function(_product_uom, type='many2one', relation='product.uom', string='Unit of Measure'),
+        'product_qty': fields.function(_product_qty, type='float', string='Quantity'),
     }
     _defaults = {
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').next_by_code(y, z, 'stock.lot.serial'),
@@ -3694,6 +3723,7 @@ class stock_warehouse(osv.osv):
         pull_obj.write(cr, uid, warehouse.mto_pull_id.id, mto_pull_vals, context=context)
         return True
 
+    @api.cr_uid_records_context
     def create_sequences_and_picking_types(self, cr, uid, warehouse, context=None):
         seq_obj = self.pool.get('ir.sequence')
         picking_type_obj = self.pool.get('stock.picking.type')
@@ -4538,7 +4568,7 @@ class stock_pack_operation(osv.osv):
             if pack.product_id.tracking != 'none':
                 qty_done = sum([x.qty for x in pack.pack_lot_ids])
                 self.pool['stock.pack.operation'].write(cr, uid, [pack.id], {'qty_done': qty_done}, context=context)
-        return {'type': 'ir.actions.act_window_close'}
+        return True
 
     def split_lot(self, cr, uid, ids, context=None):
         context = context or {}

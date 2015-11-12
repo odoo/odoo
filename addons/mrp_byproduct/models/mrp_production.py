@@ -6,10 +6,14 @@ from openerp import api, models, _
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
+
     @api.multi
-    def action_confirm(self):
+    def generate_moves(self, properties=None):
+        """ 
+            Generates moves and work orders
+        """
         StockMove = self.env['stock.move']
-        picking_id = super(MrpProduction, self).action_confirm()
+        picking_id = super(MrpProduction, self).generate_moves(properties=properties)
         for production in self.filtered(lambda p: p.bom_id):
             source = production.product_id.property_stock_production
             for sub_product in production.bom_id.subproduct_ids:

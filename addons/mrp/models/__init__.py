@@ -4,7 +4,6 @@
 import company
 import mrp_bom
 import mrp_production
-import mrp_property
 import mrp_routing
 import mrp_workcenter
 import procurement

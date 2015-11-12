@@ -34,8 +34,8 @@ class TestBomWithServiceTypeProduct(common.TransactionCase):
             'bom_line_ids': [(0, 0, {
                 'product_id': self.product_2.id,
                 'product_uom_id': self.product_uom_unit.id,
-                'product_qty': 1.0,
-                'product_id': self.product_44.id,
+                'product_qty': 1.0,}), 
+                (0, 0, {'product_id': self.product_44.id,
                 'product_uom_id': self.product_uom_unit.id,
                 'product_qty': 1.0})]})
 
@@ -44,32 +44,21 @@ class TestBomWithServiceTypeProduct(common.TransactionCase):
         self.mrp_production_service_mo1 = self.MrpProduction.create({
             'product_id': self.product_3.id,
             'product_qty': 1.0,
+            'product_uom_id': self.product_uom_unit.id,
             'bom_id': self.bill_of_material_product.id,
             'date_planned': fields.Datetime.now()})
 
     def test_00_bom_with_service_type_product(self):
 
-    # I compute the data of production order.
-
-        context = {"lang": "en_US", "tz": False, "search_default_Current": 1, "active_model": "ir.ui.menu", "active_ids": [self.mrp_production_action.id], "active_id": self.mrp_production_action.id, }
-        self.mrp_production_service_mo1.with_context(context).action_compute()
-
-    # I confirm the production order.
-        self.mrp_production_service_mo1.signal_workflow('button_confirm')
-
     # I reserved the product.
+        context = {"lang": "en_US", "tz": False, "search_default_Current": 1, "active_model": "ir.ui.menu", "active_ids": [self.mrp_production_action.id], "active_id": self.mrp_production_action.id, }
+
         self.assertEqual(self.mrp_production_service_mo1.state, 'confirmed', "Production order should be confirmed.")
-        self.mrp_production_service_mo1.force_production()
 
     #I produce product.
         context.update({'active_id': self.mrp_production_service_mo1.id})
 
-        self.mrp_product_produce_1 = self.MrpProductProduce.with_context(context).create({
-            'mode': 'consume_produce'})
-
-        lines = self.mrp_product_produce_1.on_change_qty(1.0, [])
-        self.mrp_product_produce_1.write(lines['value'])
-        self.mrp_product_produce_1.do_produce()
+        self.mrp_product_produce_1 = self.MrpProductProduce.with_context(context).create({})
 
     # I check production order after produced.
-        self.assertEqual(self.mrp_production_service_mo1.state, 'done', "Production order should be closed.")
+        self.assertEqual(self.mrp_production_service_mo1.state, 'confirmed', "Production order should only be closed manually.")

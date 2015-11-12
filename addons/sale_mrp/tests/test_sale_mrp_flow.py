@@ -53,9 +53,8 @@ class TestSaleMrpFlow(common.TransactionCase):
             return self.MrpBom.create({
                 'product_tmpl_id': product_tmpl_id,
                 'product_qty': qty,
-                'type': bom_type,
-                'product_efficiency': 1.0,
-                'product_uom': uom_id})
+                'bom_type': bom_type,
+                'product_uom_id': uom_id})
 
         self.uom_kg = self.ProductUom.create({
             'name': 'Test-KG',
@@ -267,7 +266,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         # --------------------------------------------------
 
         mnf_product_d.action_assign()
-        self.assertEqual(mnf_product_d.state, 'ready', 'Manufacturing order should be ready.')
+        self.assertEqual(mnf_product_d.availability, 'assigned', 'Availability should be assigned')
         self.assertEqual(move.state, 'assigned', "Wrong state in 'To consume line' of manufacturing order.")
 
         # ------------------
@@ -275,14 +274,12 @@ class TestSaleMrpFlow(common.TransactionCase):
         # ------------------
 
         produce_d = self.ProductProduce.with_context({'active_ids': [mnf_product_d.id], 'active_id': mnf_product_d.id}).create({
-            'mode': 'consume_produce',
             'product_qty': 20})
-        lines = produce_d.on_change_qty(mnf_product_d.product_qty, [])
-        produce_d.write(lines['value'])
         produce_d.do_produce()
+        mnf_product_d.post_inventory()
 
         # Check state of manufacturing order.
-        self.assertEqual(mnf_product_d.state, 'done', 'Manufacturing order should be done.')
+        self.assertEqual(mnf_product_d.state, 'confirmed', 'Manufacturing order should still be in confirmed state.')
         # Check available quantity of product D.
         self.assertEqual(product_d.qty_available, 20, 'Wrong quantity available of product D.')
 
@@ -294,7 +291,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         move = self.StockMove.search([('raw_material_production_id', '=', mnf_product_a.id), ('product_id', '=', product_d.id)])
         self.assertEqual(move.state, 'assigned', "Wrong state in 'To consume line' of manufacturing order.")
 
-        # Create inventry for product C.
+        # Create inventory for product C.
         # ------------------------------
         # Need product C ( 20 kg + 6 kg + 1502.5 gm = 27.5025 kg)
         # -------------------------------------------------------
@@ -317,7 +314,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         # ---------------------------------------------------
 
         mnf_product_a.action_assign()
-        self.assertEqual(mnf_product_a.state, 'ready', 'Manufacturing order should be ready.')
+        self.assertEqual(mnf_product_a.availability, 'assigned', 'Manufacturing order inventory state should be available.')
         moves = self.StockMove.search([('raw_material_production_id', '=', mnf_product_a.id), ('product_id', '=', product_c.id)])
 
         # Check product c move line state.
@@ -327,13 +324,12 @@ class TestSaleMrpFlow(common.TransactionCase):
         # Produce product A.
         # ------------------
         produce_a = self.ProductProduce.with_context(
-            {'active_ids': [mnf_product_a.id], 'active_id': mnf_product_a.id}).create({'mode': 'consume_produce'})
-        lines = produce_a.on_change_qty(mnf_product_a.product_qty, [])
-        produce_a.write(lines['value'])
+            {'active_ids': [mnf_product_a.id], 'active_id': mnf_product_a.id}).create({})
         produce_a.do_produce()
+        mnf_product_a.post_inventory()
 
         # Check state of manufacturing order product A.
-        self.assertEqual(mnf_product_a.state, 'done', 'Manufacturing order should be done.')
+        self.assertEqual(mnf_product_a.state, 'confirmed', 'Manufacturing order should still be in confirmed state.')
         # Check product A avaialble quantity should be 120.
         self.assertEqual(product_a.qty_available, 120, 'Wrong quantity available of product A.')
 

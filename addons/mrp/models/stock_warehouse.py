@@ -3,13 +3,14 @@
 
 from openerp import api, fields, models, _
 from openerp.exceptions import UserError
-
+from openerp.tools import float_compare
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
     manufacture_to_resupply = fields.Boolean(string='Manufacture in this Warehouse', default=True, help="When products are manufactured, they can be manufactured in this warehouse.")
     manufacture_pull_id = fields.Many2one('procurement.rule', string='Manufacture Rule')
+    manu_type_id = fields.Many2one('stock.picking.type', domain=[('code', '=', 'mrp_operation')], string='Manufacturing Picking Type')
 
     def _get_manufacture_pull_rule(self):
         try:
@@ -37,6 +38,35 @@ class StockWarehouse(models.Model):
             manufacture_pull_vals = warehouse._get_manufacture_pull_rule()
             self.manufacture_pull_id = self.env['procurement.rule'].create(manufacture_pull_vals)
         return res
+    
+    def _create_manufacturing_picking_type(self):
+        picking_type_obj = self.env['stock.picking.type']
+        seq_obj = self.env['ir.sequence']
+        for warehouse in self:
+            #man_seq_id = seq_obj.sudo().create('name': warehouse.name + _(' Sequence Manufacturing'), 'prefix': warehouse.code + '/MANU/', 'padding')
+            wh_stock_loc = warehouse.lot_stock_id
+            seq = seq_obj.search([('code', '=', 'mrp.production')], limit=1)
+            other_pick_type = picking_type_obj.search([('warehouse_id', '=', warehouse.id)], order = 'sequence desc', limit=1)
+            color = other_pick_type and other_pick_type.color or 0
+            max_sequence = other_pick_type and other_pick_type.sequence or 0
+            manu_type = picking_type_obj.create({
+                'name': _('Manufacturing'),
+                'warehouse_id': warehouse.id,
+                'code': 'mrp_operation',
+                'use_create_lots': True,
+                'use_existing_lots': False,
+                'sequence_id': seq.id,
+                'default_location_src_id': wh_stock_loc.id,
+                'default_location_dest_id': wh_stock_loc.id,
+                'sequence': max_sequence + 1,
+                'color': color})
+            warehouse.write({'manu_type_id': manu_type.id})
+
+    @api.v7
+    def create_sequences_and_picking_types(self, cr, uid, warehouse, context=None):
+        res = super(StockWarehouse, self).create_sequences_and_picking_types(cr, uid, warehouse, context=context)
+        warehouse._create_manufacturing_picking_type()
+        return res
 
     @api.multi
     def write(self, vals):
@@ -46,8 +76,13 @@ class StockWarehouse(models.Model):
                     if not warehouse.manufacture_pull_id:
                         manufacture_pull_vals = warehouse._get_manufacture_pull_rule()
                         warehouse.manufacture_pull_id = self.env['procurement.rule'].create(manufacture_pull_vals)
+                    if not warehouse.manu_type_id:
+                        warehouse._create_manufacturing_picking_type()
+                    warehouse.manu_type_id.active = True
             else:
                 for warehouse in self:
+                    if warehouse.manu_type_id:
+                        warehouse.manu_type_id.active = False
                     if warehouse.manufacture_pull_id:
                         warehouse.manufacture_pull_id.unlink()
         return super(StockWarehouse, self).write(vals)

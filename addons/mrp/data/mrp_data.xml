@@ -16,7 +16,25 @@ This application supports complete integration and production scheduling for sto
         <record id="sequence_mrp_prod" model="ir.sequence">
             <field name="name">Production order</field>
             <field name="code">mrp.production</field>
-            <field name="prefix">MO</field>
+            <field name="prefix">MO/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="sequence_mrp_route" model="ir.sequence">
+            <field name="name">Routing</field>
+            <field name="code">mrp.routing</field>
+            <field name="prefix">RO/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="sequence_mrp_unbuild" model="ir.sequence">
+            <field name="name">Unbuild</field>
+            <field name="code">mrp.unbuild</field>
+            <field name="prefix">UB/</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>

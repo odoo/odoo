@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="mrp_workcenter_view_inherit" model="ir.ui.view">
+            <field name="name">mrp.workcenter.form.inherit</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+            <field name="arch" type="xml">
+                <group name="capacity" position="after">
+                    <group string="Costing Information">
+                        <field name="costs_hour"/>
+                        <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+</odoo>
