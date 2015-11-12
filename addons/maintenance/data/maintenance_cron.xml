@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+	<record model="ir.cron" id="maintenance_requests_cron">
+        <field name="name">Generate preventive maintenance requests</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model" eval="'maintenance.equipment'"/>
+        <field name="function" eval="'_cron_generate_requests'"/>
+        <field name="args" eval="'()'" />
+    </record>
+</odoo>
