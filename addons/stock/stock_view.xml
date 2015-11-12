@@ -204,11 +204,6 @@
                                     <field name="picking_id" invisible="1" />
                                     <field name="create_date" invisible="1" />
                                     <field name="date_expected" invisible="1" />
-                                    <button name="%(stock.move_scrap)d"
-                                       string="Scrap Products" type="action"
-                                       icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                                       states="draft,waiting,confirmed,assigned"
-                                       groups="base.group_user"/>
                                     <field name="scrapped" invisible="1"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
@@ -242,6 +237,12 @@
         </record>
         <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="30"/>
 
+        <record model="ir.actions.act_window" id="lot_open_quants">
+            <field name="name">Quants</field>
+            <field name="context">{'search_default_lot_id': active_id}</field>
+            <field name="res_model">stock.quant</field>
+        </record>
+
         <record id="view_production_lot_form" model="ir.ui.view">
             <field name="name">stock.production.lot.form</field>
             <field name="model">stock.production.lot</field>
@@ -249,7 +250,9 @@
                 <form string="Serial Number / Lots">
                     <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="%(lot_open_quants)d" icon="fa-arrows" class="oe_stat_button" string="Locate" type="action" attrs="{'invisible': [('quant_ids','=',[])]}"/>
                         <button name="action_traceability" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
+                        <field name="quant_ids" invisible="True"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -260,6 +263,11 @@
                     <group name="main_group">
                         <group>
                             <field name="product_id"/>
+                            <label for="product_qty"/>
+                            <div class="o_row">
+                                <field name="product_qty"/>
+                                <field name="product_uom" groups="product.group_uom"/>
+                            </div>
                             <field name="ref"/>
                         </group>
                     </group>
@@ -896,10 +904,13 @@
                     <button name="do_prepare_partial" attrs="{'invisible': ['|', ('launch_pack_operations', '=', True), '|', ('state', 'not in', ('assigned', 'partially_available')), ('pack_operation_ids', '!=', [])]}"
                             string="Reset Operations" type="object"/>
                     <field name="launch_pack_operations" invisible="1"/>
+                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('draft', 'cancel'))]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <field name="has_scrap_move" invisible="True"/>
+                        <button class="oe_stat_button" name="button_scrapped_moves" string="Scrapped Moves" type="object" icon="fa-arrows-v" attrs="{'invisible': [('has_scrap_move', '=', False)]}"/>
                     </div>
                     <h1>
                         <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
@@ -1376,7 +1387,7 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0">
-                    <field name="name" invisible="1"/>
+                    <field name="name"/>
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
                     <field name="picking_type_id" invisible="1"/>
@@ -1384,15 +1395,10 @@
                     <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
                     <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom)"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
-                    <button name="%(stock.move_scrap)d"
-                        string="Scrap Products" type="action"
-                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                        states="draft,waiting,confirmed,assigned"
-                        groups="stock.group_stock_user"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                     <field name="date" groups="base.group_no_one"/>
-                    <field name="date_expected"/>
+                    <field name="date_expected" invisible="context.get('scrap_move')"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -1411,11 +1417,6 @@
                     <field name="location_id" invisible="1"/>
                     <field name="create_date" invisible="1" />
                     <field name="date_expected" invisible="1" />
-                    <button name="%(stock.move_scrap)d"
-                       string="Scrap Products" type="action"
-                       icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                       states="draft,waiting,confirmed,assigned"
-                       groups="stock.group_stock_user"/>
                     <field name="scrapped" invisible="1"/>
                     <field name="availability" invisible="1"/>
                     <field name="reserved_availability" invisible="1"/>
@@ -1445,9 +1446,6 @@
                                     <field name="product_uom_qty"
                                         on_change="onchange_quantity(product_id, product_uom_qty, product_uom)"/>
                                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
-                                    <button name="%(stock.move_scrap)d" class="btn-default"
-                                            string="Scrap" type="action" context="{'scrap': True}"
-                                            states="draft,waiting,confirmed,assigned"/> <!-- FIXME icon="terp-gtk-jump-to-ltr" -->
                                 </div>
                                 <field name="name"/>
                             </group>
@@ -1503,11 +1501,6 @@
                         <div>
                             <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom)" class="oe_inline"/>
                             <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
-                            <button name="%(stock.move_scrap)d"
-                                string="Scrap" type="action"
-                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                                states="draft,waiting,confirmed,assigned"
-                                groups="base.group_user"/>
                         </div>
                         <field name="product_tmpl_id" invisible="1"/>
                     </group>
@@ -1640,11 +1633,6 @@
                     <field name="location_id" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
                     <field name="create_date" invisible="1"/>
-                    <button name="%(stock.move_scrap)d"
-                        string="Scrap Products" type="action"
-                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                        states="draft,waiting,confirmed,assigned"
-                        groups="stock.group_stock_user"/>
                     <field name="state"/>
                 </tree>
             </field>

@@ -21,7 +21,7 @@ class bom_structure(report_sxw.rml_parse):
                 res['pname'] = l.product_id.name_get()[0][1]
                 res['pcode'] = l.product_id.default_code
                 res['pqty'] = l.product_qty
-                res['uname'] = l.product_uom.name
+                res['uname'] = l.product_uom_id.name
                 res['level'] = level
                 res['code'] = l.bom_id.code
                 result.append(res)

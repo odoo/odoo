@@ -51,7 +51,7 @@ Dashboard / Reports for Inventory Management will include:
         'security/ir.model.access.csv',
         'stock_data.xml',
         'stock_data.yml',
-        'wizard/stock_move_view.xml',
+        'stock_scrap_view.xml',
         'wizard/stock_change_product_qty_view.xml',
         'wizard/stock_return_picking_view.xml',
         'wizard/make_procurement_view.xml',

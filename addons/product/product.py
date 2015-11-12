@@ -743,11 +743,14 @@ class product_template(osv.osv):
     ]
 
     def name_get(self, cr, user, ids, context=None):
-        if context is None:
-            context = {}
-        if 'partner_id' in context:
-            pass
-        return super(product_template, self).name_get(cr, user, ids, context)
+        result = []
+        for product in self.browse(cr, user, ids, context=context):
+            name = product.name
+            code = product.default_code
+            if code:
+                name = '[%s] %s' % (code,name)
+            result.append((product.id, name))
+        return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         # Only use the product.product heuristics if there is a search term and the domain

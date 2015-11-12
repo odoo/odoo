@@ -10,5 +10,6 @@ import wizard
 import res_config
 import res_company
 import web_planner
+import stock_scrap
 
 import controllers

@@ -7,3 +7,4 @@ import test_mrp_users
 import test_order_demo
 import test_order_process
 import test_cancel_order
+import test_workorder_operation

@@ -8,9 +8,6 @@ class TestCancelOrder(TestOrderDemo):
 
     def test_00_cancel_order(self):
 
-    # I first confirm order for PC Assemble SC349.
-        self.mrp_production_test1.signal_workflow('button_confirm')
-
     # Now I cancel the production order.
         self.mrp_production_test1.action_cancel()
 

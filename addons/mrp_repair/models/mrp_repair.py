@@ -265,7 +265,7 @@ class MrpRepair(models.Model):
                             'price_subtotal': fee.product_uom_qty * fee.price_unit
                         })
                         fee.write({'invoiced': True, 'invoice_line_id': invoice_fee.id})
-                        inv.compute_taxes()
+                        invoice.compute_taxes()
                 res[repair.id] = invoice.id
         return res
 

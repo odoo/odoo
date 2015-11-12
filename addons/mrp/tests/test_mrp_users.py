@@ -11,7 +11,6 @@ class TestMrpUsers(common.TransactionCase):
 
         self.ResUsers = self.env['res.users']
         self.res_users_mrp_manager = self.env.ref('mrp.group_mrp_manager')
-        self.group_account_user = self.env.ref('account.group_account_user')
         self.main_company = self.env.ref('base.main_company')
         self.group_mrp_user = self.env.ref('mrp.group_mrp_user')
 
@@ -24,7 +23,7 @@ class TestMrpUsers(common.TransactionCase):
             'login': 'mam',
             'password': 'mam',
             'email': 'mrp_manager@yourcompany.com',
-            'groups_id': [(6, 0, [self.res_users_mrp_manager.id, self.group_account_user.id])]
+            'groups_id': [(6, 0, [self.res_users_mrp_manager.id])]
         })
 
         # Create a user as 'MRP User'
