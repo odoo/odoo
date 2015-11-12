@@ -9,6 +9,7 @@
     'depends': ['hr', 'maintenance'],
     'summary': 'Equipments, Assets, Internal Hardware, Allocation Tracking',
     'data': [
+        'security/equipment.xml',
         'views/maintenance_views.xml',
     ],
     'demo': [],

@@ -2,12 +2,12 @@
 <odoo>
 
     <!-- equiment.request : views -->
-    <record id="hr_equipment_request_view_search_inherit_hr" model="ir.ui.view">
-        <field name="name">hr.equipment.request.view.search.inherit.hr</field>
-        <field name="model">hr.equipment.request</field>
+    <record id="maintenance_request_view_search_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.request.view.search.inherit.hr</field>
+        <field name="model">maintenance.request</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_request_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="field[@name='user_id']" position="after">
+            <xpath expr="field[@name='technician_user_id']" position="after">
                 <field name="employee_id"/>
             </xpath>
             <xpath expr="//filter[@name='my_requests']" position="replace">
@@ -19,9 +19,9 @@
         </field>
     </record>
 
-    <record id="hr_equipment_request_view_form_inherit_hr" model="ir.ui.view">
-        <field name="name">hr.equipment.request.view.form.inherit.hr</field>
-        <field name="model">hr.equipment.request</field>
+    <record id="maintenance_request_view_form_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.request.view.form.inherit.hr</field>
+        <field name="model">maintenance.request</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='owner_user_id']" position="replace">
@@ -30,9 +30,9 @@
         </field>
     </record>
 
-    <record id="hr_equipment_request_view_kanban_inherit_hr" model="ir.ui.view">
-        <field name="name">hr.equipment.request.view.kanban.inherit.hr</field>
-        <field name="model">hr.equipment.request</field>
+    <record id="maintenance_request_view_kanban_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.request.view.kanban.inherit.hr</field>
+        <field name="model">maintenance.request</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_request_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//span[@name='owner_user_id']" position="replace">
@@ -42,9 +42,9 @@
         </field>
     </record>
 
-    <record id="hr_equipment_request_view_tree_inherit_hr" model="ir.ui.view">
-        <field name="name">hr.equipment.request.view.tree.inherit.hr</field>
-        <field name="model">hr.equipment.request</field>
+    <record id="maintenance_request_view_tree_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.request.view.tree.inherit.hr</field>
+        <field name="model">maintenance.request</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_request_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='owner_user_id']" position="replace">
@@ -54,9 +54,9 @@
     </record>
 
     <!-- equiment : views -->
-    <record id="hr_equipment_view_form_inherit_hr" model="ir.ui.view">
-        <field name="name">hr.equipment.view.form.inherit.hr</field>
-        <field name="model">hr.equipment</field>
+    <record id="maintenance_equipment_view_form_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.equipment.view.form.inherit.hr</field>
+        <field name="model">maintenance.equipment</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='owner_user_id']" position="replace">
@@ -67,12 +67,12 @@
         </field>
     </record>
 
-    <record id="hr_equipment_view_kanban_inherit_hr" model="ir.ui.view">
-        <field name="name">hr.equipment.view.kanban.inherit.hr</field>
-        <field name="model">hr.equipment</field>
+    <record id="maintenance_equipment_view_kanban_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.equipment.view.kanban.inherit.hr</field>
+        <field name="model">maintenance.equipment</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='user_id']" position="after">
+            <xpath expr="//field[@name='technician_user_id']" position="after">
                 <field name="employee_id"/>
                 <field name="department_id"/>
             </xpath>
@@ -82,9 +82,9 @@
         </field>
     </record>
 
-    <record id="hr_equipment_view_tree_inherit_hr" model="ir.ui.view">
-        <field name="name">hr.equipment.view.tree.inherit.hr</field>
-        <field name="model">hr.equipment</field>
+    <record id="maintenance_equipment_view_tree_inherit_hr" model="ir.ui.view">
+        <field name="name">maintenance.equipment.view.tree.inherit.hr</field>
+        <field name="model">maintenance.equipment</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='owner_user_id']" position="replace">
