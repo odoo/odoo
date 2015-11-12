@@ -413,7 +413,7 @@ var Followers = form_common.AbstractField.extend({
         // If no more subtype followed, unsubscribe the follower
         if (!checklist.length) {
             if (!this.do_unfollow(ids)) {
-                $(event.target).attr("checked", "checked");
+                $(event.target).prop("checked", true);
             } else {
                 self.$('.o_subtypes_list ul').empty();
             }
