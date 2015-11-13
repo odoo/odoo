@@ -19,6 +19,7 @@ var ChannelModel = new Model('mail.channel', session.context);
 //----------------------------------------------------------------------------------
 var messages = [];
 var channels = [];
+var channel_defs = {};
 var emojis = [];
 var emoji_substitutions = {};
 var needaction_counter = 0;
@@ -535,11 +536,16 @@ var chat_manager = {
             .then(add_channel);
     },
     join_channel: function (channel_id, options) {
-        return ChannelModel
+        if (channel_id in channel_defs) {
+            return channel_defs[channel_id];
+        }
+        var def = ChannelModel
             .call('channel_join_and_get_info', [[channel_id]])
             .then(function (result) {
                 add_channel(result, options);
             });
+        channel_defs[channel_id] = def;
+        return def;
     },
 
     unsubscribe: function (channel) {
