@@ -69,7 +69,7 @@ function make_message (data) {
     var msg = {
         id: data.id,
         author_id: data.author_id,
-        body: data.body,
+        body: data.body || "",
         date: data.date,
         message_type: data.message_type,
         is_note: data.is_note,
@@ -418,7 +418,7 @@ function on_mark_as_unread_notification (data) {
 
 function on_chat_session_notification (chat_session) {
     if ((chat_session.channel_type === "channel") && (chat_session.public === "private") && (chat_session.state === "open")) {
-        add_channel(chat_session, {autoswitch: false, silent: true, hidden: true});
+        add_channel(chat_session, {autoswitch: false});
         if (!chat_session.is_minimized) {
             web_client.do_notify(_t("Private Channel"), _t("You have been invited to: ") + chat_session.name);
         }
@@ -557,6 +557,7 @@ var chat_manager = {
         }
         return def.then(function () {
             channels = _.without(channels, channel);
+            delete channel_defs[channel.id];
         });
     },
     close_chat_session: function (channel_id) {
