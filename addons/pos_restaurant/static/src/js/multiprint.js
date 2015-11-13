@@ -58,7 +58,7 @@ models.load_models({
                 if(url.indexOf('//') < 0){
                     url = 'http://'+url;
                 }
-                if(url.indexOf(':',5) < 0){
+                if(url.indexOf(':',url.indexOf('//')+2) < 0){
                     url = url+':8069';
                 }
                 var printer = new Printer(self,{url:url});
