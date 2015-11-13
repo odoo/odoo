@@ -9,14 +9,25 @@
             <t t-if="options.display_load_more &amp;&amp; options.display_order == ORDER.DESC"
                t-call="mail.ChatThread.LoadMore"/>
         </t>
-        <t t-if="!messages.length &amp;&amp; options.no_content_helper">
-            <div class="o_chat_help_message">
-                <t t-raw="options.no_content_helper"/>
-            </div>
+        <t t-if="!messages.length &amp;&amp; options.display_help">
+            <t t-call="mail.EmptyChannel" />
         </t>
     </t>
 
+    <!-- When a channel is empty-->
+    <div t-name="mail.EmptyChannel">
+        <t t-if="options.channel_id==='channel_inbox'">
+            <div class="o_thread_title">Congratulation, your inbox is empty</div>
+            <div>New messages will appear here.</div>
+        </t>
+        <t t-if="options.channel_id==='channel_starred'">
+            <div class="o_thread_title">No message starred</div>
+            <div> You can mark any message as 'starred', and it will show up in this channel.</div>
+        </t>
+    </div>
+
     <t t-name="mail.ChatThread.Content">
+        <t t-if="options.messages_separator_position == 'top'" t-call="mail.MessagesSeparator"/>
         <t t-set="current_day" t-value="0"/>
         <t t-foreach="messages" t-as="message">
             <div t-if="current_day != message.date.split(' ')[0]" class="o_thread_date_separator">
@@ -79,7 +90,7 @@
                         on <a class="o_mail_redirect" href="#" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id"><t t-esc="message.record_name"/></a>
                     </t>
                     <t t-if="message.origin_id &amp;&amp; (message.origin_id !== options.channel_id)">
-                        (from <a class="o_channel_redirect" t-att-data-oe-id="message.origin_id" href="#"><t t-esc="message.origin_name"/>)</a>
+                        (from <a class="o_channel_redirect" t-att-data-oe-id="message.origin_id" href="#">#<t t-esc="message.origin_name"/></a>)
                     </t>
                     <span>
                         <i t-if="options.display_stars &amp;&amp; message.message_type != 'notification'"
@@ -101,6 +112,15 @@
                     <t t-call="mail.Attachment"/>
                 </t>
             </div>
+        </div>
+        <t t-if="options.messages_separator_position == message.id">
+            <t t-call="mail.MessagesSeparator"/>
+        </t>
+    </t>
+
+    <t t-name="mail.MessagesSeparator">
+        <div class="o_thread_new_messages_separator">
+            <span class="o_thread_separator_label">New messages</span>
         </div>
     </t>
 

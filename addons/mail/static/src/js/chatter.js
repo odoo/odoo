@@ -413,7 +413,7 @@ var Followers = form_common.AbstractField.extend({
         // If no more subtype followed, unsubscribe the follower
         if (!checklist.length) {
             if (!this.do_unfollow(ids)) {
-                $(event.target).attr("checked", "checked");
+                $(event.target).prop("checked", true);
             } else {
                 self.$('.o_subtypes_list ul').empty();
             }
@@ -689,7 +689,6 @@ var Chatter = form_common.AbstractField.extend({
 
     init: function () {
         this._super.apply(this, arguments);
-        this.messages = [];
         this.model = this.view.dataset.model;
         this.res_id = undefined;
         this.context = this.options.context || {};
@@ -721,12 +720,15 @@ var Chatter = form_common.AbstractField.extend({
         this.thread.on('redirect', this, this.on_redirect);
         this.thread.on('redirect_to_channel', this, this.on_channel_redirect);
 
+        this.ready = $.Deferred();
+
         var def1 = this._super.apply(this, arguments);
         var def2 = this.thread.appendTo(this.$el);
 
         return $.when(def1, def2).then(function () {
             chat_manager.bus.on('new_message', self, self.on_new_message);
             chat_manager.bus.on('update_message', self, self.on_update_message);
+            self.ready.resolve();
         });
     },
 
@@ -776,7 +778,7 @@ var Chatter = form_common.AbstractField.extend({
         var def;
         var channel = chat_manager.get_channel(channel_id);
         // If not registered to 'channel' yet, do it
-        if (channel.id !== channel_id) {
+        if (!channel) {
             def = chat_manager.join_channel(channel_id);
         }
         $.when(def).then(function () {
@@ -808,6 +810,10 @@ var Chatter = form_common.AbstractField.extend({
      * @override
      */
     render_value: function () {
+        return this.ready.then(this._render_value.bind(this));
+    },
+
+    _render_value: function () {
         // update context
         this.context = _.extend({
             default_res_id: this.view.datarecord.id || false,
