@@ -141,5 +141,14 @@
   </div>
 </template>
 
+<template id="products_add_to_cart" inherit_id="website_sale.products_add_to_cart">
+  <xpath expr="//div[@class='product_price']/t[1]" position="attributes">
+    <attribute name="t-if">len(product.product_variant_ids) == 1 and not len(product.optional_product_ids) &gt;= 1</attribute>
+  </xpath>
+  <xpath expr="//div[@class='product_price']/t[2]" position="attributes">
+    <attribute name="t-if">len(product.product_variant_ids) &gt; 1 or len(product.optional_product_ids) &gt;= 1</attribute>
+  </xpath>
+</template>
+
 </data>
 </openerp>

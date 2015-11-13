@@ -22,6 +22,19 @@
         }
     }
 
+    .o_thread_new_messages_separator {
+        border-bottom: solid lighten(@odoo-brand-primary, 15%) 1px;
+        text-align: right;
+        .o_thread_separator_label {
+            position: relative;
+            top: 8px;
+            padding: 0 10px;
+            background: white;
+            color: lighten(@odoo-brand-primary, 15%);
+            font-size: smaller;
+        }
+    }
+
     .o_thread_message {
         .o-flex-display();
         padding: 4px 0;
@@ -110,5 +123,10 @@
                 padding: 4px;
             }
         }
+    }
+    .o_thread_title {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-size: 20px;
     }
 }

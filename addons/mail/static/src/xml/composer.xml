@@ -2,6 +2,8 @@
 <templates xml:space="preserve">
 
      <div t-name="mail.ChatComposer" class="o_chat_composer">
+        <div class="o_composer_mentioned_partners"/>
+        <div class="o_composer_attachments_list"/>
         <div class="o_composer">
             <textarea class="o_composer_input" placeholder="Write something"/>
             <div class="btn-group o_composer_buttons">
@@ -10,8 +12,6 @@
                 <button class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
             </div>
         </div>
-        <div class="o_composer_mentioned_partners"/>
-        <div class="o_composer_attachments_list"/>
 
         <span class="hide">
             <t t-call="HiddenInputFile">
