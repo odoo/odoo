@@ -378,14 +378,14 @@ function on_mark_as_read_notification (data) {
             chat_manager.bus.trigger('update_message', message);
         }
     });
-    if (data.channel_ids.length) {
+    if (data.channel_ids) {
         _.each(data.channel_ids, function (channel_id) {
             var channel = chat_manager.get_channel(channel_id);
             if (channel) {
                 channel.needaction_counter -= data.message_ids.length;
             }
         });
-    } else {
+    } else { // if no channel_ids specified, this is a 'mark all read' in the inbox
         _.each(channels, function (channel) {
             channel.needaction_counter = 0;
         });
@@ -395,6 +395,12 @@ function on_mark_as_read_notification (data) {
 }
 
 function on_mark_as_unread_notification (data) {
+    _.each(data.message_ids, function (message_id) {
+        var message = _.findWhere(messages, { id: message_id });
+        if (message) {
+            add_channel_to_message(message, 'channel_inbox');
+        }
+    });
     _.each(data.channel_ids, function (channel_id) {
         var channel = chat_manager.get_channel(channel_id);
         if (channel) {
@@ -468,7 +474,7 @@ var chat_manager = {
     },
     mark_all_as_read: function (channel) {
         if ((!channel && needaction_counter) || (channel && channel.needaction_counter)) {
-            return MessageModel.call('mark_all_as_read', channel ? [[channel.id]] : [[]]);
+            return MessageModel.call('mark_all_as_read', channel ? [[channel.id]] : []);
         }
         return $.when();
     },
