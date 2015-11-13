@@ -6,10 +6,14 @@
                 var self = this;
                 $.fn.share.defaults.shareable = shareable;
                 $.fn.share.defaults.shareable.on('mouseup',function(){
-                    self.popOver();
+                    if (!$('.popover').has(event.target).length){
+                        self.popOver();
+                    }
                 });
-                $.fn.share.defaults.shareable.on('mousedown',function(){
-                    self.destroy();
+                $.fn.share.defaults.shareable.on('mousedown',function(event){
+                    if (!$('.popover').has(event.target).length){
+                        self.destroy();
+                    }
                 });
             },
             getContent : function() {
