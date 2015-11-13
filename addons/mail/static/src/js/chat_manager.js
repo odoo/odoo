@@ -339,6 +339,10 @@ function on_channel_notification (message) {
     if (channel) {
         channel.unread_counter++;
         add_message(message, { channel_id: channel.id, show_notification: true });
+    } else {
+        chat_manager.join_channel(message.channel_ids[0], {autoswitch: false}).then(function() {
+            add_message(message, { channel_id: message.channel_ids[0], show_notification: true });
+        });
     }
 }
 
@@ -413,7 +417,7 @@ function on_mark_as_unread_notification (data) {
 
 function on_chat_session_notification (chat_session) {
     if ((chat_session.channel_type === "channel") && (chat_session.public === "private") && (chat_session.state === "open")) {
-        add_channel(chat_session, {autoswitch: false});
+        add_channel(chat_session, {autoswitch: false, silent: true, hidden: true});
         if (!chat_session.is_minimized) {
             web_client.do_notify(_t("Private Channel"), _t("You have been invited to: ") + chat_session.name);
         }
