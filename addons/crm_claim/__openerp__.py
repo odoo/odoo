@@ -23,8 +23,12 @@ automatically new claims based on incoming emails.
         'report/crm_claim_report_view.xml',
         'crm_claim_data.xml',
         'res_partner_view.xml',
+        'crm_claim_tip.xml'
     ],
-    'demo': ['crm_claim_demo.xml'],
+    'demo': [
+        'crm_claim_demo.xml',
+        'crm_claim_action_rule_demo.xml'
+    ],
     'test': [
         'test/process/claim.yml',
         'test/ui/claim_demo.yml'
