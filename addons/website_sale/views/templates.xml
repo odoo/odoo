@@ -705,11 +705,11 @@
     <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
       <t t-if="step&gt;40 and step&lt;50">
         <a href="/shop/payment"  class='text-success'>
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Payment</t><span class="chevron"></span>
+          Payment<span class="chevron"></span>
         </a>
       </t>
       <t t-if="not (step&gt;40 and step&lt;50)">
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Payment</t><span class="chevron"></span>
+          Payment<span class="chevron"></span>
       </t>
     </li>
   </xpath>
@@ -718,11 +718,11 @@
     <li t-att-class="(step==30 and 'text-primary') or 'text-muted'" id="step30">
       <t t-if="step&gt;30 and step&lt;50">
         <a href="/shop/extra_info"  class='text-success'>
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Extra Info</t><span class="chevron"></span>
+          Extra Info<span class="chevron"></span>
         </a>
       </t>
       <t t-if="not (step&gt;30 and step&lt;50)">
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Extra Info</t><span class="chevron"></span>
+          Extra Info<span class="chevron"></span>
       </t>
     </li>
   </xpath>
