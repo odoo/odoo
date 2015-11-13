@@ -117,6 +117,10 @@ var CrossTabBus = bus.Bus.extend({
             self.stop_polling();
         });
 
+        if (parseInt(getItem('bus.last_ts', 0)) + 50000 < new Date().getTime()) {
+            setItem('bus.last', -1);
+        }
+
         on("storage", this.on_storage.bind(this));
         if (this.is_master) {
             setItem('bus.channels', this.channels);
@@ -134,9 +138,22 @@ var CrossTabBus = bus.Bus.extend({
      },
     _notification_receive: function(notifications){
         if(this.is_master) { // broadcast to other tabs
-            setItem('bus.notification', notifications);
+            var last = getItem('bus.last', -1);
+            var max_id = Math.max(last, 0);
+            var new_notifications = _.filter(notifications, function (notif) {
+                max_id = Math.max(max_id, notif.id);
+                return notif.id > last;
+            });
+            this.last = max_id;
+            if (new_notifications.length) {
+                setItem('bus.last', max_id);
+                setItem('bus.last_ts', new Date().getTime());
+                setItem('bus.notification', new_notifications);
+                this._super(new_notifications);
+            }
+        } else {
+            this._super.apply(this, arguments);
         }
-        this._super.apply(this, arguments);
     },
     on_storage: function (e) {
         // use the value of event to not read from
