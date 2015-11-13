@@ -255,8 +255,7 @@ var tab_manager = {
                     cleanedPeers[peerName] = peers[peerName];
                 }
             }
-
-            if (parseInt(heartbeatValue) !== tab_manager.last_heartbeat) {
+            if (!tab_manager.is_last_heartbeat_mine()) {
                 // someone else is also master...
                 // it should not happen, except in some race condition situation.
                 tab_manager.isMaster = false;
@@ -279,6 +278,10 @@ var tab_manager = {
         setTimeout(function(){
             tab_manager.heartbeat();
         }, pollPeriod);
+    },
+    is_last_heartbeat_mine: function () {
+        var heartbeatValue = localStorage[tab_manager.heartbeatKey] || 0;
+        return (parseInt(heartbeatValue) === tab_manager.last_heartbeat);
     },
     start_election: function () {
         if (tab_manager.isMaster) {
