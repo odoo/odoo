@@ -1491,7 +1491,7 @@ class account_voucher_line(osv.osv):
         'reconcile': fields.boolean('Full Reconcile'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Dr/Cr'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
-        'move_line_id': fields.many2one('account.move.line', 'Journal Item', copy=False),
+        'move_line_id': fields.many2one('account.move.line', 'Journal Item', copy=False, ondelete='cascade'),
         'date_original': fields.related('move_line_id','date', type='date', relation='account.move.line', string='Date', readonly=1),
         'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),
         'amount_original': fields.function(_compute_balance, multi='dc', type='float', string='Original Amount', store=True, digits_compute=dp.get_precision('Account')),
