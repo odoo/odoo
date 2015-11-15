@@ -5,6 +5,9 @@
 # Translators:
 # Daniel Santibáñez <dansanti@gmail.com>, 2015
 # Javier Ramirez <elbomba887@gmail.com>, 2015
+# Jesus Alan Ramos Rodriguez <alan.ramos@jarsa.com.mx>, 2015
+# Luis Pomar <luis.pomar@gmail.com>, 2015
+# Luis Triana <luistriana.28@gmail.com>, 2015
 # Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
 msgid ""
@@ -12,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-10-24 14:08+0000\n"
-"Last-Translator: Daniel Santibáñez <dansanti@gmail.com>\n"
+"PO-Revision-Date: 2015-11-11 16:08+0000\n"
+"Last-Translator: Luis Triana <luistriana.28@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -151,7 +154,7 @@ msgstr "<strong>Órdenes de Trabajo</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>WorkCenter</strong>"
-msgstr ""
+msgstr "<strong>Centro de trabajo</strong>"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_product_efficiency
@@ -169,7 +172,7 @@ msgstr "Un factor de 0.9 indica una pérdida del 10% en el proceso de producció
 msgid ""
 "A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products."
-msgstr ""
+msgstr "Una orden de fabricación, basada en una lista de materiales, consumirá\n materias primas y generará productos terminados."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_needaction
@@ -208,7 +211,7 @@ msgstr "Permitir plan detallado de órdenes de trabajo"
 msgid ""
 "Allow to manage product rounding on quantity and product efficiency during "
 "production process"
-msgstr ""
+msgstr "Permitir gestionar el redondeo de cantidades de producto y eficiencia de producto durante el proceso productivo"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
@@ -313,12 +316,12 @@ msgid ""
 "Bills of Materials allow you to define the list of required raw\n"
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
-msgstr ""
+msgstr "Las listas de material te permiten definir una lista de materias primas necesarias para realizar un producto terminado; a través de una orden de fabricación o un pack de productos."
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "Bills of materials may produce residual products (A + B --> C + D)"
-msgstr ""
+msgstr "Las listas de materiales pueden generar productos residuales (A + B --> C+ D)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_procurement_order_bom_id
@@ -434,7 +437,7 @@ msgstr "Cambiar cantidad de productos"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid "Click to add a work center."
-msgstr ""
+msgstr "Click para añadir un centro de trabajo"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -459,12 +462,12 @@ msgstr "Pulse para crear una nueva propiedad."
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid "Click to create a new routing."
-msgstr ""
+msgstr "Click para crear una nueva ruta de producción"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
 msgid "Click to start a new manufacturing order."
-msgstr ""
+msgstr "Click para iniciar una nueva orden de producción"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_code
@@ -639,7 +642,7 @@ msgid ""
 "                bill of materials and sales orders. Properties allows Odoo\n"
 "                to automatically select the right bill of materials according\n"
 "                to properties selected in the sales order by salesperson."
-msgstr ""
+msgstr "Define grupos de propiedades específicos que se pueden asignar a tus listas de materiales y órdenes de venta. Las propiedades permiten que Odoo seleccione automáticamente la lista de materiales correcta de acuerdo a las propiedades seleccionadas en la orden de venta por el vendedor."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_calendar_id
@@ -695,7 +698,7 @@ msgstr "Nombre mostrado"
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_operations:0
 msgid "Do not use a planning for the work orders "
-msgstr ""
+msgstr "No utilizar planificación para las órdenes de trabajo"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -770,7 +773,7 @@ msgid ""
 "                two properties: 1 year warranty, 3 years warranty. Depending\n"
 "                on the propoerties selected in the sales order, Odoo will\n"
 "                schedule a production using the matching bill of materials."
-msgstr ""
+msgstr "Por ejemplo, en el grupo de propiedades \"Garantía\", que una tiene \ndos propiedades: 1 año  de garantía, 3 años de garantía. Dependiendo\nde las propiedades seleccionados en el pedido de venta, Odoo programará\nuna producción con la factura correspondiente de materiales."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1018,27 +1021,27 @@ msgstr "Lote"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr ""
+msgstr "Gestionar operaciones de órdenes de trabajo"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by manufacturing orders"
-msgstr ""
+msgstr "Gestionar la producción por órdenes de fabricación"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by work orders"
-msgstr ""
+msgstr "Gestionar la producción por órdenes de trabajo"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_rounding_efficiency
 msgid "Manage rounding and efficiency of BoM components"
-msgstr ""
+msgstr "Gestionar redondeo y eficiencia de los componentes de las Listas de Materiales"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_rounding_efficiency:0
 msgid "Manage rounding and efficiency of bills of materials components"
-msgstr ""
+msgstr "Gestionar redondeo y eficiencia de los componentes de las Listas de Materiales"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -1065,7 +1068,7 @@ msgstr "Producir en este almacén"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Manufacture this product"
-msgstr ""
+msgstr "Fabricar este producto"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -1132,13 +1135,13 @@ msgstr "Órdenes de fabricación en espera de materias primas"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Manufacturing Reference"
-msgstr ""
+msgstr "Referencia de Fabricación"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:774
 #, python-format
 msgid "Manufacturing order cancelled."
-msgstr ""
+msgstr "Orden de fabricación cancelada"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -1147,7 +1150,7 @@ msgid ""
 "Manufacturing orders are usually proposed automatically based\n"
 "                on customer requirements or automated rules like the minimum\n"
 "                stock rule."
-msgstr ""
+msgstr "Las órdenes de fabricación se suele proponen automáticamente en\nfunción de los requerimientos del cliente o reglas automatizadas como\nla regla de existencias mínimas."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1207,22 +1210,22 @@ msgstr "No existe ninguna LdM para este producto"
 #. module: mrp
 #: selection:mrp.product.produce,tracking:0
 msgid "No Tracking"
-msgstr ""
+msgstr "Sin seguimiento"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "No by-products in bills of materials (A + B --> C)"
-msgstr ""
+msgstr "Sin sub-productos en las listas de materiales (A + B --> C)"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_rounding_efficiency:0
 msgid "No rounding and efficiency on bills of materials"
-msgstr ""
+msgstr "Sin redondeo y eficiencia en las listas de materiales"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "Sin variantes en productos"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1298,7 +1301,7 @@ msgstr "Número de mensajes no leidos"
 msgid ""
 "Odoo uses these BoMs to automatically propose manufacturing\n"
 "                orders according to procurement needs."
-msgstr ""
+msgstr "Odoo utilizar estas Listas de Materiales para proponer automáticamente ordenes de fabricación de acuerdo a las necesidades detectadas."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
@@ -1333,7 +1336,7 @@ msgstr "Lista de materiales (LdM) padre"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr ""
+msgstr "Ruta padre"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1473,7 +1476,7 @@ msgstr "Orden de producción"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Production Order # :"
-msgstr ""
+msgstr "Orden de producción nº:"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
@@ -1532,7 +1535,7 @@ msgstr "Productos consumidos"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr ""
+msgstr "Los productos pueden tener diversos atributos, definiendo variantes (Ejemplo: tamaño, color,...)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
@@ -1702,7 +1705,7 @@ msgstr "Eficiencia de redondeo"
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr ""
+msgstr "Ruta de producción"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -1727,7 +1730,7 @@ msgid ""
 "                operations that should be followed within your work centers in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials."
-msgstr ""
+msgstr "Las rutas le permiten crear y gestionar las operaciones de fabricación\na realizar en sus centros de producción para fabricar un producto.\nEstán relacionadas con las listas de materiales que definirán las\nmaterias primas necesarias."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
@@ -1735,7 +1738,7 @@ msgid ""
 "Routings indicates all the Work Centers used, for how long and/or cycles.If "
 "Routings is set then,the third tab of a production order (Work Centers) will"
 " be automatically pre-completed."
-msgstr ""
+msgstr "Turas indica todo el Centro de Trabajo usado, que tan largo y/o ciclos. Si Rutas esta activado, la tercera pestaña de orden de produccion (Centro de Trabajo) sera automaticamente pre-completado."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned
@@ -1822,7 +1825,7 @@ msgstr "Conjunto: Cuando se proceso un pedido de venta para este producto, la or
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Ship this product as a set of components (kit)"
-msgstr ""
+msgstr "Enviar este producto como un conjunto de componentes (kit)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
@@ -1891,12 +1894,12 @@ msgid ""
 "                creates a sales order, they can relate it to several properties\n"
 "                and Odoo will automatically select the BoM to use according\n"
 "                the needs."
-msgstr ""
+msgstr "Las Propiedades en Odoo son usadas para seleccionar la cuenta correcta de\nmateriales para manufacturar un producto cuando usted tiene difererentes\nformas de construccion el mismo producto. Usted puede asignar varias\npropiedades para cada cuenta de materiales. Cuando el vendedor\ncrea una orden de venta, ellos pueden relacionarla en varias propiedades\ny Odoo hara automaticamente seleccion de BoM para usarla acorde\na las necesidades."
 
 #. module: mrp
 #: constraint:mrp.workcenter:0
 msgid "The capacity per cycle must be strictly positive."
-msgstr ""
+msgstr "La capacidad por ciclo debe ser estrictamente positiva."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
@@ -2146,7 +2149,7 @@ msgid ""
 "If the stock is available then the status is set to 'Ready to Produce.\n"
 "When the production gets started then the status is set to 'In Production.\n"
 "When the production is over, the status is set to 'Done'."
-msgstr ""
+msgstr "Cuando se crea la orden de producción del estado se establece en ' Draft'.\nSi se confirma la orden el estado está en ' Waiting Goods.'\nSi las excepciones están ahí, el estado está en ' Recogiendo Excepcion.'\nSi la acción está disponible, el estado está en ' Listo para Produccion'\nCuando la producción se inicia entonces el estado se establece en ' En Produccion'.\nCuando la producción es más, el estado está en ' Hecho '."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -2208,7 +2211,7 @@ msgid ""
 "                units. They consist of workers and/or machines, which are\n"
 "                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
-msgstr ""
+msgstr "Centros de trabajo le permiten crear y gestionar manufactura\nunidades. Se componen de trabajadores y / o máquinas, que son\nconsiderados como unidades para la asignación de tareas , así como la capacidad\ny la planificación de previsión ."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
@@ -2223,12 +2226,12 @@ msgid ""
 "operations that should be followed within your work centers in order to "
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
-msgstr ""
+msgstr "Operaciones orden de trabajo le permiten crear y gestionar las operaciones de fabricación que deben seguirse dentro de sus centros de trabajo con el fin de producir un producto . Ellos se unen a las listas de materiales que definirán las materias primas necesarias ."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_operations
 msgid "Work Order Planning"
-msgstr ""
+msgstr "Planificación de órdenes de trabajo"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2240,7 +2243,7 @@ msgstr "Órdenes de trabajo"
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr ""
+msgstr "Trabaja con variante de producto le permite definir alguna variante de los mismos productos, una facilidad de la gestión de productos en el comercio electrónico , por ejemplo."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_calendar_id
