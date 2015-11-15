@@ -19,18 +19,18 @@ msgstr ""
 #: code:addons/mrp/stock.py:270
 #, python-format
 msgid " Manufacture"
-msgstr " Manufacture"
+msgstr " Sản xuất"
 
 #. module: mrp
 #: field:product.template,bom_count:0
 msgid "# Bill of Material"
-msgstr "# BoM"
+msgstr "SL Định mức nguyên liệu"
 
 #. module: mrp
 #: field:product.product,mo_count:0
 #: field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
-msgstr "# Lệnh sản xuất"
+msgstr "SL Lệnh sản xuất"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:352
@@ -104,14 +104,14 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "              </p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a bill of material. \n"
+"                Bấm để tạo mới một định mức nguyên liệu. \n"
 "              </p><p>\n"
-"                Bills of Materials allow you to define the list of required raw\n"
-"                materials used to make a finished product; through a manufacturing\n"
-"                order or a pack of products.\n"
+"                Định mức nguyên liệu (BoM - Bill of Materials) cho phép bạn định nghĩa một danh mục vật liêu\n"
+"                thô được sử dụng để sản xuất ra một thành phần; thông qua một lệnh sản xuất hoặc\n"
+"                một gói nhiều sản phẩm.\n"
 "              </p><p>\n"
-"                Odoo uses these BoMs to automatically propose manufacturing\n"
-"                orders according to procurement needs.\n"
+"                Odoo sử dụng những BoM này để tự động đề xuất các lệnh sản xuất\n"
+"                dự trên nhu cầu cầu ứng.\n"
 "              </p>\n"
 "            "
 
@@ -132,17 +132,17 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "              </p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a group of properties.\n"
+"                Bấm đề tạo một nhóm thuộc tính.\n"
 "              </p><p>\n"
-"                Define specific property groups that can be assigned to your\n"
-"                bill of materials and sales orders. Properties allows Odoo\n"
-"                to automatically select the right bill of materials according\n"
-"                to properties selected in the sales order by salesperson.\n"
+"                Định nghĩa các nhóm thuộc tính mà có thể gán đến một\n"
+"                định mức nguyên liệu và đơn hàng. Các thuộc tính cho phép\n"
+"                Odoo tự động lựa chọn BoM phù hợp căn cứ trên thuộc tính được\n"
+"                chọn trong đơn hàng bởi người bán hàng.\n"
 "              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an have\n"
-"                two properties: 1 year warranty, 3 years warranty. Depending\n"
-"                on the propoerties selected in the sales order, Odoo will\n"
-"                schedule a production using the matching bill of materials.\n"
+"                Ví dụ, trong nhóm thuộc tính \"Bảo hành\", bạn có hai thuộc tính:\n"
+"                Bảo hành 1 năm, Bảo hành 3 năm. Tùy thuộc vào thuộc tính bạn chọn\n"
+"                trong đơn hàng, Odoo sẽ tự động lên kế hoạch sản xuất sử dụng\n"
+"                định mức nguyên liệu tương ứng.\n"
 "              </p>\n"
 "            "
 
@@ -160,14 +160,14 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "              </p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a manufacturing order. \n"
+"                Bấm đề tạo mới một Lệnh sản xuất. \n"
 "              </p><p>\n"
-"                A manufacturing order, based on a bill of materials, will\n"
-"                consume raw materials and produce finished products.\n"
+"                Một lệnh sản xuất, dựa trên một định mức nguyên liệu, sẽ\n"
+"                tiêu thụ vật liệu thô và tạo ra các thành phầm.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically based\n"
-"                on customer requirements or automated rules like the minimum\n"
-"                stock rule.\n"
+"                Các lệnh sản xuất thường được đề xuất tự động dựa trên\n"
+"                yêu cầu của khách hàng hoặc theo các quy tắc tự động như\n"
+"                quy tắc tồn kho tối thiểu.\n"
 "              </p>\n"
 "            "
 
@@ -379,14 +379,14 @@ msgstr "Bởi vì sản phẩm %s yêu cầu nó, bạn phải gán một số s
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 #: view:website:mrp.report_mrporder
 msgid "Bill Of Material"
-msgstr "Định mức nguyên liệu"
+msgstr "Định mức Nguyên liệu"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
 #: view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
-msgstr "Định mức nguyên liệu"
+msgstr "Định mức Nguyên liệu"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
@@ -404,7 +404,7 @@ msgstr "Thành phần Định mức nguyên liệu"
 #: view:product.template:mrp.product_template_form_view_bom_button
 #: field:product.template,bom_ids:0
 msgid "Bill of Materials"
-msgstr "Định mức nguyên liệu"
+msgstr "Định mức Nguyên liệu"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
@@ -654,12 +654,12 @@ msgstr "Cấu trúc chi phí"
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
 msgid "Cost per cycle"
-msgstr "Chi phí trên chu kỳ"
+msgstr "Chi phí mỗi chu kỳ"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
 msgid "Cost per hour"
-msgstr "Chi phí trên giờ"
+msgstr "Chi phí mỗi giờ"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
@@ -685,7 +685,7 @@ msgstr "Thông tin chi phí"
 #: field:mrp.workcenter.load,create_uid:0
 #: field:stock.move.consume,create_uid:0
 msgid "Created by"
-msgstr "Created by"
+msgstr "Tạo bởi"
 
 #. module: mrp
 #: field:change.production.qty,create_date:0
@@ -706,7 +706,7 @@ msgstr "Created by"
 #: field:mrp.workcenter.load,create_date:0
 #: field:stock.move.consume,create_date:0
 msgid "Created on"
-msgstr "Created on"
+msgstr "Tạo vào"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -759,7 +759,7 @@ msgstr "Miêu tả của năng lực sản xuất."
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Destination Loc."
-msgstr "Destination Loc."
+msgstr "Địa điểm đích."
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -822,7 +822,7 @@ msgstr "Người dõi theo"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Force Reservation"
-msgstr "Force Reservation"
+msgstr "Cưỡng bức xí phần"
 
 #. module: mrp
 #: help:product.template,track_production:0
@@ -862,7 +862,7 @@ msgstr "Chỉ ra trình tự sắp xếp khi hiển thị"
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr "Group By"
+msgstr "Nhóm theo"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -883,7 +883,7 @@ msgstr "Holds the Chatter summary (number of messages, ...). This summary is dir
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
 msgid "Hour Account"
-msgstr "Hour Account"
+msgstr "Tài khoản giờ"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
@@ -946,7 +946,7 @@ msgstr "Đang sản xuất"
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Inactive"
-msgstr "Không hiệu lực"
+msgstr "Bị vô hiệu"
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -999,7 +999,7 @@ msgstr "Ngày thông điệp gần nhất"
 #: field:mrp.workcenter.load,write_uid:0
 #: field:stock.move.consume,write_uid:0
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: mrp
 #: field:change.production.qty,write_date:0
@@ -1020,12 +1020,12 @@ msgstr "Last Updated by"
 #: field:mrp.workcenter.load,write_date:0
 #: field:stock.move.consume,write_date:0
 msgid "Last Updated on"
-msgstr "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Late"
-msgstr "Late"
+msgstr "Muộn"
 
 #. module: mrp
 #: field:stock.move.consume,location_id:0
@@ -1047,7 +1047,7 @@ msgstr "Địa điểm lưu trữ thành phẩm."
 #: field:mrp.product.produce.line,lot_id:0
 #: field:stock.move.consume,restrict_lot_id:0
 msgid "Lot"
-msgstr "Lot"
+msgstr "Lô"
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_tree_parent_view
@@ -1157,7 +1157,7 @@ msgstr "Lệnh sản xuất đang diễn ra"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are currently in production."
-msgstr "Manufacturing Orders which are currently in production."
+msgstr "Các lệnh sản xuất mà đang trong trạng thái đang sản xuất."
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1256,7 +1256,7 @@ msgstr "Thông thường"
 #. module: mrp
 #: selection:mrp.production,priority:0
 msgid "Not urgent"
-msgstr "Not urgent"
+msgstr "Không gấp"
 
 #. module: mrp
 #: help:mrp.property,composition:0
@@ -1273,7 +1273,7 @@ msgstr "Ghi chú"
 #: field:mrp.routing.workcenter,cycle_nbr:0
 #: field:report.workcenter.load,cycle:0
 msgid "Number of Cycles"
-msgstr "Số vòng đời"
+msgstr "Số Chu kỳ"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
@@ -1295,7 +1295,7 @@ msgstr "Số hoạt động mà năng lực sản xuất này có thể làm vi�
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_client_mrp_menu
 msgid "Open MRP Menu"
-msgstr "Open MRP Menu"
+msgstr "Mở trình đơn MRP"
 
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
@@ -1750,7 +1750,7 @@ msgstr "Người phụ trách"
 #: help:mrp.bom,product_rounding:0
 #: help:mrp.bom.line,product_rounding:0
 msgid "Rounding applied on the product quantity."
-msgstr "Làm trón được áp dụng trên số lượng sản phẩm."
+msgstr "Làm tròn được áp dụng trên số lượng sản phẩm."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
@@ -1764,13 +1764,13 @@ msgstr "Làm trón được áp dụng trên số lượng sản phẩm."
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.routing:mrp.mrp_routing_tree_view
 msgid "Routing"
-msgstr "Quy trình sản xuất"
+msgstr "Định tuyến"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_form_view
 #: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_tree_view
 msgid "Routing Work Centers"
-msgstr "Quy trình sản xuất"
+msgstr ""
 
 #. module: mrp
 #: help:mrp.routing.workcenter,routing_id:0
@@ -2095,12 +2095,12 @@ msgstr "Theo dõi sản xuất"
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Type"
-msgstr "Loại"
+msgstr "Kiểu"
 
 #. module: mrp
 #: field:mrp.workcenter.load,time_unit:0
 msgid "Type of period"
-msgstr "Loại chu kỳ"
+msgstr "Kiểu chu kỳ"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -2151,7 +2151,7 @@ msgstr "Hợp lệ từ Ngày (theo tháng)"
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr "Valid From Month"
+msgstr "Hợp lề từ Tháng"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
@@ -2330,7 +2330,7 @@ msgstr "Sử dụng năng lực sản xuất"
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Cost"
-msgstr "Chi phí làm việc"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:206
