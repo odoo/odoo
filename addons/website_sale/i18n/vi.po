@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_sale
+#	* website_sale
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-13 07:14+0000\n"
-"PO-Revision-Date: 2015-01-13 14:20+0800\n"
-"Last-Translator: T.V.T Marine Automation <support@ma.tvtmarine.com>\n"
+"POT-Creation-Date: 2015-11-15 03:46+0000\n"
+"PO-Revision-Date: 2015-11-15 03:46+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"X-Generator: Poedit 1.5.4\n"
 
 #. module: website_sale
-#: view:website:website_sale.cart view:website:website_sale.products_item
+#: view:website:website_sale.cart
+#: view:website:website_sale.products_item
 msgid "&nbsp;"
 msgstr "&nbsp;"
 
@@ -32,9 +32,13 @@ msgid "-- Create a new address --"
 msgstr "-- Giao đến địa chỉ khác --"
 
 #. module: website_sale
+#: view:website:website_sale.product
+msgid "30-day money-back guarantee"
+msgstr "Miễn phí vận chuyển trong nội thành Hà nội"
+
+#. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
+msgid "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to define a new category.\n"
 "          </p><p>\n"
 "            Categories are used to browse your products through the\n"
@@ -45,8 +49,7 @@ msgid ""
 "            a photo on categories for small (1024x768) screens.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to define a new category.\n"
 "          </p><p>\n"
 "            Categories are used to browse your products through the\n"
@@ -64,19 +67,26 @@ msgid "Accessory Products"
 msgstr "Sản phẩm phụ kiện"
 
 #. module: website_sale
-#: view:website:website_sale.cart view:website:website_sale.product
+#: view:website:website_sale.cart
+#: view:website:website_sale.product
 msgid "Add to Cart"
-msgstr "Thêm vào Giỏ"
+msgstr "Thêm vào giỏ"
 
 #. module: website_sale
 #: view:website:website_sale.products
 msgid "All Products"
-msgstr "Tất cả Sản phẩm"
+msgstr "Tất cả sản phẩm"
 
 #. module: website_sale
 #: field:product.template,alternative_product_ids:0
 msgid "Alternative Products"
-msgstr "Sản phẩm phụ kiện"
+msgstr "Sản phẩm liên quan"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:805
+#, python-format
+msgid "An error occurred during the transaction."
+msgstr "An error occurred during the transaction."
 
 #. module: website_sale
 #: help:product.template,alternative_product_ids:0
@@ -99,9 +109,10 @@ msgid "Available in the website"
 msgstr "Khả dụng ở website"
 
 #. module: website_sale
-#: view:website:website_sale.confirmation view:website:website_sale.payment
+#: view:website:website_sale.confirmation
+#: view:website:website_sale.payment
 msgid "Bill To:"
-msgstr "Xuất hóa đơn đến:"
+msgstr "Hóa đơn giao tới:"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -120,7 +131,7 @@ msgstr "Thay đổi địa chỉ"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:53
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:54
 #, python-format
 msgid "Change the price"
 msgstr "Thay đổi giá"
@@ -132,7 +143,7 @@ msgstr "Nhóm con"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:33
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:34
 #, python-format
 msgid "Choose name"
 msgstr "Chọn tên"
@@ -144,42 +155,47 @@ msgstr "Thành phố"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:41
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:42
 #, python-format
 msgid "Click <em>Continue</em> to create the product."
 msgstr "Bấm vào <em>Tiếp tục</em> để tạo sản phẩm."
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:19
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:20
 #, python-format
 msgid "Click here to add a new product."
 msgstr "Bấm vào đây để tạo một sản phẩm mới."
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:62
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:63
 #, python-format
 msgid "Click here to set an image describing your product."
 msgstr "Bấm vào đây để chọn một hình ảnh đại diện mô tả cho sản phẩm của bạn."
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:75
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:76
 #, python-format
 msgid "Click on save to add the image to the product decsription."
 msgstr "."
 
 #. module: website_sale
+#: view:website:website_sale.products
+msgid "Click to customize this text"
+msgstr "Miêu tả ngắn gọn..."
+
+#. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:104
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:105
 #, python-format
 msgid "Click to publish your product so your customers can see it."
 msgstr "Click to publish your product so your customers can see it."
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:110
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:111
 #, python-format
 msgid "Close Tutorial"
 msgstr "Đóng hướng dẫn"
@@ -192,7 +208,7 @@ msgstr "Màu sắc"
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Company Name"
-msgstr "Tên Công ty"
+msgstr "Tên công ty"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -200,35 +216,41 @@ msgid "Confirm"
 msgstr "Xác nhận"
 
 #. module: website_sale
-#: view:website:website_sale.cart view:website:website_sale.checkout
-#: view:website:website_sale.confirmation view:website:website_sale.payment
+#: view:website:website_sale.cart
+#: view:website:website_sale.checkout
+#: view:website:website_sale.confirmation
+#: view:website:website_sale.payment
 msgid "Confirmation"
 msgstr "Xác nhận"
 
 #. module: website_sale
 #: view:website:website_sale.confirmation
 msgid "Confirmed"
-msgstr "Đã xác nhận"
+msgstr "Đã được xác nhận"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:108
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:109
 #, python-format
 msgid "Congratulations"
 msgstr "Chúc mừng"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:109
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:110
 #, python-format
 msgid "Congratulations! You just created and published your first product."
-msgstr ""
-"Xin chúc mừng! Bạn vừa thành công trong việc khởi tạo và xuất bản sản phẩm "
-"đầu tiên."
+msgstr "Xin chúc mừng! Bạn vừa thành công trong việc khởi tạo và xuất bản sản phẩm đầu tiên."
+
+#. module: website_sale
+#: view:website:website_sale.products
+msgid "Contact us"
+msgstr "Liên hệ"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:47
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:48
+#: view:website:website_sale.cart
 #, python-format
 msgid "Continue"
 msgstr "Tiếp tục"
@@ -236,7 +258,7 @@ msgstr "Tiếp tục"
 #. module: website_sale
 #: view:website:website_sale.cart
 msgid "Continue Shopping"
-msgstr "Tiếp tục Mua sắm"
+msgstr "Tiếp tục mua sắm"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -255,34 +277,35 @@ msgstr "Mã Khuyễn mãi"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:40
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:41
 #, python-format
 msgid "Create Product"
 msgstr "Tạo Sản phẩm"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:25
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:26
 #, python-format
 msgid "Create a new product"
 msgstr "Tạo một sản phẩm mới"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:8
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:9
 #, python-format
 msgid "Create a product"
 msgstr "Tạo một sản phẩm"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:18
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:19
 #, python-format
 msgid "Create your first product"
 msgstr "Tạo sản phẩm đầu tiên của bạn"
 
 #. module: website_sale
-#: field:product.public.category,create_uid:0 field:product.style,create_uid:0
+#: field:product.public.category,create_uid:0
+#: field:product.style,create_uid:0
 msgid "Created by"
 msgstr "Được tạo bởi"
 
@@ -304,10 +327,15 @@ msgstr "Bảng giá mặc định"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:81
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:82
 #, python-format
 msgid "Describe the Product"
 msgstr "Mô tả sản phẩm"
+
+#. module: website_sale
+#: field:product.template,website_description:0
+msgid "Description for the website"
+msgstr "Description for the website"
 
 #. module: website_sale
 #: help:product.template,website_sequence:0
@@ -316,21 +344,21 @@ msgstr "Determine the display order in the Website E-commerce"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:88
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:89
 #, python-format
 msgid "Drag & Drop a block"
 msgstr "Kéo & Thả một khối"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:89
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:90
 #, python-format
 msgid "Drag the 'Big Picture' block and drop it in your page."
 msgstr "Kéo khối 'Hình lớn' và thả nó vào trang."
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:54
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:55
 #, python-format
 msgid "Edit the price of this product by clicking on the amount."
 msgstr "Edit the price of this product by clicking on the amount."
@@ -342,7 +370,7 @@ msgstr "Email"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:34
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:35
 #, python-format
 msgid "Enter a name for your new product then click 'Continue'."
 msgstr "Nhập một cái tên cho sản phẩm mới của bạn và bấm vào 'Tiếp tục'."
@@ -351,6 +379,12 @@ msgstr "Nhập một cái tên cho sản phẩm mới của bạn và bấm vào
 #: constraint:product.public.category:0
 msgid "Error ! You cannot create recursive categories."
 msgstr "Lỗi! Bạn không được tạo các nhóm đệ quy lẫn nhau."
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:79
+#, python-format
+msgid "Error!"
+msgstr "Error!"
 
 #. module: website_sale
 #: help:product.public.category,sequence:0
@@ -374,12 +408,8 @@ msgstr "Have a coupon code? Fill in this field and apply."
 
 #. module: website_sale
 #: help:product.attribute.value,color:0
-msgid ""
-"Here you can set a specific HTML color index (e.g. #ff0000) to display the "
-"color on the website if the attibute type is 'Color'."
-msgstr ""
-"Here you can set a specific HTML color index (e.g. #ff0000) to display the "
-"color on the website if the attibute type is 'Color'."
+msgid "Here you can set a specific HTML color index (e.g. #ff0000) to display the color on the website if the attibute type is 'Color'."
+msgstr "Here you can set a specific HTML color index (e.g. #ff0000) to display the color on the website if the attibute type is 'Color'."
 
 #. module: website_sale
 #: selection:product.attribute,type:0
@@ -387,7 +417,8 @@ msgid "Hidden"
 msgstr "Hidden"
 
 #. module: website_sale
-#: field:product.public.category,id:0 field:product.style,id:0
+#: field:product.public.category,id:0
+#: field:product.style,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -398,29 +429,35 @@ msgstr "Hình"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:82
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:83
 #, python-format
-msgid ""
-"Insert blocks like text-image, or gallery to fully describe the product."
-msgstr ""
-"Insert blocks like text-image, or gallery to fully describe the product."
+msgid "Insert blocks like text-image, or gallery to fully describe the product."
+msgstr "Insert blocks like text-image, or gallery to fully describe the product."
 
 #. module: website_sale
-#: field:product.public.category,write_uid:0 field:product.style,write_uid:0
+#: code:addons/website_sale/models/sale_order.py:79
+#, python-format
+msgid "It is forbidden to modify a sale order which is not in draft status"
+msgstr "It is forbidden to modify a sale order which is not in draft status"
+
+#. module: website_sale
+#: field:product.public.category,write_uid:0
+#: field:product.style,write_uid:0
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
 
 #. module: website_sale
-#: field:product.public.category,write_date:0 field:product.style,write_date:0
+#: field:product.public.category,write_date:0
+#: field:product.style,write_date:0
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:68
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:69
 #, python-format
-msgid "Let's select an ipad image."
-msgstr "Let's select an ipad image."
+msgid "Let's select this image."
+msgstr "Let's select this image."
 
 #. module: website_sale
 #: field:product.public.category,image_medium:0
@@ -429,19 +466,13 @@ msgstr "Hình cỡ trung"
 
 #. module: website_sale
 #: help:product.public.category,image_medium:0
-msgid ""
-"Medium-sized image of the category. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved. Use this field in form views "
-"or some kanban views."
-msgstr ""
-"Medium-sized image of the category. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved. Use this field in form views "
-"or some kanban views."
+msgid "Medium-sized image of the category. It is automatically resized as a 128x128px image, with aspect ratio preserved. Use this field in form views or some kanban views."
+msgstr "Medium-sized image of the category. It is automatically resized as a 128x128px image, with aspect ratio preserved. Use this field in form views or some kanban views."
 
 #. module: website_sale
 #: view:website:website.layout
 msgid "My cart"
-msgstr Giỏ hàng"
+msgstr "iỏ hàng"
 
 #. module: website_sale
 #: field:product.public.category,complete_name:0
@@ -456,7 +487,7 @@ msgstr "Tên (Shipping)"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:845
+#: code:addons/website_sale/controllers/main.py:882
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:11
 #: view:website:website.layout
 #, python-format
@@ -465,7 +496,7 @@ msgstr "Sản phẩm mới"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:45
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:46
 #, python-format
 msgid "New product created"
 msgstr "Sản phẩm mới được tạo"
@@ -477,7 +508,7 @@ msgstr "Không có sản phẩm được định nghĩa."
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:96
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:97
 #, python-format
 msgid "Once you click on save, your product is updated."
 msgstr "Một khi bạn bấm vào Lưu, sản phẩm sẽ được cập nhật."
@@ -485,12 +516,12 @@ msgstr "Một khi bạn bấm vào Lưu, sản phẩm sẽ được cập nhật
 #. module: website_sale
 #: view:website:website_sale.products
 msgid "Options"
-msgstr "Tùy chọn"
+msgstr "Options"
 
 #. module: website_sale
 #: view:website:website_sale.confirmation
 msgid "Order"
-msgstr "Đặt hàng"
+msgstr "Đơn hàng"
 
 #. module: website_sale
 #: field:sale.order,website_order_line:0
@@ -499,12 +530,8 @@ msgstr "Order Lines displayed on Website"
 
 #. module: website_sale
 #: help:sale.order,website_order_line:0
-msgid ""
-"Order Lines to be displayed on the website. They should not be used for "
-"computation purpose."
-msgstr ""
-"Order Lines to be displayed on the website. They should not be used for "
-"computation purpose."
+msgid "Order Lines to be displayed on the website. They should not be used for computation purpose."
+msgstr "Order Lines to be displayed on the website. They should not be used for computation purpose."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.categ_others
@@ -517,15 +544,17 @@ msgid "Parent Category"
 msgstr "Nhóm cha"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:654
+#: code:addons/website_sale/controllers/main.py:697
 #: view:website:website_sale.payment
 #, python-format
 msgid "Pay Now"
 msgstr "Thanh toán Ngay"
 
 #. module: website_sale
-#: view:website:website_sale.cart view:website:website_sale.checkout
-#: view:website:website_sale.confirmation view:website:website_sale.payment
+#: view:website:website_sale.cart
+#: view:website:website_sale.checkout
+#: view:website:website_sale.confirmation
+#: view:website:website_sale.payment
 msgid "Payment"
 msgstr "Thanh toán"
 
@@ -537,17 +566,17 @@ msgstr "Payment Acquirer"
 #. module: website_sale
 #: view:website:website_sale.payment
 msgid "Payment Method:"
-msgstr "Hình thức thanh toán:"
+msgstr "Phương thức thanh toán:"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Giao dịch Thanh toán"
+msgstr "Payment Transaction"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Phone"
-msgstr "Số ĐT"
+msgstr "Điện thoại"
 
 #. module: website_sale
 #: view:website:website_sale.cart
@@ -560,7 +589,8 @@ msgid "Post"
 msgstr "Post"
 
 #. module: website_sale
-#: view:website:website_sale.cart view:website:website_sale.payment
+#: view:website:website_sale.cart
+#: view:website:website_sale.payment
 msgid "Price"
 msgstr "Giá"
 
@@ -572,11 +602,12 @@ msgstr "Bảng giá"
 #. module: website_sale
 #: view:website:website_sale.cart
 msgid "Process Checkout"
-msgstr "Thanh toán"
+msgstr "Checkout"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_product
-#: view:website:website_sale.cart view:website:website_sale.payment
+#: view:website:website_sale.cart
+#: view:website:website_sale.payment
 msgid "Product"
 msgstr "Sản phẩm"
 
@@ -588,7 +619,7 @@ msgstr "Thuộc tính sản phẩm"
 #. module: website_sale
 #: view:website:website_sale.product
 msgid "Product Name"
-msgstr "Product Name"
+msgstr "Tên sản phẩm"
 
 #. module: website_sale
 #: view:product.public.category:website_sale.product_public_category_tree_view
@@ -598,10 +629,11 @@ msgstr "Product Product Categories"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
 msgid "Product Template"
-msgstr "Mẫu sản phẩm"
+msgstr "Product Template"
 
 #. module: website_sale
-#: view:website:website_sale.product view:website:website_sale.product_price
+#: view:website:website_sale.product
+#: view:website:website_sale.product_price
 msgid "Product not available"
 msgstr "Product not available"
 
@@ -618,7 +650,7 @@ msgstr "Sản phẩm"
 #. module: website_sale
 #: view:website:website_sale.products
 msgid "Promote"
-msgstr "Promote"
+msgstr "Thúc đẩy"
 
 #. module: website_sale
 #: field:product.pricelist,code:0
@@ -644,7 +676,7 @@ msgstr "Public Product Categories"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:103
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:104
 #, python-format
 msgid "Publish your product"
 msgstr "Xuất bản sản phẩm của bạn"
@@ -670,7 +702,8 @@ msgid "Push up"
 msgstr "Push up"
 
 #. module: website_sale
-#: view:website:website_sale.cart view:website:website_sale.payment
+#: view:website:website_sale.cart
+#: view:website:website_sale.payment
 msgid "Quantity"
 msgstr "Số lượng"
 
@@ -682,7 +715,7 @@ msgstr "Radio"
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Return to Cart"
-msgstr "Quay về Giỏ hàng"
+msgstr "Quay lại giỏ hàng"
 
 #. module: website_sale
 #: view:website:website_sale.404
@@ -690,10 +723,12 @@ msgid "Return to the product list."
 msgstr "Về Danh mục Sản phẩm."
 
 #. module: website_sale
-#: view:website:website_sale.cart view:website:website_sale.checkout
-#: view:website:website_sale.confirmation view:website:website_sale.payment
+#: view:website:website_sale.cart
+#: view:website:website_sale.checkout
+#: view:website:website_sale.confirmation
+#: view:website:website_sale.payment
 msgid "Review Order"
-msgstr "Xem lại Đơn hàng"
+msgstr "Đơn hàng"
 
 #. module: website_sale
 #: view:website:website_sale.products_item
@@ -712,14 +747,14 @@ msgstr "Đơn hàng"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:74
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:75
 #, python-format
 msgid "Save this Image"
 msgstr "Save this Image"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:95
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:96
 #, python-format
 msgid "Save your modifications"
 msgstr "Save your modifications"
@@ -732,7 +767,7 @@ msgstr "Tìm kiếm..."
 #. module: website_sale
 #: view:website:website_sale.cart
 msgid "Secure Payment"
-msgstr "Thanh toán An toàn"
+msgstr "Thanh toán an toàn"
 
 #. module: website_sale
 #: selection:product.attribute,type:0
@@ -741,18 +776,14 @@ msgstr "Chọn"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:26
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:27
 #, python-format
-msgid ""
-"Select 'New Product' to create it and manage its properties to boost your "
-"sales."
-msgstr ""
-"Select 'New Product' to create it and manage its properties to boost your "
-"sales."
+msgid "Select 'New Product' to create it and manage its properties to boost your sales."
+msgstr "Select 'New Product' to create it and manage its properties to boost your sales."
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:67
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:68
 #, python-format
 msgid "Select an Image"
 msgstr "Select an Image"
@@ -764,26 +795,30 @@ msgid "Sequence"
 msgstr "Trình tự"
 
 #. module: website_sale
-#: view:website:website_sale.confirmation view:website:website_sale.payment
+#: view:website:website_sale.confirmation
+#: view:website:website_sale.payment
 msgid "Ship To:"
-msgstr "Giao đến:"
+msgstr "Giao hàng tới:"
 
 #. module: website_sale
-#: view:website:website_sale.checkout view:website:website_sale.confirmation
+#: view:website:website_sale.checkout
+#: view:website:website_sale.confirmation
 #: view:website:website_sale.payment
 msgid "Ship to the same address"
-msgstr "Chuyển đến địa chỉ khai báo bên trên"
+msgstr "Giao hàng tới cùng địa chỉ"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Shipping"
-msgstr "Giao hàng"
+msgstr "Địa chỉ giao hàng"
 
 #. module: website_sale
-#: view:website:website_sale.cart view:website:website_sale.checkout
-#: view:website:website_sale.confirmation view:website:website_sale.payment
+#: view:website:website_sale.cart
+#: view:website:website_sale.checkout
+#: view:website:website_sale.confirmation
+#: view:website:website_sale.payment
 msgid "Shipping & Billing"
-msgstr "Giao hàng & Thanh toán"
+msgstr "Vận chuyển & Hóa đơn"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -814,7 +849,7 @@ msgstr "Shop - Select Payment Mode"
 #. module: website_sale
 #: view:website:website_sale.cart
 msgid "Shopping Cart"
-msgstr "Shopping Cart"
+msgstr "Giỏ hàng"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -838,7 +873,7 @@ msgstr "Cỡ Y"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:13
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:14
 #, python-format
 msgid "Skip It"
 msgstr "Bỏ qua"
@@ -850,14 +885,8 @@ msgstr "Hình cỡ nhỏ"
 
 #. module: website_sale
 #: help:product.public.category,image_small:0
-msgid ""
-"Small-sized image of the category. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Small-sized image of the category. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+msgid "Small-sized image of the category. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
+msgstr "Small-sized image of the category. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
 
 #. module: website_sale
 #: view:website:website_sale.404
@@ -866,7 +895,7 @@ msgstr "Rất tiếc, sản phẩm này không còn nữa."
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:13
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:14
 #, python-format
 msgid "Start Tutorial"
 msgstr "Khởi động Hướng dẫn"
@@ -874,7 +903,7 @@ msgstr "Khởi động Hướng dẫn"
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "State / Province"
-msgstr "Bang / Tỉnh"
+msgstr "Tỉnh / TP thuộc TW"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -918,40 +947,37 @@ msgid "Taxes may be updated after providing shipping address"
 msgstr "Các loại thuế có thể thay đổi và được cập nhật lại sau khi bạn cung cấp địa chỉ giao hàng"
 
 #. module: website_sale
-#: view:website:website_sale.checkout view:website:website_sale.total
+#: view:website:website_sale.checkout
+#: view:website:website_sale.total
 msgid "Taxes:"
 msgstr "Thuế:"
 
 #. module: website_sale
 #: view:website:website_sale.confirmation
 msgid "Thank you for your order."
-msgstr "Cám ơn bạn đã đặt mua."
+msgstr "Cảm ơn bạn đã đặt hàng."
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:752
+#: code:addons/website_sale/controllers/main.py:799
 #, python-format
 msgid "The payment seems to have been canceled."
 msgstr "Việc thanh toán dường như đã bị hủy."
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:728
-#: code:addons/website_sale/controllers/main.py:740
+#: code:addons/website_sale/controllers/main.py:775
+#: code:addons/website_sale/controllers/main.py:787
 #, python-format
 msgid "There seems to be an error with your request."
 msgstr "Dường như có lỗi xảy ra với yêu cầu của bạn."
 
 #. module: website_sale
 #: help:product.public.category,image:0
-msgid ""
-"This field holds the image used as image for the category, limited to "
-"1024x1024px."
-msgstr ""
-"This field holds the image used as image for the category, limited to "
-"1024x1024px."
+msgid "This field holds the image used as image for the category, limited to 1024x1024px."
+msgstr "This field holds the image used as image for the category, limited to 1024x1024px."
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:46
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:47
 #, python-format
 msgid "This page contains all the information related to the new product."
 msgstr "This page contains all the information related to the new product."
@@ -964,7 +990,7 @@ msgstr "Those categories are used to group similar products for e-commerce."
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Total To Pay:"
-msgstr "Tổng phải thanh toán:"
+msgstr "Tổng tiền:"
 
 #. module: website_sale
 #: view:website:website_sale.total
@@ -983,7 +1009,7 @@ msgstr "Kiểu"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:61
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:62
 #, python-format
 msgid "Update image"
 msgstr "Cập nhật hình"
@@ -996,12 +1022,12 @@ msgstr "Use the"
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "VAT Number"
-msgstr "Mã số thuế GTGT"
+msgstr "Số VAT"
 
 #. module: website_sale
 #: view:website:website_sale.payment
 msgid "Validate Order"
-msgstr "Thẩm định đơn hàng"
+msgstr "Thẩm định Đơn hàng"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
@@ -1015,9 +1041,21 @@ msgid "Website Comments"
 msgstr "Website Comments"
 
 #. module: website_sale
+#: field:payment.transaction,website_message_ids:0
+#: field:sale.order,website_message_ids:0
+msgid "Website Messages"
+msgstr "Website Messages"
+
+#. module: website_sale
 #: model:ir.actions.act_url,name:website_sale.action_open_website
 msgid "Website Shop"
 msgstr "Website Shop"
+
+#. module: website_sale
+#: help:payment.transaction,website_message_ids:0
+#: help:sale.order,website_message_ids:0
+msgid "Website communication history"
+msgstr "Website communication history"
 
 #. module: website_sale
 #: field:product.template,website_meta_description:0
@@ -1035,13 +1073,14 @@ msgid "Website meta title"
 msgstr "Website meta title"
 
 #. module: website_sale
-#: field:product.product,website_url:0 field:product.template,website_url:0
+#: field:product.product,website_url:0
+#: field:product.template,website_url:0
 msgid "Website url"
 msgstr "Website url"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:11
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:12
 #, python-format
 msgid "Welcome to your shop"
 msgstr "Welcome to your shop"
@@ -1053,29 +1092,30 @@ msgstr "Viết một lời bình..."
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:12
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:13
 #, python-format
-msgid ""
-"You successfully installed the e-commerce. This guide will help you to "
-"create your product and promote your sales."
-msgstr ""
-"You successfully installed the e-commerce. This guide will help you to "
-"create your product and promote your sales."
+msgid "You successfully installed the e-commerce. This guide will help you to create your product and promote your sales."
+msgstr "You successfully installed the e-commerce. This guide will help you to create your product and promote your sales."
 
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Your Address"
-msgstr "Địa chỉ của bạn"
+msgstr "Thông tin liên hệ"
+
+#. module: website_sale
+#: view:website:website_sale.products
+msgid "Your Banner Title"
+msgstr "Tiêu đề Banner"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Your Name"
-msgstr "Tên bạn"
+msgstr "Họ và tên"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Your Order"
-msgstr "Đơn hàng của bạn"
+msgstr "Đơn hàng"
 
 #. module: website_sale
 #: view:website:website_sale.cart
@@ -1083,14 +1123,13 @@ msgid "Your cart is empty!"
 msgstr "Giỏ hàng của bạn trống rỗng!"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:750
+#: code:addons/website_sale/controllers/main.py:797
 #, python-format
 msgid "Your payment has been received."
 msgstr "Khoản thanh toán của bạn đã được nhận."
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:754
-#: code:addons/website_sale/controllers/main.py:758
+#: code:addons/website_sale/controllers/main.py:801
 #, python-format
 msgid "Your transaction is waiting confirmation."
 msgstr "Giao dịch của bạn đang chờ xác nhận."
@@ -1098,12 +1137,12 @@ msgstr "Giao dịch của bạn đang chờ xác nhận."
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Zip / Postal Code"
-msgstr "Mã Bưu chính / Zip"
+msgstr "Mã Zip / Postal"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "change"
-msgstr "thay đổi"
+msgstr "Thay đổi"
 
 #. module: website_sale
 #: view:website:website_sale.cart
@@ -1118,7 +1157,7 @@ msgstr "col-md-3 hidden-xs"
 #. module: website_sale
 #: view:website:website_sale.products
 msgid "col-md-9"
-msgstr ""
+msgstr "col-md-9"
 
 #. module: website_sale
 #: view:website:website_sale.product
@@ -1133,7 +1172,7 @@ msgstr "bình luận"
 #. module: website_sale
 #: view:website:website_sale.product
 msgid "on"
-msgstr "trên"
+msgstr "on"
 
 #. module: website_sale
 #: view:website:website_sale.checkout
@@ -1167,15 +1206,5 @@ msgstr "☑ Mã hóa 256 bit"
 
 #. module: website_sale
 #: view:website:website_sale.cart
-msgid "☑ 30-days money-back guarantee"
-msgstr "☑ Cam kết hoàn tiền 30-days"
-
-#. module: website_sale
-#: view:website:website_sale.cart
 msgid "☑ Invoice sent by e-Mail"
-msgstr "☑ Gửi hóa đơn bằng email"
-
-#. module: website_sale
-#: view:website:website_sale.cart
-msgid "☑ Processed by Ogone"
-msgstr "☑ Xử lý bởi Ogone"
+msgstr "☑ Hóa đơn được gửi qua email"
