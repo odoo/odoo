@@ -7,8 +7,10 @@
 # Florian Hatat, 2015
 # Loic <loic.richard2@gmail.com>, 2015
 # Martin Trigaux, 2015
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 # Melanie Bernard <mbe@odoo.com>, 2015
 # Sylvain LE GAL <sylvain.legal@grap.coop>, 2015
+# Symons Xavier <xsy@openerp.com>, 2015
 # user 2 odoo <user2odoo@gmail.com>, 2015
 # zoe <yann.hoareau@migs.re>, 2015
 msgid ""
@@ -16,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-11-06 11:35+0000\n"
-"Last-Translator: Florian Hatat\n"
+"PO-Revision-Date: 2015-11-13 16:09+0000\n"
+"Last-Translator: Symons Xavier <xsy@openerp.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +30,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr "Factures Fournisseur"
+msgstr "Nb. de factures fournisseurs"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr
@@ -239,7 +241,7 @@ msgstr "<strong>Nb. d'articles</strong> :<br/>"
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Opening Date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Date d'ouverture</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
@@ -638,7 +640,7 @@ msgstr "Autoriser le caissier à offrir une réduction en pourcentage au client.
 msgid ""
 "Allows you to define a loyalty program in the point of sale, where the "
 "customers earn loyalty points and get rewards"
-msgstr ""
+msgstr "vous permet de définir un programme de fidélisation pour le module POS au travers duquel les clients épargnent des points et obtiennent des récompenses."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_amount
@@ -3729,7 +3731,7 @@ msgstr "La société de l'emplacement de stock est différente de celle du point
 msgid ""
 "The displayed prices will always include all taxes, even if the taxes have "
 "been setup differently"
-msgstr ""
+msgstr "Les prix affichés contiendrons toujours toutes les taxes, même si les taxes ont été mises en place différemment"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_proxy_ip
@@ -3825,7 +3827,7 @@ msgstr "Le système ouvrira toutes les caisses, pour vous permettre de commencer
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_mercury
 msgid "The transactions are processed by MercuryPay"
-msgstr ""
+msgstr "Cette transaction a été effectuée par MercuryPay"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:590
@@ -3837,7 +3839,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_end
 msgid "Theoretical Closing Balance"
-msgstr ""
+msgstr "Solde de clôture théorique"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3986,7 +3988,7 @@ msgstr ""
 msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
-msgstr ""
+msgstr "Cette séquence est créée automatiquement par Odoo, mais vous pouvez la changer pour personnaliser les références de vos commandes."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_template_pos_categ_id
@@ -4009,7 +4011,7 @@ msgstr "Conseils"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tip_product_id
 msgid "Tip Product"
-msgstr ""
+msgstr "Article de Pourboire"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_to_weight
@@ -4032,7 +4034,7 @@ msgstr "Aujourd'hui"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report
 msgid "Today's Payment"
-msgstr ""
+msgstr "Paiements du jour"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
@@ -4049,7 +4051,7 @@ msgstr "Total"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_total_entry_encoding
 msgid "Total Cash Transaction"
-msgstr ""
+msgstr "Total des transactions en liquide"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_total_discount
@@ -4066,7 +4068,7 @@ msgstr "Prix total"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:803
 #, python-format
 msgid "Total Taxes"
-msgstr ""
+msgstr "Total des taxes"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_trans_pos_user_tree
@@ -4086,7 +4088,7 @@ msgstr "Total des lignes de contrôle de clôture"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_balance_start
 msgid "Total of opening cash control lines."
-msgstr ""
+msgstr "Total des lignes de contrôle d'ouverture de caisse."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
@@ -4359,7 +4361,7 @@ msgstr "Vous devez ouvrir au moins une caisse."
 #: code:addons/point_of_sale/point_of_sale.py:1426
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
-msgstr ""
+msgstr "Vous devez sélectionner une liste de prix dans le formulaire de vente !"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1407
@@ -4456,7 +4458,7 @@ msgstr "barcode.rule"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1041
 #, python-format
 msgid "belong to another session:"
-msgstr ""
+msgstr "appartiennent à une autre session :"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_8
@@ -4509,7 +4511,7 @@ msgstr "remise"
 #: code:addons/point_of_sale/static/src/js/screens.js:1850
 #, python-format
 msgid "for an order of"
-msgstr ""
+msgstr "pour une commande de"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:171
@@ -4522,7 +4524,7 @@ msgstr "inutilisé"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1035
 #, python-format
 msgid "paid orders"
-msgstr ""
+msgstr "commandes payées"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -4622,14 +4624,14 @@ msgstr "inconnu"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1036
 #, python-format
 msgid "unpaid orders"
-msgstr ""
+msgstr "commandes non payées"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1038
 #, python-format
 msgid "unpaid orders could not be imported"
-msgstr ""
+msgstr "commandes non payées n'ont pas su être importées"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_uuid

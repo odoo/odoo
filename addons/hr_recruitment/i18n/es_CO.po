@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-11-07 16:34+0000\n"
+"PO-Revision-Date: 2015-11-12 04:23+0000\n"
 "Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgid ""
 "            </p>\n"
 "            <p>Please welcome him/her and help him/her finding his/her marks.</p>\n"
 "            "
-msgstr ""
+msgstr "\n            <p>\n                %if object.department_id:\n                    Me complace anunciar que <strong> ${object.name} </strong> se unirá a nosotros como ${object.job_id.name}\n                    en ${object.department_id.name}.\n                %else:\n                    Me alegra anunciar que <strong> ${object.name} </strong> se unirá a nosotros como ${object.job_id.name}.\n                %endif\n            </p>\n            <p>Démosle la bienvenida y ayudémosle a que alcance sus metas.</p>\n            "
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
@@ -214,7 +214,7 @@ msgstr "Modelo con Alias"
 #. module: hr_recruitment
 #: selection:hr.recruitment.config.settings,module_document:0
 msgid "Allow the automatic indexation of resumes"
-msgstr ""
+msgstr "Permitir la indexación automática de HVs"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -379,7 +379,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_departmnet
 msgid "By Department"
-msgstr ""
+msgstr "Por Departamento"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_job
@@ -405,7 +405,7 @@ msgstr "Cancelar"
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
 msgid "Cases By Stage and Estimates"
-msgstr ""
+msgstr "Casos Por Etapa y Estimaciones"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
@@ -642,7 +642,7 @@ msgstr "Departamento"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_manager_id
 msgid "Department Manager"
-msgstr ""
+msgstr "Director del Departamento"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_description
@@ -674,7 +674,7 @@ msgstr "Nombre Público"
 #. module: hr_recruitment
 #: selection:hr.recruitment.config.settings,module_document:0
 msgid "Do not manage CVs and motivation letter"
-msgstr ""
+msgstr "No manejar HVs y cartas de motivación"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -894,7 +894,7 @@ msgstr "Agrupar por"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_department
 msgid "HR Department"
-msgstr "Departmento RRHH"
+msgstr "Departamento RR.HH."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -1077,7 +1077,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_last_stage_update
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Last Stage Update"
-msgstr ""
+msgstr "Última Actualización de la Etapa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_write_uid
@@ -1144,7 +1144,7 @@ msgstr "Móvil:"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr "Más <i class=\"fa fa-caret-up\"/>"
+msgstr "Más <i class=\"fa fa-caret-down\"/>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_5
@@ -1166,7 +1166,7 @@ msgstr "Nombre"
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 #, python-format
 msgid "New"
-msgstr "Nuevo(a)"
+msgstr "Nuevo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_new_applicant_count
@@ -1223,7 +1223,7 @@ msgstr "Próxima Acción"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_action
 msgid "Next Action Date"
-msgstr ""
+msgstr "Fecha de la Próxima Acción"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1317,7 +1317,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr ""
+msgstr "ID opcional de un hilo (registro) al cual se le adjuntarán todos los mensajes entrantes, incluso si no fueron respuestas del mismo. Si se fija, esto deshabilitará completamente la creación de nuevos registros."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_user_id
@@ -1332,7 +1332,7 @@ msgstr "Modelo Padre"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ID del Hilo del Registro Padre"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_model_id
@@ -1394,7 +1394,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ID del Hilo del Registro"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
@@ -1446,7 +1446,7 @@ msgstr "Estadísticas de la Selección"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_reference
 msgid "Referred By"
-msgstr ""
+msgstr "Referido Por"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1489,13 +1489,13 @@ msgstr "Responsable"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_module_document
 msgid "Resumes"
-msgstr ""
+msgstr "Hojas de Vida"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_resumes
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job02
 msgid "Resumes and Letters"
-msgstr ""
+msgstr "HVs y Cartas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_exp
@@ -1756,13 +1756,13 @@ msgstr "Este formulario tiene como propósito ayudar al responsable de una entre
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts "
 "Ex: Fall_Drive, Christmas_Special"
-msgstr ""
+msgstr "Éste es un nombre que le ayuda a mantener rastro de sus diferentes esfuerzos en las campañas. Por ejemplo: Rebajas_Otoño, Especial_Navidad"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_medium_id
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_medium_id
 msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr ""
+msgstr "Éste es el método de entrega. Por ejemplo: Tarjeta postal, Correo electrónico, o Banner de publicidad"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_source_id
@@ -1770,7 +1770,7 @@ msgstr ""
 msgid ""
 "This is the source of the link Ex: Search Engine, another domain, or name of"
 " email list"
-msgstr ""
+msgstr "Ésta es la fuente del enlace. Ej: motor de búsqueda, otro dominio, o nombre de la lista de correo"
 
 #. module: hr_recruitment
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_1

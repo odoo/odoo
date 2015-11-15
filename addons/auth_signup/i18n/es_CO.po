@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-11-05 21:47+0000\n"
+"PO-Revision-Date: 2015-11-10 19:55+0000\n"
 "Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -57,7 +57,7 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>Se ha solicitado un cambio de contraseña para una cuenta asociada a este correo.</p>\n\n<p>Usted puede cambiarla dentro de las siguientes 24 horas entrando a <a href=\"${object.signup_url}\">este enlace</a>.</p>\n\n<p>Nota: Si usted no esperaba esta notificación, puede simplemente ignorarla.</p>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -69,7 +69,7 @@ msgstr "Invitación de ${object.company_id.name} para conectarse a Odoo"
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr ""
+msgstr "<strong>Un cambio de contraseña ha sido solicitado para este usuario. Un correo con el siguiente enlace fue enviado:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -162,7 +162,7 @@ msgstr "Contraseña"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr "Restablecer contraseña"
+msgstr "Cambiar contraseña"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
@@ -290,7 +290,7 @@ msgstr "Meta título del sitio web"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Su Correo"
+msgstr "Su Usuario"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields

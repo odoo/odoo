@@ -3,15 +3,17 @@
 # * payment_ogone
 # 
 # Translators:
+# Clo <clo@odoo.com>, 2015
 # Cyrille de Lambert <cdelambert@teclib.com>, 2015
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 # Melanie Bernard <mbe@odoo.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-11-03 09:18+0000\n"
-"Last-Translator: Melanie Bernard <mbe@odoo.com>\n"
+"PO-Revision-Date: 2015-11-12 08:30+0000\n"
+"Last-Translator: Clo <clo@odoo.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,14 +36,14 @@ msgstr "; aucune commande trouvée"
 #. module: payment_ogone
 #: model:payment.acquirer,cancel_msg:payment_ogone.payment_acquirer_ogone
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Annulez,</i> Votre paiement a été annulé.</span>"
+msgstr "<span><i>Annuler,</i> votre paiement a été annulé.</span>"
 
 #. module: payment_ogone
 #: model:payment.acquirer,done_msg:payment_ogone.payment_acquirer_ogone
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr "<span><i>Terminé,</i> Votre paiement en-ligne a été enregistré. Merci de votre commande.</span>"
+msgstr "<span><i>Terminé,</i> votre paiement en ligne a été enregistré. Merci de votre commande.</span>"
 
 #. module: payment_ogone
 #: model:payment.acquirer,error_msg:payment_ogone.payment_acquirer_ogone
@@ -56,7 +58,7 @@ msgstr "<span><i>Erreur,</i> une erreur est survenue pendant la transaction. La 
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr "<span><i>En cours,</i> Votre paiement en-ligne a été enregistré. Mais votre commande n'est pas encore validée.</span>"
+msgstr "<span><i>En cours,</i> votre paiement en ligne a été enregistré. Mais votre commande n'est pas encore validée.</span>"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
@@ -105,7 +107,7 @@ msgid ""
 "                                                                this default Alias Usage will be presented to\n"
 "                                                                the customer as the reason you want to\n"
 "                                                                keep his payment data"
-msgstr ""
+msgstr "Si vous voulez utiliser des alias Ogone,\nL'alias par défaut sera présenté au \nclient comme la raison pour laquelle vous voulez\ngarder ses données de paiement"
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
@@ -126,13 +128,13 @@ msgstr "Ogone"
 #: code:addons/payment_ogone/models/ogone.py:247
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
+msgstr "Ogone: SHASIGN invalide, %s reçu, %s calculé, pour les données %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/ogone.py:235
 #, python-format
 msgid "Ogone: received data for reference %s"
-msgstr ""
+msgstr "Ogone: données reçues pour la référence %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/ogone.py:228
@@ -140,7 +142,7 @@ msgstr ""
 msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
 "(%s)"
-msgstr ""
+msgstr "Ogone: données reçues avec la référence manquante (%s) ou pay_id (%s) ou SHASIGN (%s)"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_pspid

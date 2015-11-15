@@ -3,13 +3,14 @@
 # * event
 # 
 # Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-10-23 17:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-11 13:41+0000\n"
+"Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +21,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
 msgid " # No of Cancelled Registrations"
-msgstr ""
+msgstr " # Törölt regisztrációk száma"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_confirm_state
@@ -35,32 +36,32 @@ msgstr " Tervezett regisztrációk száma"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "(stats)"
-msgstr ""
+msgstr "(Statisztikák)"
 
 #. module: event
 #: model:event.event,description:event.event_0
 msgid "3 Intensive Days"
-msgstr ""
+msgstr "3 intenzív nap"
 
 #. module: event
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "5 Intensive Days"
-msgstr ""
+msgstr "5 intenzív nap"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-"
 "locate<br/>the event or change the dates on which it is held.)</em>"
-msgstr ""
+msgstr "<em>(Terem Munka törlésének joga fenntartva, nevezze-újra vagy helyezze-át<br/>az eseményt vagy változtassa meg a szervezési dátumot.)</em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\"/>\n                                        <b>Eddig</b>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -68,7 +69,7 @@ msgstr ""
 #: model:event.event,description:event.event_3
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
-msgstr ""
+msgstr "<i>Képes lesz egy dinamikus oldalt létrehozására, hogy kölcsönhatásba lépjen a halgatókkal.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -77,7 +78,7 @@ msgstr ""
 msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
-msgstr ""
+msgstr "<i>Képes lesz egy teljes alkalmazás fejlesztésére háttér támogatással és felhasználói interfésszel.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -85,7 +86,7 @@ msgstr ""
 #: model:event.event,description:event.event_3
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
-msgstr ""
+msgstr "<i>Képes lesz egy egyszerű dinamikus részekből álló HTML oldal fejlesztésére.</i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -101,7 +102,7 @@ msgid ""
 "For any further information please contact our event department.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr ""
+msgstr "<p>Üdvözlöm ${object.name},</p>\n<p>Ez egy emlékeztető a ${object.event_id.name} eseményre történt regisztrációjára amit jóváhagytunk és megtartásra kerül ${object.event_id.date_begin_located} -tól ${object.event_id.date_end_located} -ig.\nEgyéb felmerülő kérdésekben kérjük vegye fel a kapcsolatot a fejlesztő részlegünkkel.</p>\n<p>Köszönjük a részvételét!</p>\n<p>Viszont látásra</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -111,7 +112,7 @@ msgid ""
 "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr ""
+msgstr "<p>Üdvözlöm ${object.name},</p>\n<p>Visszaigazoljuk, hogy a részvételét a ${object.event_id.name} eseményre rögzítettük.\nKérjük, tekintse meg az email mellékletében az <b>Esemény Jelvény</b>.</p>\n<p>Köszönjük a részvételét!</p>\n<p>Viszont látásra</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -121,7 +122,7 @@ msgid ""
 "You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr ""
+msgstr "        <p>Hello ${object.name},</p>\n        <p>Visszaigazoljuk a feliratkozását erre a rendezvényre ${object.event_id.name} és annak rögzítésére.\n        Automatikus válasz levelet kap a részvétel információiról (mint menetrend, napirend...) amint a rendezvényt jóváhagyták.</p>\n        <p>Köszönjük jelentkezését, részvételét!</p>\n        <p>Viszont látásra</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_thanks
@@ -135,14 +136,14 @@ msgid ""
 "        <strong>${object.event_id.organizer_id.name}</strong>\n"
 "    % endif\n"
 "</p>"
-msgstr ""
+msgstr "<p>Tisztelt ${object.name},</p>\n<p>Köszönjül részvételét az eseményünkön  ${object.event_id.name} eseményünkön.\n<br/><br/>\n    % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n        <strong>The ${object.event_id.organizer_id.name} Csoport</strong>\n    % elif object.event_id.organizer_id:\n        <strong>${object.event_id.organizer_id.name}</strong>\n    % endif\n</p>"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<small>John Doe, CEO</small>"
-msgstr ""
+msgstr "<small>John Doe, CEO</small>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -150,7 +151,7 @@ msgid ""
 "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n                                                erre \n                                            </span>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -161,12 +162,12 @@ msgid ""
 "developers who need to grasp knowledge of the <strong>business applications "
 "development </strong>process. This course is for new developers or for IT "
 "professionals eager to learn more about technical aspects.</span>"
-msgstr ""
+msgstr "<span style=\"text-align: -webkit-center; \">Ez az előadássorozat olyan fejlesztők részére ajánlott  akik az <strong>üzleti alkalmazás fejlesztés</strong>folyamatáról szeretnének ismereteket szerezni. Ez az előadás sorozat új fejlesztőknek vagy IT szakembereknek akik műszaki szemszögből szeretnének tanulni.</span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Conference on Business Apps</strong>"
-msgstr ""
+msgstr "<strong>Konferencia az üzleti alkalmazáshoz</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -175,7 +176,7 @@ msgstr ""
 msgid ""
 "<strong>Having attended this course, participants should be able "
 "to:</strong>"
-msgstr ""
+msgstr "<strong>Jelentkezett erre az előadás sorozatra, résztvevők tudnak majd:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -183,31 +184,31 @@ msgstr ""
 #: model:event.event,description:event.event_2
 #: model:event.event,description:event.event_3
 msgid "<strong>Objectives:</strong>"
-msgstr ""
+msgstr "<strong>Célkitűzések:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Our prices include:</strong>"
-msgstr ""
+msgstr "<strong>Áraink magukban foglalják:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Program:</strong>"
-msgstr ""
+msgstr "<strong>Program:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Requirements:</strong>"
-msgstr ""
+msgstr "<strong>Követelmények:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
-msgstr ""
+msgstr "<strong>Hol talál minket:</strong>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_needaction
@@ -225,37 +226,37 @@ msgstr "Aktív"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Advanced JQuery"
-msgstr ""
+msgstr "Haladó JQuery"
 
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "After each subscription"
-msgstr ""
+msgstr "Mindegyik feliratkozás után"
 
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "After the event"
-msgstr ""
+msgstr "Az esemény után"
 
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
 msgid "All events are free"
-msgstr ""
+msgstr "Összes esemény ingyenes"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
 msgid "Allow adding extra questions on subscriptions"
-msgstr ""
+msgstr "Extra kérdések és feliratkozások engedélyezése"
 
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
 msgid "Allow selling tickets"
-msgstr ""
+msgstr "Jegyek értékesítésének engedélyezése"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_track:0
 msgid "Allow tracks, agenda and dedicated menus/website per event"
-msgstr ""
+msgstr "Nyomon követések,  napirend és ajánlott menük/weboldalak eseményenkénti engedélyezése"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
@@ -272,7 +273,7 @@ msgstr "Archívált"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Arrays"
-msgstr ""
+msgstr "Tömbök"
 
 #. module: event
 #: selection:event.registration,state:0
@@ -301,13 +302,13 @@ msgstr "Feliratkozók"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Attendee / Contact"
-msgstr ""
+msgstr "Feliratkozók / Kapcsolat"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_name
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 msgid "Attendee Name"
-msgstr ""
+msgstr "Feliratkozók neve"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -321,7 +322,7 @@ msgstr "Résztvevők"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_auto_confirmation
 msgid "Auto Confirmation"
-msgstr ""
+msgstr "Automata jóváhagyás"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_back
@@ -331,7 +332,7 @@ msgstr "Jelkép hátul"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_front
 msgid "Badge Front"
-msgstr ""
+msgstr "Jelvény előlap"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
@@ -353,40 +354,40 @@ msgstr "Odoo hírdetés képe"
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "Before the event"
-msgstr ""
+msgstr "Az esemény előtt"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Best regards,"
-msgstr ""
+msgstr "Legjobbakat,"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bootstrap CSS"
-msgstr ""
+msgstr "Rendszertöltő CSS"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bring your own laptop."
-msgstr ""
+msgstr "Hozz saját laptopot."
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Building a Full Application"
-msgstr ""
+msgstr "Építs egy teljes alkalmazást"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Calling the ORM"
-msgstr ""
+msgstr "ORM hívása"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
@@ -420,12 +421,12 @@ msgstr "Kategória"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
-msgstr ""
+msgstr "Chamber Works 60, Rosewood Court Detroit, MI 48212 (Egyesőlt Államok)"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid "Click to add a new event."
-msgstr ""
+msgstr "Kattintson új esemény létrehozásához."
 
 #. module: event
 #: code:addons/event/models/event.py:204
@@ -450,12 +451,12 @@ msgstr "Email írás"
 #. module: event
 #: model:event.type,name:event.event_type_2
 msgid "Conference"
-msgstr ""
+msgstr "Konferencia"
 
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on Business Apps"
-msgstr ""
+msgstr "Konferencia az üzleti alkalmazásoknak"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
@@ -465,7 +466,7 @@ msgstr "Beállítások"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
 msgid "Configure Event"
-msgstr ""
+msgstr "Esemény beállítása"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -491,7 +492,7 @@ msgstr "Regisztráció megerősítése"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
 msgid "Confirmation not required"
-msgstr ""
+msgstr "Jóváhagyás nem szükséges"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -504,7 +505,7 @@ msgstr "Jóváhagyott"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Confirmed attendees"
-msgstr ""
+msgstr "Jóváhagyott résztvevők"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -521,7 +522,7 @@ msgstr "Kapcsolattartó"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Controlers and Views"
-msgstr ""
+msgstr "Vezérlők és nézetek"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -533,7 +534,7 @@ msgstr "Ország"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Course Summary"
-msgstr ""
+msgstr "Előadás sorozat összegzés"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
@@ -585,21 +586,21 @@ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 1"
-msgstr ""
+msgstr "Nap 1"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 2"
-msgstr ""
+msgstr "Nap 2"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 3"
-msgstr ""
+msgstr "Nap 3"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -631,7 +632,7 @@ msgstr "Leírás"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Develop a new module for a particular application."
-msgstr ""
+msgstr "Fejlesszen új modult egy bizonyos alkalmazáshoz."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_display_name
@@ -648,7 +649,7 @@ msgstr "Név megjelenítése"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
 msgid "Display order"
-msgstr ""
+msgstr "Sorrend megjelenítés"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -674,7 +675,7 @@ msgstr "Tervezet"
 msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
-msgstr ""
+msgstr "Konferencia alatt, csoportunk részletes áttekintést fog adni az üzleti alkalmazásainkról. Tudni fogja a használata előnyeit."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -684,17 +685,17 @@ msgstr "Email"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Email Schedule"
-msgstr ""
+msgstr "Email ütemezés"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_group_email_scheduling
 msgid "Email Scheduling"
-msgstr ""
+msgstr "Email ütemezése"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
 msgid "Email to Send"
-msgstr ""
+msgstr "Email küldésre"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
@@ -704,7 +705,7 @@ msgstr "Dátum-ig:"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
 msgid "End Date Located"
-msgstr ""
+msgstr "Befejezés dátuma elhelyezett"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -719,7 +720,7 @@ msgstr "Rendezvény"
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_event_badge
 msgid "Event Badge"
-msgstr ""
+msgstr "Esemény jelvény"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -745,22 +746,22 @@ msgstr "Esemény vége dátuma"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
-msgstr ""
+msgstr "Esemény információ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_logo
 msgid "Event Logo"
-msgstr ""
+msgstr "Esemény logó"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr ""
+msgstr "Esemény email ütemezés"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr ""
+msgstr "Esemény email ütemező"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -839,12 +840,12 @@ msgstr "Rendezvények elemzése"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr ""
+msgstr "Esemény email ütemezők"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 msgid "Events Types"
-msgstr ""
+msgstr "Rendezvény típusai"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -864,7 +865,7 @@ msgstr "Események melyek visszaigazolt állapotúak"
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Exhibition"
-msgstr ""
+msgstr "Kiállítás"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -874,7 +875,7 @@ msgstr "Elvárt"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr ""
+msgstr "Várható résztvevők"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
