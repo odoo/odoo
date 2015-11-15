@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-08-19 10:50+0000\n"
+"PO-Revision-Date: 2015-11-13 14:04+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -151,7 +151,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr "* Lokacija dobavitelja: navidezna lokacija, ki predstavlja izvorno lokacijo za proizvode, ki prihajajo od dobaviteljev\n                       \n* Pogled: navidezna lokacija, ki se uporablja za ustvarjanje hierarhične strukture skladišča, z združevanjem podrejenih lokacij; ne more neposredno vsebovati proizvodov\n                       \n* Interna lokacija: fizična lokacija znotraj lastnega skladišča,\n                       \n* Lokacija kupca: navidezna lokacija, ki predstavlja ciljno lokacijo za proizvode, ki jih pošiljamo kupcem\n                       \n* Inventar: navidezna lokacija, ki služi kot proti-postavka za operacije inventarja pri popravkih količin zalog (fizične inventure)\n                       \n* Nabava: navidezna lokacija, ki služi kot začasna proti-postavka za nabavne operacije, ko je vir (dobavitelj ali proizvodnja) še nepoznan. Ta lokacija bi morala biti prazna, ko se razvrščevalnik ustavi.\n                       \n* Proizvodnja: navidezna proti-postavka lokacije za proizvodne operacije: na tej lokaciji se potrošijo surovine in proizvedejo končni proizvodi\n                       \n* Tranzitna lokacija: proti-postavka lokacije, ki se uporablja pri premikih med družbami in skladišči\n                      "
+msgstr "* Lokacija dobavitelja: navidezna lokacija, ki predstavlja izvorno lokacijo za proizvode, ki prihajajo od dobaviteljev\n                       \n* Prikaz: navidezna lokacija, ki se uporablja za ustvarjanje hierarhične strukture skladišča, z združevanjem podrejenih lokacij; ne more neposredno vsebovati proizvodov\n                       \n* Interna lokacija: fizična lokacija znotraj lastnega skladišča,\n                       \n* Lokacija kupca: navidezna lokacija, ki predstavlja ciljno lokacijo za proizvode, ki jih pošiljamo kupcem\n                       \n* Inventar: navidezna lokacija, ki služi kot proti-postavka za operacije inventarja pri popravkih količin zalog (fizične inventure)\n                       \n* Nabava: navidezna lokacija, ki služi kot začasna proti-postavka za nabavne operacije, ko je vir (dobavitelj ali proizvodnja) še nepoznan. Ta lokacija bi morala biti prazna, ko se razvrščevalnik ustavi.\n                       \n* Proizvodnja: navidezna proti-postavka lokacije za proizvodne operacije: na tej lokaciji se potrošijo surovine in proizvedejo končni proizvodi\n                       \n* Tranzitna lokacija: proti-postavka lokacije, ki se uporablja pri premikih med družbami in skladišči\n                      "
 
 #. module: stock
 #. openerp-web
@@ -258,7 +258,7 @@ msgid ""
 "                if it should show the customer.  \n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Ustvari nov tip zbirnika. \n              </p><p>\n                Tip zbirnika omogoča dodeljevanje specifičnega tipa\n                vsaki operaciji zaloge, glede na kar se pogledi spremenijo.  \n                Na tipu zbirnika lahko npr. določimo, če je pakiranje privzeto zahtevano, \n                če je vidno kupcu.  \n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Ustvari nov tip zbirnika. \n              </p><p>\n                Tip zbirnika omogoča dodeljevanje specifičnega tipa\n                vsaki operaciji zaloge, glede na kar se prikazi spremenijo.  \n                Na tipu zbirnika lahko npr. določimo, če je pakiranje privzeto zahtevano, \n                če je vidno kupcu.  \n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
@@ -641,7 +641,7 @@ msgstr "Če odznačite polje aktivno, lahko skrijete INCOTERM, ki ga ne boste up
 #. module: stock
 #: view:stock.picking:stock.stock_picking_calendar
 msgid "Calendar View"
-msgstr "Koledarski pogled"
+msgstr "Koledarski prikaz"
 
 #. module: stock
 #: code:addons/stock/stock.py:2989
@@ -1641,7 +1641,7 @@ msgstr "Višina (Z)"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v html formatu, da se lahko vstavlja v poglede kanban."
+msgstr "Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v html formatu, da se lahko vstavlja v kanban prikaze."
 
 #. module: stock
 #: field:make.procurement,id:0 field:procurement.orderpoint.compute,id:0
@@ -3159,7 +3159,7 @@ msgstr "Naziv tipa zbirnika"
 msgid ""
 "Picking Type determines the way the picking should be shown in the view, "
 "reports, ..."
-msgstr "Tip zbirnika določi način prikaza zbirnikov v pogledih, poročilih, ..."
+msgstr "Tip zbirnika določi način prikaza zbirnikov v prikazih, poročilih, ..."
 
 #. module: stock
 #: field:stock.picking.type,return_picking_type_id:0
@@ -3229,13 +3229,13 @@ msgstr "Določite vsaj eno količino različno od 0."
 #: code:addons/stock/wizard/stock_change_product_qty.py:58
 #, python-format
 msgid "Please use the Product Variant view to update the product quantity."
-msgstr "Za posodobitev količin proizvoda uporabite pogled različice proizvoda."
+msgstr "Za posodobitev količin proizvoda uporabite prikaz različice proizvoda."
 
 #. module: stock
 #: code:addons/stock/wizard/make_procurement_product.py:117
 #, python-format
 msgid "Please use the Product Variant vue to request a procurement."
-msgstr "Za zahtevo po oskrbi uporabite pogled različice proizvoda."
+msgstr "Za zahtevo po oskrbi uporabite prikaz različice proizvoda."
 
 #. module: stock
 #: field:stock.move,product_packaging:0
@@ -4580,7 +4580,7 @@ msgstr "Tehnično polje z omejitvami lastništva na lotih kvantov, ki se upošte
 msgid ""
 "Technical field used to display the correct label on print button in the "
 "picking view"
-msgstr "Tehnično polje za prikaz prave etikete na gumbu za tiskanje v pogledu zbirnika"
+msgstr "Tehnično polje za prikaz prave etikete na gumbu za tiskanje v prikazu zbirnika"
 
 #. module: stock
 #: help:stock.return.picking,move_dest_exists:0
@@ -5179,7 +5179,7 @@ msgstr "Uporabljeno za izbor lota/serijske številke vrnjenega proizvoda"
 #. module: stock
 #: help:stock.picking.type,sequence:0
 msgid "Used to order the 'All Operations' kanban view"
-msgstr "Uporabljeno za urejanje 'Vseh operacij' v pogledu kanban."
+msgstr "Uporabljeno za urejanje 'Vseh operacij' v prikazu kanban."
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
@@ -5222,7 +5222,7 @@ msgstr "Zelo nujno"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "View"
-msgstr "Pogled"
+msgstr "Prikaz"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
@@ -5439,7 +5439,7 @@ msgstr "Ne morete preklicati premika zaloge s statusom 'Opravljeno'."
 #: code:addons/stock/stock.py:638
 #, python-format
 msgid "You cannot move to a location of type view %s."
-msgstr "Ne morete premikati na lokacijo tipa pogled %s."
+msgstr "Ne morete premikati na lokacijo tipa prikaz %s."
 
 #. module: stock
 #: code:addons/stock/stock.py:2625
@@ -5560,7 +5560,7 @@ msgstr "reverz"
 #: help:stock.inventory,move_ids_exist:0
 #: help:stock.picking,pack_operation_exist:0
 msgid "technical field for attrs in view"
-msgstr "tehnično polje za atribute v pogledu"
+msgstr "tehnično polje za atribute v prikazu"
 
 #. module: stock
 #: help:stock.picking,quant_reserved_exist:0
