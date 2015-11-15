@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2015-07-17 08:20+0000\n"
+"PO-Revision-Date: 2015-11-11 13:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-8/language/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -105,14 +105,14 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: website_quote
 #: model:email.template,subject:website_quote.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: website_quote
 #: view:website:website_quote.optional_products
@@ -124,7 +124,7 @@ msgstr "% discount"
 #: view:website:website_quote.so_quotation
 #: view:website:website_quote.so_template
 msgid "&times;"
-msgstr ""
+msgstr "&times;"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -650,7 +650,7 @@ msgstr "Valyti"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Contact us"
-msgstr ""
+msgstr "Susisiekite su mumis"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1165,7 +1165,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Reference:"
-msgstr ""
+msgstr "Jūsų užsakymo numeris:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1218,7 +1218,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.chatter
 msgid "on"
-msgstr ""
+msgstr "įjungta"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
