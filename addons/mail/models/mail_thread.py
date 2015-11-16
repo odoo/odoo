@@ -366,7 +366,7 @@ class MailThread(models.AbstractModel):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='message_ids']"):
                 # the 'Log a note' button is employee only
-                options = json.loads(node.get('options', '{}'))
+                options = eval(node.get('options', '{}'))
                 is_employee = self.env.user.has_group('base.group_user')
                 options['display_log_button'] = is_employee
                 if is_employee:
@@ -379,7 +379,7 @@ class MailThread(models.AbstractModel):
                 # emoji list
                 options['emoji_list'] = self.env['mail.shortcode'].search([('shortcode_type', '=', 'image')]).read(['source', 'description', 'substitution'])
                 # save options on the node
-                node.set('options', json.dumps(options))
+                node.set('options', repr(options))
             res['arch'] = etree.tostring(doc)
         return res
 

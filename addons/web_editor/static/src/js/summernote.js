@@ -676,6 +676,13 @@ dom.isFont = function (node) {
 dom.isVisibleText = function (textNode) {
   return !!textNode.textContent.match(/\S|\u00A0/);
 };
+
+/* avoid thinking HTML comment are visible */
+var old_isVisiblePoint = dom.isVisiblePoint;
+dom.isVisiblePoint = function (point) {
+  return point.node.nodeType !== 8 && old_isVisiblePoint.apply(this, arguments);
+};
+
 /**
  * order the style of the node to compare 2 nodes and remove attribute if empty
  *
