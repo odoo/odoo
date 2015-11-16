@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import lxml
+from lxml import html
 import random
 
 from odoo import api, fields, models, _
@@ -83,6 +84,7 @@ class BlogPost(models.Model):
         'blog.tag', string='Tags'
     )
     content = fields.Html(string='Content', translate=True, sanitize=False, default=_default_content)
+    teaser = fields.Text(string='Teaser Content', compute='_compute_teaser')
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
         domain=lambda self: [
@@ -111,6 +113,14 @@ class BlogPost(models.Model):
         result = super(BlogPost, self).write(vals)
         self._check_for_publication(vals)
         return result
+
+    @api.one
+    @api.depends('content')
+    def _compute_teaser(self):
+        text_content = ''
+        for p in html.fragment_fromstring(self.content, create_parent='div').xpath('//p'):
+            text_content += p.text.replace('\n', ' ')
+        self.teaser = ' '.join(filter(None, text_content.split(' '))[:50]) + '...'
 
     @api.multi
     def _website_url(self, field_name, arg):
