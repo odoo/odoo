@@ -67,14 +67,20 @@ msgid ""
 "                        </p>\n"
 "                        %(static_help)s"
 msgstr ""
-
+"<p class='oe_view_nocontent_create'>\n"
+"                            Bấm để tạo mởi %(document)s hoặc gửi một "
+"email đến: <a href='mailto:%(email)s'>%(email)s</a>\n"
+"                        </p>\n"
+"                        %(static_help)s"
 #. module: mail
 #: code:addons/mail/mail_thread.py:145
 #, python-format
 msgid ""
-"<p class='oe_view_nocontent_create'>Bấm để tạo mới "
+"<p class='oe_view_nocontent_create'>Click here to add new "
 "%(document)s</p>%(static_help)s"
 msgstr ""
+"<p class='oe_view_nocontent_create'>Bấm để tạo mới "
+"%(document)s</p>%(static_help)s"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_inbox_feeds
@@ -179,12 +185,12 @@ msgstr "Truy cập bị từ chối"
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Nhóm truy cập"
 
 #. module: mail
 #: help:mail.message.subtype,default:0
 msgid "Activated by default when subscribing."
-msgstr ""
+msgstr "Được kích hoạt mặc định khi đăng ký nhận tin"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -212,7 +218,7 @@ msgstr "Thêm một ghi chú nội bộ, cái mà sẽ không được gửi cho
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
 msgid "Add contacts to notify..."
-msgstr "Thêm các Liên hệ để thông báo"
+msgstr "Thêm các Liên hệ để thông báo..."
 
 #. module: mail
 #. openerp-web
@@ -278,7 +284,7 @@ msgstr ""
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "All Messages"
-msgstr ""
+msgstr "Tất cả thông điệp"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
