@@ -312,7 +312,7 @@
                                     <field name="journal_id" groups="account.group_account_user" options="{'no_create': True}"
                                         attrs="{'readonly':[('move_name','!=',False)]}"/>
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" invisible="1"/>
-                                    <field name="user_id" string="Responsible" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
+                                    <field name="user_id" string="Responsible"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable')]"
                                 name="account_id" groups="account.group_account_manager"/>
                                     <field name="name" invisible="1"/>
@@ -379,7 +379,7 @@
                         <group>
                             <field name="date_invoice"/>
                             <field name="move_name" invisible="1"/>
-                            <field name="user_id" groups="base.group_user" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
+                            <field name="user_id" groups="base.group_user"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
                             <div groups="base.group_multi_currency">
                                 <field name="currency_id" options="{'no_create': True, 'no_open': True}" class="oe_inline"/>
