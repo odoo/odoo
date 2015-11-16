@@ -91,7 +91,7 @@ odoo.define('website_blog.editor', function (require) {
             this.src = null;
             this.$cover.css({"background-image": '', 'min-height': ''});
             this.$image.removeAttr("src");
-            this.$target.removeClass('cover cover_full cover_narrow');
+            this.$target.removeClass('cover cover_full cover_narrow cover_midscreen cover_mid_narrow');
         },
         change : function(type, value, $li) {
             if (type !== 'click') return;
@@ -99,7 +99,7 @@ odoo.define('website_blog.editor', function (require) {
             var editor  = new widget.MediaDialog(null, {only_images: true}, this.$image, this.$image[0]).open();
             editor.on('saved', self, function (event, img) {
                 var url = self.$image.attr('src');
-                self.$cover.css({"background-image": url ? 'url(' + url + ')' : "", 'min-height': $(window).height()-this.$cover.offset().top});
+                self.$cover.css({"background-image": url ? 'url(' + url + ')' : ""});
                 self.$target.addClass('o_dirty cover cover_full');
                 self.set_active();
             });
@@ -123,7 +123,17 @@ odoo.define('website_blog.editor', function (require) {
             this.value = this.$cover.css('opacity');
             this.$el.parent().find('.snippet-option-website_blog:not(li[data-change])').toggleClass("hidden", !this.$target.hasClass("cover"));
             this.$el.find('li[data-bgcolor], li[data-opacity], li[data-cover_class]').removeClass("active");
-            this.$el.find('[data-bgcolor="' + this.background + '"], [data-opacity="' + parseFloat(this.value).toFixed(1) + '"], [data-cover_class*="' + ((this.class||'').indexOf('cover_full') === -1 ? 'container' : 'cover_full') + '"]').addClass("active");
+            this.$el.find('[data-bgcolor="' + this.background + '"], [data-opacity="' + parseFloat(this.value).toFixed(1) + '"]').addClass("active");
+
+            if ((this.class || '').indexOf('cover_narrow') != -1) {
+                this.$el.find('[data-cover_class*=cover_narrow]').addClass("active");
+            } else if ((this.class || '').indexOf('cover_midscreen') != -1) {
+                this.$el.find('[data-cover_class*=cover_midscreen]').addClass("active");
+            } else if ((this.class || '').indexOf('cover_mid_narrow') != -1) {
+                this.$el.find('[data-cover_class*=cover_mid_narrow]').addClass("active");
+            } else {
+                this.$el.find('[data-cover_class*=cover_full]').addClass("active");
+            }
         },
     });
 });
