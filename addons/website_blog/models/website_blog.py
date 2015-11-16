@@ -3,6 +3,7 @@
 
 from datetime import datetime
 import lxml
+from lxml import html
 import random
 
 from odoo import api, models, fields, _
@@ -114,6 +115,7 @@ class BlogPost(models.Model):
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
+    teaser = fields.Text(string='Teaser Content', compute='_compute_teaser')
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
         domain=lambda self: [
@@ -131,6 +133,14 @@ class BlogPost(models.Model):
     author_avatar = fields.Binary(related='author_id.image_small', string="Avatar")
     visits = fields.Integer('No of Views')
     ranking = fields.Float(compute='_compute_ranking', string='Ranking')
+
+    @api.one
+    @api.depends('content')
+    def _compute_teaser(self):
+        text_content = ''
+        for p in html.fragment_fromstring(self.content, create_parent='div').xpath('//p'):
+            text_content += p.text.replace('\n', ' ')
+        self.teaser = ' '.join(filter(None, text_content.split(' '))[:50]) + '...'
 
     def html_tag_nodes(self, html, attribute=None, tags=None):
         """ Processing of html content to tag paragraphs and set them an unique
