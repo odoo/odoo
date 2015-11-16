@@ -19,6 +19,7 @@ var ChannelModel = new Model('mail.channel', session.context);
 //----------------------------------------------------------------------------------
 var messages = [];
 var channels = [];
+var channel_defs = {};
 var emojis = [];
 var emoji_substitutions = {};
 var needaction_counter = 0;
@@ -339,6 +340,10 @@ function on_channel_notification (message) {
     if (channel) {
         channel.unread_counter++;
         add_message(message, { channel_id: channel.id, show_notification: true });
+    } else {
+        chat_manager.join_channel(message.channel_ids[0], {autoswitch: false}).then(function() {
+            add_message(message, { channel_id: message.channel_ids[0], show_notification: true });
+        });
     }
 }
 
@@ -378,14 +383,14 @@ function on_mark_as_read_notification (data) {
             chat_manager.bus.trigger('update_message', message);
         }
     });
-    if (data.channel_ids.length) {
+    if (data.channel_ids) {
         _.each(data.channel_ids, function (channel_id) {
             var channel = chat_manager.get_channel(channel_id);
             if (channel) {
                 channel.needaction_counter -= data.message_ids.length;
             }
         });
-    } else {
+    } else { // if no channel_ids specified, this is a 'mark all read' in the inbox
         _.each(channels, function (channel) {
             channel.needaction_counter = 0;
         });
@@ -395,6 +400,12 @@ function on_mark_as_read_notification (data) {
 }
 
 function on_mark_as_unread_notification (data) {
+    _.each(data.message_ids, function (message_id) {
+        var message = _.findWhere(messages, { id: message_id });
+        if (message) {
+            add_channel_to_message(message, 'channel_inbox');
+        }
+    });
     _.each(data.channel_ids, function (channel_id) {
         var channel = chat_manager.get_channel(channel_id);
         if (channel) {
@@ -407,7 +418,7 @@ function on_mark_as_unread_notification (data) {
 
 function on_chat_session_notification (chat_session) {
     if ((chat_session.channel_type === "channel") && (chat_session.public === "private") && (chat_session.state === "open")) {
-        add_channel(chat_session, {autoswitch: false});
+        add_channel(chat_session, {autoswitch: false, silent: true, hidden: true});
         if (!chat_session.is_minimized) {
             web_client.do_notify(_t("Private Channel"), _t("You have been invited to: ") + chat_session.name);
         }
@@ -468,7 +479,7 @@ var chat_manager = {
     },
     mark_all_as_read: function (channel) {
         if ((!channel && needaction_counter) || (channel && channel.needaction_counter)) {
-            return MessageModel.call('mark_all_as_read', channel ? [[channel.id]] : [[]]);
+            return MessageModel.call('mark_all_as_read', channel ? [[channel.id]] : []);
         }
         return $.when();
     },
@@ -525,11 +536,16 @@ var chat_manager = {
             .then(add_channel);
     },
     join_channel: function (channel_id, options) {
-        return ChannelModel
+        if (channel_id in channel_defs) {
+            return channel_defs[channel_id];
+        }
+        var def = ChannelModel
             .call('channel_join_and_get_info', [[channel_id]])
             .then(function (result) {
                 add_channel(result, options);
             });
+        channel_defs[channel_id] = def;
+        return def;
     },
 
     unsubscribe: function (channel) {
