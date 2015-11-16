@@ -262,16 +262,10 @@ class res_users(osv.osv):
         return False
 
     def _get_group(self,cr, uid, context=None):
-        dataobj = self.pool.get('ir.model.data')
-        result = []
-        try:
-            dummy,group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_user')
-            result.append(group_id)
-            dummy,group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_partner_manager')
-            result.append(group_id)
-        except ValueError:
-            # If these groups does not exists anymore
-            pass
+        default_user = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'base.default_user')
+        if not default_user:
+            return []
+        result = default_user.groups_id.ids
         return result
 
     _defaults = {
