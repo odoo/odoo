@@ -550,10 +550,10 @@ var chat_manager = {
 
     unsubscribe: function (channel) {
         var def;
-        if (channel.type === "dm") {
-            def = ChannelModel.call('channel_pin', [channel.uuid, false]);
-        } else {
+        if (_.contains(['public', 'private'], channel.type)) {
             def = ChannelModel.call('action_unfollow', [[channel.id]]);
+        } else {
+            def = ChannelModel.call('channel_pin', [channel.uuid, false]);
         }
         return def.then(function () {
             channels = _.without(channels, channel);
