@@ -312,7 +312,7 @@ class calendar_event(osv.Model):
         'stop_datetime': fields.datetime('End Datetime', states={'done': [('readonly', True)]}, track_visibility='onchange'),  # old date_deadline
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
-        'class': fields.selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', states={'done': [('readonly', True)]}),
+        'privacy': fields.selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', oldname='class',  states={'done': [('readonly', True)]}),
         'location': fields.char('Location', help="Location of Event", track_visibility='onchange', states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}),
 
@@ -1041,7 +1041,7 @@ class calendar_event(osv.Model):
         if context is None:
             context = {}
         fields2 = fields and fields[:] or None
-        EXTRAFIELDS = ('class', 'user_id', 'duration', 'allday', 'start', 'start_date', 'start_datetime', 'rrule')
+        EXTRAFIELDS = ('privacy', 'user_id', 'duration', 'allday', 'start', 'start_date', 'start_datetime', 'rrule')
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)
@@ -1079,7 +1079,7 @@ class calendar_event(osv.Model):
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
                 if user_id == uid:
                     continue
-            if r['class'] == 'private':
+            if r['privacy'] == 'private':
                 for f in r.keys():
                     if f not in ('id', 'allday', 'start', 'stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule'):
                         if isinstance(r[f], list):

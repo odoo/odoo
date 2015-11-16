@@ -2,7 +2,7 @@
   In Order to test calendar, I will first create One Simple Event with real data
 -
     !record {model: calendar.event, id: calendar_event_technicalpresentation0}:
-        class: private
+        privacy: private
         start: '2011-04-30 16:00:00'
         stop: '2011-04-30 18:30:00'
         description: The Technical Presentation will cover following topics:\n* Creating OpenERP
@@ -46,7 +46,7 @@
 -
     !record {model: calendar.event, id: calendar_event_alldaytestevent0}:
         allday: 1
-        class: confidential
+        privacy: confidential
         start: '2011-04-30 00:00:00'
         stop: '2011-04-30 00:00:00'
         description: 'All day technical test '
