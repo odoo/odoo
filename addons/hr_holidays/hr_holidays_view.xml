@@ -22,7 +22,6 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <field name="name"/>
-                    <filter string="My Leaves" domain="[('user_id','=',uid)]" name="my_leaves"/>
                     <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                     <filter string="Approved Leaves" domain="[('state', '=', 'validate')]" name="validated"/>
                     <separator/>
@@ -45,7 +44,7 @@
                                              ('date_from', '&gt;=', time.strftime('%%Y-01-01'))]"
                         help="Current Year Leaves"/>
                     <separator/>
-                    <filter string="My Requests" name="my_leaves" domain="[('user_id', '=', uid)]" help="My Leave Requests"/>
+                    <filter string="My Requests" name="my_leaves" domain="[('user_id', '=', uid)]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>
