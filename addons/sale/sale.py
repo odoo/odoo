@@ -726,7 +726,7 @@ class SaleOrderLine(models.Model):
         self.update(vals)
         return {'domain': domain}
 
-    @api.onchange('product_uom')
+    @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         if not self.product_uom:
             self.price_unit = 0.0
