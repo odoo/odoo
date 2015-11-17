@@ -369,13 +369,7 @@
                                 <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                                 <field name="name"/>
                                 <field name="phone"/>
-                                <label for="email"/>
-                                <div>
-                                    <field name="email" class="oe_inline"/>
-                                    <button class="oe_inline oe_right" string="Send Email"
-                                        name="%(mail.action_email_compose_message_wizard)d"
-                                        icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
-                                </div>
+                                <field name="email"/>
                             </group>
                             <group>
                                 <field name="nb_register"/>
