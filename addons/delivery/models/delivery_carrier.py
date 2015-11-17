@@ -21,7 +21,7 @@
 
 import logging
 from openerp import models, fields, api
-from openerp.exceptions import UserError, ValidationError
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -72,9 +72,6 @@ class DeliveryCarrier(models.Model):
                         # no suitable delivery method found, probably configuration error
                         _logger.info("Carrier %s: %s, not found", self.name, e.name)
                         self.price = 0.0
-                except ValidationError as e:
-                    _logger.info("Carrier %s: %s, not available: %s", self.name, e.name, e.message)
-                    self.price = 0.0
             else:
                 res = super(DeliveryCarrier, self).get_price('price', [])
                 self.available = res[self.id]['available']
