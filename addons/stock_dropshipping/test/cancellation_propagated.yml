@@ -93,8 +93,8 @@
     assert purchase_line.product_qty == 5.0, 'The product quantity of the first order line should be 5 and not %s' % (purchase_line.product_qty,)
     assert purchase_line.product_uom.id == ref("product.product_uom_unit"), 'The product UoM ID of the first order line should be %s and not %s' % (ref("product.product_uom_unit"), purchase_line.product_uom.id,)
     purchase_line = purchase_ids[0].order_line[1]
-    assert purchase_line.product_qty == 2.0, 'The product quantity of the first order line should be 2 and not %s' % (purchase_line.product_qty,)
-    assert purchase_line.product_uom.id == ref("product.product_uom_dozen"), 'The product UoM ID of the second order line should be %s and not %s' % (ref("product.product_uom_dozen"), purchase_line.product_uom.id,)
+    assert purchase_line.product_qty == 24.0, 'The product quantity of the second order line should be 2 and not %s' % (purchase_line.product_qty,)
+    assert purchase_line.product_uom.id == ref("product.product_uom_unit"), 'The product UoM ID of the second order line should be %s and not %s' % (ref("product.product_uom_dozen"), purchase_line.product_uom.id,)
 
     # Let us cancel the procurement related to the 2nd sales order first and check that the 2 Dozen(s) are subtracted correctly
     so2 = self.pool.get('sale.order').browse(cr, uid, ref('sale_order_product_mto2'))

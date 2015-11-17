@@ -736,9 +736,9 @@ class ProcurementOrder(models.Model):
 
         return {
             'name': name,
-            'product_qty': self.product_qty,
+            'product_qty': self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_qty, seller.product_uom) if seller else self.product_qty,
             'product_id': self.product_id.id,
-            'product_uom': self.product_uom.id,
+            'product_uom': seller.product_uom.id if seller else self.product_uom.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
             'taxes_id': [(6, 0, taxes_id)],
