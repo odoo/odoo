@@ -738,9 +738,10 @@ var FieldPercentPie = common.AbstractField.extend({
                 .donut(true) 
                 .showLegend(false)
                 .showLabels(false)
-                .tooltips(false)
                 .color(['#7C7BAD','#DDD'])
                 .donutRatio(0.62);
+
+            chart.tooltip.enabled(false);
    
             d3.select(svg)
                 .datum([{'x': 'value', 'y': value}, {'x': 'complement', 'y': 100 - value}])
