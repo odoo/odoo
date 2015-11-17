@@ -271,10 +271,11 @@ def xml_translate(callback, value):
         trans.process(root)
         return trans.get_done()
     except etree.ParseError:
-        # fallback in case it is a translated term...
-        root = etree.fromstring("<div>%s</div>" % encode(value))
-        trans.process(root)
-        return trans.get_done()[5:-6]       # remove tags <div> and </div>
+        # fallback for translated terms: use an HTML parser and wrap the term
+        wrapped = "<div>%s</div>" % encode(value)
+        root = etree.fromstring(wrapped, etree.HTMLParser(encoding='utf-8'))
+        trans.process(root[0][0])               # html > body > div
+        return trans.get_done()[5:-6]           # remove tags <div> and </div>
 
 def html_translate(callback, value):
     """ Translate an HTML value (string), using `callback` for translating text
