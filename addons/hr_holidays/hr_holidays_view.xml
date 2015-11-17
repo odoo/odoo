@@ -38,10 +38,11 @@
                     <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
                     <separator/>
                     <filter name="year" string="Year"
-                        domain="['|','&amp;',('date_to', '&lt;=', time.strftime('%%Y-12-31')),
-                                             ('date_to', '&gt;=', time.strftime('%%Y-01-01')),
-                                     '&amp;',('date_from', '&lt;=', time.strftime('%%Y-12-31')),
-                                             ('date_from', '&gt;=', time.strftime('%%Y-01-01'))]"
+                        domain="['|',
+'&amp;', '&amp;', ('date_to', '=', False), ('date_from', '=', False), ('holiday_status_id.active', '=', True),
+'|',
+    '&amp;',('date_to', '&lt;=', time.strftime('%%Y-12-31')), ('date_to', '&gt;=', time.strftime('%%Y-01-01')),
+    '&amp;',('date_from', '&lt;=', time.strftime('%%Y-12-31')), ('date_from', '&gt;=', time.strftime('%%Y-01-01'))]"
                         help="Current Year Leaves"/>
                     <separator/>
                     <filter string="My Requests" name="my_leaves" domain="[('user_id', '=', uid)]"/>
