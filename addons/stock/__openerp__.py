@@ -32,7 +32,7 @@ Dashboard / Reports for Inventory Management will include:
 * Moves Analysis
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['product', 'procurement', 'barcodes', 'web_planner'],
+    'depends': ['product', 'procurement', 'barcodes', 'web_planner', 'l10n_generic_coa'],
     'category': 'Inventory Management',
     'sequence': 13,
     'demo': [

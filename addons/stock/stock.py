@@ -1845,7 +1845,7 @@ class StockMove(models.Model):
     propagate = fields.Boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too', default=True)
     picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
-    lot_ids = fields.Many2many(compute="_get_lot_ids", relation='stock.production.lot', string='Lots')
+    lot_ids = fields.Many2many(compute="_get_lot_ids", comodel_name='stock.production.lot', string='Lots')
     origin_returned_move_id = fields.Many2one('stock.move', 'Origin return move', help='move that created the return move', copy=False)
     returned_move_ids = fields.One2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move')
     reserved_availability = fields.Float(compute="_get_reserved_availability", string='Quantity Reserved', readonly=True, help='Quantity that has already been reserved for this move')
