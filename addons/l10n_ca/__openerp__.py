@@ -9,7 +9,7 @@
     'category': 'Localization/Account Charts',
     'description': """
 This is the module to manage the Canadian accounting chart in OpenERP.
-===========================================================================================
+======================================================================
 
 Canadian accounting charts and localizations.
 
