@@ -42,6 +42,8 @@ class report_custom(report_rml):
         rml_obj.localcontext.update({'lang':context.get('lang',False)})
         company_currency = user_pool.browse(cr, uid, uid).company_id.currency_id
         company_currency_symbol = company_currency.symbol or company_currency.name
+        product_uom_digits = rml_obj.get_digits(dp='Product Unit of Measure')
+        purchase_price_digits = rml_obj.get_digits(dp='Product Price')
         def process_bom(bom, currency_id, factor=1):
             xml = '<row>'
             sum = 0
@@ -63,7 +65,7 @@ class report_custom(report_rml):
                         'uom': prod.uom_po_id.id,
                         'date': time.strftime('%Y-%m-%d'),
                         })[pricelist.id]
-                main_sp_price = """<b>"""+rml_obj.formatLang(price)+' '+ (company_currency_symbol)+"""</b>\r\n"""
+                main_sp_price = """<b>"""+rml_obj.formatLang(price, digits=purchase_price_digits)+' '+ (company_currency_symbol)+"""</b>\r\n"""
                 sum += prod_qtty*price
             std_price = product_uom_pool._compute_price(cr, uid, prod.uom_id.id, prod.standard_price, to_uom_id=product_uom.id)
             main_strd_price = str(std_price) + '\r\n'
@@ -78,11 +80,11 @@ class report_custom(report_rml):
                         'uom': prod.uom_po_id.id,
                         'date': time.strftime('%Y-%m-%d'),
                         })[pricelist.id]
-                sellers_price += """<i>"""+rml_obj.formatLang(price) +' '+ (company_currency_symbol) +"""</i>\r\n"""
+                sellers_price += """<i>"""+rml_obj.formatLang(price, digits=purchase_price_digits) +' '+ (company_currency_symbol) +"""</i>\r\n"""
             xml += """<col para='yes'> """+ prod_name +""" </col>
                     <col para='yes'> """+ main_sp_name + sellers + """ </col>
-                    <col f='yes'>"""+ rml_obj.formatLang(prod_qtty) +' '+ product_uom_name +"""</col>
-                    <col f='yes'>"""+ rml_obj.formatLang(float(main_strd_price)) +' '+ (company_currency_symbol) +"""</col>
+                    <col f='yes'>"""+ rml_obj.formatLang(prod_qtty, digits=product_uom_digits) +' '+ product_uom_name +"""</col>
+                    <col f='yes'>"""+ rml_obj.formatLang(float(main_strd_price), digits=purchase_price_digits) +' '+ (company_currency_symbol) +"""</col>
                     <col f='yes'>""" + main_sp_price + sellers_price + """</col>'"""
 
             xml += '</row>'
@@ -139,8 +141,6 @@ class report_custom(report_rml):
                     <col t='yes'>%s</col>
                 </row>
         """ % (_('Components'), _('Components suppliers'), _('Quantity'),_('Cost Price per Unit of Measure'), _('Supplier Price per Unit of Measure'))
-
-        purchase_price_digits = rml_obj.get_digits(dp='Product Price')
 
         for product in product_pool.browse(cr, uid, ids, context=context):
             product_uom_name = to_xml(product.uom_id.name)
