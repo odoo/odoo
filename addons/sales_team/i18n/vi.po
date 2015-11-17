@@ -30,6 +30,14 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Bấm để định nghĩa một Đội bán hàng.\n"
+"                </p><p>\n"
+"                    Sử dụng đội bán hàng để tổ chức các bộ phận hay nhân viên bán hàng khác nhau\n"
+"                    thành các đội riêng biệt. Mỗi đội sẽ làm việc trong với một danh mục cơ hội\n"
+"                    riêng của đội.\n"
+"                </p>\n"
+"            "
 
 #. module: sales_team
 #: field:crm.case.section,active:0
@@ -39,12 +47,12 @@ msgstr "Có hiệu lực"
 #. module: sales_team
 #: help:sale.config.settings,group_multi_salesteams:0
 msgid "Allows you to use Sales Teams to manage your leads and opportunities."
-msgstr ""
+msgstr "Cho phép bạn sử dụng Đội bán hàng để quản lý nguồn dẫn và cơ hội của bạn."
 
 #. module: sales_team
 #: field:crm.case.section,child_ids:0
 msgid "Child Teams"
-msgstr ""
+msgstr "Đội con"
 
 #. module: sales_team
 #: field:crm.case.section,code:0
@@ -54,17 +62,17 @@ msgstr "Mã"
 #. module: sales_team
 #: field:crm.case.section,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Mã màu"
 
 #. module: sales_team
 #: field:crm.case.section,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Tạo bởi"
 
 #. module: sales_team
 #: field:crm.case.section,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: sales_team
 #: help:crm.case.section,message_last_post:0
@@ -74,7 +82,7 @@ msgstr ""
 #. module: sales_team
 #: field:res.users,default_section_id:0
 msgid "Default Sales Team"
-msgstr ""
+msgstr "Đội bán hàng mặc định"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_salesteams_view_kanban
@@ -89,12 +97,12 @@ msgstr "Mô tả"
 #. module: sales_team
 #: model:crm.case.section,name:sales_team.section_sales_department
 msgid "Direct Sales"
-msgstr ""
+msgstr "Bán trực tiếp"
 
 #. module: sales_team
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive Sales team."
-msgstr ""
+msgstr "Lỗi! Bạn không thể tạo Đội bán hàng đệ quy."
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_view_form
@@ -140,7 +148,7 @@ msgstr ""
 #. module: sales_team
 #: model:crm.case.section,name:sales_team.crm_case_section_1
 msgid "Indirect Sales"
-msgstr ""
+msgstr "Bán giá tiếp"
 
 #. module: sales_team
 #: field:crm.case.section,message_is_follower:0
@@ -155,22 +163,22 @@ msgstr ""
 #. module: sales_team
 #: field:crm.case.section,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: sales_team
 #: field:crm.case.section,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Cập nhật lần cuối vào"
 
 #. module: sales_team
 #: view:sale.config.settings:sales_team.view_sale_config_settings
 msgid "Manage Sales Teams"
-msgstr ""
+msgstr "Quản lý các Đội bán hàng"
 
 #. module: sales_team
 #: model:crm.case.section,name:sales_team.crm_case_section_2
 msgid "Marketing"
-msgstr "Tiếp thị"
+msgstr "Marketing"
 
 #. module: sales_team
 #: field:crm.case.section,message_ids:0
@@ -185,7 +193,7 @@ msgstr ""
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_salesteams_search
 msgid "My Salesteams"
-msgstr ""
+msgstr "Đội của tôi"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_view_form
@@ -200,12 +208,12 @@ msgstr ""
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_salesteams_search
 msgid "Parent Sales Teams"
-msgstr ""
+msgstr "Đội cha"
 
 #. module: sales_team
 #: field:crm.case.section,parent_id:0
 msgid "Parent Team"
-msgstr ""
+msgstr "Đội cha"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
@@ -227,7 +235,7 @@ msgstr ""
 #: view:crm.case.section:sales_team.crm_case_section_view_tree
 #: field:crm.case.section,name:0 field:res.partner,section_id:0
 msgid "Sales Team"
-msgstr "Nhóm bán hàng"
+msgstr "Đội bán hàng"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_case_section_act
@@ -236,27 +244,27 @@ msgstr "Nhóm bán hàng"
 #: model:ir.ui.menu,name:sales_team.menu_sales_team_act
 #: view:sale.config.settings:sales_team.view_sale_config_settings
 msgid "Sales Teams"
-msgstr ""
+msgstr "Đội bán hàng"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_salesteams_view_kanban
 msgid "Sales Teams Settings"
-msgstr ""
+msgstr "Thiết lập Đội bán hàng"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_view_form
 msgid "Sales team"
-msgstr ""
+msgstr "Đội bán hàng"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_view_form
 msgid "Salesteam"
-msgstr ""
+msgstr "Đội bán hàng"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_salesteams_search
 msgid "Salesteams Search"
-msgstr ""
+msgstr "Tìm kiếm Đội bán hàng"
 
 #. module: sales_team
 #: field:crm.case.section,message_summary:0
@@ -311,4 +319,4 @@ msgstr "Giờ làm việc"
 #. module: sales_team
 #: field:crm.case.section,complete_name:0
 msgid "unknown"
-msgstr "unknown"
+msgstr "không xác định"
