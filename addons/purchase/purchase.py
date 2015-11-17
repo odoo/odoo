@@ -529,7 +529,8 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.order_id.state in ['approved', 'done']:
                 raise UserError(_('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
-            line.procurement_ids.message_post(body=_('Purchase order line deleted.'))
+            for proc in line.procurement_ids:
+                proc.message_post(body=_('Purchase order line deleted.'))
             line.procurement_ids.write({'state': 'exception'})
         return super(PurchaseOrderLine, self).unlink()
 
