@@ -2,7 +2,6 @@ odoo.define('website_blog.website_blog', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
-var InlineDiscussion = require('website_blog.InlineDiscussion');
 
 function page_transist(event) {
     event.preventDefault();
@@ -30,16 +29,7 @@ function animate(event) {
 
 $(document).ready(function() {
     if ($('.website_blog').length) {
-
-        var content = $("div[enable_chatter_discuss='True']").find('p[data-chatter-id]');
-        if (content) {
-            ajax.jsonRpc("/blog/get_user/", 'call', {}).then(function(data){
-                $('#discussions_wrapper').empty();
-                new InlineDiscussion({'content' : content, 'public_user':data[0]}).start();
-            });
-        }
-
-        $(".js_tweet").share({'author_name': $('#blog_author').text()});
+        $(".js_tweet, .js_comment").share({'author_name': $('#blog_author').text()});
         $('.cover_footer').on('click', page_transist);
         $('a[href^="#blog_content"]').on('click', animate);
     }
