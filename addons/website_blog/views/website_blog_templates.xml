@@ -132,7 +132,7 @@
                   </p>
                 </div>
 
-                <div t-foreach="blog_posts" t-as="blog_post" class="mb32">
+                <div t-foreach="blog_posts" t-as="blog_post" class="mb32" name="blog_post">
                     <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
                         <h2 t-field="blog_post.name" class="mb4 o_blog_post_title">Untitled Post</h2>
                     </a>
@@ -171,6 +171,14 @@
 
         <div class="oe_structure"/>
     </t>
+</template>
+
+<!-- Option: Blog Post List: grid layout -->
+<template id="opt_blog_post_grid_layout" name="Grid view"
+        customize_show="True" active="False" inherit_id="website_blog.blog_post_short">
+    <xpath expr="//div[@name='blog_post']" position="attributes">
+        <attribute name="class" add="col-sm-5 o_grid" separator=" "/>
+    </xpath>
 </template>
 
 <!-- Option: Blog Post List: display the author avatar -->

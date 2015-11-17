@@ -112,3 +112,21 @@ mark + .popover, .cover_footer
 .o_blog_post_teaser
   width: 89%
   text-align: justify
+
+/*To display the grid or inline presentation of the blog.post_list*/
+.o_grid
+  margin: 0 6% 6% 0
+
+    .o_blog_post_teaser
+        width: 100%
+
+    .o_author_avatar
+        position: relative
+        right: 35%
+        margin-bottom: 100px
+
+/*Mobile preview: for blog grid layout */
+@media (max-width: 768px)
+.o_grid
+    .o_author_avatar
+        right: 0%
