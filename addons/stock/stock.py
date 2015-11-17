@@ -1701,7 +1701,6 @@ class StockMove(models.Model):
 
     @api.multi
     def _get_remaining_qty(self):
-        print "_get_remaining_qty >>>>>>>>>>>>>>>>>>>>>>>"
         for move in self:
             qty = move.product_qty
             for record in move.linked_move_operation_ids:
@@ -1717,13 +1716,12 @@ class StockMove(models.Model):
 
     @api.multi
     def _get_product_availability(self):
-        print "_get_product_availability >>>>>>>>>>>>>>>>>>>>>>>>>", self
         for move in self:
             if move.state == 'done':
                 move.availability = move.product_qty
             else:
                 sublocation_ids = self.env['stock.location'].search([('id', 'child_of', [move.location_id.id])])
-                quant_ids = self.env['stock.quant'].search([('location_id', 'in', sublocation_ids), ('product_id', '=', move.product_id.id), ('reservation_id', '=', False)])
+                quant_ids = self.env['stock.quant'].search([('location_id', 'in', sublocation_ids.ids), ('product_id', '=', move.product_id.id), ('reservation_id', '=', False)])
                 availability = 0
                 for quant in quant_ids:
                     availability += quant.qty
@@ -1739,7 +1737,6 @@ class StockMove(models.Model):
 
     @api.multi
     def _get_string_qty_information(self):
-        print "_get_string_qty_information >>>>>>>>>>>>>>>>>>>>>>>>"
         uom_obj = self.env['product.uom']
         # res = dict.fromkeys(ids, '')
         precision = self.pool['decimal.precision'].precision_get('Product Unit of Measure')
@@ -1770,18 +1767,15 @@ class StockMove(models.Model):
 
     @api.multi
     def _get_reserved_availability(self):
-        print "_get_reserved_availability >>>>>>>>>>>>>>>>>>>>>>>"
         for move in self:
             move.reserved_availability = sum([quant.qty for quant in move.reserved_quant_ids])
 
     @api.model
     def _default_destination_address(self):
-        print "_default_destination_address >>>>>>>>>>>>>>>>>>>>>>>"
         return False
 
     @api.model
     def _default_group_id(self):
-        print "_default_group_id >>>>>>>>>>>>>>>>>>>>>>>", self, self.env.context
         if self.env.context.get('default_picking_id', False):
             picking = self.env['stock.picking'].browse(self.env.context['default_picking_id'])
             return picking.group_id.id
