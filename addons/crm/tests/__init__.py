@@ -3,6 +3,7 @@
 
 import test_new_lead_notification
 import test_crm_access_group_users
+import test_crm_lead_activity
 import test_crm_lead_find_stage
 import test_crm_lead_merge
 import test_crm_lead_message
