@@ -133,6 +133,20 @@
         <menuitem action="action_account_form" id="menu_action_account_form" parent="menu_finance_entries" sequence="20"/>
 
         <act_window
+            id="act_account_partner_ledger_payable"
+            name="Partner Ledger: Payable"
+            res_model="account.move.line"
+            context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_payable':1}"
+            src_model="res.partner"/>
+
+        <act_window
+            id="act_account_partner_ledger_receivable"
+            name="Partner Ledger: Receivable"
+            res_model="account.move.line"
+            context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_receivable':1}"
+            src_model="res.partner"/>
+
+        <act_window
             id="act_account_acount_move_line_open_unreconciled"
             name="Unreconciled Entries"
             res_model="account.move.line"
@@ -1130,6 +1144,9 @@
                     <filter name="posted" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
                     <separator/>
                     <filter string="Unreconciled" domain="[('reconciled','=',False), ('account_id.reconcile','=',True)]" help="Unreconciled Journal Items" name="unreconciled"/>
+                    <separator/>
+                    <filter string="Payable" domain="[('account_id.internal_type', '=', 'payable')]" help="From Payable accounts" name="payable"/>
+                    <filter string="Receivable" domain="[('account_id.internal_type', '=', 'receivable')]" help="From Receivable accounts" name="receivable"/>
                     <separator/>
                     <field name="move_id" string="Number (Move)"/>
                     <field name="account_id"/>
