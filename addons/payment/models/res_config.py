@@ -22,9 +22,12 @@ class AccountPaymentConfig(osv.TransientModel):
         'module_payment_buckaroo': fields.boolean(
             'Buckaroo',
             help='-It installs the module payment_buckaroo.'),
-        'module_payment_authorize': fields.dummy(
+        'module_payment_authorize': fields.boolean(
             'Authorize.Net',
             help='-It installs the module payment_authorize.'),
+        'module_payment_sips': fields.boolean(
+            'Sips',
+            help='-It installs the module payment_sips.'),
     }
 
     _defaults = {
