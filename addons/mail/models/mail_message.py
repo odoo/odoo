@@ -197,10 +197,12 @@ class Message(models.Model):
             partners in partner_ids if partner_ids is given. """
         if not partner_ids:
             partner_ids = [self.env.user.partner_id.id]
+        new_value = {'needaction_partner_ids': [(3, pid) for pid in partner_ids]}
         if set(partner_ids) == set([self.env.user.partner_id.id]):
             # a user should be able to mark a message as done for him
-            self = self.sudo()
-        self.write({'needaction_partner_ids': [(3, pid) for pid in partner_ids]})
+            self.sudo().write(new_value)
+        else:
+            self.write(new_value)
 
         channel_ids = [c.id for c in self.channel_ids]
         notification = {'type': 'mark_as_read', 'message_ids': [self.id], 'channel_ids': channel_ids}
