@@ -4496,7 +4496,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var pop = new instance.web.form.FormOpenPopup(self);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.o2m.string,
-            write_function: function(id, data) {
+            write_function: function(id, data, options) {
                 return self.o2m.dataset.write(id, data, options).done(function() {
                     self.o2m.reload_current_view();
                 });
