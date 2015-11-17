@@ -2254,6 +2254,7 @@ class stock_move(osv.osv):
 
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
+        @return: True
         """
         context = context or {}
         quant_obj = self.pool.get("stock.quant")
@@ -2317,6 +2318,7 @@ class stock_move(osv.osv):
         #force assignation of consumable products and incoming from supplier/inventory/production
         if to_assign_moves:
             self.force_assign(cr, uid, list(to_assign_moves), context=context)
+        return True
 
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels the moves and if all moves are cancelled it cancels the picking.
