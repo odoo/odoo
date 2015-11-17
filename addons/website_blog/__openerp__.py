@@ -28,7 +28,6 @@ Odoo Blog
     'test': [
     ],
     'qweb': [
-        'static/src/xml/*.xml'
     ],
     'installable': True,
     'application': True,

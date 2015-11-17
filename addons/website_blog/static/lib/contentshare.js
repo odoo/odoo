@@ -1,6 +1,7 @@
 (function(){
     $.fn.share = function(options) {
         var option = $.extend($.fn.share.defaults,options);
+        var selected_text ="";
         $.extend($.fn.share,{
             init : function(shareable) {
                 var self = this;
@@ -15,10 +16,27 @@
                 });
             },
             getContent : function() {
-                var current_url = window.location.href
-                var selected_text = this.getSelection('string').substring(0,option.maxLength-(current_url.length+option.author_name.length+7));
-                var text = encodeURIComponent('\"'+selected_text+'\" '+'--@'+option.author_name+' '+current_url)
-                return '<a onclick="window.open(\''+option.shareLink+text+'\',\'_'+option.target+'\',\'location=yes,height=570,width=520,scrollbars=yes,status=yes\')"><i class="fa fa-twitter fa-lg"/></a>';
+                var popover_content = '';
+                if($('.blog_title' || '.blog_content').hasClass('js_comment')){
+                    selected_text = this.getSelection('string');
+                    popover_content += '<a class="o_share_comment mr12"><i class="fa fa-comment fa-lg mr4 ml4"/></a>';
+                }
+                if($('.blog_title' || '.blog_content').hasClass('js_tweet')){
+                    var current_url = window.location.href
+                    selected_text = this.getSelection('string').substring(0,option.maxLength-(current_url.length+option.author_name.length+7));
+                    var text = encodeURIComponent('\"'+selected_text+'\" '+'--@'+option.author_name+' '+current_url)
+                    popover_content += '<a onclick="window.open(\''+option.shareLink+text+'\',\'_'+option.target+'\',\'location=yes,height=570,width=520,scrollbars=yes,status=yes\')"><i class="ml4 mr4 fa fa-twitter fa-lg"/></a>';
+                }
+                return popover_content;
+            },
+            commentEdition : function(){
+                var positionComment = ($('#comments').position()).top-50;
+                $(".o_website_chatter_form textarea").val('"' + selected_text + '"');
+                $('html, body').stop().animate({
+                    'scrollTop': positionComment
+                }, 500, 'swing', function () {
+                    window.location.hash = 'blog_post_comment_quote';
+                });
             },
             getSelection : function(share) {
                 if(window.getSelection){
@@ -43,6 +61,7 @@
                     }
                 });
                 $('.'+option.className).popover('show');
+                $('.o_share_comment').on('click', this.commentEdition);
             },
             destroy : function(){
                 $('.'+option.className).popover('hide');

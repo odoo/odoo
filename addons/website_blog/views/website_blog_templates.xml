@@ -13,7 +13,6 @@
         <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
 
         <script type="text/javascript" src="/website_blog/static/lib/contentshare.js"/>
-        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.inline.discussion.js"></script>
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
     </xpath>
 </template>
@@ -298,18 +297,21 @@
 <template id="opt_blog_post_select_to_tweet" name="Select to Tweet"
         inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
     <xpath expr="//div[@id='blog_content']" position="attributes">
-        <attribute name="class">blog_content js_tweet mt32</attribute>
+        <attribute name="class" add="js_tweet" separator=" "/>
     </xpath>
-    <xpath expr="//div[@id='title']//div[@class='blog_title']" position="attributes">
-        <attribute name="class">blog_title js_tweet</attribute>
+    <xpath expr="//div[@id='title']//div[contains(@class, 'blog_title')]" position="attributes">
+        <attribute name="class" add="js_tweet" separator=" "/>
     </xpath>
 </template>
 
-<!-- Options: Blog Post: user can add Inline Discussion -->
-<template id="opt_blog_post_inline_discussion" name="Allow comment in text"
-        inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
+<!-- Options: Blog Post: user can select text for COMMENT -->
+<template id="opt_blog_post_select_to_comment" name="Select to comment"
+        inherit_id="website_blog.opt_blog_post_complete_comment" customize_show="False">
     <xpath expr="//div[@id='blog_content']" position="attributes">
-        <attribute name="enable_chatter_discuss">True</attribute>
+        <attribute name="class" add="js_comment" separator=" "/>
+    </xpath>
+    <xpath expr="//div[@id='title']//div[contains(@class, 'blog_title')]" position="attributes">
+        <attribute name="class" add="js_comment" separator=" "/>
     </xpath>
 </template>
 
