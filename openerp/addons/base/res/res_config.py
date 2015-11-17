@@ -485,7 +485,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
                 return {
                     'warning': {
                         'title': _('Warning!'),
-                        'message': _('Enabling this feature will install the following paying application(s) : \n%s') % message,
+                        'message': _('Enabling this feature will install the following paid application(s) : \n%s') % message,
                     }
                 }
         return {}
