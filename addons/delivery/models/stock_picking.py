@@ -82,6 +82,31 @@ class StockPicking(models.Model):
         return res
 
     @api.multi
+    def open_print_label_url(self):
+        self.ensure_one()
+        domain = [('res_model', '=', self._name), ('res_id', '=', self.id)]
+        tracking_number_list = self.carrier_tracking_ref.split('+')
+        domain += [('|')] * (len(tracking_number_list) - 1)
+        for tracking_number in tracking_number_list:
+            domain.append(('datas_fname', 'ilike', 'Label%s%%%s%%'%(self.delivery_type, tracking_number)))
+        attachments = self.env['ir.attachment'].search(domain)
+        url_list = ['/delivery/printlabel/' + str(attach.id) for attach in attachments]
+        return {
+                'type': 'ir.actions.act_url',
+                'name': 'Print Delivery Label',
+                'target': 'new',
+                'url': url_list
+        }
+
+    @api.multi
+    def do_new_transfer(self):
+        res = super(StockPicking, self).do_new_transfer()
+        for pick in self:
+            if pick.carrier_tracking_ref != False:
+                return pick.open_print_label_url()
+        return res
+
+    @api.multi
     def send_to_shipper(self):
         self.ensure_one()
         res = self.carrier_id.send_shipping(self)[0]
