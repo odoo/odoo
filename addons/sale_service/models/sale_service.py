@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -127,7 +128,7 @@ class project_task(osv.osv):
         proc_obj = self.pool.get("procurement.order")
         for task in self.browse(cr, uid, ids, context=context):
             if task.procurement_id:
-                proc_obj.check(cr, uid, [task.procurement_id.id], context=context)
+                proc_obj.check(cr, SUPERUSER_ID, [task.procurement_id.id], context=context)
 
     def write(self, cr, uid, ids, values, context=None):
         """ When closing tasks, validate subflows. """

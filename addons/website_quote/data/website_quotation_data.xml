@@ -201,7 +201,7 @@
        % endif
     </p>
 
-    <% set signup_url = object.get_signup_url() %>
+    % set signup_url = object.get_signup_url()
     % if signup_url and object.amount_total > 0 :
     <p>
     You can access this document and pay online via our Customer Portal:
