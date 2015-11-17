@@ -197,10 +197,12 @@ class Message(models.Model):
             partners in partner_ids if partner_ids is given. """
         if not partner_ids:
             partner_ids = [self.env.user.partner_id.id]
+        new_value = {'needaction_partner_ids': [(3, pid) for pid in partner_ids]}
         if set(partner_ids) == set([self.env.user.partner_id.id]):
             # a user should be able to mark a message as done for him
-            self = self.sudo()
-        self.write({'needaction_partner_ids': [(3, pid) for pid in partner_ids]})
+            self.sudo().write(new_value)
+        else:
+            self.write(new_value)
 
         channel_ids = [c.id for c in self.channel_ids]
         notification = {'type': 'mark_as_read', 'message_ids': [self.id], 'channel_ids': channel_ids}
@@ -890,7 +892,7 @@ class Message(models.Model):
                 ('res_id', '=', self.res_id)
             ]).filtered(lambda fol: self.subtype_id in fol.subtype_ids)
             if self.subtype_id.internal:
-                followers.filtered(lambda fol: fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id'))
+                followers = followers.filtered(lambda fol: fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id'))
             channels = self_sudo.channel_ids | followers.mapped('channel_id')
             partners = self_sudo.partner_ids | followers.mapped('partner_id')
         else:

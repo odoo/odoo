@@ -70,7 +70,7 @@
                 <form class="oe_reset_password_form" role="form" method="post" t-if="not message">
                   <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
-                    <t t-if="token">
+                    <t t-if="token and not invalid_token">
                         <t t-call="auth_signup.fields">
                             <t t-set="only_passwords" t-value="1"/>
                         </t>
@@ -90,7 +90,8 @@
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <input type="hidden" name="token" t-att-value="token"/>
                     <div class="clearfix oe_login_buttons">
-                        <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link pull-right">Back to Login</a>
+                        <a t-if="not token" t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link pull-right">Back to Login</a>
+                        <a t-if="invalid_token" href="/web/login" class="btn btn-link pull-right">Back to Login</a>
                         <button type="submit" class="btn btn-primary pull-left">Confirm</button>
                     </div>
 

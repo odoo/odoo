@@ -89,6 +89,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
                     qcontext.setdefault(k, v)
             except:
                 qcontext['error'] = _("Invalid signup token")
+                qcontext['invalid_token'] = True
         return qcontext
 
     def do_signup(self, qcontext):

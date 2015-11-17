@@ -91,11 +91,8 @@
     </t>
 
     <t t-name="mail.chat.UndoSnackbar">
-        <div class="alert alert-dismissible o_mail_snackbar" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&amp;times;</span>
-            </button>
-            <t t-esc="nb_needactions"/> message(s) marked as read.
+        <div class="alert o_mail_snackbar" data-dismiss="alert" role="alert">
+            <t t-esc="nb_needactions"/> mention(s) marked as read.
             <a href="#" class="alert-link o_snackbar_undo">Undo</a>
         </div>
     </t>

@@ -422,12 +422,17 @@ class AccountMoveLine(models.Model):
             # since postgresql doesn't implement empty list (so 'AND id in ()' is useless)
             return []
 
+        assert res_type in ('partner', 'account')
+        assert account_type in ('payable', 'receivable', None)
         is_partner = res_type == 'partner'
         res_alias = is_partner and 'p' or 'a'
-        self.env.cr.execute(
-            """ SELECT %s account_id, account_name, account_code, max_date, to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked FROM (
-                    SELECT %s
-                        %s.last_time_entries_checked AS last_time_entries_checked,
+
+        query = ("""
+            SELECT {0} account_id, account_name, account_code, max_date,
+                   to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked
+            FROM (
+                    SELECT {1}
+                        {res_alias}.last_time_entries_checked AS last_time_entries_checked,
                         a.id AS account_id,
                         a.name AS account_name,
                         a.code AS account_code,
@@ -436,44 +441,42 @@ class AccountMoveLine(models.Model):
                         account_move_line l
                         RIGHT JOIN account_account a ON (a.id = l.account_id)
                         RIGHT JOIN account_account_type at ON (at.id = a.user_type_id)
-                        %s
+                        {2}
                     WHERE
                         a.reconcile IS TRUE
-                        %s
-                        %s
-                        %s
+                        {3}
+                        {4}
+                        {5}
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
                             WHERE l.account_id = a.id
-                            %s
+                            {6}
                             AND l.amount_residual > 0
                         )
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
                             WHERE l.account_id = a.id
-                            %s
+                            {6}
                             AND l.amount_residual < 0
                         )
-                    GROUP BY %s a.id, a.name, a.code, %s.last_time_entries_checked
-                    ORDER BY %s.last_time_entries_checked
+                    GROUP BY {7} a.id, a.name, a.code, {res_alias}.last_time_entries_checked
+                    ORDER BY {res_alias}.last_time_entries_checked
                 ) as s
-                WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
-            """ % (
+            WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
+        """.format(
                 is_partner and 'partner_id, partner_name,' or ' ',
                 is_partner and 'p.id AS partner_id, p.name AS partner_name,' or ' ',
-                res_alias,
                 is_partner and 'RIGHT JOIN res_partner p ON (l.partner_id = p.id)' or ' ',
                 is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
-                account_type and "AND at.type = '" + account_type + "'" or '',
-                res_ids and 'AND ' + res_alias + '.id in (' + ','.join(map(str, res_ids)) + ')' or '',
-                is_partner and 'AND l.partner_id = p.id' or ' ',
+                account_type and "AND at.type = %(account_type)s" or '',
+                res_ids and 'AND ' + res_alias + '.id in %(res_ids)s' or '',
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 is_partner and 'l.partner_id, p.id,' or ' ',
-                res_alias,
-                res_alias,
+                res_alias=res_alias
             ))
+        self.env.cr.execute(query, locals())
 
         # Apply ir_rules by filtering out
         rows = self.env.cr.dictfetchall()
@@ -498,17 +501,18 @@ class AccountMoveLine(models.Model):
         """ Returns two lines whose amount are opposite """
 
         # Get pairs
-        partner_id_condition = partner_id and 'AND a.partner_id = %d AND b.partner_id = %d' % (partner_id, partner_id) or ''
-        self.env.cr.execute(
-            """ SELECT a.id, b.id
+        partner_id_condition = partner_id and 'AND a.partner_id = %(partner_id)s AND b.partner_id = %(partner_id)s' or ''
+        query = """
+                SELECT a.id, b.id
                 FROM account_move_line a, account_move_line b
                 WHERE a.amount_residual = -b.amount_residual
                 AND NOT a.reconciled AND NOT b.reconciled
-                AND a.account_id = %d AND b.account_id = %d
-                %s
+                AND a.account_id = %(account_id)s AND b.account_id = %(account_id)s
+                {partner_id_condition}
                 ORDER BY a.date asc
                 LIMIT 10
-            """ % (account_id, account_id, partner_id_condition))
+            """.format(**locals())
+        self.env.cr.execute(query, locals())
         pairs = self.env.cr.fetchall()
 
         # Apply ir_rules by filtering out

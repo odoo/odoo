@@ -105,9 +105,13 @@
             .o-position-absolute(15px, 15px);
             padding-top: 10px;
             padding-bottom: 10px;
-            background-color: lighten(@odoo-brand-optional, 50%);
-            border-color: lighten(@odoo-brand-optional, 40%);
-            color: @odoo-brand-optional;
+            cursor: pointer;
+            background-color: darken(@gray, 8%);
+            color: white;
+            .o_snackbar_undo {
+                margin-left: 8px;
+                padding: 8px;
+            }
         }
     }
 }
