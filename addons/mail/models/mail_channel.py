@@ -254,7 +254,6 @@ class Channel(models.Model):
         message_values = message.message_format()[0]
         notifications = []
         for channel in self:
-            message_values['channel_ids'] = [channel.id]
             notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(message_values)])
             # add uuid to allow anonymous to listen
             if channel.public == 'public':
