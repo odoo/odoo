@@ -144,7 +144,7 @@ class module(osv.osv):
         try:
             info = modules.load_information_from_description_file(name)
         except Exception:
-            _logger.debug('Error when trying to fetch informations for '
+            _logger.debug('Error when trying to fetch information for '
                           'module %s', name, exc_info=True)
         return info
 
