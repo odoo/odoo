@@ -405,41 +405,30 @@
         <p>
             Write a small text here for when <b>new visitors</b> find your website
             through your <b>blog entries</b>, referenced in Google.
-        </p>
-        <div>
-            <a href="/page/website.contactus"><button class="btn btn-primary">Contact us</button></a>
-        </div>
+        </p>            
+        <h2 class="mt4">
+            <a t-att-href="'/blog/%s/feed' % (blog.id)"><i class="fa fa-rss-square"/></a>
+        </h2>
         </section>
     </xpath>
 </template>
 
 <!-- Option:Right Column: follow us -->
-<template id="opt_blog_rc_follow_us" name="Follow us" priority="4"
+<template id="opt_blog_rc_follow_us" name="Subscription" priority="4"
         inherit_id="website_blog.index_right" active="True" customize_show="True">
     <xpath expr="//div[@id='main_column']" position="attributes">
         <attribute name="class">col-sm-8</attribute>
     </xpath>
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
-            <h4>Follow us<small t-if="blog">: <t t-esc="blog.name"/></small></h4>
+            <h4>Stay updated :</h4>
             <t t-if="blog">
                 <t t-call="website_mail.follow">
                     <t t-set="email" t-value="user_id.email"/>
                     <t t-set="object" t-value="blog"/>
                 </t>
             </t>
-            <p class="text-muted mb0 mt16">
-                Participate on our social stream.
-            </p>
-            <h2 class="mt4">
-                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
-                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
-                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
-                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
-                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
-                <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
-                <a t-att-href="'/blog/%s/feed' % (blog.id)"><i class="fa fa-rss-square"/></a>
-            </h2>
+
         </section>
     </xpath>
 </template>
