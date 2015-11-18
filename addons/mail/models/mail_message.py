@@ -197,10 +197,12 @@ class Message(models.Model):
             partners in partner_ids if partner_ids is given. """
         if not partner_ids:
             partner_ids = [self.env.user.partner_id.id]
+        new_value = {'needaction_partner_ids': [(3, pid) for pid in partner_ids]}
         if set(partner_ids) == set([self.env.user.partner_id.id]):
             # a user should be able to mark a message as done for him
-            self = self.sudo()
-        self.write({'needaction_partner_ids': [(3, pid) for pid in partner_ids]})
+            self.sudo().write(new_value)
+        else:
+            self.write(new_value)
 
         channel_ids = [c.id for c in self.channel_ids]
         notification = {'type': 'mark_as_read', 'message_ids': [self.id], 'channel_ids': channel_ids}
@@ -313,7 +315,7 @@ class Message(models.Model):
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
             })
-            body_short = tools.html_email_clean(message_dict['body'], remove=True)
+            body_short = tools.html_email_clean(message_dict['body'], shorten=True, remove=True)
             message_dict['body_short'] = body_short != message_dict['body'] and body_short or False
 
         return True
@@ -547,13 +549,14 @@ class Message(models.Model):
         message_tree = dict((m.id, m) for m in self)
         self._message_read_dict_postprocess(message_values, message_tree)
 
-        # add is_note flag
-        internal_subtype_ids = self.env['mail.message.subtype'].search([('internal', '=', True)]).ids
+        # add subtype data (is_note flag, subtype_description)
+        subtypes = self.env['mail.message.subtype'].search(
+            [('id', 'in', [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']])]).read(['internal', 'description'])
+        subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
         for message in message_values:
-            if message['subtype_id'] and message['subtype_id'][0]:
-                message['is_note'] = bool(message['subtype_id'][0] in internal_subtype_ids)
+            message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
+            message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
         return message_values
-
 
     #------------------------------------------------------
     # mail_message internals
@@ -890,7 +893,7 @@ class Message(models.Model):
                 ('res_id', '=', self.res_id)
             ]).filtered(lambda fol: self.subtype_id in fol.subtype_ids)
             if self.subtype_id.internal:
-                followers.filtered(lambda fol: fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id'))
+                followers = followers.filtered(lambda fol: fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id'))
             channels = self_sudo.channel_ids | followers.mapped('channel_id')
             partners = self_sudo.partner_ids | followers.mapped('partner_id')
         else:

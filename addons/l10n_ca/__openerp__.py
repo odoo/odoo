@@ -38,6 +38,7 @@ position.
         'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     'data': [
         'account_chart_template.xml',
@@ -48,4 +49,5 @@ position.
         'account_chart_template.yml',
     ],
     'installable': True,
+    'post_init_hook': 'load_translations',
 }

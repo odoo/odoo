@@ -1,0 +1,68 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_vat
+# 
+# Translators:
+# Andre de Kock <adekock11@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-11-12 08:31+0000\n"
+"Last-Translator: Andre de Kock <adekock11@gmail.com>\n"
+"Language-Team: Afrikaans (http://www.transifex.com/odoo/odoo-9/language/af/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: af\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "Maatskappye"
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr "As geselekteer, sal Vennote se VAT nommers bevestig word teen EU se VIES diens, eerder as deur 'n eenvoudige formaat bevestiging (kontrolesom)."
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:111
+#, python-format
+msgid "Importing VAT Number [%s] is not valid !"
+msgstr "Invoer van VAT Nommer [%s] is ongeldig !"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Vennoot"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:128
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr "Die VAT nommer [%s] vir vennote [%s] lyk nie geldig nie\nLet wel: die formaat wat verwag word is %s"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:127
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr "Die VAT nommer [%s] vir vennote [%s] het of die VIES VAT geldigheidstoets misluk of dit respekteer nie die verwagte formaat %s nie."
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
+msgid "VIES VAT Check"
+msgstr "VIES VAT Check"
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "bv. BE0477472701"

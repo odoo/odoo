@@ -773,7 +773,6 @@ var Chatter = form_common.AbstractField.extend({
     },
 
     on_channel_redirect: function (channel_id) {
-        event.preventDefault();
         var self = this;
         var def;
         var channel = chat_manager.get_channel(channel_id);
@@ -789,7 +788,6 @@ var Chatter = form_common.AbstractField.extend({
     },
 
     on_redirect: function (res_model, res_id) {
-        event.preventDefault();
         this.do_action({
             type:'ir.actions.act_window',
             view_type: 'form',

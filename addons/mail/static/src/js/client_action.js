@@ -223,12 +223,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
     render_sidebar: function () {
         var self = this;
-        var $sidebar = QWeb.render("mail.chat.Sidebar", {
+        var $sidebar = $(QWeb.render("mail.chat.Sidebar", {
             active_channel_id: this.channel ? this.channel.id: undefined,
             channels: chat_manager.get_channels(),
             needaction_counter: chat_manager.get_needaction_counter(),
-        });
-        this.$(".o_mail_chat_sidebar").replaceWith($sidebar);
+        }));
+        this.$(".o_mail_chat_sidebar").html($sidebar.contents());
 
         this.$('.o_mail_add_channel[data-type=public]').find("input").autocomplete({
             source: function(request, response) {
@@ -279,6 +279,16 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.create_channel(name, "private");
             }
         });
+    },
+
+    render_snackbar: function (nb_needactions) {
+        this.$snackbar = $(QWeb.render('mail.chat.UndoSnackbar', {
+            nb_needactions: nb_needactions,
+        }));
+        this.$('.o_mail_chat_content').append(this.$snackbar);
+        // Hide snackbar after 20s
+        var $snackbar = this.$snackbar;
+        setTimeout(function() { $snackbar.fadeOut(); }, 20000);
     },
 
     do_search_channel: function(search_val){
@@ -334,10 +344,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             if (channel.type !== 'static') {
                 // Display snackbar if needactions have been cleared
                 if (channel.needaction_counter > 0) {
-                    self.$snackbar = $(QWeb.render('mail.chat.UndoSnackbar', {
-                        nb_needactions: channel.needaction_counter,
-                    }));
-                    self.$('.o_mail_chat_content').append(self.$snackbar);
+                    self.render_snackbar(channel.needaction_counter);
                 }
                 chat_manager.mark_channel_as_seen(channel);
                 self.clear_needactions_def = chat_manager.mark_all_as_read(channel);

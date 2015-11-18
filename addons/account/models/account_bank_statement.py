@@ -566,6 +566,13 @@ class AccountBankStatementLine(models.Model):
             match_recs = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
             if match_recs and len(match_recs) == 1:
                 return match_recs
+            elif len(match_recs) == 0:
+                move = self.env['account.move'].search([('name', '=', self.name)], limit=1)
+                if move:
+                    domain = [('move_id', '=', move.id)]
+                    match_recs = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
+                    if match_recs and len(match_recs) == 1:
+                        return match_recs
 
         # How to compare statement line amount and move lines amount
         amount_domain_maker = self._get_domain_maker_move_line_amount()
@@ -818,10 +825,7 @@ class AccountBankStatementLine(models.Model):
             ctx = dict(self._context, date=self.date)
             for aml_dict in to_create:
                 aml_dict['move_id'] = move.id
-                aml_dict['date'] = self.date
                 aml_dict['partner_id'] = self.partner_id.id
-                aml_dict['journal_id'] = self.journal_id.id
-                aml_dict['company_id'] = self.company_id.id
                 aml_dict['statement_id'] = self.statement_id.id
                 if st_line_currency.id != company_currency.id:
                     aml_dict['amount_currency'] = aml_dict['debit'] - aml_dict['credit']

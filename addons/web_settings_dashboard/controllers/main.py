@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime, timedelta
 
 from openerp import http
 from openerp.exceptions import AccessError
 from openerp.http import request
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class WebSettingsDashboard(http.Controller):
@@ -34,6 +36,11 @@ class WebSettingsDashboard(http.Controller):
             LIMIT 10
         """)
         pending_users = cr.fetchall()
+
+        # See update.py for this computation
+        limit_date = datetime.now() - timedelta(15)
+        enterprise_users = request.env['res.users'].search_count([("login_date", ">=", limit_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('share', '=', False)])
+
         return {
             'apps': {
                 'installed_apps': installed_apps
@@ -44,4 +51,7 @@ class WebSettingsDashboard(http.Controller):
                 'pending_users': pending_users,
                 'user_form_view_id': request.env['ir.model.data'].xmlid_to_res_id("base.view_users_form"),
             },
+            'enterprise': {
+                'enterprise_users': enterprise_users,
+            }
         }

@@ -494,8 +494,11 @@ class Channel(models.Model):
     @api.multi
     def channel_join_and_get_info(self):
         self.ensure_one()
-        notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
-        self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
+        if self.channel_type == 'channel':
+            notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
+            self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
+        else:
+            self.channel_last_seen_partner_ids.write({'is_pinned': True})
         self.action_follow()
 
         channel_info = self.channel_info()[0]

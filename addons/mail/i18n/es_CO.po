@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-11-07 16:34+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-12 05:46+0000\n"
+"Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,13 +145,13 @@ msgstr "%s (copia)"
 #: code:addons/mail/models/mail_thread.py:202
 #, python-format
 msgid "%s created"
-msgstr ""
+msgstr "%s creado/a"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:81
 #, python-format
 msgid "%s has joined the %s network."
-msgstr ""
+msgstr "%s se ha unido a la red %s."
 
 #. module: mail
 #. openerp-web
@@ -187,7 +187,7 @@ msgstr ""
 msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-msgstr ""
+msgstr "<div class=\"o_mail_notification\">creado <a href=\"#\" class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:489
@@ -195,7 +195,7 @@ msgstr ""
 msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-msgstr ""
+msgstr "<div class=\"o_mail_notification\">se unió a <a href=\"#\" class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:151
@@ -270,7 +270,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:13
 #, python-format
 msgid "@ Inbox"
-msgstr ""
+msgstr "@ Inbox"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
@@ -376,7 +376,7 @@ msgstr "Avanzada"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Ajustes Avanzados"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_id
@@ -734,7 +734,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
 msgid "Closed"
-msgstr "Cerrado(a)"
+msgstr "Cerrado"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -873,7 +873,7 @@ msgstr "Mes de Creación"
 #: model:ir.model.fields,help:mail.field_mail_mail_starred
 #: model:ir.model.fields,help:mail.field_mail_message_starred
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "El usuario actual tiene una notificación destacada enlazada a este mensaje"
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:16
@@ -905,7 +905,7 @@ msgstr "Predeterminado"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_null_value
 #: model:ir.model.fields,field_description:mail.field_mail_template_null_value
 msgid "Default Value"
-msgstr ""
+msgstr "Valor Por Defecto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_defaults
@@ -968,14 +968,14 @@ msgstr ""
 msgid ""
 "Did you know ? Type '@someone' in the composer to cite someone in your "
 "message, and make it appear in his own inbox."
-msgstr ""
+msgstr "Sabía que? Puede escribir '@alguien' para mencionar a alguien en su mensaje, y que se le notifique automáticamente en su inbox."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:31
 #, python-format
 msgid "Direct Messages"
-msgstr ""
+msgstr "Mensajes Directos"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_menu_root_chat
@@ -1104,7 +1104,7 @@ msgstr "Plantillas de Correo"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr "Hilo de Correos"
+msgstr "Hilo de discusión"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_alias_id
@@ -1308,7 +1308,7 @@ msgstr "Sólo seguidores"
 #: code:addons/mail/static/src/xml/chatter.xml:103
 #, python-format
 msgid "Following"
-msgstr ""
+msgstr "Siguiendo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_from
@@ -1478,14 +1478,14 @@ msgstr "Alias Inactivo"
 #: code:addons/mail/static/src/js/chat_manager.js:426
 #, python-format
 msgid "Inbox"
-msgstr ""
+msgstr "Inbox"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_parent_id
 #: model:ir.model.fields,help:mail.field_mail_mail_parent_id
 #: model:ir.model.fields,help:mail.field_mail_message_parent_id
 msgid "Initial thread message."
-msgstr ""
+msgstr "Mensaje inicial del hilo."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_internal
@@ -1574,12 +1574,12 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Join Group"
-msgstr "Unirme al Grupo"
+msgstr "Unirse al Grupo"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
 msgid "Join a group"
-msgstr "Unirme a un grupo"
+msgstr "Unirse a un Grupo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_lang
@@ -1813,7 +1813,7 @@ msgid ""
 " record (New), or to a stage change in a process (Stage change). Message "
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
-msgstr ""
+msgstr "El subtipo de mensaje da un tipo más preciso al mensaje, especialmente para las notificaciones del sistema. Por ejemplo, puede ser una notificación relacionada a un nuevo registro (Nuevo), o a un cambio de etapa en un proceso (Cambio de etapa). Los subtipos de mensaje permiten afinar las notificaciones que los usuarios quieren recibir en su muro."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -1879,7 +1879,7 @@ msgstr "Mensajes e historial de comunicación"
 msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
-msgstr "Mensajes con subtipos internos sólo serán visibles para los empleados (miembros del grupo base_user)"
+msgstr "Los mensajes con subtipos internos sólo serán visibles para los empleados (miembros del grupo base_user)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_users_form_mail
@@ -2006,7 +2006,7 @@ msgstr "Sin seguidores"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_no_auto_thread
 #: model:ir.model.fields,field_description:mail.field_mail_message_no_auto_thread
 msgid "No threading for answers"
-msgstr ""
+msgstr "Sin hilo para las respuestas"
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_note
@@ -2018,7 +2018,7 @@ msgstr "Nota"
 #: code:addons/mail/static/src/xml/thread.xml:48
 #, python-format
 msgid "Note by"
-msgstr ""
+msgstr "Nota de"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -2130,7 +2130,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
 #: model:ir.model.fields,field_description:mail.field_res_users_opt_out
 msgid "Opt-Out"
-msgstr ""
+msgstr "No acepta correos"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_force_thread_id
@@ -2140,7 +2140,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr ""
+msgstr "ID opcional de un hilo (registro) al cual se le adjuntarán todos los mensajes entrantes, incluso si no fueron respuestas del mismo. Si se fija, esto deshabilitará completamente la creación de nuevos registros."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_mail_server_id
@@ -2148,7 +2148,7 @@ msgstr ""
 msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
-msgstr ""
+msgstr "Servidor preferido opcional para correos salientes. Si no está establecido, se usará el de mayor prioridad."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_report_template
@@ -2175,13 +2175,13 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
 msgid "Outgoing"
-msgstr ""
+msgstr "Saliente"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_template_mail_server_id
 msgid "Outgoing Mail Server"
-msgstr ""
+msgstr "Servidor de Correo Saliente"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
@@ -2193,7 +2193,7 @@ msgstr "Correos Salientes"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_mail_server_id
 msgid "Outgoing mail server"
-msgstr ""
+msgstr "Servidor de correo saliente"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -2231,7 +2231,7 @@ msgstr "Modelo Padre"
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ID del Hilo del Registro Padre"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_parent_model_id
@@ -2249,7 +2249,7 @@ msgid ""
 "Parent subtype, used for automatic subscription. This field is not correctly"
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
-msgstr ""
+msgstr "Subtipo padre, usado para la suscripción automática. Este campo no se nombra correctamente. Por ejemplo en un proyecto, el parent_id de los subtipos de proyecto se refiere a los subtipos relacionados a las tareas."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -2415,7 +2415,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ID del Hilo del Registro"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_references
@@ -2455,7 +2455,7 @@ msgstr "Asociado Relacionado"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_relation_field
 msgid "Relation field"
-msgstr ""
+msgstr "Campo relación"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -2472,7 +2472,7 @@ msgstr "Eliminar este seguidor"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Reply"
-msgstr ""
+msgstr "Responder"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_reply_to
@@ -2708,7 +2708,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_starred
 #, python-format
 msgid "Starred"
-msgstr ""
+msgstr "Destacados"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_state
@@ -2891,7 +2891,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
-msgstr ""
+msgstr "Hilo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_email_to
@@ -3148,7 +3148,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:478
 #, python-format
 msgid "You have been invited to: "
-msgstr ""
+msgstr "Usted ha sido invitado a:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_attachment_ids
@@ -3170,7 +3170,7 @@ msgstr ""
 msgid ""
 "Your \"Inbox\" contains all the messages in which you've been mentioned, and the messages you receive as a follower of a document.<br>\n"
 "                    The \"Starred\" section contains all your favorite messages."
-msgstr ""
+msgstr "Su \"Inbox\" contiene todos los mensajes en los que usted ha sido mencionado/a, y los mensajes que ha recibido como seguidor/a de un documento.<br>\nLa sección \"Destacados\" contiene todos sus mensajes favoritos."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template

@@ -18,6 +18,7 @@ _default_parameters = {
     "database.secret": lambda: (str(uuid.uuid4()), ['base.group_erp_manager']),
     "database.uuid": lambda: (str(uuid.uuid1()), []),
     "database.create_date": lambda: (datetime.datetime.now().strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT), ['base.group_user']),
+    "database.expiration_date": lambda: ((datetime.datetime.now()+datetime.timedelta(+30)).strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT), ['base.group_user']),
     "web.base.url": lambda: ("http://localhost:%s" % config.get('xmlrpc_port'), []),
 }
 

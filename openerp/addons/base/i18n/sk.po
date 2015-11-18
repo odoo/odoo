@@ -6,13 +6,14 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
 # Matus Krnac <matus.krnac@gmail.com>, 2015
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2015
+# Robert Kirschner <robertkirschner@yahoo.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-11-07 20:28+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
+"PO-Revision-Date: 2015-11-13 19:12+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1747,7 +1748,7 @@ msgid ""
 "going through the retailer's warehouse. In this case no\n"
 "internal transfer document is needed.\n"
 "\n"
-msgstr ""
+msgstr "\nSpravovanie drop shippingových objednávok\n===========================\n\nTento modul pridáva predkonfigurovaný drop shippingový typ odberu\nrovnako ako trasu obstarávania, ktoré umožňujú konfiguráciu drop\nshippingových produktov a objednávok.\n\nAk je použitý drop shipping, tovar je prevedený priamo\nod dodávateľov k zákazníkom (priama dodávka) bez\nprechádzania skladom obchodníka. V tomto prípade nie je treba\nžiadny interný prevodový dokument.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense
@@ -1855,7 +1856,7 @@ msgid ""
 "* Last Product Inventories\n"
 "* Moves Analysis\n"
 "    "
-msgstr ""
+msgstr "\nSpráva multi-skladov, multi- a štruktúrovaných skladových lokácií\n================================================== ============\n\nSklad a riadenie zásob je založené na hierarchickej štruktúre lokácií, od skladov po zásobniky.\nSystém podvojného účtovníctva vám zásob umožňuje spravovať zákazníkmov, dodávateľov aj výrobné zásoby.\n\nOpenERP má schopnosť spravovať šarže a sériové čísla zabezpečujúc súlad s požiadavkami na vysledovateľnosť stanovenými väčšinou priemyselných odvetví.\n\nKľúčové vlastnosti\n------------\n* História a plánovanie pohybov,\n* Pravidlá minima skladu\n* Podpora pre čiarové kódy\n* Rýchla detekcia chýb prostredníctvom podvojného systému\n* Sledovateľnosť (sériové čísla, balíky, ...)\n\nNástenka / Výkazy pre riadenie zásob budú zahŕňať:\n-------------------------------------------------- --------\n* Prichádzajúce produkty (graf)\n* Odchádzajúce produkty (graf)\n* Obstarávanie vo výnimkach\n* Analýza zásob\n* Zásoby posledného výrobku\n* Analýza pohybov"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -1891,7 +1892,7 @@ msgid ""
 "* My Quotations\n"
 "* Monthly Turnover (Graph)\n"
 "    "
-msgstr ""
+msgstr "\nSpravovanie predajných kvót a objednávok\n==================================\n\nTáto aplikácia vám umožní spravovať svoje predajné ciele efektívnym a účinným spôsobom sledovaním všetkých objednávok predaja a histórie.\n\nZabezpečuje plný pracovný postup predaja:\n\n* ** Kvóta ** -> ** Predajná objednávka ** -> ** Faktúra **\n\nPredvoľby (len s nainštalovaným Spravovaním skladov)\n------------------------------------------------------\n\nAk ste tiež nainštalovali riadenie skladov, môžete sa vysporiadať s týmito preferenciami:\n\n* Doprava: Voľba dodávky naraz alebo čiastkové dodávka\n* Fakturácia: vybrať, ako bude vyplatené faktúry\n* Incoterms: Medzinárodné Obchodné podmienky\n\nMôžete si vybrať flexibilné spôsoby fakturácie:\n\n* *Na požiadanie: Faktúry sú vytvorené manuálne z predajných objednávok v prípade potreby\n* *Na dodací príkaz *: Faktúry sú generované z odberu (doručenie)\n* *Pred doručením: *: Návrh faktúry je vytvorený a musí byť zaplatený pred dodaním\n\n\nNástenka pre manažéra predaja bude obsahovať\n------------------------------------------------\n* Moje kvóty\n* Mesačný obrat (graf)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock
@@ -1913,7 +1914,7 @@ msgid ""
 "* *On Demand*: Invoices are created manually from Sales Orders when needed\n"
 "* *On Delivery Order*: Invoices are generated from picking (delivery)\n"
 "* *Before Delivery*: A Draft invoice is created and must be paid before delivery\n"
-msgstr ""
+msgstr "\nSpráva predajných kvót a objednávok\n==================================\n\nTento modul je prepojením medzi aplikáciami predaja a riadenia skladov.\n\nPreferencie\n-----------\n* Doprava: Voľba dodávky naraz alebo čiastková dodávka\n* Fakturácia: vybrať ako budú vyplatené faktúry\n* Incoterms: Medzinárodné obchodné podmienky\n\nMôžete si vybrať flexibilné spôsoby fakturácie:\n\n* *Na požiadanie: Faktúry sú vytvorené manuálne z predajných objednávok v prípade potreby\n* *Na dodací príkaz *: Faktúry sú generované z odberu (doručenie)\n* *Pred doručením: *: Návrh faktúry je vytvorený a musí byť zaplatený pred dodaním\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_uos
@@ -1925,7 +1926,7 @@ msgid ""
 "Sell products in one unit of measure that is different from the one\n"
 "you manage the inventory.\n"
 "    "
-msgstr ""
+msgstr "\nSpravovanie druhotných jednotiek predaja\n==============================\n\nPredávajte výrobky v jednej mernej jednotke ktorá je odlišná od tej\nktorú spravujete v zásobach."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp
@@ -1964,7 +1965,7 @@ msgid ""
 "With this module you can personnalize the sale order and invoice report with\n"
 "separators, page-breaks or subtotals.\n"
 "    "
-msgstr ""
+msgstr "\nSpravovanie výkazov o predaji\n=========================\nS týmto modulom môžete prispôsobiť výkaz predajnej objednávky a faktúr  s\noddeľovačmi, zalomením stránok alebo medzisúčtami."
 
 #. module: base
 #: model:ir.module.module,description:base.module_marketing
@@ -1975,7 +1976,7 @@ msgid ""
 "\n"
 "Contains the installer for marketing-related modules.\n"
 "    "
-msgstr ""
+msgstr "\nMenu pre marketing.\n===================\n\nObsahuje inštalátor pre moduly na marketingové účely. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
@@ -1999,7 +2000,7 @@ msgid ""
 "\n"
 ".. SAT: http://www.sat.gob.mx/\n"
 "    "
-msgstr ""
+msgstr "\nMinimal accounting configuration for Mexico.\n============================================\n\nThis Chart of account is a minimal proposal to be able to use OoB the\naccounting feature of Openerp.\n\nThis doesn't pretend be all the localization for MX it is just the minimal\ndata required to start from 0 in mexican localization.\n\nThis modules and its content is updated frequently by openerp-mexico team.\n\nWith this module you will have:\n\n- Minimal chart of account tested in production eviroments.\n- Minimal chart of taxes, to comply with SAT_ requirements.\n\n.. SAT: http://www.sat.gob.mx/"
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic
@@ -2012,7 +2013,7 @@ msgid ""
 "totally independently. So, you can enter various different analytic operations\n"
 "that have no counterpart in the general financial accounts.\n"
 "    "
-msgstr ""
+msgstr "\nModul pre určenie analytického účtovného objektu.\n===============================================\n\nV OpenERP, analytické účty sú viazané na všeobecné účty, ale zaobchádza sa\ns nimi úplne nezávisle. Takže môžete zadávať rôzne iné analytické operácie\nktoré nemajú náprotivok vo všeobecných finančných účtoch."
 
 #. module: base
 #: model:ir.module.module,description:base.module_resource
@@ -2025,7 +2026,7 @@ msgid ""
 "work center on manufacturing orders). This module manages a resource calendar\n"
 "associated to every resource. It also manages the leaves of every resource.\n"
 "    "
-msgstr ""
+msgstr "\nModul pre riadenie zdrojov.\n===============================\n\nZdroj predstavuje niečo, čo môže byť naplánované (developer na úlohu alebo\npracovné stredisko na výrobné zákazky). Tento modul spravuje kalendár zdrojov\nprepojený na každý zdroj. Spravuje tiež odchody každého zdroja."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports_followup
@@ -2049,7 +2050,7 @@ msgid ""
 "------------------------------------------------------------------------------------------------------------------\n"
 "    Reporting / Accounting / **Follow-ups Analysis\n"
 "\n"
-msgstr ""
+msgstr "\nModul pre automatizáciu listov pre neuhradené faktúry, s viac úrovňovými upomienkami.\n================================================== =======================\n\nMôžete definovať viac úrovní upomienok cez menu:\n-------------------------------------------------- -------------\nNastavenie / Ďalšie sledovanie / Úrovne ďalšieho sledovania\n\nAkonáhle sú definované, môžete automaticky tlačiť upomienky každý deň jednoduchým kliknutím na menu:\n------------------------------------------------------------------------------------------------------\nĎalšie sledovanie platby / Odoslať e-mail a listy\n\nTo bude generovať PDF / posielať e-maily / nastaví manuálne vykonávanie akcií, v závislosti na rôznych úrovniach\ndefinovaných upomienok. Môžete definovať rôzne postupy pre rôzne firmy.\n\nVšimnite si, že ak chcete skontrolovať úroveň ďalšieho sledovnia partnera / účtovného vstupu, môžete tak urobiť v ponuke:\n------------------------------------------------------------------------------------------------------------------\nVýkazy / Účtovníctvo / ** Analýza ďalšieho sledovnia\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -2100,7 +2101,7 @@ msgid ""
 "description provided by the CODA configuration tables is based upon the CODA\n"
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
-msgstr ""
+msgstr "\nModule to import CODA bank statements.\n======================================\n\nSupported are CODA flat files in V2 format from Belgian bank accounts.\n---------------------------------------------------------------------\n* CODA v1 support.\n* CODA v2.2 support.\n* Foreign Currency support.\n* Support for all data record types (0, 1, 2, 3, 4, 8, 9).\n* Parsing & logging of all Transaction Codes and Structured Format\nCommunications.\n* Automatic Financial Journal assignment via CODA configuration parameters.\n* Support for multiple Journals per Bank Account Number.\n* Support for multiple statements from different bank accounts in a single\nCODA file.\n* Support for 'parsing only' CODA Bank Accounts (defined as type='info' in\nthe CODA Bank Account configuration records).\n* Multi-language CODA parsing, parsing configuration data provided for EN,\nNL, FR.\n\nThe machine readable CODA Files are parsed and stored in human readable format in\nCODA Bank Statements. Also Bank Statements are generated containing a subset of\nthe CODA information (only those transaction lines that are required for the\ncreation of the Financial Accounting records). The CODA Bank Statement is a\n'read-only' object, hence remaining a reliable representation of the original\nCODA file whereas the Bank Statement will get modified as required by accounting\nbusiness processes.\n\nCODA Bank Accounts configured as type 'Info' will only generate CODA Bank Statements.\n\nA removal of one object in the CODA processing results in the removal of the\nassociated objects. The removal of a CODA File containing multiple Bank\nStatements will also remove those associated statements.\n\nInstead of a manual adjustment of the generated Bank Statements, you can also\nre-import the CODA after updating the OpenERP database with the information that\nwas missing to allow automatic reconciliation.\n\nRemark on CODA V1 support:\n~~~~~~~~~~~~~~~~~~~~~~~~~~\nIn some cases a transaction code, transaction category or structured\ncommunication code has been given a new or clearer description in CODA V2.The\ndescription provided by the CODA configuration tables is based upon the CODA\nV2.2 specifications.\nIf required, you can manually adjust the descriptions via the CODA configuration menu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -2115,7 +2116,7 @@ msgid ""
 "Bank Statements may be generated containing a subset of the OFX information (only those transaction lines that are required for the\n"
 "creation of the Financial Accounting records).\n"
 "    "
-msgstr ""
+msgstr "\nModul pre import OFX bankových výpisov.\n======================================\n\nTento modul umožňuje importovať strojovo čitateľné OFX súbory do Odoo: sú rozobraté a uložené v ľudsky čitateľnom formáte v\nÚčtovníctvo \\ Banka a hotovosť \\ Bankové výpisy.\n\nBankové výpisy môžu byť generované obsahujúc podmnožinu informácií OFX (Iba tie riadky transakcií, ktoré sú nutné pre\nvytvorenie záznamov finančného účtovníctva)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_qif
@@ -2131,7 +2132,7 @@ msgid ""
 "---------------------------------------------\n"
 "Because of the QIF format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
-msgstr ""
+msgstr "\nModul pre import QIF bankových výpisov.\n======================================\n\nTento modul umožňuje importovať strojovo čitateľné QIF súbory do Odoo: sú rozobraté a uložené v ľudsky čitateľnom formáte, v\nÚčtovníctvo \\ Banka a hotovosť \\ Bankové výpisy.\n\nDôležitá poznámka\n---------------------------------------------\nVzhľadom k obmedzeniu formátu QIF, nemôžeme zabezpečiť že rovnaké transakcie nie sú importované niekoľkokrát, alebo zvláda multimeny.\nKedykoľvek je to možné, mali by ste použiť vhodnejší formát súboru, ako je OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_warning
@@ -2143,7 +2144,7 @@ msgid ""
 "Warning messages can be displayed for objects like sale order, purchase order,\n"
 "picking and invoice. The message is triggered by the form's onchange event.\n"
 "    "
-msgstr ""
+msgstr "\nModul pre spúštanie varovaní v OpenERP objektoch.\n==============================================\n\nVarovné správy môžu byť zobrazené pre objekty ako sú predajné objednávky, objednávky,\nvychystávanie a faktúry. Správa je spustená zmenou udalosti formulára."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_expense
@@ -2155,7 +2156,7 @@ msgid ""
 "Create some products for which you can re-invoice the costs.\n"
 "This module does not add any feature, despite a few demo data to\n"
 "test the features easily.\n"
-msgstr ""
+msgstr "\nModul používaný pre demo dáta\n=========================\n\nVytvorte niektoré produkty pre ktoré môžete znova fakturovať náklady.\nTento modul neprináša žiadnu funkciu, napriek niekoľkým demo údajom\npre ľahšie testovanie funkcií.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
@@ -2180,7 +2181,7 @@ msgid ""
 "\n"
 "* In a module, so that administrators and users of OpenERP who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
-msgstr ""
+msgstr "\nNový rozšíriteľný import súboru pre OpenERP\n======================================\n\nOpäť implementovať import súborov systému OpenERP:\n\n* Na strane servera, predchádzajúci systém vkladal väčšinu logiky do\nklienta, ktorý kopíruje výkon (medzi klientmi), robí\nimport systém oveľa ťažší na používanie bez klienta (priame RPC alebo\niné formy automatizácie) a robí znalosti o\nimport / export systéme oveľa ťažšie na zhromaždenie lebo sú rozložené\ncez 3+ rôzne projekty.\n\n* Viac rozšíriteľným spôsobom, takže užívatelia a partneri môžu vybudovať\nvlastný front-end pre import z iných formátov súborov (napr. OpenDocument\nsúbory), ktoré môžu byť jednoduchšie na zvládnutie v ich pracovnom toku, alebo z\nich dátových výrobných zdrojov.\n\n* V module, tak aby sa správcovia a užívatelia OpenERP, ktorí nepotrebujú\nalebo nechcú online import, mohli vyhnúť tomu že je k dispozícii pre používateľov.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -2191,7 +2192,7 @@ msgid ""
 "This initially includes chart of accounts of USA translated to Arabic.\n"
 "\n"
 "In future this module will include some payroll rules for ME .\n"
-msgstr ""
+msgstr "\nOdoo Arabic localization for most arabic countries and Saudi Arabia.\n\nThis initially includes chart of accounts of USA translated to Arabic.\n\nIn future this module will include some payroll rules for ME .\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form_editor
@@ -2202,7 +2203,7 @@ msgid ""
 "\n"
 "Allows you to build web forms on the website using the website builder.\n"
 "        "
-msgstr ""
+msgstr "\nOdoo formulárový editor\n====================\n\nUmožňuje vytvárať webové formuláre na webových stránkach pomocou staviteľa webových stránok."
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_odoo_support
@@ -2214,7 +2215,7 @@ msgid ""
 "Ask your functional question directly to the Odoo Operators with the livechat support.\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nOdoo živá podpora\n=================\n\nOpýtajte sa svoju praktickú otázku priamo Odoo operátorov s liveChat podporou."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_editor
@@ -2223,7 +2224,7 @@ msgid ""
 "Odoo Web Editor widget.\n"
 "==========================\n"
 "\n"
-msgstr ""
+msgstr "\nOdoo web editor nástroj.\n==========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_livechat
@@ -2234,7 +2235,7 @@ msgid ""
 "For website built with Odoo CMS, this module include a chat button on your Website, and allow your visitors to chat with your collabarators.\n"
 "It also will include the feedback tool for the livechat, and web pages to display your channel and its ratings on the website.\n"
 "        "
-msgstr ""
+msgstr "\nOdoo živý chat web stránky \n========================\nPre webové stránky postavené s Odoo CMS, tento modul zahŕňa tlačidlo chatu na vašich webových stránkach, a umožňuje tak návštevníkom chatovať so svojimi spoluúčastníkmi.\nTiež bude obsahovať nástroj spätnej väzby pre live chat, a webové stránky pre zobrazenie vášho kanála a jeho hodnotenie na webových stránkach."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_settings_dashboard
@@ -2248,7 +2249,7 @@ msgid ""
 "* Quick access to the `App Store` and `Theme Store`\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nOdoo nástenka\n==============\n* Rýchly prístup k inštalovaniu aplikácií\n* Rýchle pridávanie používateľov\n* Prístup ku všetkým plánovačom na jednom mieste\n* Rýchly prístup k obchodu s aplikáciami a obchodu s témami"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track
@@ -2265,7 +2266,7 @@ msgid ""
 "- agenda\n"
 "- call for proposals\n"
 "        "
-msgstr ""
+msgstr "\nOnline pokročilé udalosti\n======================\n\nPridáva podporu pre:\n- sponzorov\n- špecializované menu pre udalosť\n- novinky pre udalosť\n- sledovanie\n- agendu\n- výzva na predkladanie návrhov"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_sale
@@ -2275,7 +2276,7 @@ msgid ""
 "======================\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nVstupenky na online udalosť\n======================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event
@@ -2283,7 +2284,7 @@ msgid ""
 "\n"
 "Online Events\n"
 "        "
-msgstr ""
+msgstr "\nOnline udalosti"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
@@ -2334,7 +2335,7 @@ msgid ""
 "==========================================\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nOpenERP poštová skupina : Archív zoznamu adries\n =========================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_quote
@@ -2344,7 +2345,7 @@ msgid ""
 "=========================\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nOpenERP Quote Roller pre predaj\n========================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_calendar
@@ -2353,7 +2354,7 @@ msgid ""
 "OpenERP Web Calendar view.\n"
 "==========================\n"
 "\n"
-msgstr ""
+msgstr "\nOpenERP webové zobrazenie kalendára.\n==========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_gantt
@@ -2362,7 +2363,7 @@ msgid ""
 "OpenERP Web Gantt chart view.\n"
 "=============================\n"
 "\n"
-msgstr ""
+msgstr "\nOpenERP webové zobrazenie Gantt diagramu.\n=============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web
@@ -2373,7 +2374,7 @@ msgid ""
 "\n"
 "This module provides the core of the OpenERP Web Client.\n"
 "        "
-msgstr ""
+msgstr "\nOpenERP modul webového jadra.\n========================\n\nTento modul poskytuje jadro OpenERP webového klienta."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban
@@ -2382,7 +2383,7 @@ msgid ""
 "OpenERP Web kanban view.\n"
 "========================\n"
 "\n"
-msgstr ""
+msgstr "\nOpenERP webový kanban pohľad.\n========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tip
@@ -2391,7 +2392,7 @@ msgid ""
 "OpenERP Web tips.\n"
 "========================\n"
 "\n"
-msgstr ""
+msgstr "\nOpenERP webové tipy.\n========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_view_editor
@@ -2401,7 +2402,7 @@ msgid ""
 "==========================\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nOpenERP zobrazenia webových úprav.\n=========================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website
@@ -2412,7 +2413,7 @@ msgid ""
 "===================\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nOpenERP webové stránky CMS\n ==================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_google_map
@@ -2422,7 +2423,7 @@ msgid ""
 "==========================\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nOpenERP webové stránky Google mapy\n=========================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_tip
@@ -2431,7 +2432,7 @@ msgid ""
 "OpenERP link module for web tips.\n"
 "=================================\n"
 "\n"
-msgstr ""
+msgstr "\nOpenERP odkaz modul pre webové tipy.\n=================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_diagram
@@ -2440,7 +2441,7 @@ msgid ""
 "Openerp Web Diagram view.\n"
 "=========================\n"
 "\n"
-msgstr ""
+msgstr "\nOpenERP zobrazenie webového diagramu.\n=========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -2456,7 +2457,7 @@ msgid ""
 "------------\n"
 "* Manage your Events and Registrations\n"
 "* Use emails to automatically confirm and send acknowledgements for any event registration\n"
-msgstr ""
+msgstr "\nOrganizácie a riadenie udalostí.\n======================================\n\nModul udalostí vám umožňuje efektívne organizovať akcie a všetky súvisiace úlohy: plánovanie, sledovanie registrácie,\nprezencie, atď.\n\nKľúčové vlastnosti\n------------\n* Spravovanie vašich udalostí a registrácií\n* Používajte e-maily pre automatické potvrdenie a odoslanie potvrdenia pre každú registráciu udalosti\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr
@@ -2466,7 +2467,7 @@ msgid ""
 "=============\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nStránka nášho týmu\n ============="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_enterprise
@@ -2474,7 +2475,7 @@ msgid ""
 "\n"
 "Override community website features\n"
 "    "
-msgstr ""
+msgstr "\nPrevážiť komunitné funkcie webovej stránky "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pa
@@ -2518,7 +2519,7 @@ msgid ""
 "* Manager, colleague, collaborator, and employee himself/herself receives email to perform a periodical appraisal.\n"
 "* Every Appraisal Form filled by employees, colleague, collaborator, can be viewed in a PDF form.\n"
 "* Meeting Requests are created manually according to employees appraisals.\n"
-msgstr ""
+msgstr "\nPravidelné hodnotenie zamestnancov\n==============================================\n\nPomocou tejto aplikácie môžete udržiavať motivačný proces tým, že pravidelne robíte vyhodnocovanie výkonu zamestnancov. Pravidelné hodnotenie ľudských zdrojov môže byť v prospech vašim ľudom aj organizácii.\n\nPlán hodnotenia možno priradiť ku každému zamestnancovi. Tieto plány definujú frekvenciu a spôsob ktorým spravujte vaše pravidelné osobné hodnotenie.\n\nKľúčové vlastnosti\n------------\n* Schopnosť vytvárať ocenenie(a) zamestnanca.\n* Hodnotenie môže byť vytvorené manažérom zamestnanca alebo automaticky na základe harmonogramu, ktorý je definovaný vo forme zamestnanca.\n* Hodnotenie prebieha podľa plánu, v ktorom môžu byť vytvorené rôzne prieskumy. Každý prieskum možno zodpovedaný určitou úrovňou v hierarchii zamestnancov. Finálne posúdenie a hodnotenie vykonáva manažér.\n* Manažér, kolega, spolupracovník, a zamestnanec sám / sama dostane e-mail na vykonanie periodického hodnotenia.\n* Každý formulár hodnotenia vyplnený zamestnancami, kolegami, spolupracovníkmi je možné zobraziť vo forme PDF.\n* Žiadosti o schôdzku sú vytvárané manuálne podľa hodnotenia zamestnancov.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -2558,7 +2559,7 @@ msgid ""
 "If you activate this module, you won't be able to access the \n"
 "regular openerp interface anymore. \n"
 "\n"
-msgstr ""
+msgstr "\nPosBox domovská stránka\n===============\n\nTento modul má prednosť pred OpenERP webovým rozhraním pre zobrazenie jednoduchej\ndomovskej stránky, ktorá vysvetľuje, čo je to posbox a zobrazuje stav,\na kde nájsť dokumentáciu.\n\nAk aktivujete tento modul, nebudete mať už prístup k\nbežnému OpenERP rozhraniu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_upgrade
@@ -2571,7 +2572,7 @@ msgid ""
 "new version. This module is specific to the PosBox setup and environment\n"
 "and should not be installed on regular openerp servers.\n"
 "\n"
-msgstr ""
+msgstr "\nPosBox softvérový upgrader\n========================\n\nTento modul umožňuje vzdialene aktualizovať PosBox softvér na\nnovú verzia. Tento modul je špecifický pre nastavenie PosBox a  prostredie\na nemal by byť inštalovaný na bežných OpenERP serveroch.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_extended
@@ -2580,7 +2581,7 @@ msgid ""
 "Product extension. This module adds:\n"
 "  * Computes standard price from the BoM of the product with a button on the product variant based\n"
 "    on the materials in the BoM and the work centers.  It can create the necessary accounting entries when necessary.\n"
-msgstr ""
+msgstr "\nRozšírenie produktu. Tento modul pridáva:\n* Počíta štandardnú cenu z kusovníka výrobku, tlačidlom na variante produktu, založeného\nna materiáloch v kusovníku a v pracovných centrách. V prípade potreby môže vytvárať potrebné účtovné zápisy.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -2634,7 +2635,7 @@ msgid ""
 "* Allows the user to create an invoice automatically\n"
 "* Refund previous sales\n"
 "    "
-msgstr ""
+msgstr "\nJednoduchý a rýchly predajný proces\n===========================\n\nTento modul umožňuje spravovať vaše predaje cez internet veľmi ľahko a s plne dotykovým webovým rozhraním.\nJe kompatibilný so všetkými PC tabletmi a iPad-mi,  ponúkajúc viac platobných metód.\n\nVýber produktu je možné vykonať niekoľkými spôsobmi:\n\n* Pomocou čítačky čiarových kódov\n* Prechádzaním kategórií výrobkov alebo pomocou textového vyhľadávania.\n\nHlavné vlastnosti\n-------------\n* Rýchle kódovanie predaja\n* Vyberte si jeden spôsob platby (rýchly spôsob), alebo platbu rozdeľte na niekoľko platobných metód\n* Výpočet množstva peňazí na vrátenie\n* Vytvorenie a automatické potvrdenie zoznamu odberu\n* Umožňuje užívateľovi automaticky vytvoriť faktúru\n* Preplatenie predchádzajúcich predajov"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_sheet
@@ -2656,7 +2657,7 @@ msgid ""
 "* Period size (Day, Week, Month)\n"
 "* Maximal difference between timesheet and attendances\n"
 "    "
-msgstr ""
+msgstr "\nĽahké zaznamenávanie a overovanie časového rozvrhu a prezencie\n===================================================== \n\nTáto aplikácia dodáva novú obrazovku umožňujúci spravovať obe návštevnosťi (Prihlásenie / Odhlásenie), a vaše pracovné kódovanie (časového rozvrhu) podľa jednotlivých období. Záznamy časového rozvrhu vytvárajú zamestnanci každý deň. Na konci stanovenej doby, zamestnanci potvrdia ich rozvrh a manažér potom musí schváliť položky svojho tímu. Lehoty sú definované vo formulároch spoločnosti a môžete nastaviť ich spustenie mesačne alebo týždenne.\n\nCelý proces overenia časového rozvrhu je:\n---------------------------------------------\n* Návrh rozvrhu\n* Potvrdenie zamestnancom na konci obdobia\n* Overenie projektovým manažérom\n\nValidácia môže byť vo firme nakonfigurovaná:\n------------------------------------------------\n* Veľkosť obdobia (deň, týždeň, mesiac)\n* Maximálny rozdiel medzi časovým rozvrhom a prezenciou"
 
 #. module: base
 #: model:ir.module.module,description:base.module_report
@@ -2664,7 +2665,7 @@ msgid ""
 "\n"
 "Report\n"
 "        "
-msgstr ""
+msgstr "\nVýkaz"
 
 #. module: base
 #: model:ir.module.module,description:base.module_fetchmail
@@ -2697,14 +2698,14 @@ msgid ""
 "For more specific needs, you may also assign custom-defined actions\n"
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
-msgstr ""
+msgstr "\nZískať prichádzajúce e-maily na POP / IMAP serveroch.\n============================================\n\nZadajte parametre POP / IMAP účte (účtoch) a všetky prichádzajúce e-maily na\ntieto účty budú automaticky stiahnuté do vášho OpenERP systému. Všetky\nPOP3 / IMAP kompatibilný servery sú podporované, vrátane tých, ktoré vyžadujú\nšifrované SSL / TLS pripojenie.\n\nToho možno využiť pre jednoduché vytvorenie e-mailovo založených pracovných postupov pre mnoho e-mailovo potvrdených OpenERP dokumentov, ako sú:\n----------------------------------------------------------------------------------------------------------\n* CRM vedenie / príležitosti\n* CRM reklamácie\n* Projektové problémy\n* Projektové úlohy\n* Nábor ľudských zdrojov (žiadatelia)\n\nStačí nainštalovať príslušnú aplikáciu, a môžete priradiť niektorý z týchto typov dokumentov\n(vedenie, projektová problematika) k prichádzajúcim e-mailovým účtom. Nové e-maily budú\nautomaticky tvoriť nové dokumenty zvoleného typu, takže je to hračka vytvoriť\npošta-do-OpenERP integráciu. Ešte lepšie: tieto dokumenty priamo pôsobia ako mini\nkonverzácie synchronizované e-mailom. Môžete odpovedať zvnútra OpenERP, a\nodpovede budú automaticky zhromažené keď sa vrátia, a pripojené k dokumentu\nrovnaká *konverzácia*.\n\nPre viac špecifické potreby, môžete tiež priradiť vlastné definované akcie\n(technicky: Serverové akcie), ktoré majú byť spustené pri každom prijatom e-maily."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
 msgid ""
 "\n"
 "Sell digital product using attachments to virtual products\n"
-msgstr ""
+msgstr "\nPredávajte digitálne produkty pomocou príloh na virtuálnych produktoch\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
@@ -2721,7 +2722,7 @@ msgid ""
 "    * Company\n"
 "    * Date\n"
 "    "
-msgstr ""
+msgstr "\nNastavte predvolené hodnoty pre vaše analytické účty.\n==============================================\n\nUmožňuje automaticky výber analytických účtov na základe kritérií:\n-------------------------------------------------- -------------------\n* Produkt\n* Partner\n* Užívateľ\n* Firma\n* Dátum"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -2736,7 +2737,7 @@ msgid ""
 " * Statistics of Presentation\n"
 " * Channel Subscription\n"
 " * Supported document types : PDF, images, YouTube videos and Google Drive documents)\n"
-msgstr ""
+msgstr "\nZdieľajte a zverejňujte videá, prezentácie a dokumenty \n======================================================\n\n* Aplikácie webovej stránky \n* Spravovanie kanála\n* Filtre a štítky\n* Štatistiky prezentácie\n* Odber kanála\n* Podporované typy dokumentov: PDF, obrázky, videá z YouTube a dokumenty Disku Google)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sign
@@ -2746,7 +2747,7 @@ msgid ""
 "\n"
 "Let your customers follow the signature process easily.\n"
 "    "
-msgstr ""
+msgstr "\nZaregistrujte sa a ľahko skompletizujte svoje dokumenty . Prispôsobte si svoje dokumenty textom a podpisovým políčkom a pošlite ich svojim príjemcom.\n\nNechajte svojich zákazníkov ľahko dodržiavať proces podpisu ."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg
@@ -2768,7 +2769,7 @@ msgid ""
 "      submission of GST Tax Report.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nSingapore accounting chart and localization.\n=======================================================\n\nAfter installing this module, the Configuration wizard for accounting is launched.\n* The Chart of Accounts consists of the list of all the general ledger accounts\nrequired to maintain the transactions of Singapore.\n* On that particular wizard, you will be asked to pass the name of the company,\nthe chart template to follow, the no. of digits to generate, the code for your\naccount and bank account, currency to create journals.\n\n* The Chart of Taxes would display the different types/groups of taxes such as\nStandard Rates, Zeroed, Exempted, MES and Out of Scope.\n* The tax codes are specified considering the Tax Group and for easy accessibility of\nsubmission of GST Tax Report."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -2784,7 +2785,7 @@ msgid ""
 "    * Defines templates for sale and purchase VAT\n"
 "    * Defines tax code templates\n"
 "    * Defines fiscal positions for spanish fiscal legislation\n"
-msgstr ""
+msgstr "\nSpanish charts of accounts (PGCE 2008).\n========================================\n\n* Defines the following chart of account templates:\n* Spanish general chart of accounts 2008\n* Spanish general chart of accounts 2008 for small and medium companies\n* Spanish general chart of accounts 2008 for associations\n* Defines templates for sale and purchase VAT\n* Defines tax code templates\n* Defines fiscal positions for spanish fiscal legislation\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey_crm
@@ -2793,7 +2794,7 @@ msgid ""
 "Survey - CRM (bridge module)\n"
 "=================================================================================\n"
 "This module adds a Survey mass mailing button inside the more option of lead/customers views\n"
-msgstr ""
+msgstr "\nPrieskum - CRM (premosťovací modul)\n================================================== ===============================\nTento modul pridáva hromadné korešpondenciu tlačidlo Prieskum vo viacerých možnostiach zobrazenia vedenia / zákazníkov\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -2828,7 +2829,7 @@ msgid ""
 "\n"
 "``l10n_ch`` is located in the core Odoo modules. The other modules are in:\n"
 "https://github.com/OCA/l10n-switzerland\n"
-msgstr ""
+msgstr "\nSwiss localization\n==================\n\n**Multilang Swiss PME/KMU 2015 account chart and taxes**\n\n**Author:** Camptocamp SA\n\n**Financial contributors:** Prisme Solutions Informatique SA, Quod SA\n\n**Translation contributors:** brain-tec AG, Agile Business Group\n\nThe swiss localization addons are organized this way:\n\n``l10n_ch``\nMultilang Swiss PME/KMU 2015 account chart and taxes (official addon)\n``l10n_ch_base_bank``\nTechnical module that introduces a new and simplified version of bank\ntype management\n``l10n_ch_bank``\nList of swiss banks\n``l10n_ch_zip``\nList of swiss postal zip\n``l10n_ch_dta``\nSupport of the DTA payment protocol (will be deprecated by the end of 2014)\n``l10n_ch_payment_slip``\nSupport of ESR/BVR payment slip report and reconciliation.\n\n``l10n_ch`` is located in the core Odoo modules. The other modules are in:\nhttps://github.com/OCA/l10n-switzerland\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_yodlee
@@ -2838,7 +2839,7 @@ msgid ""
 "================================\n"
 "\n"
 "Yodlee interface.\n"
-msgstr ""
+msgstr "\nSynchronizujte vaša bankové kanály s Yodlee\n================================\n\nYodlee rozhranie.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet
@@ -2851,7 +2852,7 @@ msgid ""
 "Management to the Timesheet line entries for particular date and particular user\n"
 "with the effect of creating, editing and deleting either ways.\n"
 "    "
-msgstr ""
+msgstr "\nSynchronizácia pracovných zápisov úloh projektu s položkami časového rozvrhu.\n====================================================================\n\nTento modul umožňuje prenášať položky v rámci úloh definovaných pre Projektový\nmanažment na riadky záznamu časového rozvrhu pre konkrétny dátum a konkrétneho užívateľa\ns výsledkom tvorenia, editácie a obojsmerného mazania."
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_synchro
@@ -2862,7 +2863,7 @@ msgid ""
 "\n"
 "If you use the external timesheet application, this module alows you to synchronize timesheet entries between Odoo and the application.\n"
 "    "
-msgstr ""
+msgstr "\nSynchronizácia záznamov časového rozvrhu s externou aplikáciou časového rozvrhu .\n ====================================================================\n\nAk používate externú aplikáciu časového rozvrhu, tento modul umožňuje synchronizovať položky časového rozvrhu medzi Odoo a tou aplikáciou."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_voucher
@@ -2885,7 +2886,7 @@ msgid ""
 "* Voucher Receipt [Sales & Purchase]\n"
 "* Voucher Payment [Customer & Vendors]\n"
 "    "
-msgstr ""
+msgstr "\nTODO\n\nstarý popis:\nFakturácia a platby podľa účtovného poukazu & Príjmy\n===================================================== \nŠpecifický a ľahko použiteľný systém fakturácie v Odoo vám umožní sledovať vaše účtovníctvo, a to aj keď nie ste účtovník. To poskytuje jednoduchý spôsob, ako nadviazať na svojich dodávateľov a zákazníkov.\n\nToto zjednodušené účtovníctvo by sa dalo použiť v prípade, že pracujete s (externým) účtom, aby sa zachovali vaše záznamy, a k tomu chcete sledovať platby.\n\nFakturačný systém zahŕňa príjmy a poukážky (jednoduchý spôsob, ako udržať prehľad o predajoch a nákupoch). To vám ponúka jednoduchý spôsob registrácie platby, bez nutnosti kódovať kompletné výňatky z účtu.\n\nTento modul spravuje:\n\n* Zadávanie poukazov\n* Príjem poukazov [Predaje & Nákupy]\n* Platba poukazom[Zákazník & Predajcovia]"
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -2904,7 +2905,7 @@ msgid ""
 "\n"
 "If you want to save your employees' time and avoid them to always have coins in their pockets, this module is essential.\n"
 "    "
-msgstr ""
+msgstr "\nZákladný modul pre spravovanie obedov.\n================================\n\nMnoho spoločností objednáva sendviče, pizze a ďalšie, od obvyklých dodávateľov pre svojich zamestnancov, aby im ponúkli viac zariadení.\n\nRiadenie obedov v spoločnosti však vyžaduje správnu administráciu najmä keď je dôležitý počet zamestnancov alebo dodávateľov.\n\nModul \"Obedná objednávka\" bol vyvinutý, aby sa toto spravovanie zjednoduchšilo, ale aj aby ponúkol zamestnancom viaceré nástroje a použiteľnosť.\n\nOkrem plnohodnotného jedla a spravovania dodávateľov, tento modul ponúka možnosť zobraziť varovania a poskytuje rýchly výber objednávok založený na preferenciách zamestnanca.\n\nAk chcete ušetriť čas vašich zamestnancov a odhľahčiť ich od toho aby mali vždy mince vo vrecku, tento modul je zásadný."
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm
@@ -2928,7 +2929,7 @@ msgid ""
 "-------------------------------\n"
 "* Planned Revenue by Stage and User (graph)\n"
 "* Opportunities by Stage (graph)\n"
-msgstr ""
+msgstr "\nVšeobecné OpenERP vedenie vzťahov so zákazníkmi\n====================================================\n\nTáto aplikácia umožňuje skupine ľudí inteligentne a efektívne spravovať vedenie, príležitosti, stretnutia a aktivity.\n\nSpravuje kľúčové úlohy ako sú komunikácia, identifikácia, stanovenie priorít, priradenie, riešenie a notifikácie.\n\nOpenERP zaisťuje, že všetky prípady sú úspešne sledované zo strany užívateľov, zákazníkov a dodávateľov. Je možné automaticky posielať upomienky, spustiť špecifické metódy a mnoho ďalších akcií na základe vašich vlastných podnikových pravidiel.\n\nNajlepšia vec na tomto systéme je, že používatelia nemusia robiť nič špecíalne. Modul CRM má e-mailovú bránu pre synchronizáciu rozhrania medzi e-mailami a OpenERP. Týmto spôsobom môžu používatelia len poslať e-maily na sledovač požiadavok.\n\nOpenERP sa postará o poďakovanie za ich správy, automaticky ich presmeruje na príslušných zamestnancov a uistí sa, že všetka budúca korešpondencia sa dostane na správne miesto.\n\n\nNástenka pre CRM bude zahŕňať:\n-------------------------------\n* Plánované príjmy podľa štádia a užívateľa (graf)\n* Príležitosti podľa štádia (graf)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -2936,7 +2937,7 @@ msgid ""
 "\n"
 "The kernel of OpenERP, needed for all installation.\n"
 "===================================================\n"
-msgstr ""
+msgstr "\nJadro OpenERP, potrebné pre všetky inštalácie.\n===================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -2944,7 +2945,7 @@ msgid ""
 "\n"
 "The module adds google user in res user.\n"
 "========================================\n"
-msgstr ""
+msgstr "\nModul pridáva google užívateľa v res užívateľa.\n========================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_spreadsheet
@@ -2952,7 +2953,7 @@ msgid ""
 "\n"
 "The module adds the possibility to display data from OpenERP in Google Spreadsheets in real time.\n"
 "=================================================================================================\n"
-msgstr ""
+msgstr "\nModul pridáva možnosť zobraziť dáta z OpenERP v Google Tabuľkách v reálnom čase.\n=================================================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_calendar
@@ -2960,7 +2961,7 @@ msgid ""
 "\n"
 "The module adds the possibility to synchronize Google Calendar with OpenERP\n"
 "===========================================================================\n"
-msgstr ""
+msgstr "\nModul pridáva možnosť synchronizovať Google Kalendár s OpenERP\n===========================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -2969,7 +2970,7 @@ msgid ""
 "This creates a product cache per POS config. It drastically lowers the\n"
 "time it takes to load a POS session with a lot of products.\n"
 "    "
-msgstr ""
+msgstr "\nTýmto sa vytvorí medzipamäť produktu podľa POS konfig. To výrazne znižuje\nčas potrebný na načítanie POS cyklu s mnohými výrobkami."
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -2985,7 +2986,7 @@ msgid ""
 "\n"
 "If you need to manage your meetings, you should install the CRM module.\n"
 "    "
-msgstr ""
+msgstr "\nJedná sa o plne funkčný kalendárový systém.\n========================================\n\nPodporuje:\n------------ \n- Kalendár akcií\n- Opakujúce sa udalosti\n\nAk potrebujete spravovať svoje stretnutia, mali by ste nainštalovať CRM modul."
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
@@ -3010,7 +3011,7 @@ msgid ""
 "\n"
 "Print product labels with barcode.\n"
 "    "
-msgstr ""
+msgstr "\nToto je základný modul pre spravovanie produktov a cenníkov v OpenERP.\n================================================== ======================\n\nProdukty podporujú varianty, rôzne oceňovacie metódy, informácií predajcov,\nvýrobu na sklad / objednávku, rôzne merné jednotky, balenie a vlastnosti.\n\nPodpora cenníkov :\n-------------------\n* Viac úrovní zľavy (podľa produktu, kategórie, množstiev)\n* Vypočítať cenu na základe iných kritérií:\n* Ďalšie cenník\n* Obstarávacia cena\n* Maloobchodná cena\n* Predajcova cena\n\nPreferencie cenníkov podľa produktov a / alebo partnerov.\n\nVytlačiť produktové štítky s čiarovým kódom."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -3044,7 +3045,7 @@ msgid ""
 "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nThis is the base module to manage the accounting chart for Belgium in OpenERP.\n==============================================================================\n\nAfter installing this module, the Configuration wizard for accounting is launched.\n* We have the account templates which can be helpful to generate Charts of Accounts.\n* On that particular wizard, you will be asked to pass the name of the company,\nthe chart template to follow, the no. of digits to generate, the code for your\naccount and bank account, currency to create journals.\n\nThus, the pure copy of Chart Template is generated.\n\nWizards provided by this module:\n--------------------------------\n* Partner VAT Intra: Enlist the partners with their related VAT and invoiced\namounts. Prepares an XML file format.\n\n**Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Partner VAT Intra\n* Periodical VAT Declaration: Prepares an XML file for Vat Declaration of\nthe Main company of the User currently Logged in.\n\n**Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Periodical VAT Declaration\n* Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat\nDeclaration of the Main company of the User currently Logged in Based on\nFiscal year.\n\n**Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -3058,7 +3059,7 @@ msgid ""
 "* The Tax Code Chart for Domincan Republic\n"
 "* The main taxes used in Domincan Republic\n"
 "* Fiscal position for local "
-msgstr ""
+msgstr "\nThis is the base module to manage the accounting chart for Dominican Republic.\n==============================================================================\n\n* Chart of Accounts.\n* The Tax Code Chart for Domincan Republic\n* The main taxes used in Domincan Republic\n* Fiscal position for local "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -3069,7 +3070,7 @@ msgid ""
 "\n"
 "Accounting chart and localization for Ecuador.\n"
 "    "
-msgstr ""
+msgstr "\nThis is the base module to manage the accounting chart for Ecuador in OpenERP.\n==============================================================================\n\nAccounting chart and localization for Ecuador."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -3080,7 +3081,7 @@ msgid ""
 "\n"
 "Greek accounting chart and localization.\n"
 "    "
-msgstr ""
+msgstr "\nThis is the base module to manage the accounting chart for Greece.\n==================================================================\n\nGreek accounting chart and localization."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gt
@@ -3092,7 +3093,7 @@ msgid ""
 "Agrega una nomenclatura contable para Guatemala. También icluye impuestos y\n"
 "la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes\n"
 "taxes and the Quetzal currency."
-msgstr ""
+msgstr "\nThis is the base module to manage the accounting chart for Guatemala.\n=====================================================================\n\nAgrega una nomenclatura contable para Guatemala. También icluye impuestos y\nla moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes\ntaxes and the Quetzal currency."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
@@ -3104,7 +3105,7 @@ msgid ""
 "Agrega una nomenclatura contable para Honduras. También incluye impuestos y la\n"
 "moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
 "and the Lempira currency."
-msgstr ""
+msgstr "\nThis is the base module to manage the accounting chart for Honduras.\n====================================================================\n\nAgrega una nomenclatura contable para Honduras. También incluye impuestos y la\nmoneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\nand the Lempira currency."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -3122,7 +3123,7 @@ msgid ""
 "    * the 2015 chart of taxes is implemented to a large extent,\n"
 "      see the first sheet of tax.xls for details of coverage\n"
 "    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
-msgstr ""
+msgstr "\nThis is the base module to manage the accounting chart for Luxembourg.\n======================================================================\n\n* the Luxembourg Official Chart of Accounts (law of June 2009 + 2015 chart and Taxes),\n* the Tax Code Chart for Luxembourg\n* the main taxes used in Luxembourg\n* default fiscal position for local, intracom, extracom\n\nNotes:\n* the 2015 chart of taxes is implemented to a large extent,\nsee the first sheet of tax.xls for details of coverage\n* to update the chart of tax template, update tax.xls and run tax2csv.py\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -3136,7 +3137,7 @@ msgid ""
 "produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...).\n"
 "L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
 "Seddik au cours du troisième trimestre 2010."
-msgstr ""
+msgstr "\nThis is the base module to manage the accounting chart for Maroc.\n=================================================================\n\nCe Module charge le modèle du plan de comptes standard Marocain et permet de\ngénérer les états comptables aux normes marocaines (Bilan, CPC (comptes de\nproduits et charges), balance générale à 6 colonnes, Grand livre cumulatif...).\nL'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\nSeddik au cours du troisième trimestre 2010."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_coa
@@ -3147,7 +3148,7 @@ msgid ""
 "\n"
 "Install some generic chart of accounts.\n"
 "    "
-msgstr ""
+msgstr "\nToto je základný modul pre správu všeobecného účtovnického grafu v Odoo.\n================================================== ============================\n\nNainštalovať nejaký všeobecný graf účtov."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -3159,7 +3160,7 @@ msgid ""
 "    - VAT100-ready tax structure\n"
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
-msgstr ""
+msgstr "\nThis is the latest UK OpenERP localisation necessary to run OpenERP accounting for UK SME's with:\n=================================================================================================\n- a CT600-ready chart of accounts\n- VAT100-ready tax structure\n- InfoLogic UK counties listing\n- a few other adaptations"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement
@@ -3185,7 +3186,7 @@ msgid ""
 "\n"
 "Procurements in exception should be checked manually and can be re-run.\n"
 "    "
-msgstr ""
+msgstr "\nToto je modul pre výpočet obstarávania.\n==============================================\n\nTento modul obstarávania závisí iba na module produktu a nie je užitočný\nsám o sebe. Obstarávania predstavujú potreby, ktoré je potrebné vyriešiť pomocou zadávania pravidielo bstarávania. Keď je obstarávanie vytvorené, je potvrdené. Akonáhle je nájdené pravidlo,\nže bude uvedené do prevádzkového stavu. Potom to bude kontrolovať či to čo bolo potrebné urobiť\npre pravidlo už bolo vykonané. Potom pôjde do vykonaného stavu. Obstarávanie\nmôže ísť tiež do výnimky, napríklad vtedy, keď nemôže nájsť pravidlo, a môže byť zrušené.\n\nMechanizmus bude rozšírený niekoľkými modulmi. Pravidlo obstarávanie zásob bude\nvytvárť pohyb, a obstarávania bude splnené keď bude pohyb hotový.\nPravidlo obstarávania predaj_služieb vytvorí úlohu. Tí o kúpe alebo\nMRP vytvora obstarávaciu objednávku alebo výrobnú objednávku.\n\nPlánovač skontroluje, či je možné priradiť pravidlo pre potvrdené obstarávania, a či\nmôže dať bežiace obstarávanie na urobné.\n\nObstarávanía vo výnimke by mali byť kontrolované manuálne a môžu byť opätovne spustené."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -3197,7 +3198,7 @@ msgid ""
 "\n"
 "Romanian accounting chart and localization.\n"
 "    "
-msgstr ""
+msgstr "\nThis is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.\nIt also adds the Registration Number for Romania in OpenERP.\n================================================================================================================\n\nRomanian accounting chart and localization."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -3229,7 +3230,7 @@ msgid ""
 "4) An international vendor charge you your provincial tax. They are registered with your\n"
 "position.\n"
 "    "
-msgstr ""
+msgstr "\nThis is the module to manage the Canadian accounting chart in OpenERP.\n===========================================================================================\n\nCanadian accounting charts and localizations.\n\nFiscal positions\n----------------\n\nWhen considering taxes to be applied, it is the province where the delivery occurs that matters.\nTherefore we decided to implement the most common case in the fiscal positions: delivery is the\nresponsibility of the vendor and done at the customer location.\n\nSome examples:\n\n1) You have a customer from another province and you deliver to his location.\nOn the customer, set the fiscal position to his province.\n\n2) You have a customer from another province. However this customer comes to your location\nwith their truck to pick up products. On the customer, do not set any fiscal position.\n\n3) An international vendor doesn't charge you any tax. Taxes are charged at customs\nby the customs broker. On the vendor, set the fiscal position to International.\n\n4) An international vendor charge you your provincial tax. They are registered with your\nposition."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -3245,7 +3246,7 @@ msgid ""
 "Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
 "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 "    "
-msgstr ""
+msgstr "\nThis is the module to manage the accounting chart and taxes for Poland in OpenERP.\n==================================================================================\n\nTo jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów podatkowych i\nrejestrów podatkowych. Moduł ustawia też konta do kupna i sprzedaży towarów\nzakładając, że wszystkie towary są w obrocie hurtowym.\n\nNiniejszy moduł jest przeznaczony dla odoo 8.0.\nWewnętrzny numer wersji OpenGLOBE 1.02"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -3271,7 +3272,7 @@ msgid ""
 "configuration of their taxes and fiscal positions manually.\n"
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
-msgstr ""
+msgstr "\nThis is the module to manage the accounting chart for France in OpenERP.\n========================================================================\n\nThis module applies to companies based in France mainland. It doesn't apply to\ncompanies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, Mayotte).\n\nThis localisation module creates the VAT taxes of type 'tax included' for purchases\n(it is notably required when you use the module 'hr_expense'). Beware that these\n'tax included' VAT taxes are not managed by the fiscal positions provided by this\nmodule (because it is complex to manage both 'tax excluded' and 'tax included'\nscenarios in fiscal positions).\n\nThis localisation module doesn't properly handle the scenario when a France-mainland\ncompany sells services to a company based in the DOMs. We could manage it in the\nfiscal positions, but it would require to differentiate between 'product' VAT taxes\nand 'service' VAT taxes. We consider that it is too 'heavy' to have this by default\nin l10n_fr; companies that sell services to DOM-based companies should update the\nconfiguration of their taxes and fiscal positions manually.\n\n**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl
@@ -3302,7 +3303,7 @@ msgid ""
 "De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nThis is the module to manage the accounting chart for Netherlands in OpenERP.\n=============================================================================\n\nRead changelog in file __openerp__.py for version information.\nDit is een basismodule om een uitgebreid grootboek- en BTW schema voor\nNederlandse bedrijven te installeren in OpenERP versie 7.0.\n\nDe BTW rekeningen zijn waar nodig gekoppeld om de juiste rapportage te genereren,\ndenk b.v. aan intracommunautaire verwervingen waarbij u 21% BTW moet opvoeren,\nmaar tegelijkertijd ook 21% als voorheffing weer mag aftrekken.\n\nNa installatie van deze module word de configuratie wizard voor 'Accounting' aangeroepen.\n* U krijgt een lijst met grootboektemplates aangeboden waarin zich ook het\nNederlandse grootboekschema bevind.\n\n* Als de configuratie wizard start, wordt u gevraagd om de naam van uw bedrijf\nin te voeren, welke grootboekschema te installeren, uit hoeveel cijfers een\ngrootboekrekening mag bestaan, het rekeningnummer van uw bank en de currency\nom Journalen te creeren.\n\nLet op!! -> De template van het Nederlandse rekeningschema is opgebouwd uit 4\ncijfers. Dit is het minimale aantal welk u moet invullen, u mag het aantal verhogen.\nDe extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -3314,7 +3315,7 @@ msgid ""
 "This module applies to companies based in Vietnamese Accounting Standard (VAS).\n"
 "\n"
 "**Credits:** General Solutions.\n"
-msgstr ""
+msgstr "\nThis is the module to manage the accounting chart for Vietnam in OpenERP.\n=========================================================================\n\nThis module applies to companies based in Vietnamese Accounting Standard (VAS).\n\n**Credits:** General Solutions.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn_reports
@@ -3326,7 +3327,7 @@ msgid ""
 "This module applies to companies based in Vietnamese Accounting Standard (VAS).\n"
 "\n"
 "**Credits:** General Solutions.\n"
-msgstr ""
+msgstr "\nThis is the module to manage the accounting reports for Vietnam in Odoo.\n=========================================================================\n\nThis module applies to companies based in Vietnamese Accounting Standard (VAS).\n\n**Credits:** General Solutions.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_partner_assign
@@ -3340,14 +3341,14 @@ msgid ""
 "Once the coordinates of the Lead/Opportunity is known, they can be automatically assigned\n"
 "to an appropriate local partner, based on the distance and the weight that was assigned to the partner.\n"
 "    "
-msgstr ""
+msgstr "\nToto je modul ktorý použiva OpenERP SA ne presmerovanie zákazníkov svojim partnerom na základe geolokácie.\n======================================================================================================\n\nTieto moduly vám umožnia vedenie geolokácie , príležitosti a partnerov na základe ich adresy.\n\nPotom, čo sa súradnice Vedenie / Príležitosť  známe, môžu byť automaticky priradené\nk zodpovedajúcemu miestnemu partnerovi, na základe vzdialenosti a hmotnosti ktorý bol priradený partnerovi."
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating_project
 msgid ""
 "\n"
 "This module Allows a customer to give rating on Project.\n"
-msgstr ""
+msgstr "\nTento modul umožňuje zákazníkovi, aby hodnotil projekt.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad_project
@@ -3356,7 +3357,7 @@ msgid ""
 "This module adds a PAD in all project form views.\n"
 "=================================================\n"
 "    "
-msgstr ""
+msgstr "\nTento modul pridáva PAD vo všetkých zobrazeniach formy projektu.\n================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_sale
@@ -3379,7 +3380,7 @@ msgid ""
 "pay online on their Sale Orders and Invoices that are not paid yet. Paypal is included\n"
 "by default, you simply need to configure a Paypal account in the Accounting/Invoicing settings.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul pridá menu Predaj do portálu akonáhle sú nainštalované predaj a portál.\n================================================== ====================================\n\nPo inštalácii tohto modulu, budú mať užívatelia portálu prístup k svojim dokumentom\nprostredníctvom nasledujúcich menu:\n\n- Kvóty\n- Predajné objednávky\n- Dodacie objednávky\n- Produkty (verejné)\n- Faktúry\n- Platby / Refundácie\n\nAk sú nakonfigurovaný nadobúdatelia on-line platby, užívatelia portálu budú mať  možnosť\nplatiť on-line ich predajné objednávky a faktúry, ktoré zatiaľ nevyplatili. Paypal je zahrnutý\nv predvolenom nastavení, stačí jednoducho nastaviť Paypal účet v nastavení Účtovníctvo / Fakturácia."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_portal_followup
@@ -3388,7 +3389,7 @@ msgid ""
 "This module adds a followup menu and features to your portal if followup and portal are installed.\n"
 "==================================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nTento modul pridá nasledovacie menu a funkcie do portálu, ak sú nainštalované nasledovanie a portál.\n=================================================================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_webkit
@@ -3439,7 +3440,7 @@ msgid ""
 "    * Collated and book format support\n"
 "    * Zip return for separated PDF\n"
 "    * Web client WYSIWYG\n"
-msgstr ""
+msgstr "\nTento modul pridáva nový výkazový prostriedok založený na WebKit knižnici (wkhtmltopdf) podporujúci výkazy, ktoré sú navrhnuté v HTML + CSS.\n=====================================================================================================================\n\nŠtruktúra modulu a nejaký kód sú inšpirované výkaz_openoffice modulom.\n\nModul umožňuje:\n------------------ \n- Definícia HTML výkazu\n- Podpora viacerých záhlaví\n- Multi logo\n- Podpora multi spoločnosti\n- HTML a CSS-3 podpora (V limite aktuálnej Webkit verzie)\n- Podporu JavaScriptu\n- Hrubé HTML doladenie\n- Schopnosti knižnej tlače\n- Definícia marž\n- Definícia veľkostí papiera\n\nViaceré záhlavia a logá môžu byť zadefinované pre jednu spoločnosť. CSS štýl, hlavičky a\ntelo ukončenia stránky sú definované na jednu spoločnosť.\n\nPre vzorku výkazu viď tiež webkit_report_sample modul, a toto video:\nhttp://files.me.com/nbessi/06n92k.mov\n\nPožiadavky a inštalácia:\n------------------------------ \nTento modul vyžaduje ``wkhtmltopdf`` knižnicu na preloženie dokumentu HTML ako\nPDF. Verzia 0.9.9 alebo novšia je nutná, a možno ju nájsť na\nhttp://code.google.com/p/wkhtmltopdf/ pre Linux, Mac OS X (i386) a Windows (32bits).\n\nPo inštalácii knižnice na OpenERP server počítači, možno budete musieť nastaviť\ncestu na `` wkhtmltopdf`` spustiteľný súbor do systémového parametra s názvom\n``webkit_path`` v Nastavenia -> Prispôsobenie -> Parametre -> Systémové parametre\nAk sa vyskytnú problémy, chýbajúce hlavičky / päty v systéme Linux, uistite sa, že\nnainštalujte \"statickú\" verziu knižnice. Štandardné ``wkhtmltopdf`` na\nUbuntu je známe týmto problémom.\n\n\nTODO:\n----- \n* Podpora aktivácie a deaktivácie JavaScriptu\n* Podpora zoradeného a knižného formátu\n* Zip návrat pre oddelené PDF\n* Webový klient WYSIWYG\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -3455,7 +3456,7 @@ msgid ""
 "We suggest you to install this module, if you installed both the sale and the crm\n"
 "modules.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul pridáva zástupcu na jednom alebo viacerých prípadoch príležitostí v CRM.\n================================================== =========================\n\nTento zástupca vám umožní vytvárať predajné objednávky na základe vybraného prípadu.\nAk sú otvorené rôzne prípady (zoznam), vytvára jednu predajnú objednávku na prípad.\nPrípad sa potom uzavrie a je prepojený s vygenerovanou predajnou objednávkou.\n\nOdporúčame nainštalovať tento modul, ak ste nainštalovali  predaj aj CRM\nmoduly."
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_stock
@@ -3464,7 +3465,7 @@ msgid ""
 "This module adds access rules to your portal if stock and portal are installed.\n"
 "==========================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nTento modul pridáva prístupové pravidlá k portálu, ak sú nainštalované sklad a portál.\n=========================================================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_claim
@@ -3473,7 +3474,7 @@ msgid ""
 "This module adds claim menu and features to your portal if claim and portal are installed.\n"
 "==========================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nTento modul pridáva reklamačné menu a funkcie na portáli, ak sú nainštalované reklamácie a portál.\n=========================================================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_project_issue
@@ -3482,7 +3483,7 @@ msgid ""
 "This module adds project issues inside your account's page on website if project_issue and website_portal are installed.\n"
 "==================================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nTento modul pridáva projektové problémy vnútri stránky vášho účtu na webových stránkach, ak sú nainštalované project_issue a website_portal.\n=================================================================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_gamification
@@ -3491,7 +3492,7 @@ msgid ""
 "This module adds security rules for gamification to allow portal users to participate to challenges\n"
 "===================================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nTento modul pridáva bezpečnostné pravidlá pre gamifikáciu aby umožnil užívateľom portálu zúčastniť sa na úlohach.\n==================================================================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_operations
@@ -3524,7 +3525,7 @@ msgid ""
 "The field 'Working Hours' is the delay(stop date - start date).\n"
 "So, that we can compare the theoretic delay and real delay. \n"
 "    "
-msgstr ""
+msgstr "\nTento modul pridáva stav, date_start, date_stop v prevádzkových riadkoch výrobných objednávok (v záložke \"pracovné objednávky\").\n================================================================================================================\n\nStatus: návrh, potvrdiť, hotovo, zrušiť\nPo ukončení / potvrdení, zrušenie výrobných objednávok nastaví všetky stavové riadky\npodľa príslušného stavu.\n\nVytvoriť menu:\n------------- \n**Výroba**> **Výroba**> **Pracovné objednávky**\n\nKtoré je zobrazenie na riadkoch \"pracovné objednávky\" vo výrobnej objednávke.\n\nPridať tlačidlo v tvare zobrazenia výrobnej objednávky podľa záložky pracovných objednávok:\n------------------------------------------------------------------------- \n* Štart (nastaviť stav pre potvrdenie), nastavte date_start\n* Urobiť (nastaviť stav na hotovo), nastavte date_stop\n* Nastavený na návrh (nastaviť stav na návrh)\n* Zrušiť,  nastaviť stav na zrušiť\n\nKeď sa výrobná objednávka stane \"pripravený na výrobu\", činnosti sa musia\nstať \"potvrdené\". Keď sa výrobné objednávky urobiť, všetky operácie\nmusia mať stav Hotovo.\n\nPole \"Pracovná doba\" je oneskorenie (dátum zastavenia - dátum začiatku).\nTakže môžeme porovnať teoretické meškanie a skutočné meškanie."
 
 #. module: base
 #: model:ir.module.module,description:base.module_barcodes
@@ -3549,7 +3550,7 @@ msgid ""
 "- Patterns to identify barcodes containing a numerical value (e.g. weight, price)\n"
 "- Definition of barcode aliases that allow to identify the same product with different barcodes\n"
 "- Support for encodings EAN-13, EAN-8 and UPC-A\n"
-msgstr ""
+msgstr "\nTento modul pridáva podporu pre snímanie čiarového kódu a analýzu.\n\nSkenovanie\n--------\nPoužite USB skener (ktorá napodobňuje klávesnicové vstupy) pre prácu s čiarovými kódmi v Odoo.\nSkener musí byť nakonfigurovaný na použitie bez prefixu a návrat vozíka alebo záloku ako sufix.\nOneskorenie medzi zadaním každého znaku musí byť menšie ako alebo rovné 50 milisekúnd.\nVäčšina sknerov čiarových kódov bude fungovať po vybalení z krabice.\nAvšak, uistite sa že skener používa rovnaké rozloženie klávesnice ako zariadenie na ktorom je zapojený.\nBuď pomocou nastavenia rozloženia klávesnice zariadenia na US QWERTY (predvolená hodnota pre väčšinu čítačov)\nalebo zmenou rozloženia klávesnice skenera (pozrite v príručke).\n\nAnalýza\n------- \nČiarové kódy sú interpretované pomocou pravidiel definovaných nomenklatúrou.\nTo poskytuje nasledujúce funkcie:\n- Vzory pre identifikáciu čiarových kódov, ktoré obsahujú číselné hodnoty (napr hmotnosť, cena)\n- Definícia aliasov čiarových kódov, ktoré umožňujú identifikovať rovnaký výrobok s rôznymi čiarovými kódmi\n- Podpora pre kódovanie EAN-13, EAN-8 a UPC-A\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -3561,7 +3562,7 @@ msgid ""
 "This gives the profitability by calculating the difference between the Unit\n"
 "Price and Cost Price.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul pridáva \"Maržu\" na predajné objednávky.\n============================================= \n\nTo dáva ziskovosť výpočtom rozdielu medzi jednotkovou\ncenou a výrobnou cenou."
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue_sheet
@@ -3572,7 +3573,7 @@ msgid ""
 "\n"
 "Worklogs can be maintained to signify number of hours spent by users to handle an issue.\n"
 "                "
-msgstr ""
+msgstr "\nTento modul pridáva podporu časového rozvrhu pre Problémy / Spravovanie chýb v projekte.\n================================================== =============================== \n\nPracovné denníky možno udržiavať pre zaznamenanie počtu hodín strávených užívateľom na zvládnutie problému."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_picking_wave
@@ -3581,7 +3582,7 @@ msgid ""
 "This module adds the picking wave option in warehouse management.\n"
 "=================================================================\n"
 "    "
-msgstr ""
+msgstr "\nTento modul pridá možnosť zberných vĺn v spravovaní skladu.\n================================================================= "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -3593,21 +3594,21 @@ msgid ""
 "Keeps account of the attendances of the employees on the basis of the\n"
 "actions(Sign in/Sign out) performed by them.\n"
 "       "
-msgstr ""
+msgstr "\nTento modul má za cieľ riadiť dochádzku zamestnancov.\n==================================================\nUdržuje počty návštevnosti zamestnancov na základe\nakcií (Prihlásenie / Odhlásenie) ktoré vyplnia."
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating_project_issue
 msgid ""
 "\n"
 "This module allows a customer to give rating on Project Issue.\n"
-msgstr ""
+msgstr "\nTento modul umožňuje zákazníkovi, aby hodnotil projektový problém.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating
 msgid ""
 "\n"
 "This module allows a customer to give rating.\n"
-msgstr ""
+msgstr "\nTento modul umožňuje zákazníkovi hodnotenie.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_budget
@@ -3634,7 +3635,7 @@ msgid ""
 "\n"
 "    3. The last one is available from the Analytic Chart of Accounts. It gives \n"
 "       the spreading, for the selected Analytic Accounts of Budgets.\n"
-msgstr ""
+msgstr "\nTento modul umožňuje účtovný spravovať analytické a prekrížné rozpočty.\n========================================================================== \n\nAkonáhle sú rozpočty definované (vo Fakturácia / Rozpočty / Rozpočty), ​​manažéri projektov\nmôžu nastaviť plánované množstvo na každom analytickom účte.\n\nÚčtovník má možnosť vidieť celkové sumy plánované pre každý\nRozpočet, aby bolo zabezpečené že celkoé  plánované nie je väčšie / menšie než to, čo je\nplánované pre tento rozpočet. Každý zoznam záznamu možno tiež prepnúť do jeho grafického\nzobrazenia.\n\nK dispozícii sú tri výkazy:\n---------------------------- \n1. Prvý z nich je k dispozícii zo zoznamu rozpočtov. Poskytuje rozšírenie analytických účtov pre\ntieto rozpočty.\n\n2. Druhý je súhrnom toho predchádzajúceho, poskytuje iba rozšírenie analytických účtov\npre vybrané rozpočty.\n\n3. Posledný z nich je k dispozícii z Analytickej účtovej osnovy. To dáva\nrozšírenia pre vybrané analytické účty rozpočtov.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_action_rule
@@ -3649,7 +3650,7 @@ msgid ""
 "sales team, or an opportunity which still has status pending after 14 days might\n"
 "trigger an automatic reminder email.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul umožňuje realizovať akčné pravidlá pre ľubovoľný objekt.\n============================================================ \n\nPoužívajte automatické akcie, ktoré automaticky spustia akcie pre rôzne obrazovky.\n\n**Príklad:** Vedenie vytvorené konkrétnym užívateľom môže byť automaticky nastavené na špecifický\npredajný tím, alebo príležitosť ktorá má stále status nevybavené po 14 dňoch by mohla\nspustiť automatický pripomienkový e-mail."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_check_printing
@@ -3665,7 +3666,7 @@ msgid ""
 "- Check on middle: Peachtree standard\n"
 "- Check on bottom: ADP standard\n"
 "    "
-msgstr ""
+msgstr "\nTento modul umožňuje tlačiť aše platby na predtlačený šekový papier.\nMôžete nakonfigurovať výstup (rozvrhnutie, útržkové informácie, atď.) v nastavení spoločnosti, a spravovať\nčíslovanie šekov (ak používate predtlačené šeky bez čísel), v nastavení účtonej knihy.\n\nPodporované formáty\n----------------- \n- Skontrolujte na vrchu: Quicken / QuickBooks štandard\n- Skontrolujte na strede: Peachtree štandard\n- Skontrolujte na spodku: ADP štandard"
 
 #. module: base
 #: model:ir.module.module,description:base.module_note
@@ -3681,7 +3682,7 @@ msgid ""
 "meeting minutes.\n"
 "\n"
 "Notes can be found in the 'Home' menu.\n"
-msgstr ""
+msgstr "\nTento modul umožňuje užívateľom vytvárať vlastné poznámky vnútri OpenERP\n =================================================================\n\nPoužite poznámky na písanie zápisnice z rokovaní, organizovanie myšlienok, usporiadanie osobných todo zoznamov, atď. Každý užívateľ spravuje svoje osobné poznámky. Poznámky sú k dispozícii\niba ich autoroom, ale môžu zdieľať poznámky s iným užívateľom takže niekoľko\nľudí môže pracovať na rovnakej poznámke v reálnom čase. Je veľmi efektívne zdieľať\nzápisnice z rokovaní.\n\nPoznámky môžete nájsť v menu \"Domov\".\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_anonymization
@@ -3698,7 +3699,7 @@ msgid ""
 "team. Once you get back your migrated database, you restore it and reverse the\n"
 "anonymization process to recover your previous data.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul vám umožňuje anonymizovať databázu.\n=============================================== \n\nTento modul umožňuje, aby vaše údaje ostali dôverné pre danú databázu.\nTento proces je užitočný, ak chcete použiť proces migrácie a chrániť\nvlastné dôverné dáta, alebo vášho zákazníka. Princípom je, že spustíte nástroj anonymizácie, ktorý bude skrývať vaše dôverné údaje (sú nahradené\nznakmi \"XXX\"). Potom môžete poslať anonymizovanú databázu migračnému\ntímu. Akonáhle dostanete späť vašu zmigrovanú databázu, obnovíte ju a zvrátite\nproces anonymizácie pre obnovienie vašich predchádzajúcich dát."
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -3717,7 +3718,7 @@ msgid ""
 "It is integrated with sales and accounting to allow you to automatically\n"
 "invoice and send propositions for membership renewal.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul umožňuje spravovať všetky operácie pre spravovanie členstva.\n========================================================================= \n\nPodporuje rôzne druhy členov:\n-------------------------------------- \n* Voľný člen\n* Pridružený člen (napr: skupina sa hlási k členstvu pre všetky dcérske spoločnosti)\n* Platiaci členovia\n* Špeciálne členské ceny\n\nJe integrovaný s predajom a účtovníctvom, aby vám povolil automaticky\nfakturovať a odoslať návrhy na obnovenie členstva."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_contract
@@ -3728,7 +3729,7 @@ msgid ""
 "    - Create & edit susbcriptions\n"
 "    - Modify subscriptions with sales orders\n"
 "    - Generate invoice automatically at fixed intervals\n"
-msgstr ""
+msgstr "\nTento modul umožňuje spravovať odbery.\nVlastnosti:\n- Vytvorenie a úpravy odberov\n- Zmena odberov s predajnými objednávkami\n- Vytvoriť faktúru automaticky v pravidelných intervaloch\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition
@@ -3740,7 +3741,7 @@ msgid ""
 "When a purchase order is created, you now have the opportunity to save the\n"
 "related requisition. This new object will regroup and will allow you to easily\n"
 "keep track and order all your purchase orders.\n"
-msgstr ""
+msgstr "\nTento modul umožňuje spravovať vaše Nákupné požiadavky.\n=========================================================== \n\nPri vytvorení objednávky máte teraz príležitosť, ako uložiť\nsúvisiacu požiadavku. Tento nový objekt sa preskupí a vám umožní ľahko\nsledovať a objednať všetky vaše objednávky.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_byproduct
@@ -3759,7 +3760,7 @@ msgid ""
 "-----------------\n"
 "    A + B + C -> D + E\n"
 "    "
-msgstr ""
+msgstr "\nTento modul umožňuje vyrábať viac výrobkov z jednej produkčnej objednávky.\n============================================================================= \n\nMôžete nakonfigurovať vedľajši produkty v kusovníku.\n\nBez tohto modulu:\n-------------------- \nA + B + C -> D\n\nS týmto modulom:\n----------------- \nA + B + C -> D + E"
 
 #. module: base
 #: model:ir.module.module,description:base.module_print_docsaway
@@ -3768,14 +3769,14 @@ msgid ""
 "This module allows you to send your documents through postal mail, thanks to Docsaway.\n"
 "======================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nTento modul umožňuje odosielať dokumenty poštou, vďaka Docsaway.\n======================================================================================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_contract_asset
 msgid ""
 "\n"
 "This module allows you to set a deferred revenue on your subscription contracts.\n"
-msgstr ""
+msgstr "\nTento modul umožňuje nastaviť prechodné príjmy na vaše predplatné zmluvy.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_rating_project_issue
@@ -3784,7 +3785,7 @@ msgid ""
 "This module display project customer satisfaction on your website.\n"
 "==================================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nTento modul zobrazuje spokojnosť projektového zákazníka na vašich webových stránkach.\n=================================================================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -3796,7 +3797,7 @@ msgid ""
 "Shows you a list of applications features to install from.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nTento modul umožňuje nastaviť systém pri inštalácii novej databázy.\n================================================================================\n\nZobrazuje vám zoznam funkcií aplikácií z ktorých môžte inštalovať."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -3814,7 +3815,7 @@ msgid ""
 "It is completely integrated with the cost accounting module. It allows you to set\n"
 "up a management by affair.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul implementuje systém časového rozvrhu.\n========================================== \n\nKaždý zamestnanec môže kzaódovať a sledovať ich čas strávený na rôznych projektoch.\nProjekt je analytický účet a čas strávený na projekte vytvára náklady na\nanalytickom účte.\n\nMnožstvo podávania výkazov o čase sledovaní zamestnancov sú k dispozícii.\n\nJe kompletne integrovaný s modulom nákladového účtovníctva. To vám umožní zostaiť\nmanažment podľa udalosti."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada
@@ -3833,7 +3834,7 @@ msgid ""
 "    \n"
 "    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
 "    "
-msgstr ""
+msgstr "\nThis module implements the accounting chart for OHADA area.\n===========================================================\n\nIt allows any company or association to manage its financial accounting.\n\nCountries that use OHADA are the following:\n-------------------------------------------\nBenin, Burkina Faso, Cameroon, Central African Republic, Comoros, Congo,\n\nIvory Coast, Gabon, Guinea, Guinea Bissau, Equatorial Guinea, Mali, Niger,\n\nReplica of Democratic Congo, Senegal, Chad, Togo."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -3845,7 +3846,7 @@ msgid ""
 "The ability to extract the correctly represented local accounts from IBAN accounts\n"
 "with a single statement.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul nainštaluje základ pre IBAN (International Bank Account Number) bankových účtov a kontroluje ich platnosť.\n======================================================================================================================\n\nSchopnosť extrahovať správne zastúpené lokálne účty z účtov IBAN\ns jedným vyhlásením."
 
 #. module: base
 #: model:ir.module.module,description:base.module_association
@@ -3857,7 +3858,7 @@ msgid ""
 "It installs the profile for associations to manage events, registrations, memberships, \n"
 "membership products (schemes).\n"
 "    "
-msgstr ""
+msgstr "\nTento modul má nakonfigurovať moduly týkajúce sa združenia.\n============================================================== \n\nNainštaluje to profil pre združenia na správu udalostí, registrácie, členstvá,\nčlenské výrobky (schémy)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_visible_discount
@@ -3875,7 +3876,7 @@ msgid ""
 "    If the check box is unchecked, we will have on Sale Order and Invoice lines:\n"
 "    Unit price=225, Discount=0,00, Net price=225.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul umožňuje výpočet zľavy v riadkoch predajných objdnávok a riadkoch faktúr, zaloěné na cenníku partnera.\n===============================================================================================================\n\nZa týmto účelom, nové zaškrtávacie políčko s názvom 'Viditeľná zľava' je pridaný do formulára cenníka.\n\n**Príklad:**\nPre produkt PC1 a partnera \"Asustek\": ak katalógová cena = 450, a cena\nvypočítať pomocou cenníka ASUSTeK je 225. Ak je políčko zaškrtnuté, budeme\nmať na riadku predajnej objednávky: jednotková cena = 450, zľava = 50,00, Čistá cena = 225.\nAk políčko nie je označené, budeme mať na riadkoch predajnej objednávky a faktúr:\nJednotková cena = 225, Zľava = 0,00, Čistá cena = 225."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -3885,7 +3886,7 @@ msgid ""
 "It must be used as a dependency for modules that provide country-specific check templates.\n"
 "The check settings are located in the accounting journals configuration page.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul ponúka základné funkcie na uskutočnenie platieb vytlačením šekov.\nJe nutné ju použiť v závislosti na moduly, ktoré poskytujú vzory šekov jednotlivých krajín.\nKontrolné nastavenia sú umiestnené na konfiguračnej stránke účtovných kníh."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp
@@ -3897,7 +3898,7 @@ msgid ""
 "It is basically used when we want to keep track of production orders generated\n"
 "from sales order. It adds sales name and sales Reference on production order.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul poskytuje prostriedok pre užívateľov k inštalácii MRP a predajných modulov naraz.\n================================================== ================================== \n\nV podstate sa používa, keď chceme sledovať výrobné objednávky generované\nz predajnej objednávky. Pridá názov predaja a referenciu predaja na výrobné objednávky."
 
 #. module: base
 #: model:ir.module.module,description:base.module_marketing_campaign
@@ -3926,7 +3927,7 @@ msgid ""
 "      module, but this will also install the CRM application as it depends on\n"
 "      CRM Leads.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul poskytuje automatizáciu vedenia cez marketingové kampane (kampane môžu byť v skutočnosti definované z akéhokoľvek zdroja, a to nielen CRM vedenia).\n=========================================================================================================================================\n\nTieto kampane sú dynamické a viackanálové. Proces je nasledujúci:\n------------------------------------------------------------------------ \n* Návrh marketingových kampaní, ako sú pracovné postupy, vrátane e-mailových šablón na\nposlanie, výkazy na vytlačenie a odoslanie e-mailom, špeciálne akcie\n* Definujte vstupné segmenty, ktoré vyberú položky, ktoré by mali vstúpiť do\nkampane (napr vedenie z niektorých krajín.)\n* Rozbehnite svoju kampaň v režime simulácie pre vyskúšanie si v reálnom alebo zrýchlenom čase,\na doladťe to\n* Môžete tiež spustiť skutočnú kampaň v manuálnom režime, kde každá akcia\nvyžaduje manuálne potvrdenie\n* Konečne spustite naživo svoju kampaň, a sledujte štatistiky keďže\nkampaň robí všetko úplne automaticky.\n\nKým kampaň beží môžete samozrejme aj naďalej doladťovať parametre,\nvstupné segmenty, \tpracovný tok.\n\n**Poznámka:** Ak potrebujete demo dáta, môžete nainštalovať marketing_campaign_crm_demo\nmodul, ale to tiež nainštaluje CRM aplikáciu , pretože závisí na\nCRM vedení."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -3936,7 +3937,7 @@ msgid ""
 "This module provides the standard Accounting Chart for Austria which is based on the Template from BMF.gv.at.\n"
 "============================================================================================================= \n"
 "Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.\n"
-msgstr ""
+msgstr "\nThis module provides the standard Accounting Chart for Austria which is based on the Template from BMF.gv.at.\n============================================================================================================= \nPlease keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_note_pad
@@ -3947,7 +3948,7 @@ msgid ""
 "\n"
 "Use for update your text memo in real time with the following user that you invite.\n"
 "\n"
-msgstr ""
+msgstr "\nTento modul aktualizuje poznámky vnútri OpenERP pre použitie externého PADu\n================================================================= \n\nPoužíva sa na aktualizáciu vašej textovej poznámky v reálnom čase s užívateľom ktorého pozvete.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement_jit
@@ -3967,14 +3968,14 @@ msgid ""
 "If this automatic reservation would reserve too much, you can\n"
 "still unreserve a picking.\n"
 "    "
-msgstr ""
+msgstr "\nTento modul automaticky rezervuje výbery zo skladu keď je predajná objednávka potvrdená\n================================================== ==========================================\nPo potvrdení predajnej objednávky, alebo keď sú pridané množstvá,\nvýber ktorý je zarezervovaný zo skladu bude zarezervovaný v prípade, že\npotrebné množstvá sú k dispozícii.\n\nV najjednoduchšej konfiguráciách, toto je ľahký spôsob práce:\nkto skôr príde, je skôr obslúžený. Avšak, ak nie je nainštalovaný, môžete\npoužiť manuálne rezervácie alebo spustiť plánovače, kedy systém\nbude brať do úvahy predpokladaný dátum a prioritu.\n\nAk by táto automatická rezervácia rezervoala príliš veľa, môžete\nstále výber odrezervovať."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban_gauge
 msgid ""
 "\n"
 "This widget allows to display gauges using justgage library.\n"
-msgstr ""
+msgstr "\nTento ovládací prvok umožňuje zobrazenie meradiel, použitím justgage knižnice.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue
@@ -3986,7 +3987,7 @@ msgid ""
 "\n"
 "It allows the manager to quickly check the issues, assign them and decide on their status quickly as they evolve.\n"
 "    "
-msgstr ""
+msgstr "\nSledujte spravovanie problémov / chýb pre projekty\n========================================= \nTáto aplikácia umožňuje spravovať problémy ktorým by ste mohli čeliť v rámci projektu ako chyby v systéme, sťažností klientov alebo poškodenie materiálu.\n\nTo umožňuje správcovi rýchlo skontrolovať problémy, priradiť ich a rozhodovať o ich statuse rýchlo počas toho ako sa vyvíjajú."
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -4003,7 +4004,7 @@ msgid ""
 "    - alert date\n"
 "\n"
 "Also implements the removal strategy First Expiry First Out (FEFO) widely used, for example, in food industries.\n"
-msgstr ""
+msgstr "\nSledujte rôzne dáta týkajúce sa produktov a výrobných šarží.\n====================================================== \n\nTieto dáta môžu byť sledované:\n------------------------------- \n- koniec životnosti\n- dátum spotreby\n- dátum odstránenia\n- dátum upozornenia\n\nTiež implementuje stratégiu odstránenia, First Expiry First Out (FEFO) široko používanú napríklad v potravinárskom priemysle.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project
@@ -4023,7 +4024,7 @@ msgid ""
 "* Tasks Analysis\n"
 "* Cumulative Flow\n"
 "    "
-msgstr ""
+msgstr "\nSledujte viac úrovňové projekty, úlohy, prácu na úlohách\n===================================================== \n\nTáto aplikácia umožňuje funkčnému systémemu riadenia projektov organizovať vaše aktivity do úloh a naplánovať prácu pre dokončenie úloh.\n\nGanttove diagramy vám graficky znázornenia plány vášho projektu, rovnako ako dostupnosť zdrojov a pracovnú náplň.\n\nNástenka / Výkazy pre riadenie projektov budú zahŕňať:\n-------------------------------------------------------- \n* Moje  úlohy\n* Otvorené úlohy\n* Analýza úloh\n* Kumulatívny tok"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -4036,7 +4037,7 @@ msgid ""
 "    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
 "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
 "    "
-msgstr ""
+msgstr "\nTürkiye için Tek düzen hesap planı şablonu OpenERP Modülü.\n==========================================================\n\nBu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n* Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\nbilgileriniz, ilgili para birimi gibi bilgiler isteyecek."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
@@ -4046,7 +4047,7 @@ msgid ""
 "=======================================================\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nUnited Arab Emirates accounting chart and localization.\n======================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us
@@ -4055,7 +4056,7 @@ msgid ""
 "United States - Chart of accounts.\n"
 "==================================\n"
 "    "
-msgstr ""
+msgstr "\nUnited States - Chart of accounts.\n=================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_contract
@@ -4067,7 +4068,7 @@ msgid ""
 "    - Generate invoice and credit card payments automatically at fixed intervals\n"
 "    - Let your customer edit their subscriptions themselves (options, close their contract) with granular control\n"
 "        "
-msgstr ""
+msgstr "\nPoužite túto aplikáciu pre spravovanie odberov:\nVlastnosti:\n- Vytvorenie a úpravy odberov s predajnými objednávkmi (automatické vytváranie pri potvrdení)\n- Vytvorenie platby faktúr a kreditnou kartou automaticky v pravidelných intervaloch\n- Nechajte vášho zákazníka editovať ich odbery samých (možnosti, uzatvorenie zmluvy) s veľmi detailnou kontrolou"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sales_team
@@ -4076,7 +4077,7 @@ msgid ""
 "Using this application you can manage Sales Team  with CRM and/or Sales \n"
 "=======================================================================\n"
 " "
-msgstr ""
+msgstr "\nPomocou tejto aplikácie môžete spravovať obchodný tím s CRM a / alebo predaj-om"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat
@@ -4110,7 +4111,7 @@ msgid ""
 "such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,\n"
 "only the country code will be validated.\n"
 "    "
-msgstr ""
+msgstr "\nDPH validácia pre partnerove čísla platcu DPH.\n========================================= \n\nPo inštalácii tohto modulu, hodnoty zadané v DPH políčku Partneri\nbudú potvrdené pre všetky podporované krajiny. Krajina je odvodená od\n2-písmenového kódu krajiny, ktoré sú predpony DPH čísla, napr `` BE0477472701``\nbude overované pomocou belgických pravidiel.\n\nExistujú dve rôzne úrovne overovania DPH:\n-------------------------------------------------------- \n* V predvolenom nastavení, jednoduchá off-line kontrola sa vykonáva pomocou známych overovacích\nprevidiel pre krajinu, zvyčajne jednoduchá kontrola číslic. Toto je rýchle a\nvždy k dispozícii, ale prepúšťa čísla, ktoré možno nie sú v skutočnosti pridelené,\nalebo už nie sú platné.\n\n* Keď sa \"DPH VIES kontrola\" je povolená možnosť (v konfigurácii užívateľovej\nspločnosti), čísla platcu DPH budú namiesto toho predložené do on-line EÚ VIES\ndatabázy, ktorá bude skutočne overovať že číslo je platné a v súčasnej dobe\npridelená spoločnosti v EÚ. Toto je trochu pomalšie ako prostá\noff-line kontrola, vyžaduje pripojenie k Internetu, a nemusí byť k dispozícii\ncelý čas. V prípade, že služba nie je k dispozícii, alebo nepodporuje\nvyžiadanú krajinu (napr. krajina mimo EÚ), jednoduchá kontrola bude vykonaná\nnamiesto toho.\n\nPodporované krajiny v súčasnej dobe zahŕňajú krajiny EÚ, a niekoľko krajín mimo EÚ\nako sú Čile, Kolumbia, Mexiko, Nórsko alebo Rusko. V prípade nepodporovaných krajín, \nbude overený len kód krajiny."
 
 #. module: base
 #: model:ir.module.module,description:base.module_fleet
@@ -4131,7 +4132,7 @@ msgid ""
 "* Add services, fuel log entry, odometer values for all vehicles\n"
 "* Show all costs associated to a vehicle or to a type of service\n"
 "* Analysis graph for costs\n"
-msgstr ""
+msgstr "\nVozidlo, leasing, poistenia, náklady\n================================== \nS týmto modulom, Odoo vám pomôže spravovať všetky svoje vozidlá,\nzmluvy spojenej s týmito vozidla, ako aj služby, záznamy protokolu paliva, \nnáklady a mnoho ďalších funkcií potrebných na riadenie\nvášho vozového parku (vozidiel)\n\nHlavné funkcie\n------------- \n* Pridávanie vozidiel do vášho vozového parku\n* Spravovanie zmlúv na vozidlá\n* Pripomenutie keď sa zmluve blíži dátum vypršania platnosti\n* Pridať služby, záznamy protokolu paliva, hodnoty počítadla kilometrov pre všetky vozidlá\n* Zobraziť všetky náklady spojené s vozidlom alebo na druhom služby\n* Analytický graf nákladov\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -4150,7 +4151,7 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
-msgstr ""
+msgstr "\nWMS účtovnícky modul\n====================== \nTento modul je spojivom medzi \"sklad\" a \"účet\" modulmi a umožňuje vytvárať účtovné položky na ocenenie vašich skladových pohybov. \n\nKľúčové vlastnosti\n------------ \n* Ocenenie zásob (periodickej alebo automatické)\n* Faktúra z Odberu\t\n\nNástenka / Výkazy pre Manažment skladiska zahŕňa:\n------------------------------------------------------ \n* Hodnota skladových zásob k danému dátumu (podporuje dátumy v minulosti)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -4160,7 +4161,7 @@ msgid ""
 "========================\n"
 "\n"
 "Translate you website in one click\n"
-msgstr ""
+msgstr "\nPrekladač webových stránok Gengo \n======================== \n\nPreložiť vám webové stránky jedným kliknutím\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_livechat
@@ -4175,7 +4176,7 @@ msgid ""
 "Help your customers with this chat, and analyse their feedback.\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nPodpora živého chatu webových stránok\n========================== \n\nPovoľte pridanie miniplakácií instantných správ na ľubovoľnej webovej stránke ktorá bude komunikovať\ns aktuálnym serverom a odošle požiadavku návštevníka medzi niekoľko živých\nchat operátorov.\nPomôžte svojim zákazníkom týmto chatom a analyzujte ich spätnú väzbu."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_membership
@@ -4183,7 +4184,7 @@ msgid ""
 "\n"
 "Website for browsing Associations, Groups and Memberships\n"
 "=========================================================\n"
-msgstr ""
+msgstr "\nWebová stránka pre prechádzanie Združení, Skupín a Členstiev\n=========================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_links
@@ -4193,7 +4194,7 @@ msgid ""
 "=====================================================\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nRozhranie webových stránok na vytváranie krátkych a sledovateľných URL.\n====================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_scale
@@ -4205,7 +4206,7 @@ msgid ""
 "This module allows the point of sale to connect to a scale using a USB HSM Serial Scale Interface,\n"
 "such as the Mettler Toledo Ariva.\n"
 "\n"
-msgstr ""
+msgstr "\nHardvérový ovládač mernej váhy\n================================ \n\nTento modul umožňuje miestu predaja pripojiť sa k meradlu pomocou USB HSM Serial Scale rozhraniu,\nako je napríklad Mettler Toledo Ariva.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_sips
@@ -4215,7 +4216,7 @@ msgid ""
 "\n"
 "Works with Worldline keys version 2.0, contains implementation of\n"
 "payments acquirer using Worldline SIPS."
-msgstr ""
+msgstr "\nWorldline SIPS platobné nadobúdateľ pre on-line platby\n\nPracuje s Worldline kľúčmi verzia 2.0, obsahuje implementáciu\nnadobúdateľa platieb pomocou Worldline SIPS."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_score
@@ -4228,7 +4229,7 @@ msgid ""
 "    - Assign score on lead: sort your lead automatically and consider the more important at first.\n"
 "    - Assign lead to salesteams: define your own filters and sort automatically your leads by saleteam.\n"
 "    - Assign lead to salesmen: define filter by saleman and dispatch automatically your leads to the right saleman.\n"
-msgstr ""
+msgstr "Vyhodnocovanie vedenia\n=================== \n\nTento modul vám umožní ...\n- Sledovať špecifické zobrazenie stránky na vašej webovej stránke.\n- Priradiť skóre na vedenie: automaticky triediť vaše vedenie a zvážiť najskôr to dôležitejšie, \n- Priradenie vedenia k obchodníkom: definujte vlastné filtre a automatické triedenie vašich vedení od obchodníkov.\n- Priradenie vedenia predajcom: definovať filter obchodník a automaticky odoslať svoje vedenie na správneho obchodníka.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_inter_company_rules
@@ -4236,7 +4237,7 @@ msgid ""
 " Module for synchronization of Documents between several companies. For example, this allow you to have a Sale Order created automatically when a Purchase Order is validated with another company of the system as vendor, and inversely.\n"
 "\n"
 "    Supported documents are SO, PO and invoices/refunds.\n"
-msgstr ""
+msgstr "Modul pre synchronizáciu dokumentov medzi niekoľkými spoločnosťami. Napríklad, toto vám umožní mať predajnú objednávku vytvorenú automaticky, keď je objednávka overená inou spoločnosťou zo systému ako dodávateľ, a inverzne.\n\nPodporované dokumenty sú SO, PO a faktúry / refundácie.\n"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4319,7 +4320,7 @@ msgstr "%s (kópia)"
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
 "an o2m."
-msgstr ""
+msgstr "%s Môže to byť '%s' v súčasnom modeli, alebo pole s rovnakým názvom v o2m."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4389,7 +4390,7 @@ msgid ""
 "    * Warranty concept\n"
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
-msgstr ""
+msgstr ",\n'zhrnutie' : 'Opravy rozbitých alebo poškodených výrobkov',\nCieľom je mať kompletný modul pre správu všetkých opráv produktov.\n==================================================================== \n\nNasledujúce témy by mali byť pokryté týmto modulom:\n------------------------------------------------------ \n* Pridať / odstrániť produkty v oprave\n* Dopad pre sklad\n* Fakturácia (produkty a / alebo služby)\n* Koncept záruky\n* Výkaz kvóty opravy\n* Poznámky pre technika a pre koncového zákazníka\n"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -4551,30 +4552,30 @@ msgstr "<code>\n                                                partner_name = o
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>datetime</code> (Python module)"
-msgstr ""
+msgstr "<code>datetime</code> (Python modul)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>dateutil</code> (Python module)"
-msgstr ""
+msgstr "<code>dateutil</code> (Python modul)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>self</code> (the set of records to compute)"
-msgstr ""
+msgstr "<code>self</code> (séria záznamov pre výpočet)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>time</code> (Python module)"
-msgstr ""
+msgstr "<code>time</code> (Python modul)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Apps</strong>"
-msgstr ""
+msgstr "<strong>Apps</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -4682,7 +4683,7 @@ msgstr "<u><strong>Pohľady</strong></u>"
 #: code:addons/models.py:3480
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
-msgstr ""
+msgstr "Dokument bol modifikovaný od vášho posledného zobrazenia (%s:%d)"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_groups
@@ -4826,7 +4827,7 @@ msgstr "Predvolby analitického účtu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
 msgid "Account Bank Statement Import"
-msgstr ""
+msgstr "Import účtu bankového výpisu"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_charts
@@ -4836,22 +4837,22 @@ msgstr "Účtovné osnovy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_contract_dashboard
 msgid "Account Contract Dashboard"
-msgstr ""
+msgstr "Nástenka zmluvy účtu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_extension
 msgid "Account Extension"
-msgstr ""
+msgstr "Rozšírenie účtu"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank_partner_id
 msgid "Account Holder"
-msgstr ""
+msgstr "Držiteľ účtu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_portal
 msgid "Account Management Frontend for your Customers"
-msgstr ""
+msgstr "Napojenie vedenia účtu pre vašich zákazníkov"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_account_no
@@ -4871,7 +4872,7 @@ msgstr "Číslo účtu musí byť unikátne"
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_report
 msgid "Account Report"
-msgstr ""
+msgstr "Výkaz účtu"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_reports
@@ -4881,7 +4882,7 @@ msgstr "Výkazy účtov"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_cash_basis
 msgid "Account Tax Cash Basis"
-msgstr ""
+msgstr "Hotovostný základ daňe účtu"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules_accounting
@@ -4942,7 +4943,7 @@ msgstr "Väzba akcií"
 #. module: base
 #: model:ir.ui.view,arch_db:base.values_view_tree_action
 msgid "Action Bindings/Defaults"
-msgstr ""
+msgstr "Väzby / Predvoľby akcií"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_name
@@ -5079,7 +5080,7 @@ msgstr "Pridať automatickú obnovu pre pohľad"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
 msgid "Add barcode scanning facilities to Warehouse Management."
-msgstr ""
+msgstr "Pridajte zariadenia skenovania čiarových kódov do Spravovania skladísk."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -5099,14 +5100,14 @@ msgstr "Pridať alebo nepridať firemnú RML hlavičku"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter
 msgid "Add twitter scroller snippet in website builder"
-msgstr ""
+msgstr "Pridajte twitter scroller úryvok do staviteľa webovej stránky "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_portal_sale
 msgid ""
 "Add your sales document in the frontend portal (sales order, quotations, "
 "invoices)"
-msgstr ""
+msgstr "Pridajte svoj predajný doklad do frontend portálu (predajné objednávky, kvóty, faktúry)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -5201,7 +5202,7 @@ msgid ""
 "         login once with a valid LDAP user, let OpenERP create a blank local\n"
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
-msgstr ""
+msgstr "Pridáva podporu pre autentizáciu pomocou LDAP servera.\n===============================================\nTento modul umožňuje používateľom prihlásiť so svojim LDAP užívateľským menom a heslom, a\nautomaticky vytvorí pre nich OpenERP užívateľov v reálnom čase.\n\n** Poznámka: ** Tento modul funguje len na serveroch, ktoré majú inštalovaný Python modul ``ldap``.\n\nKonfigurácia:\n-------------- \nPo inštalácii tohto modulu, je nutné nastaviť parametre LDAP v\nzáložka Konfigurácia v detailoch spoločnosti. Rôzne spoločnosti môžu mať rôzne\nLDAP servery, pokiaľ majú jedinečné používateľské mená (používateľské mená musia byť jedinečné\nv OpenERP, dokonca aj cez niekoľko spoločností).\n\nAnonymné LDAP väzby sú tiež podporované (pre LDAP servery, ktoré to dovoľujú), tým\nže jednoducho necháte LDAP užívateľa a heslo v konfigurácii LDAP prázdne\t.\nTo neumožňuje anonymné overenie pre užívateľov, je to len pre hlavný\nLDAP účet ktorý sa používa pre overenie, či užívateľ existuje pred pokusom o\noverenie.\n\nZabezpečenie spojenia so STARTTLS je k dispozícii pre servery LDAP ktoré to podporujú, zapnutím možnosti TLS v konfigurácii LDAP.\n\nPre ďalšie možnosti konfigurácie nastavenia LDAP, obráte sa na ldap.conf\nmanpage: manpage: `ldap.conf (5)`.\n\nOtázky zabezpečenia:\n------------------------ \nUžívateľské LDAP heslá nie sú nikdy uložené v databáze OpenERP, LDAP server\nje opýtaný vždy, keď je potrebné aby bol užívateľ byť overený. Žiadna duplikácia\nhesla nastane, a heslá sú spravované len na jednom mieste.\n\nOpenERP nespravuje zmeny hesla v LDAP, takže všetky zmeny hesla\nby mali byť vykonávané iným spôsobom priamo v adresári LDAP (pre užívateľov LDAP).\n\nJe tiež možné mať miestnych OpenERP užívateľov v databáze spolu s\nLDAP-overenými užívateľmi (účet správcu je zrejmý príklad).\n\nTakto to funguje:\n--------------------- \n* Systém najprv pokúsi overiť užívateľov porovnaním s miestnou OpenERP\ndatabázou;\n* Ak sa overenie nepodarí (napríklad preto, že používateľ nemá žiadne miestne\nheslo), systém sa potom pokúsi overiť porovnaním s LDAP;\n\nKedže LDAP užívatelia majú prázdne heslá v predvolenom nastavení v miestnej OpenERP databáze\n(čo znamená, že nemajú žiadny prístup), prvý krok vždy zlyhá a LDAP server je\ndopytovaný pre overenie.\n\nPovolenie STARTTLS zaisťuje, že dopyt autentizácie do LDAP servera je\nšifrovaný.\n\nPoužívateľská šablóna:\n-------------- \nV konfigurácii LDAP na formulári spoločnosti, je možné zvoliť *Používateľská šablóna *. Ak je nastavená, bude tento užívateľ použitý ako vzor pre vytvorenie miestnych pouužívateľov\nvždy, keď niekto overuje prvýkrát cez LDAP autentizáciu. Toto\numožňuje prednastaviť predvolené skupiny a menu prvoužívateľov.\n\n**Upozornenie:** Ak nastavíte heslo pre používateľa šablóny, toto heslo bude\npridelené ako lokálne heslo pre každého nového užívateľa LDAP, efektívne nastaví\n*hlavné heslo* pre tçhto užívateľov (kým sa manuálne nezmení). To\nzvyčajne nechcete. Jeden jednoduchý spôsob, ako nastaviť používateľskú šablónu je\njedno prihlásenie s platným LDAP používateľom, nechať OpenERP vytvoriť prázdneho miestneho\nužívateľa s rovnakým login (a prázdnym heslom), potom premenujte tohto nového\npoužívateľa na užívateľské meno, ktoré neexistuje v LDAP a nastavte jeho skupiny\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -5212,7 +5213,7 @@ msgstr "Správa"
 #: model:ir.model.fields,help:base.field_res_country_state_name
 msgid ""
 "Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
-msgstr ""
+msgstr "Administratívne rozdelenie krajiny. Napr. Fed. štát, kraj, okres"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:597 code:addons/base/ir/ir_model.py:658
@@ -5224,19 +5225,19 @@ msgstr "Odinštalovanie modulov je možné len správcom"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
 msgid "Advanced Events"
-msgstr ""
+msgstr "Pokročilé udalosti"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Advanced Properties"
-msgstr ""
+msgstr "Pokročilé vlastnosti"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
-msgstr ""
+msgstr "Nadobúdateľ platby Adyen"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -5251,12 +5252,12 @@ msgstr "Afganista, Islamská republika"
 #. module: base
 #: selection:res.currency,position:0
 msgid "After Amount"
-msgstr ""
+msgstr "Po sume"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_aftersale
 msgid "After-Sale"
-msgstr ""
+msgstr "Popredaj"
 
 #. module: base
 #: model:res.country,name:base.al
@@ -5288,14 +5289,14 @@ msgstr "Povoliť znovu vytlačenie účtu"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_tax_cash_basis
 msgid "Allow to have cash basis on tax"
-msgstr ""
+msgstr "Povoliť peňažný základ dane"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_version
 msgid ""
 "Allow to save all the versions of your website and allow to perform AB "
 "testing."
-msgstr ""
+msgstr "Povoliť uložiť všetky verzie vašich webových stránok a umožniť vykonať AB testovanie."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
@@ -5305,14 +5306,14 @@ msgstr "Povolené spoločnosti"
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_upgrade
 msgid "Allows to remotely upgrade the PosBox software"
-msgstr ""
+msgstr "Umožňuje vzdialene aktualizovať PosBox softvér"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_account_voucher
 msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
-msgstr ""
+msgstr "Umožňuje vytvárať faktúry a sledovať platby. Je to jednoduchšia verzia modulu účtovníctva pre manažérov, ktorí nie sú účtovníkmi."
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:379
@@ -5320,7 +5321,7 @@ msgstr ""
 msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
 "external id or database id"
-msgstr ""
+msgstr "Nejednoznačné špecifikácie pre pole '%(field)s', poskytnite iba jeden z názvov, externé ID alebo ID databázy"
 
 #. module: base
 #: model:res.country,name:base.as
@@ -5330,14 +5331,14 @@ msgstr "Americká Samoa"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Amharic / አምሃርኛ"
-msgstr ""
+msgstr "Amharic / አምሃርኛ"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_tag
 msgid ""
 "An arbitrary string, interpreted by the client according to its own needs "
 "and wishes. There is no central tag repository across clients."
-msgstr ""
+msgstr "Ľubovoľný reťazec, interpretovaný klientom podľa svojich vlastných potrieb a prianí. Neexistuje žiadne centrálne úložisko menoviek naprieč klientami."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_module_module_auto_install
@@ -5345,7 +5346,7 @@ msgid ""
 "An auto-installable module is automatically installed by the system when all"
 " its dependencies are satisfied. If the module has no dependency, it is "
 "always installed."
-msgstr ""
+msgstr "Samoinštalovateľný modul je automaticky nainštalovaný v systéme, ak sú splnené všetky jeho podmienky. V prípade, že modul nemá žiadnu podmienku, je vždy inštalovaný."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
@@ -5388,7 +5389,7 @@ msgstr "Antigua a Barbuda"
 msgid ""
 "Appears by default on the top right corner of your printed documents (report"
 " header)."
-msgstr ""
+msgstr "Vyskytuje sa v predvolenom nastavení v pravom hornom rohu vašich vytlačených dokumentov (hlavičky výkazu)."
 
 #. module: base
 #: code:addons/base/res/res_users.py:760
@@ -5403,7 +5404,7 @@ msgstr "Aplikácia"
 #. module: base
 #: model:ir.module.module,description:base.module_web_planner
 msgid "Application Planner"
-msgstr ""
+msgstr "Plánovač aplikácie"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -5421,7 +5422,7 @@ msgstr "Použiť"
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
 #, python-format
 msgid "Apply Schedule Upgrade"
-msgstr ""
+msgstr "Vykonať aktualizáciu rozvrhu"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
@@ -5463,17 +5464,17 @@ msgstr "Aplikácia"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_modules
 msgid "Apps To Export"
-msgstr ""
+msgstr "Aplikácie na exportovanie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_upgrade_module_info
 msgid "Apps to Update"
-msgstr ""
+msgstr "Aplikácie na aktualizovanie"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Apps:"
-msgstr ""
+msgstr "Aplikácie:"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -5483,12 +5484,12 @@ msgstr "Arabčina / الْعَرَبيّة"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Arch názov súboru"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
@@ -5498,7 +5499,7 @@ msgstr "Architektúra"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Archived"
-msgstr ""
+msgstr "Archivovaný"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -5513,7 +5514,7 @@ msgstr "Argentína - Účtovníctvo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
 msgid "Argentina - Accounting Reports"
-msgstr ""
+msgstr "Argentina - Accounting Reports"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_args
@@ -5528,7 +5529,7 @@ msgstr "Argumenty odoslané klientovi spolu zo značkou pohľadu"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron_args
 msgid "Arguments to be passed to the method, e.g. (uid,)."
-msgstr ""
+msgstr "Argumenty, ktoré majú byť odovzdané metóde, napr. (uid,)."
 
 #. module: base
 #: model:res.country,name:base.am
@@ -5558,12 +5559,12 @@ msgstr "Správa spojovania"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_membership
 msgid "Associations: Members"
-msgstr ""
+msgstr "Združenia: Členovia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_link_new_record
 msgid "Attach the new record"
-msgstr ""
+msgstr "Priložte nový záznam"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
@@ -5592,7 +5593,7 @@ msgstr "Prílohy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document
 msgid "Attachments List and Document Indexation"
-msgstr ""
+msgstr "Zoznam príloh a Indexácia dokumentov"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
@@ -5624,7 +5625,7 @@ msgstr "Rakúsko - Účtovníctvo"
 #. module: base
 #: model:ir.module.category,name:base.module_category_authentication
 msgid "Authentication"
-msgstr ""
+msgstr "Autentifikácia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
@@ -5646,7 +5647,7 @@ msgstr "Meno autora"
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr ""
+msgstr "Authorize.Net Nadobúdateľ platby"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_auto_search
@@ -5683,7 +5684,7 @@ msgstr "Nastaviť automatické poskytovanie nových termínov k prekladu adminis
 #. module: base
 #: model:ir.ui.menu,name:base.menu_automation
 msgid "Automation"
-msgstr ""
+msgstr "Automatizácia"
 
 #. module: base
 #: model:res.country,name:base.az
@@ -5694,7 +5695,7 @@ msgstr "Azerbajdžán"
 #: code:addons/translate.py:1046
 #, python-format
 msgid "Bad file format: %s"
-msgstr ""
+msgstr "Zlý formát súboru: %s"
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -5747,7 +5748,7 @@ msgstr "Bankový účet"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank_acc_type
 msgid "Bank account type, inferred from account number"
-msgstr ""
+msgstr "Typ bankového účtu, odvodené od čísla účtu"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
@@ -5783,12 +5784,12 @@ msgstr "Hardvérový ovládač čítačky čiarového kódu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes
 msgid "Barcodes"
-msgstr ""
+msgstr "Čiarové kódy"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes
 msgid "Barcodes Scanning and Parsing"
-msgstr ""
+msgstr "Skenovanie a analýza čiarových kódov"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_base
@@ -5812,13 +5813,13 @@ msgstr "Základný kanban"
 #: code:addons/base/res/res_lang.py:185
 #, python-format
 msgid "Base Language 'en_US' can not be deactivated!"
-msgstr ""
+msgstr "Základný jazyk 'en_US' nemôže byť deaktivovaný!"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:203
 #, python-format
 msgid "Base Language 'en_US' can not be deleted!"
-msgstr ""
+msgstr "Základný jazyk 'en_US' nemôže byť zmazaný!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_model_id
@@ -5834,7 +5835,7 @@ msgstr "Základný objekt"
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Base Properties"
-msgstr ""
+msgstr "Základné vlastnosti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_import
@@ -5849,12 +5850,12 @@ msgstr "Základný import modul"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_model_id
 msgid "Base model on which the server action runs."
-msgstr ""
+msgstr "Základný model, na ktorom beží akcia servera."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_partner
 msgid "Base module holding website-related stuff for partner model"
-msgstr ""
+msgstr "Základný modul drží veci súvisiace s webovými stránkami pre partnerský model"
 
 #. module: base
 #: selection:ir.ui.view,mode:0
@@ -5864,12 +5865,12 @@ msgstr "Základný pohľad"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Basque / Euskara"
-msgstr ""
+msgstr "Basque / Euskara"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_deposit
 msgid "Batch Deposit"
-msgstr ""
+msgstr "Depozit várky"
 
 #. module: base
 #: selection:res.currency,position:0
@@ -5884,7 +5885,7 @@ msgstr "Bielorusko"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
-msgstr ""
+msgstr "Belgian Intrastat Declaration"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -5899,12 +5900,12 @@ msgstr "Belgicko - Účtovníctvo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports
 msgid "Belgium - Accounting Reports"
-msgstr ""
+msgstr "Belgium - Accounting Reports"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr ""
+msgstr "Belgium - Import Bank CODA Statements"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
@@ -5914,12 +5915,12 @@ msgstr "Belgicko - výplatná páska"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
 msgid "Belgium - Payroll with Accounting"
-msgstr ""
+msgstr "Belgium - Payroll with Accounting"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_invoice_bba
 msgid "Belgium - Structured Communication"
-msgstr ""
+msgstr "Belgium - Structured Communication"
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -5961,7 +5962,7 @@ msgstr "Dátum narodenia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
 msgid "Blogs"
-msgstr ""
+msgstr "Blogy"
 
 #. module: base
 #: model:res.country,name:base.bo
@@ -5976,12 +5977,12 @@ msgstr "Bolívia - Účtovníctvo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_bo_reports
 msgid "Bolivia - Accounting Reports"
-msgstr ""
+msgstr "Bolivia - Accounting Reports"
 
 #. module: base
 #: model:res.country,name:base.bq
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Bonaire, Sint Eustatius and Saba"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -5991,7 +5992,7 @@ msgstr "Boolean"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bootswatch
 msgid "Bootswatch Theme"
-msgstr ""
+msgstr "Bootswatch téma"
 
 #. module: base
 #: model:res.country,name:base.ba
@@ -6026,17 +6027,17 @@ msgstr "Brazília - Účtovníctvo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_reports
 msgid "Brazilian - Accounting Reports"
-msgstr ""
+msgstr "Brazilian - Accounting Reports"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_bridge
 msgid "Bridge"
-msgstr ""
+msgstr "Premostenie"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_payment
 msgid "Bridge module for acquirers and website."
-msgstr ""
+msgstr "Premosťovací modul pre nadobúdateľa a webové stránky."
 
 #. module: base
 #: model:res.country,name:base.io
@@ -6057,7 +6058,7 @@ msgstr "Brunej"
 #: model:ir.module.module,description:base.module_payment_buckaroo
 #: model:ir.module.module,shortdesc:base.module_payment_buckaroo
 msgid "Buckaroo Payment Acquirer"
-msgstr ""
+msgstr "Nadobúdateľ platby  Buckaroo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
@@ -6067,12 +6068,12 @@ msgstr "Správa rozpočtu"
 #. module: base
 #: model:ir.module.module,summary:base.module_website
 msgid "Build Your Enterprise Website"
-msgstr ""
+msgstr "Vytvorte vašu podnikovú webovú stránku"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_form_editor
 msgid "Build custom web forms using the website builder"
-msgstr ""
+msgstr "Vytvorte vlastné webové formuláre pomocou tvoriteľa webových stránok"
 
 #. module: base
 #: model:res.country,name:base.bg
@@ -6097,7 +6098,7 @@ msgstr "Burundi"
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "By"
-msgstr ""
+msgstr "Podľa"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_crm
@@ -6108,7 +6109,7 @@ msgstr "CRM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gamification_sale_crm
 msgid "CRM Gamification"
-msgstr ""
+msgstr "CRM gamifikácia"
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -6120,7 +6121,7 @@ msgstr "CSV súbor"
 msgid ""
 "CSV format: you may edit it directly with your favorite spreadsheet software,\n"
 "                                the rightmost column (value) contains the translations"
-msgstr ""
+msgstr "CSV formát: môžete si ho upraviť priamo s vašim obľúbeným tabuľkovým softvérom,\npravý krajný stĺpec (hodnota) obsahuje preklady"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -6137,7 +6138,7 @@ msgstr "Kalendáre"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_calendar
 msgid "Calendars on Orderpoints"
-msgstr ""
+msgstr "Kalendáre na položkách objednávky"
 
 #. module: base
 #: model:res.country,name:base.kh
@@ -6154,7 +6155,7 @@ msgstr "Kamerun"
 #, python-format
 msgid ""
 "Can not create Many-To-One records indirectly, import the field separately"
-msgstr ""
+msgstr "Nie je možné vytvoriť Many-to-One záznamy nepriamo, importujte pole samostatne"
 
 #. module: base
 #: code:addons/base/module/module.py:584
@@ -6223,13 +6224,13 @@ msgstr "Nie je možné duplikovať nastavenia!"
 #: code:addons/base/ir/ir_model.py:520
 #, python-format
 msgid "Cannot rename field to %s, because that field already exists!"
-msgstr ""
+msgstr "Nemožno premenovať pole %s, pretože to pole už existuje!"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:190
 #, python-format
 msgid "Cannot unactivate a language that is currently used by users."
-msgstr ""
+msgstr "Nemožno deaktivovať jazyk, ktorý v súčasnej dobe používajú užívateia."
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -6312,7 +6313,7 @@ msgid ""
 "correctly set. If an existing contact starts working for a new company then "
 "a new contact should be created under that new company. You can use the "
 "\"Discard\" button to abandon this change."
-msgstr ""
+msgstr "Zmena spoločnosť kontaktu by sa malo uskutočniť len vtedy, ak nebol správne nastavený. Ak existujúci kontakt začne pracovať pre novú spoločnosť, potom by mal byť vytvorený nový kontakt v rámci tohto nového podniku. Môžete použiť tlačidlo \"Zrušiť\" pre zrušenie tejto zmeny."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:506
@@ -6324,7 +6325,7 @@ msgstr "Je zakázaná zmena modelu poľa"
 #: code:addons/base/ir/ir_model.py:484
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
-msgstr ""
+msgstr "Zmena systému ukladania pre pole \"%s\" nie je povolená."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:509
@@ -6332,7 +6333,7 @@ msgstr ""
 msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
 " it again!"
-msgstr ""
+msgstr "Zmena typu poľa ešte nie je podporovaná. Prosím, zrušte ju a vytvorte ju znova!"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -6342,17 +6343,17 @@ msgstr "Znak"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_livechat
 msgid "Chat With Your Website Visitors"
-msgstr ""
+msgstr "Chatujte s návštevníkmi vašich webových stránok"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_im_odoo_support
 msgid "Chat with the Odoo collaborators"
-msgstr ""
+msgstr "Chatujte so spolupracovníkmi Odoo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
 msgid "Check Printing Base"
-msgstr ""
+msgstr "Skontrolujte tlačovú základňu"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_is_company
@@ -6363,7 +6364,7 @@ msgstr "Zaškrtnite toto pole, pokiaľ je kontakt firmou, inak budete jednať s 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_check_printing
 msgid "Check printing commons"
-msgstr ""
+msgstr "Skontrolujte tlač commons"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_customer
@@ -6377,7 +6378,7 @@ msgstr "Zaškrtnite toto pole, pokiaľ je kontakt zákazník."
 msgid ""
 "Check this box if this contact is a vendor. If it's not checked, purchase "
 "people will not see it when encoding a purchase order."
-msgstr ""
+msgstr "Zaškrtnite toto políčko, ak je tento kontakt predajca. Ak nie je zaškrtnuté, ľudia od nákupov  ho neuvidia pri kódovanie objednávky."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_employee
@@ -6390,41 +6391,41 @@ msgstr "Zaškrtnite toto pole, pokiaľ je kontakt zamestnanec."
 msgid ""
 "Check this if you want to link the newly-created record to the current "
 "record on which the server action runs."
-msgstr ""
+msgstr "Zaškrtnite, ak chcete prepojiť novovytvorený záznam na aktuálny záznam na ktorom je spustená serverová akcia."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_custom_footer
 msgid ""
 "Check this to define the report footer manually.  Otherwise it will be "
 "filled in automatically."
-msgstr ""
+msgstr "Zaškrtnite toto pre definovanie zápätie výkazu manuálne. V opačnom prípade bude doplnený automaticky."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "Check to attach the newly created record to the record on which the server "
 "action runs."
-msgstr ""
+msgstr "Zaškrtnite pre priloženie novovytvoreného záznamu do záznamu, na ktorom je spustená serverová akcia."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_checks_printing
 msgid "Checks Printing"
-msgstr ""
+msgstr "Skontroluje tlač"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_checksum
 msgid "Checksum/SHA1"
-msgstr ""
+msgstr "Checksum/SHA1"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_child_ids
 msgid "Child Actions"
-msgstr ""
+msgstr "Podradené akcie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category_child_ids
 msgid "Child Applications"
-msgstr ""
+msgstr "Podradené aplikácie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_child_ids
@@ -6444,14 +6445,14 @@ msgstr "ID potomka"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_child_ids
 msgid "Child Tag"
-msgstr ""
+msgstr "Podradená menovka"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_child_ids
 msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
-msgstr ""
+msgstr "Podradené akcie servera koré budú vykonané. Všimnite si, že posledný návrat vrátil hodnotu akcii hodnota sa použije ako globálna návratná hodnota."
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -6466,7 +6467,7 @@ msgstr "Čile - Účtovníctvo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_reports
 msgid "Chile - Accounting Reports"
-msgstr ""
+msgstr "Chile - Accounting Reports"
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -6491,12 +6492,12 @@ msgstr "Čínština (TW) / 正體字"
 #. module: base
 #: selection:ir.actions.server,use_write:0
 msgid "Choose and Update a record in the database"
-msgstr ""
+msgstr "Vyberte a aktualizujte záznam v databáze"
 
 #. module: base
 #: selection:ir.actions.server,use_create:0
 msgid "Choose and copy a record in the database"
-msgstr ""
+msgstr "Vyberte a skopírujte záznam v databáze"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_encryption
@@ -6505,7 +6506,7 @@ msgid ""
 "- None: SMTP sessions are done in cleartext.\n"
 "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
 "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated port (default: 465)"
-msgstr ""
+msgstr "Vyberte šifrovaciu schéma pripojenia:\n- None:  SMTP relácie sa vykonávajú vo forme obyčajného textu.\n- TLS (STARTTLS):  TLS šifrovanie je požadované na začiatku SMTP relácie (odporúčané)\n- SSL / TLS: relácie SMTP sú šifrované pomocou SSL / TLS cez vyhradený port (predvolená: 465)"
 
 #. module: base
 #: model:res.country,name:base.cx
@@ -6529,22 +6530,22 @@ msgstr "Mesto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_claim_from_delivery
 msgid "Claim on Deliveries"
-msgstr ""
+msgstr "Reklamácie na dodania"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_claim
 msgid "Claims Management"
-msgstr ""
+msgstr "Spravovanie reklamácií"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_attachment
 msgid "Click here to attach a new document."
-msgstr ""
+msgstr "Kliknite sem pre pripojenie nového dokumentu."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
-msgstr ""
+msgstr "Kliknite sem pre vytvorenie vlastného zobrazenia"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -6556,28 +6557,28 @@ msgstr "Kliknite na Aktualizovať pre začatie procesu..."
 #: model:ir.actions.act_window,help:base.action_partner_form
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
 msgid "Click to add a contact in your address book."
-msgstr ""
+msgstr "Kliknite pre pridanie kontaktu do vášho adresára."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_partner_bank_account_form
 msgid "Click to create a bank account."
-msgstr ""
+msgstr "Kliknite pre vytvorenie bankového účtu."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_bank_form
 msgid "Click to create a new bank."
-msgstr ""
+msgstr "Kliknite pre vytvorenie novej banky."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_category_form
 msgid "Click to create a new partner tag."
-msgstr ""
+msgstr "Kliknite pre vytvorenie novej menovky partnera."
 
 #. module: base
 #: selection:ir.logging,type:0
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Client"
-msgstr ""
+msgstr "Klient"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_action_id
@@ -6593,7 +6594,7 @@ msgstr "Aktivity klienta"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_tag
 msgid "Client action tag"
-msgstr ""
+msgstr "Menovka klientovej akcie"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_language_install
@@ -6624,12 +6625,12 @@ msgid ""
 "        record['size'] = len(record.name)\n"
 "\n"
 "Modules time, datetime, dateutil are available."
-msgstr ""
+msgstr "Kód pre výpočet hodnoty poľa.\nOpakovať v sade záznamov \"sebe\" a priradiť hodnotu poľa:\n\npre záznam v sebe:\nzáznam ['veľkosť'] = len (record.name)\n\nModuly čas, datetime, dateutil sú k dispozícii."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad
 msgid "Collaborative Pads"
-msgstr ""
+msgstr "Spolupracujúce PAD-y"
 
 #. module: base
 #: model:res.country,name:base.co
@@ -6639,17 +6640,17 @@ msgstr "Kolumbia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co
 msgid "Colombian - Accounting"
-msgstr ""
+msgstr "Colombian - Accounting"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co_reports
 msgid "Colombian - Accounting Reports"
-msgstr ""
+msgstr "Colombian - Accounting Reports"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co
 msgid "Colombian Accounting and Tax Preconfiguration"
-msgstr ""
+msgstr "Colombian Accounting and Tax Preconfiguration"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_color
@@ -6662,22 +6663,22 @@ msgstr "Farebný index"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_column1
 msgid "Column 1"
-msgstr ""
+msgstr "Stĺpec 1"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_column2
 msgid "Column 2"
-msgstr ""
+msgstr "Stĺpec 2"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_column2
 msgid "Column referring to the record in the comodel table"
-msgstr ""
+msgstr "Stĺpec odkazujúci na záznam v spolumodelovej tabuľke"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_column1
 msgid "Column referring to the record in the model table"
-msgstr ""
+msgstr "Stĺpec odkazujúci na záznam v modelovej tabuľke"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_view_mode
@@ -6694,13 +6695,13 @@ msgstr "Komentár"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_form
 msgid "Comments"
-msgstr ""
+msgstr "Komentáre"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_commercial_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_id
 msgid "Commercial Entity"
-msgstr ""
+msgstr "Komerčný subjekt"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
@@ -6756,34 +6757,34 @@ msgstr "Meno spoločnosti"
 #: model:ir.actions.act_window,name:base.ir_property_form
 #: model:ir.ui.menu,name:base.menu_ir_property_form_all
 msgid "Company Properties"
-msgstr ""
+msgstr "Vlastnosti spoločnosti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_company_registry
 msgid "Company Registry"
-msgstr ""
+msgstr "Register spoločnosti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_rml_header1
 msgid "Company Tagline"
-msgstr ""
+msgstr "Slogan spoločnosti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_company_type
 #: model:ir.model.fields,field_description:base.field_res_users_company_type
 msgid "Company Type"
-msgstr ""
+msgstr "Druh spoločnosti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_contact_address
 #: model:ir.model.fields,field_description:base.field_res_users_contact_address
 msgid "Complete Address"
-msgstr ""
+msgstr "Kompletná adresa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data_complete_name
 msgid "Complete ID"
-msgstr ""
+msgstr "Kompletné ID"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_complete_name
@@ -6793,7 +6794,7 @@ msgstr "Celé meno"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_9
 msgid "Components Buyer"
-msgstr ""
+msgstr "Komponenty kupujúci"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_compute
@@ -6805,14 +6806,14 @@ msgstr "Vypočítať"
 msgid ""
 "Computed fields are defined with the fields\n"
 "                                            <strong>Dependencies</strong> and <strong>Compute</strong>."
-msgstr ""
+msgstr "Vypočítané polia sú definované v poliach\n<strong>Závislosti</ strong> a <strong>Vyrátať</ strong>."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 msgid ""
 "Computed fields are defined with the fields\n"
 "                                <strong>Dependencies</strong> and <strong>Compute</strong>."
-msgstr ""
+msgstr "Vypočítané polia sú definované poliami\n<strong>Závislosti</ strong> a <strong>Vyrátať</ strong>."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_condition
@@ -6828,7 +6829,7 @@ msgid ""
 "verified, the action will not be executed. The condition is a Python "
 "expression, like 'object.list_price > 5000'. A void condition is considered "
 "as always True. Help about python expression is given in the help tab."
-msgstr ""
+msgstr "Stav overený pred spustením akcie servera. Ak to nie je overené, akcia sa nevykoná. Podmienkou je  Python výraz, ako je \"object.list_price> 5000\". Prázdna podmienka sa  vždy považuje ako  Pravda. Nápoveda o Python výrazu je uvedený v záložke pomocníka."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
@@ -6857,12 +6858,12 @@ msgstr "Nastavenie"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
 msgid "Configuration (RML)"
-msgstr ""
+msgstr "Konfigurácia (RML)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer
 msgid "Configuration Installer"
-msgstr ""
+msgstr "Inštalačný program konfigurácie"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_ir_actions_todo_form
@@ -6884,22 +6885,22 @@ msgstr "Kongo"
 #. module: base
 #: model:res.country,name:base.cd
 msgid "Congo, Democratic Republic of the"
-msgstr ""
+msgstr "Congo, Democratic Republic of the"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_proxy
 msgid "Connect the Web Client to Hardware Peripherals"
-msgstr ""
+msgstr "Pripojte webový klient k hardvérovej periférií"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Connection Information"
-msgstr ""
+msgstr "Informácie o pripojení"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_encryption
 msgid "Connection Security"
-msgstr ""
+msgstr "Bezpečnosť pripojenia"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:192
@@ -6907,13 +6908,13 @@ msgstr ""
 msgid ""
 "Connection Test Failed! Here is what we got instead:\n"
 " %s"
-msgstr ""
+msgstr "Test pripojenia zlyhalo! Toto sme dostali miesto toho:\n%s"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:199
 #, python-format
 msgid "Connection Test Succeeded! Everything seems properly set up!"
-msgstr ""
+msgstr "Test pripojenia bol úspešný! Všetko sa zdá byť správne nastavené!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_name
@@ -6924,17 +6925,17 @@ msgstr "Obmedzenie"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_type
 msgid "Constraint Type"
-msgstr ""
+msgstr "Druh obmedzenia"
 
 #. module: base
 #: sql_constraint:ir.model.constraint:0
 msgid "Constraints with the same name are unique per module."
-msgstr ""
+msgstr "Obmedzenia s rovnakým názvom sú jedinečné pre každý modul."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_8
 msgid "Consultancy Services"
-msgstr ""
+msgstr "Konzultačné služby"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
@@ -6945,17 +6946,17 @@ msgstr "Kontakt"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact / Address"
-msgstr ""
+msgstr "Kontakt / Adresa"
 
 #. module: base
 #: model:res.groups,name:base.group_partner_manager
 msgid "Contact Creation"
-msgstr ""
+msgstr "Vytvorenie kontaktu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm
 msgid "Contact Form"
-msgstr ""
+msgstr "Kontaktný formulár"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -6979,12 +6980,12 @@ msgstr "Kontakty"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contacts & Addresses"
-msgstr ""
+msgstr "Kontakty & Adresy"
 
 #. module: base
 #: sql_constraint:res.partner:0
 msgid "Contacts require a name."
-msgstr ""
+msgstr "Kontakty vyžadujú meno."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_context
@@ -7012,7 +7013,7 @@ msgstr "Prispievatelia"
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "Controller"
-msgstr ""
+msgstr "Kontrolór"
 
 #. module: base
 #: model:res.country,name:base.ck
@@ -7022,12 +7023,12 @@ msgstr "Cookove ostrovy"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_copy
 msgid "Copied"
-msgstr ""
+msgstr "Skopírované"
 
 #. module: base
 #: selection:ir.actions.server,use_create:0
 msgid "Copy the current record"
-msgstr ""
+msgstr "Skopírovať do súčasného záznamu"
 
 #. module: base
 #: model:res.country,name:base.cr
@@ -7037,13 +7038,13 @@ msgstr "Kostarika"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cr
 msgid "Costa Rica - Accounting"
-msgstr ""
+msgstr "Costa Rica - Accounting"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:629
 #, python-format
 msgid "Couldn't create contact without email address!"
-msgstr ""
+msgstr "Nie je možné vytvoriť kontakt bez e-mailovej adresy!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -7071,7 +7072,7 @@ msgstr "Krajina"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_phone_code
 msgid "Country Calling Code"
-msgstr ""
+msgstr "Volací kód krajiny"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_code
@@ -7115,7 +7116,7 @@ msgstr "Právo vytvárať"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_search
 msgid "Create Access Right"
-msgstr ""
+msgstr "Vytvorte prístupové práva"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
@@ -7128,7 +7129,7 @@ msgstr "Dátum vytvorenia"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_issue
 msgid "Create Issues From Contact Form"
-msgstr ""
+msgstr "Vytvorte problém z kontaktného formulára"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_project_issue
@@ -7149,7 +7150,7 @@ msgstr "Vytvorenie menu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_service
 msgid "Create Tasks from SO"
-msgstr ""
+msgstr "Vytvorte úlohy z SO"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_menu_create
@@ -7164,19 +7165,19 @@ msgstr "Vytvoriť menu"
 #. module: base
 #: selection:ir.actions.server,use_create:0
 msgid "Create a new record in another model"
-msgstr ""
+msgstr "Vytvorte nový záznam v inom modeli"
 
 #. module: base
 #: selection:ir.actions.server,use_create:0
 msgid "Create a new record in the Base Model"
-msgstr ""
+msgstr "Vytvorte nový záznam v základnom modeli"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_company_form
 msgid ""
 "Create and manage the companies that will be managed by Odoo from here. "
 "Shops or subsidiaries can be created and maintained from here."
-msgstr ""
+msgstr "Vytvorte a spravujte spoločnosti, ktoré bude bude riadiť Odoo odtiaľto. Obchody alebo dcérske spoločnosti možno vytvoriť a udržiavať odtiaľto."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_users
@@ -7190,12 +7191,12 @@ msgstr "Vytvorenie a správa používateľov, ktorí sa môžu pripojiť do syst
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Create surveys, collect answers and print statistics"
-msgstr ""
+msgstr "Vytvorte prieskumy, zbierajte odpovede a vytlačte štatistiky"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_crud_model_name
 msgid "Create/Write Target Model Name"
-msgstr ""
+msgstr "Vytvoriť/zapísať cieľový názov modelu"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -7354,12 +7355,12 @@ msgstr "Vytvorené"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Creation Month"
-msgstr ""
+msgstr "Mesiac vytvorenia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_use_create
 msgid "Creation Policy"
-msgstr ""
+msgstr "Metóda vytvorenia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_credit_limit
@@ -7370,7 +7371,7 @@ msgstr "Limit kreditu"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mercury
 msgid "Credit card support for Point Of Sale"
-msgstr ""
+msgstr "Podpora kreditných kariet pre miesto predaja"
 
 #. module: base
 #: model:res.country,name:base.hr
@@ -7385,7 +7386,7 @@ msgstr "Chorvátsko - Účtovníctvo (RRIF 2012)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_reports
 msgid "Croatia - RRIF 2012 COA - Accounting Reports"
-msgstr ""
+msgstr "Croatia - RRIF 2012 COA - Accounting Reports"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7400,7 +7401,7 @@ msgstr "Kuba"
 #. module: base
 #: model:res.country,name:base.cw
 msgid "Curaçao"
-msgstr ""
+msgstr "Curaçao"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_currency_form
@@ -7425,7 +7426,7 @@ msgstr "Mena"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_name
 msgid "Currency Code (ISO 4217)"
-msgstr ""
+msgstr "Kód meny (ISO 4217)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency_rate
@@ -7437,17 +7438,17 @@ msgstr "Kurz meny"
 #: model:ir.ui.view,arch_db:base.view_currency_rate_search
 #: model:ir.ui.view,arch_db:base.view_currency_rate_tree
 msgid "Currency Rates"
-msgstr ""
+msgstr "Kurzy meny"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_symbol
 msgid "Currency sign, to be used when printing amounts."
-msgstr ""
+msgstr "Znak meny, ktorý má byť použitý pri tlači sumy."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Current Company"
-msgstr ""
+msgstr "Súčasná spoločnosť"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate
@@ -7483,7 +7484,7 @@ msgstr "Vlastné pole"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_custom_footer
 msgid "Custom Footer"
-msgstr ""
+msgstr "Vlastné zápätie"
 
 #. module: base
 #: selection:ir.model,state:0
@@ -7493,7 +7494,7 @@ msgstr "Vlastný objekt"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_auto
 msgid "Custom Python Parser"
-msgstr ""
+msgstr "Vlastný Python parser"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_administration_shortcut
@@ -7509,17 +7510,17 @@ msgstr "Vlastné pole musí mať meno, ktoré začína 'x_'!"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating
 msgid "Customer Rating"
-msgstr ""
+msgstr "Hodnotenie zákazníkom"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_customer
 msgid "Customer References"
-msgstr ""
+msgstr "Referencie zákazníkov"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_customer_relationship_management
 msgid "Customer Relationship Management"
-msgstr ""
+msgstr "Customer Relationship Management"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -7536,14 +7537,14 @@ msgstr "Zákazníci"
 #: model:ir.ui.view,arch_db:base.view_view_custom_search
 #: model:ir.ui.view,arch_db:base.view_view_custom_tree
 msgid "Customized Views"
-msgstr ""
+msgstr "Prispôsobené zobrazenia"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid ""
 "Customized views are used when users reorganize the content of their "
 "dashboard views (via web client)"
-msgstr ""
+msgstr "Prispôsobené zobrazenia sa používajú keď užívatelia reorganizujú obsah ich nástenkových zobrazení (cez webového klienta)"
 
 #. module: base
 #: model:res.country,name:base.cy
@@ -7563,7 +7564,7 @@ msgstr "Česká republika"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
 msgid "DHL Shipping"
-msgstr ""
+msgstr "DHL doprava"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7580,34 +7581,34 @@ msgstr "Nástenky"
 #. module: base
 #: model:ir.module.module,description:base.module_test_convert
 msgid "Data for xml conversion tests"
-msgstr ""
+msgstr "Dáta pre xml konverzné testy"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
 msgid "Database"
-msgstr ""
+msgstr "Databáza"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_anonymization
 msgid "Database Anonymization"
-msgstr ""
+msgstr "Anonymizácia databázy"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_db_datas
 msgid "Database Data"
-msgstr ""
+msgstr "Databázové dáta"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_res_id
 msgid ""
 "Database ID of record to open in form view, when ``view_mode`` is set to "
 "'form' only"
-msgstr ""
+msgstr "Databázové ID záznamu otvoriť v zobrazení formulára, keď je ``režim_zobrazenia`` nastavené iba na \"formulár\" "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_dbname
 msgid "Database Name"
-msgstr ""
+msgstr "Názov databázy"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_9
@@ -7620,13 +7621,13 @@ msgstr "Štruktúra databázy"
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
 "type incoherence in a previous request"
-msgstr ""
+msgstr "Databázovému výberu chýbajú ID ({}) a má ďalšie ID ({}), môže to byť spôsobené typovou nesúdržnosťou v predchádzajúcej žiadosti"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_res_id
 msgid ""
 "Database identifier of the record to which this applies. 0 = for all records"
-msgstr ""
+msgstr "Databázový identifikátor záznamu na ktorý sa toto vzťahuje. 0 = pre všetky záznamy"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_date
@@ -7656,7 +7657,7 @@ msgstr "DateTime"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_order_dates
 msgid "Dates on Sales Order"
-msgstr ""
+msgstr "Dátumy na objednávkch predaja"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -7666,12 +7667,12 @@ msgstr "Deň"
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Day of the Week (0:Monday): %(weekday)s"
-msgstr ""
+msgstr "Deň v týždni (0: pondelok): %(weekday)s"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Day of the Year: %(doy)s"
-msgstr ""
+msgstr "Deň roka: %(doy)s"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
@@ -7694,22 +7695,22 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr "Vážený pán / pani,\n\nNaše záznamy ukazujú, že niektoré platby na vašom účte sú stále nesplatené. Podrobnosti nájdete nižšie.\n\nAk užs uma bola vyplatená, prosím ignorujte toto oznámenie. V opačnom prípade, prosím, pošlite nám celkovú sumu uvedené nižšie.\n\nAk máte akékoľvek otázky ohľadom svojho účtu, kontaktujte nás prosím.\n\nĎakujem vopred za Vašu spoluprácu.\nS pozdravom,"
+msgstr "Vážený pán / pani,\n\nNaše záznamy ukazujú, že niektoré platby na Vašom účte sú stále nesplatené. Podrobnosti nájdete nižšie.\n\nAk už suma bola vyplatená, prosím ignorujte toto oznámenie. V opačnom prípade nám prosím pošlite  celkovú sumu uvedenú nižšie.\n\nAk máte akékoľvek otázky ohľadom svojho účtu, neváhajte nás kontaktovať.\n\nĎakujem vopred za Vašu spoluprácu.\nS pozdravom,"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
 msgid "Debugging"
-msgstr ""
+msgstr "Odstraňovanie chýb"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_decimal_places
 msgid "Decimal Places"
-msgstr ""
+msgstr "Desatinné miesta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_decimal_precision
 msgid "Decimal Precision Configuration"
-msgstr ""
+msgstr "Konfigurácia presnosti desatinných miest"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_decimal_point
@@ -7724,12 +7725,12 @@ msgstr "Predvolený"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_default
 msgid "Default Theme"
-msgstr ""
+msgstr "Predvolená téma"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_is_default
 msgid "Default filter"
-msgstr ""
+msgstr "Predvolený filter"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_limit
@@ -7739,28 +7740,28 @@ msgstr "Predvolený limit pre zobrazenie zoznamu"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_value
 msgid "Default value (pickled) or reference to an action"
-msgstr ""
+msgstr "Východisková hodnota (pickled), alebo odkaz na akciu"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_values_value_unpickle
 #: model:ir.ui.view,arch_db:base.values_view_form_defaults
 msgid "Default value or action reference"
-msgstr ""
+msgstr "Predvolená hodnota alebo referencia akcie "
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_default
 msgid "Default website theme to showcase customization possibilities."
-msgstr ""
+msgstr "Prednastavené téma internetovej stránky na predvedenie možností prispôsobenia."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_contract_asset
 msgid "Deferred revenue management for contracts"
-msgstr ""
+msgstr "Riadenie odložených tržieb pre zmluvy "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_python
 msgid "Define Taxes as Python Code"
-msgstr ""
+msgstr "Definujte dane ako Python kód"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -7770,7 +7771,7 @@ msgstr "Definované výkazy"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_definition
 msgid "Definition"
-msgstr ""
+msgstr "Definícia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_unlink
@@ -7780,23 +7781,23 @@ msgstr "Právo vymazať"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_search
 msgid "Delete Access Right"
-msgstr ""
+msgstr "Zmazať prístupové právo"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:175 code:addons/base/ir/ir_actions.py:896
 #, python-format
 msgid "Deletion of the action record failed."
-msgstr ""
+msgstr "Zmazanie záznamu akcie zlyhalo."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
 msgid "Delivery Costs"
-msgstr ""
+msgstr "Dodacie náklady"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_demo
 msgid "Demo Data"
-msgstr ""
+msgstr "Demo dáta"
 
 #. module: base
 #: model:res.country,name:base.dk
@@ -7816,13 +7817,13 @@ msgid ""
 "Dependencies of compute method; a list of comma-separated field names, like\n"
 "\n"
 "    name, partner_id.name"
-msgstr ""
+msgstr "Závislosti výpočtovej metódy; zoznam čiarkou oddelených názvov polí,  ako\n\nmeno, partner_id.meno"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency_depend_id
 #: model:ir.module.category,name:base.module_category_hidden_dependency
 msgid "Dependency"
-msgstr ""
+msgstr "Závislosť"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_description
@@ -7831,50 +7832,50 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module_description
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_description_html
 msgid "Description HTML"
-msgstr ""
+msgstr "Popis HTML"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_themes
 msgid "Design gorgeous mails with 8 high quality themes"
-msgstr ""
+msgstr "Navrhnite nádherné maily s 8 vysoko kvalitnými motívmi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing
 msgid "Design, send and track emails"
-msgstr ""
+msgstr "Navrhujte, posielajte a sledujte e-maily"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_act_to
 msgid "Destination Activity"
-msgstr ""
+msgstr "Cieľová aktivta"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_instance_id
 msgid "Destination Instance"
-msgstr ""
+msgstr "Cieľová inštancia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_res_model
 #: model:ir.model.fields,field_description:base.field_ir_act_window_res_model
 msgid "Destination Model"
-msgstr ""
+msgstr "Cieľový model"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid "Detailed algorithm:"
-msgstr ""
+msgstr "Detailný algritmus:"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_position
 msgid ""
 "Determines where the currency symbol should be placed after or before the "
 "amount."
-msgstr ""
+msgstr "Určuje kde by mal byť symbol meny umiestnený za alebo pred sumou."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de
@@ -7889,7 +7890,7 @@ msgstr "Nemecko SKR03 - Účtovníctvo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr03_reports
 msgid "Deutschland SKR03 - Accounting Reports"
-msgstr ""
+msgstr "Deutschland SKR03 - Accounting Reports"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr04
@@ -7899,27 +7900,27 @@ msgstr "Nemecko SKR04 - Účtovníctvo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr04_reports
 msgid "Deutschland SKR04 - Accounting Reports"
-msgstr ""
+msgstr "Deutschland SKR04 - Accounting Reports"
 
 #. module: base
 #: selection:ir.ui.view,type:0
 msgid "Diagram"
-msgstr ""
+msgstr "Diagram"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sign
 msgid "Digital Signatures"
-msgstr ""
+msgstr "Digitálne podpisy"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_direction
 msgid "Direction"
-msgstr ""
+msgstr "Smer"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "Directory"
-msgstr ""
+msgstr "Adresár"
 
 #. module: base
 #: code:addons/base/res/res_config.py:467
@@ -7927,7 +7928,7 @@ msgstr ""
 msgid ""
 "Disabling this option will also uninstall the following modules \n"
 "%s"
-msgstr ""
+msgstr "Vypnutie tejto voľby tiež odinštaluje nasledujúce moduly\n%s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_discuss
@@ -7938,12 +7939,12 @@ msgstr "Diskusie"
 #. module: base
 #: model:ir.module.module,summary:base.module_mail
 msgid "Discussions, Mailing Lists, News"
-msgstr ""
+msgstr "Diskusie, Adresáre, Novinky"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_form
 msgid "Display"
-msgstr ""
+msgstr "Zobraziť"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown_display_name
@@ -8047,19 +8048,19 @@ msgstr "Zobraziť meno"
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Display an option on related documents to print this report"
-msgstr ""
+msgstr "Zobraziť voľby pre súvisiace dokumenty pre tlač tejto správy"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Display an option on related documents to run this sever action"
-msgstr ""
+msgstr "Zobraziť voľby pre súvisiace dokumenty pre spustenie tejto akcie servera"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_group
 msgid ""
 "Display and manage the list of all countries group. You can create or delete"
 " country group to make sure the ones you are working on will be maintained."
-msgstr ""
+msgstr "Zobraziť a spravovať zoznam všetkých krajín skupiny. Môžete vytvoriť alebo odstrániť skupinu krajín, aby ste sa uistil že tie na ktorých pracujete budú zachované."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -8067,38 +8068,38 @@ msgid ""
 "Display and manage the list of all countries that can be assigned to your "
 "partner records. You can create or delete countries to make sure the ones "
 "you are working on will be maintained."
-msgstr ""
+msgstr "Zobraziť a spravovať zoznam všetkých krajín ktoré môžu byť priradené k záznamom vašich partnerov. Môžete vytvoriť alebo odstrániť krajiny, aby ste sa uistil že tie na ktorých pracujete budú zachované."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
 msgid "Distributor"
-msgstr ""
+msgstr "Distribútor"
 
 #. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
-msgstr ""
+msgstr "Džibutsko"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
 msgid "Doctor"
-msgstr ""
+msgstr "Doktor"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:824 code:addons/base/ir/ir_model.py:827
 #, python-format
 msgid "Document model"
-msgstr ""
+msgstr "Model dokumentu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum_doc
 msgid "Documentation"
-msgstr ""
+msgstr "Dokumentácia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_documentation_examples
 msgid "Documentation examples test"
-msgstr ""
+msgstr "Test príkladov dokumentácie "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_domain
@@ -8106,22 +8107,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_rule_domain
 #: model:ir.model.fields,field_description:base.field_ir_rule_domain_force
 msgid "Domain"
-msgstr ""
+msgstr "Doména"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_domain
 msgid "Domain Value"
-msgstr ""
+msgstr "Hodnota domény"
 
 #. module: base
 #: model:res.country,name:base.dm
 msgid "Dominica"
-msgstr ""
+msgstr "Dominika"
 
 #. module: base
 #: model:res.country,name:base.do
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Dominikánska republika"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_do
@@ -8132,18 +8133,18 @@ msgstr "Dominikánska republika - Účtovníctvo"
 #. module: base
 #: selection:ir.actions.todo,state:0
 msgid "Done"
-msgstr ""
+msgstr "Hotovo"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
 msgid "Dr."
-msgstr ""
+msgstr "Dr."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_dropshipping
 #: model:ir.module.module,summary:base.module_stock_dropshipping
 msgid "Drop Shipping"
-msgstr ""
+msgstr "Drop Shipping"
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -8160,47 +8161,47 @@ msgstr ""
 #: code:addons/base/ir/ir_qweb.py:930
 #, python-format
 msgid "Durations can't be negative"
-msgstr ""
+msgstr "Trvania nemôžu byť záporné"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Dutch (BE) / Nederlands (BE)"
-msgstr ""
+msgstr "Holandština (BE) / Holandsko (BE)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Dutch / Nederlands"
-msgstr ""
+msgstr "Holandštinaina / Holandsko"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Dynamic expression builder"
-msgstr ""
+msgstr "Tvorca dynamického výrazu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
 msgid "ESC/POS Hardware Driver"
-msgstr ""
+msgstr "Hardvérový ovládač ESC/POS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_service
 msgid "EU Mini One Stop Shop (MOSS)"
-msgstr ""
+msgstr "EÚ Mini One Stop Shop (MOSS)"
 
 #. module: base
 #: sql_constraint:ir.model:0
 msgid "Each model must be unique!"
-msgstr ""
+msgstr "Každý modul musí byť unikátny!"
 
 #. module: base
 #: model:res.country,name:base.tp
 msgid "East Timor"
-msgstr ""
+msgstr "Východný Timor"
 
 #. module: base
 #: model:res.country,name:base.ec
 msgid "Ecuador"
-msgstr ""
+msgstr "Ekvádor"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
@@ -8210,33 +8211,33 @@ msgstr "Ekvádor - Účtovníctvo"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
 msgid "Edit Translations"
-msgstr ""
+msgstr "Upraviť preklady"
 
 #. module: base
 #: model:res.groups,name:base.group_website_publisher
 msgid "Editor"
-msgstr ""
+msgstr "Editor"
 
 #. module: base
 #: model:res.groups,name:base.group_website_designer
 msgid "Editor and Designer"
-msgstr ""
+msgstr "Editor a Dizajnér"
 
 #. module: base
 #: model:res.country,name:base.eg
 msgid "Egypt"
-msgstr ""
+msgstr "Egypt"
 
 #. module: base
 #: model:res.country,name:base.sv
 msgid "El Salvador"
-msgstr ""
+msgstr "Salvádor"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:585
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
-msgstr ""
+msgstr "Prvok \"%s\" nemôže byť umiestnený v nadriadenom zobrazení"
 
 #. module: base
 #: code:addons/base/res/res_company.py:105
@@ -8247,23 +8248,23 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_email
 #, python-format
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "Email Address"
-msgstr ""
+msgstr "Emailová adresa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
 msgid "Email Gateway"
-msgstr ""
+msgstr "Emailová brána"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Email Preferences"
-msgstr ""
+msgstr "Emailové preferencie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_employee
@@ -8271,27 +8272,27 @@ msgstr ""
 #: model:res.groups,name:base.group_user
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employee"
-msgstr ""
+msgstr "Zamestnanec"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal
 msgid "Employee Appraisals"
-msgstr ""
+msgstr "Posudky zamestnanca"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract
 msgid "Employee Contracts"
-msgstr ""
+msgstr "Kontrakty zamestnanca"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr
 msgid "Employee Directory"
-msgstr ""
+msgstr "Adresár zamestnanca"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 msgid "Employees"
-msgstr ""
+msgstr "Zamestnanci"
 
 #. module: base
 #: model:res.groups,name:base.group_light_multi_company
@@ -8304,39 +8305,39 @@ msgstr ""
 msgid ""
 "Enabling this feature will install the following paying application(s) : \n"
 "%s"
-msgstr ""
+msgstr "Povolenie tejto funkcie nainštaluje nasledujúce platobnú aplikáciu(e):\n%s"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (AU)"
-msgstr ""
+msgstr "Angličtina (AU)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (UK)"
-msgstr ""
+msgstr "Angličtina (UK)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (US)"
-msgstr ""
+msgstr "Angličtina (US)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "Enter Python code here. Help about Python expression is available in the "
 "help tab of this document."
-msgstr ""
+msgstr "Tu zadajte Python kód. Nápoveda o Python výrazoch je k dispozícii v záložke pomocníka tohto dokumentu."
 
 #. module: base
 #: model:res.country,name:base.gq
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "Rovníková Guinea"
 
 #. module: base
 #: model:res.groups,name:base.group_equipment_manager
 msgid "Equipment Manager"
-msgstr ""
+msgstr "Správca zariadení"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_equipment
@@ -16660,7 +16661,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_2
 msgid "User Interface"
-msgstr ""
+msgstr "Používateľské rozhranie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_user_user_login
