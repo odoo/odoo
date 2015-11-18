@@ -413,7 +413,9 @@ class ir_translation(osv.osv):
     def translate_fields(self, cr, uid, model, id, field=None, context=None):
         trans_model = self.pool[model]
         domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
-        langs_ids = self.pool.get('res.lang').search(cr, uid, [('code', '!=', 'en_US')], context=context)
+        langs_ids = self.pool.get('res.lang').search(
+            cr, uid, [('code', '!=', 'en_US'), ('translatable', '=', True)],
+            context=context)
         if not langs_ids:
             raise osv.except_osv(_('Error'), _("Translation features are unavailable until you install an extra OpenERP translation."))
         langs = [lg.code for lg in self.pool.get('res.lang').browse(cr, uid, langs_ids, context=context)]
