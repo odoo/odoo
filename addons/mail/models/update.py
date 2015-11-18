@@ -109,8 +109,8 @@ class publisher_warranty_contract(AbstractModel):
                     pass
             if result.get('enterprise_info'):
                 # Update expiration date
-                self.pool['ir.config_parameter'].set_param(cr, uid, 'database.expiration_date', result.get('enterprise_info').get('expiration_date'))
-                self.pool['ir.config_parameter'].set_param(cr, uid, 'database.expiration_reason', result.get('enterprise_info').get('expiration_reason'))
+                self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'database.expiration_date', result.get('enterprise_info').get('expiration_date'), ['base.group_user'])
+                self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'database.expiration_reason', result.get('enterprise_info').get('expiration_reason', 'trial'), ['base.group_system'])
 
         except Exception:
             if cron_mode:
