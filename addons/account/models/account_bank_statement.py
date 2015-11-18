@@ -566,6 +566,13 @@ class AccountBankStatementLine(models.Model):
             match_recs = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
             if match_recs and len(match_recs) == 1:
                 return match_recs
+            elif len(match_recs) == 0:
+                move = self.env['account.move'].search([('name', '=', self.name)], limit=1)
+                if move:
+                    domain = [('move_id', '=', move.id)]
+                    match_recs = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
+                    if match_recs and len(match_recs) == 1:
+                        return match_recs
 
         # How to compare statement line amount and move lines amount
         amount_domain_maker = self._get_domain_maker_move_line_amount()

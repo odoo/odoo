@@ -315,7 +315,7 @@ class Message(models.Model):
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
             })
-            body_short = tools.html_email_clean(message_dict['body'], remove=True)
+            body_short = tools.html_email_clean(message_dict['body'], shorten=True, remove=True)
             message_dict['body_short'] = body_short != message_dict['body'] and body_short or False
 
         return True
@@ -549,13 +549,14 @@ class Message(models.Model):
         message_tree = dict((m.id, m) for m in self)
         self._message_read_dict_postprocess(message_values, message_tree)
 
-        # add is_note flag
-        internal_subtype_ids = self.env['mail.message.subtype'].search([('internal', '=', True)]).ids
+        # add subtype data (is_note flag, subtype_description)
+        subtypes = self.env['mail.message.subtype'].search(
+            [('id', 'in', [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']])]).read(['internal', 'description'])
+        subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
         for message in message_values:
-            if message['subtype_id'] and message['subtype_id'][0]:
-                message['is_note'] = bool(message['subtype_id'][0] in internal_subtype_ids)
+            message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
+            message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
         return message_values
-
 
     #------------------------------------------------------
     # mail_message internals

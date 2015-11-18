@@ -69,9 +69,11 @@ function make_message (data) {
     var msg = {
         id: data.id,
         author_id: data.author_id,
+        body_short: data.body_short || "",
         body: data.body || "",
         date: data.date,
         message_type: data.message_type,
+        subtype_description: data.subtype_description,
         is_note: data.is_note,
         attachment_ids: data.attachment_ids,
         subject: data.subject,

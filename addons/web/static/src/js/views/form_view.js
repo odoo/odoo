@@ -700,12 +700,11 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.set({actual_mode: mode});
     },
     check_actual_mode: function(source, options) {
-        var self = this;
         if(this.get("actual_mode") === "view") {
-            self.$el.removeClass('oe_form_editable').addClass('oe_form_readonly');
+            this.$el.removeClass('oe_form_editable').addClass('oe_form_readonly');
         } else {
-            self.$el.removeClass('oe_form_readonly').addClass('oe_form_editable');
-            this.autofocus();
+            this.$el.removeClass('oe_form_readonly').addClass('oe_form_editable');
+            _.defer(_.bind(this.autofocus, this));
         }
     },
     autofocus: function() {

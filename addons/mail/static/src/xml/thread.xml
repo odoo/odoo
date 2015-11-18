@@ -102,11 +102,25 @@
                     </span>
                 </p>
                 <t t-if="message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0">
+                    <t t-if="message.subtype_description">
+                        <p t-esc="message.subtype_description"/>
+                    </t>
                     <t t-call="mail.ChatThread.MessageTracking"/>
                 </t>
                 <p t-if="message.subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
                 <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
-                    <t t-raw="message.body"/>
+                    <t t-if="message.body_short">
+                        <div class="o_mail_body_short">
+                            <t t-raw="message.body_short"/>
+                        </div>
+                        <div class="o_mail_body_long">
+                            <t t-raw="message.body"/>
+                            <span class="oe_mail_expand"><a href="#">... read less</a></span>
+                        </div>
+                    </t>
+                    <t t-if="! message.body_short">
+                        <t t-raw="message.body"/>
+                    </t>
                 </t>
                 <t t-foreach="message.attachment_ids" t-as="attachment">
                     <t t-call="mail.Attachment"/>

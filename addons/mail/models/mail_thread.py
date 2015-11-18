@@ -1238,10 +1238,14 @@ class MailThread(models.AbstractModel):
         html_sanitize methods located in tools. """
         root = lxml.html.fromstring(body)
         postprocessed = False
+        to_remove = []
         for node in root.iter():
-            if 'o_mail_notification' in node.get('class', '') or 'o_mail_notification' in node.get('summary', ''):
+            if 'o_mail_notification' in (node.get('class') or '') or 'o_mail_notification' in (node.get('summary') or ''):
                 postprocessed = True
-                node.getparent().remove(node)
+                if node.getparent() is not None:
+                    to_remove.append(node)
+        for node in to_remove:
+            node.getparent().remove(node)
         if postprocessed:
             body = etree.tostring(root, pretty_print=False, encoding='UTF-8')
         return body, attachments
