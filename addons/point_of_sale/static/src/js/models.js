@@ -1325,13 +1325,13 @@ exports.Orderline = Backbone.Model.extend({
             return base_amount >= 0 ? ret : ret * -1;
         }
         if ((tax.amount_type === 'percent' && !tax.price_include) || (tax.amount_type === 'division' && tax.price_include)){
-            return (base_amount * tax.amount / 100) * quantity;
+            return base_amount * tax.amount / 100;
         }
         if (tax.amount_type === 'percent' && tax.price_include){
-            return (base_amount - (base_amount / (1 + tax.amount / 100))) * quantity;
+            return base_amount - (base_amount / (1 + tax.amount / 100));
         }
         if (tax.amount_type === 'division' && !tax.price_include) {
-            return (base_amount / (1 - tax.amount / 100) - base_amount) * quantity;
+            return base_amount / (1 - tax.amount / 100) - base_amount;
         }
         return false;
     },
@@ -1354,7 +1354,7 @@ exports.Orderline = Backbone.Model.extend({
                 list_taxes.concat(ret.taxes);
             }
             else {
-                var tax_amount = self._compute_all(tax, price_unit, quantity);
+                var tax_amount = self._compute_all(tax, base, quantity);
                 tax_amount = round_pr(tax_amount, currency_rounding);
 
                 if (tax_amount){
