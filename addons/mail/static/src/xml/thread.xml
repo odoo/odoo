@@ -102,6 +102,9 @@
                     </span>
                 </p>
                 <t t-if="message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0">
+                    <t t-if="message.subtype_description">
+                        <p t-esc="message.subtype_description"/>
+                    </t>
                     <t t-call="mail.ChatThread.MessageTracking"/>
                 </t>
                 <p t-if="message.subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>

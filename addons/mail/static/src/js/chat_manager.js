@@ -72,6 +72,7 @@ function make_message (data) {
         body: data.body || "",
         date: data.date,
         message_type: data.message_type,
+        subtype_description: data.subtype_description,
         is_note: data.is_note,
         attachment_ids: data.attachment_ids,
         subject: data.subject,
