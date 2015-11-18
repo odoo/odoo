@@ -33,7 +33,13 @@
                         </div>
                         <div class="user-info-block">
                             <div class="user-heading">
-                                <h3>Version <t t-esc="version_info.server_version"/></h3>
+                                <h3>
+                                    Version <t t-esc="db_info.server_version"/>
+                                    (<span t-esc="db_info.server_version_info[5] == 'e'?'Enterprise':'Community'"/> Edition)
+                                </h3>
+                                <t t-if="db_info.expiration_date">
+                                    <h5>Database expiration: <t t-esc="new moment(db_info.expiration_date).format('LL')"/></h5>
+                                </t>
                             </div>
                             <div class="user-body">
                                 <div class="tab-content">
