@@ -1957,15 +1957,12 @@ class StockInventory(models.Model):
                     raise UserError(_('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s' % (inventory_line.product_id.name, inventory_line.product_qty)))
             inv.action_check()
             inv.write({'state': 'done'})
-            inv.post_inventory()
+            self.post_inventory(inv)
         return True
 
-    @api.multi
-    def post_inventory(self):
-        #The inventory is posted as a single step which means quants cannot be moved from an internal location to another using an inventory
-        #as they will be moved to inventory loss, and other quants will be created to the encoded quant location. This is a normal behavior
-        #as quants cannot be reuse from inventory location (users can still manually move the products before/after the inventory if they want).
-        self.move_ids.filtered(lambda x: x.state != 'done').action_done()
+    @api.model
+    def post_inventory(self, inv):
+        inv.move_ids.filtered(lambda x: x.state != 'done').action_done()
 
     @api.multi
     def action_check(self):

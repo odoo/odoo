@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date, datetime
 from dateutil import relativedelta
+import json
 import time
+import sets
 
+import openerp
+from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare, float_round
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
-from openerp import fields, models, api
-from openerp.osv import fields, osv
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api, models
 import openerp.addons.decimal_precision as dp
 from openerp.addons.procurement import procurement
+import logging
 from openerp.exceptions import UserError
 
 class stock_move(osv.osv):
