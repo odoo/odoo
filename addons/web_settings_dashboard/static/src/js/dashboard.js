@@ -16,15 +16,8 @@ var _t = core._t;
 var Dashboard = Widget.extend({
     template: 'DashboardMain',
 
-    events: {
-        'click .o_browse_apps': 'on_new_apps',
-    },
-
     init: function(parent, data){
         this.all_dashboards = ['apps', 'invitations', 'planner', 'share'];
-        if (odoo.version == 'community') {
-            this.all_dashboards = this.all_dashboards.concat('enterprise');
-        }
         return this._super.apply(this, arguments);
     },
 
@@ -54,7 +47,7 @@ var Dashboard = Widget.extend({
     },
 
     load_apps: function(data){
-        this.$('.o_web_settings_dashboard_apps').append(QWeb.render("DashboardApps", data.apps));
+        return  new DashboardApps(this, data.apps).replace(this.$('.o_web_settings_dashboard_apps'));
     },
 
     load_share: function(data){
@@ -68,14 +61,6 @@ var Dashboard = Widget.extend({
     load_planner: function(data){
         return  new DashboardPlanner(this, data.planner).replace(this.$('.o_web_settings_dashboard_planner'));
     },
-
-    load_enterprise: function(data){
-        return  new DashboardEnterprise(this, data.enterprise).replace(this.$('.o_web_settings_dashboard_enterprise'));
-    },
-
-    on_new_apps: function(){
-        this.do_action('base.open_module_tree');
-    }
 });
 
 var DashboardInvitations = Widget.extend({
@@ -242,11 +227,12 @@ var DashboardPlanner = Widget.extend({
     }
 });
 
-var DashboardEnterprise = Widget.extend({
+var DashboardApps = Widget.extend({
 
-    template: 'DashboardEnterprise',
+    template: 'DashboardApps',
 
     events: {
+        'click .o_browse_apps': 'on_new_apps',
         'click .o_confirm_upgrade': 'confirm_upgrade',
     },
 
@@ -256,8 +242,19 @@ var DashboardEnterprise = Widget.extend({
         return this._super.apply(this, arguments);
     },
 
+    start: function() {
+        this._super.apply(this, arguments);
+        if (odoo.db_info && odoo.db_info.server_version_info[5] === 'c') {
+            $(QWeb.render("DashboardEnterprise")).appendTo(this.$el);
+        }
+    },
+
+    on_new_apps: function(){
+        this.do_action('base.open_module_tree');
+    },
+
     confirm_upgrade: function() {
-        framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + this.data.enterprise_users);
+        framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + (this.data.enterprise_users || 1));
     },
 });
 
