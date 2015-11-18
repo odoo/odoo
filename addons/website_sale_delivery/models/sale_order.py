@@ -117,7 +117,7 @@ class SaleOrder(orm.Model):
         for carrier in carrier_obj.browse(cr, SUPERUSER_ID, delivery_ids, context=dict(context, order_id=order.id)):
 
             try:
-                _logger.debug("Checking availability of %s %s" % carrier.name)
+                _logger.debug("Checking availability of %s" % carrier.name)
                 if carrier.available:
                     available_carrier_ids.append(carrier.id)
             except ValidationError as e:
