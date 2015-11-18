@@ -226,7 +226,7 @@ class base_action_rule(osv.osv):
                 record = create.origin(self.with_env(actions.env), vals)
 
                 # check postconditions, and execute actions on the records that satisfy them
-                for action in actions:
+                for action in actions.with_context(old_values=None):
                     action._process(action._filter_post(record))
 
                 return record.with_env(self.env)
