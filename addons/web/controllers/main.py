@@ -513,6 +513,19 @@ def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', un
 
     return (status, headers, content)
 
+def db_info():
+    version_info = openerp.service.common.exp_version()
+    if request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_system'):
+        warn_enterprise = 'admin'
+    elif request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_user'):
+        warn_enterprise = 'user'
+    else:
+        warn_enterprise = False
+    return {
+        'server_version': version_info.get('server_version'),
+        'server_version_info': version_info.get('server_version_info'),
+    }
+
 #----------------------------------------------------------
 # OpenERP Web web Controllers
 #----------------------------------------------------------
@@ -533,7 +546,7 @@ class Home(http.Controller):
 
         request.uid = request.session.uid
         menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context)
-        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
+        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data, 'db_info': json.dumps(db_info())})
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
