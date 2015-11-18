@@ -688,8 +688,7 @@ class task(osv.osv):
 
     def onchange_date_deadline(
             self, cr, uid, ids, date_end, date_deadline, context=None):
-        if not date_end or (date_end[:10] == self.browse(
-                cr, uid, ids, context=context).date_deadline):
+        if not date_end or (date_end[:10] == self.browse(cr, uid, ids, context=context).date_deadline):
             return {'value': {'date_end': date_deadline}}
 
     def duplicate_task(self, cr, uid, map_ids, context=None):
