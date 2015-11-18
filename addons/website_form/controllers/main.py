@@ -123,7 +123,7 @@ class WebsiteForm(http.Controller):
 
             # If it's a custom field
             elif field_name != 'context':
-                data['custom'] += "%s : %s\n" % (field_name, field_value)
+                data['custom'] += "%s : %s\n" % (field_name.decode('utf-8'), field_value)
 
         # Add metadata if enabled
         environ = request.httprequest.headers.environ
