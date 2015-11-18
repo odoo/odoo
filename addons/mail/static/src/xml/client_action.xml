@@ -78,7 +78,9 @@
             <div t-if="channel.type === channel_type" t-att-data-channel-id="channel.id"
                  t-attf-class="o_mail_chat_channel_item #{channel.unread_counter ? ' o_unread_message' : ''} #{(active_channel_id == channel.id) ? 'o_active': ''}">
                 <span><i t-if="display_status" t-att-class="'o_user_status fa ' + (channel.status == 'online' ? 'fa-circle' : 'fa-circle-o')"/></span>
-                <span t-if="display_hash" class="o_mail_hash">#</span> <t t-esc="channel.name"/>
+                <span t-if="display_hash" class="o_mail_hash">#</span>
+                <t t-esc="channel.name"/>
+                <i t-if="channel.mass_mailing" class="fa fa-envelope-o"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
                 <span t-attf-class="fa fa-times pull-right o_mail_partner_unpin #{counter ? 'hide' : ''}"
                       t-att-title="_t('Close')" t-att-data-channel-id="channel.id"/>

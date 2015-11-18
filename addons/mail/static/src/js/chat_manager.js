@@ -200,6 +200,7 @@ function make_channel (data, options) {
         autoswitch: 'autoswitch' in options ? options.autoswitch : true,
         hidden: options.hidden,
         display_needactions: options.display_needactions,
+        mass_mailing: data.mass_mailing,
         needaction_counter: data.message_needaction_counter || 0,
         unread_counter: data.message_unread_counter || 0,
         last_seen_message_id: data.seen_message_id,
@@ -330,10 +331,12 @@ function on_notification (notification) {
 function on_needaction_notification (message) {
     message = add_message(message, { channel_id: 'channel_inbox', show_notification: true} );
     needaction_counter++;
-    var channel = chat_manager.get_channel(message.channel_ids[0]);
-    if (channel) {
-        channel.needaction_counter++;
-    }
+    _.each(message.channel_ids, function (channel_id) {
+        var channel = chat_manager.get_channel(channel_id);
+        if (channel) {
+            channel.needaction_counter++;
+        }
+    });
     chat_manager.bus.trigger('update_needaction', needaction_counter);
 }
 

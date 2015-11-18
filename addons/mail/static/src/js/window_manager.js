@@ -100,7 +100,7 @@ core.bus.on('web_client_ready', null, function () {
 
     chat_manager.bus.on('anyone_listening', null, function (channel, query) {
         _.each(chat_sessions, function (session) {
-            if (_.contains(channel.id, session.id)) {
+            if (channel.id === session.id) {
                 query.is_displayed = true;
             }
         });
