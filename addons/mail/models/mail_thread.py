@@ -1239,7 +1239,7 @@ class MailThread(models.AbstractModel):
         root = lxml.html.fromstring(body)
         postprocessed = False
         for node in root.iter():
-            if 'o_mail_notification' in node.get('class', '') or 'o_mail_notification' in node.get('summary', ''):
+            if 'o_mail_notification' in (node.get('class') or '') or 'o_mail_notification' in (node.get('summary') or ''):
                 postprocessed = True
                 node.getparent().remove(node)
         if postprocessed:
