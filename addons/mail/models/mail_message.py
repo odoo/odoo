@@ -315,7 +315,7 @@ class Message(models.Model):
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
             })
-            body_short = tools.html_email_clean(message_dict['body'], remove=True)
+            body_short = tools.html_email_clean(message_dict['body'], shorten=True, remove=True)
             message_dict['body_short'] = body_short != message_dict['body'] and body_short or False
 
         return True
