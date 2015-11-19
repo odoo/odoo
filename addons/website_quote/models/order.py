@@ -405,14 +405,17 @@ class sale_order_option(osv.osv):
             domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
         return {'value': vals, 'domain': domain}
 
+    # TODO master: to remove, replaced by onchange of the new api
     def product_uom_change(self, cr, uid, ids, product, uom_id, context=None):
         context = context or {}
         if not uom_id:
             return {'value': {'price_unit': 0.0, 'uom_id': False}}
         return self.on_change_product_id(cr, uid, ids, product, uom_id=uom_id, context=context)
 
-    @api.onchange('product_id')
+    @api.onchange('product_id', 'uom_id')
     def _onchange_product_id(self):
+        if not self.product_id:
+            return
         product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
         self.price_unit = product.list_price
         self.website_description = product.quote_description or product.website_description
@@ -424,6 +427,10 @@ class sale_order_option(osv.osv):
             partner_id = self.order_id.partner_id.id
             pricelist = self.order_id.pricelist_id.id
             self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
+        if self.uom_id and self.uom_id != self.product_id.uom_id:
+            self.price_unit = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id.id)
+        domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
+        return {'domain': domain}
 
 
 class product_template(osv.Model):
