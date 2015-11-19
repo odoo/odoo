@@ -682,7 +682,7 @@ class StockQuant(models.Model):
 #----------------------------------------------------------
 # Stock Picking
 #----------------------------------------------------------
-class stock_picking(models.Model):
+class StockPicking(models.Model):
     _name = "stock.picking"
     _inherit = ['mail.thread']
     _description = "Transfer"
