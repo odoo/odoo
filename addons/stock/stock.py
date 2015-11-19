@@ -2328,6 +2328,8 @@ class stock_move(osv.osv):
         pickings_write = []
         pick_obj = self.pool['stock.picking']
         for pick in pickings:
+            if pick.state in ('waiting', 'confirmed'): #In case of 'all at once' delivery method it should not prepare pack operations
+                continue
             # Check if someone was treating the picking already
             if not any([x.qty_done > 0 for x in pick.pack_operation_ids]):
                 pickings_partial.append(pick.id)
@@ -2363,7 +2365,7 @@ class stock_move(osv.osv):
             else:
                 todo_moves.append(move)
 
-                #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
+                #we always search for yet unassigned quants
                 main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
 
                 #if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
