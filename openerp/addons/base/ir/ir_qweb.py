@@ -116,8 +116,9 @@ class QWeb(orm.AbstractModel):
     _name = 'ir.qweb'
 
     _void_elements = frozenset([
-        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
-        'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
+        u'area', u'base', u'br', u'col', u'embed', u'hr', u'img', u'input',
+        u'keygen', u'link', u'menuitem', u'meta', u'param', u'source',
+        u'track', u'wbr'])
     _format_regex = re.compile(
         '(?:'
             # ruby-style pattern
@@ -266,7 +267,7 @@ class QWeb(orm.AbstractModel):
         t_render = None
         template_attributes = {}
         for (attribute_name, attribute_value) in element.attrib.iteritems():
-            attribute_name = str(attribute_name)
+            attribute_name = unicode(attribute_name)
             if attribute_name == "groups":
                 cr = qwebcontext.get('request') and qwebcontext['request'].cr or None
                 uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
@@ -325,7 +326,7 @@ class QWeb(orm.AbstractModel):
                 except Exception:
                     template = qwebcontext.get('__template__')
                     raise_qweb_exception(message="Could not render element %r" % element.tag, node=element, template=template)
-        name = str(element.tag)
+        name = unicode(element.tag)
         inner = "".join(g_inner)
         trim = template_attributes.get("trim", 0)
         if trim == 0:
@@ -344,7 +345,7 @@ class QWeb(orm.AbstractModel):
                 for qwebcontext in (name, generated_attributes, inner, name)
             )
         else:
-            return "<%s%s/>" % (name, generated_attributes)
+            return "<%s%s/>" % (name.encode("utf-8"), generated_attributes)
 
     def render_attribute(self, element, name, value, qwebcontext):
         return _build_attribute(name, value)
