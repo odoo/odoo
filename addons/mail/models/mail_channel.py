@@ -184,7 +184,7 @@ class Channel(models.Model):
     @api.returns('self', lambda value: value.id)
     def message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, content_subtype='html', **kwargs):
         # auto pin 'direct_message' channel partner
-        self.filtered(lambda channel: channel.channel_type == 'direct_message').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
+        self.filtered(lambda channel: channel.channel_type == 'chat').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
         # apply shortcode (text only) subsitution
         body = self.env['mail.shortcode'].apply_shortcode(body, shortcode_type='text')
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
@@ -497,8 +497,6 @@ class Channel(models.Model):
         if self.channel_type == 'channel':
             notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
             self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
-        else:
-            self.channel_last_seen_partner_ids.write({'is_pinned': True})
         self.action_follow()
 
         channel_info = self.channel_info()[0]
