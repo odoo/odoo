@@ -411,22 +411,12 @@ class Post(models.Model):
             raise KarmaError('Not enough karma to answer to a question')
         if not post.parent_id and not post.can_post:
             post.state = 'pending'
-        # messaging and chatter
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        if post.parent_id:
-            body = _(
-                '<p>A new answer for <i>%s</i> has been posted. <a href="%s/forum/%s/question/%s">Click here to access the post.</a></p>' %
-                (post.parent_id.name, base_url, slug(post.parent_id.forum_id), slug(post.parent_id))
-            )
-            post.parent_id.message_post(subject=_('Re: %s') % post.parent_id.name, body=body, subtype='website_forum.mt_answer_new')
-        else:
-            body = _(
-                '<p>A new question <i>%s</i> has been asked on %s. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>' %
-                (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
-            )
-            post.message_post(subject=post.name, body=body, subtype='website_forum.mt_question_new')
-            if post.state == 'active':
-                self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
+
+        # add karma for posting new questions
+        if not post.parent_id and post.state == 'active':
+            self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
+
+        post.post_notification()
         return post
 
     @api.model
@@ -484,6 +474,34 @@ class Post(models.Model):
         return res
 
     @api.multi
+    def post_notification(self):
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        for post in self:
+            if post.state == 'active' and post.parent_id:
+                body = _(
+                    '<p>A new answer for <i>%s</i> has been posted. <a href="%s/forum/%s/question/%s">Click here to access the post.</a></p>' %
+                    (post.parent_id.name, base_url, slug(post.parent_id.forum_id), slug(post.parent_id))
+                )
+                post.parent_id.message_post(subject=_('Re: %s') % post.parent_id.name, body=body, subtype='website_forum.mt_answer_new')
+            elif post.state == 'active' and not post.parent_id:
+                body = _(
+                    '<p>A new question <i>%s</i> has been asked on %s. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>' %
+                    (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
+                )
+                post.message_post(subject=post.name, body=body, subtype='website_forum.mt_question_new')
+            elif post.state == 'pending' and not post.parent_id:
+                # TDE FIXME: in master, you should probably use a subtype;
+                # however here we remove subtype but set partner_ids
+                partners = post.message_partner_ids.filtered(lambda partner: partner.user_ids and partner.user_ids.karma >= post.forum_id.karma_moderate)
+                note_subtype = self.sudo().env.ref('mail.mt_note')
+                body = _(
+                    '<p>A new question <i>%s</i> has been asked on %s and require your validation. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>' %
+                    (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
+                )
+                post.message_post(subject=post.name, body=body, subtype_id=note_subtype.id, partner_ids=partners.ids)
+        return True
+
+    @api.multi
     def reopen(self):
         if any(post.parent_id or post.state != 'close' for post in self):
             return False
@@ -528,12 +546,12 @@ class Post(models.Model):
         if self.state == 'pending':
             self.create_uid.sudo().add_karma(self.forum_id.karma_gen_question_new)
 
-        self.moderator_id = self.env.user
-
         self.write({
             'state': 'active',
             'active': True,
+            'moderator_id': self.env.user.id,
         })
+        self.post_notification()
         return True
 
     @api.one
