@@ -167,7 +167,7 @@
                             <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}"/>
                             <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
-                            <field name="project_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}"/>
+                            <field name="project_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" groups="sale.group_analytic_accounting"/>
                         </group>
                         <group>
                             <field name="date_order" invisible="1"/>
