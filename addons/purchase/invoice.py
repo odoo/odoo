@@ -74,7 +74,7 @@ class AccountInvoice(models.Model):
                 'uom_id': line.product_uom.id,
                 'product_id': line.product_id.id,
                 'account_id': self.env['account.invoice.line'].with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
-                'price_unit': line.price_unit,
+                'price_unit': line.order_id.currency_id.compute(line.price_unit, self.currency_id),
                 'quantity': qty,
                 'discount': 0.0,
                 'account_analytic_id': line.account_analytic_id.id,
@@ -89,6 +89,12 @@ class AccountInvoice(models.Model):
         self.invoice_line_ids = result
         self.purchase_id = False
         return {}
+
+    @api.onchange('currency_id')
+    def _onchange_currency_id(self):
+        if self.currency_id:
+            for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):
+                line.price_unit = line.purchase_id.currency_id.compute(line.purchase_line_id.price_unit, self.currency_id)
 
     @api.model
     def invoice_line_move_line_get(self):
@@ -134,7 +140,7 @@ class AccountInvoice(models.Model):
                             if valuation_stock_move:
                                 valuation_price_unit = valuation_stock_move[0].price_unit
                         if inv.currency_id.id != company_currency.id:
-                            valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(inv.currency_id, valuation_price_unit)
+                            valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id)
                         if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
                             # price with discount and without tax included
                             price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
