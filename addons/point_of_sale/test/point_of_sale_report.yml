@@ -21,17 +21,6 @@
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-lines_report.'+format), 'wb+').write(data)
 
 -
-  In order to test the PDF reports defined on a Point of Sale, we will print a POS Receipt Report
--
-  !python {model: pos.order}: |
-    import os
-    import openerp.report
-    from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('pos_order_pos1')], 'point_of_sale.report_receipt', {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt_report.'+format), 'wb+').write(data)
-
--
   Print the POS Details Report through the wizard
 -
   !python {model: ir.ui.menu}: |

@@ -30,7 +30,6 @@ Main Features
     """,
     'depends': ['sale_stock', 'barcodes'],
     'data': [
-        'data/report_paperformat.xml',
         'data/default_barcode_patterns.xml',
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
@@ -55,7 +54,6 @@ Main Features
         'res_config_view.xml',
         'views/report_statement.xml',
         'views/report_usersproduct.xml',
-        'views/report_receipt.xml',
         'views/report_saleslines.xml',
         'views/report_detailsofsales.xml',
         'views/report_payment.xml',
