@@ -140,7 +140,7 @@ class AccountInvoice(models.Model):
                             if valuation_stock_move:
                                 valuation_price_unit = valuation_stock_move[0].price_unit
                         if inv.currency_id.id != company_currency.id:
-                            valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(inv.currency_id, valuation_price_unit)
+                            valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id)
                         if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
                             # price with discount and without tax included
                             price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
