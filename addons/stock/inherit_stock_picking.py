@@ -21,36 +21,36 @@ from openerp.exceptions import UserError
 class stock_picking(models.Model):
     _inherit = "stock.picking"
 
-    def create(self, cr, user, vals, context=None):
-        context = context or {}
-        if ('name' not in vals) or (vals.get('name') in ('/', False)):
-            ptype_id = vals.get('picking_type_id', context.get('default_picking_type_id', False))
-            sequence_id = self.pool.get('stock.picking.type').browse(cr, user, ptype_id, context=context).sequence_id.id
-            vals['name'] = self.pool.get('ir.sequence').next_by_id(cr, user, sequence_id, context=context)
-        # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
-        # As it is a create the format will be a list of (0, 0, dict)
-        if vals.get('move_lines') and vals.get('location_id') and vals.get('location_dest_id'):
-            for move in vals['move_lines']:
-                if len(move) == 3:
-                    move[2]['location_id'] = vals['location_id']
-                    move[2]['location_dest_id'] = vals['location_dest_id']
-        return super(stock_picking, self).create(cr, user, vals, context)
+    # def create(self, cr, user, vals, context=None):
+    #     context = context or {}
+    #     if ('name' not in vals) or (vals.get('name') in ('/', False)):
+    #         ptype_id = vals.get('picking_type_id', context.get('default_picking_type_id', False))
+    #         sequence_id = self.pool.get('stock.picking.type').browse(cr, user, ptype_id, context=context).sequence_id.id
+    #         vals['name'] = self.pool.get('ir.sequence').next_by_id(cr, user, sequence_id, context=context)
+    #     # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
+    #     # As it is a create the format will be a list of (0, 0, dict)
+    #     if vals.get('move_lines') and vals.get('location_id') and vals.get('location_dest_id'):
+    #         for move in vals['move_lines']:
+    #             if len(move) == 3:
+    #                 move[2]['location_id'] = vals['location_id']
+    #                 move[2]['location_dest_id'] = vals['location_dest_id']
+    #     return super(stock_picking, self).create(cr, user, vals, context)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(stock_picking, self).write(cr, uid, ids, vals, context=context)
-        after_vals = {}
-        if vals.get('location_id'):
-            after_vals['location_id'] = vals['location_id']
-        if vals.get('location_dest_id'):
-            after_vals['location_dest_id'] = vals['location_dest_id']
-        # Change locations of moves if those of the picking change
-        if after_vals:
-            moves = []
-            for pick in self.browse(cr, uid, ids, context=context):
-                moves += [x.id for x in pick.move_lines if not x.scrapped]
-            if moves:
-                self.pool['stock.move'].write(cr, uid, moves, after_vals, context=context)
-        return res
+    # def write(self, cr, uid, ids, vals, context=None):
+    #     res = super(stock_picking, self).write(cr, uid, ids, vals, context=context)
+    #     after_vals = {}
+    #     if vals.get('location_id'):
+    #         after_vals['location_id'] = vals['location_id']
+    #     if vals.get('location_dest_id'):
+    #         after_vals['location_dest_id'] = vals['location_dest_id']
+    #     # Change locations of moves if those of the picking change
+    #     if after_vals:
+    #         moves = []
+    #         for pick in self.browse(cr, uid, ids, context=context):
+    #             moves += [x.id for x in pick.move_lines if not x.scrapped]
+    #         if moves:
+    #             self.pool['stock.move'].write(cr, uid, moves, after_vals, context=context)
+    #     return res
 
     def _state_get(self, cr, uid, ids, field_name, arg, context=None):
         '''The state of a picking depends on the state of its related stock.move
@@ -166,91 +166,6 @@ class stock_picking(models.Model):
     _defaults = {
         'state': 'draft',
     }
-
-    def do_print_picking(self, cr, uid, ids, context=None):
-        '''This function prints the picking list'''
-        context = dict(context or {}, active_ids=ids)
-        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_picking', context=context)
-
-    def launch_packops(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'launch_pack_operations': True}, context=context)
-
-    def action_confirm(self, cr, uid, ids, context=None):
-        todo = []
-        todo_force_assign = []
-        for picking in self.browse(cr, uid, ids, context=context):
-            if not picking.move_lines:
-                self.launch_packops(cr, uid, [picking.id], context=context)
-            if picking.location_id.usage in ('supplier', 'inventory', 'production'):
-                todo_force_assign.append(picking.id)
-            for r in picking.move_lines:
-                if r.state == 'draft':
-                    todo.append(r.id)
-        if len(todo):
-            self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
-
-        if todo_force_assign:
-            self.force_assign(cr, uid, todo_force_assign, context=context)
-        return True
-
-    def action_assign(self, cr, uid, ids, context=None):
-        """ Check availability of picking moves.
-        This has the effect of changing the state and reserve quants on available moves, and may
-        also impact the state of the picking as it is computed based on move's states.
-        @return: True
-        """
-        for pick in self.browse(cr, uid, ids, context=context):
-            if pick.state == 'draft':
-                self.action_confirm(cr, uid, [pick.id], context=context)
-            #skip the moves that don't need to be checked
-            move_ids = [x.id for x in pick.move_lines if x.state not in ('draft', 'cancel', 'done')]
-            if not move_ids:
-                raise UserError(_('Nothing to check the availability for.'))
-            self.pool.get('stock.move').action_assign(cr, uid, move_ids, context=context)
-        return True
-
-    def force_assign(self, cr, uid, ids, context=None):
-        """ Changes state of picking to available if moves are confirmed or waiting.
-        @return: True
-        """
-        pickings = self.browse(cr, uid, ids, context=context)
-        for pick in pickings:
-            move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed', 'waiting']]
-            self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
-        return True
-
-    def action_cancel(self, cr, uid, ids, context=None):
-        for pick in self.browse(cr, uid, ids, context=context):
-            ids2 = [move.id for move in pick.move_lines]
-            self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
-        return True
-
-    def action_done(self, cr, uid, ids, context=None):
-        """Changes picking state to done by processing the Stock Moves of the Picking
-
-        Normally that happens when the button "Done" is pressed on a Picking view.
-        @return: True
-        """
-        for pick in self.browse(cr, uid, ids, context=context):
-            todo = []
-            for move in pick.move_lines:
-                if move.state == 'draft':
-                    todo.extend(self.pool.get('stock.move').action_confirm(cr, uid, [move.id], context=context))
-                elif move.state in ('assigned', 'confirmed'):
-                    todo.append(move.id)
-            if len(todo):
-                self.pool.get('stock.move').action_done(cr, uid, todo, context=context)
-        return True
-
-    def unlink(self, cr, uid, ids, context=None):
-        #on picking deletion, cancel its move then unlink them too
-        move_obj = self.pool.get('stock.move')
-        context = context or {}
-        for pick in self.browse(cr, uid, ids, context=context):
-            move_ids = [move.id for move in pick.move_lines]
-            move_obj.action_cancel(cr, uid, move_ids, context=context)
-            move_obj.unlink(cr, uid, move_ids, context=context)
-        return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
     def _create_backorder(self, cr, uid, picking, backorder_moves=[], context=None):
         """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.

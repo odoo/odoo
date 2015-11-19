@@ -793,6 +793,128 @@ class StockPicking(models.Model):
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
 
+    @api.model
+    def create(self, vals):
+        if ('name' not in vals) or (vals.get('name') in ('/', False)):
+            ptype_id = vals.get('picking_type_id', self.env.context.get('default_picking_type_id'))
+            sequence_id = self.env['stock.picking.type'].browse(ptype_id).sequence_id
+            vals['name'] = sequence_id.next_by_id()
+        # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
+        # As it is a create the format will be a list of (0, 0, dict)
+        if vals.get('move_lines') and vals.get('location_id') and vals.get('location_dest_id'):
+            for move in vals['move_lines']:
+                if len(move) == 3:
+                    move[2]['location_id'] = vals['location_id']
+                    move[2]['location_dest_id'] = vals['location_dest_id']
+        return super(StockPicking, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        res = super(StockPicking, self).write(vals)
+        after_vals = {}
+        if vals.get('location_id'):
+            after_vals['location_id'] = vals['location_id']
+        if vals.get('location_dest_id'):
+            after_vals['location_dest_id'] = vals['location_dest_id']
+        # Change locations of moves if those of the picking change
+        if after_vals:
+            moves = self.move_lines.filtered(lambda x: not x.scrapped)
+            # moves = None
+            # for pick in self:
+            #     moves += [x.id for x in pick.move_lines if not x.scrapped]
+            if moves:
+                moves.write(after_vals)
+        return res
+
+    @api.multi
+    def do_print_picking(self):
+        '''This function prints the picking list'''
+        self.with_context(active_ids=self.ids)
+        return self.env["report"].get_action(self.ids, 'stock.report_picking')
+
+    @api.multi
+    def launch_packops(self):
+        self.write({'launch_pack_operations': True})
+
+    @api.multi
+    def action_confirm(self):
+        todo = []
+        todo_force_assign = []
+        for picking in self:
+            if not picking.move_lines:
+                picking.launch_packops()
+            if picking.location_id.usage in ('supplier', 'inventory', 'production'):
+                todo_force_assign.append(picking.id)
+            for r in picking.move_lines:
+                if r.state == 'draft':
+                    todo.append(r.id)
+        if len(todo):
+            self.env['stock.move'].browse(todo).action_confirm()
+
+        if todo_force_assign:
+            self.browse(todo_force_assign).force_assign()
+        return True
+
+    @api.multi
+    def action_assign(self):
+        """ Check availability of picking moves.
+        This has the effect of changing the state and reserve quants on available moves, and may
+        also impact the state of the picking as it is computed based on move's states.
+        @return: True
+        """
+        for pick in self:
+            if pick.state == 'draft':
+                pick.action_confirm()
+            #skip the moves that don't need to be checked
+            move_ids = pick.move_lines.filtered(lambda x: x.state not in ('draft', 'cancel', 'done'))
+            # move_ids = [x.id for x in pick.move_lines if x.state not in ('draft', 'cancel', 'done')]
+            if not move_ids.ids:
+                raise UserError(_('Nothing to check the availability for.'))
+            move_ids.action_assign()
+        return True
+
+    @api.multi
+    def force_assign(self):
+        """ Changes state of picking to available if moves are confirmed or waiting.
+        @return: True
+        """
+        for pick in self:
+            move_ids = pick.move_lines.filtered(lambda x: x.state in ['confirmed', 'waiting'])
+            move_ids.force_assign()
+        return True
+
+    @api.multi
+    def action_cancel(self):
+        for pick in self:
+            pick.move_lines.action_cancel()
+        return True
+
+    @api.multi
+    def action_done(self):
+        """Changes picking state to done by processing the Stock Moves of the Picking
+
+        Normally that happens when the button "Done" is pressed on a Picking view.
+        @return: True
+        """
+        for pick in self:
+            todo = []
+            for move in pick.move_lines:
+                if move.state == 'draft':
+                    todo.extend(move.action_confirm())
+                elif move.state in ('assigned', 'confirmed'):
+                    todo.append(move.id)
+            if len(todo):
+                self.env['stock.move'].browse(todo).action_done()
+        return True
+
+    @api.multi
+    def unlink(self):
+        #on picking deletion, cancel its move then unlink them too
+        for pick in self:
+            pick.move_lines.action_cancel()
+            pick.move_lines.unlink()
+        return super(StockPicking, self).unlink(cr, uid, ids, context=context)
+
 class StockProductionLot(models.Model):
     _name = 'stock.production.lot'
     _inherit = ['mail.thread']
