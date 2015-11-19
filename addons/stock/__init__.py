@@ -3,6 +3,7 @@
 
 from stock import *
 import inherit_stock_move
+import inherit_stock_picking
 import partner
 import product
 import procurement
