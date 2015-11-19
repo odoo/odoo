@@ -74,7 +74,7 @@ class AccountInvoice(models.Model):
                 'uom_id': line.product_uom.id,
                 'product_id': line.product_id.id,
                 'account_id': self.env['account.invoice.line'].with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
-                'price_unit': line.price_unit,
+                'price_unit': line.order_id.currency_id.compute(line.price_unit, self.currency_id),
                 'quantity': qty,
                 'discount': 0.0,
                 'account_analytic_id': line.account_analytic_id.id,
@@ -89,6 +89,12 @@ class AccountInvoice(models.Model):
         self.invoice_line_ids = result
         self.purchase_id = False
         return {}
+
+    @api.onchange('currency_id')
+    def _onchange_currency_id(self):
+        if self.currency_id:
+            for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):
+                line.price_unit = line.purchase_id.currency_id.compute(line.purchase_line_id.price_unit, self.currency_id)
 
     @api.model
     def invoice_line_move_line_get(self):
