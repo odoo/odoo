@@ -1,36 +1,38 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from functools import partial
-from openerp import SUPERUSER_ID
-from openerp.osv import fields, osv
+from odoo import api, fields, models
 
 
-class ResCompany(osv.Model):
+class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    _columns = {'paperformat_id': fields.many2one('report.paperformat', 'Paper format')}
+    paperformat_id = fields.Many2one('report.paperformat', string='Paper format')
 
-    def init(self, cr):
+    def init(self):
         # set a default paperformat based on rml one.
-        ref = partial(self.pool['ir.model.data'].xmlid_to_res_id, cr, SUPERUSER_ID)
 
-        ids = self.search(cr, SUPERUSER_ID, [('paperformat_id', '=', False)])
-        for company in self.browse(cr, SUPERUSER_ID, ids):
-            paperformat_id = {
-                'a4': ref('report.paperformat_euro'),
-                'us_letter': ref('report.paperformat_us'),
-            }.get(company.rml_paper_format) or ref('report.paperformat_euro')
+        companies = self.sudo().search([('paperformat_id', '=', False)])
 
+        A4_paperformat = self.env.ref('report.paperformat_euro', False)
+        US_paperformat = self.env.ref('report.paperformat_us', False)
+        EUR_paperformat = self.env.ref('report.paperformat_euro', False)
+
+        paperformat_dict = {
+                'a4': A4_paperformat and A4_paperformat.id or False,
+                'us_letter': US_paperformat and US_paperformat.id or False,
+        }
+        for company in companies:
+            paperformat_id = paperformat_dict.get(company.rml_paper_format) or EUR_paperformat and EUR_paperformat.id
             if paperformat_id:
                 company.write({'paperformat_id': paperformat_id})
 
         sup = super(ResCompany, self)
         if hasattr(sup, 'init'):
-            sup.init(cr)
+            sup.init()
 
-    def _prepare_report_view_action(self, cr, uid, template):
-        template_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, template)
+    def _prepare_report_view_action(self, template):
+        template_id = self.env.ref(template, False).id
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'ir.ui.view',
@@ -39,12 +41,14 @@ class ResCompany(osv.Model):
             'res_id': template_id,
         }
 
-    def edit_external_header(self, cr, uid, ids, context=None):
-        return self._prepare_report_view_action(cr, uid, 'report.external_layout_header')
+    @api.multi
+    def edit_external_header(self):
+        return self._prepare_report_view_action('report.external_layout_header')
 
-    def edit_external_footer(self, cr, uid, ids, context=None):
-        return self._prepare_report_view_action(cr, uid, 'report.external_layout_footer')
+    @api.multi
+    def edit_external_footer(self):
+        return self._prepare_report_view_action('report.external_layout_footer')
 
-    def edit_internal_header(self, cr, uid, ids, context=None):
-        return self._prepare_report_view_action(cr, uid, 'report.internal_layout')
-
+    @api.multi
+    def edit_internal_header(self):
+        return self._prepare_report_view_action('report.internal_layout')

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
         <!-- Add a paperformat and web button to the report form view -->
         <record id="act_report_xml_view_inherit" model="ir.ui.view">
-            <field name="name">act_report_xml_view_inherit</field>
+            <field name="name">ir.actions.report.xml.view.inherit</field>
             <field name="inherit_id" ref="base.act_report_xml_view" />
             <field name="model">ir.actions.report.xml</field>
             <field name="arch" type="xml">
@@ -20,4 +20,4 @@
                 </data>
             </field>
         </record>
-</openerp>
+</odoo>

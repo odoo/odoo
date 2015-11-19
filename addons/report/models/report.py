@@ -1,31 +1,27 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api
-from openerp import SUPERUSER_ID
-from openerp.exceptions import AccessError
-from openerp.osv import osv, fields
-from openerp.sql_db import TestCursor
-from openerp.tools import config
-from openerp.tools.misc import find_in_path
-from openerp.tools.translate import _
-from openerp.addons.web.http import request
-from openerp.tools.safe_eval import safe_eval as eval
-from openerp.exceptions import UserError
-
-import re
-import time
 import base64
 import logging
-import tempfile
 import lxml.html
 import os
+import re
 import subprocess
+import tempfile
+import time
 from contextlib import closing
 from distutils.version import LooseVersion
 from functools import partial
 from pyPdf import PdfFileWriter, PdfFileReader
 from reportlab.graphics.barcode import createBarcodeDrawing
+
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.exceptions import AccessError, UserError
+from odoo.http import request
+from odoo.sql_db import TestCursor
+from odoo.tools import config
+from odoo.tools.misc import find_in_path
+from odoo.tools.safe_eval import safe_eval as eval
 
 
 # A lock occurs when the user wants to print a report having multiple barcode while the server is
@@ -73,50 +69,40 @@ else:
         wkhtmltopdf_state = 'workers'
 
 
-class Report(osv.Model):
+class Report(models.Model):
     _name = "report"
     _description = "Report"
 
     public_user = None
 
-    #--------------------------------------------------------------------------
-    # Extension of ir_ui_view.render with arguments frequently used in reports
-    #--------------------------------------------------------------------------
-
-    def render(self, cr, uid, ids, template, values=None, context=None):
+    @api.multi
+    def render(self, template, values=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
         render but embellish it with some variables/methods used in reports.
 
         :param values: additionnal methods/variables used in the rendering
         :returns: html representation of the template
         """
-        if values is None:
+        if not values:
             values = {}
 
-        if context is None:
-            context = {}
-
-        context = dict(context, inherit_branding=True)  # Tell QWeb to brand the generated html
-
-        view_obj = self.pool['ir.ui.view']
-
-        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        context = dict(self.env.context, inherit_branding=True)  # Tell QWeb to brand the generated html
+        user = self.env['res.users'].browse(self.env.uid)
         website = None
         if request and hasattr(request, 'website'):
             if request.website is not None:
                 website = request.website
-                context = dict(context, translatable=context.get('lang') != request.website.default_lang_code)
-
+                context.update({'translatable': context.get('lang') != request.website.default_lang_code})
         values.update(
             time=time,
-            context_timestamp=lambda t: fields.datetime.context_timestamp(cr, uid, t, context),
+            context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
             editable=True,
             user=user,
             res_company=user.company_id,
             website=website,
             web_base_url=self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url', default='')
         )
-        return view_obj.render_template(cr, uid, template, values, context=context)
+        return self.env['ir.ui.view'].with_context(context).render_template(template, values)
 
     #--------------------------------------------------------------------------
     # Main report methods
@@ -358,7 +344,8 @@ class Report(osv.Model):
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
 
-    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False):
+    @api.model
+    def _run_wkhtmltopdf(self, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
@@ -461,7 +448,7 @@ class Report(osv.Model):
                             'res_id': reporthtml[0],
                         }
                         try:
-                            self.pool['ir.attachment'].create(cr, uid, attachment)
+                            self.env['ir.attachment'].create(attachment)
                         except AccessError:
                             _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
                         else:
@@ -491,16 +478,14 @@ class Report(osv.Model):
 
         return content
 
-    def _get_report_from_name(self, cr, uid, report_name):
+    @api.model
+    def _get_report_from_name(self, report_name):
         """Get the first record of ir.actions.report.xml having the ``report_name`` as value for
         the field report_name.
         """
-        report_obj = self.pool['ir.actions.report.xml']
-        qwebtypes = ['qweb-pdf', 'qweb-html']
-        conditions = [('report_type', 'in', qwebtypes), ('report_name', '=', report_name)]
-        context = self.pool['res.users'].context_get(cr, uid)
-        idreport = report_obj.search(cr, uid, conditions, context=context)[0]
-        return report_obj.browse(cr, uid, idreport, context=context)
+        domain = [('report_type', 'in', ['qweb-pdf', 'qweb-html']), ('report_name', '=', report_name)]
+        context = self.env['res.users'].context_get()
+        return self.env['ir.actions.report.xml'].with_context(context).search(domain, limit=1)
 
     def _build_wkhtmltopdf_args(self, paperformat, specific_paperformat_args=None):
         """Build arguments understandable by wkhtmltopdf from a report.paperformat record.

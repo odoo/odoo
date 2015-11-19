@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Report',
     'category': 'Base',
-    'summary': 'Hidden',
-    'version': '1.0',
+    'summary': 'Report',
     'description': """
 Report
         """,
@@ -16,6 +17,5 @@ Report
         'views/res_company_views.xml',
         'views/ir_actions_report_views.xml',
     ],
-    'installable': True,
     'auto_install': True,
 }
