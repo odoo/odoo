@@ -127,6 +127,21 @@ class crm_lead(format_address, osv.osv):
         'stage_id': _read_group_stage_ids
     }
 
+    def _compute_kanban_state(self, cr, uid, ids, fields, args, context=None):
+        """ Very interesting kanban state color. This makes complete sense. Or
+        not. """
+        result = {}
+        today = datetime.now()
+        for lead in self.browse(cr, uid, ids, context=context):
+            result[lead.id] = 'normal'
+            if lead.date_action:
+                lead_date = datetime.strptime(lead.date_action, tools.DEFAULT_SERVER_DATE_FORMAT)
+                if lead_date > today:
+                    result[lead.id] = 'green'
+                elif lead_date < today:
+                    result[lead.id] = 'red'
+        return result
+
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         :return dict: difference between current date and log date
@@ -151,6 +166,7 @@ class crm_lead(format_address, osv.osv):
                     duration = abs(int(ans.days))
                 res[lead.id][field] = duration
         return res
+
     def _meeting_count(self, cr, uid, ids, field_name, arg, context=None):
         Event = self.pool['calendar.event']
         return {
@@ -170,6 +186,9 @@ class crm_lead(format_address, osv.osv):
         'email_from': fields.char('Email', size=128, help="Email address of the contact", select=1),
         'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',
                         select=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales team.'),
+        'kanban_state': fields.function(
+            _compute_kanban_state, string='Activity State', type="selection",
+            selection=[('grey', 'Normal'), ('red', 'Blocked'), ('green', 'Ready for next stage')]),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'email_cc': fields.text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
@@ -207,11 +226,7 @@ class crm_lead(format_address, osv.osv):
         'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),
         'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         # CRM Actions
-        'last_activity_id': fields.many2one("crm.activity", "Last Activity", select=True),
         'next_activity_id': fields.many2one("crm.activity", "Next Activity", select=True),
-        'next_activity_1': fields.related("last_activity_id", "activity_1_id", "name", type="char", string="Next Activity 1"),
-        'next_activity_2': fields.related("last_activity_id", "activity_2_id", "name", type="char", string="Next Activity 2"),
-        'next_activity_3': fields.related("last_activity_id", "activity_3_id", "name", type="char", string="Next Activity 3"),
         'date_action': fields.date('Next Activity Date', select=True),
         'title_action': fields.char('Next Activity Summary'),
 
@@ -365,62 +380,9 @@ class crm_lead(format_address, osv.osv):
     # Backward compatibility
     case_mark_won = action_set_won
 
-    def log_next_activity_1(self, cr, uid, ids, context=None):
-        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_1_id', context=context)
-
-    def log_next_activity_2(self, cr, uid, ids, context=None):
-        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_2_id', context=context)
-
-    def log_next_activity_3(self, cr, uid, ids, context=None):
-        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_3_id', context=context)
-
-    def set_next_activity(self, cr, uid, ids, next_activity_name, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            if not lead.last_activity_id:
-                continue
-            next_activity = next_activity_name and getattr(lead.last_activity_id, next_activity_name, False) or False
-            if next_activity:
-                date_action = False
-                if next_activity.days:
-                    date_action = (datetime.now() + timedelta(days=next_activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
-                lead.write({
-                    'next_activity_id': next_activity.id,
-                    'date_action': date_action,
-                    'title_action': next_activity.description,
-                })
-        return True
-
-    def log_next_activity_done(self, cr, uid, ids, context=None, next_activity_name=False):
-        to_clear_ids = []
-        for lead in self.browse(cr, uid, ids, context=context):
-            if not lead.next_activity_id:
-                continue
-            body_html = """<div><b>Activity Done</b>: ${object.next_activity_id.name}</div>
-%if object.title_action:
-<div>${object.title_action}</div>
-%endif"""
-            body_html = self.pool['mail.template'].render_template(cr, uid, body_html, 'crm.lead', lead.id, context=context)
-            msg_id = lead.message_post(body_html, subtype_id=lead.next_activity_id.subtype_id.id)
-            to_clear_ids.append(lead.id)
-            self.write(cr, uid, [lead.id], {'last_activity_id': lead.next_activity_id.id}, context=context)
-
-        if to_clear_ids:
-            self.cancel_next_activity(cr, uid, to_clear_ids, context=context)
-        return True
-
-    def cancel_next_activity(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids,  {
-            'next_activity_id': False,
-            'date_action': False,
-            'title_action': False,
-        }, context=context)
-
     def onchange_next_activity_id(self, cr, uid, ids, next_activity_id, context=None):
         if not next_activity_id:
             return {'value': {
-                'next_action1': False,
-                'next_action2': False,
-                'next_action3': False,
                 'title_action': False,
                 'date_action': False,
             }}
@@ -429,12 +391,8 @@ class crm_lead(format_address, osv.osv):
         if activity.days:
             date_action = (datetime.now() + timedelta(days=activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
         return {'value': {
-            'next_activity_1': activity.activity_1_id and activity.activity_1_id.name or False,
-            'next_activity_2': activity.activity_2_id and activity.activity_2_id.name or False,
-            'next_activity_3': activity.activity_3_id and activity.activity_3_id.name or False,
             'title_action': activity.description,
             'date_action': date_action,
-            'last_activity_id': False,
         }}
 
     def _merge_get_result_type(self, cr, uid, opps, context=None):
@@ -1234,12 +1192,10 @@ class crm_lead_tag(osv.Model):
 class crm_lost_reason(osv.Model):
     _name = "crm.lost.reason"
     _description = 'Reason for loosing leads'
-
     _columns = {
         'name': fields.char('Name', required=True),
         'active': fields.boolean('Active'),
     }
-
     _defaults = {
         'active': True,
     }
