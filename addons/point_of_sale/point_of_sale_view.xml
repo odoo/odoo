@@ -20,7 +20,6 @@
                         <button name="action_invoice" string="Invoice" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
                         <button name="refund" string="Return Products" type="object" 
                             attrs="{'invisible':[('state','=','draft')]}"/>
-                        <button name="%(action_report_pos_receipt)d" string="Reprint" type="action" states="paid,done,invoiced"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
                     </header>
                     <sheet>
