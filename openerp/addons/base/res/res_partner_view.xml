@@ -87,7 +87,6 @@
                             attrs="{'invisible': [('is_company','=', True)]}"/>
                     </div>
                     <group>
-                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                         <field name="function" placeholder="e.g. Sales Director"/>
                         <field name="user_ids" invisible="1"/>
                         <field name="email" widget="email" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
