@@ -141,6 +141,16 @@ class Channel(models.Model):
             mail_channel.write({'channel_partner_ids': [(4, pid) for pid in mail_channel.mapped('group_ids').mapped('users').mapped('partner_id').ids]})
 
     @api.multi
+    def _minimize(self, partner_ids):
+        self.ensure_one()
+        domain = [('channel_id', '=', self.id), ('partner_id', 'in', tuple(partner_ids))]
+        channel_partners = self.env['mail.channel.partner'].search(domain)
+        channel_partners.write({
+            'is_minimized': True,
+            'fold_state': 'open',
+        })
+
+    @api.multi
     def action_follow(self):
         self.ensure_one()
         channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: cp.partner_id == self.env.user.partner_id)
@@ -317,8 +327,8 @@ class Channel(models.Model):
             :rtype : dict
         """
         if partners_to:
-            partners_to.append(self.env.user.partner_id.id)
-            # determine type according to the number of partner in the channel
+            partners = partners_to + [self.env.user.partner_id.id]
+            # determine type according to the number of partners in the channel
             self.env.cr.execute("""
                 SELECT P.channel_id as channel_id
                 FROM mail_channel C, mail_channel_partner P
@@ -328,7 +338,7 @@ class Channel(models.Model):
                     AND channel_type LIKE 'chat'
                 GROUP BY P.channel_id
                 HAVING COUNT(P.partner_id) = %s
-            """, (tuple(partners_to), len(partners_to),))
+            """, (tuple(partners), len(partners),))
             result = self.env.cr.dictfetchall()
             if result:
                 # get the existing channel between the given partners
@@ -339,14 +349,16 @@ class Channel(models.Model):
             else:
                 # create a new one
                 channel = self.create({
-                    'channel_partner_ids': [(4, partner_id) for partner_id in partners_to],
+                    'channel_partner_ids': [(4, partner_id) for partner_id in partners],
                     'public': 'private',
                     'channel_type': 'chat',
                     'email_send': False,
-                    'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
+                    'name': ', '.join(self.env['res.partner'].sudo().browse(partners).mapped('name')),
                 })
-                # broadcast the channel header to the other partner (not me)
-                channel._broadcast(partners_to)
+                # minimize the DM on other partners' side
+                channel._minimize(partners_to)
+                # broadcast the channel header
+                channel._broadcast(partners)
             return channel.channel_info()[0]
         return False
 

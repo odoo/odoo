@@ -173,6 +173,8 @@ class ImLivechatChannel(models.Model):
             'public': 'public',
             'email_send': False,
         })
+        # minimize channel on operator's side
+        mail_channel._minimize([operator_partner_id])
         return mail_channel.sudo().with_context(im_livechat_operator_partner_id=operator_partner_id).channel_info()[0]
 
     @api.model
