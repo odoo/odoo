@@ -427,8 +427,7 @@ function on_chat_session_notification (chat_session) {
     }
     // partner specific change (open a detached window for example)
     if ((chat_session.state === "open") || (chat_session.state === "folded")) {
-        add_channel(chat_session, {autoswitch: false});
-        if (chat_session.is_minimized) {
+        if (chat_session.is_minimized && chat_manager.get_channel(chat_session.id)) {
             chat_manager.bus.trigger("open_chat", chat_session);
         }
     } else if (chat_session.state === "closed") {
