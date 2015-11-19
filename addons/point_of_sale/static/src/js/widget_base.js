@@ -2,7 +2,6 @@ openerp.point_of_sale.load_basewidget = function load_basewidget(instance, modul
     "use strict";
 
     var round_di = instance.web.round_decimals;
-    var round_pr = instance.web.round_precision;
 
     // This is a base class for all Widgets in the POS. It exposes relevant data to the 
     // templates : 
@@ -39,12 +38,6 @@ openerp.point_of_sale.load_basewidget = function load_basewidget(instance, modul
             if (precision && (typeof this.pos.dp[precision]) !== undefined) {
                 decimals = this.pos.dp[precision];
             }
-
-            this.format_currency_no_symbol = function(amount){
-                amount = round_pr(amount,currency.rounding);
-                amount = amount.toFixed(decimals);
-                return amount;
-            };
 
             if (typeof amount === 'number') {
                 amount = round_di(amount,decimals).toFixed(decimals);
