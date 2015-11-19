@@ -157,7 +157,7 @@ class Forum(models.Model):
 
     @api.model
     def create(self, values):
-        return super(Forum, self.with_context(mail_create_nolog=True)).create(values)
+        return super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
 
     @api.model
     def _tag_to_write_vals(self, tags=''):
