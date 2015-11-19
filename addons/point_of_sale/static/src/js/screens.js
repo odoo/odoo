@@ -1569,7 +1569,12 @@ var PaymentScreenWidget = ScreenWidget.extend({
             this.inputbuffer = newbuf;
             var order = this.pos.get_order();
             if (order.selected_paymentline) {
-                var amount = formats.parse_value(this.inputbuffer, {type: "float"}, 0.0);
+                var amount = this.inputbuffer;
+
+                if (this.inputbuffer !== "-") {
+                    amount = formats.parse_value(this.inputbuffer, {type: "float"}, 0.0);
+                }
+
                 order.selected_paymentline.set_amount(amount);
                 this.order_changes();
                 this.render_paymentlines();
