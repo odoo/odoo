@@ -255,6 +255,80 @@
             </field>
         </record>
 
+        <!--
+            OPPORTUNITY
+        -->
+        <record model="ir.ui.view" id="crm_lead_log_form">
+            <field name="name">Log an Activity</field>
+            <field name="model">crm.lead.log</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Log an Activity">
+                    <group>
+                        <group>
+                            <field name="team_id" invisible="True"/>
+                            <field name="next_activity_id" required="1"
+                               domain="['|',('team_id','=',False),('team_id','=',team_id)]"
+                               options="{'no_create': True, 'no_open': True}"/>
+                            <field name="name" placeholder="e.g. Discuss proposal"/>
+                        </group>
+                        <group>
+                            <field name="planned_revenue"/>
+                            <field name="date_deadline"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Log a note..."/>
+                    <footer>
+                        <button name="action_log_schedule" string="Log &amp; Schedule Next" type="object" class="btn btn-primary"/>
+                        <button name="action_log" string="Log Only" type="object" class="btn btn-primary"/>
+                        <button string="Cancel" class="btn btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="crm_lead_log_plan_form">
+            <field name="name">Schedule next Activity</field>
+            <field name="model">crm.lead.log</field>
+            <field name="priority">40</field>
+            <field name="arch" type="xml">
+                <form string="Schedule Next Activity">
+                    <group class="mt0">
+                        <group>
+                            <field name="team_id" invisible="True"/>
+                            <field name="last_activity_id" invisible="True"/>
+                            <field name="next_activity_id"
+                               domain="['|',('team_id','=',False),('team_id','=',team_id)]"
+                               on_change="onchange_next_activity_id(next_activity_id)"
+                               options="{'no_create': True, 'no_open': True}"/>
+                            <field name="date_action"/>
+                            <field name="name" placeholder="e.g. Discuss proposal"/>
+                        </group>
+                        <group>
+                            <div>
+                                <p><strong>Recommended activities:</strong></p>
+                                <field name="recommended_activity" widget="radio"
+                                    on_change="onchange_next_activity_id(recommended_activity)"
+                                    domain="[('activity_invert_ids','in',[last_activity_id])]"/>
+                            </div>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_schedule" string="Schedule Activity" type="object" class="btn btn-primary"/>
+                        <button string="No activity" class="btn btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="crm_lead_log_action" model="ir.actions.act_window">
+            <field name="name">Log an Activity</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.lead.log</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_lead_log_form"/>
+            <field name="target">new</field>
+        </record>
 
         <!-- CRM Lead Calendar View -->
         <record model="ir.ui.view" id="crm_case_calendar_view_leads">
@@ -395,82 +469,6 @@
             </field>
         </record>
 
-
-        <!--
-            OPPORTUNITY
-        -->
-        <record model="ir.ui.view" id="crm_lead_log_form">
-            <field name="name">Log an Activity</field>
-            <field name="model">crm.lead.log</field>
-            <field name="priority">20</field>
-            <field name="arch" type="xml">
-                <form string="Log an Activity">
-                    <group>
-                        <group>
-                            <field name="team_id" invisible="True"/>
-                            <field name="next_activity_id" required="1"
-                               domain="['|',('team_id','=',False),('team_id','=',team_id)]"
-                               options="{'no_create': True, 'no_open': True}"/>
-                            <field name="name" placeholder="e.g. Discuss proposal"/>
-                        </group>
-                        <group>
-                            <field name="planned_revenue"/>
-                            <field name="date_deadline"/>
-                        </group>
-                    </group>
-                    <field name="note" placeholder="Log a note..."/>
-                    <footer>
-                        <button name="action_log_schedule" string="Log &amp; Schedule Next" type="object" class="btn btn-primary"/>
-                        <button name="action_log" string="Log Only" type="object" class="btn btn-primary"/>
-                        <button string="Cancel" class="btn btn-default" special="cancel"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="crm_lead_log_plan_form">
-            <field name="name">Schedule next Activity</field>
-            <field name="model">crm.lead.log</field>
-            <field name="priority">40</field>
-            <field name="arch" type="xml">
-                <form string="Schedule Next Activity">
-                    <group class="mt0">
-                        <group>
-                            <field name="team_id" invisible="True"/>
-                            <field name="last_activity_id" invisible="True"/>
-                            <field name="next_activity_id"
-                               domain="['|',('team_id','=',False),('team_id','=',team_id)]"
-                               on_change="onchange_next_activity_id(next_activity_id)"
-                               options="{'no_create': True, 'no_open': True}"/>
-                            <field name="date_action"/>
-                            <field name="name" placeholder="e.g. Discuss proposal"/>
-                        </group>
-                        <group>
-                            <div>
-                                <p><strong>Recommended activities:</strong></p>
-                                <field name="recommended_activity" widget="radio"
-                                    on_change="onchange_next_activity_id(recommended_activity)"
-                                    domain="[('activity_invert_ids','in',[last_activity_id])]"/>
-                            </div>
-                        </group>
-                    </group>
-                    <footer>
-                        <button name="action_schedule" string="Schedule Activity" type="object" class="btn btn-primary"/>
-                        <button string="No activity" class="btn btn-default" special="cancel"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
-
-        <record id="crm_lead_log_action" model="ir.actions.act_window">
-            <field name="name">Log an Activity</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">crm.lead.log</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="crm_lead_log_form"/>
-            <field name="target">new</field>
-        </record>
 
         <!-- Opportunities Form View -->
         <record model="ir.ui.view" id="crm_case_form_view_oppor">
