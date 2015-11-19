@@ -178,7 +178,6 @@
                                     <button name="open_parent" type="object" string="(edit)" class="oe_link"
                                         attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}"/>
                                 </div>
-                                
                                 <field name="street" placeholder="Street..." class="o_address_street"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"
@@ -193,6 +192,7 @@
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                             </div>
                             <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
@@ -205,7 +205,6 @@
                             <field name="title" options='{"no_open": True}'
                                 attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="lang"/>
-                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                         </group>
                     </group>
 
