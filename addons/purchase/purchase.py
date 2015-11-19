@@ -436,7 +436,7 @@ class PurchaseOrderLine(models.Model):
             total = 0.0
             for move in line.move_ids:
                 if move.state == 'done':
-                    total += move.product_qty
+                    total += move.product_uom_qty
             line.qty_received = total
 
     name = fields.Text(string='Description', required=True)
