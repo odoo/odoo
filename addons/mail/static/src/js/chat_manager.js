@@ -589,9 +589,9 @@ function init () {
     });
 
     var load_channels = session.rpc('/mail/client_action').then(function (result) {
-        _.each(result.channel_slots.channel_channel, add_channel);
-        _.each(result.channel_slots.channel_private_group, add_channel);
-        _.each(result.channel_slots.channel_direct_message, add_channel);
+        _.each(result.channel_slots, function (channels) {
+            _.each(channels, add_channel);
+        });
         needaction_counter = result.needaction_inbox_counter;
     });
 

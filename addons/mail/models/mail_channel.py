@@ -467,12 +467,6 @@ class Channel(models.Model):
         direct_message_channels = self.search([('channel_type', '=', 'chat'), ('id', 'in', pinned_channels.ids)])
         values['channel_direct_message'] = direct_message_channels.channel_info()
 
-        # get the partner of the pinned 'direct message' channels with mapping partner/channel
-        direct_channel_partner = direct_message_channels.mapped('channel_last_seen_partner_ids').filtered(lambda cp: cp.partner_id.id != my_partner_id)
-        values['mapping'] = dict((item.partner_id.id, item.channel_id.id) for item in direct_channel_partner)
-        # partners of the 'direct message' channels
-        values['partners'] = direct_message_channels.mapped('channel_partner_ids').filtered(lambda partner: partner.id != my_partner_id).read(['id', 'name', 'im_status'])
-
         # get the private group
         values['channel_private_group'] = self.search([('channel_type', '=', 'channel'), ('public', '=', 'private'), ('channel_partner_ids', 'in', [my_partner_id])]).channel_info()
         return values
