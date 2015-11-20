@@ -18,6 +18,7 @@ _logger = logging.getLogger(__name__)
 class lang(osv.osv):
     _name = "res.lang"
     _description = "Languages"
+    _order = "active desc,name"
 
     _disallowed_datetime_patterns = tools.DATETIME_FORMATS_MAP.keys()
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
