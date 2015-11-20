@@ -36,7 +36,7 @@ class sale_order(osv.Model):
         document = self.browse(cr, uid, ids[0], context=context)
         contex_signup = dict(context, signup_valid=True)
         return self.pool['res.partner']._get_signup_url_for_action(
-            cr, uid, [document.partner_id.id], action='mail.action_mail_redirect',
+            cr, uid, [document.partner_id.id], action='/mail/view',
             model=self._name, res_id=document.id, context=contex_signup,
         )[document.partner_id.id]
 
@@ -78,7 +78,7 @@ class account_invoice(osv.Model):
         document = self.browse(cr, uid, ids[0], context=context)
         contex_signup = dict(context, signup_valid=True)
         return self.pool['res.partner']._get_signup_url_for_action(
-            cr, uid, [document.partner_id.id], action='mail.action_mail_redirect',
+            cr, uid, [document.partner_id.id], action='/mail/view',
             model=self._name, res_id=document.id, context=contex_signup,
         )[document.partner_id.id]
 

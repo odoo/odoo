@@ -677,7 +677,9 @@ class MassMailing(osv.Model):
             for item in list_ids:
                 if isinstance(item, (int, long)):
                     mailing_list_ids.add(item)
-                elif len(item) == 3:
+                elif len(item) == 2 and item[0] == 4:  # 4, id
+                    mailing_list_ids.add(item[1])
+                elif len(item) == 3:  # 6, 0, ids
                     mailing_list_ids |= set(item[2])
             if mailing_list_ids:
                 value['mailing_domain'] = "[('list_id', 'in', %s), ('opt_out', '=', False)]" % list(mailing_list_ids)

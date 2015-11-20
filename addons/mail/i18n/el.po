@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-22 06:31+0000\n"
+"PO-Revision-Date: 2015-11-09 23:02+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -79,49 +79,44 @@ msgid ""
 "        </tr>\n"
 "    </tbody></table>\n"
 "</div>\n"
-"<div style=\"padding:0px;width:600px;margin:auto;color:#777777;background-color:#FFFFFF\" class=\"\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top;padding:0px;font-family:arial;font-size:12px;border-collapse:collapse;background:inherit;color:inherit\">\n"
-"        <tbody>\n"
-"            <tr>\n"
-"                <td valign=\"top\" style=\"width:600px\">\n"
-"                    <div>\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
-"                    </div>\n"
-"                </td>\n"
-"            </tr>\n"
-"        </tbody>\n"
+"<div style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:5px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div class=\"snippet_row bg-color\" style=\"padding:0;width:600px;max-width:600px;margin:0 auto;background: #fff repeat top /100%;color:#777777\">\n"
-"    <table style=\"width:100%;text-align:justify;margin:0 auto;background:inherit;color:inherit;border-collapse:collapse;color:inherit\">\n"
+"<div style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td style=\"padding:10px 30px; font-size:14px\">\n"
+"            <td style=\"padding:5px 10px 5px 5px;font-size: 14px;\">\n"
 "                ${object.body | safe}\n"
 "                % if ctx.get('tracking'):\n"
+"                    <ul>\n"
 "                    % for tracking in ctx['tracking']\n"
-"                        ${tracking[0]} : ${tracking[1]} -> ${tracking[2]}\n"
+"                        <li>${tracking[0]} : ${tracking[1]} -> ${tracking[2]}</li>\n"
 "                    % endfor\n"
+"                    </ul>\n"
 "                % endif\n"
 "            </td>\n"
-"        </tr>\n"
-"    </tbody></table>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
 "</div>\n"
 "% if ctx.get('signature'):\n"
-"<div class=\"snippet_row bg-color\" style=\"padding:0px;width:600px;margin:auto;background: #fff repeat top /100%;color:#777777\">\n"
-"    <center>\n"
-"        <table width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: 0 auto; width:600px; border-collapse:collapse;background:inherit;color:inherit\">\n"
-"            <tbody><tr>\n"
-"                <td style=\"font-size:12px; padding: 5px 30px; text-align: left;\">\n"
-"                    &nbsp;\n"
-"                    ${ctx['signature'] | safe}\n"
-"                    &nbsp;\n"
-"                </td>\n"
-"                </tr>\n"
-"            </tbody>\n"
-"        </table>\n"
-"    </center>\n"
+"<div style=\"padding:0px; width:600px;margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:5px 10px 5px 5px;font-size: 14px; text-align: left;\">\n"
+"                ${ctx['signature'] | safe}\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
 "</div>\n"
-"% endif\n"
+"% endif"
 msgstr ""
 
 #. module: mail
@@ -129,7 +124,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:50
 #, python-format
 msgid " from "
-msgstr ""
+msgstr "από"
 
 #. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
@@ -160,6 +155,13 @@ msgstr "%s έχει ενταχθεί το δίκτυο του %s."
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:86
+#, python-format
+msgid "(in channel"
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:48
 #, python-format
 msgid "(no email address)"
@@ -174,9 +176,33 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:122
+#: code:addons/mail/static/src/xml/thread.xml:147
 #, python-format
-msgid "-------- Show more messages --------"
+msgid "-------- Show older messages --------"
+msgstr "-------- Εμφάνιση παλαιότερων μηνυμάτων --------"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:513
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">created <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:489
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">joined <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:151
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">left <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
 
 #. module: mail
@@ -244,7 +270,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:13
 #, python-format
 msgid "@ Inbox"
-msgstr ""
+msgstr "@ Εισερχόμενα"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
@@ -266,13 +292,6 @@ msgstr ""
 #: model:ir.model,name:mail.model_res_groups
 msgid "Access Groups"
 msgstr "Ομάδες Πρόσβασης"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:154
-#, python-format
-msgid "Action"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_needaction
@@ -309,7 +328,7 @@ msgstr "Δραστηριότητα"
 #: code:addons/mail/static/src/xml/chatter.xml:144
 #, python-format
 msgid "Add Channels"
-msgstr ""
+msgstr "Προσθήκη Καναλιών"
 
 #. module: mail
 #. openerp-web
@@ -331,7 +350,7 @@ msgstr "Προσθήκη υπογραφής"
 #: code:addons/mail/static/src/xml/client_action.xml:44
 #, python-format
 msgid "Add a channel"
-msgstr ""
+msgstr "Προσθήκη Καναλιού"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -357,7 +376,7 @@ msgstr "Για προχωρημένους"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Ρυθμίσεις για προχωρημένους"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_id
@@ -421,7 +440,7 @@ msgstr "Όλα τα μηνύματα"
 #: code:addons/mail/static/src/js/thread.js:38
 #, python-format
 msgid "Anonymous"
-msgstr ""
+msgstr "Ανώνυμος"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_no_auto_thread
@@ -436,7 +455,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_template_model_id
 msgid "Applies to"
-msgstr ""
+msgstr "Εφαρμογή σε"
 
 #. module: mail
 #. openerp-web
@@ -629,7 +648,7 @@ msgstr "Κανάλι"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_type
 msgid "Channel Type"
-msgstr ""
+msgstr "Τύπος Καναλιού"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_message_ids
@@ -639,6 +658,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:23
+#: code:addons/mail/static/src/xml/client_action.xml:89
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_channel_ids
@@ -660,17 +680,17 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.client,name:mail.mail_channel_action_client_chat
 msgid "Chat"
-msgstr ""
+msgstr "Chat"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr ""
+msgstr "Συζήτηση Chat"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
 msgid "Chat Shortcode"
-msgstr ""
+msgstr "Σύντομος κωδικός Chat "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_child_ids
@@ -709,7 +729,7 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.act_window,help:mail.mail_shortcode_action
 msgid "Click to define a new chat shortcode."
-msgstr ""
+msgstr "Κάντε κλικ για να ορίσετε νέο σύντομο κωδικό Chat"
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -955,12 +975,12 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:31
 #, python-format
 msgid "Direct Messages"
-msgstr ""
+msgstr "Άμεσα μηνύματα"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_menu_root_chat
 msgid "Discuss"
-msgstr "Συζητήστε"
+msgstr "Συζήτηση"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
@@ -1442,9 +1462,9 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.client,help:mail.mail_channel_action_client_chat
 msgid ""
-"In the \"Channels\" section, you will find the public and restricted channel.<br/>\n"
-"                    The \"Direct Message\" section allows you to talk directly to one person.<br/>\n"
-"                    The \"Private Group\" section contains your private conversations. You can join a private channel either by creating a channel yourself, or by being invited to another one.<br/>"
+"In the \"Channels\" section, you will find the public and restricted channel.<br>\n"
+"                    The \"Direct Message\" section allows you to talk directly to one person.<br>\n"
+"                    The \"Private Group\" section contains your private conversations. You can join a private channel either by creating a channel yourself, or by being invited to another one.<br>"
 msgstr ""
 
 #. module: mail
@@ -1500,7 +1520,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:75
 #, python-format
 msgid "Invite"
-msgstr ""
+msgstr "Προσκαλέστε"
 
 #. module: mail
 #. openerp-web
@@ -1662,7 +1682,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Livechat Conversation"
-msgstr ""
+msgstr "Συνομιλία Livechat"
 
 #. module: mail
 #. openerp-web
@@ -1915,11 +1935,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_needaction
-#: model:ir.model.fields,field_description:mail.field_mail_mail_needaction_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_needaction
-#: model:ir.model.fields,field_description:mail.field_mail_message_needaction_partner_ids
 #: model:ir.model.fields,help:mail.field_mail_compose_message_needaction
 #: model:ir.model.fields,help:mail.field_mail_mail_needaction
 #: model:ir.model.fields,help:mail.field_mail_message_needaction
@@ -2107,7 +2124,7 @@ msgstr "Άνοιγμα Γονικού Εγγράφου"
 #: code:addons/mail/static/src/xml/client_action.xml:36
 #, python-format
 msgid "Open chat"
-msgstr "Άνοιγμα Συνομιλίας"
+msgstr "Άνοιγμα Chat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
@@ -2251,6 +2268,13 @@ msgid "Partners that did not ask not to be included in mass mailing campaigns"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction_partner_ids
+#: model:ir.model.fields,field_description:mail.field_mail_mail_needaction_partner_ids
+#: model:ir.model.fields,field_description:mail.field_mail_message_needaction_partner_ids
+msgid "Partners with Need Action"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_auto_delete
 #: model:ir.model.fields,help:mail.field_mail_mail_auto_delete
 #: model:ir.model.fields,help:mail.field_mail_template_auto_delete
@@ -2346,14 +2370,14 @@ msgstr "Απόρρητο"
 #: code:addons/mail/static/src/js/chat_manager.js:478
 #, python-format
 msgid "Private Channel"
-msgstr ""
+msgstr "Ιδιωτικό κανάλι"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:41
 #, python-format
 msgid "Private Channels"
-msgstr ""
+msgstr "Ιδιωτικά κανάλια"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_3
@@ -2684,7 +2708,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_starred
 #, python-format
 msgid "Starred"
-msgstr "Πρωταγωνίστησε"
+msgstr "Με αστέρι"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_state
@@ -2836,7 +2860,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
 msgid "The shortcut which must be replace in the Chat Messages"
-msgstr ""
+msgstr "Η συντόμευση που πρέπει να αντικατασταθεί στα μηνύματα Chat"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -2847,8 +2871,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.actions.client,help:mail.mail_channel_action_client_chat
-msgid "There are no messages to display.<br/>"
-msgstr ""
+msgid "There are no messages to display.<br>"
+msgstr "Δεν υπάρχουν μηνύματα προς εμφάνιση.<br>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_image
@@ -2879,7 +2903,7 @@ msgstr "Σε"
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_email_to
 msgid "To (Emails)"
-msgstr ""
+msgstr "Προς (Emails)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_partner_to
@@ -2894,7 +2918,7 @@ msgstr "Προς (Συνεργάτες)"
 #: code:addons/mail/static/src/xml/chatter.xml:30
 #, python-format
 msgid "To: Followers of"
-msgstr ""
+msgstr "Προς: Ακόλουθοι του"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -2913,26 +2937,26 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Tracking"
-msgstr ""
+msgstr "Παρακολούθηση"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_tree
 msgid "Tracking Value"
-msgstr ""
+msgstr "Τιμή Παρακολούθησης"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_tracking_value
 #: model:ir.ui.menu,name:mail.menu_mail_tracking_value
 msgid "Tracking Values"
-msgstr ""
+msgstr "Τιμές Παρακολούθησης"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_tracking_value_ids
 msgid "Tracking values"
-msgstr ""
+msgstr "Τιμές παρακολούθησης"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_message_type
@@ -2989,21 +3013,21 @@ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 #: code:addons/mail/static/src/js/client_action.js:158
 #, python-format
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Διαγραφή"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:470
 #, python-format
 msgid "Unsubscribed"
-msgstr ""
+msgstr "Διαγραμμένες"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:113
 #, python-format
 msgid "Uploading"
-msgstr ""
+msgstr "Αποστέλεται"
 
 #. module: mail
 #. openerp-web
@@ -3015,12 +3039,12 @@ msgstr "Σφάλμα κατά την μεταφόρτωση"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_use_active_domain
 msgid "Use active domain"
-msgstr ""
+msgstr "Χρήση ενεργού τομέα"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_template_id
 msgid "Use template"
-msgstr ""
+msgstr "Χρήση προτύπου"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_sequence
@@ -3082,17 +3106,11 @@ msgid "Who can follow the group's activities?"
 msgstr ""
 
 #. module: mail
-#: model:mail.channel,name:mail.channel_all_employees
-msgid "Whole Company"
-msgstr "Ολόκληρη Εταιρεία"
-
-#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:57
-#: code:addons/mail/static/src/xml/composer.xml:7
+#: code:addons/mail/static/src/xml/composer.xml:6
 #, python-format
 msgid "Write something"
-msgstr ""
+msgstr "Γράψε κάτι"
 
 #. module: mail
 #. openerp-web
@@ -3130,7 +3148,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:478
 #, python-format
 msgid "You have been invited to: "
-msgstr ""
+msgstr "Έχετε προσκληθεί να:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_attachment_ids
@@ -3142,7 +3160,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:469
+#: code:addons/mail/static/src/js/client_action.js:346
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr ""
@@ -3150,7 +3168,7 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.client,help:mail.mail_channel_action_client_chat
 msgid ""
-"Your \"Inbox\" contains all the messages in which you've been mentioned, and the messages you receive as a follower of a document.<br/>\n"
+"Your \"Inbox\" contains all the messages in which you've been mentioned, and the messages you receive as a follower of a document.<br>\n"
 "                    The \"Starred\" section contains all your favorite messages."
 msgstr ""
 
@@ -3179,23 +3197,28 @@ msgstr "από"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:29
+#: code:addons/mail/static/src/xml/client_action.xml:30
 #, python-format
 msgid "dm"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:281
+#: code:addons/mail/models/mail_thread.py:314
 #, python-format
 msgid "document"
 msgstr "έγγραφο"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:232
+#: code:addons/mail/static/src/js/chatter.js:220
 #, python-format
 msgid "followers"
 msgstr "ακόλουθοι"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_all_employees
+msgid "general"
+msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -3230,7 +3253,7 @@ msgstr "στις"
 #: code:addons/mail/static/src/xml/client_action.xml:39
 #, python-format
 msgid "private"
-msgstr ""
+msgstr "ιδιωτικό"
 
 #. module: mail
 #. openerp-web
@@ -3247,7 +3270,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "record:"
-msgstr ""
+msgstr "εγγραφή:"
 
 #. module: mail
 #. openerp-web
@@ -3262,4 +3285,4 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:35
 #, python-format
 msgid "true"
-msgstr ""
+msgstr "αληθές"

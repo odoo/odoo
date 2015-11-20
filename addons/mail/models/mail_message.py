@@ -85,7 +85,7 @@ class Message(models.Model):
     # recipients
     partner_ids = fields.Many2many('res.partner', string='Recipients')
     needaction_partner_ids = fields.Many2many(
-        'res.partner', 'mail_message_res_partner_needaction_rel', string='Need Action')
+        'res.partner', 'mail_message_res_partner_needaction_rel', string='Partners with Need Action')
     needaction = fields.Boolean(
         'Need Action', compute='_get_needaction', search='_search_needaction',
         help='Need Action')
@@ -146,23 +146,79 @@ class Message(models.Model):
     # Notification API
     #------------------------------------------------------
 
+    @api.model
+    def mark_all_as_read(self, channel_ids=None):
+        """ Remove all needactions of the current partner. If channel_ids is
+            given, restrict to messages written in one of those channels. """
+        partner_id = self.env.user.partner_id.id
+        # possibly horribly inefficient method:
+        # it does one db request for the search, and one for each message in
+        # the result set to remove the current user from the relation.
+        # domain = [('needaction_partner_ids', 'in', partner_id)]
+        # if channel_ids:
+        #     domain += [('channel_ids', 'in', channel_ids)]
+        # unread_messages = self.search(domain)
+        # unread_messages.write({'needaction_partner_ids': [(3, partner_id)]})
+
+        # a much faster way to do this is in pure sql:
+        query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
+        args = [(partner_id,)]
+        if channel_ids:
+            query += """
+                AND mail_message_id in
+                    (SELECT mail_message_id
+                    FROM mail_message_mail_channel_rel
+                    WHERE mail_channel_id in %s)"""
+            args += [tuple(channel_ids)]
+        query += " RETURNING mail_message_id as id"
+        self._cr.execute(query, args)
+        self.invalidate_cache()
+
+        ids = [m['id'] for m in self._cr.dictfetchall()]
+        notification = {'type': 'mark_as_read', 'message_ids': ids, 'channel_ids': channel_ids}
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
+
+        return ids
+
     @api.multi
-    def set_message_needaction(self, partner_ids=None):
-        if not partner_ids:
-            partner_ids = [self.env.user.partner_id.id]
-        if set(partner_ids) == set([self.env.user.partner_id.id]):
-            # a user should be able to mark a message as needaction for him
-            self = self.sudo()
-        return self.write({'needaction_partner_ids': [(4, pid) for pid in partner_ids]})
+    def mark_as_unread(self, channel_ids=None):
+        """ Add needactions to messages for the current partner. """
+        partner_id = self.env.user.partner_id.id
+        for message in self:
+            message.write({'needaction_partner_ids': [(4, partner_id)]})
+
+        ids = [m.id for m in self]
+        notification = {'type': 'mark_as_unread', 'message_ids': ids, 'channel_ids': channel_ids}
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
     @api.multi
     def set_message_done(self, partner_ids=None):
+        """ Remove the needaction from messages for the current partner, or for
+            partners in partner_ids if partner_ids is given. """
         if not partner_ids:
             partner_ids = [self.env.user.partner_id.id]
+        new_value = {'needaction_partner_ids': [(3, pid) for pid in partner_ids]}
         if set(partner_ids) == set([self.env.user.partner_id.id]):
             # a user should be able to mark a message as done for him
-            self = self.sudo()
-        return self.write({'needaction_partner_ids': [(3, pid) for pid in partner_ids]})
+            self.sudo().write(new_value)
+        else:
+            self.write(new_value)
+
+        channel_ids = [c.id for c in self.channel_ids]
+        notification = {'type': 'mark_as_read', 'message_ids': [self.id], 'channel_ids': channel_ids}
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
+
+    @api.model
+    def unstar_all(self):
+        """ Unstar messages for the current partner. """
+        partner_id = self.env.user.partner_id.id
+
+        starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
+        starred_messages.write({'starred_partner_ids': [(3, partner_id)]})
+
+        ids = [m.id for m in starred_messages]
+        notification = {'type': 'toggle_star', 'message_ids': ids, 'starred': False}
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
     @api.multi
     def set_message_starred(self, starred):
@@ -170,8 +226,6 @@ class Message(models.Model):
             to uid are set to (un)starred.
 
             :param bool starred: set notification as (un)starred
-            :param bool create_missing: create notifications for missing entries
-                (i.e. when acting on displayed messages not notified)
         """
         # a user should always be able to star a message he can read
         self.check_access_rule('read')
@@ -179,7 +233,9 @@ class Message(models.Model):
             self.sudo().write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
         else:
             self.sudo().write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
-        return starred
+
+        notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
     #------------------------------------------------------
     # Message loading for web interface
@@ -259,7 +315,7 @@ class Message(models.Model):
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
             })
-            body_short = tools.html_email_clean(message_dict['body'], remove=True)
+            body_short = tools.html_email_clean(message_dict['body'], shorten=True, remove=True)
             message_dict['body_short'] = body_short != message_dict['body'] and body_short or False
 
         return True
@@ -493,13 +549,14 @@ class Message(models.Model):
         message_tree = dict((m.id, m) for m in self)
         self._message_read_dict_postprocess(message_values, message_tree)
 
-        # add is_note flag
-        internal_subtype_ids = self.env['mail.message.subtype'].search([('internal', '=', True)]).ids
+        # add subtype data (is_note flag, subtype_description)
+        subtypes = self.env['mail.message.subtype'].search(
+            [('id', 'in', [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']])]).read(['internal', 'description'])
+        subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
         for message in message_values:
-            if message['subtype_id'] and message['subtype_id'][0]:
-                message['is_note'] = bool(message['subtype_id'][0] in internal_subtype_ids)
+            message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
+            message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
         return message_values
-
 
     #------------------------------------------------------
     # mail_message internals
@@ -836,7 +893,7 @@ class Message(models.Model):
                 ('res_id', '=', self.res_id)
             ]).filtered(lambda fol: self.subtype_id in fol.subtype_ids)
             if self.subtype_id.internal:
-                followers.filtered(lambda fol: fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id'))
+                followers = followers.filtered(lambda fol: fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id'))
             channels = self_sudo.channel_ids | followers.mapped('channel_id')
             partners = self_sudo.partner_ids | followers.mapped('partner_id')
         else:

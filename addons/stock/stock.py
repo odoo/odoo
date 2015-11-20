@@ -452,6 +452,7 @@ class stock_quant(osv.osv):
         '''
         context = context or {}
         domain = domain or [('qty', '>', 0.0)]
+        domain = list(domain)
         quants = [(None, qty)]
         if ops:
             restrict_lot_id = lot_id
@@ -459,8 +460,10 @@ class stock_quant(osv.osv):
             domain += [('owner_id', '=', ops.owner_id.id)]
             if ops.package_id and not ops.product_id:
                 domain += [('package_id', 'child_of', ops.package_id.id)]
-            else:
+            elif ops.package_id and ops.product_id:
                 domain += [('package_id', '=', ops.package_id.id)]
+            else:
+                domain += [('package_id', '=', False)]
             domain += [('location_id', '=', ops.location_id.id)]
         else:
             restrict_lot_id = move.restrict_lot_id.id
@@ -2325,6 +2328,8 @@ class stock_move(osv.osv):
         pickings_write = []
         pick_obj = self.pool['stock.picking']
         for pick in pickings:
+            if pick.state in ('waiting', 'confirmed'): #In case of 'all at once' delivery method it should not prepare pack operations
+                continue
             # Check if someone was treating the picking already
             if not any([x.qty_done > 0 for x in pick.pack_operation_ids]):
                 pickings_partial.append(pick.id)
@@ -2345,6 +2350,7 @@ class stock_move(osv.osv):
         main_domain = {}
         todo_moves = []
         operations = set()
+        self.do_unreserve(cr, uid, [x.id for x in self.browse(cr, uid, ids, context=context) if x.reserved_quant_ids and x.state in ['confirmed', 'waiting', 'assigned']], context=context)
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting', 'assigned'):
                 continue
@@ -2359,7 +2365,7 @@ class stock_move(osv.osv):
             else:
                 todo_moves.append(move)
 
-                #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
+                #we always search for yet unassigned quants
                 main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
 
                 #if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
@@ -2548,7 +2554,8 @@ class stock_move(osv.osv):
                                                     dest_package_id=quant_dest_package_id, context=context)
                     if redo_false_quants:
                         move_rec = self.pool['stock.move'].browse(cr, uid, move, context=context)
-                        false_quants_move = [x for x in move_rec.reserved_quant_ids if not x.lot_id]
+                        false_quants_move = [x for x in move_rec.reserved_quant_ids if (not x.lot_id) and (x.owner_id.id == ops.owner_id.id) \
+                                             and (x.location_id.id == ops.location_id.id) and (x.package_id.id != ops.package_id.id)]
 
     def action_done(self, cr, uid, ids, context=None):
         """ Process completely the moves given as ids and if all moves are done, it will finish the picking.
@@ -2624,6 +2631,9 @@ class stock_move(osv.osv):
                     qty_on_link = move_qty_ops[move]
                     rounding = ops.product_id.uom_id.rounding
                     for reserved_quant in move.reserved_quant_ids:
+                        if (reserved_quant.owner_id.id != ops.owner_id.id) or (reserved_quant.location_id.id != ops.location_id.id) or \
+                                (reserved_quant.package_id.id != ops.package_id.id):
+                            continue
                         if not reserved_quant.lot_id:
                             false_quants += [reserved_quant]
                         elif float_compare(lot_qty.get(reserved_quant.lot_id.id, 0), 0, precision_rounding=rounding) > 0:

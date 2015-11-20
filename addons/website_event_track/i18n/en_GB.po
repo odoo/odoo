@@ -3,12 +3,13 @@
 # * website_event_track
 # 
 # Translators:
+# James Dove <james@oceancave.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 11:01+0000\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2015-11-06 14:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/odoo-9/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -78,6 +79,11 @@ msgid "About The Author"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
+msgid "Action Needed"
+msgstr "Action Needed"
+
+#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management with Odoo: tips and tricks from the fields"
 msgstr ""
@@ -144,7 +150,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_color
 msgid "Color Index"
-msgstr ""
+msgstr "Colour Index"
 
 #. module: website_event_track
 #: selection:event.track,state:0
@@ -177,7 +183,7 @@ msgstr "Date"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Date of the last message posted on the record."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -312,12 +318,12 @@ msgstr "Followers"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Followers (Channels)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Followers (Partners)"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
@@ -383,10 +389,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread
 msgid "If checked new messages require your attention."
 msgstr "If checked new messages require your attention."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "If checked, new messages require your attention."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_image
@@ -406,7 +416,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Is Follower"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
@@ -416,7 +426,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "Last Message Date"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor___last_update
@@ -492,7 +502,7 @@ msgid ""
 "Medium-sized image of this contact. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "Medium-sized image of this contact. It is automatically resized as a 128x128px image, with aspect ratio preserved. Use this field in form views or some kanban views."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
@@ -522,16 +532,6 @@ msgstr "More"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track30
 msgid "Morning break"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
-msgid "Need Action Counter"
 msgstr ""
 
 #. module: website_event_track
@@ -573,14 +573,19 @@ msgid "No tracks found!"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Number of Actions"
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Number of messages which requires an action"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Number of unread messages"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
@@ -700,7 +705,7 @@ msgid "Responsible"
 msgstr "Responsible"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8620
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8532
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr ""
@@ -949,7 +954,7 @@ msgstr "Unread Messages"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Unread Messages Counter"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
@@ -991,7 +996,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Website Messages"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_website_url
@@ -1001,7 +1006,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Website communication history"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_website_meta_description

@@ -268,6 +268,7 @@ var ImageDialog = Widget.extend({
         this.accept = this.options.accept || this.options.document ? "*/*" : "image/*";
         this.domain = this.options.domain || ['|', ['mimetype', '=', false], ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]];
         this.parent = parent;
+        this.old_media = media;
         this.media = media;
         this.images = [];
         this.page = 0;
@@ -597,7 +598,16 @@ rte.Class.include({
     init: function (EditorBar) {
         this._super.apply(this, arguments);
         computeFonts();
-    }
+    },
+    onEnableEditableArea: function ($editable) {
+        if ($editable.data('oe-type') === "monetary") {
+            $editable.attr('contenteditable', false);
+            $editable.find('.oe_currency_value').attr('contenteditable', true);
+        }
+        if ($editable.is('[data-oe-model]') && !$editable.is('[data-oe-model="ir.ui.view"]') && !$editable.is('[data-oe-type="html"]')) {
+            $editable.data('layoutInfo').popover().find('.btn-group:not(.note-history)').remove();
+        }
+    },
 });
 
 /* list of font icons to load by editor. The icons are displayed in the media editor and

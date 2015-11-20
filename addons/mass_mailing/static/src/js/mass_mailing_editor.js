@@ -132,6 +132,7 @@ $.summernote.eventHandler.modules.popover.update = function ($popover, oStyle, i
 web_editor.Class.include({
     start: function () {
         var self = this;
+        $('[data-toggle="tooltip"]').tooltip();
         if (location.search.indexOf("enable_editor") !== -1) {
             this.on('rte:start', this, function () {
                 $("#choose_template").off("click").on("click", _.bind(self.on_choose_template, self));

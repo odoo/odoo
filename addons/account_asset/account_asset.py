@@ -36,10 +36,6 @@ class AccountAssetCategory(models.Model):
     open_asset = fields.Boolean(string='Post Journal Entries', help="Check this if you want to automatically confirm the assets of this category when created by invoices.")
     type = fields.Selection([('sale', 'Sale: Revenue Recognition'), ('purchase', 'Purchase: Asset')], required=True, index=True, default='purchase')
 
-    @api.onchange('account_asset_id')
-    def onchange_account_asset(self):
-        self.account_depreciation_id = self.account_asset_id
-
     @api.onchange('type')
     def onchange_type(self):
         if self.type == 'sale':

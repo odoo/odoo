@@ -123,7 +123,7 @@ class WebsiteForm(http.Controller):
 
             # If it's a custom field
             elif field_name != 'context':
-                data['custom'] += "%s : %s\n" % (field_name, field_value)
+                data['custom'] += "%s : %s\n" % (field_name.decode('utf-8'), field_value)
 
         # Add metadata if enabled
         environ = request.httprequest.headers.environ
@@ -155,16 +155,18 @@ class WebsiteForm(http.Controller):
         record = request.env[model.model].sudo().create(values)
 
         if custom or meta:
-            default_field_name = model.website_form_default_field_id.name
-            default_field_data = values.get(default_field_name, '')
+            default_field = model.website_form_default_field_id
+            default_field_data = values.get(default_field.name, '')
             custom_content = (default_field_data + "\n\n" if default_field_data else '') \
                            + (self._custom_label + custom + "\n\n" if custom else '') \
                            + (self._meta_label + meta if meta else '')
 
             # If there is a default field configured for this model, use it.
             # If there isn't, put the custom data in a message instead
-            if default_field_name:
-                record.update({default_field_name: custom_content})
+            if default_field.name:
+                if default_field.ttype == 'html' or model.model == 'mail.mail':
+                    custom_content = nl2br(custom_content)
+                record.update({default_field.name: custom_content})
             else:
                 values = {
                     'body': nl2br(custom_content),

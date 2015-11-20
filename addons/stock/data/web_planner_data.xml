@@ -9,7 +9,7 @@
                 <t t-set="hide_mark_as_done" t-value="True"/>
                 <div class="o_planner_intro">
                     <p>
-                        This guide will help you get started with Odoo Inventory.
+                        This guide helps getting started with Odoo Inventory.
                         Once you are done, you will benefit from:
                     </p>
                     <ul>
@@ -18,7 +18,7 @@
                         <li>Accurate visibility on all your operations</li>
                     </ul>
                     <p>
-                        In short, you will get a more efficient warehouse management that will lead
+                        In short, you will get a more efficient warehouse management that leads
                         to inventory reduction and better efficiencies in your daily operations.
                     </p><p>
                         If you need help, do not hesitate to contact our experts
@@ -54,7 +54,7 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Your Vendors</t>
                     <p class="text-muted">
-                        Unless you are starting a new business, you probably have a list of vendors you'd like to import.
+                        Unless you are starting a new business, you probably have a list of vendors you would like to import.
                     </p>
                     <t t-if="not is_module_installed('account') and not is_module_installed('purchase')">
                         <div class="alert alert-warning">
@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <p>
-                                        If you have less than 50 vendors, we recommand you
+                                        If you have less than 50 vendors, we recommend you
                                         to create them manually.
                                     </p>
                                     <ul><li>
@@ -94,7 +94,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <p>
-                                        We can handle the whole import process
+                                        We handle the whole import process
                                         for you: simply send your Odoo project
                                         manager a CSV file containing all your
                                         data.
@@ -110,9 +110,9 @@
                         </div>
                     </div>
                     <div class="alert alert-info">
-                        <span>For developers, <strong>you can use our
+                        <span>If you are a developer <strong>you can use our
                         API</strong> to load data automatically through
-                        scripts: take a look at our <a href="https://www.odoo.com/documentation/8.0/api_integration.html" target="_blank">API Documentation</a> for more
+                        scripts: take a look at our <a href="https://www.odoo.com/documentation/9.0/api_integration.html" target="_blank">API Documentation</a> for more
                         information.</span>
                     </div>
                 </t>
@@ -135,6 +135,7 @@
                           <div class="panel-body">
                             <li><strong>Stockable products</strong> are subject to the full inventory management system: minimum stock rules, automatic procurement, etc.</li>
                             <li><strong>Consumable products</strong> are always assumed to be in sufficient quantity in your stock, therefore their available quantities are not tracked</li>
+                            <li><strong>Service products</strong> are non-material products provided by a company or an individual</li>
                           </div>
                         </div>
                       </div>
@@ -150,11 +151,11 @@
                           <div class="panel-body">
                             <ul>
                                 <li><strong>Manufacture:</strong> the product is manufactured internally or the service is supplied from internal resources</li>
-                                <li><strong>Buy:</strong> the product is bought from a vendor, through a Purchase Order</li>
+                                <li><strong>Buy:</strong> the product is bought from a vendor through a Purchase Order</li>
                             </ul>
                             <ul>
-                                <li><strong>Make to Stock:</strong> your customers are supplied from available stock. If the quantities in stock are too low to fulfill the order, a Purchase Order (according the minimum stock rules) will be generated in order to get the products required</li>
-                                <li><strong>Make to Order:</strong> the product is acquired only as demand requires (meaning each time a Sales Order is confirmed). This will not modify stock in the medium term because you restock with the exact amount that was ordered</li>
+                                <li><strong>Make to Stock:</strong> your customers are supplied from available stock. If the quantities in stock are too low to fulfill the order, a Purchase Order is generated according the minimum stock rules in order to get the products required</li>
+                                <li><strong>Make to Order:</strong> the product is acquired only as demand requires, each time a Sales Order is confirmed. This does not modify stock in the medium term because you restock with the exact amount that was ordered</li>
                             </ul>
                           </div>
                         </div>
@@ -184,10 +185,10 @@
                         </div>
                         <div id="o_concept_desc4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="o_concept4">
                           <div class="panel-body">
-                            <li>By default, Odoo measures products by 'units', which are a generic and can represent just about anything</li>
+                            <li>By default, Odoo measures products by 'units', which are generic and represent just about anything</li>
                             <li>To use more precise units like pounds or kilograms, activate<i> Some products may be sold/purchased in different unit of measures (advanced)</i> in the <a t-att-href="prepare_backend_url('stock.action_stock_config_settings')">Inventory Settings</a></li>
-                            <li>Your can review and edit the pre-defined units via the <a t-attf-href="/web#view_type=list&amp;model=product.uom&amp;menu_id=#{uom_menu_id}">Units of Measures</a> configuration menu</li>
-                            <li>Of course, feel free to add your own; just remember that Odoo can convert units within the same category (for example, liters to gallons in the volume category)</li>
+                            <li>You can review and edit the predefined units via the <a t-att-href="prepare_backend_url('product.product_uom_form_action')">Units of Measures</a> configuration menu</li>
+                            <li>Of course, feel free to add your own. Please note that Odoo is able to convert units within the same category, for example, liters to gallons in the volume category</li>
                           </div>
                         </div>
                       </div>
@@ -220,7 +221,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <p>
-                                        We can handle the whole import process
+                                        We handle the whole import process
                                         for you: simply send your Odoo project
                                         manager a CSV file containing all your
                                         products.
@@ -243,18 +244,18 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Initial Inventory</t>
                     <p>
-                        It's time to make your initial Inventory. To do so:
+                        It is time to make your initial Inventory. In order to do so:
                     </p>
 
                     <div>
                         <ol>
                             <li><a t-att-href="prepare_backend_url('stock.action_inventory_form')" >Create an Inventory Adjustment</a></li>
-                            <li>When everyting is set, click on <i>Start Inventory</i></li>
+                            <li>When everything is set, click on <i>Start Inventory</i></li>
                             <li>Set the <i>Real Quantity</i> for each Product and <i>Validate the Inventory</i></li>
                         </ol>
                     </div>
                     <p>
-                        Now, all your products have their quantity set correctly.
+                        Now, all your product quantities are correctly set.
                     </p>
                     <div class="alert alert-info">
                         <strong>Import data</strong>
@@ -269,14 +270,14 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Sales Flow</t>
                     <p class="text-muted">
-                        In Odoo, inventory management is fully integrated with the sales and
-                        invoicing process. That means you can automate everything from the initial
-                        quotation, to the goods delivery and final invoice.
+                        Odoo inventory management is fully integrated with sales and
+                        invoicing process. Everything is automated from the initial
+                        quotation to the delivery and the final invoice.
                     </p>
                     <div t-if="not is_module_installed('sale')" class="alert alert-warning">
                         <span>You need to install the Sales Management app for this flow.</span>
                     </div>
-                    <p>To better understand a complete sales flow, follow these steps:</p>
+                    <p>A classic sales flow looks like the following:</p>
 
                     <div class="row">
                         <div class="col-md-6 text-center">
@@ -287,11 +288,11 @@
                                     </span>
                                 </div>
                                 <div class="panel-body">
-                                    <div><span class="label label-default text-center odoo_purple"><a t-att-href="prepare_backend_url('sale.action_quotations')"> Create a Quotation</a></span><div> for a customer and add some products</div></div>
+                                    <div><span class="label label-default text-center odoo_purple"><a t-att-href="prepare_backend_url('sale.action_quotations')"> Create a Quotation</a></span><div> for a customer and add products</div></div>
                                     <span class="fa fa-angle-down fa-2x"></span>
-                                    <div><span class="label label-default text-center odoo_purple">Confirm Sale</span><div>a Sale Order and a Transfer Order have been created</div></div>
+                                    <div><span class="label label-default text-center odoo_purple">Confirm Sale</span><div>The quotation becomes a Sale Order and a Transfer Order is created</div></div>
                                     <span class="fa fa-angle-down fa-2x"></span>
-                                    <div><span class="label label-default text-center odoo_purple">Click on <span class="fa fa-truck"/> Delivery</span><div> on the form to get the Transfer Order</div></div>
+                                    <div><span class="label label-default text-center odoo_purple">Click on <span class="fa fa-truck"/> Delivery</span><div> on the sale order form to see Transfer Order</div></div>
                                 </div>
                             </div>
                         </div>
@@ -303,9 +304,11 @@
                                     </span>
                                 </div>
                                 <div class="panel-body">
-                                    <div><span class="label label-default text-center odoo_purple">'Ready to Transfer'</span><div>shoud be displayed on the transfer if your products supply chain is properly configured. Otherwise, <strong>Check the availability</strong> manually</div></div>
+                                    <div><span class="label label-default text-center odoo_purple">'Available'</span><div>is displayed on the transfer if your products supply chain is properly configured. Otherwise, <strong>Check the availability</strong> manually</div></div>
                                     <span class="fa fa-angle-down fa-2x"></span>
-                                    <div><span class="label label-default text-center odoo_purple">Validate the Delivery</span><div>either by processing it one line at a time by clicking on the <span class="fa fa-gears"/> button, or as a whole with the <i>Validate</i> button</div></div>
+                                    <div><span class="label label-default text-center odoo_purple">Process the products</span><div>either by manually updating the Done quantity on the product lines, or let Odoo do it automatically while validating</div></div>
+                                    <span class="fa fa-angle-down fa-2x"></span>
+                                    <div><span class="label label-default text-center odoo_purple">Validate the Delivery</span><div>with the <i>Validate</i> button</div></div>
                                 </div>
                             </div>
                         </div>
@@ -314,23 +317,29 @@
 
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Purchase Flow</t>
+                    <p class="text-muted">
+                        Like with the sales flow, Odoo inventory management is
+                        fully integrated with the purchase app.
+                    </p>
                     <div t-if="not is_module_installed('purchase')" class="alert alert-warning">
                         <span>You need to install the Purchases Management app for this flow.</span>
                     </div>
-                    <p>Now a similar exercise but for a purchase flow.</p>
+                    <p>A classic purchase flow looks like the following:</p>
 
                     <div class="row">
                         <div class="col-md-6 text-center">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <span class="panel-title">
-                                        <strong>From the Purchases application</strong>
+                                        <strong>From the Purchase application</strong>
                                     </span>
                                 </div>
                                 <div class="panel-body">
-                                    <div><span class="label label-default text-center odoo_purple"><a t-att-href="prepare_backend_url('purchase.purchase_rfq')">Create a RFQ</a></span><div> with the products and their desired quantities to your vendor</div></div>
+                                    <div><span class="label label-default text-center odoo_purple"><a t-att-href="prepare_backend_url('purchase.purchase_rfq')">Create a RFQ</a></span><div> from your vendor with the products and the requested quantities</div></div>
                                     <span class="fa fa-angle-down fa-2x"></span>
-                                    <div><span class="label label-default text-center odoo_purple">Confirm Order</span><div>a Purchase Order and a Transfer Order have been created</div></div>
+                                    <div><span class="label label-default text-center odoo_purple">Confirm Order</span><div>The RFQ becomes a Purchase Order and a Transfer Order is created</div></div>
+                                    <span class="fa fa-angle-down fa-2x"></span>
+                                    <div><span class="label label-default text-center odoo_purple">Click on <span class="fa fa-truck"/> Shipment</span><div> on the purchase order form or click on <i>Receive Products</i> to see the Transfer Order</div></div>
                                 </div>
                             </div>
                         </div>
@@ -344,16 +353,13 @@
                                 <div class="panel-body">
                                     <div><span class="label label-default text-center odoo_purple">Find Incoming Shipments</span><div>via the <a t-att-href="prepare_backend_url('stock.stock_picking_type_action')">Dashboard</a> when you receive the ordered products</div></div>
                                     <span class="fa fa-angle-down fa-2x"></span>
-                                    <div><span class="label label-default text-center odoo_purple">Process the products</span><div>either manually by clicking on the <span class="fa fa-gears"/> button on the product lines, or scan them with the Odoo Barcode app</div></div>
+                                    <div><span class="label label-default text-center odoo_purple">Process the products</span><div>either by manually updating the Done quantity on the product lines, or scan them with the Odoo Barcode app, or let Odoo do it automatically while validating</div></div>
                                     <span class="fa fa-angle-down fa-2x"></span>
                                     <div><span class="label label-default text-center odoo_purple">Validate the Receipt Order</span><div>to mark the products as transferred to your stock location</div></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <p>Back to the Purchases application, find the <strong>original Purchase Order</strong> <a t-att-href="prepare_backend_url('purchase.purchase_form_action')">in the list</a> and print the invoice.</p>
-
                 </t>
             </t>
             <t t-call="web_planner.category">
@@ -368,7 +374,9 @@
                         space and may loose value).
                     </p>
                     <p>
-                        In Odoo, <strong>Reordering Rules</strong> can be used to replenish your products: Odoo will automatically propose a procurement to buy new products if you are running out of stock.
+                        In Odoo, <strong>Reordering Rules</strong> are used to replenish your products.
+                        Odoo will automatically propose a procurement to buy new products if you are
+                        running out of stock.
                     </p>
                     <p>
                         To create them, click on <strong><span class="fa fa-refresh"/> Reordering</strong> on <a t-att-href="prepare_backend_url('product.product_template_action_product')">a stockable Product</a> and simply enter a minimum and maximum quantity.
@@ -379,14 +387,14 @@
                     <t t-set="page_title">Resolve Procurement Exceptions</t>
                     <t t-set="page_menutitle">Procurement Exceptions</t>
                     <p class="text-muted">
-                        If you configured automatic procurement, Odoo will automatically generate
+                        If you configured automatic procurement, Odoo automatically generates
                         Procurements Orders. You usually don't need to worry about them, but
-                        sometimes, the system can remain blocked without generating a
+                        sometimes the system can remain blocked without generating a
                         corresponding document, usually due to a configuration problem.
                     </p>
                     <p class="text-muted">
                         It is therefore a good idea to check and try to resolve those procurement
-                        exceptions, accessible from the Schedulers menu (you need the Stock
+                        exceptions. These are accessible from the Schedulers menu (you need the Stock
                         Manager role to see it).
                     </p>
                     <h4>Here are some usual problems and their solutions:</h4>
@@ -399,40 +407,41 @@
                 </t>
             </t>
             <t t-call="web_planner.category">
-                <t t-set="menu_categorytitle">Advanced'</t>
+                <t t-set="menu_categorytitle">Advanced</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-bolt'"/>
 
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Traceability</t>
                     <p>
-                        Odoo can run advanced traceability by using Product Lots and Serial
+                        Odoo is able to run advanced traceability by using Product Lots and Serial
                         Numbers, usually identified by bar codes stuck on the products.
                     </p>
                     <p>
                         Lots can be encoded on incoming shipments, internal transfers and
                         outgoing deliveries according to the settings in the picking type.
-                        For every product, you can define if it does not do any lot tracking at all,
-                        if it tracks by lot, or by unique serial number.
+                        The tracking can be configured on every product: not any tracing at
+                        all, tracking by lot, or tracking by unique serial number.
                     </p>
                     <p>
-                        In case of unique serial numbers, each serial number will correspond
+                        In case of unique serial numbers, each serial number corresponds
                         to exactly one piece.  In case of lots, you need to supply the quantity
                         for each lot when you move that product.
                     </p>
-                    <h4>To use Lot Tracking:</h4>
+                    <h4>How to use Lot Tracking:</h4>
                     <ul>
                         <li><strong>Activate <i>Track lots or serial numbers</i></strong> in your <a t-att-href="prepare_backend_url('stock.action_stock_config_settings')">Inventory Settings</a>.</li>
                         <li>Set the products you want to track with lots or serial numbers by setting the Tracking field on the product form</li>
                         <li><strong>When you process an incoming shipment, internal transfer or delivery</strong>, assign a lot number or different lot numbers or serial numbers to a product by clicking on the <span class="fa fa-list"/> icon</li>
                     </ul>
-                    <p>To check the trajectory of a lot, you can find it back in <strong><i>Inventory Control > Serial Numbers</i></strong>
-                        and then Traceability or you can filter the Quantitative Valuation of a product with a certain lot.  </p>
+                    <p>To check the trajectory of a lot, find it back in <strong><i>Inventory Control > Serial Numbers / lots</i></strong>.
+                       Choose a Lo t in the list and click on <i>Traceability</i>i>. You may also
+                       filter the Quantitative Valuation of a product with a certain lot.</p>
                 </t>
 
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Routes Management</t>
                     <p>
-                        Odoo can manage <strong>advanced push/pull routes configuration</strong>, for example:
+                        Odoo handles <strong>advanced push/pull routes configuration</strong>, for example:
                     </p>
                     <ul>
                         <li>Manage product manufacturing chains</li>
@@ -440,7 +449,7 @@
                         <li>Define routes within your warehouse according to business needs, such as Quality Control, After Sales Services or Supplier Returns</li>
                         <li>Help rental management, by generating automated return moves for rented products</li>
                     </ul>
-                    <p>This is quite complex to set up, so <strong>contact your Projet Manager</strong> and he will take care of this for you</p>
+                    <p>This is quite complex to set up, so <strong>contact your Project Manager</strong> to address this.</p>
                 </t>
             </t>
             <t t-call="web_planner.page">
@@ -452,8 +461,8 @@
                 <div class="text-center">
                     <h1>Congratulations!</h1>
                     <h4>We hope this guide helped you implement Odoo Inventory.</h4>
-                    <p>Don't hesitate to send us an email to describe your experience or to suggest improvements!</p>
-                    <p>Once it's fully working, give us some feedback: we love to hear from our customer. It would be great if you can send a photo of your warehouse to <a href="mailto:feedback@mail.odoo.com?subject=Inventory%20Planner" target="_blank">feedback@mail.odoo.com</a></p>
+                    <p>Do not hesitate to send us an email to describe your experience or to suggest improvements!</p>
+                    <p>Once it's fully working, give us some feedback: we love to hear from our customer. It would be great if you could send us a photo of your warehouse to <a href="mailto:feedback@mail.odoo.com?subject=Inventory%20Planner" target="_blank">feedback@mail.odoo.com</a></p>
                     <p><strong>Enjoy your Inventory management with Odoo!</strong></p>
                     <p>- The Odoo Team</p>
                     <img src="/web_planner/static/src/img/odoo_logo.png"/>

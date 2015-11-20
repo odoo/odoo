@@ -667,7 +667,7 @@ PaymentScreenWidget.include({
             }
         }
 
-        this._super();
+        this._super(force_validation);
     }
 });
 

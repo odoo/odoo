@@ -372,7 +372,12 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
-        cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
+        cr.execute("""
+            UPDATE ir_model
+               SET name=%s, info=%s, state='base', transient=%s
+             WHERE model=%s
+         RETURNING id
+        """, [self._description, self.__doc__, self._transient, self._name])
         if not cr.rowcount:
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
             model_id = cr.fetchone()[0]

@@ -366,7 +366,7 @@ class MailThread(models.AbstractModel):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='message_ids']"):
                 # the 'Log a note' button is employee only
-                options = json.loads(node.get('options', '{}'))
+                options = eval(node.get('options', '{}'))
                 is_employee = self.env.user.has_group('base.group_user')
                 options['display_log_button'] = is_employee
                 if is_employee:
@@ -379,7 +379,7 @@ class MailThread(models.AbstractModel):
                 # emoji list
                 options['emoji_list'] = self.env['mail.shortcode'].search([('shortcode_type', '=', 'image')]).read(['source', 'description', 'substitution'])
                 # save options on the node
-                node.set('options', json.dumps(options))
+                node.set('options', repr(options))
             res['arch'] = etree.tostring(doc)
         return res
 
@@ -1238,10 +1238,14 @@ class MailThread(models.AbstractModel):
         html_sanitize methods located in tools. """
         root = lxml.html.fromstring(body)
         postprocessed = False
+        to_remove = []
         for node in root.iter():
-            if 'o_mail_notification' in node.get('class', '') or 'o_mail_notification' in node.get('summary', ''):
+            if 'o_mail_notification' in (node.get('class') or '') or 'o_mail_notification' in (node.get('summary') or ''):
                 postprocessed = True
-                node.getparent().remove(node)
+                if node.getparent() is not None:
+                    to_remove.append(node)
+        for node in to_remove:
+            node.getparent().remove(node)
         if postprocessed:
             body = etree.tostring(root, pretty_print=False, encoding='UTF-8')
         return body, attachments

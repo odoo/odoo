@@ -4,6 +4,7 @@
     <t t-name="DashboardMain">
         <div class="container-fluid o_web_settings_dashboard">
             <div class="row">
+                <div class="o_web_settings_dashboard_enterprise"/>
                 <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col"> <div class="text-center o_web_settings_dashboard_apps"></div>
                     <ul class="nav nav-pills o_web_settings_dashboard_pills">
                         <li role="presentation" class="text-center"><a href="https://www.odoo.com/apps/modules" target="_blank"><i class="fa fa-rocket fa-2x text-muted"/> App store </a></li>
@@ -66,6 +67,10 @@
                         <t t-foreach="pending_users" t-as="pending">
                             <a href="#"><div class="o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/></div></a>
                         </t>
+                        <t t-if="pending_users.length &lt; widget.data.pending_count">
+                            <br/>
+                            <a href="#"><div class="o_web_settings_dashboard_more"><t t-esc="widget.data.pending_count - pending_users.length"/> more</div></a>
+                        </t>
                     </t>
                 </small>
             </div>
@@ -127,6 +132,33 @@
                 <div class="col-xs-4"><a><i class="fa fa-twitter-square fa-4x tw_share"/></a></div>
                 <div class="col-xs-4"><a><i class="fa fa-facebook-square fa-4x fb_share"/></a></div>
                 <div class="col-xs-4"><a><i class="fa fa-linkedin-square fa-4x li_share"/></a></div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="DashboardEnterprise">
+        <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
+            <div class="text-center o_web_settings_dashboard_enterprise">
+                <div class="text-center o_web_settings_dashboard_enterprise">
+                    <i class="fa fa-cloud-upload fa-4x text-muted"></i>
+                    <div class="text-center o_web_settings_dashboard_header">Odoo Enterprise</div>
+                    <div>
+                        <a class="btn btn-primary btn-block o_confirm_upgrade" role="button"><strong>Upgrade Now</strong></a>
+                    </div>
+                    <hr/>
+                    <div class="text-left">
+                        Get more features with Odoo Enterprise!
+                        <ul class="list-unstyled">
+                            <li><i class="fa fa-check"></i> Access to all Enterprise Apps</li>
+                            <li><i class="fa fa-check"></i> New design</li>
+                            <li><i class="fa fa-check"></i> Mobile support</li>
+                            <li><i class="fa fa-check"></i> Upgrade to future versions</li>
+                            <li><i class="fa fa-check"></i> Bugfixes guarantee</li>
+                            <li><a href="http://www.odoo.com/editions" target="_blank"><i class="fa fa-plus"></i> And more</a></li>
+                        </ul>
+                        <img class="img img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"'/>
+                    </div>
+                </div>
             </div>
         </div>
     </t>
