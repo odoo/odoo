@@ -635,16 +635,21 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             _(ids).each(function (id) {
                 self.records.remove(self.records.get(id));
             });
-            if (self.records.length === 0 && self.dataset.size() > 0) {
-                //Trigger previous manually to navigate to previous page, 
-                //If all records are deleted on current page.
-                self.$pager.find('ul li:first a').trigger('click');
-            } else if (self.dataset.size() == self._limit) {
-                //Reload listview to update current page with next page records 
-                //because pager going to be hidden if dataset.size == limit
-                self.reload();
+            // Hide the table if there is no more record in the dataset
+            if (self.dataset.size() === 0) {
+                self.no_result();
             } else {
-                self.configure_pager(self.dataset);
+                if (self.records.length === 0 && self.dataset.size() > 0) {
+                    //Trigger previous manually to navigate to previous page,
+                    //If all records are deleted on current page.
+                    self.$pager.find('ul li:first a').trigger('click');
+                } else if (self.dataset.size() === self._limit) {
+                    //Reload listview to update current page with next page records
+                    //because pager going to be hidden if dataset.size == limit
+                    self.reload();
+                } else {
+                    self.configure_pager(self.dataset);
+                }
             }
             self.compute_aggregates();
         });
