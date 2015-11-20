@@ -363,12 +363,6 @@
                     <field name="product_id"/>
                     <filter string="My Orders" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
                     <separator/>
-                    <filter string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
-                    <filter string="Sales" name="sales" domain="[('state','in',('sale','done'))]"/>
-                    <separator/>
-                    <filter string="To Invoice" domain="[('invoice_status','=','to invoice')]"/>
-                    <filter string="Upselling" domain="[('invoice_status','=','upselling')]"/>
-                    <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
@@ -379,13 +373,43 @@
             </field>
         </record>
 
+        <record id="sale_order_view_search_inherit_quotation" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit.quotation</field>
+            <field name="model">sale.order</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <separator/>
+                    <filter string="Quotations" name="draft" domain="[('state','=','draft')]" help="Sales Order that haven't yet been confirmed"/>
+                    <filter string="Quotations Sent" name="sent" domain="[('state','=','sent')]" help="Sales Order that haven't yet been confirmed"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sale_order_view_search_inherit_sale" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit.sale</field>
+            <field name="model">sale.order</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <separator/>
+                    <filter string="Sales" name="sales" domain="[('state','in',('progress','done'))]" />
+                    <separator/>
+                    <filter string="To Invoice" domain="[('invoice_status','=','to invoice')]" />
+                    <filter string="Upselling" domain="[('invoice_status','=','upselling')]" />
+                </xpath>
+            </field>
+        </record>
+
         <record id="action_orders" model="ir.actions.act_window">
             <field name="name">Sales Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>
             <field name="context">{'show_sale': True}</field>
             <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
             <field name="help" type="html">
@@ -412,6 +436,7 @@
             <field name="view_mode">tree,form,calendar,graph,pivot</field>
             <field name="context">{'show_sale': True}</field>
             <field name="domain">[('invoice_status','=','to invoice')]</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem name="Invoicing"
             id="menu_sale_invoicing" parent="base.menu_base_partner"
@@ -428,6 +453,7 @@
             <field name="view_mode">tree,form,calendar,graph,pivot</field>
             <field name="domain">[('invoice_status','=','upselling')]</field>
             <field name="context">{'show_sale': True}</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_orders_upselling"
             id="menu_sale_order_upselling" parent="sale.menu_sale_invoicing"
@@ -441,9 +467,8 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_quotation_tree"/>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
-            <field name="context">{}</field>
             <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Create a Quotation, the first step of a new sale.
@@ -607,7 +632,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
             <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
             <field name="context">{
                     'show_sale': True,
@@ -631,7 +656,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
             <field name="domain">[('state', '=', 'sale'),('invoice_status','=','to invoice')]</field>
             <field name="context">{
                     'show_sale': True,
@@ -655,7 +680,7 @@
                 }
             </field>
             <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
-            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Create a Quotation, the first step of a new sale.
