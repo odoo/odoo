@@ -85,8 +85,6 @@ class TestSaleOrder(TestSale):
         # cancelling and setting to done, you should not be able to delete any SO ever
         so.action_cancel()
         self.assertTrue(so.state == 'cancel', 'Sale: cancelling SO should always be possible')
-        with self.assertRaises(UserError):
-            so.sudo(self.manager).unlink()
         so.action_done()
         self.assertTrue(so.state == 'done', 'Sale: SO not done')
 
