@@ -5307,8 +5307,9 @@ class BaseModel(object):
         environment
 
         .. warning::
-            The new environment may not benefit from the initial environment's
-            data cache. This may introduce performance problems.
+            The new environment will not benefit from the current
+            environment's data cache, so later data access may incur extra
+            delays while re-fetching from the database.
 
         :type env: :class:`~openerp.api.Environment`
         """
@@ -5324,15 +5325,16 @@ class BaseModel(object):
         and record rules are bypassed.
 
         .. warning::
-            A recordset for a different user may also be attached to a
-            different company. As a consequence, and depending on your
-            application, using `sudo` may break features in multi-company
-            instances.
+            Using `sudo` could cause data access to cross the boundaries of
+            record rules, possibly mixing records that are meant to be
+            isolated (e.g. records from different companies in multi-company
+            environments).
 
         .. warning::
-            The new recordset won't benefit from the initial environment's
-            data cache, since the record rules and access control will have to
-            be re-evaluated. This may introduce performance problems.
+            Because the record rules and access control will have to be
+            re-evaluated, the new recordset will not benefit from the current
+            environment's data cache, so later data access may incur extra
+            delays while re-fetching from the database.
         """
         return self.with_env(self.env(user=user))
 
