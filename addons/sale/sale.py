@@ -148,8 +148,8 @@ class SaleOrder(models.Model):
     @api.multi
     def unlink(self):
         for order in self:
-            if order.state != 'draft':
-                raise UserError(_('You can only delete draft quotations!'))
+            if order.state not in ('draft', 'cancel'):
+                raise UserError(_('You can not delete a quotation sent or a sale order! Try to cancel it before.'))
         return super(SaleOrder, self).unlink()
 
     @api.multi
