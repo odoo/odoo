@@ -22,6 +22,8 @@
                                 attrs="{'invisible':[('email_cc','=',False)]}"/>
                         <field name="reply_to" readonly="1"
                                 attrs="{'invisible':[('reply_to','=',False)]}"/>
+                        <field name="scheduled_date" readonly="1"
+                                attrs="{'invisible':[('scheduled_date','=',False)]}"/>
                     </group>
                     <field name="body_html" widget="html" readonly="1"
                             nolabel="1" options='{"safe": True}'/>

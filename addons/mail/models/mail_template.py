@@ -160,6 +160,7 @@ class MailTemplate(models.Model):
                                                   "destination document model (sub-model).")
     null_value = fields.Char('Default Value', help="Optional value to use if the target field is empty")
     copyvalue = fields.Char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field.")
+    scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
 
     @api.onchange('model_id')
     def onchange_model_id(self):
@@ -433,7 +434,7 @@ class MailTemplate(models.Model):
             res_ids = [res_ids]
             multi_mode = False
         if fields is None:
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to']
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date']
 
         res_ids_to_templates = self.get_email_template_batch(res_ids)
 

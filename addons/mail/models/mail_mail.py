@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import datetime
 import logging
+
 from email.utils import formataddr
 from urlparse import urljoin
 
@@ -50,6 +52,8 @@ class MailMail(models.Model):
     failure_reason = fields.Text(
         'Failure Reason', readonly=1,
         help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.")
+    scheduled_date = fields.Char('Scheduled Send Date',
+        help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.")
 
     @api.model
     def create(self, values):
@@ -98,7 +102,11 @@ class MailMail(models.Model):
                                 messages are sent).
         """
         if not self.ids:
-            filters = [('state', '=', 'outgoing')]
+            filters = ['&',
+                       ('state', '=', 'outgoing'),
+                       '|',
+                       ('scheduled_date', '<', datetime.datetime.now()),
+                       ('scheduled_date', '=', False)]
             if 'filters' in self._context:
                 filters.extend(self._context['filters'])
             ids = self.search(filters).ids
