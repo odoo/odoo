@@ -440,7 +440,7 @@ class PurchaseOrderLine(models.Model):
             line.qty_received = total
 
     name = fields.Text(string='Description', required=True)
-    product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
+    product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, select=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes')
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
@@ -581,6 +581,14 @@ class PurchaseOrderLine(models.Model):
             self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         if not seller:
+            if not self.product_qty:
+                # Suggest a minimum quantity if possible
+                seller_min_qty = self.product_id.seller_ids\
+                    .filtered(lambda r: r.name == self.order_id.partner_id)\
+                    .sorted(key=lambda r: r.min_qty)
+                if seller_min_qty:
+                    self.product_qty = seller_min_qty[0].min_qty
+                    self.product_uom = seller_min_qty[0].product_uom
             return result
 
         fpos = self.order_id.fiscal_position_id
