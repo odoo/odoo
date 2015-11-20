@@ -485,7 +485,7 @@ class Message(models.Model):
 
             nb_read = 0
             if context and 'mail_read_set_read' in context and context['mail_read_set_read']:
-                nb_read = self.set_message_read(True, create_missing=False)
+                nb_read = self.set_message_done()
 
         else:
             nb_read = 0

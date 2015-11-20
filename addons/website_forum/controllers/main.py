@@ -97,7 +97,7 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
     def notification_read(self, **kwargs):
-        request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_read(read=True)
+        request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_done()
         return True
 
     @http.route(['/forum/<model("forum.forum"):forum>',
