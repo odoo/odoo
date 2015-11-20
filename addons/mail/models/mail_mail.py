@@ -3,6 +3,7 @@
 import base64
 import datetime
 import logging
+import threading
 
 from email.utils import formataddr
 from urlparse import urljoin
@@ -114,8 +115,12 @@ class MailMail(models.Model):
         try:
             # Force auto-commit - this is meant to be called by
             # the scheduler, and we can't allow rolling back the status
-            # of previously sent emails!
-            res = self.browse(ids).send(auto_commit=True)
+            # of previously sent emails! Does not auto_commit if in
+            # testing mode
+            if (not self.pool._init or getattr(threading.currentThread(), 'testing', False)):
+                res = self.browse(ids).send(auto_commit=False)
+            else:
+                res = self.browse(ids).send(auto_commit=True)
         except Exception:
             _logger.exception("Failed processing mail queue")
         return res
