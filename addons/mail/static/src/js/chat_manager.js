@@ -427,8 +427,7 @@ function on_chat_session_notification (chat_session) {
     }
     // partner specific change (open a detached window for example)
     if ((chat_session.state === "open") || (chat_session.state === "folded")) {
-        add_channel(chat_session, {autoswitch: false});
-        if (chat_session.is_minimized) {
+        if (chat_session.is_minimized && chat_manager.get_channel(chat_session.id)) {
             chat_manager.bus.trigger("open_chat", chat_session);
         }
     } else if (chat_session.state === "closed") {
@@ -590,9 +589,9 @@ function init () {
     });
 
     var load_channels = session.rpc('/mail/client_action').then(function (result) {
-        _.each(result.channel_slots.channel_channel, add_channel);
-        _.each(result.channel_slots.channel_private_group, add_channel);
-        _.each(result.channel_slots.channel_direct_message, add_channel);
+        _.each(result.channel_slots, function (channels) {
+            _.each(channels, add_channel);
+        });
         needaction_counter = result.needaction_inbox_counter;
     });
 
