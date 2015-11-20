@@ -187,17 +187,20 @@ class ir_model(osv.osv):
             RegistryManager.signal_registry_change(cr.dbname)
         return res
 
-    def instanciate(self, cr, user, model, transient, context=None):
+    @api.model
+    def _instanciate(self, model, description, info, transient):
         if isinstance(model, unicode):
             model = model.encode('utf-8')
 
         class CustomModel(models.Model):
+            __doc__ = info
             _name = model
+            _description = description
             _module = False
             _custom = True
             _transient = bool(transient)
 
-        CustomModel._build_model(self.pool, cr)
+        CustomModel._build_model(self.pool, self._cr)
 
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
