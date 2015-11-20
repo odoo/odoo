@@ -372,19 +372,26 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
+        params = {
+            'model': self._name,
+            'name': self._description,
+            'info': next(cls.__doc__ for cls in type(self).mro() if cls.__doc__),
+            'state': 'manual' if self._custom else 'base',
+            'transient': self._transient,
+        }
         cr.execute("""
             UPDATE ir_model
-               SET transient=%s
-             WHERE model=%s
+               SET name=%(name)s, info=%(info)s, transient=%(transient)s
+             WHERE model=%(model)s
          RETURNING id
-        """, [self._transient, self._name])
+        """, params)
         if not cr.rowcount:
-            cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
-            model_id = cr.fetchone()[0]
-            cr.execute("INSERT INTO ir_model (id, model, name, info, state, transient) VALUES (%s, %s, %s, %s, %s, %s)",
-                       (model_id, self._name, self._description, self.__doc__, 'base', self._transient))
-        else:
-            model_id = cr.fetchone()[0]
+            cr.execute("""
+                INSERT INTO ir_model (model, name, info, state, transient)
+                VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
+                RETURNING id
+            """, params)
+        model_id = cr.fetchone()[0]
         if 'module' in context:
             name_id = 'model_'+self._name.replace('.', '_')
             cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
