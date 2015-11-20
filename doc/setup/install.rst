@@ -84,7 +84,7 @@ https://nightly.odoo.com.
 Windows
 -------
 
-* download https://nightly.odoo.com/8.0/nightly/exe/odoo_8.0.latest.exe
+* download https://nightly.odoo.com/9.0/nightly/exe/odoo_9.0.latest.exe
 * run the downloaded file
 
   .. warning:: on Windows 8, you may see a warning titled "Windows protected
@@ -100,7 +100,7 @@ Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`{%PROGRAMFILES%}\\Odoo 8.0-{id}\\server\\openerp-server.conf`.
+:file:`{%PROGRAMFILES%}\\Odoo 9.0-{id}\\server\\openerp-server.conf`.
 
 The configuration file can be edited to connect to a remote Postgresql, edit
 file locations or set a dbfilter.
@@ -111,13 +111,13 @@ To reload the configuration file, restart the Odoo service via
 Deb
 ---
 
-To install Odoo 8.0 on Debian-based distribution, execute the following
+To install Odoo 9.0 on Debian-based distribution, execute the following
 commands as root:
 
 .. code-block:: console
 
     # wget -O - https://nightly.odoo.com/odoo.key | apt-key add -
-    # echo "deb http://nightly.odoo.com/8.0/nightly/deb/ ./" >> /etc/apt/sources.list
+    # echo "deb http://nightly.odoo.com/9.0/nightly/deb/ ./" >> /etc/apt/sources.list
     # apt-get update && apt-get install odoo
 
 This will automatically install all dependencies, install Odoo itself as a
@@ -166,7 +166,7 @@ RPM
     $ sudo postgresql-setup initdb
     $ sudo systemctl enable postgresql
     $ sudo systemctl start postgresql
-    $ sudo yum-config-manager --add-repo=https://nightly.odoo.com/8.0/nightly/rpm/odoo.repo
+    $ sudo yum-config-manager --add-repo=https://nightly.odoo.com/9.0/nightly/rpm/odoo.repo
     $ sudo yum install -y odoo
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
@@ -213,7 +213,7 @@ easily keeping (and running) multiple versions of Odoo side-by-side.
 There are two way to get the odoo source source zip or git.
 
 * Odoo zip can be downloaded from
-  https://nightly.odoo.com/8.0/nightly/src/odoo_8.0.latest.zip, the zip file
+  https://nightly.odoo.com/9.0/nightly/src/odoo_9.0.latest.zip, the zip file
   then needs to be uncompressed to use its content
 
 * git allows simpler update and easier switching between differents versions
