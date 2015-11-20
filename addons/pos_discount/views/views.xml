@@ -7,13 +7,13 @@
             <field name="model">pos.config</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_config_form" />
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='features']/group[1]" position="inside">
-                        <field name='iface_discount' />
-                </xpath>
                 <xpath expr="//group[@name='receipt']" position="after">
-                    <group string="Discounts" col="4" >
+                    <group string="Discounts">
+                        <field name='iface_discount' />
+                    </group>
+                    <group col="4" attrs="{'invisible': [('iface_discount', '=', False)]}">
                         <field name='discount_pc' />
-                        <field name="discount_product_id" />
+                        <field name='discount_product_id' attrs="{'required': [('iface_discount', '=', True)]}" />
                     </group>
                 </xpath>
             </field>
