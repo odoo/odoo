@@ -2,6 +2,10 @@
 
 from openerp.tests import common
 
+def strip_prefix(prefix, names):
+    size = len(prefix)
+    return [name[size:] for name in names if name.startswith(prefix)]
+
 class TestOnChange(common.TransactionCase):
 
     def setUp(self):
@@ -83,8 +87,8 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(field_onchange.get('name'), '1')
         self.assertEqual(field_onchange.get('messages'), '1')
         self.assertItemsEqual(
-            [name for name in field_onchange if name.startswith('messages.')],
-            ['messages.author', 'messages.body', 'messages.name', 'messages.size'],
+            strip_prefix('messages.', field_onchange),
+            ['author', 'body', 'name', 'size'],
         )
 
         # modify discussion name
@@ -106,7 +110,7 @@ class TestOnChange(common.TransactionCase):
         self.env.invalidate_all()
         result = self.Discussion.onchange(values, 'name', field_onchange)
         self.assertIn('messages', result['value'])
-        self.assertEqual(result['value']['messages'], [
+        self.assertItemsEqual(result['value']['messages'], [
             (5,),
             (1, message.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
