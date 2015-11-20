@@ -324,6 +324,18 @@ class product_pricelist_item(osv.osv):
 class product_pricelist_item_new(models.Model):
     _inherit = "product.pricelist.item"
 
+    _applied_on_field_map = {
+        '0_product_variant': 'product_id',
+        '1_product': 'product_tmpl_id',
+        '2_product_category': 'categ_id',
+    }
+
+    _compute_price_field_map = {
+        'fixed': ['fixed_price'],
+        'percentage': ['percent_price'],
+        'formula': ['price_discount', 'price_surcharge', 'price_round', 'price_min_margin', 'price_max_margin'],
+    }
+
     @api.one
     @api.depends('categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
         'pricelist_id', 'percent_price', 'price_discount', 'price_surcharge')
@@ -347,3 +359,16 @@ class product_pricelist_item_new(models.Model):
     #functional fields used for usability purposes
     name = Fields.Char(compute='_get_pricelist_item_name_price', string='Name', multi='item_name_price', help="Explicit rule name for this pricelist line.")
     price = Fields.Char(compute='_get_pricelist_item_name_price', string='Price', multi='item_name_price', help="Explicit rule name for this pricelist line.")
+
+    @api.onchange('applied_on')
+    def _onchange_applied_on(self):
+        for applied_on, field in self._applied_on_field_map.iteritems():
+            if self.applied_on != applied_on:
+                setattr(self, field, False)
+
+    @api.onchange('compute_price')
+    def _onchange_compute_price(self):
+        for compute_price, field in self._compute_price_field_map.iteritems():
+            if self.compute_price != compute_price:
+                for f in field:
+                    setattr(self, f, 0.0)
