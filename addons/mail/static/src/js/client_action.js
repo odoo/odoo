@@ -218,6 +218,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 });
                 chat_manager.bus.on('update_needaction', self, self.render_sidebar);
                 chat_manager.bus.on('unsubscribe_from_channel', self, self.render_sidebar);
+                chat_manager.bus.on('update_channel_unread_counter', self, self.render_sidebar);
             });
     },
 

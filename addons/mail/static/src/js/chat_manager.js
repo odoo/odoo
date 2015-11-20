@@ -306,6 +306,11 @@ function fetch_document_messages (ids, options) {
     }
 }
 
+function update_channel_unread_counter (channel, counter) {
+    channel.unread_counter = counter;
+    chat_manager.bus.trigger("update_channel_unread_counter", channel);
+}
+
 var channel_seen = _.throttle(function (channel) {
     return ChannelModel.call('channel_seen', [[channel.id]]).then(function (last_seen_message_id) {
         channel.last_seen_message_id = last_seen_message_id;
@@ -343,7 +348,7 @@ function on_needaction_notification (message) {
 function on_channel_notification (message) {
     var channel = chat_manager.get_channel(message.channel_ids[0]);
     if (channel) {
-        channel.unread_counter++;
+        update_channel_unread_counter(channel, channel.unread_counter+1);
         add_message(message, { channel_id: channel.id, show_notification: true });
     } else {
         chat_manager.join_channel(message.channel_ids[0], {autoswitch: false}).then(function() {
@@ -492,7 +497,7 @@ var chat_manager = {
     },
     mark_channel_as_seen: function (channel) {
         if (channel.unread_counter > 0) {
-            channel.unread_counter = 0;
+            update_channel_unread_counter(channel, 0);
             channel_seen(channel);
         }
     },
