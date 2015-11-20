@@ -22,6 +22,10 @@ _logger = logging.getLogger(__name__)
 
 MODULE_UNINSTALL_FLAG = '_force_unlink'
 
+def encode(s):
+    """ Return an UTF8-encoded version of ``s``. """
+    return s.encode('utf8') if isinstance(s, unicode) else s
+
 def _get_fields_type(self, cr, uid, context=None):
     # Avoid too many nested `if`s below, as RedHat's Python 2.6
     # break on it. See bug 939653.
@@ -187,17 +191,18 @@ class ir_model(osv.osv):
             RegistryManager.signal_registry_change(cr.dbname)
         return res
 
-    def instanciate(self, cr, user, model, transient, context=None):
-        if isinstance(model, unicode):
-            model = model.encode('utf-8')
-
+    @api.model
+    def _instanciate(self, model_data):
+        """ Instanciate a model class for the custom model given by parameters ``model_data``. """
         class CustomModel(models.Model):
-            _name = model
+            _name = encode(model_data['model'])
+            _description = model_data['name']
             _module = False
             _custom = True
-            _transient = bool(transient)
+            _transient = bool(model_data['transient'])
+            __doc__ = model_data['info']
 
-        CustomModel._build_model(self.pool, cr)
+        CustomModel._build_model(self.pool, self._cr)
 
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
