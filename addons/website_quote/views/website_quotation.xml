@@ -570,6 +570,11 @@
                         </div>
                     </div>
                     <div class="col-md-9">
+                        <div class="row">
+                            <div t-ignore="true" class="css_editable_mode_hidden col-md-offset-11">
+                              <a class="btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('website_quote.action_sale_quotation_template').id)">Back</a>
+                            </div>
+                        </div>
                         <div class="alert alert-info alert-dismissable" t-ignore="True">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                             <p>

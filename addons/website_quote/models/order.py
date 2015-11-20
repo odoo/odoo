@@ -9,6 +9,7 @@ import datetime
 
 import openerp.addons.decimal_precision as dp
 from openerp import SUPERUSER_ID
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 
 
@@ -129,6 +130,16 @@ class sale_order_line(osv.osv):
         values = self._inject_quote_description(cr, uid, values, context)
         return super(sale_order_line, self).write(cr, uid, ids, values, context=context)
 
+    # The overrided onchange was written in new api, sorry
+    # Take the description on the order template if the product is present in it
+    @api.multi
+    @api.onchange('product_id')
+    def product_id_change(self):
+        domain = super(sale_order_line, self).product_id_change()
+        if self.order_id.template_id:
+            self.name = next((quote_line.name for quote_line in self.order_id.template_id.quote_line if quote_line.product_id.id == self.product_id.id), self.name) 
+        return domain
+
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -174,7 +185,7 @@ class sale_order(osv.osv):
 
         if partner:
             context = dict(context or {})
-            context['lang'] = self.pool['res.partner'].browse(cr, uid, partner, context).lang
+            context['lang'] = self.pool['res.partner'].browse(cr, uid, partner, context=context).lang
 
         pricelist_obj = self.pool['product.pricelist']
 
@@ -229,7 +240,7 @@ class sale_order(osv.osv):
             }))
         date = False
         if quote_template.number_of_days > 0:
-            date = (datetime.datetime.now() + datetime.timedelta(quote_template.number_of_days)).strftime("%Y-%m-%d")
+            date = (datetime.datetime.now() + datetime.timedelta(quote_template.number_of_days)).strftime(DEFAULT_SERVER_DATE_FORMAT)
         data = {
             'order_line': lines,
             'website_description': quote_template.website_description,
