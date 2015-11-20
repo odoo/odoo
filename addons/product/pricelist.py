@@ -48,7 +48,7 @@ class product_pricelist(osv.osv):
                        FROM ((
                                 SELECT pr.id, pr.name
                                 FROM product_pricelist pr JOIN
-                                     res_currency cur ON 
+                                     res_currency cur ON
                                          (pr.currency_id = cur.id)
                                 WHERE pr.name || ' (' || cur.name || ')' = %(name)s
                             )
@@ -61,7 +61,7 @@ class product_pricelist(osv.osv):
                                         tr.name = 'product.pricelist,name' AND
                                         tr.lang = %(lang)s
                                      ) JOIN
-                                     res_currency cur ON 
+                                     res_currency cur ON
                                          (pr.currency_id = cur.id)
                                 WHERE tr.value || ' (' || cur.name || ')' = %(name)s
                             )
@@ -323,6 +323,19 @@ class product_pricelist_item(osv.osv):
 
 class product_pricelist_item_new(models.Model):
     _inherit = "product.pricelist.item"
+
+    _applied_on_field_map = {
+        '0_product_variant': 'product_id',
+        '1_product': 'product_tmpl_id',
+        '2_product_category': 'categ_id',
+    }
+
+    @api.one
+    @api.onchange('applied_on')
+    def _onchange_applied_on(self):
+        for applied_on, field in self._applied_on_field_map.iteritems():
+            if self.applied_on != applied_on:
+                setattr(self, field, False)
 
     @api.one
     @api.depends('categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
