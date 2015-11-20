@@ -281,32 +281,40 @@ class payment_line(osv.osv):
                 date = time.strftime('%Y-%m-%d')
         return date
 
-    def _get_ml_inv_ref(self, cr, uid, ids, *a):
+    def _get_payment_move_line(self, cr, uid, ids, context=None):
+        payment_line_obj = self.pool.get('payment.line')
+        return payment_line_obj.search(cr, uid,
+                                       [('move_line_id', 'in', ids)],
+                                       context=context)
+
+    def _get_move_line_values(self, cr, uid, ids, fields, arg, context=None):
         res = {}
-        for id in self.browse(cr, uid, ids):
-            res[id.id] = False
-            if id.move_line_id:
-                if id.move_line_id.invoice:
-                    res[id.id] = id.move_line_id.invoice.id
+        for payment_line in self.browse(cr, uid, ids):
+            res[payment_line.id] = {'ml_date_created': False,
+                                    'ml_maturity_date': False,
+                                    'ml_inv_ref': False,
+                                    'ml_reconcile_id': False,
+                                    'ml_state': False}
+            if payment_line.move_line_id:
+                move_line = payment_line.move_line_id
+                res[payment_line.id] = {
+                    'ml_date_created': move_line.date_created,
+                    'ml_maturity_date': move_line.date_maturity,
+                    'ml_inv_ref': move_line.invoice and move_line.invoice.id or False,
+                    'ml_reconcile_id': move_line.reconcile_id and move_line.reconcile_id.id or False,
+                    'ml_state': move_line.state,
+                }
         return res
 
-    def _get_ml_maturity_date(self, cr, uid, ids, *a):
-        res = {}
-        for id in self.browse(cr, uid, ids):
-            if id.move_line_id:
-                res[id.id] = id.move_line_id.date_maturity
-            else:
-                res[id.id] = False
-        return res
-
-    def _get_ml_created_date(self, cr, uid, ids, *a):
-        res = {}
-        for id in self.browse(cr, uid, ids):
-            if id.move_line_id:
-                res[id.id] = id.move_line_id.date_created
-            else:
-                res[id.id] = False
-        return res
+    _move_line_store_condition = {
+        'payment.line': (lambda self, cr, uid, ids, c=None: ids,
+                         ['move_line_id'],
+                         10),
+        'account.move.line': (_get_payment_move_line,
+                              ['date_created', 'date_maturity', 'invoice',
+                               'reconcile_id', 'state'],
+                              10),
+    }
 
     _columns = {
         'name': fields.char('Your Reference', size=64, required=True),
@@ -324,10 +332,12 @@ class payment_line(osv.osv):
         'amount': fields.function(_amount, string='Amount in Company Currency',
             type='float',
             help='Payment amount in the company currency'),
-        'ml_date_created': fields.function(_get_ml_created_date, string="Effective Date",
-            type='date', help="Invoice Effective Date"),
-        'ml_maturity_date': fields.function(_get_ml_maturity_date, type='date', string='Due Date'),
-        'ml_inv_ref': fields.function(_get_ml_inv_ref, type='many2one', relation='account.invoice', string='Invoice Ref.'),
+        'ml_date_created': fields.function(_get_move_line_values, string="Effective Date",
+            type='date', help="Invoice Effective Date", multi="move_line_values", store=_move_line_store_condition),
+        'ml_maturity_date': fields.function(_get_move_line_values, type='date', string='Due Date', multi="move_line_values", store=_move_line_store_condition),
+        'ml_inv_ref': fields.function(_get_move_line_values, type='many2one', relation='account.invoice', string='Invoice Ref.', multi="move_line_values", store=_move_line_store_condition),
+        'ml_reconcile_id': fields.function(_get_move_line_values, type='many2one', relation='account.move.reconcile', string='Move Line Reconcile', multi="move_line_values", store=_move_line_store_condition),
+        'ml_state': fields.function(_get_move_line_values, type='selection', selection=[('draft', 'Unbalanced'), ('valid', 'Balanced')], string='Move Line State', multi="move_line_values", store=_move_line_store_condition),
         'info_owner': fields.function(info_owner, string="Owner Account", type="text", help='Address of the Main Partner'),
         'info_partner': fields.function(info_partner, string="Destination Account", type="text", help='Address of the Ordering Customer.'),
         'date': fields.date('Payment Date', help="If no payment date is specified, the bank will treat this payment line directly"),

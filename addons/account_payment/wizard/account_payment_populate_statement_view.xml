@@ -8,7 +8,7 @@
              <field name="arch" type="xml">
                 <form string="Populate Statement:" version="7.0">
                     <group>
-                        <field name="lines"/>
+                        <field name="lines" domain="['|', ('order_id.mode', '=', False), ('bank_statement_line_id', '=', False), ('ml_reconcile_id', '=', False), ('ml_state', '=', 'valid')]"/>
                     </group>
                     <footer>
                         <button name="populate_statement" string="ADD" type="object" class="oe_highlight"/>
