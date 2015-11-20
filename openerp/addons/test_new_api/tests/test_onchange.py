@@ -133,7 +133,10 @@ class TestOnChange(common.TransactionCase):
 
         field_onchange = self.Discussion._onchange_spec()
         self.assertEqual(field_onchange.get('moderator'), '1')
-        self.assertFalse(any(name.startswith('participants.') for name in field_onchange))
+        self.assertItemsEqual(
+            strip_prefix('participants.', field_onchange),
+            ['display_name'],
+        )
 
         # first remove demo user from participants
         discussion.participants -= demo
@@ -151,9 +154,10 @@ class TestOnChange(common.TransactionCase):
         result = discussion.onchange(values, 'moderator', field_onchange)
 
         self.assertIn('participants', result['value'])
-        self.assertEqual(
+        self.assertItemsEqual(
             result['value']['participants'],
-            [(5,)] + [(4, usr.id) for usr in discussion.participants + demo],
+            [(5,)] + [(1, user.id, {'display_name': user.display_name})
+                      for user in discussion.participants + demo],
         )
 
     def test_onchange_one2many_value(self):
