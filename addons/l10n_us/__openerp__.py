@@ -11,6 +11,7 @@ United States - Chart of accounts.
     'depends': ['l10n_generic_coa', 'report'],
     'data': [
         'data/res_company.xml',
+        'views/res_config_view.xml'
     ],
     'demo': [],
     'test': [],

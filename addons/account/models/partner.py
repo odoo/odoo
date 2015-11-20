@@ -45,7 +45,7 @@ class AccountFiscalPosition(models.Model):
         return True
 
     @api.v7
-    def map_tax(self, cr, uid, fposition_id, taxes, context=None):
+    def map_tax(self, cr, uid, fposition_id, taxes, product=None, partner=None, context=None):
         if not taxes:
             return []
         if not fposition_id:
@@ -63,7 +63,7 @@ class AccountFiscalPosition(models.Model):
         return list(result)
 
     @api.v8     # noqa
-    def map_tax(self, taxes):
+    def map_tax(self, taxes, product=None, partner=None):
         result = self.env['account.tax'].browse()
         for tax in taxes:
             tax_count = 0

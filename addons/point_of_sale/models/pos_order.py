@@ -22,7 +22,7 @@ class PosOrder(models.Model):
     def _amount_line_tax(self, cr, uid, line, fiscal_position_id, context=None):
         taxes = line.tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
         if fiscal_position_id:
-            taxes = fiscal_position_id.map_tax(taxes)
+            taxes = fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
         taxes = taxes.compute_all(price, line.order_id.pricelist_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
         return sum(tax.get('amount', 0.0) for tax in taxes)
@@ -184,7 +184,7 @@ class PosOrder(models.Model):
         invoice_line.invoice_line_tax_ids = invoice_line.invoice_line_tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id).ids
         fiscal_position_id = line.order_id.fiscal_position_id
         if fiscal_position_id:
-            invoice_line.invoice_line_tax_ids = fiscal_position_id.map_tax(invoice_line.invoice_line_tax_ids)
+            invoice_line.invoice_line_tax_ids = fiscal_position_id.map_tax(invoice_line.invoice_line_tax_ids, line.product_id, line.order_id.partner_id)
         invoice_line.invoice_line_tax_ids = invoice_line.invoice_line_tax_ids.ids
         # We convert a new id object back to a dictionary to write to
         # bridge between old and new api
@@ -739,7 +739,7 @@ class PosOrderLine(models.Model):
             taxes = line.tax_ids.filtered(lambda tax: tax.company_id.id == line.order_id.company_id.id)
             fiscal_position_id = line.order_id.fiscal_position_id
             if fiscal_position_id:
-                taxes = fiscal_position_id.map_tax(taxes)
+                taxes = fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             line.price_subtotal = line.price_subtotal_incl = price * line.qty
             if taxes:
@@ -778,7 +778,7 @@ class PosOrderLine(models.Model):
     @api.multi
     def _get_tax_ids_after_fiscal_position(self):
         for line in self:
-            line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
+            line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids, line.product_id, line.order_id.partner_id)
 
 
 class PosOrderLineLot(models.Model):
