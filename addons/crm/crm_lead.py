@@ -119,16 +119,6 @@ class crm_lead(format_address, osv.osv):
         'stage_id': _read_group_stage_ids
     }
 
-    def _compute_kanban_state(self, cr, uid, ids, fields, args, context=None):
-        result = {}
-        today = datetime.now().strftime("%Y-%m-%d")
-        for lead in self.browse(cr, uid, ids, context=context):
-            if not lead.date_action:
-                result[lead.id] = False
-            else:
-                result[lead.id] = {1: 'green', -1: 'red'}.get(cmp(lead.date_action, today), 'grey')
-        return result
-
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         :return dict: difference between current date and log date
@@ -172,8 +162,6 @@ class crm_lead(format_address, osv.osv):
         'email_from': fields.char('Email', size=128, help="Email address of the contact", select=1),
         'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',
                         select=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales team.'),
-        'kanban_state': fields.function(_compute_kanban_state, string='Activity State', type="selection",
-                    selection=[('', ''), ('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')]),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'email_cc': fields.text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
@@ -213,6 +201,9 @@ class crm_lead(format_address, osv.osv):
         # CRM Actions
         'last_activity_id': fields.many2one("crm.activity", "Last Activity", select=True),
         'next_activity_id': fields.many2one("crm.activity", "Next Activity", select=True),
+        'next_activity_1': fields.related("last_activity_id", "activity_1_id", "name", type="char", string="Next Activity 1"),
+        'next_activity_2': fields.related("last_activity_id", "activity_2_id", "name", type="char", string="Next Activity 2"),
+        'next_activity_3': fields.related("last_activity_id", "activity_3_id", "name", type="char", string="Next Activity 3"),
         'date_action': fields.date('Next Activity Date', select=True),
         'title_action': fields.char('Next Activity Summary'),
 
@@ -366,9 +357,62 @@ class crm_lead(format_address, osv.osv):
     # Backward compatibility
     case_mark_won = action_set_won
 
+    def log_next_activity_1(self, cr, uid, ids, context=None):
+        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_1_id', context=context)
+
+    def log_next_activity_2(self, cr, uid, ids, context=None):
+        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_2_id', context=context)
+
+    def log_next_activity_3(self, cr, uid, ids, context=None):
+        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_3_id', context=context)
+
+    def set_next_activity(self, cr, uid, ids, next_activity_name, context=None):
+        for lead in self.browse(cr, uid, ids, context=context):
+            if not lead.last_activity_id:
+                continue
+            next_activity = next_activity_name and getattr(lead.last_activity_id, next_activity_name, False) or False
+            if next_activity:
+                date_action = False
+                if next_activity.days:
+                    date_action = (datetime.now() + timedelta(days=next_activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
+                lead.write({
+                    'next_activity_id': next_activity.id,
+                    'date_action': date_action,
+                    'title_action': next_activity.description,
+                })
+        return True
+
+    def log_next_activity_done(self, cr, uid, ids, context=None, next_activity_name=False):
+        to_clear_ids = []
+        for lead in self.browse(cr, uid, ids, context=context):
+            if not lead.next_activity_id:
+                continue
+            body_html = """<div><b>Activity Done</b>: ${object.next_activity_id.name}</div>
+%if object.title_action:
+<div>${object.title_action}</div>
+%endif"""
+            body_html = self.pool['mail.template'].render_template(cr, uid, body_html, 'crm.lead', lead.id, context=context)
+            msg_id = lead.message_post(body_html, subtype_id=lead.next_activity_id.subtype_id.id)
+            to_clear_ids.append(lead.id)
+            self.write(cr, uid, [lead.id], {'last_activity_id': lead.next_activity_id.id}, context=context)
+
+        if to_clear_ids:
+            self.cancel_next_activity(cr, uid, to_clear_ids, context=context)
+        return True
+
+    def cancel_next_activity(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids,  {
+            'next_activity_id': False,
+            'date_action': False,
+            'title_action': False,
+        }, context=context)
+
     def onchange_next_activity_id(self, cr, uid, ids, next_activity_id, context=None):
         if not next_activity_id:
             return {'value': {
+                'next_action1': False,
+                'next_action2': False,
+                'next_action3': False,
                 'title_action': False,
                 'date_action': False,
             }}
@@ -377,6 +421,9 @@ class crm_lead(format_address, osv.osv):
         if activity.days:
             date_action = (datetime.now() + timedelta(days=activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
         return {'value': {
+            'next_activity_1': activity.activity_1_id and activity.activity_1_id.name or False,
+            'next_activity_2': activity.activity_2_id and activity.activity_2_id.name or False,
+            'next_activity_3': activity.activity_3_id and activity.activity_3_id.name or False,
             'title_action': activity.description,
             'date_action': date_action,
             'last_activity_id': False,
@@ -1175,121 +1222,16 @@ class crm_lead_tag(osv.Model):
             ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
 
-class crm_lead_log(osv.osv_memory):
-    _name = "crm.lead.log"
-    _description = "Log an Activity"
-    _columns = {
-        'next_activity_id': fields.many2one("crm.activity", "Activity"),
-        'last_activity_id': fields.many2one("crm.activity", "Activity"),
-        'recommended_activity': fields.many2one("crm.activity", "Recommended Activities"),
-        'name': fields.char('Summary'),
-        'mode': fields.selection([('log','Log activity'), ('new','New activity')], 'Summary'),
-        'lead_id': fields.many2one('crm.lead', 'Lead', required=True),
-        'note': fields.html('Note'),
-        'date_deadline': fields.related('lead_id', 'date_deadline', string='Expected Closing', type='date'),
-        'planned_revenue': fields.float('Expected Revenue'),
-        'date_action': fields.date('Next Activity Date'),
-        'team_id': fields.many2one('crm.team', 'Sales Team'),
-    }
-    def action_schedule(self, cr, uid, ids, context={}):
-        for log in self.browse(cr, uid, ids, context):
-            lead = log.lead_id.write({
-                'title_action': log.name,
-                'date_action': log.date_action,
-                'next_activity_id': log.next_activity_id.id,
-            })
-        return True
-
-    def action_log_schedule(self, cr, uid, ids, context={}):
-        lead_id,activity_id = self.action_log(cr, uid, ids, context)
-        view_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'crm.crm_lead_log_plan_form')
-        return {
-                'name': _('Next activity'),
-                'res_model': 'crm.lead.log',
-                'context': {'activity_id': activity_id, 'active_id': lead_id, 'active_model': 'crm.lead', 'active_ids': [lead_id], 'default_mode': 'new'},
-                'type': 'ir.actions.act_window',
-                'view_id': False,
-                'views': [(view_id, 'form')],
-                'view_mode': 'form',
-                'target': 'new',
-                'view_type': 'form',
-                'res_id': False
-            }
-
-    def action_log(self, cr, uid, ids, context={}):
-        lead_id = False
-        for log in self.browse(cr, uid, ids, context):
-            body_html = """<div><b>Activity Done</b>: ${object.next_activity_id.name}</div>
-%if object.name:
-<p><em>${object.name}</em></p>
-%endif"""
-            activity_id = log.next_activity_id or False
-            body_html = self.pool['mail.template'].render_template(cr, uid, body_html, 'crm.lead.log', log.id, context=context)
-            if log.note:
-                body_html += '<br/>' + log.note
-            msg_id = log.lead_id.message_post(body_html, subtype_id=log.next_activity_id.subtype_id.id)
-            log.lead_id.write({
-                'date_deadline': log.date_deadline,
-                'planned_revenue': log.planned_revenue,
-                'title_action': False,
-                'date_action': False,
-                'next_activity_id': False,
-                'last_activity_id': log.next_activity_id.id,
-            })
-            lead_id = log.lead_id.id
-        return (lead_id, activity_id and activity_id.id or False)
-
-    def _get_default_lead_id(self, cr, uid, context={}):
-        return context.get('active_id', False)
-
-    def _get_default_name(self, cr, uid, context={}):
-        log = self.pool.get('crm.lead').browse(cr, uid, ctx['active_id'], ctx)
-        if log.mode=='log':
-            return log.title_action
-        return False
-
-    def _get_next_activity(self, cr, uid, field, context=None):
-        activity = self.pool.get('crm.activity').browse(cr, uid, context.get('activity_id'), context)
-        data = getattr(activity, field)
-        if data:
-            return data.id
-        return False
-
-    def onchange_next_activity_id(self, cr, uid, ids, next_activity_id, context=None):
-        if not next_activity_id:
-            return {'value': {
-                'name': False,
-                'date_action': False,
-            }}
-        activity = self.pool['crm.activity'].browse(cr, uid, next_activity_id, context=context)
-        date_action = False
-        if activity.days:
-            date_action = (datetime.now() + timedelta(days=activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        return {'value': {
-            'name': activity.description,
-            'date_action': date_action,
-            'next_activity_id': next_activity_id
-        }}
-
-    _defaults = {
-        'lead_id': _get_default_lead_id,
-        'date_deadline': lambda self, cr,uid,ctx: self.pool.get('crm.lead').browse(cr, uid, ctx.get('active_id'), ctx).date_deadline,
-        'planned_revenue': lambda self, cr,uid,ctx: self.pool.get('crm.lead').browse(cr, uid, ctx.get('active_id'), ctx).planned_revenue,
-        'name': lambda self, cr,uid,ctx: self.pool.get('crm.lead').browse(cr, uid, ctx.get('active_id'), ctx).title_action,
-        'next_activity_id': lambda self, cr,uid,ctx: self.pool.get('crm.lead').browse(cr, uid, ctx.get('active_id'), ctx).next_activity_id.id,
-        'last_activity_id': lambda self, cr,uid,ctx: ctx.get('activity_id', False),
-        'team_id': lambda self, cr,uid,ctx: self.pool.get('crm.lead').browse(cr, uid, ctx.get('active_id'), ctx).team_id.id,
-        'mode': 'log'
-    }
-
 
 class crm_lost_reason(osv.Model):
     _name = "crm.lost.reason"
     _description = 'Reason for loosing leads'
+
     _columns = {
         'name': fields.char('Name', required=True),
         'active': fields.boolean('Active'),
     }
+
     _defaults = {
         'active': True,
     }

@@ -29,9 +29,9 @@ class CrmActivity(models.Model):
     sequence = fields.Integer('Sequence', default=0)
     team_id = fields.Many2one('crm.team', string='Sales Team')
     subtype_id = fields.Many2one('mail.message.subtype', string='Message Subtype', required=True, ondelete='cascade')
-
-    activity_ids = fields.Many2many('crm.activity', 'crm_activity_rel', 'activity_id', 'recommended_id', string='Recommended Activities')
-    activity_invert_ids = fields.Many2many('crm.activity', 'crm_activity_rel', 'recommended_id', 'activity_id', string='Preceding Activities')
+    activity_1_id = fields.Many2one('crm.activity', string="Next Activity 1")
+    activity_2_id = fields.Many2one('crm.activity', string="Next Activity 2")
+    activity_3_id = fields.Many2one('crm.activity', string="Next Activity 3")
 
     @api.model
     def create(self, values):
