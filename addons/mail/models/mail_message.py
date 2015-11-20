@@ -549,8 +549,9 @@ class Message(models.Model):
         message_tree = dict((m.id, m) for m in self)
         self._message_read_dict_postprocess(message_values, message_tree)
 
-        # add subtype data (is_note flag, subtype_description)
-        subtypes = self.env['mail.message.subtype'].search(
+        # add subtype data (is_note flag, subtype_description). Do it as sudo
+        # because portal / public may have to look for internal subtypes
+        subtypes = self.env['mail.message.subtype'].sudo().search(
             [('id', 'in', [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']])]).read(['internal', 'description'])
         subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
         for message in message_values:
@@ -887,12 +888,12 @@ class Message(models.Model):
 
         # all followers of the mail.message document have to be added as partners and notified
         # and filter to employees only if the subtype is internal
-        if self.subtype_id and self.model and self.res_id:
+        if self_sudo.subtype_id and self.model and self.res_id:
             followers = self.env['mail.followers'].sudo().search([
                 ('res_model', '=', self.model),
                 ('res_id', '=', self.res_id)
             ]).filtered(lambda fol: self.subtype_id in fol.subtype_ids)
-            if self.subtype_id.internal:
+            if self_sudo.subtype_id.internal:
                 followers = followers.filtered(lambda fol: fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id'))
             channels = self_sudo.channel_ids | followers.mapped('channel_id')
             partners = self_sudo.partner_ids | followers.mapped('partner_id')
