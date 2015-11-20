@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import datetime
 
 from openerp.addons.mail.tests.common import TestMail
 from openerp.tools import mute_logger
@@ -136,3 +137,30 @@ class TestMailTemplate(TestMail):
         self.assertEqual(action.name, 'Send Mail (%s)' % self.email_template.name)
         value = self.email_template.ref_ir_value
         self.assertEqual(value.name, 'Send Mail (%s)' % self.email_template.name)
+
+    def test_set_scheduled_date_on_a_template(self):
+        self.email_template_in_2_days = self.email_template.copy()
+        self.email_template_in_2_days.write({'scheduled_date': "${(datetime.datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')}"})
+
+        mail_now_id = self.email_template.send_mail(self.group_pigs.id)
+        mail_in_2_days_id = self.email_template_in_2_days.send_mail(self.group_pigs.id)
+
+        mail_now = self.env['mail.mail'].browse(mail_now_id)
+        mail_in_2_days = self.env['mail.mail'].browse(mail_in_2_days_id)
+
+        # assert scheduled date are correct
+        self.assertEqual(bool(mail_now.scheduled_date), False)
+        scheduled_date = datetime.datetime.strptime(mail_in_2_days.scheduled_date, '%Y-%m-%d %H:%M')
+        date_in_2_days = datetime.datetime.today() + datetime.timedelta(days = 2)
+        self.assertEqual(scheduled_date.day, date_in_2_days.day)
+        self.assertEqual(scheduled_date.month, date_in_2_days.month)
+        self.assertEqual(scheduled_date.year, date_in_2_days.year)
+
+        # Launch the scheduler on the first mail, it should be reported in self.mails
+        # and the mail_mail is now deleted
+        self.env['mail.mail'].process_email_queue(ids=[mail_now.id])
+        self.assertTrue(len(self._mails) > 0)
+        
+        # Launch the scheduler on the first mail, it's still in 'outgoing' state
+        self.env['mail.mail'].process_email_queue(ids=[mail_in_2_days.id])
+        self.assertEqual(mail_in_2_days.state, 'outgoing')
