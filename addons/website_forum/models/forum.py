@@ -494,8 +494,7 @@ class Post(models.Model):
             if post.closed_reason_id in (reason_offensive, reason_spam):
                 _logger.info('Upvoting user <%s>, reopening spam/offensive question',
                              post.create_uid)
-                # TODO: in master, consider making this a tunable karma parameter
-                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_downvote * -5)
+                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged * -1)
 
         self.sudo().write({'state': 'active'})
 
@@ -510,8 +509,7 @@ class Post(models.Model):
             for post in self:
                 _logger.info('Downvoting user <%s> for posting spam/offensive contents',
                              post.create_uid)
-                # TODO: in master, consider making this a tunable karma parameter
-                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_downvote * 5)
+                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged)
 
         self.write({
             'state': 'close',
@@ -568,9 +566,8 @@ class Post(models.Model):
             raise KarmaError('Not enough karma to mark a post as offensive')
 
         # remove some karma
-        # TODO: consider making this a tunable karma parameter (cfr close)
         _logger.info('Downvoting user <%s> for posting spam/offensive contents', self.create_uid)
-        self.create_uid.sudo().add_karma(self.forum_id.karma_gen_question_downvote * 5)
+        self.create_uid.sudo().add_karma(self.forum_id.karma_gen_answer_flagged)
 
         self.write({
             'state': 'offensive',
