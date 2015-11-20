@@ -5306,6 +5306,10 @@ class BaseModel(object):
         """ Returns a new version of this recordset attached to the provided
         environment
 
+        .. warning::
+            The new environment may not benefit from the initial environment's
+            data cache. This may introduce performance problems.
+
         :type env: :class:`~openerp.api.Environment`
         """
         return self._browse(env, self._ids)
@@ -5315,6 +5319,20 @@ class BaseModel(object):
 
         Returns a new version of this recordset attached to the provided
         user.
+
+        By default this returns a `SUPERUSER` recordset, where access control
+        and record rules are bypassed.
+
+        .. warning::
+            A recordset for a different user may also be attached to a
+            different company. As a consequence, and depending on your
+            application, using `sudo` may break features in multi-company
+            instances.
+
+        .. warning::
+            The new recordset won't benefit from the initial environment's
+            data cache, since the record rules and access control will have to
+            be re-evaluated. This may introduce performance problems.
         """
         return self.with_env(self.env(user=user))
 
