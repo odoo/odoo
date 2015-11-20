@@ -84,7 +84,7 @@ https://nightly.odoo.com.
 Windows
 -------
 
-* download https://nightly.odoo.com/8.0/nightly/exe/odoo_8.0.latest.exe
+* download https://nightly.odoo.com/9.0/nightly/exe/odoo_9.0.latest.exe
 * run the downloaded file
 
   .. warning:: on Windows 8, you may see a warning titled "Windows protected
