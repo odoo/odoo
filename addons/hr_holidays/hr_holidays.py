@@ -426,7 +426,7 @@ class hr_holidays(osv.osv):
                 self._create_resource_leave(cr, uid, [record], context=context)
                 self.write(cr, uid, ids, {'meeting_id': meeting_id})
             elif record.holiday_type == 'category':
-                emp_ids = obj_emp.search(cr, uid, [('category_ids', 'child_of', [record.category_id.id])])
+                emp_ids = record.category_id.employee_ids.ids
                 leave_ids = []
                 batch_context = dict(context, mail_notify_force_send=False)
                 for emp in obj_emp.browse(cr, uid, emp_ids, context=context):

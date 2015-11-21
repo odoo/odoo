@@ -258,13 +258,6 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
 
     fn_popover_update.call(this, $popover, oStyle, isAirMode);
 
-    if (!isAirMode || (oStyle.range && $(oStyle.range.sc).closest('[data-oe-model]:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"])').length)) {
-        $imagePopover.hide();
-        $linkPopover.hide();
-        $airPopover.hide();
-        return;
-    }
-
     if (oStyle.image) {
         if (oStyle.image.parentNode.className.match(/(^|\s)media_iframe_video(\s|$)/i)) {
             oStyle.image = oStyle.image.parentNode;

@@ -33,7 +33,7 @@ class view(osv.osv):
 
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
-            if 'website_id' in context:
+            if 'website_id' in (context or {}):
                 domain = [('key', '=', view_id), '|', ('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
                 rec_id = self.search(cr, uid, domain, order='website_id', context=context)
             else:

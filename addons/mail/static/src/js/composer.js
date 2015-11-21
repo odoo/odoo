@@ -108,6 +108,11 @@ var MentionManager = Widget.extend({
         return this.open;
     },
 
+    get_listener_selection: function (delimiter) {
+        var listener = _.findWhere(this.listeners, {delimiter: delimiter});
+        return listener ? listener.selection : [];
+    },
+
     proposition_navigation: function (keycode) {
         var $active = this.$('.o_mention_proposition.active');
         if (keycode === $.ui.keyCode.ENTER) { // selecting proposition
@@ -398,7 +403,7 @@ var Composer = Widget.extend({
         return $.when({
             content: this.mention_manager.generate_links(value),
             attachment_ids: _.pluck(this.get('attachment_ids'), 'id'),
-            partner_ids: _.pluck(this.get('mention_selected_partners'), 'id'),
+            partner_ids: _.pluck(this.mention_manager.get_listener_selection('@'), 'id'),
         });
     },
 

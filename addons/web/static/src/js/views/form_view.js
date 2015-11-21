@@ -589,11 +589,16 @@ var FormView = View.extend(common.FieldManagerMixin, {
         }
         // FIXME XXX a list of warnings?
         if (!_.isEmpty(result.warning)) {
-            new Dialog(this, {
+            this.warning_displayed = true;
+            var dialog = new Dialog(this, {
                 size: 'medium',
                 title:result.warning.title,
                 $content: QWeb.render("CrashManager.warning", result.warning)
-            }).open();
+            });
+            dialog.open();
+            dialog.on('closed', this, function () {
+                this.warning_displayed = false;
+            });
         }
 
         return $.Deferred().resolve();
@@ -695,12 +700,11 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.set({actual_mode: mode});
     },
     check_actual_mode: function(source, options) {
-        var self = this;
         if(this.get("actual_mode") === "view") {
-            self.$el.removeClass('oe_form_editable').addClass('oe_form_readonly');
+            this.$el.removeClass('oe_form_editable').addClass('oe_form_readonly');
         } else {
-            self.$el.removeClass('oe_form_readonly').addClass('oe_form_editable');
-            this.autofocus();
+            this.$el.removeClass('oe_form_readonly').addClass('oe_form_editable');
+            _.defer(_.bind(this.autofocus, this));
         }
     },
     autofocus: function() {
@@ -1005,6 +1009,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             } else {
                 var fields = _.keys(self.fields_view.fields);
                 fields.push('display_name');
+                fields.push('__last_update');
                 return self.dataset.read_index(fields,
                     {
                         context: { 'bin_size': true },

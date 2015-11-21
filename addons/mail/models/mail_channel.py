@@ -47,7 +47,7 @@ class Channel(models.Model):
         'Channel Type', default='channel')
     description = fields.Text('Description')
     uuid = fields.Char('UUID', size=50, select=True, default=lambda self: '%s' % uuid.uuid4())
-    email_send = fields.Boolean('Email Sent', default=True)
+    email_send = fields.Boolean('Email Sent', default=False)
     # multi users channel
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen')
     channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners')
@@ -141,13 +141,26 @@ class Channel(models.Model):
             mail_channel.write({'channel_partner_ids': [(4, pid) for pid in mail_channel.mapped('group_ids').mapped('users').mapped('partner_id').ids]})
 
     @api.multi
+    def _minimize(self, partner_ids):
+        self.ensure_one()
+        domain = [('channel_id', '=', self.id), ('partner_id', 'in', tuple(partner_ids))]
+        channel_partners = self.env['mail.channel.partner'].search(domain)
+        channel_partners.write({
+            'is_minimized': True,
+            'fold_state': 'open',
+        })
+
+    @api.multi
     def action_follow(self):
-        return self.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]})
+        self.ensure_one()
+        channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: cp.partner_id == self.env.user.partner_id)
+        if not channel_partner:
+            return self.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]})
 
     @api.multi
     def action_unfollow(self):
         result = self.write({'channel_partner_ids': [(3, self.env.user.partner_id.id)]})
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info()[0])
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info('unsubscribe')[0])
         notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
         self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         return result
@@ -181,7 +194,7 @@ class Channel(models.Model):
     @api.returns('self', lambda value: value.id)
     def message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, content_subtype='html', **kwargs):
         # auto pin 'direct_message' channel partner
-        self.filtered(lambda channel: channel.channel_type == 'direct_message').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
+        self.filtered(lambda channel: channel.channel_type == 'chat').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
         # apply shortcode (text only) subsitution
         body = self.env['mail.shortcode'].apply_shortcode(body, shortcode_type='text')
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
@@ -248,7 +261,7 @@ class Channel(models.Model):
         return notifications
 
     @api.multi
-    def channel_info(self):
+    def channel_info(self, extra_info = False):
         """ Get the informations header for the current channels
             :returns a list of channels values
             :rtype : list(dict)
@@ -269,6 +282,8 @@ class Channel(models.Model):
                 'channel_type': channel.channel_type,
                 'public': channel.public,
             }
+            if extra_info:
+                info['info'] = extra_info
             # add the partner for 'direct mesage' channel
             if channel.channel_type == 'chat':
                 info['direct_partner'] = channel.sudo().channel_partner_ids.filtered(lambda p: p.id != self.env.user.partner_id.id).read(['id', 'name', 'im_status'])
@@ -312,8 +327,8 @@ class Channel(models.Model):
             :rtype : dict
         """
         if partners_to:
-            partners_to.append(self.env.user.partner_id.id)
-            # determine type according to the number of partner in the channel
+            partners = partners_to + [self.env.user.partner_id.id]
+            # determine type according to the number of partners in the channel
             self.env.cr.execute("""
                 SELECT P.channel_id as channel_id
                 FROM mail_channel C, mail_channel_partner P
@@ -323,7 +338,7 @@ class Channel(models.Model):
                     AND channel_type LIKE 'chat'
                 GROUP BY P.channel_id
                 HAVING COUNT(P.partner_id) = %s
-            """, (tuple(partners_to), len(partners_to),))
+            """, (tuple(partners), len(partners),))
             result = self.env.cr.dictfetchall()
             if result:
                 # get the existing channel between the given partners
@@ -334,14 +349,16 @@ class Channel(models.Model):
             else:
                 # create a new one
                 channel = self.create({
-                    'channel_partner_ids': [(4, partner_id) for partner_id in partners_to],
+                    'channel_partner_ids': [(4, partner_id) for partner_id in partners],
                     'public': 'private',
                     'channel_type': 'chat',
                     'email_send': False,
-                    'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
+                    'name': ', '.join(self.env['res.partner'].sudo().browse(partners).mapped('name')),
                 })
-                # broadcast the channel header to the other partner (not me)
-                channel._broadcast(partners_to)
+                # minimize the DM on other partners' side
+                channel._minimize(partners_to)
+                # broadcast the channel header
+                channel._broadcast(partners)
             return channel.channel_info()[0]
         return False
 
@@ -382,6 +399,8 @@ class Channel(models.Model):
         # add the person in the channel, and pin it (or unpin it)
         channel = self.search([('uuid', '=', uuid)])
         channel_partners = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)])
+        if not pinned:
+            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel.channel_info('unsubscribe')[0])
         if channel_partners:
             channel_partners.write({'is_pinned': pinned})
 
@@ -391,6 +410,7 @@ class Channel(models.Model):
         if self.channel_message_ids.ids:
             last_message_id = self.channel_message_ids.ids[0] # zero is the index of the last message
             self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({'seen_message_id': last_message_id})
+            return last_message_id
 
     @api.multi
     def channel_invite(self, partner_ids):
@@ -459,12 +479,6 @@ class Channel(models.Model):
         direct_message_channels = self.search([('channel_type', '=', 'chat'), ('id', 'in', pinned_channels.ids)])
         values['channel_direct_message'] = direct_message_channels.channel_info()
 
-        # get the partner of the pinned 'direct message' channels with mapping partner/channel
-        direct_channel_partner = direct_message_channels.mapped('channel_last_seen_partner_ids').filtered(lambda cp: cp.partner_id.id != my_partner_id)
-        values['mapping'] = dict((item.partner_id.id, item.channel_id.id) for item in direct_channel_partner)
-        # partners of the 'direct message' channels
-        values['partners'] = direct_message_channels.mapped('channel_partner_ids').filtered(lambda partner: partner.id != my_partner_id).read(['id', 'name', 'im_status'])
-
         # get the private group
         values['channel_private_group'] = self.search([('channel_type', '=', 'channel'), ('public', '=', 'private'), ('channel_partner_ids', 'in', [my_partner_id])]).channel_info()
         return values
@@ -486,8 +500,9 @@ class Channel(models.Model):
     @api.multi
     def channel_join_and_get_info(self):
         self.ensure_one()
-        notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
-        self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
+        if self.channel_type == 'channel':
+            notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
+            self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         self.action_follow()
 
         channel_info = self.channel_info()[0]

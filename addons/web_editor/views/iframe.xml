@@ -39,6 +39,13 @@
                         }
                     };
                 }
+                if(window['odoo']) {
+                    odoo.define('web.csrf', function (require) {
+                        var token = "<t t-esc="request.csrf_token(None)"/>";
+                        require('web.core').csrf_token = token;
+                        require('qweb').default_dict.csrf_token = token;
+                    });
+                }
             </script>
             <t t-raw="head or ''"/>
         </head>

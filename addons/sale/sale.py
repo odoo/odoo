@@ -304,6 +304,8 @@ class SaleOrder(models.Model):
                     inv_data = order._prepare_invoice()
                     invoice = inv_obj.create(inv_data)
                     invoices[group_key] = invoice
+                elif group_key in invoices and order.name not in invoices[group_key].origin.split(', '):
+                    invoices[group_key].write({'origin': invoices[group_key].origin + ', ' + order.name})
                 if line.qty_to_invoice > 0:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif line.qty_to_invoice < 0 and final:
@@ -386,6 +388,8 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         for order in self:
             order.state = 'sale'
+            if self.env.context.get('send_email'):
+                self.force_quotation_send()
             order.order_line._action_procurement_create()
             if not order.project_id:
                 for line in order.order_line:
@@ -722,7 +726,7 @@ class SaleOrderLine(models.Model):
         self.update(vals)
         return {'domain': domain}
 
-    @api.onchange('product_uom')
+    @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         if not self.product_uom:
             self.price_unit = 0.0

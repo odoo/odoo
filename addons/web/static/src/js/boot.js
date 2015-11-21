@@ -51,6 +51,7 @@
         testing: typeof QUnit === "object",
         debug: debug,
         remaining_jobs: jobs,
+        version: "community",
 
         __DEBUG__: {
             get_dependencies: function (name, transitive) {
@@ -262,7 +263,7 @@
                     log_when_loaded();
                 }
             });
-        }, 1000);
+        }, 4000);
     };
     $(log_when_loaded);
 

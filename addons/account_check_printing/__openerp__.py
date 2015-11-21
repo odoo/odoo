@@ -10,7 +10,7 @@ It must be used as a dependency for modules that provide country-specific check 
 The check settings are located in the accounting journals configuration page.
     """,
     'website': 'https://www.odoo.com/page/accounting',
-    'depends' : ['account_accountant'],
+    'depends' : ['account'],
     'data': [
         'data/check_printing.xml',
         'views/account_journal_dashboard_view.xml',

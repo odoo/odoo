@@ -6,7 +6,7 @@
     -->
     <t t-name="mail.chatter.ChatComposer" t-extend="mail.ChatComposer">
         <!-- Insert information before the composer -->
-        <t t-jquery=".o_composer" t-operation="before">
+        <t t-jquery=".o_composer_mentioned_partners" t-operation="before">
             <!-- Internal note composer -->
             <t t-if="widget.options.is_log">
                 <span class="o_chatter_composer_info">

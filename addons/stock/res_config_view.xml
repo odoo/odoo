@@ -60,7 +60,7 @@
 
                         <label for="group_stock_adv_location"/>
                         <div>
-                            <field name="group_stock_adv_location" widget="radio"/>
+                            <field name="group_stock_adv_location" widget="radio" on_change="onchange_adv_location(group_stock_adv_location)"/>
                             <div attrs="{'invisible': [('group_stock_adv_location', '=', 0)]}">
                                 <label for="propagation_minimum_delta"/>
                                 <field name="propagation_minimum_delta" class="oe_inline"/>
