@@ -371,9 +371,15 @@ class account_move_line(osv.osv):
             context = {}
         if not args:
             return []
-        where = ' AND '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))
+
+        where = ' AND '.join(
+            '(abs(sum(debit-credit)) %s %%s)' % operator
+            for field, operator, value in args
+        )
+        params = tuple(value for field, operator, value in args)
+
         cursor.execute('SELECT id, SUM(debit-credit) FROM account_move_line \
-                     GROUP BY id, debit, credit having '+where)
+                     GROUP BY id, debit, credit having '+where, params)
         res = cursor.fetchall()
         if not res:
             return [('id', '=', '0')]

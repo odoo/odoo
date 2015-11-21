@@ -23,7 +23,7 @@ from datetime import timedelta
 import pytz
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import AccessError, Warning
 
 class event_type(models.Model):
     """ Event Type """
@@ -383,6 +383,19 @@ class event_registration(models.Model):
         template = self.event_id.email_confirmation_id
         if template:
             mail_message = template.send_mail(self.id)
+
+    @api.multi
+    def message_get_suggested_recipients(self):
+        recipients = super(event_registration, self).message_get_suggested_recipients()
+        try:
+            for registration in self:
+                if registration.partner_id:
+                    self._message_add_suggested_recipient(recipients, registration, partner=registration.partner_id, reason=_('Registrant'))
+                elif registration.email:
+                    self._message_add_suggested_recipient(recipients, registration, email=registration.email, reason=_('Registrant Email'))
+        except AccessError: # no read access rights -> ignore suggested recipients
+            pass
+        return recipients
 
     @api.onchange('partner_id')
     def _onchange_partner(self):

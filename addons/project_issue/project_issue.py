@@ -464,7 +464,9 @@ class project(osv.Model):
     _inherit = "project.project"
 
     def _get_alias_models(self, cr, uid, context=None):
-        return [('project.task', "Tasks"), ("project.issue", "Issues")]
+        res = super(project, self)._get_alias_models(cr, uid, context=context)
+        res.append(("project.issue", "Issues"))
+        return res
 
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         Issue = self.pool['project.issue']
