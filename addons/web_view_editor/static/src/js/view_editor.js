@@ -3,6 +3,7 @@ odoo.define('web_view_editor.view_editor', function (require) {
 
 var ActionManager = require('web.ActionManager');
 var core = require('web.core');
+var core = require('web.core');
 var data = require('web.data');
 var DebugManager =  require('web.DebugManager');
 var Dialog = require('web.Dialog');
