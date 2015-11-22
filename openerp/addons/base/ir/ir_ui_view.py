@@ -631,7 +631,9 @@ class view(osv.osv):
             fields = list({'arch', 'model'}.union(fields))
 
         # read the view arch
+
         [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
+
         view_arch = etree.fromstring(view['arch'].encode('utf-8'))
         if not v.inherit_id:
             arch_tree = view_arch
