@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
+# Eric Geens <eric.geens@vitabiz.be>, 2015
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@bas-solutions.nl>, 2015
 # Volluta <volluta@tutanota.com>, 2015
@@ -12,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-11-07 14:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
+"POT-Creation-Date: 2015-11-18 08:05+0000\n"
+"PO-Revision-Date: 2015-11-18 13:10+0000\n"
+"Last-Translator: Eric Geens <eric.geens@vitabiz.be>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -951,10 +952,12 @@ msgstr "Rapport van rekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_account_report_id
+#: model:ir.ui.menu,name:account.menu_account_financial_reports_tree
 msgid "Account Reports"
 msgstr "Rapportage grootboekrekeningen"
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 #: model:ir.ui.view,arch_db:account.view_account_report_tree_hierarchy
 msgid "Account Reports Hierarchy"
 msgstr "Rapportage grootboekrekeningen hiërarchie"
@@ -1272,6 +1275,7 @@ msgstr "Beïnvloed subsequenties belastingen"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_aged_balance_view
 #: model:ir.actions.report.xml,name:account.action_report_aged_partner_balance
+#: model:ir.ui.menu,name:account.menu_aged_trial_balance
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
 msgid "Aged Partner Balance"
 msgstr "Ouderdomsanalyse per relatie"
@@ -1724,6 +1728,7 @@ msgstr "Saldo"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_balancesheet0
 #: model:ir.actions.act_window,name:account.action_account_report_bs
+#: model:ir.ui.menu,name:account.menu_account_report_bs
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Balance Sheet"
 msgstr "Balans"
@@ -1740,7 +1745,7 @@ msgstr "Balans kasbasis"
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
-#: selection:account.journal,type:0 code:addons/account/models/account.py:393
+#: selection:account.journal,type:0
 #: code:addons/account/models/chart_template.py:606
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_id
 #: model:ir.model.fields,field_description:account.field_res_partner_bank_account_count
@@ -3490,6 +3495,11 @@ msgid "Due Month"
 msgstr "Verval maand"
 
 #. module: account
+#: model:ir.actions.report.xml,name:account.action_report_print_overdue
+msgid "Due Payments"
+msgstr "Vervallen betalingen"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
 msgid "Due Type"
 msgstr "Vervalsoort"
@@ -3654,9 +3664,10 @@ msgstr "Wisselkoers mutatie van"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
-"Exchange rates are updated automatically once a day from "
-"<strong>XE.com</strong>. You do not need to setup your own rates."
-msgstr "Wisselkoersen worden dagelijks automatisch geüpdate van <strong>XE.com</strong>. U hoeft niet uw eigen ratio's op te zetten."
+"Exchange rates can be automatically updated once a day from <strong>Yahoo "
+"Finance</strong> or the <strong>European Central Bank</strong>. You can "
+"activate this feature in the bottom of the"
+msgstr "Wisselkoersen kunnen eenmaal per dag automatisch bijgewerkt worden vanuit <strong>Yahoo Finance</strong> of de <strong>Europese Centrale Bank</strong>. U kan deze optie activeren onderaan in de"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_expects_chart_of_accounts
@@ -3752,6 +3763,11 @@ msgid "Financial Account"
 msgstr "Financiële administratie"
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_account_report
+msgid "Financial Report"
+msgstr "Financieel rapport"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_style_overwrite
 msgid "Financial Report Style"
 msgstr "Financiële rapport stijl"
@@ -3759,6 +3775,7 @@ msgstr "Financiële rapport stijl"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_financial_report_tree
 #: model:ir.actions.act_window,name:account.action_account_report
+#: model:ir.ui.menu,name:account.menu_account_reports
 msgid "Financial Reports"
 msgstr "Financiële rapportages"
 
@@ -3769,7 +3786,6 @@ msgstr "Financiele rapporten hiërarchie"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_financial
-#: model:ir.ui.menu,name:account.menu_account_report
 msgid "Financial report"
 msgstr "Financieel rapport"
 
@@ -3976,6 +3992,7 @@ msgstr "Algemene informatie"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.action_report_general_ledger
+#: model:ir.ui.menu,name:account.menu_general_ledger
 msgid "General Ledger"
 msgstr "Grootboek"
 
@@ -4417,8 +4434,8 @@ msgstr "Om een bankafschrift te verwijderen, dient u eerst het gerelateerde jour
 #, python-format
 msgid ""
 "In order to pay multiple invoices at once, they must belong to the same "
-"partner."
-msgstr "Om meerdere facturen in één keer te kunnen betalen, moeten ze tot dezelfde relatie behoren."
+"commercial partner."
+msgstr "Om meerdere facturen in één keer te betalen, moeten ze behoren tot dezelfde commerciële relatie."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:128
@@ -4756,7 +4773,7 @@ msgid "It indicates that the invoice has been sent."
 msgstr "Het geeft aan dat de factuur is verzonden."
 
 #. module: account
-#: code:addons/account/models/account_move.py:802
+#: code:addons/account/models/account_move.py:811
 #, python-format
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
@@ -6711,12 +6728,6 @@ msgid "Purchase Tax"
 msgstr "Inkoop belasting"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:683
-#, python-format
-msgid "Purchase Tax %.2f%%"
-msgstr "Inkoop belastigen %.2f%%"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_purchase_tax_rate
 msgid "Purchase Tax(%)"
 msgstr "Inkoop belastingen (%)"
@@ -7589,6 +7600,7 @@ msgstr "BTW"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:680
+#: code:addons/account/models/chart_template.py:683
 #, python-format
 msgid "Tax %.2f%%"
 msgstr "BTW %.2f%%"
@@ -7769,13 +7781,9 @@ msgstr "Technisch veld om filter_refund te verbergen in het geval een factuur de
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_journal_type
+#: model:ir.model.fields,help:account.field_account_payment_has_invoices
 msgid "Technical field used for usability purposes"
 msgstr "Technisch veld gebruikt voor gebruiksvriendelijke doeleinden"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_payment_has_invoices
-msgid "Technical field used for usablity purposes"
-msgstr "Technisch veld voor gebruiksvriendelijke doeleinden"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_matched_percentage
@@ -9442,6 +9450,11 @@ msgstr "account.tax.group"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
+msgid "accounting settings"
+msgstr "boekhoudinstellingen"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
 msgid "activate this feature"
 msgstr "activeer deze optie"
 
@@ -9500,11 +9513,6 @@ msgstr "bijv. bankkosten"
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "e.g. sales@odoo.com"
 msgstr "bijv. verkoop@uwbedrijf.nl"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_config_settings
-msgid "eInvoicing & Payments"
-msgstr "Facturatie & Betalingen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
