@@ -13,6 +13,8 @@ from functools import wraps
 import logging
 import urlparse
 import uuid
+
+import psycopg2
 import psycopg2.extras
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
@@ -527,7 +529,11 @@ class ConnectionPool(object):
         _logger.debug(('%r ' + msg), self, *args)
 
     @locked
-    def borrow(self, dsn):
+    def borrow(self, connection_info):
+        """
+        :param dict connection_info: dict of psql connection keywords
+        :rtype: PsycoConnection
+        """
         # free dead and leaked connections
         for i, (cnx, _) in tools.reverse_enumerate(self._connections):
             if cnx.closed:
@@ -541,7 +547,7 @@ class ConnectionPool(object):
                 _logger.info('%r: Free leaked connection to %r', self, cnx.dsn)
 
         for i, (cnx, used) in enumerate(self._connections):
-            if not used and cnx._original_dsn == dsn:
+            if not used and cnx._original_dsn == connection_info:
                 try:
                     cnx.reset()
                 except psycopg2.OperationalError:
@@ -570,11 +576,13 @@ class ConnectionPool(object):
                 raise PoolError('The Connection Pool Is Full')
 
         try:
-            result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
+            result = psycopg2.connect(
+                connection_factory=PsycoConnection,
+                **connection_info)
         except psycopg2.Error:
             _logger.info('Connection to the database failed')
             raise
-        result._original_dsn = dsn
+        result._original_dsn = connection_info
         self._connections.append((result, True))
         self._debug('Create new connection')
         return result
@@ -639,8 +647,17 @@ class Connection(object):
         except Exception:
             return False
 
-def dsn(db_or_uri):
-    """parse the given `db_or_uri` and return a 2-tuple (dbname, uri)"""
+def connection_info_for(db_or_uri):
+    """ parse the given `db_or_uri` and return a 2-tuple (dbname, connection_params)
+
+    Connection params are either a dictionary with a single key ``dsn``
+    containing a connection URI, or a dictionary containing connection
+    parameter keywords which psycopg2 can build a key/value connection string
+    (dsn) from
+
+    :param str db_or_uri: database name or postgres dsn
+    :rtype: (str, dict)
+    """
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
         us = urlparse.urlsplit(db_or_uri)
@@ -650,15 +667,15 @@ def dsn(db_or_uri):
             db_name = us.username
         else:
             db_name = us.hostname
-        return db_name, db_or_uri
+        return db_name, {'dsn': db_or_uri}
 
-    _dsn = ''
+    connection_info = {'database': db_or_uri}
     for p in ('host', 'port', 'user', 'password'):
         cfg = tools.config['db_' + p]
         if cfg:
-            _dsn += '%s=%s ' % (p, cfg)
+            connection_info[p] = cfg
 
-    return db_or_uri, '%sdbname=%s' % (_dsn, db_or_uri)
+    return db_or_uri, connection_info
 
 _Pool = None
 
@@ -667,16 +684,16 @@ def db_connect(to, allow_uri=False):
     if _Pool is None:
         _Pool = ConnectionPool(int(tools.config['db_maxconn']))
 
-    db, uri = dsn(to)
+    db, info = connection_info_for(to)
     if not allow_uri and db != to:
         raise ValueError('URI connections not allowed')
-    return Connection(_Pool, db, uri)
+    return Connection(_Pool, db, info)
 
 def close_db(db_name):
     """ You might want to call openerp.modules.registry.RegistryManager.delete(db_name) along this function."""
     global _Pool
     if _Pool:
-        _Pool.close_all(dsn(db_name)[1])
+        _Pool.close_all(connection_info_for(db_name)[1])
 
 def close_all():
     global _Pool
