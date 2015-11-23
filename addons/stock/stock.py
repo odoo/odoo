@@ -913,7 +913,255 @@ class StockPicking(models.Model):
         for pick in self:
             pick.move_lines.action_cancel()
             pick.move_lines.unlink()
-        return super(StockPicking, self).unlink(cr, uid, ids, context=context)
+        return super(StockPicking, self).unlink()
+
+    @api.model
+    def _create_backorder(self, picking, backorder_moves=[]):
+        """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
+        """
+        if not backorder_moves:
+            backorder_moves = picking.move_lines
+        backorder_move_ids = [x.id for x in backorder_moves if x.state not in ('done', 'cancel')]
+        if 'do_only_split' in self.env.context and self.env.context['do_only_split']:
+            backorder_move_ids = [x.id for x in backorder_moves if x.id not in self.env.context.get('split', [])]
+
+        if backorder_move_ids:
+            backorder = picking.copy({
+                'name': '/',
+                'move_lines': [],
+                'pack_operation_ids': [],
+                'backorder_id': picking.id,
+            })
+            # backorder = self.browse(cr, uid, backorder_id, context=context)
+            picking.message_post(body=_("Back order <em>%s</em> <b>created</b>.") % (backorder.name))
+            self.env["stock.move"].browse(backorder_move_ids).write({'picking_id': backorder.id})
+
+            if not picking.date_done:
+                picking.write({'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+            backorder.action_confirm()
+            backorder.action_assign()
+            return backorder
+        return False
+
+    @api.multi
+    def recheck_availability(self):
+        self.action_assign()
+        self.do_prepare_partial()
+
+    @api.model
+    def _get_top_level_packages(self, quants_suggested_locations):
+        """This method searches for the higher level packages that can be moved as a single operation, given a list of quants
+           to move and their suggested destination, and returns the list of matching packages.
+        """
+        # Try to find as much as possible top-level packages that can be moved
+        quant_obj = self.env["stock.quant"]
+        top_lvl_packages = set()
+        quants_to_compare = quants_suggested_locations.keys()
+        for pack in list(set([x.package_id for x in quants_suggested_locations.keys() if x and x.package_id])):
+            loop = True
+            test_pack = pack
+            good_pack = False
+            pack_destination = False
+            while loop:
+                pack_quants = test_pack.get_content()
+                all_in = True
+                for quant in quant_obj.browse(pack_quants):
+                    # If the quant is not in the quants to compare and not in the common location
+                    if not quant in quants_to_compare:
+                        all_in = False
+                        break
+                    else:
+                        #if putaway strat apply, the destination location of each quant may be different (and thus the package should not be taken as a single operation)
+                        if not pack_destination:
+                            pack_destination = quants_suggested_locations[quant]
+                        elif pack_destination != quants_suggested_locations[quant]:
+                            all_in = False
+                            break
+                if all_in:
+                    good_pack = test_pack
+                    if test_pack.parent_id:
+                        test_pack = test_pack.parent_id
+                    else:
+                        #stop the loop when there's no parent package anymore
+                        loop = False
+                else:
+                    #stop the loop when the package test_pack is not totally reserved for moves of this picking
+                    #(some quants may be reserved for other picking or not reserved at all)
+                    loop = False
+            if good_pack:
+                top_lvl_packages.add(good_pack)
+        return list(top_lvl_packages)
+
+    @api.model
+    def _prepare_pack_ops(self, picking, quants, forced_qties):
+        """ returns a list of dict, ready to be used in create() of stock.pack.operation.
+
+        :param picking: browse record (stock.picking)
+        :param quants: browse record list (stock.quant). List of quants associated to the picking
+        :param forced_qties: dictionary showing for each product (keys) its corresponding quantity (value) that is not covered by the quants associated to the picking
+        """
+        def _picking_putaway_apply(product):
+            location = False
+            # Search putaway strategy
+            if product_putaway_strats.get(product.id):
+                location = product_putaway_strats[product.id]
+            else:
+                location = self.env['stock.location'].get_putaway_strategy(picking.location_dest_id, product)
+                product_putaway_strats[product.id] = location
+            return location or picking.location_dest_id.id
+
+        # If we encounter an UoM that is smaller than the default UoM or the one already chosen, use the new one instead.
+        product_uom = {}  # Determines UoM used in pack operations
+        location_dest_id = None
+        location_id = None
+        for move in [x for x in picking.move_lines if x.state not in ('done', 'cancel')]:
+            if not product_uom.get(move.product_id.id):
+                product_uom[move.product_id.id] = move.product_id.uom_id
+            if move.product_uom.id != move.product_id.uom_id.id and move.product_uom.factor > product_uom[move.product_id.id].factor:
+                product_uom[move.product_id.id] = move.product_uom
+            if not move.scrapped:
+                if location_dest_id and move.location_dest_id.id != location_dest_id:
+                    raise UserError(_('The destination location must be the same for all the moves of the picking.'))
+                location_dest_id = move.location_dest_id.id
+                if location_id and move.location_id.id != location_id:
+                    raise UserError(_('The source location must be the same for all the moves of the picking.'))
+                location_id = move.location_id.id
+
+        quant_obj = self.env["stock.quant"]
+        vals = []
+        qtys_grouped = {}
+        lots_grouped = {}
+        #for each quant of the picking, find the suggested location
+        quants_suggested_locations = {}
+        product_putaway_strats = {}
+        for quant in quants:
+            if quant.qty <= 0:
+                continue
+            suggested_location_id = _picking_putaway_apply(quant.product_id)
+            quants_suggested_locations[quant] = suggested_location_id
+
+        #find the packages we can movei as a whole
+        top_lvl_packages = self._get_top_level_packages(quants_suggested_locations)
+        # and then create pack operations for the top-level packages found
+        for pack in top_lvl_packages:
+            pack_quant_ids = pack.get_content()
+            pack_quants = quant_obj.browse(pack_quant_ids)
+            vals.append({
+                    'picking_id': picking.id,
+                    'package_id': pack.id,
+                    'product_qty': 1.0,
+                    'location_id': pack.location_id.id,
+                    'location_dest_id': quants_suggested_locations[pack_quants[0]],
+                    'owner_id': pack.owner_id.id,
+                })
+            #remove the quants inside the package so that they are excluded from the rest of the computation
+            for quant in pack_quants:
+                del quants_suggested_locations[quant]
+        # Go through all remaining reserved quants and group by product, package, owner, source location and dest location
+        # Lots will go into pack operation lot object
+        for quant, dest_location_id in quants_suggested_locations.items():
+            key = (quant.product_id.id, quant.package_id.id, quant.owner_id.id, quant.location_id.id, dest_location_id)
+            if qtys_grouped.get(key):
+                qtys_grouped[key] += quant.qty
+            else:
+                qtys_grouped[key] = quant.qty
+            if quant.product_id.tracking != 'none' and quant.lot_id:
+                lots_grouped.setdefault(key, {}).setdefault(quant.lot_id.id, 0.0)
+                lots_grouped[key][quant.lot_id.id] += quant.qty
+
+        # Do the same for the forced quantities (in cases of force_assign or incomming shipment for example)
+        for product, qty in forced_qties.items():
+            if qty <= 0:
+                continue
+            suggested_location_id = _picking_putaway_apply(product)
+            key = (product.id, False, picking.owner_id.id, picking.location_id.id, suggested_location_id)
+            if qtys_grouped.get(key):
+                qtys_grouped[key] += qty
+            else:
+                qtys_grouped[key] = qty
+
+        # Create the necessary operations for the grouped quants and remaining qtys
+        uom_obj = self.env['product.uom']
+        prevals = {}
+        for key, qty in qtys_grouped.items():
+            product = self.env["product.product"].browse(key[0])
+            uom_id = product.uom_id.id
+            qty_uom = qty
+            if product_uom.get(key[0]):
+                uom_id = product_uom[key[0]].id
+                qty_uom = uom_obj._compute_qty(product.uom_id.id, qty, uom_id)
+            pack_lot_ids = []
+            if lots_grouped.get(key):
+                for lot in lots_grouped[key].keys():
+                    pack_lot_ids += [(0, 0, {'lot_id': lot, 'qty': 0.0, 'qty_todo': lots_grouped[key][lot]})]
+            val_dict = {
+                'picking_id': picking.id,
+                'product_qty': qty_uom,
+                'product_id': key[0],
+                'package_id': key[1],
+                'owner_id': key[2],
+                'location_id': key[3],
+                'location_dest_id': key[4],
+                'product_uom_id': uom_id,
+                'pack_lot_ids': pack_lot_ids,
+            }
+            if key[0] in prevals:
+                prevals[key[0]].append(val_dict)
+            else:
+                prevals[key[0]] = [val_dict]
+        # prevals var holds the operations in order to create them in the same order than the picking stock moves if possible
+        processed_products = set()
+        for move in [x for x in picking.move_lines if x.state not in ('done', 'cancel')]:
+            if move.product_id.id not in processed_products:
+                vals += prevals.get(move.product_id.id, [])
+                processed_products.add(move.product_id.id)
+        return vals
+
+    @api.multi
+    def do_prepare_partial(self):
+        pack_operation_obj = self.env['stock.pack.operation']
+
+        #get list of existing operations and delete them
+        existing_package_ids = pack_operation_obj.search([('picking_id', 'in', self.ids)])
+        if existing_package_ids:
+            existing_package_ids.unlink()
+        for picking in self:
+            forced_qties = {}  # Quantity remaining after calculating reserved quants
+            picking_quants = []
+            #Calculate packages, reserved quants, qtys of this picking's moves
+            for move in picking.move_lines:
+                if move.state not in ('assigned', 'confirmed', 'waiting'):
+                    continue
+                move_quants = move.reserved_quant_ids
+                picking_quants += move_quants
+                forced_qty = (move.state == 'assigned') and move.product_qty - sum([x.qty for x in move_quants]) or 0
+                #if we used force_assign() on the move, or if the move is incoming, forced_qty > 0
+                if float_compare(forced_qty, 0, precision_rounding=move.product_id.uom_id.rounding) > 0:
+                    if forced_qties.get(move.product_id):
+                        forced_qties[move.product_id] += forced_qty
+                    else:
+                        forced_qties[move.product_id] = forced_qty
+            for vals in self._prepare_pack_ops(picking, picking_quants, forced_qties):
+                vals['fresh_record'] = False
+                pack_operation_obj.create(vals)
+        #recompute the remaining quantities all at once
+        self.do_recompute_remaining_quantities()
+        self.write({'recompute_pack_op': False})
+
+    @api.multi
+    def do_unreserve(self):
+        """
+          Will remove all quants for picking in picking_ids
+        """
+        moves_to_unreserve = []
+        pack_line_to_unreserve = []
+        for picking in self:
+            moves_to_unreserve += [m.id for m in picking.move_lines if m.state not in ('done', 'cancel')]
+            pack_line_to_unreserve += [p.id for p in picking.pack_operation_ids]
+        if moves_to_unreserve:
+            if pack_line_to_unreserve:
+                self.env['stock.pack.operation'].browse(pack_line_to_unreserve).unlink()
+            self.env['stock.move'].browse(moves_to_unreserve).do_unreserve()
 
 class StockProductionLot(models.Model):
     _name = 'stock.production.lot'
