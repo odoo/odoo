@@ -63,7 +63,10 @@
                     </td>
                     <td>
                         <select t-if="(event.seats_available or event.seats_availability == 'unlimited') and (ticket.seats_available or ticket.seats_availability == 'unlimited')" t-attf-name="nb_register-#{ticket.id}" class="form-control">
-                            <t t-foreach="range(0, (ticket.seats_availability == 'unlimited' or ticket.seats_available > 9) and 10 or ticket.seats_available + 1)" t-as="nb">
+                            <t t-set="seats_max_ticket" t-value="(ticket.seats_availability == 'unlimited' or ticket.seats_available > 9) and 10 or ticket.seats_available + 1"/>
+                            <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available > 9) and 10 or event.seats_available + 1"/>
+                            <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
+                            <t t-foreach="range(0, seats_max)" t-as="nb">
                                 <option t-esc="nb"/>
                             </t>
                         </select>
