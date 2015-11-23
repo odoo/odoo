@@ -761,6 +761,12 @@ var BufferedDataSet = DataSetStatic.extend({
             _.extend(cached.from_read, options.from_read);
             _.extend(cached.changes, options.changes);
             _.extend(cached.readonly_fields, options.readonly_fields);
+            // discard values from cached.changes that are in cached.from_read
+            _.each(cached.changes, function (v, k) {
+                if (cached.from_read[k] === v) {
+                    delete cached.changes[k];
+                }
+            });
             if (options.to_create !== undefined) cached.to_create = options.to_create;
             if (options.to_delete !== undefined) cached.to_delete = options.to_delete;
         }
