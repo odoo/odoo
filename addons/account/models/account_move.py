@@ -676,9 +676,11 @@ class AccountMoveLine(models.Model):
                 self.process_reconciliation(cr, uid, datum['mv_line_ids'], datum['new_mv_line_dicts'], context=context)
 
             if datum['type'] == 'partner':
-                self.env['res.partner'].browse(datum['id']).mark_as_reconciled()
+                partners = self.pool['res.partner'].browse(cr, uid, datum['id'], context=context)
+                self.pool['res.partner'].mark_as_reconciled(cr, uid, partners.ids, context=context)
             if datum['type'] == 'account':
-                self.env['account.account'].browse(datum['id']).mark_as_reconciled()
+                accounts = self.pool['account.account'].browse(cr, uid, datum['id'], context=context)
+                self.pool['account.account'].mark_as_reconciled(cr, uid, accounts.ids, context=context)
 
     @api.v7
     def process_reconciliation(self, cr, uid, mv_line_ids, new_mv_line_dicts, context=None):

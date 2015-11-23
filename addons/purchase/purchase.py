@@ -560,8 +560,7 @@ class PurchaseOrderLine(models.Model):
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
         self.date_planned = datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        self.price_unit = 0.0
-        self.product_qty = 0.0
+        self.price_unit = self.product_qty = 0.0
         self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         result['domain'] = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
 
@@ -576,7 +575,8 @@ class PurchaseOrderLine(models.Model):
         fpos = self.order_id.fiscal_position_id
         self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
 
-        self.with_context(change_product=True)._onchange_quantity()
+        self._suggest_quantity()
+        self._onchange_quantity()
 
         return result
 
@@ -596,18 +596,7 @@ class PurchaseOrderLine(models.Model):
             self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         if not seller:
-            # Suggest a minimum quantity if possible
-            if not self.product_qty:
-                seller_min_qty = self.product_id.seller_ids\
-                    .filtered(lambda r: r.name == self.order_id.partner_id)\
-                    .sorted(key=lambda r: r.min_qty)
-                if seller_min_qty:
-                    self.product_qty = seller_min_qty[0].min_qty
-                    self.product_uom = seller_min_qty[0].product_uom
-                else:
-                    self.product_qty = 1.0
-            if not self.env.context.get('change_product', False):
-                return
+            return
 
         price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, self.product_id.supplier_taxes_id, self.taxes_id) if seller else 0.0
         if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
@@ -617,6 +606,22 @@ class PurchaseOrderLine(models.Model):
             price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=self.product_uom.id)
 
         self.price_unit = price_unit
+
+    def _suggest_quantity(self):
+        '''
+        Suggest a minimal quantity based on the seller
+        '''
+        if not self.product_id:
+            return
+
+        seller_min_qty = self.product_id.seller_ids\
+            .filtered(lambda r: r.name == self.order_id.partner_id)\
+            .sorted(key=lambda r: r.min_qty)
+        if seller_min_qty:
+            self.product_qty = seller_min_qty[0].min_qty or 1.0
+            self.product_uom = seller_min_qty[0].product_uom
+        else:
+            self.product_qty = 1.0
 
 
 class ProcurementRule(models.Model):

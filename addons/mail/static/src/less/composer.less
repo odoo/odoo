@@ -7,16 +7,18 @@
     text-align: justify;
 }
 
-// Emoji size in the popover
+// Emoji
 .o_mail_emoji {
     display: inline-block;
     height: 24px;
     width: 24px;
 
     > img {
-        cursor: pointer;
         width: 100%;
     }
+}
+.o_composer_emoji .o_mail_emoji {
+    cursor: pointer; // only in the popover
 }
 
 // Attachment Icons (common for chat thread and chat composer)

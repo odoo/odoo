@@ -15,12 +15,16 @@ var CHAT_WINDOW_WIDTH = 260;
 
 function open_chat (session) {
     if (!_.findWhere(chat_sessions, {id: session.id})) {
+        var channel = chat_manager.get_channel(session.id);
         var chat_session = {
             id: session.id,
             uuid: session.uuid,
             name: session.name,
-            window: new ChatWindow(web_client, session.id, session.name, session.is_folded),
+            window: new ChatWindow(web_client, session.id, session.name, session.is_folded, channel.unread_counter),
         };
+        if (!session.is_folded) {
+            chat_manager.mark_channel_as_seen(channel);
+        }
         chat_session.window.on("close_chat_session", null, function () {
             close_chat(chat_session);
             chat_manager.close_chat_session(chat_session.id);
@@ -35,6 +39,9 @@ function open_chat (session) {
 
         chat_session.window.on("post_message", null, function (message) {
             chat_manager.post_message(message);
+        });
+        chat_session.window.on("messages_read", null, function () {
+            chat_manager.mark_channel_as_seen(channel);
         });
 
         chat_sessions.push(chat_session);
@@ -74,6 +81,9 @@ function reposition_windows () {
 function update_sessions (message, scrollBottom) {
     _.each(chat_sessions, function (session) {
         if (_.contains(message.channel_ids, session.id)) {
+            if (!session.window.folded) {
+                chat_manager.mark_channel_as_seen(chat_manager.get_channel(session.id));
+            }
             chat_manager.get_messages({channel_id: session.id}).then(function (messages) {
                 session.window.render(messages);
                 if (scrollBottom) {
@@ -100,7 +110,7 @@ core.bus.on('web_client_ready', null, function () {
 
     chat_manager.bus.on('anyone_listening', null, function (channel, query) {
         _.each(chat_sessions, function (session) {
-            if (_.contains(channel.id, session.id)) {
+            if (channel.id === session.id) {
                 query.is_displayed = true;
             }
         });
@@ -110,6 +120,14 @@ core.bus.on('web_client_ready', null, function () {
         _.each(chat_sessions, function (session) {
             if (channel_id === session.id) {
                 close_chat(session);
+            }
+        });
+    });
+
+    chat_manager.bus.on('update_channel_unread_counter', null, function (channel) {
+        _.each(chat_sessions, function (session) {
+            if (channel.id === session.id) {
+                session.window.update_unread(channel.unread_counter);
             }
         });
     });

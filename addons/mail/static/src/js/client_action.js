@@ -194,7 +194,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
         this.thread.on('load_more_messages', this, this.load_more_messages);
         this.thread.on('mark_as_read', this, function (message_id) {
-            chat_manager.mark_as_read(message_id);
+            chat_manager.mark_as_read([message_id]);
         });
         this.thread.on('toggle_star_status', this, function (message_id) {
             chat_manager.toggle_star_status(message_id);
@@ -218,6 +218,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 });
                 chat_manager.bus.on('update_needaction', self, self.render_sidebar);
                 chat_manager.bus.on('unsubscribe_from_channel', self, self.render_sidebar);
+                chat_manager.bus.on('update_channel_unread_counter', self, self.render_sidebar);
             });
     },
 

@@ -193,20 +193,33 @@ class Message(models.Model):
 
     @api.multi
     def set_message_done(self, partner_ids=None):
-        """ Remove the needaction from messages for the current partner, or for
-            partners in partner_ids if partner_ids is given. """
-        if not partner_ids:
-            partner_ids = [self.env.user.partner_id.id]
-        new_value = {'needaction_partner_ids': [(3, pid) for pid in partner_ids]}
-        if set(partner_ids) == set([self.env.user.partner_id.id]):
-            # a user should be able to mark a message as done for him
-            self.sudo().write(new_value)
-        else:
-            self.write(new_value)
+        """ Remove the needaction from messages for the current partner. """
+        partner_id = self.env.user.partner_id
+        messages = self.filtered(lambda msg: partner_id in msg.needaction_partner_ids)
+        if not len(messages):
+            return
+        messages.sudo().write({'needaction_partner_ids': [(3, partner_id.id)]})
 
-        channel_ids = [c.id for c in self.channel_ids]
-        notification = {'type': 'mark_as_read', 'message_ids': [self.id], 'channel_ids': channel_ids}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
+        # notifies changes in messages through the bus.  To minimize the number of
+        # notifications, we need to group the messages depending on their channel_ids
+        groups = []
+        current_channel_ids = messages[0].channel_ids
+        current_group = []
+        for record in messages:
+            if record.channel_ids == current_channel_ids:
+                current_group.append(record.id)
+            else:
+                groups.append((current_group, current_channel_ids))
+                current_group = [record.id]
+                current_channel_ids = record.channel_ids
+
+        groups.append((current_group, current_channel_ids))
+        current_group = [record.id]
+        current_channel_ids = record.channel_ids
+
+        for (msg_ids, channel_ids) in groups:
+            notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids]}
+            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id.id), notification)
 
     @api.model
     def unstar_all(self):
@@ -485,7 +498,7 @@ class Message(models.Model):
 
             nb_read = 0
             if context and 'mail_read_set_read' in context and context['mail_read_set_read']:
-                nb_read = self.set_message_read(True, create_missing=False)
+                nb_read = self.set_message_done()
 
         else:
             nb_read = 0
