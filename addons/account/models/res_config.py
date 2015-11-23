@@ -128,6 +128,9 @@ class AccountConfigSettings(models.TransientModel):
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format",
         help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
             'This installs the module account_bank_statement_import_ofx.')
+    module_account_bank_statement_import_camt = fields.Boolean("Import CAMT format bank statement",
+        help='Get your bank statements from your bank and import them in Odoo in the .XML format.\n'
+            'This installs the module account_bank_statement_import_camt.')
 
 
     @api.model
