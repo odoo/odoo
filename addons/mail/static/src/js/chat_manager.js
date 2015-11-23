@@ -464,7 +464,7 @@ var chat_manager = {
                     return _.contains(message.channel_ids, options.channel_id);
                 }));
             } else {
-                return fetch_from_channel(channel);
+                return fetch_from_channel(channel, {domain: options.domain});
             }
         } else { // chatter message
         }
