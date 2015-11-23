@@ -25,38 +25,21 @@ class stock_move(osv.Model):
     _inherit = "stock.move"
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
-        """ Add a reference to the stock.move in the invoice line
-
-        In anglo-saxon the price for COGS should be taken from stock.move
-        if possible (fallback on standard_price)
+        """ Add a reference to the stock.move in the invoice line and add the Anglo-Saxon account in the invoice line.
         """
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
-        res.update({
-            'move_id': move.id,
-        })
+        vals = {'move_id' : move.id}
+        if inv_type in ('in_invoice', 'in_refund'):
+            fiscal_position = partner.property_account_position
+            if move.product_id.type != 'service':
+                oa = move.product_id.property_stock_account_input and move.product_id.property_stock_account_input.id
+                if not oa:
+                    oa = move.product_id.categ_id.property_stock_account_input_categ and move.product_id.categ_id.property_stock_account_input_categ.id        
+                if oa:
+                    fpos = fiscal_position or False
+                    a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
+                    vals.update({'account_id':a})
+        res.update(vals)
         return res
-
-class stock_picking(osv.osv):
-    _inherit = "stock.picking"
-    _description = "Picking List"
-
-    def action_invoice_create(self, cr, uid, ids, journal_id=False,
-            group=False, type='out_invoice', context=None):
-        '''Return ids of created invoices for the pickings'''
-        res = super(stock_picking,self).action_invoice_create(cr, uid, ids, journal_id, group, type, context=context)
-        if type in ('in_invoice', 'in_refund'):
-            for inv in self.pool.get('account.invoice').browse(cr, uid, res, context=context):
-                for ol in inv.invoice_line:
-                    if ol.product_id.type != 'service':
-                        oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
-                        if not oa:
-                            oa = ol.product_id.categ_id.property_stock_account_input_categ and ol.product_id.categ_id.property_stock_account_input_categ.id        
-                        if oa:
-                            fpos = ol.invoice_id.fiscal_position or False
-                            a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
-                            self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
-        return res
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
