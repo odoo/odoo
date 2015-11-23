@@ -1331,6 +1331,44 @@ class StockPicking(models.Model):
             }
         return res
 
+    @api.model
+    def _create_extra_moves(self, picking):
+        '''This function creates move lines on a picking, at the time of do_transfer, based on
+        unexpected product transfers (or exceeding quantities) found in the pack operations.
+        '''
+        move_obj = self.env['stock.move']
+        operation_obj = self.env['stock.pack.operation']
+        moves = []
+        for op in picking.pack_operation_ids:
+            for product_id, remaining_qty in operation_obj._get_remaining_prod_quantities(op).items():
+                product = self.env['product.product'].browse(product_id)
+                if float_compare(remaining_qty, 0, precision_rounding=product.uom_id.rounding) > 0:
+                    vals = self._prepare_values_extra_move(op, product, remaining_qty)
+                    moves.append(move_obj.create(vals).id)
+        if moves:
+            move_list = move_obj.browse(moves)
+            move_list.action_confirm()
+        return moves
+
+    @api.multi
+    def rereserve_pick(self):
+        """
+        This can be used to provide a button that rereserves taking into account the existing pack operations
+        """
+        for pick in self:
+            self.rereserve_quants(pick, move_ids=pick.move_lines.ids)
+
+    @api.model
+    def rereserve_quants(self, picking, move_ids=[]):
+        """ Unreserve quants then try to reassign quants."""
+        stock_move_obj = self.env['stock.move']
+        if not move_ids:
+            picking.do_unreserve()
+            picking.action_assign()
+        else:
+            stock_move_obj.browse(move_ids).do_unreserve()
+            stock_move_obj.browse(move_ids).action_assign(no_prepare=True)
+
 class StockProductionLot(models.Model):
     _name = 'stock.production.lot'
     _inherit = ['mail.thread']

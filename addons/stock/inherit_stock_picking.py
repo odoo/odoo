@@ -167,40 +167,6 @@ class stock_picking(models.Model):
         'state': 'draft',
     }
 
-    def _create_extra_moves(self, cr, uid, picking, context=None):
-        '''This function creates move lines on a picking, at the time of do_transfer, based on
-        unexpected product transfers (or exceeding quantities) found in the pack operations.
-        '''
-        move_obj = self.pool.get('stock.move')
-        operation_obj = self.pool.get('stock.pack.operation')
-        moves = []
-        for op in picking.pack_operation_ids:
-            for product_id, remaining_qty in operation_obj._get_remaining_prod_quantities(cr, uid, op, context=context).items():
-                product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                if float_compare(remaining_qty, 0, precision_rounding=product.uom_id.rounding) > 0:
-                    vals = self._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
-                    moves.append(move_obj.create(cr, uid, vals, context=context))
-        if moves:
-            move_obj.action_confirm(cr, uid, moves, context=context)
-        return moves
-
-    def rereserve_pick(self, cr, uid, ids, context=None):
-        """
-        This can be used to provide a button that rereserves taking into account the existing pack operations
-        """
-        for pick in self.browse(cr, uid, ids, context=context):
-            self.rereserve_quants(cr, uid, pick, move_ids = [x.id for x in pick.move_lines], context=context)
-
-    def rereserve_quants(self, cr, uid, picking, move_ids=[], context=None):
-        """ Unreserve quants then try to reassign quants."""
-        stock_move_obj = self.pool.get('stock.move')
-        if not move_ids:
-            self.do_unreserve(cr, uid, [picking.id], context=context)
-            self.action_assign(cr, uid, [picking.id], context=context)
-        else:
-            stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
-            stock_move_obj.action_assign(cr, uid, move_ids, no_prepare=True, context=context)
-
     def do_new_transfer(self, cr, uid, ids, context=None):
         pack_op_obj = self.pool['stock.pack.operation']
         data_obj = self.pool['ir.model.data']
