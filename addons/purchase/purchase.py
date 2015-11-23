@@ -1439,7 +1439,7 @@ class procurement_order(osv.osv):
         #Passing partner_id to context for purchase order line integrity of Line name
         new_context = context.copy()
         new_context.update({'lang': partner.lang, 'partner_id': partner.id})
-        names = prod_obj.name_get(cr, uid, [x.product_id.id for x in procurements], context=context)
+        names = prod_obj.name_get(cr, uid, [x.product_id.id for x in procurements], context=new_context)
         names_dict = {}
         for id, name in names:
             names_dict[id] = name
