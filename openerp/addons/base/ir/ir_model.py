@@ -252,6 +252,7 @@ class ir_model_fields(osv.osv):
         'depends': fields.char("Dependencies", help="Dependencies of compute method; "
                         "a list of comma-separated field names, like\n\n"
                         "    name, partner_id.name"),
+        'store': fields.boolean('Stored', help="Whether the value is stored in the database."),
     }
     _rec_name='field_description'
     _defaults = {
@@ -262,6 +263,7 @@ class ir_model_fields(osv.osv):
         'on_delete': 'set null',
         'field_description': '',
         'selectable': 1,
+        'store': True,
     }
     _order = "name"
 

@@ -412,6 +412,7 @@ class BaseModel(object):
                 'ttype': f.type,
                 'relation': f.comodel_name or None,
                 'index': bool(f.index),
+                'store': bool(f.store),
                 'copy': bool(f.copy),
                 'related': f.related and ".".join(f.related),
                 'readonly': bool(f.readonly),
@@ -696,6 +697,7 @@ class BaseModel(object):
                 'related': field['related'],
                 'required': bool(field['required']),
                 'readonly': bool(field['readonly']),
+                'store': bool(field['store']),
             }
             # FIXME: ignore field['serialization_field_id']
             if field['ttype'] in ('char', 'text', 'html'):
