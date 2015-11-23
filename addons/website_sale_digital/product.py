@@ -11,11 +11,9 @@ class product_template(models.Model):
     def _compute_attachment_count(self):
         IrAttachment = self.env['ir.attachment']
         for ptemplate in self:
-            prod_tmpl_attach_count = IrAttachment.read_group([('res_model', '=', 'product.template'), ('res_id', 'in', ptemplate.ids)], ['res_id'], ['res_id'])
-            prod_attach_count = IrAttachment.read_group([('res_model', '=', 'product.product'), ('res_id', 'in', ptemplate.product_variant_ids.ids)], ['res_id'], ['res_id'])
-            prod_tmpl_result = dict((data['res_id'], data['res_id_count']) for data in prod_tmpl_attach_count)
-            prod_attach_result = dict((data['res_id'], data['res_id_count']) for data in prod_attach_count)
-            ptemplate.attachment_count = prod_tmpl_result.get(ptemplate.id, 0) + sum(prod_attach_result.get(p.id, 0) for p in ptemplate.product_variant_ids)
+            prod_tmpl_attach_count = IrAttachment.search_count([('res_model', '=', 'product.template'), ('res_id', 'in', ptemplate.ids)])
+            prod_attach_count = IrAttachment.search_count([('res_model', '=', 'product.product'), ('res_id', 'in', ptemplate.product_variant_ids.ids)])
+            ptemplate.attachment_count = prod_tmpl_attach_count + prod_attach_count
 
     @api.model
     def _get_product_template_type(self):
@@ -49,9 +47,7 @@ class product_product(models.Model):
     def _compute_attachment_count(self):
         IrAttachment = self.env['ir.attachment']
         for product in self:
-            read_count = IrAttachment.read_group([('res_model', '=', product._name), ('res_id', 'in', product.ids)], ['res_id'], ['res_id'])
-            result = dict((data['res_id'], data['res_id_count']) for data in read_count)
-            product.attachment_count = result.get(product.id, 0)
+            product.attachment_count = IrAttachment.search_count([('res_model', '=', product._name), ('res_id', 'in', product.ids)])
 
     @api.multi
     def action_open_attachments(self):

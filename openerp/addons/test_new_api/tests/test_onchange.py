@@ -2,6 +2,10 @@
 
 from openerp.tests import common
 
+def strip_prefix(prefix, names):
+    size = len(prefix)
+    return [name[size:] for name in names if name.startswith(prefix)]
+
 class TestOnChange(common.TransactionCase):
 
     def setUp(self):
@@ -83,8 +87,8 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(field_onchange.get('name'), '1')
         self.assertEqual(field_onchange.get('messages'), '1')
         self.assertItemsEqual(
-            [name for name in field_onchange if name.startswith('messages.')],
-            ['messages.author', 'messages.body', 'messages.name', 'messages.size'],
+            strip_prefix('messages.', field_onchange),
+            ['author', 'body', 'name', 'size'],
         )
 
         # modify discussion name
@@ -106,7 +110,7 @@ class TestOnChange(common.TransactionCase):
         self.env.invalidate_all()
         result = self.Discussion.onchange(values, 'name', field_onchange)
         self.assertIn('messages', result['value'])
-        self.assertEqual(result['value']['messages'], [
+        self.assertItemsEqual(result['value']['messages'], [
             (5,),
             (1, message.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
@@ -129,7 +133,10 @@ class TestOnChange(common.TransactionCase):
 
         field_onchange = self.Discussion._onchange_spec()
         self.assertEqual(field_onchange.get('moderator'), '1')
-        self.assertFalse(any(name.startswith('participants.') for name in field_onchange))
+        self.assertItemsEqual(
+            strip_prefix('participants.', field_onchange),
+            ['display_name'],
+        )
 
         # first remove demo user from participants
         discussion.participants -= demo
@@ -147,9 +154,10 @@ class TestOnChange(common.TransactionCase):
         result = discussion.onchange(values, 'moderator', field_onchange)
 
         self.assertIn('participants', result['value'])
-        self.assertEqual(
+        self.assertItemsEqual(
             result['value']['participants'],
-            [(5,)] + [(4, usr.id) for usr in discussion.participants + demo],
+            [(5,)] + [(1, user.id, {'display_name': user.display_name})
+                      for user in discussion.participants + demo],
         )
 
     def test_onchange_one2many_value(self):

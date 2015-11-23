@@ -326,11 +326,10 @@ class PurchaseOrder(models.Model):
     @api.multi
     def _create_picking(self):
         for order in self:
-            ptypes = order.order_line.mapped('product_id.type')
-            if ('product' in ptypes) or ('consu' in ptypes):
+            if any([ptype in ['product', 'consu'] for ptype in order.order_line.mapped('product_id.type')]):
                 res = order._prepare_picking()
                 picking = self.env['stock.picking'].create(res)
-                moves = order.order_line._create_stock_moves(picking)
+                moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
                 moves.action_confirm()
                 moves.force_assign()
         return True
@@ -437,11 +436,11 @@ class PurchaseOrderLine(models.Model):
             total = 0.0
             for move in line.move_ids:
                 if move.state == 'done':
-                    total += move.product_qty
+                    total += move.product_uom_qty
             line.qty_received = total
 
     name = fields.Text(string='Description', required=True)
-    product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
+    product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, select=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes')
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
@@ -553,14 +552,16 @@ class PurchaseOrderLine(models.Model):
         else:
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
-    @api.onchange('product_id', 'product_qty', 'product_uom')
+    @api.onchange('product_id')
     def onchange_product_id(self):
         result = {}
         if not self.product_id:
             return result
 
-        if self.product_id.uom_id.category_id.id != self.product_uom.category_id.id:
-            self.product_uom = self.product_id.uom_po_id
+        # Reset date, price and quantity since _onchange_quantity will provide default values
+        self.date_planned = datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.price_unit = self.product_qty = 0.0
+        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         result['domain'] = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
 
         product_lang = self.product_id.with_context({
@@ -570,6 +571,19 @@ class PurchaseOrderLine(models.Model):
         self.name = product_lang.display_name
         if product_lang.description_purchase:
             self.name += '\n' + product_lang.description_purchase
+
+        fpos = self.order_id.fiscal_position_id
+        self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
+
+        self._suggest_quantity()
+        self._onchange_quantity()
+
+        return result
+
+    @api.onchange('product_qty', 'product_uom')
+    def _onchange_quantity(self):
+        if not self.product_id:
+            return
 
         seller = self.product_id._select_seller(
             self.product_id,
@@ -582,10 +596,7 @@ class PurchaseOrderLine(models.Model):
             self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         if not seller:
-            return result
-
-        fpos = self.order_id.fiscal_position_id
-        self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
+            return
 
         price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, self.product_id.supplier_taxes_id, self.taxes_id) if seller else 0.0
         if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
@@ -596,7 +607,21 @@ class PurchaseOrderLine(models.Model):
 
         self.price_unit = price_unit
 
-        return result
+    def _suggest_quantity(self):
+        '''
+        Suggest a minimal quantity based on the seller
+        '''
+        if not self.product_id:
+            return
+
+        seller_min_qty = self.product_id.seller_ids\
+            .filtered(lambda r: r.name == self.order_id.partner_id)\
+            .sorted(key=lambda r: r.min_qty)
+        if seller_min_qty:
+            self.product_qty = seller_min_qty[0].min_qty or 1.0
+            self.product_uom = seller_min_qty[0].product_uom
+        else:
+            self.product_qty = 1.0
 
 
 class ProcurementRule(models.Model):
