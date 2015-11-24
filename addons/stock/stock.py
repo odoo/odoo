@@ -1397,7 +1397,7 @@ class StockPicking(models.Model):
                         'views': [(view, 'form')],
                         'view_id': view,
                         'target': 'new',
-                        'res_id': wiz_id,
+                        'res_id': wiz_id.id,
                         'context': self.env.context,
                     }
 
@@ -1415,7 +1415,7 @@ class StockPicking(models.Model):
                         'views': [(view, 'form')],
                         'view_id': view,
                         'target': 'new',
-                        'res_id': wiz_id,
+                        'res_id': wiz_id.id,
                         'context': self.env.context,
                         }
             for operation in pick.pack_operation_ids:
@@ -1448,7 +1448,7 @@ class StockPicking(models.Model):
                 for opslot in ops.pack_lot_ids:
                     if not opslot.lot_id:
                         lot_id = lot_obj.create({'name': opslot.lot_name, 'product_id': ops.product_id.id})
-                        opslot.write({'lot_id': lot_id})
+                        opslot.write({'lot_id': lot_id.id})
                 #Unlink pack operations where qty = 0
                 to_unlink += [x.id for x in ops.pack_lot_ids if x.qty == 0.0]
         opslot_obj.browse(to_unlink).unlink()
