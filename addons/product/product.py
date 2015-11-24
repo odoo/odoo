@@ -1209,6 +1209,10 @@ class product_product(osv.osv):
             return price_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
         return 0.0
 
+    def _need_procurement(self, cr, uid, ids, context=None):
+        # When sale/product is installed alone, there is no need to create procurements. Only
+        # sale_stock and sale_service need procurements
+        return False
 
 class product_packaging(osv.osv):
     _name = "product.packaging"

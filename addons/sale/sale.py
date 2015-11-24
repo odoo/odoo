@@ -543,7 +543,7 @@ class SaleOrderLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         new_procs = self.env['procurement.order'] #Empty recordset
         for line in self:
-            if line.state != 'sale':
+            if line.state != 'sale' or not line.product_id._need_procurement():
                 continue
             qty = 0.0
             for proc in line.procurement_ids:

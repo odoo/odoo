@@ -315,3 +315,14 @@ class AccountInvoiceLine(models.Model):
                 price_unit = average_price_unit or price_unit
                 price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id)
         return price_unit
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.multi
+    def _need_procurement(self):
+        for product in self:
+            if product.type not in ['service', 'digital']:
+                return True
+        return super(ProductProduct, self)._need_procurement()
