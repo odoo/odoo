@@ -977,6 +977,20 @@ class product_product(osv.osv):
         'color': 0,
     }
 
+    def _check_attribute_value_ids(self, cr, uid, ids, context=None):
+        for product in self.browse(cr, uid, ids, context=context):
+            attributes = set()
+            for value in product.attribute_value_ids:
+                if value.attribute_id in attributes:
+                    return False
+                else:
+                    attributes.add(value.attribute_id)
+        return True
+
+    _constraints = [
+        (_check_attribute_value_ids, 'Error! It is not allowed to choose more than one value for a given attribute.', ['attribute_value_ids'])
+    ]
+
     _sql_constraints = [
         ('barcode_uniq', 'unique(barcode)', _("A barcode can only be assigned to one product !")),
     ]

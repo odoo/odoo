@@ -42,6 +42,9 @@ var LivechatButton = Widget.extend({
         bus.on('notification', this, function (notification) {
             this.add_message(notification[1]);
             this.render_messages();
+            if (this.chat_window.folded) {
+                this.chat_window.update_unread(this.chat_window.unread_msgs+1);
+            }
         });
         return this._super();
     },
@@ -93,7 +96,7 @@ var LivechatButton = Widget.extend({
         var options = {
             display_stars: false,
         };
-        this.chat_window = new ChatWindow(this, channel.id, channel.name, false, options);
+        this.chat_window = new ChatWindow(this, channel.id, channel.name, false, channel.message_unread_counter, options);
         this.chat_window.appendTo($('body')).then(function () {
             self.chat_window.$el.css({right: 0, bottom: 0});
             self.$el.hide();
