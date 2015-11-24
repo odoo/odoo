@@ -310,6 +310,7 @@ class account_analytic_line(osv.osv):
                     WHERE %(date_to)s >= l.date
                         AND %(date_from)s <= l.date
                         AND %(user_id)s = l.user_id
+                        AND l.is_timesheet = True
                     GROUP BY l.id""", {'date_from': ts.date_from,
                                         'date_to': ts.date_to,
                                         'user_id': ts.employee_id.user_id.id,})
