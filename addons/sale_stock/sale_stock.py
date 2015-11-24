@@ -113,27 +113,21 @@ class SaleOrderLine(models.Model):
             return self._check_package()
         return {}
 
-    @api.onchange('product_id', 'product_uom_qty')
+    @api.onchange('product_id', 'product_uom_qty', 'product_uom', 'route_id')
     def _onchange_product_id_check_availability(self):
-        if not self.product_id:
+        if not self.product_id or not self.product_uom_qty or not self.product_uom:
             self.product_packaging = False
             return {}
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         if self.product_id.type == 'product':
-            product = self.product_id.with_context(
-                lang=self.order_id.partner_id.lang,
-                partner_id=self.order_id.partner_id.id,
-                date_order=self.order_id.date_order,
-                pricelist_id=self.order_id.pricelist_id.id,
-                uom=self.product_uom.id,
-                warehouse_id=self.order_id.warehouse_id.id
-            )
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            product_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, self.product_id.uom_id)
+            if float_compare(self.product_id.virtual_available, product_qty, precision_digits=precision) == -1:
                 is_available = self._check_routing()
                 if not is_available:
                     warning_mess = {
                         'title': _('Not enough inventory!'),
                         'message' : _('You plan to sell %.2f %s but you only have %.2f %s available!\nThe stock on hand is %.2f %s.') % \
-                            (self.product_uom_qty, self.product_uom.name or self.product_id.uom_id.name, product.virtual_available, self.product_uom.name or self.product_id.uom_id.name, product.qty_available, self.product_uom.name or self.product_id.uom_id.name)
+                            (self.product_uom_qty, self.product_uom.name, self.product_id.virtual_available, self.product_id.uom_id.name, self.product_id.qty_available, self.product_id.uom_id.name)
                     }
                     return {'warning': warning_mess}
         return {}
