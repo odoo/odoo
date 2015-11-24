@@ -675,6 +675,7 @@ class SaleOrderLine(models.Model):
             'product_id': self.product_id.id or False,
             'invoice_line_tax_ids': [(6, 0, self.tax_id.ids)],
             'account_analytic_id': self.order_id.project_id.id,
+            'sale_layout_cat_id': self.sale_layout_cat_id.id,
         }
         return res
 
