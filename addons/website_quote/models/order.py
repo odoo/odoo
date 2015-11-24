@@ -203,6 +203,9 @@ class sale_order(osv.osv):
 
             if 'tax_id' in data:
                 data['tax_id'] = [(6, 0, data['tax_id'])]
+            else:
+                taxes = line.product_id.product_tmpl_id.taxes_id.ids
+                data['tax_id'] = [(6, 0, taxes)]
             data.update({
                 'name': line.name,
                 'price_unit': price,
