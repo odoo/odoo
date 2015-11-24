@@ -51,6 +51,18 @@ class Bank(osv.osv):
             result.append((bank.id, (bank.bic and (bank.bic + ' - ') or '') + bank.name))
         return result
 
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', limit=100, context=None):
+        args = list(args or [])
+        if name:
+            search_name = name
+            if operator != '=':
+                search_name = '%s%%' % name
+            res_partner_bank_ids = self.search(cr, uid, [('bic', operator, search_name)] + args,limit=limit, context=context)
+            if res_partner_bank_ids:
+                return self.name_get(cr, uid, res_partner_bank_ids, context=context)
+        return super(Bank, self)\
+            .name_search(cr, uid, name=name, args=args, operator=operator, limit=limit, context=context)
+
 class res_partner_bank_type(osv.osv):
     _description='Bank Account Type'
     _name = 'res.partner.bank.type'
