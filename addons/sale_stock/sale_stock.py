@@ -128,13 +128,7 @@ class SaleOrderLine(models.Model):
                 uom=self.product_uom.id,
                 warehouse_id=self.order_id.warehouse_id.id
             )
-            if float_compare(product.virtual_available, self.product_uom_qty, precision_digits=precision) == -1:
-                # Check if MTO, Cross-Dock or Drop-Shipping
-                is_available = False
-                for route in self.route_id+self.product_id.route_ids:
-                    for pull in route.pull_ids:
-                        if pull.location_id.id == self.order_id.warehouse_id.lot_stock_id.id:
-                            is_available = True
+                is_available = self._check_routing()
                 if not is_available:
                     warning_mess = {
                         'title': _('Not enough inventory!'),
@@ -194,6 +188,38 @@ class SaleOrderLine(models.Model):
                 },
             }
         return {}
+
+    def _check_routing(self):
+        """ Verify the route of the product based on the warehouse
+            return True if the product availibility in stock does not need to be verified,
+            which is the case in MTO, Cross-Dock or Drop-Shipping
+        """
+        is_available = False
+        product_routes = self.route_id or self.product_id.route_ids
+
+        # Check MTO
+        wh_mto_route = self.order_id.warehouse_id.mto_pull_id.route_id
+        if wh_mto_route and wh_mto_route <= product_routes:
+            is_available = True
+        else:
+            mto_route_id = False
+            try:
+                mto_route_id = self.env['stock.warehouse']._get_mto_route()
+            except models.except_orm:
+                # if route MTO not found in ir_model_data, we treat the product as in MTS
+                pass
+            if mto_route_id and mto_route_id in product_routes.ids:
+                is_available = True
+
+        # Check Drop-Shipping
+        if not is_available:
+            for pull_rule in product_routes.mapped('pull_ids'):
+                if pull_rule.picking_type_id.default_location_src_id.usage == 'supplier' and\
+                        pull_rule.picking_type_id.default_location_dest_id.usage == 'customer':
+                    is_available = True
+                    break
+
+        return is_available
 
 
 class StockLocationRoute(models.Model):
