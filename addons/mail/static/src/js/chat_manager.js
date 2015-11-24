@@ -24,6 +24,7 @@ var channel_defs = {};
 var emojis = [];
 var emoji_substitutions = {};
 var needaction_counter = 0;
+var mention_partner_suggestions = [];
 var discuss_ids = {};
 
 // Message and channel manipulation helpers
@@ -584,6 +585,27 @@ var chat_manager = {
         return get_channel_cache(channel, domain).all_history_loaded;
     },
 
+    get_mention_partner_suggestions: function (channel) {
+        if (!channel) {
+            return mention_partner_suggestions;
+        }
+        if (!channel.members_deferred) {
+            channel.members_deferred = ChannelModel
+                .call("channel_fetch_listeners", [channel.uuid])
+                .then(function (members) {
+                    var suggestions = [];
+                    _.each(mention_partner_suggestions, function (partners) {
+                        suggestions.push(_.filter(partners, function (partner) {
+                            return !_.findWhere(members, { id: partner.id });
+                        }));
+                    });
+
+                    return [members].concat(suggestions);
+                });
+        }
+        return channel.members_deferred;
+    },
+
     get_emojis: function() {
         return emojis;
     },
@@ -671,6 +693,7 @@ function init () {
             _.each(channels, add_channel);
         });
         needaction_counter = result.needaction_inbox_counter;
+        mention_partner_suggestions = result.mention_partner_suggestions;
     });
 
     var load_emojis = session.rpc("/mail/chat_init").then(function (result) {
