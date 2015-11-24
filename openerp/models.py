@@ -2651,7 +2651,7 @@ class BaseModel(object):
                                     self._m2o_add_foreign_key_checked(k, dest_model, f.ondelete)
                             if f.select:
                                 cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
-                            if f.required:
+                            if f.required and not hasattr(f.required, '__call__'):
                                 try:
                                     cr.commit()
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
