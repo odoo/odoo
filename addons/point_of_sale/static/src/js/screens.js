@@ -1903,12 +1903,12 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             invoiced.done(function(){
                 self.invoicing = false;
-                order.finalize();
             });
         } else {
             this.pos.push_order(order);
-            this.gui.show_screen('receipt');
         }
+
+        this.gui.show_screen('receipt');
     },
 });
 gui.define_screen({name:'payment', widget: PaymentScreenWidget});
