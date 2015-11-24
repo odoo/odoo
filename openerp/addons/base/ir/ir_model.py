@@ -10,6 +10,7 @@ import types
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import models, tools, api
+from openerp.modules import init_models
 from openerp.modules.registry import RegistryManager
 from openerp.osv import fields, osv
 from openerp.osv.orm import BaseModel, Model, MAGIC_COLUMNS
@@ -181,9 +182,7 @@ class ir_model(osv.osv):
             self.pool.setup_models(cr, partial=(not self.pool.ready))
             # update database schema
             model = self.pool[vals['model']]
-            ctx = dict(context, update_custom_fields=True)
-            model._auto_init(cr, ctx)
-            model._auto_end(cr, ctx) # actually create FKs!
+            init_models([model], cr, dict(context, update_custom_fields=True))
             RegistryManager.signal_registry_change(cr.dbname)
         return res
 
@@ -464,9 +463,7 @@ class ir_model_fields(osv.osv):
                 self.pool.setup_models(cr, partial=(not self.pool.ready))
                 # update database schema
                 model = self.pool[vals['model']]
-                ctx = dict(context, update_custom_fields=True)
-                model._auto_init(cr, ctx)
-                model._auto_end(cr, ctx) # actually create FKs!
+                init_models([model], cr, dict(context, update_custom_fields=True))
                 RegistryManager.signal_registry_change(cr.dbname)
 
         return res
@@ -551,11 +548,8 @@ class ir_model_fields(osv.osv):
 
         if patched_models:
             # update the database schema of the models to patch
-            ctx = dict(context, update_custom_fields=True)
-            for model_name in patched_models:
-                obj = self.pool[model_name]
-                obj._auto_init(cr, ctx)
-                obj._auto_end(cr, ctx) # actually create FKs!
+            models = [self.pool[name] for name in patched_models]
+            init_models(models, cr, dict(context, update_custom_fields=True))
 
         if column_rename or patched_models:
             RegistryManager.signal_registry_change(cr.dbname)
