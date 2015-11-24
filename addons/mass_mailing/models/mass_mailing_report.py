@@ -36,7 +36,7 @@ class MassMailingReport(osv.Model):
                     min(ms.id) as id,
                     ms.scheduled as scheduled_date,
                     mm.name as name,
-                    mc.name as campaign,
+                    utm.name as campaign,
                     count(ms.bounced) as bounced,
                     count(ms.sent) as sent,
                     (count(ms.sent) - count(ms.bounced)) as delivered,
@@ -48,5 +48,6 @@ class MassMailingReport(osv.Model):
                     mail_mail_statistics as ms
                     left join mail_mass_mailing as mm ON (ms.mass_mailing_id=mm.id)
                     left join mail_mass_mailing_campaign as mc ON (ms.mass_mailing_campaign_id=mc.id)
-                GROUP BY ms.scheduled, mm.name, mc.name, mm.state, mm.email_from
+                    left join utm_campaign as utm ON (mc.campaign_id = utm.id)
+                GROUP BY ms.scheduled, mm.name, utm.name, mm.state, mm.email_from
             )""")

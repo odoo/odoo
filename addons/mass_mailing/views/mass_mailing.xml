@@ -784,14 +784,13 @@
                             </button>
                         </div>
                         <group>
-                            <field name="name" string="Campaign Name" on_change="on_change_campaign_name(name)"/>
+                            <field name="name" string="Campaign Name"/>
                             <field name="user_id"/>
                             <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                         <notebook>
                             <page string="Tracking">
                                 <group>
-                                    <field name="campaign_id" attrs="{'invisible': True}"/>
                                     <field name="medium_id" />
                                     <field name="source_id" />
                                 </group>
