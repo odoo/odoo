@@ -376,7 +376,7 @@ class StockQuant(models.Model):
         if to_move_quants:
             to_recompute_move_ids = [x.reservation_id.id for x in to_move_quants if x.reservation_id and x.reservation_id.id != move.id]
             self.move_quants_write(to_move_quants, move, location_to, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
-            self.pool.get('stock.move').recalculate_move_state(self._cr, self._uid, to_recompute_move_ids, context=self._context)
+            self.pool['stock.move'].recalculate_move_state(self._cr, self._uid, to_recompute_move_ids, context=self._context)
             # self.env['stock.move'].recalculate_move_state(to_recompute_move_ids)
         if location_to.usage == 'internal':
             # Do manual search for quant to avoid full table scan (order by id)
@@ -1369,6 +1369,173 @@ class StockPicking(models.Model):
             stock_move_obj.browse(move_ids).do_unreserve()
             stock_move_obj.browse(move_ids).action_assign(no_prepare=True)
 
+    @api.multi
+    def do_new_transfer(self):
+        pack_op_obj = self.env['stock.pack.operation']
+        for pick in self:
+            to_delete = []
+            if not pick.move_lines and not pick.pack_operation_ids:
+                raise UserError(_('Please create some Initial Demand or Mark as Todo and create some Operations. '))
+            # In draft or with no pack operations edited yet, ask if we can just do everything
+            if pick.state == 'draft' or all([x.qty_done == 0.0 for x in pick.pack_operation_ids]):
+                # If no lots when needed, raise error
+                picking_type = pick.picking_type_id
+                if (picking_type.use_create_lots or picking_type.use_existing_lots):
+                    for pack in pick.pack_operation_ids:
+                        if pack.product_id and pack.product_id.tracking != 'none':
+                            raise UserError(_('Some products require lots, so you need to specify those first!'))
+
+                view = self.env.ref('stock.view_immediate_transfer').id
+                # view = data_obj.xmlid_to_res_id(cr, uid, 'stock.view_immediate_transfer')
+                wiz_id = self.env['stock.immediate.transfer'].create({'pick_id': pick.id})
+                return {
+                        'name': _('Immediate Transfer?'),
+                        'type': 'ir.actions.act_window',
+                        'view_type': 'form',
+                        'view_mode': 'form',
+                        'res_model': 'stock.immediate.transfer',
+                        'views': [(view, 'form')],
+                        'view_id': view,
+                        'target': 'new',
+                        'res_id': wiz_id,
+                        'context': self.env.context,
+                    }
+
+            # Check backorder should check for other barcodes
+            if self.check_backorder(pick):
+                view = self.env.ref('stock.view_backorder_confirmation').id
+                # view = data_obj.xmlid_to_res_id(cr, uid, 'stock.view_backorder_confirmation')
+                wiz_id = self.env['stock.backorder.confirmation'].create({'pick_id': pick.id})
+                return {
+                        'name': _('Create Backorder?'),
+                        'type': 'ir.actions.act_window',
+                        'view_type': 'form',
+                        'view_mode': 'form',
+                        'res_model': 'stock.backorder.confirmation',
+                        'views': [(view, 'form')],
+                        'view_id': view,
+                        'target': 'new',
+                        'res_id': wiz_id,
+                        'context': self.env.context,
+                        }
+            for operation in pick.pack_operation_ids:
+                if operation.qty_done < 0:
+                    raise UserError(_('No negative quantities allowed'))
+                if operation.qty_done > 0:
+                    operation.write({'product_qty': operation.qty_done})
+                else:
+                    to_delete.append(operation.id)
+            if to_delete:
+                pack_op_obj.browse(to_delete).unlink()
+        self.do_transfer()
+        return
+
+    @api.model
+    def check_backorder(self, picking):
+        need_rereserve, all_op_processed = self.picking_recompute_remaining_quantities(picking, done_qtys=True)
+        for move in picking.move_lines:
+            if float_compare(move.remaining_qty, 0, precision_rounding=move.product_id.uom_id.rounding) != 0:
+                return True
+        return False
+
+    @api.multi
+    def create_lots_for_picking(self):
+        lot_obj = self.env['stock.production.lot']
+        opslot_obj = self.env['stock.pack.operation.lot']
+        to_unlink = []
+        for picking in self:
+            for ops in picking.pack_operation_ids:
+                for opslot in ops.pack_lot_ids:
+                    if not opslot.lot_id:
+                        lot_id = lot_obj.create({'name': opslot.lot_name, 'product_id': ops.product_id.id})
+                        opslot.write({'lot_id': lot_id})
+                #Unlink pack operations where qty = 0
+                to_unlink += [x.id for x in ops.pack_lot_ids if x.qty == 0.0]
+        opslot_obj.browse(to_unlink).unlink()
+
+    @api.multi
+    def do_transfer(self):
+        """
+            If no pack operation, we do simple action_done of the picking
+            Otherwise, do the pack operations
+        """
+        stock_move_obj = self.env['stock.move']
+        self.create_lots_for_picking()
+        for picking in self:
+            if not picking.pack_operation_ids:
+                picking.action_done()
+                continue
+            else:
+                need_rereserve, all_op_processed = self.picking_recompute_remaining_quantities(picking)
+                #create extra moves in the picking (unexpected product moves coming from pack operations)
+                todo_move_ids = []
+                if not all_op_processed:
+                    todo_move_ids += self._create_extra_moves(picking)
+
+                #split move lines if needed
+                toassign_move_ids = []
+                for move in picking.move_lines:
+                    remaining_qty = move.remaining_qty
+                    if move.state in ('done', 'cancel'):
+                        #ignore stock moves cancelled or already done
+                        continue
+                    elif move.state == 'draft':
+                        toassign_move_ids.append(move.id)
+                    if float_compare(remaining_qty, 0,  precision_rounding=move.product_id.uom_id.rounding) == 0:
+                        if move.state in ('draft', 'assigned', 'confirmed'):
+                            todo_move_ids.append(move.id)
+                    elif float_compare(remaining_qty,0, precision_rounding=move.product_id.uom_id.rounding) > 0 and \
+                                float_compare(remaining_qty, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) < 0:
+                        new_move = stock_move_obj.split(move, remaining_qty)
+                        todo_move_ids.append(move.id)
+                        #Assign move as it was assigned before
+                        toassign_move_ids.append(new_move)
+                if need_rereserve or not all_op_processed:
+                    if not picking.location_id.usage in ("supplier", "production", "inventory"):
+                        self.rereserve_quants(picking, move_ids=todo_move_ids)
+                    picking.do_recompute_remaining_quantities()
+                if todo_move_ids and not self.env.context.get('do_only_split'):
+                    self.env['stock.move'].browse(todo_move_ids).action_done()
+                elif self.env.context.get('do_only_split'):
+                    self.with_context(split=todo_move_ids)
+            self._create_backorder(picking)
+        return True
+
+    @api.model
+    def do_split(self, picking_ids):
+        """ just split the picking (create a backorder) without making it 'done' """
+        self.with_context(do_only_split=True)
+        return picking_ids.do_transfer()
+
+    @api.multi
+    def put_in_pack(self):
+        stock_operation_obj = self.env["stock.pack.operation"]
+        package_obj = self.env["stock.quant.package"]
+        package_id = False
+        for pick in self:
+            operations = [x for x in pick.pack_operation_ids if x.qty_done > 0 and (not x.result_package_id)]
+            pack_operation_ids = []
+            for operation in operations:
+                #If we haven't done all qty in operation, we have to split into 2 operation
+                op = operation
+                if operation.qty_done < operation.product_qty:
+                    new_operation = operation.copy({'product_qty': operation.qty_done, 'qty_done': operation.qty_done})
+
+                    operation.write({'product_qty': operation.product_qty - operation.qty_done, 'qty_done': 0})
+                    if operation.pack_lot_ids:
+                        packlots_transfer = [(4, x.id) for x in operation.pack_lot_ids]
+                        new_operation.write({'pack_lot_ids': packlots_transfer})
+
+                    op = new_operation
+                pack_operation_ids.append(op.id)
+            if operations:
+                stock_operation_obj.browse(pack_operation_ids).check_tracking()
+                package_id = package_obj.create({})
+                stock_operation_obj.browse(pack_operation_ids).write({'result_package_id': package_id})
+            else:
+                raise UserError(_('Please process some quantities to put in the pack first!'))
+        return package_id.id
+
 class StockProductionLot(models.Model):
     _name = 'stock.production.lot'
     _inherit = ['mail.thread']
@@ -1455,7 +1622,7 @@ class StockMove(models.Model):
     def _get_string_qty_information(self):
         uom_obj = self.env['product.uom']
         # res = dict.fromkeys(ids, '')
-        precision = self.pool['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for move in self:
             if move.state in ('draft', 'done', 'cancel') or move.location_id.usage != 'internal':
                 move.string_availability_info = ''  # 'not applicable' or 'n/a' could work too
@@ -2071,8 +2238,8 @@ class StockWarehouse(models.Model):
 
     @api.model
     def _location_used(self, location_id, warehouse):
-        pull_obj = self.pool['procurement.rule']
-        push_obj = self.pool['stock.location.path']
+        pull_obj = self.env['procurement.rule']
+        push_obj = self.env['stock.location.path']
 
         domain = ['&', ('route_id', 'not in', [x.id for x in warehouse.route_ids]),
                        '|', ('location_src_id', '=', location_id),                      # noqa
@@ -2171,7 +2338,7 @@ class StockWarehouse(models.Model):
 
     @api.model
     def _get_mto_route(self):
-        route_obj = self.pool.get('stock.location.route')
+        route_obj = self.env['stock.location.route']
         try:
             mto_route_id = self.env.ref('stock.route_warehouse0_mto').id
         except:
