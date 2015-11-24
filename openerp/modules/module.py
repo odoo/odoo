@@ -15,6 +15,7 @@ import time
 import types
 import unittest
 import threading
+from operator import itemgetter
 from os.path import join as opj
 
 
@@ -342,20 +343,17 @@ def init_module_models(cr, module_name, obj_list):
 
     """
     _logger.info('module %s: creating or updating database tables', module_name)
-    todo = []
+    context = {'module': module_name, 'todo': []}
     for obj in obj_list:
-        result = obj._auto_init(cr, {'module': module_name})
-        if result:
-            todo += result
+        obj._auto_init(cr, context)
         if hasattr(obj, 'init'):
             obj.init(cr)
         cr.commit()
     for obj in obj_list:
-        obj._auto_end(cr, {'module': module_name})
+        obj._auto_end(cr, context)
         cr.commit()
-    todo.sort(key=lambda x: x[0])
-    for t in todo:
-        t[1](cr, *t[2])
+    for _, func, args in sorted(context['todo'], key=itemgetter(0)):
+        func(cr, *args)
     if obj_list:
         obj_list[0].recompute(cr, openerp.SUPERUSER_ID, {})
     cr.commit()

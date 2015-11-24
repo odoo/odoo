@@ -2426,6 +2426,8 @@ class BaseModel(object):
           _auto_end).
 
         """
+        assert 'todo' in (context or {}), "Context not passed correctly to method _auto_init()."
+
         self._foreign_keys = set()
         raise_on_invalid_object_name(self._name)
 
@@ -2441,7 +2443,7 @@ class BaseModel(object):
 
         store_compute = False
         stored_fields = []              # new-style stored fields with compute
-        todo_end = []
+        todo_end = context['todo']
         update_custom_fields = context.get('update_custom_fields', False)
         self._field_create(cr, context=context)
         create = not self._table_exist(cr)
@@ -2701,8 +2703,6 @@ class BaseModel(object):
                     map(recs._recompute_todo, stored_fields)
 
             todo_end.append((1000, func, ()))
-
-        return todo_end
 
     def _auto_end(self, cr, context=None):
         """ Create the foreign keys recorded by _auto_init. """
