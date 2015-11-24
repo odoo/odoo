@@ -799,10 +799,11 @@ class ProcurementOrder(models.Model):
         cache = {}
         res = []
         for procurement in self:
-            if not procurement.product_id.seller_ids:
+            suppliers = procurement.product_id.seller_ids.filtered(lambda r: not r.product_id or r.product_id == procurement.product_id)
+            if not suppliers:
                 procurement.message_post(body=_('No vendor associated to product %s. Please set one to fix this procurement.') % (procurement.product_id.name))
                 continue
-            supplier = procurement.product_id.seller_ids[0]
+            supplier = suppliers[0]
             partner = supplier.name
             domain = (
                 ('partner_id', '=', partner.id),

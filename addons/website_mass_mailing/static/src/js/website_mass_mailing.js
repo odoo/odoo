@@ -124,6 +124,8 @@ animation.registry.newsletter_popup = animation.Class.extend({
 
 
 odoo.define('mass_mailing.unsubscribe', function (require) {
+var ajax = require('web.ajax');
+require('web_editor.base');  // wait for implicit dependencies to load
 
 if(!$('.o_unsubscribe_form').length) {
     return $.Deferred().reject("DOM doesn't contain '.o_unsubscribe_form'");
