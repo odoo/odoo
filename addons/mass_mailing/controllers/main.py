@@ -19,7 +19,7 @@ class MassMailController(http.Controller):
 
         return response
 
-    @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', auth='none', website=True)
+    @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', auth='public', website=True)
     def mailing(self, mailing_id, email=None, res_id=None, **post):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
         if mailing.exists():
