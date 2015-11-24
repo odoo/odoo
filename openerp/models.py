@@ -2410,7 +2410,6 @@ class BaseModel(object):
 
     def _auto_init(self, cr, context=None):
         """
-
         Call _field_create and, unless _auto is False:
 
         - create the corresponding table in database for the model,
@@ -2425,6 +2424,9 @@ class BaseModel(object):
         - save in self._foreign_keys a list a foreign keys to create (see
           _auto_end).
 
+        Note: you should not override this method. Instead, you can modify the
+        model's database schema by overriding method :meth:`~.init`, which is
+        called right after this one.
         """
         assert 'todo' in (context or {}), "Context not passed correctly to method _auto_init()."
 
@@ -2712,6 +2714,11 @@ class BaseModel(object):
         cr.commit()
         del self._foreign_keys
 
+    def init(self, cr):
+        """ This method is called after :meth:`~._auto_init`, and may be
+            overridden to create or modify a model's database schema.
+        """
+        pass
 
     def _table_exist(self, cr):
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (self._table,))

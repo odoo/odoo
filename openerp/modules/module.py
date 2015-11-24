@@ -22,6 +22,7 @@ from os.path import join as opj
 import openerp
 import openerp.tools as tools
 import openerp.release as release
+from openerp import SUPERUSER_ID
 from openerp.tools.safe_eval import safe_eval as eval
 
 MANIFEST = '__openerp__.py'
@@ -333,29 +334,32 @@ def load_information_from_description_file(module, mod_path=None):
     _logger.debug('module %s: no %s file found.', module, MANIFEST)
     return {}
 
-def init_module_models(cr, module_name, obj_list):
+def init_models(models, cr, context):
     """ Initialize a list of models.
 
-    Call _auto_init and init on each model to create or update the
-    database tables supporting the models.
+    Call methods ``_auto_init``, ``init``, and ``_auto_end`` on each model to
+    create or update the database tables supporting the models.
 
-    TODO better explanation of _auto_init and init.
+    The context may contain the following items:
+     - ``module``: the name of the module being installed/updated, if any;
+     - ``update_custom_fields``: whether custom fields should be updated.
 
     """
-    _logger.info('module %s: creating or updating database tables', module_name)
-    context = {'module': module_name, 'todo': []}
-    for obj in obj_list:
-        obj._auto_init(cr, context)
-        if hasattr(obj, 'init'):
-            obj.init(cr)
+    if 'module' in context:
+        _logger.info('module %s: creating or updating database tables', context['module'])
+    context = dict(context, todo=[])
+    models = [model.browse(cr, SUPERUSER_ID, [], context) for model in models]
+    for model in models:
+        model._auto_init()
+        model.init()
         cr.commit()
-    for obj in obj_list:
-        obj._auto_end(cr, context)
+    for model in models:
+        model._auto_end()
         cr.commit()
     for _, func, args in sorted(context['todo'], key=itemgetter(0)):
         func(cr, *args)
-    if obj_list:
-        obj_list[0].recompute(cr, openerp.SUPERUSER_ID, {})
+    if models:
+        models[0].recompute()
     cr.commit()
 
 def load_openerp_module(module_name):
