@@ -146,36 +146,92 @@ class Message(models.Model):
     # Notification API
     #------------------------------------------------------
 
-    @api.multi
-    def set_message_needaction(self, partner_ids=None):
-        if not partner_ids:
-            partner_ids = [self.env.user.partner_id.id]
-        if set(partner_ids) == set([self.env.user.partner_id.id]):
-            # a user should be able to mark a message as needaction for him
-            self = self.sudo()
-        return self.write({'needaction_partner_ids': [(4, pid) for pid in partner_ids]})
-
-    @api.multi
-    def mark_all_as_read(self):
-        user_id = self.env.user.partner_id.id
-
+    @api.model
+    def mark_all_as_read(self, channel_ids=None):
+        """ Remove all needactions of the current partner. If channel_ids is
+            given, restrict to messages written in one of those channels. """
+        partner_id = self.env.user.partner_id.id
         # possibly horribly inefficient method:
         # it does one db request for the search, and one for each message in
         # the result set to remove the current user from the relation.
-        # unread_messages = self.search([('needaction_partner_ids', 'in', user_id)])
-        # unread_messages.write({'needaction_partner_ids': [(3, user_id)]})
+        # domain = [('needaction_partner_ids', 'in', partner_id)]
+        # if channel_ids:
+        #     domain += [('channel_ids', 'in', channel_ids)]
+        # unread_messages = self.search(domain)
+        # unread_messages.write({'needaction_partner_ids': [(3, partner_id)]})
 
         # a much faster way to do this is in pure sql:
-        self.env.cr.execute("DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s", [(user_id,)])
+        query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
+        args = [(partner_id,)]
+        if channel_ids:
+            query += """
+                AND mail_message_id in
+                    (SELECT mail_message_id
+                    FROM mail_message_mail_channel_rel
+                    WHERE mail_channel_id in %s)"""
+            args += [tuple(channel_ids)]
+        query += " RETURNING mail_message_id as id"
+        self._cr.execute(query, args)
+        self.invalidate_cache()
+
+        ids = [m['id'] for m in self._cr.dictfetchall()]
+        notification = {'type': 'mark_as_read', 'message_ids': ids, 'channel_ids': channel_ids}
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
+
+        return ids
+
+    @api.multi
+    def mark_as_unread(self, channel_ids=None):
+        """ Add needactions to messages for the current partner. """
+        partner_id = self.env.user.partner_id.id
+        for message in self:
+            message.write({'needaction_partner_ids': [(4, partner_id)]})
+
+        ids = [m.id for m in self]
+        notification = {'type': 'mark_as_unread', 'message_ids': ids, 'channel_ids': channel_ids}
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
     @api.multi
     def set_message_done(self, partner_ids=None):
-        if not partner_ids:
-            partner_ids = [self.env.user.partner_id.id]
-        if set(partner_ids) == set([self.env.user.partner_id.id]):
-            # a user should be able to mark a message as done for him
-            self = self.sudo()
-        return self.write({'needaction_partner_ids': [(3, pid) for pid in partner_ids]})
+        """ Remove the needaction from messages for the current partner. """
+        partner_id = self.env.user.partner_id
+        messages = self.filtered(lambda msg: partner_id in msg.needaction_partner_ids)
+        if not len(messages):
+            return
+        messages.sudo().write({'needaction_partner_ids': [(3, partner_id.id)]})
+
+        # notifies changes in messages through the bus.  To minimize the number of
+        # notifications, we need to group the messages depending on their channel_ids
+        groups = []
+        current_channel_ids = messages[0].channel_ids
+        current_group = []
+        for record in messages:
+            if record.channel_ids == current_channel_ids:
+                current_group.append(record.id)
+            else:
+                groups.append((current_group, current_channel_ids))
+                current_group = [record.id]
+                current_channel_ids = record.channel_ids
+
+        groups.append((current_group, current_channel_ids))
+        current_group = [record.id]
+        current_channel_ids = record.channel_ids
+
+        for (msg_ids, channel_ids) in groups:
+            notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids]}
+            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id.id), notification)
+
+    @api.model
+    def unstar_all(self):
+        """ Unstar messages for the current partner. """
+        partner_id = self.env.user.partner_id.id
+
+        starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
+        starred_messages.write({'starred_partner_ids': [(3, partner_id)]})
+
+        ids = [m.id for m in starred_messages]
+        notification = {'type': 'toggle_star', 'message_ids': ids, 'starred': False}
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
     @api.multi
     def set_message_starred(self, starred):
@@ -183,8 +239,6 @@ class Message(models.Model):
             to uid are set to (un)starred.
 
             :param bool starred: set notification as (un)starred
-            :param bool create_missing: create notifications for missing entries
-                (i.e. when acting on displayed messages not notified)
         """
         # a user should always be able to star a message he can read
         self.check_access_rule('read')
@@ -192,7 +246,9 @@ class Message(models.Model):
             self.sudo().write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
         else:
             self.sudo().write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
-        return starred
+
+        notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
     #------------------------------------------------------
     # Message loading for web interface
@@ -272,7 +328,7 @@ class Message(models.Model):
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
             })
-            body_short = tools.html_email_clean(message_dict['body'], remove=True)
+            body_short = tools.html_email_clean(message_dict['body'], shorten=True, remove=True)
             message_dict['body_short'] = body_short != message_dict['body'] and body_short or False
 
         return True
@@ -442,7 +498,7 @@ class Message(models.Model):
 
             nb_read = 0
             if context and 'mail_read_set_read' in context and context['mail_read_set_read']:
-                nb_read = self.set_message_read(True, create_missing=False)
+                nb_read = self.set_message_done()
 
         else:
             nb_read = 0
@@ -506,13 +562,15 @@ class Message(models.Model):
         message_tree = dict((m.id, m) for m in self)
         self._message_read_dict_postprocess(message_values, message_tree)
 
-        # add is_note flag
-        internal_subtype_ids = self.env['mail.message.subtype'].search([('internal', '=', True)]).ids
+        # add subtype data (is_note flag, subtype_description). Do it as sudo
+        # because portal / public may have to look for internal subtypes
+        subtypes = self.env['mail.message.subtype'].sudo().search(
+            [('id', 'in', [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']])]).read(['internal', 'description'])
+        subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
         for message in message_values:
-            if message['subtype_id'] and message['subtype_id'][0]:
-                message['is_note'] = bool(message['subtype_id'][0] in internal_subtype_ids)
+            message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
+            message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
         return message_values
-
 
     #------------------------------------------------------
     # mail_message internals
@@ -843,13 +901,13 @@ class Message(models.Model):
 
         # all followers of the mail.message document have to be added as partners and notified
         # and filter to employees only if the subtype is internal
-        if self.subtype_id and self.model and self.res_id:
+        if self_sudo.subtype_id and self.model and self.res_id:
             followers = self.env['mail.followers'].sudo().search([
                 ('res_model', '=', self.model),
                 ('res_id', '=', self.res_id)
             ]).filtered(lambda fol: self.subtype_id in fol.subtype_ids)
-            if self.subtype_id.internal:
-                followers.filtered(lambda fol: fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id'))
+            if self_sudo.subtype_id.internal:
+                followers = followers.filtered(lambda fol: fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id'))
             channels = self_sudo.channel_ids | followers.mapped('channel_id')
             partners = self_sudo.partner_ids | followers.mapped('partner_id')
         else:

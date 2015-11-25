@@ -190,3 +190,10 @@ class product_attribute_value(osv.Model):
     _columns = {
         'color': fields.char("HTML Color Index", help="Here you can set a specific HTML color index (e.g. #ff0000) to display the color on the website if the attibute type is 'Color'."),
     }
+
+    # TODO in master: remove this function and change 'color' field name
+    def write(self, cr, uid, ids, vals, context=None):
+        # ignore write coming from many2many_tags color system
+        if vals.keys() == ['color'] and isinstance(vals['color'], (int, long)):
+            vals = {}
+        return super(product_attribute_value, self).write(cr, uid, ids, vals, context=context)

@@ -33,7 +33,7 @@ class view(osv.osv):
 
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
-            if 'website_id' in context:
+            if 'website_id' in (context or {}):
                 domain = [('key', '=', view_id), '|', ('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
                 rec_id = self.search(cr, uid, domain, order='website_id', context=context)
             else:
@@ -126,7 +126,7 @@ class view(osv.osv):
                 qcontext.update(values)
 
             # in edit mode ir.ui.view will tag nodes
-            if not qcontext.get('translatable'):
+            if not qcontext.get('translatable') and not qcontext.get('rendering_bundle'):
                 if qcontext.get('editable'):
                     context = dict(context, inherit_branding=True)
                 elif request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):

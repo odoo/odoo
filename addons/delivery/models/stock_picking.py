@@ -114,3 +114,17 @@ class StockPicking(models.Model):
         msg = "Shipment %s cancelled" % self.carrier_tracking_ref
         self.message_post(body=msg)
         self.carrier_tracking_ref = False
+
+
+class StockReturnPicking(models.TransientModel):
+    _inherit = 'stock.return.picking'
+
+    @api.multi
+    def _create_returns(self):
+        # Prevent copy of the carrier and carrier price when generating return picking
+        # (we have no integration of returns for now)
+        new_picking, pick_type_id = super(StockReturnPicking, self)._create_returns()
+        picking = self.env['stock.picking'].browse(new_picking)
+        picking.write({'carrier_id': False,
+                       'carrier_price': 0.0})
+        return new_picking, pick_type_id

@@ -3,8 +3,7 @@
 import pytz
 
 from openerp import _, api, fields, models
-from openerp.exceptions import UserError
-
+from openerp.exceptions import AccessError, UserError
 
 class event_type(models.Model):
     """ Event Type """
@@ -371,11 +370,14 @@ class event_registration(models.Model):
     @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(event_registration, self).message_get_suggested_recipients()
-        for attendee in self:
-            if attendee.email:
-                attendee._message_add_suggested_recipient(recipients, email=attendee.email, reason=_('Customer Email'))
-            if attendee.partner_id:
-                attendee._message_add_suggested_recipient(recipients, partner=attendee.partner_id, reason=_('Customer'))
+        try:
+            for attendee in self:
+                if attendee.partner_id:
+                    attendee._message_add_suggested_recipient(recipients, partner=attendee.partner_id, reason=_('Customer'))
+                elif attendee.email:
+                    attendee._message_add_suggested_recipient(recipients, email=attendee.email, reason=_('Customer Email'))
+        except AccessError:     # no read access rights -> ignore suggested recipients
+            pass
         return recipients
 
     @api.multi

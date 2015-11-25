@@ -22,7 +22,6 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <field name="name"/>
-                    <filter string="My Leaves" domain="[('user_id','=',uid)]" name="my_leaves"/>
                     <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                     <filter string="Approved Leaves" domain="[('state', '=', 'validate')]" name="validated"/>
                     <separator/>
@@ -39,13 +38,14 @@
                     <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
                     <separator/>
                     <filter name="year" string="Year"
-                        domain="['|','&amp;',('date_to', '&lt;=', time.strftime('%%Y-12-31')),
-                                             ('date_to', '&gt;=', time.strftime('%%Y-01-01')),
-                                     '&amp;',('date_from', '&lt;=', time.strftime('%%Y-12-31')),
-                                             ('date_from', '&gt;=', time.strftime('%%Y-01-01'))]"
+                        domain="['|',
+'&amp;', '&amp;', ('date_to', '=', False), ('date_from', '=', False), ('holiday_status_id.active', '=', True),
+'|',
+    '&amp;',('date_to', '&lt;=', time.strftime('%%Y-12-31')), ('date_to', '&gt;=', time.strftime('%%Y-01-01')),
+    '&amp;',('date_from', '&lt;=', time.strftime('%%Y-12-31')), ('date_from', '&gt;=', time.strftime('%%Y-01-01'))]"
                         help="Current Year Leaves"/>
                     <separator/>
-                    <filter string="My Requests" name="my_leaves" domain="[('user_id', '=', uid)]" help="My Leave Requests"/>
+                    <filter string="My Requests" name="my_leaves" domain="[('user_id', '=', uid)]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>
@@ -70,6 +70,7 @@
             <field name="arch" type="xml">
                 <calendar string="Leave Request" color="employee_id"
                           date_start="date_from" date_stop="date_to"
+                          mode="month"
                           quick_add="False" avatar_model="hr.employee">
                     <field name="employee_id"/>
                     <field name="holiday_status_id"/>
@@ -418,6 +419,7 @@
             <field name="context">{
                 'search_default_group_type': 1,
                 'search_default_year': 1 ,
+                'search_default_my_leaves': 1,
                 'needaction_menu_ref':
                 [
                     'hr_holidays.menu_open_ask_holidays_new',

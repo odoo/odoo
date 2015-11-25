@@ -966,7 +966,6 @@ var ClientListScreenWidget = ScreenWidget.extend({
         this.renderElement();
         this.details_visible = false;
         this.old_client = this.pos.get_order().get_client();
-        this.new_client = this.old_client;
 
         this.$('.back').click(function(){
             self.gui.back();
@@ -1016,6 +1015,10 @@ var ClientListScreenWidget = ScreenWidget.extend({
             self.clear_search();
         });
     },
+    hide: function () {
+        this._super();
+        this.new_client = null;
+    },
     barcode_client_action: function(code){
         if (this.editing_client) {
             this.$('.detail.barcode').val(code.code);
@@ -1058,7 +1061,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 clientline = clientline.childNodes[1];
                 this.partner_cache.cache_node(partner.id,clientline);
             }
-            if( partners === this.new_client ){
+            if( partner === this.old_client ){
                 clientline.classList.add('highlight');
             }else{
                 clientline.classList.remove('highlight');
@@ -1566,7 +1569,12 @@ var PaymentScreenWidget = ScreenWidget.extend({
             this.inputbuffer = newbuf;
             var order = this.pos.get_order();
             if (order.selected_paymentline) {
-                var amount = formats.parse_value(this.inputbuffer, {type: "float"}, 0.0);
+                var amount = this.inputbuffer;
+
+                if (this.inputbuffer !== "-") {
+                    amount = formats.parse_value(this.inputbuffer, {type: "float"}, 0.0);
+                }
+
                 order.selected_paymentline.set_amount(amount);
                 this.order_changes();
                 this.render_paymentlines();

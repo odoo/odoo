@@ -27,11 +27,12 @@
 
         .o_mail_sidebar_title {
             .o-flex-display();
-            padding: 5px 8px 5px @odoo-horizontal-padding;
+            padding: 12px 8px 5px @odoo-horizontal-padding;
             align-items: center;
             justify-content: space-between;
             h4 {
                 text-transform: uppercase;
+                margin-bottom: 5px;
             }
             .o_add {
                 padding: 6px;
@@ -39,13 +40,17 @@
         }
         .o_mail_chat_channel_item {
             width: 100%;
-            padding: 5px 8px 5px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
+            padding: 2px 8px 2px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
             > .badge {
                 margin: 0;
             }
             .o_mail_partner_unpin {
                 padding: 2px 6px;
             }
+            i.fa-envelope-o {
+                margin-left: 3px;
+            }
+
         }
         .o_mail_add_channel {
             width: 100%;
@@ -66,14 +71,16 @@
 
     .o_mail_chat_content {
         .o-flex(1, 1, 100%);
-        height: 100%;
         .o-flex-display();
         .o-flex-flow(column, nowrap);
+        height: 100%;
+        position: relative;
 
         .o_mail_thread {
             .o-flex(1, 0, 0);
             overflow: auto;
             .o-webclient-padding();
+            padding-bottom: 15px;
 
             .o_chat_help_message {
                 padding: 25px 0;
@@ -82,7 +89,7 @@
         }
         .o_chat_composer {
             .o-flex(0, 0, auto);
-            .o-webclient-padding(@top: 10px, @bottom: 5px);
+            .o-webclient-padding(@top: 2px, @bottom: 8px);
 
             .o_composer {
                 .o-flex-display();
@@ -99,6 +106,18 @@
                 }
             }
         }
+        .o_mail_snackbar {
+            .o-position-absolute(15px, 15px);
+            padding-top: 10px;
+            padding-bottom: 10px;
+            cursor: pointer;
+            background-color: darken(@gray, 8%);
+            color: white;
+            .o_snackbar_undo {
+                margin-left: 8px;
+                padding: 8px;
+            }
+        }
     }
 }
 
@@ -110,6 +129,7 @@
     .o_mail_chat_sidebar {
         background-color: darken(@gray, 8%);
         color: lighten(@gray, 50%);
+        opacity: 0.9;
 
         .o_mail_chat_channel_item {
             overflow: hidden;
@@ -125,6 +145,11 @@
             &.o_active {
                 background-color: darken(@gray, 15%);
             }
+
+            .o_mail_hash {
+                opacity: 0.6
+            }
+
             .o_mail_partner_unpin {
                 opacity: 0;
                 &:hover {

@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-22 07:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-21 10:10+0000\n"
+"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "<b>Please choose the document type before setting the conditions.</b>"
-msgstr ""
+msgstr "<b>在设置条件之前请先设置文件类型</b>"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -31,7 +31,7 @@ msgstr "动作规则"
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
 msgid "Action Rule Test"
-msgstr ""
+msgstr "动作规则测试"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -63,7 +63,7 @@ msgstr "自动的动作"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "基于表单更改"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -73,7 +73,7 @@ msgstr "基于时间条件"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "在更新Domain之前"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_id
@@ -88,12 +88,12 @@ msgstr "已取消"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Check this box if this contact is a customer."
-msgstr ""
+msgstr "如果该联系人是客户就选择这个框"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid "Click to setup a new automated action rule."
-msgstr ""
+msgstr "点击去创建一个字那个的自动的动作规则"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -103,7 +103,7 @@ msgstr "已关闭"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "以逗号分隔的触发变化的字段名称列表"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -236,7 +236,7 @@ msgstr "在同一个\"搜索\"视图，选择菜单中的\"保存现有的过滤
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Is a Customer"
-msgstr ""
+msgstr "是一个客户"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_date_action_last
@@ -289,7 +289,7 @@ msgstr "新建"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "变化字段的触发器"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -304,7 +304,7 @@ msgstr "创建或更新时"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Deletion"
-msgstr ""
+msgstr "删除"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -341,7 +341,7 @@ msgstr "规则名称"
 msgid ""
 "Select when the action must be run, and choose records and/or timing "
 "conditions."
-msgstr ""
+msgstr "当动作必须要执行的时候，选择并且选择记录和/或时间条件"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_sequence
@@ -367,7 +367,7 @@ msgstr "设置负责人"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Set selection based on a search filter:"
-msgstr ""
+msgstr "在搜索过滤设置一个选择"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
@@ -382,17 +382,17 @@ msgstr "主题"
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done
 msgid "Test lead in state 'done'"
-msgstr ""
+msgstr "测试完成状态的线索"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_draft
 msgid "Test lead in state 'draft'"
-msgstr ""
+msgstr "测试草稿状态的线索"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_open
 msgid "Test lead in state 'open'"
-msgstr ""
+msgstr "测试打开状态的线索"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
@@ -412,7 +412,7 @@ msgid ""
 "                be automatically set to a specific sales team, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
-msgstr ""
+msgstr "使用自动操作来触发不同屏幕的动作\n例如：一个特定用户创建的线索可能被自动分配给某一个销售团队\n或者商机在等待14天后自动触发一个提醒电子邮件，"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
@@ -443,4 +443,4 @@ msgstr "如果不选中，此规则被隐藏且不被执行"
 msgid ""
 "You may also use filters instead of choosing records. In order to create a "
 "new filter:"
-msgstr ""
+msgstr "你可能也用过滤器选择记录。可以创建一个新的过滤："

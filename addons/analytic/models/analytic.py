@@ -52,7 +52,9 @@ class account_analytic_account(models.Model):
     line_ids = fields.One2many('account.analytic.line', 'account_id', string="Analytic Lines")
 
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
-    partner_id = fields.Many2one('res.partner', string='Customer')
+
+    # use auto_join to speed up name_search call
+    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True)
 
     balance = fields.Monetary(compute='_compute_debit_credit_balance', string='Balance')
     debit = fields.Monetary(compute='_compute_debit_credit_balance', string='Debit')
@@ -75,7 +77,7 @@ class account_analytic_account(models.Model):
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         args = args or []
-        recs = self.search(['|', '|', ('code', operator, name), ('partner_id', operator, name), ('name', operator, name)] + args, limit=limit)
+        recs = self.search(['|', '|', ('code', operator, name), ('partner_id.name', operator, name), ('name', operator, name)] + args, limit=limit)
         return recs.name_get()
 
 

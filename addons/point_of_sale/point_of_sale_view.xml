@@ -854,14 +854,6 @@
                                     <label for="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Theoretical Closing Balance" class="oe_force_bold oe_opening_total"/>
                                     <field name="cash_register_balance_end" nolabel="1" attrs="{'invisible' : [('state', '=', 'opening_control')]}" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 </group>
-                                <div class="oe_clear"/>
-                                <div attrs="{'invisible' : ['|', ('cash_journal_id', '=', False), ('state', '!=', 'opening_control')]}" class="oe_view_nocontent" groups="point_of_sale.group_pos_manager">
-                                    <p class="oe_view_nocontent_create">
-                                    You can define another list of available currencies on the
-                                    <i>Cash Registers</i> tab of the <b><field name="cash_journal_id" class="oe_inline"/></b>
-                                    payment method.
-                                    </p>
-                                </div>
                             </div>
                             <div>
                                 <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">

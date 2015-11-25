@@ -35,6 +35,12 @@ var Thread = Widget.extend({
             this.$('.o_thread_message').removeClass('o_thread_selected_message');
             $(event.currentTarget).toggleClass('o_thread_selected_message', !selected);
         },
+        "click span.oe_mail_expand": function (event) {
+            event.preventDefault();
+            var $source = $(event.currentTarget);
+            $source.parents('.o_thread_message_core').find('.o_mail_body_short').toggle();
+            $source.parents('.o_thread_message_core').find('.o_mail_body_long').toggle();
+        },
     },
 
     init: function (parent, options) {
@@ -46,6 +52,7 @@ var Thread = Widget.extend({
             default_username: _t('Anonymous'),
             display_document_link: true,
             display_avatar: true,
+            squash_close_messages: true,
         });
     },
 
@@ -54,6 +61,7 @@ var Thread = Widget.extend({
         if (this.options.display_order === ORDER.DESC) {
             msgs.reverse();
         }
+        options = _.extend({}, this.options, options);
 
         // Hide avatar and info of a message if that message and the previous
         // one are both comments wrote by the same author at the same minute
@@ -63,6 +71,8 @@ var Thread = Widget.extend({
                 prev_msg.message_type !== 'comment' || msg.message_type !== 'comment' ||
                 (prev_msg.author_id[0] !== msg.author_id[0])) {
                 msg.display_author = true;
+            } else {
+                msg.display_author = !options.squash_close_messages;
             }
             prev_msg = msg;
         });
@@ -78,14 +88,22 @@ var Thread = Widget.extend({
         event.preventDefault();
         var res_id = $(event.target).data('oe-id');
         var res_model = $(event.target).data('oe-model');
-        this.trigger('redirect', res_model, res_id);
+        this._redirect({model:res_model, id: res_id});
     },
 
     on_channel_redirect: function (event) {
         event.preventDefault();
         var channel_id = $(event.target).data('oe-id');
-        this.trigger('redirect_to_channel', channel_id);
+        this._redirect({channel_id: channel_id});
     },
+
+    _redirect: _.debounce(function (options) {
+        if ('channel_id' in options) {
+            this.trigger('redirect_to_channel', options.channel_id);
+        } else {
+            this.trigger('redirect', options.model, options.id);
+        }
+    }, 200, true),
 
     on_click_show_more: function () {
         this.trigger('load_more_messages');
@@ -131,10 +149,12 @@ var Thread = Widget.extend({
      */
     remove_message_and_render: function (message_id, messages, options) {
         var self = this;
+        var done = $.Deferred();
         this.$('.o_thread_message[data-message-id=' + message_id + ']').fadeOut({
-            done: function () { self.render(messages, options); },
+            done: function () { self.render(messages, options); done.resolve();},
             duration: 200,
         });
+        return done;
     },
 
     /**

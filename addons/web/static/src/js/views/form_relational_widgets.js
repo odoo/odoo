@@ -655,6 +655,10 @@ var AbstractManyField = common.AbstractField.extend({
                 if (record.to_create) {
                     command_list.push(COMMANDS.create(values));
                 } else {
+                    if (index === -1) {
+                        // because the UPDATE below does not imply LINK_TO
+                        command_list.push(COMMANDS.link_to(id));
+                    }
                     command_list.push(COMMANDS.update(record.id, values));
                 }
                 return;
@@ -961,7 +965,8 @@ var X2ManyListView = ListView.extend({
             field.no_rerender = true;
             current_values[field.name] = field.get('value');
         });
-        var valid = _.every(this.dataset.cache, function(record){
+        var cached_records = _.filter(this.dataset.cache, function(item){return !_.isEmpty(item.values)});
+        var valid = _.every(cached_records, function(record){
             _.each(fields, function(field){
                 var value = record.values[field.name];
                 field.set_value(_.isArray(value) && _.isArray(value[0]) ? [COMMANDS.delete_all()].concat(value) : value);
