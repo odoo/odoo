@@ -16,7 +16,10 @@ class TemplatePreview(models.TransientModel):
         if not template_id:
             return []
         template = self.env['mail.template'].browse(int(template_id))
-        records = self.env[template.model_id.model].search([], limit=10)
+        try:
+            records = self.env[template.model_id.model].search([], limit=10)
+        except:
+            raise UserError(_('This %s table is not available in database\nTry other') % (template.model_id.model))
         if default_res_id and default_res_id not in records:
             records |= self.env[template.model_id.model].browse(default_res_id)
         return records.name_get()
