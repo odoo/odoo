@@ -478,26 +478,41 @@ class Post(models.Model):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for post in self:
             if post.state == 'active' and post.parent_id:
-                body = _(
-                    '<p>A new answer for <i>%s</i> has been posted. <a href="%s/forum/%s/question/%s">Click here to access the post.</a></p>' %
-                    (post.parent_id.name, base_url, slug(post.parent_id.forum_id), slug(post.parent_id))
-                )
+                body = """
+<p>%(intro)s</p>
+<p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
+<a href="%(url)s" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">
+    %(click)s
+</a>
+</p>""" % {'intro': _('A new answer on %s has been posted. Click here to access the post :') % self.parent_id.name,
+           'url': '%s/forum/%s/question/%s' % (base_url, slug(self.parent_id.forum_id), slug(self.parent_id)),
+           'click': _('See post')}
                 post.parent_id.message_post(subject=_('Re: %s') % post.parent_id.name, body=body, subtype='website_forum.mt_answer_new')
             elif post.state == 'active' and not post.parent_id:
-                body = _(
-                    '<p>A new question <i>%s</i> has been asked on %s. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>' %
-                    (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
-                )
+                body = """
+<p>%(intro)s</p>
+<p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
+    <a href="%(url)s" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">
+        %(click)s
+    </a>
+</p>""" % {'intro': _('A new question <b>%s</b> on %s has been posted. Click here to access the question :') % (self.name, self.parent_id.name),
+           'url': '%s/forum/%s/question/%s' % (base_url, slug(self.forum_id), slug(self)),
+           'click': _('See question')}
                 post.message_post(subject=post.name, body=body, subtype='website_forum.mt_question_new')
             elif post.state == 'pending' and not post.parent_id:
                 # TDE FIXME: in master, you should probably use a subtype;
                 # however here we remove subtype but set partner_ids
                 partners = post.message_partner_ids.filtered(lambda partner: partner.user_ids and partner.user_ids.karma >= post.forum_id.karma_moderate)
                 note_subtype = self.sudo().env.ref('mail.mt_note')
-                body = _(
-                    '<p>A new question <i>%s</i> has been asked on %s and require your validation. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>' %
-                    (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
-                )
+                body = """
+<p>%(intro)s</p>
+<p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
+    <a href="%(url)s" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">
+        %(click)s
+    </a>
+</p>""" % {'intro': _('A new question <b>%s</b> has been asked on %s and require your validation. Click here to access the question :') % (self.name, self.parent_id.name),
+           'url': '%s/forum/%s/question/%s' % (base_url, slug(self.forum_id), slug(self)),
+           'click': _('Validate question')}
                 post.message_post(subject=post.name, body=body, subtype_id=note_subtype.id, partner_ids=partners.ids)
         return True
 
