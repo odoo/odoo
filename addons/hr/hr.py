@@ -317,8 +317,7 @@ class hr_department(osv.osv):
         return res
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+        context = dict(context) if context is not None else {}
         context['mail_create_nosubscribe'] = True
         # TDE note: auto-subscription of manager done by hand, because currently
         # the tracking allows to track+subscribe fields linked to a res.user record
