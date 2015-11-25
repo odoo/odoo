@@ -1528,7 +1528,8 @@ class stock_picking(models.Model):
         This can be used to provide a button that rereserves taking into account the existing pack operations
         """
         for pick in self.browse(cr, uid, ids, context=context):
-            self.rereserve_quants(cr, uid, pick, move_ids = [x.id for x in pick.move_lines], context=context)
+            self.rereserve_quants(cr, uid, pick, move_ids = [x.id for x in pick.move_lines
+                                                             if x.state not in ('done', 'cancel')], context=context)
 
     def rereserve_quants(self, cr, uid, picking, move_ids=[], context=None):
         """ Unreserve quants then try to reassign quants."""

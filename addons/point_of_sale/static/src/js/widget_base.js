@@ -48,7 +48,6 @@ var PosBaseWidget = Widget.extend({
             amount = amount.toFixed(decimals);
             return amount;
         };
-
         if (typeof amount === 'number') {
             amount = round_di(amount,decimals).toFixed(decimals);
             amount = formats.format_value(round_di(amount, decimals), { type: 'float', digits: [69, decimals]});
