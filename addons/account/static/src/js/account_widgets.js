@@ -1339,12 +1339,14 @@ openerp.account = function (instance) {
 
             // Show or hide partial reconciliation
             if (self.get("mv_lines_selected").length > 0) {
+                var last_line = _.last(self.get("mv_lines_selected"));
                 var propose_partial = self.getCreatedLines().length === 0
-                    && self.get("mv_lines_selected").length === 1
                     && balance_type === "greater"
-                    && ! self.get("mv_lines_selected")[0].partial_reconcile
-                    && ! self.is_rapprochement;
-                self.get("mv_lines_selected")[0].propose_partial_reconcile = propose_partial;
+                    && Math.abs(self.get("balance")) < Math.abs(last_line.debit - last_line.credit)
+                    && self.get("balance") * (last_line.debit - last_line.credit) < 0
+                    && ! last_line.partial_reconcile
+                    && ! last_line.already_paid;
+                last_line.propose_partial_reconcile = propose_partial;
                 self.updateAccountingViewMatchedLines();
             }
 
@@ -1443,6 +1445,12 @@ openerp.account = function (instance) {
     
         mvLinesSelectedChanged: function(elt, val) {
             var self = this;
+
+            // Reset partial reconciliation
+            _.each(self.get("mv_lines_selected"), function(line) {
+                if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
+                if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
+            });
         
             var added_lines = _.difference(val.newValue, val.oldValue);
             var removed_lines = _.difference(val.oldValue, val.newValue);
@@ -1592,15 +1600,6 @@ openerp.account = function (instance) {
             var self = this;
             var mv_lines_selected = self.get("mv_lines_selected");
             var lines_selected_num = mv_lines_selected.length;
-
-            // Undo partial reconciliation if necessary
-            if (lines_selected_num !== 1) {
-                _.each(mv_lines_selected, function(line) {
-                    if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
-                    if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
-                });
-                self.updateAccountingViewMatchedLines();
-            }
 
             // Compute balance
             var balance = 0;
