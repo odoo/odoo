@@ -127,12 +127,14 @@ function make_message (data) {
     if (_.contains(data.starred_partner_ids, session.partner_id)) {
         msg.is_starred = true;
     }
-    var real_channels = _.without(msg.channel_ids, 'channel_inbox', 'channel_starred');
-    var origin = real_channels.length ? real_channels[0] : undefined;
-    var channel = origin && chat_manager.get_channel(origin);
-    if (channel) {
-        msg.origin_id = origin;
-        msg.origin_name = channel.name;
+    if (msg.model === 'mail.channel') {
+        var real_channels = _.without(msg.channel_ids, 'channel_inbox', 'channel_starred');
+        var origin = real_channels.length === 1 ? real_channels[0] : undefined;
+        var channel = origin && chat_manager.get_channel(origin);
+        if (channel) {
+            msg.origin_id = origin;
+            msg.origin_name = channel.name;
+        }
     }
     return msg;
 }
