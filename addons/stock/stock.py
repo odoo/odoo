@@ -1582,6 +1582,44 @@ class StockMove(models.Model):
     _order = 'picking_id, sequence, id'
     _log_create = False
 
+    @api.model
+    def get_price_unit(self, move):
+        """ Returns the unit price to store on the quant """
+        return move.price_unit or move.product_id.standard_price
+
+    @api.multi
+    def name_get(self):
+        res = []
+        for line in self:
+            name = line.location_id.name + ' > ' + line.location_dest_id.name
+            if line.product_id.code:
+                name = line.product_id.code + ': ' + name
+            if line.picking_id.origin:
+                name = line.picking_id.origin + '/ ' + name
+            res.append((line.id, name))
+        return res
+
+    @api.multi
+    def _get_move(self):
+        res = set()
+        for quant in self:
+            if quant.reservation_id:
+                res.add(quant.reservation_id.id)
+        return list(res)
+
+    @api.multi
+    def _get_move_ids(self):
+        res = []
+        for picking in self:
+            res += [x.id for x in picking.move_lines]
+        return res
+
+    @api.multi
+    def _get_moves_from_prod(self):
+        if self.ids:
+            return self.search([('product_id', 'in', self.ids)])
+        return []
+
     @api.multi
     def _get_remaining_qty(self):
         for move in self:
@@ -1664,6 +1702,15 @@ class StockMove(models.Model):
             return picking.group_id.id
         return False
 
+    @api.multi
+    def _set_product_qty(self):
+        """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
+            in the default product UoM. This code has been added to raise an error if a write is made given a value
+            for `product_qty`, where the same write should set the `product_uom_qty` field instead, in order to
+            detect errors.
+        """
+        raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
+
     sequence = fields.Integer(default=10)
     name = fields.Char('Description', required=True, select=True)
     priority = fields.Selection(procurement.PROCUREMENT_PRIORITIES, default='1')
@@ -1745,6 +1792,135 @@ class StockMove(models.Model):
         for move in self:
             if move.product_id.uom_id.category_id.id != move.product_uom.category_id.id:
                 raise UserError('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.')
+
+    @api.v7
+    def init(self, cr):
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_move_product_location_index',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX stock_move_product_location_index ON stock_move (product_id, location_id, location_dest_id, company_id, state)')
+
+    @api.multi
+    def do_unreserve(self):
+        quant_obj = self.env["stock.quant"]
+        for move in self:
+            if move.state in ('done', 'cancel'):
+                raise UserError(_('Cannot unreserve a done move'))
+            quant_obj.quants_unreserve(move)
+            if self.find_move_ancestors(move):
+                move.write({'state': 'waiting'})
+            else:
+                move.write({'state': 'confirmed'})
+
+    @api.model
+    def _prepare_procurement_from_move(self, move):
+        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or move.picking_id.name or "/")
+        group_id = move.group_id and move.group_id.id or False
+        if move.rule_id:
+            if move.rule_id.group_propagation_option == 'fixed' and move.rule_id.group_id:
+                group_id = move.rule_id.group_id.id
+            elif move.rule_id.group_propagation_option == 'none':
+                group_id = False
+        return {
+            'name': move.rule_id and move.rule_id.name or "/",
+            'origin': origin,
+            'company_id': move.company_id and move.company_id.id or False,
+            'date_planned': move.date,
+            'product_id': move.product_id.id,
+            'product_qty': move.product_uom_qty,
+            'product_uom': move.product_uom.id,
+            'location_id': move.location_id.id,
+            'move_dest_id': move.id,
+            'group_id': group_id,
+            'route_ids': [(4, x.id) for x in move.route_ids],
+            'warehouse_id': move.warehouse_id.id or (move.picking_type_id and move.picking_type_id.warehouse_id.id or False),
+            'priority': move.priority,
+        }
+
+    @api.model
+    def _push_apply(self, moves):
+        push_obj = self.env["stock.location.path"]
+        for move in moves:
+            #1) if the move is already chained, there is no need to check push rules
+            #2) if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
+            #   to receive goods without triggering the push rules again (which would duplicate chained operations)
+            if not move.move_dest_id:
+                domain = [('location_from_id', '=', move.location_dest_id.id)]
+                #priority goes to the route defined on the product and product category
+                route_ids = [x.id for x in move.product_id.route_ids + move.product_id.categ_id.total_route_ids]
+                rules = push_obj.search(domain + [('route_id', 'in', route_ids)], order='route_sequence, sequence')
+                if not rules:
+                    #then we search on the warehouse if a rule can apply
+                    wh_route_ids = []
+                    if move.warehouse_id:
+                        wh_route_ids = [x.id for x in move.warehouse_id.route_ids]
+                    elif move.picking_type_id and move.picking_type_id.warehouse_id:
+                        wh_route_ids = [x.id for x in move.picking_type_id.warehouse_id.route_ids]
+                    if wh_route_ids:
+                        rules = push_obj.search(domain + [('route_id', 'in', wh_route_ids)], order='route_sequence, sequence')
+                    if not rules:
+                        #if no specialized push rule has been found yet, we try to find a general one (without route)
+                        rules = push_obj.search(domain + [('route_id', '=', False)], order='sequence')
+                if rules:
+                    rule = rules[0]
+                    # Make sure it is not returning the return
+                    if (not move.origin_returned_move_id or move.origin_returned_move_id.location_id.id != rule.location_dest_id.id):
+                        push_obj._apply(rule, move)
+        return True
+
+    @api.model
+    def _create_procurement(self, move):
+        """ This will create a procurement order """
+        return self.env["procurement.order"].create(self._prepare_procurement_from_move(move)).id
+
+    @api.model
+    def _create_procurements(self, moves):
+        res = []
+        for move in moves:
+            res.append(self._create_procurement(move))
+        return res
+
+    @api.multi
+    def write(self, vals):
+        # Check that we do not modify a stock.move which is done
+        frozen_fields = set(['product_qty', 'product_uom', 'location_id', 'location_dest_id', 'product_id'])
+        for move in self:
+            if move.state == 'done':
+                if frozen_fields.intersection(vals):
+                    raise UserError(_('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
+        propagated_changes_dict = {}
+        #propagation of quantity change
+        if vals.get('product_uom_qty'):
+            propagated_changes_dict['product_uom_qty'] = vals['product_uom_qty']
+        if vals.get('product_uom_id'):
+            propagated_changes_dict['product_uom_id'] = vals['product_uom_id']
+        #propagation of expected date:
+        propagated_date_field = False
+        if vals.get('date_expected'):
+            #propagate any manual change of the expected date
+            propagated_date_field = 'date_expected'
+        elif (vals.get('state', '') == 'done' and vals.get('date')):
+            #propagate also any delta observed when setting the move as done
+            propagated_date_field = 'date'
+
+        if not self.env.context.get('do_not_propagate', False) and (propagated_date_field or propagated_changes_dict):
+            #any propagation is (maybe) needed
+            for move in self:
+                if move.move_dest_id and move.propagate:
+                    if 'date_expected' in propagated_changes_dict:
+                        propagated_changes_dict.pop('date_expected')
+                    if propagated_date_field:
+                        current_date = datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
+                        new_date = datetime.strptime(vals.get(propagated_date_field), DEFAULT_SERVER_DATETIME_FORMAT)
+                        delta = new_date - current_date
+                        if abs(delta.days) >= move.company_id.propagation_minimum_delta:
+                            old_move_date = datetime.strptime(move.move_dest_id.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
+                            new_move_date = (old_move_date + relativedelta.relativedelta(days=delta.days or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                            propagated_changes_dict['date_expected'] = new_move_date
+                    #For pushed moves as well as for pulled moves, propagate by recursive call of write().
+                    #Note that, for pulled moves we intentionally don't propagate on the procurement.
+                    if propagated_changes_dict:
+                        move.move_dest_id.write(propagated_changes_dict)
+        return super(StockMove, self).write(vals)
 
 class StockInventory(models.Model):
     _name = "stock.inventory"
