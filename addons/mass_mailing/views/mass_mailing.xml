@@ -448,7 +448,10 @@
 
                         <group>
                             <field name="email_from"/>
-                            <field name="name"/>
+                            <label for="name" string="Subject"/>
+                            <div>
+                                <field name="name" nolabel="1"/>
+                            </div>
                             <label for="mailing_model" string="Recipients"/>
                             <div>
                                 <field name="mailing_model" widget="radio" style="margin-bottom: 8px"
@@ -498,13 +501,6 @@
                                             <field name="contact_ab_pc" class="oe_inline"/> %
                                         </div>
                                     </group>
-                                </group>
-                            </page>
-                            <page string="Tracking" groups="base.group_no_one">
-                                <group>
-                                    <field name="campaign_id" attrs="{'invisible': True}" />
-                                    <field name="medium_id" />
-                                    <field name="source_id" />
                                 </group>
                             </page>
                         </notebook>

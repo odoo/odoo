@@ -12,7 +12,6 @@ class crm_opportunity_report(osv.Model):
     _auto = False
     _description = "CRM Opportunity Analysis"
     _rec_name = 'date_deadline'
-    _inherit = ["utm.mixin"]
 
     _columns = {
         'date_deadline': fields.date('Expected Closing', readonly=True),
@@ -46,6 +45,9 @@ class crm_opportunity_report(osv.Model):
         ],'Type', help="Type is used to separate Leads and Opportunities"),
         'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', readonly=True),
         'date_conversion': fields.datetime('Conversion Date', readonly=True),
+        'campaign_id': fields.many2one('utm.campaign', 'Campaign', readonly=True),
+        'source_id':fields.many2one('utm.source', 'Source', readonly=True),
+        'medium_id': fields.many2one('utm.medium', 'Medium', readonly=True),
     }
 
     def init(self, cr):
