@@ -204,7 +204,8 @@ class sale_order(osv.osv):
             if 'tax_id' in data:
                 data['tax_id'] = [(6, 0, data['tax_id'])]
             else:
-                taxes = line.product_id.product_tmpl_id.taxes_id.ids
+                fpos = (fiscal_position_id and self.pool['account.fiscal.position'].browse(cr, uid, fiscal_position_id)) or False
+                taxes = fpos.map_tax(line.product_id.product_tmpl_id.taxes_id).ids if fpos else line.product_id.product_tmpl_id.taxes_id.ids
                 data['tax_id'] = [(6, 0, taxes)]
             data.update({
                 'name': line.name,
