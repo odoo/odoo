@@ -352,6 +352,22 @@ odoo.define('website_form_editor', function (require) {
         },
 
         clean_for_save: function () {
+            var model = this.$target.data('model_name');
+            // because apparently this can be called on the wrong widget and
+            // we may not have a model, or fields...
+            if (model) {
+                // we may be re-whitelisting already whitelisted fields. Doesn't
+                // really matter.
+                var fields = this.$target.find('input.form-field[name=email_to], .form-field:not(.o_website_form_custom) :input').map(function (_, node) {
+                    return node.getAttribute('name');
+                }).get();
+                if (fields.length) {
+                    // ideally we'd only do this if saving the form
+                    // succeeds... but no idea how to do that
+                    new Model('ir.model.fields').call('formbuilder_whitelist', [model, _.uniq(fields)]);
+                }
+            }
+
             // Prevent saving of the error colors  // TODO: would be better on Edit
             this.$target.find('.has-error').removeClass('has-error');
 
