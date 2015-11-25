@@ -196,6 +196,12 @@ class sale_quote(http.Controller):
                 'callback_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
             }, context=context)
             tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
+            # update quotation
+            request.registry['sale.order'].write(
+                cr, SUPERUSER_ID, [order.id], {
+                    'payment_acquirer_id': acquirer_id,
+                    'payment_tx_id': tx_id
+                }, context=context)
 
         # confirm the quotation
         if tx.acquirer_id.auto_confirm == 'at_pay_now':

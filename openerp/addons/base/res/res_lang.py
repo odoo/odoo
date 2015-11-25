@@ -18,6 +18,7 @@ _logger = logging.getLogger(__name__)
 class lang(osv.osv):
     _name = "res.lang"
     _description = "Languages"
+    _order = "active desc,name"
 
     _disallowed_datetime_patterns = tools.DATETIME_FORMATS_MAP.keys()
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
@@ -211,6 +212,11 @@ class lang(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
              ids = [ids]
+
+        if 'code' in vals:
+            for rec in self.browse(cr, uid, ids, context):
+                if rec.code != vals['code']:
+                    raise UserError(_("Language code cannot be modified."))
 
         if vals.get('active') == False:
             users = self.pool.get('res.users')

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import api, models
 from openerp.osv import fields, osv
 from openerp.exceptions import UserError
 from openerp.tools.translate import _
@@ -106,3 +107,14 @@ class project_task(osv.osv):
                 raise UserError(_('You cannot delete a task related to a Sale Order. You can only archive this task.'))
         res = super(project_task, self).unlink(cr, uid, ids, context)
         return res
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.multi
+    def _need_procurement(self):
+        for product in self:
+            if product.type == 'service' and product.track_service == 'task':
+                return True
+        return super(ProductProduct, self)._need_procurement()

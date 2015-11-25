@@ -246,7 +246,8 @@
                     <separator/>
                     <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <separator/>
-                    <filter string="Upcoming" name="upcoming" domain="[('date_begin','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
+                    <filter string="Upcoming" name="upcoming"
+                        domain="['&amp;', ('state', '!=', 'cancel'), ('date_begin','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
                     <field name="event_type_id"/>
                     <field name="user_id"/>
                     <separator/>

@@ -135,11 +135,14 @@ class survey_mail_compose_message(osv.TransientModel):
                 'body': wizard.body.replace("__URL__", url),
                 'body_html': wizard.body.replace("__URL__", url),
                 'parent_id': None,
-                'partner_ids': partner_id and [(4, partner_id)] or None,
-                'attachment_ids': wizard.attachment_ids or None,
+                'attachment_ids': wizard.attachment_ids and [(6, 0, wizard.attachment_ids.ids)] or None,
                 'email_from': wizard.email_from or None,
-                'email_to': email,
+                'auto_delete': True,
             }
+            if partner_id:
+                values['recipient_ids'] = [(4, partner_id)]
+            else:
+                values['email_to'] = email
             mail_id = mail_mail_obj.create(cr, uid, values, context=context)
             mail_mail_obj.send(cr, uid, [mail_id], context=context)
 

@@ -59,6 +59,14 @@ class crm_lead(format_address, osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
     _mail_mass_mailing = _('Leads / Opportunities')
 
+    def _get_default_probability(self, cr, uid, context=None):
+        """ Gives default probability """
+        stage_id = self._get_default_stage_id(cr, uid, context=None)
+        if stage_id:
+            return self.pool['crm.stage'].browse(cr, uid, stage_id, context=context).probability
+        else:
+            return 10
+
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         team_id = self.pool['crm.team']._get_default_team_id(cr, SUPERUSER_ID, context=context, user_id=uid)
@@ -239,7 +247,7 @@ class crm_lead(format_address, osv.osv):
         'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, SUPERUSER_ID, context=c, user_id=uid),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm_stage.AVAILABLE_PRIORITIES[0][0],
-        'probability': 10,
+        'probability': lambda s, cr, uid, c: s._get_default_probability(cr, uid, c),
         'color': 0,
         'date_last_stage_update': fields.datetime.now,
     }

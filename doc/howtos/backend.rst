@@ -1634,6 +1634,30 @@ http://localhost:8069/report/html/account.report_invoice/1 (if ``account`` is
 installed) and the PDF version through
 http://localhost:8069/report/pdf/account.report_invoice/1.
 
+.. _reference/backend/reporting/printed-reports/pdf-without-styles:
+
+.. danger::
+
+    If it appears that your PDF report is missing the styles (i.e. the text
+    appears but the style/layout is different from the html version), probably
+    your wkhtmltopdf_ process cannot reach your web server to download them.
+
+    If you check your server logs and see that the CSS styles are not being
+    downloaded when generating a PDF report, most surely this is the problem.
+
+    The wkhtmltopdf_ process will use the ``web.base.url`` system parameter as
+    the *root path* to all linked files, but this parameter is automatically
+    updated each time the Administrator is logged in. If your server resides
+    behind some kind of proxy, that could not be reachable. You can fix this by
+    adding one of these system parameters:
+
+    - ``report.url``, pointing to an URL reachable from your server
+      (probably ``http://localhost:8069`` or something similar). It will be
+      used for this particular purpose only.
+
+    - ``web.base.url.freeze``, when set to ``True``, will stop the
+      automatic updates to ``web.base.url``.
+
 .. exercise:: Create a report for the Session model
 
    For each session, it should display session's name, its start and end,

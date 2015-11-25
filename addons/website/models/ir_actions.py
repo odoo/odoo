@@ -39,7 +39,7 @@ class actions_server(osv.Model):
             help='A code server action can be executed from the website, using a dedicated '
                  'controller. The address is <base>/website/action/<website_path>. '
                  'Set this field as True to allow users to run this action. If it '
-                 'set to is False the action cannot be run through the website.'),
+                 'is set to False the action cannot be run through the website.'),
     }
 
     def on_change_website_path(self, cr, uid, ids, website_path, xml_id, context=None):

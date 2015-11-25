@@ -6,8 +6,18 @@
             <field name="applicability">taxes</field>
         </record>
 
+        <record id="tag_8_incl" model="account.account.tag">
+            <field name="name">8.0% Incl.</field>
+            <field name="applicability">taxes</field>
+        </record>
+
         <record id="tag_2_5" model="account.account.tag">
             <field name="name">2.5%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_2_5_incl" model="account.account.tag">
+            <field name="name">2.5% Incl.</field>
             <field name="applicability">taxes</field>
         </record>
 
@@ -16,13 +26,28 @@
             <field name="applicability">taxes</field>
         </record>
 
+        <record id="tag_3_8_incl" model="account.account.tag">
+            <field name="name">3.8% Incl.</field>
+            <field name="applicability">taxes</field>
+        </record>
+
         <record id="tag_8_achat" model="account.account.tag">
             <field name="name">8.0% achat</field>
             <field name="applicability">taxes</field>
         </record>
 
+        <record id="tag_8_achat_incl" model="account.account.tag">
+            <field name="name">8.0% achat Incl.</field>
+            <field name="applicability">taxes</field>
+        </record>
+
         <record id="tag_2_5_achat" model="account.account.tag">
             <field name="name">2.5% achat</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_2_5_achat_incl" model="account.account.tag">
+            <field name="name">2.5% achat Incl.</field>
             <field name="applicability">taxes</field>
         </record>
 
@@ -41,8 +66,18 @@
             <field name="applicability">taxes</field>
         </record>
 
+        <record id="tag_3_8_achat_incl" model="account.account.tag">
+            <field name="name">3.8% achat Incl.</field>
+            <field name="applicability">taxes</field>
+        </record>
+
         <record id="tag_8_invest" model="account.account.tag">
             <field name="name">8.0% invest.</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_8_invest_incl" model="account.account.tag">
+            <field name="name">8.0% invest. Incl.</field>
             <field name="applicability">taxes</field>
         </record>
 
@@ -51,8 +86,18 @@
             <field name="applicability">taxes</field>
         </record>
 
+        <record id="tag_2_5_invest_incl" model="account.account.tag">
+            <field name="name">2.5% invest. Incl.</field>
+            <field name="applicability">taxes</field>
+        </record>
+
         <record id="tag_3_8_invest" model="account.account.tag">
             <field name="name">3.8% invest</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_3_8_invest_incl" model="account.account.tag">
+            <field name="name">3.8% invest Incl.</field>
             <field name="applicability">taxes</field>
         </record>
 
@@ -79,6 +124,18 @@
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_2_5')])]"/>
         </record>
+        <record model="account.tax.template" id="vat_25_incl">
+            <field name="name">TVA due à 2.5% (Incl. TR)</field>
+            <field name="description">2.5% Incl.</field>
+            <field name="price_include" eval="1"/>
+            <field name="amount" eval="2.5"/>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="refund_account_id" ref="ch_coa_2200"/>
+            <field name="account_id" ref="ch_coa_2200"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_2_5_incl')])]"/>
+        </record>
         <record model="account.tax.template" id="vat_25_purchase">
             <field name="name">TVA 2.5% sur achat B&amp;S (TR)</field>
             <field name="description">2.5% achat</field>
@@ -90,6 +147,18 @@
             <field name="account_id" ref="ch_coa_1170"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_2_5_achat')])]"/>
         </record>
+        <record model="account.tax.template" id="vat_25_purchase_incl">
+            <field name="name">TVA 2.5% sur achat B&amp;S (Incl. TR)</field>
+            <field name="description">2.5% achat Incl.</field>
+            <field name="price_include" eval="1"/>
+            <field name="amount" eval="2.5"/>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="refund_account_id" ref="ch_coa_1170"/>
+            <field name="account_id" ref="ch_coa_1170"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_2_5_achat_incl')])]"/>
+        </record>
         <record model="account.tax.template" id="vat_25_invest">
             <field name="name">TVA 2.5% sur invest. et autres ch. (TR)</field>
             <field name="description">2.5% invest.</field>
@@ -100,6 +169,18 @@
             <field name="refund_account_id" ref="ch_coa_1171"/>
             <field name="account_id" ref="ch_coa_1171"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_2_5_invest')])]"/>
+        </record>
+        <record model="account.tax.template" id="vat_25_invest_incl">
+            <field name="name">TVA 2.5% sur invest. et autres ch. (Incl. TR)</field>
+            <field name="description">2.5% invest. Incl.</field>
+            <field name="price_include" eval="1"/>
+            <field name="amount" eval="2.5"/>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="refund_account_id" ref="ch_coa_1171"/>
+            <field name="account_id" ref="ch_coa_1171"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_2_5_invest_incl')])]"/>
         </record>
 
         <record model="account.tax.template" id="vat_38">
@@ -113,6 +194,18 @@
             <field name="account_id" ref="ch_coa_2200"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_3_8')])]"/>
         </record>
+        <record model="account.tax.template" id="vat_38_incl">
+            <field name="name">TVA due à 3.8% (Incl. TS)</field>
+            <field name="description">3.8% Incl.</field>
+            <field name="price_include" eval="1"/>
+            <field name="amount" eval="3.8"/>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="refund_account_id" ref="ch_coa_2200"/>
+            <field name="account_id" ref="ch_coa_2200"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_3_8_incl')])]"/>
+        </record>
         <record model="account.tax.template" id="vat_38_purchase">
             <field name="name">TVA 3.8% sur achat B&amp;S (TS)</field>
             <field name="description">3.8% achat</field>
@@ -124,6 +217,18 @@
             <field name="account_id" ref="ch_coa_1170"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_3_8_achat')])]"/>
         </record>
+        <record model="account.tax.template" id="vat_38_purchase_incl">
+            <field name="name">TVA 3.8% sur achat B&amp;S (Incl. TS)</field>
+            <field name="description">3.8% achat Incl.</field>
+            <field name="price_include" eval="1"/>
+            <field name="amount" eval="3.8"/>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="refund_account_id" ref="ch_coa_1170"/>
+            <field name="account_id" ref="ch_coa_1170"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_3_8_achat_incl')])]"/>
+        </record>
         <record model="account.tax.template" id="vat_38_invest">
             <field name="name">TVA 3.8% sur invest. et autres ch. (TS)</field>
             <field name="description">3.8% invest</field>
@@ -134,6 +239,18 @@
             <field name="refund_account_id" ref="ch_coa_1171"/>
             <field name="account_id" ref="ch_coa_1171"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_3_8_invest')])]"/>
+        </record>
+        <record model="account.tax.template" id="vat_38_invest_incl">
+            <field name="name">TVA 3.8% sur invest. et autres ch. (Incl. TS)</field>
+            <field name="description">3.8% invest Incl.</field>
+            <field name="price_include" eval="1"/>
+            <field name="amount" eval="3.8"/>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="refund_account_id" ref="ch_coa_1171"/>
+            <field name="account_id" ref="ch_coa_1171"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_3_8_invest_incl')])]"/>
         </record>
         <record model="account.tax.template" id="vat_80">
             <field name="name">TVA due a 8.0% (TN)</field>
@@ -147,6 +264,19 @@
             <field name="account_id" ref="ch_coa_2200"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_8')])]"/>
         </record>
+        <record model="account.tax.template" id="vat_80_incl">
+            <field name="name">TVA due à 8.0% (Incl. TN)</field>
+            <field name="description">8.0% Incl.</field>
+            <field name="price_include" eval="1"/>
+            <field name="amount" eval="8.0"/>
+            <field name="sequence" eval="0"/>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="refund_account_id" ref="ch_coa_2200"/>
+            <field name="account_id" ref="ch_coa_2200"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_8_incl')])]"/>
+        </record>
         <record model="account.tax.template" id="vat_80_purchase">
             <field name="name">TVA 8.0% sur achat B&amp;S (TN)</field>
             <field name="description">8.0% achat</field>
@@ -159,6 +289,19 @@
             <field name="account_id" ref="ch_coa_1170"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_8_achat')])]"/>
         </record>
+        <record model="account.tax.template" id="vat_80_purchase_incl">
+            <field name="name">TVA 8.0% sur achat B&amp;S (Incl. TN)</field>
+            <field name="description">8.0% achat Incl.</field>
+            <field name="price_include" eval="1"/>
+            <field name="amount" eval="8.0"/>
+            <field name="amount_type">percent</field>
+            <field name="sequence" eval="0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="refund_account_id" ref="ch_coa_1170"/>
+            <field name="account_id" ref="ch_coa_1170"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_8_achat_incl')])]"/>
+        </record>
         <record model="account.tax.template" id="vat_80_invest">
             <field name="name">TVA 8.0% sur invest. et autres ch. (TN)</field>
             <field name="description">8.0% invest.</field>
@@ -169,6 +312,18 @@
             <field name="refund_account_id" ref="ch_coa_1171"/>
             <field name="account_id" ref="ch_coa_1171"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_8_invest')])]"/>
+        </record>
+        <record model="account.tax.template" id="vat_80_invest_incl">
+            <field name="name">TVA 8.0% sur invest. et autres ch. (Incl. TN)</field>
+            <field name="description">8.0% invest. Incl.</field>
+            <field name="price_include" eval="1"/>
+            <field name="amount" eval="8.0"/>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="refund_account_id" ref="ch_coa_1171"/>
+            <field name="account_id" ref="ch_coa_1171"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_8_invest_incl')])]"/>
         </record>
         <record model="account.tax.template" id="vat_XO">
             <field name="name">TVA due a 0% (Exportations)</field>

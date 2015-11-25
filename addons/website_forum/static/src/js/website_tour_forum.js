@@ -87,7 +87,7 @@ Tour.register({
         {
             title:     _t("New Question Created"),
             waitFor:   'body:has(".fa-star")',
-            content:   _t("This page contain new created question."),
+            content:   _t("This page contains the newly created questions."),
             popover:   { next: _t("Continue") },
         },
         {
@@ -107,7 +107,7 @@ Tour.register({
         {
             title:     _t("Answer Posted"),
             waitFor:   'body:has(".fa-check-circle")',
-            content:   _t("This page contain new created question and its answer."),
+            content:   _t("This page contains the newly created questions and its answers."),
             popover:   { next: _t("Continue") },
         },
         {

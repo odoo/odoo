@@ -145,7 +145,7 @@ class sale_order(osv.osv):
     _columns = {
         'access_token': fields.char('Security Token', required=True, copy=False),
         'template_id': fields.many2one('sale.quote.template', 'Quotation Template', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
-        'website_description': fields.html('Description'),
+        'website_description': fields.html('Description', translate=True),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float", digits=0),
         'quote_viewed': fields.boolean('Quotation Viewed'),
@@ -195,6 +195,10 @@ class sale_order(osv.osv):
 
             if 'tax_id' in data:
                 data['tax_id'] = [(6, 0, data['tax_id'])]
+            else:
+                fpos = (fiscal_position_id and self.pool['account.fiscal.position'].browse(cr, uid, fiscal_position_id)) or False
+                taxes = fpos.map_tax(line.product_id.product_tmpl_id.taxes_id).ids if fpos else line.product_id.product_tmpl_id.taxes_id.ids
+                data['tax_id'] = [(6, 0, taxes)]
             data.update({
                 'name': line.name,
                 'price_unit': price,
@@ -245,17 +249,17 @@ class sale_order(osv.osv):
             products += line.product_id.product_tmpl_id.recommended_products(context=context)
         return products
 
-    def get_access_action(self, cr, uid, id, context=None):
+    def get_access_action(self, cr, uid, ids, context=None):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the online quote if exists. """
-        quote = self.browse(cr, uid, id, context=context)
+        quote = self.browse(cr, uid, ids[0], context=context)
         if not quote.template_id:
-            return super(sale_order, self).get_access_action(cr, uid, id, context=context)
+            return super(sale_order, self).get_access_action(cr, uid, ids, context=context)
         return {
             'type': 'ir.actions.act_url',
-            'url': '/quote/%s' % id,
+            'url': '/quote/%s' % quote.id,
             'target': 'self',
-            'res_id': id,
+            'res_id': quote.id,
         }
 
     def _confirm_online_quote(self, cr, uid, order_id, tx, context=None):
@@ -368,14 +372,17 @@ class sale_order_option(osv.osv):
             domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
         return {'value': vals, 'domain': domain}
 
+    # TODO master: to remove, replaced by onchange of the new api
     def product_uom_change(self, cr, uid, ids, product, uom_id, context=None):
         context = context or {}
         if not uom_id:
             return {'value': {'price_unit': 0.0, 'uom_id': False}}
         return self.on_change_product_id(cr, uid, ids, product, uom_id=uom_id, context=context)
 
-    @api.onchange('product_id')
+    @api.onchange('product_id', 'uom_id')
     def _onchange_product_id(self):
+        if not self.product_id:
+            return
         product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
         self.price_unit = product.list_price
         self.website_description = product.quote_description or product.website_description
@@ -387,6 +394,10 @@ class sale_order_option(osv.osv):
             partner_id = self.order_id.partner_id.id
             pricelist = self.order_id.pricelist_id.id
             self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
+        if self.uom_id and self.uom_id != self.product_id.uom_id:
+            self.price_unit = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id.id)
+        domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
+        return {'domain': domain}
 
 
 class product_template(osv.Model):

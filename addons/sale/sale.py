@@ -103,7 +103,7 @@ class SaleOrder(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
-    date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Date.context_today)
+    date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
     validity_date = fields.Date(string='Expiration Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
 
@@ -161,6 +161,7 @@ class SaleOrder(models.Model):
             return 'sale.mt_order_sent'
         return super(SaleOrder, self)._track_subtype(init_values)
 
+    @api.multi
     @api.onchange('partner_shipping_id')
     def onchange_partner_shipping_id(self):
         """
@@ -302,6 +303,8 @@ class SaleOrder(models.Model):
                     inv_data = order._prepare_invoice()
                     invoice = inv_obj.create(inv_data)
                     invoices[group_key] = invoice
+                elif group_key in invoices and order.name not in invoices[group_key].origin.split(', '):
+                    invoices[group_key].write({'origin': invoices[group_key].origin + ', ' + order.name})
                 if line.qty_to_invoice > 0:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif line.qty_to_invoice < 0 and final:
@@ -384,6 +387,8 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         for order in self:
             order.state = 'sale'
+            if self.env.context.get('send_email'):
+                self.force_quotation_send()
             order.order_line._action_procurement_create()
             if not order.project_id:
                 for line in order.order_line:
@@ -537,7 +542,7 @@ class SaleOrderLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         new_procs = self.env['procurement.order'] #Empty recordset
         for line in self:
-            if line.state != 'sale':
+            if line.state != 'sale' or not line.product_id._need_procurement():
                 continue
             qty = 0.0
             for proc in line.procurement_ids:
@@ -597,7 +602,7 @@ class SaleOrderLine(models.Model):
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
         ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True, default='no')
-    price_unit = fields.Float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), default=0.0)
+    price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'), default=0.0)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
     price_tax = fields.Monetary(compute='_compute_amount', string='Taxes', readonly=True, store=True)
@@ -606,20 +611,20 @@ class SaleOrderLine(models.Model):
     price_reduce = fields.Monetary(compute='_get_price_reduce', string='Price Reduce', readonly=True, store=True)
     tax_id = fields.Many2many('account.tax', string='Taxes')
 
-    discount = fields.Float(string='Discount (%)', digits_compute=dp.get_precision('Discount'), default=0.0)
+    discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict', required=True)
-    product_uom_qty = fields.Float(string='Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
+    product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom = fields.Many2one('product.uom', string='Unit of Measure', required=True)
 
     qty_delivered_updateable = fields.Boolean(compute='_compute_qty_delivered_updateable', string='Can Edit Delivered', readonly=True, default=True)
-    qty_delivered = fields.Float(string='Delivered', copy=False, digits_compute=dp.get_precision('Product Unit of Measure'), default=0.0)
+    qty_delivered = fields.Float(string='Delivered', copy=False, digits=dp.get_precision('Product Unit of Measure'), default=0.0)
     qty_to_invoice = fields.Float(
         compute='_get_to_invoice_qty', string='To Invoice', store=True, readonly=True,
-        digits_compute=dp.get_precision('Product Unit of Measure'), default=0.0)
+        digits=dp.get_precision('Product Unit of Measure'), default=0.0)
     qty_invoiced = fields.Float(
         compute='_get_invoice_qty', string='Invoiced', store=True, readonly=True,
-        digits_compute=dp.get_precision('Product Unit of Measure'), default=0.0)
+        digits=dp.get_precision('Product Unit of Measure'), default=0.0)
 
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', readonly=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
@@ -720,7 +725,7 @@ class SaleOrderLine(models.Model):
         self.update(vals)
         return {'domain': domain}
 
-    @api.onchange('product_uom')
+    @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         if not self.product_uom:
             self.price_unit = 0.0

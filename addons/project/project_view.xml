@@ -264,6 +264,7 @@
                             <field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id"
                                 options='{"no_open": True}'/>
+                                on_change="onchange_user_id(user_id, context)"
                             <field name="planned_hours" widget="float_time"
                                     groups="project.group_time_work_estimation_tasks"
                                     on_change="onchange_planned(planned_hours)"/>

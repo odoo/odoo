@@ -56,6 +56,8 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _default_journal(self):
+        if self._context.get('default_journal_id', False):
+            return self.env['account.journal'].browse(self._context.get('default_journal_id'))
         inv_type = self._context.get('type', 'out_invoice')
         inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
         company_id = self._context.get('company_id', self.env.user.company_id.id)
@@ -82,7 +84,7 @@ class AccountInvoice(models.Model):
     def _compute_residual(self):
         residual = 0.0
         residual_company_signed = 0.0
-        sign = self.type in ['in_refund', 'in_invoice'] and -1 or 1
+        sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
         for line in self.sudo().move_id.line_ids:
             if line.account_id.internal_type in ('receivable', 'payable'):
                 residual_company_signed += line.amount_residual * sign
@@ -137,28 +139,29 @@ class AccountInvoice(models.Model):
         if self.payment_move_line_ids:
             info = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
             for payment in self.payment_move_line_ids:
+                #we don't take into account the movement created due to a change difference
+                if payment.currency_id and payment.move_id.rate_diff_partial_rec_id:
+                    continue
                 if self.type in ('out_invoice', 'in_refund'):
                     amount = sum([p.amount for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
                     amount_currency = sum([p.amount_currency for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
                 elif self.type in ('in_invoice', 'out_refund'):
                     amount = sum([p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
                     amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
-                #we don't take into account the movement created due to a change difference
-                if payment.currency_id and payment.move_id.rate_diff_partial_rec_id:
-                    continue
                 # get the payment value in invoice currency
                 if payment.currency_id and amount_currency != 0:
+                    currency_id = payment.currency_id
                     amount_to_show = -amount_currency
                 else:
-                    self.with_context(date=payment.date)
-                    amount_to_show = payment.company_id.currency_id.compute(-amount, self.currency_id)
+                    currency_id = payment.company_id.currency_id
+                    amount_to_show = -amount
                 info['content'].append({
                     'name': payment.name,
                     'journal_name': payment.journal_id.name,
                     'amount': amount_to_show,
-                    'currency': self.currency_id.symbol,
-                    'digits': [69, self.currency_id.decimal_places],
-                    'position': self.currency_id.position,
+                    'currency': currency_id.symbol,
+                    'digits': [69, currency_id.decimal_places],
+                    'position': currency_id.position,
                     'date': payment.date,
                     'payment_id': payment.id,
                     'move_id': payment.move_id.id,
@@ -1191,7 +1194,7 @@ class AccountPaymentTerm(models.Model):
     _order = "name"
 
     def _default_line_ids(self):
-        return [(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 0, 'option': 'day_after_invoice_date'})]
+        return [(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 9, 'days': 0, 'option': 'day_after_invoice_date'})]
 
     name = fields.Char(string='Payment Term', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment term without removing it.")

@@ -97,6 +97,7 @@ class purchase_order(osv.Model):
                 'message': message
                 }
             if partner.purchase_warn == 'block':
+                self.update({'partner_id': False})
                 return {'warning': warning}
 
         if warning:

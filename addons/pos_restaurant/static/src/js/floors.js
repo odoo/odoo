@@ -784,13 +784,12 @@ models.PosModel = models.PosModel.extend({
             this.set_order(null);
         } else if (this.order_to_transfer_to_different_table) {
             this.order_to_transfer_to_different_table.table = table;
+            this.order_to_transfer_to_different_table.save_to_db();
             this.order_to_transfer_to_different_table = null;
 
             // set this table
             this.set_table(table);
 
-            // trigger a change so the table change gets stored in localStorage
-            this.get_order().trigger('change', this.get_order());
         } else {
             this.table = table;
             var orders = this.get_order_list();

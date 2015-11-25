@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+import logging
 
 from openerp.osv import orm, fields
 from openerp import SUPERUSER_ID
 from openerp.addons import decimal_precision
 from openerp.exceptions import ValidationError
 from openerp.tools.translate import _
+
+
+_logger = logging.getLogger(__name__)
 
 
 class delivery_carrier(orm.Model):
@@ -99,25 +103,29 @@ class SaleOrder(orm.Model):
             if carrier_id:
                 order.delivery_set()
             else:
-                order._delivery_unset()                    
+                order._delivery_unset()
 
         return bool(carrier_id)
 
     def _get_delivery_methods(self, cr, uid, order, context=None):
         carrier_obj = self.pool.get('delivery.carrier')
-        delivery_ids = carrier_obj.search(cr, uid, [('website_published','=',True)], context=context)
+        delivery_ids = carrier_obj.search(cr, uid, [('website_published', '=', True)], context=context)
+        available_carrier_ids = []
         # Following loop is done to avoid displaying delivery methods who are not available for this order
         # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
         # done in delivery_set method of sale.py, from delivery module
-        for delivery_id in carrier_obj.browse(cr, SUPERUSER_ID, delivery_ids, context=dict(context, order_id=order.id)):
+        for carrier in carrier_obj.browse(cr, SUPERUSER_ID, delivery_ids, context=dict(context, order_id=order.id)):
+
             try:
-                if not delivery_id.available:
-                    delivery_ids.remove(delivery_id.id)
-            except ValidationError:
-            # RIM: hack to remove in master, because available field should not depend on a SOAP call to external shipping provider
-            # The validation error is used in backend to display errors in fedex config, but should fail silently in frontend
-                delivery_ids.remove(delivery_id.id)
-        return delivery_ids
+                _logger.debug("Checking availability of %s" % carrier.name)
+                if carrier.available:
+                    available_carrier_ids.append(carrier.id)
+            except ValidationError as e:
+                # RIM: hack to remove in master, because available field should not depend on a SOAP call to external shipping provider
+                # The validation error is used in backend to display errors in fedex config, but should fail silently in frontend
+                _logger.debug("%s removed from e-commerce carrier list. %s" % (carrier.name, e))
+
+        return available_carrier_ids
 
     def _get_errors(self, cr, uid, order, context=None):
         errors = super(SaleOrder, self)._get_errors(cr, uid, order, context=context)

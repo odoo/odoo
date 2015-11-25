@@ -51,7 +51,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route(website=True, auth="public")
     def web_login(self, redirect=None, *args, **kw):
         r = super(Website, self).web_login(redirect=redirect, *args, **kw)
-        if request.params['login_success'] and not redirect:
+        if not redirect and request.params['login_success']:
             if request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_user'):
                 redirect = '/web?' + request.httprequest.query_string
             else:

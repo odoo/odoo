@@ -6,8 +6,9 @@
     }
 
     .o_project_kanban_main {
-        .o-flex(1, 0, 0);
+        .o-flex(0, 0, auto);
         padding: @odoo-horizontal-padding;
+        width: 70%; // for IE11 overflow issue
 
         // give space for manage section at the bottom
         margin-bottom: @odoo-horizontal-padding/2 + 19px;

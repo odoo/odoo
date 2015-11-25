@@ -372,7 +372,12 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
-        cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
+        cr.execute("""
+            UPDATE ir_model
+               SET transient=%s
+             WHERE model=%s
+         RETURNING id
+        """, [self._transient, self._name])
         if not cr.rowcount:
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
             model_id = cr.fetchone()[0]
@@ -1607,14 +1612,14 @@ class BaseModel(object):
             'context': context,
         }
 
-    def get_access_action(self, cr, uid, id, context=None):
+    def get_access_action(self, cr, uid, ids, context=None):
         """ Return an action to open the document. This method is meant to be
         overridden in addons that want to give specific access to the document.
         By default it opens the formview of the document.
 
         :param int id: id of the document to open
         """
-        return self.get_formview_action(cr, uid, id, context=context)
+        return self.get_formview_action(cr, uid, ids[0], context=context)
 
     def _view_look_dom_arch(self, cr, uid, node, view_id, context=None):
         return self.pool['ir.ui.view'].postprocess_and_fields(
@@ -1631,7 +1636,9 @@ class BaseModel(object):
             return len(res)
         return res
 
-    @api.returns('self')
+    @api.returns('self',
+        upgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
+        downgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else value.ids)
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         """ search(args[, offset=0][, limit=None][, order=None][, count=False])
 
@@ -5381,6 +5388,11 @@ class BaseModel(object):
         """ Returns a new version of this recordset attached to the provided
         environment
 
+        .. warning::
+            The new environment will not benefit from the current
+            environment's data cache, so later data access may incur extra
+            delays while re-fetching from the database.
+
         :type env: :class:`~openerp.api.Environment`
         """
         return self._browse(env, self._ids)
@@ -5390,6 +5402,25 @@ class BaseModel(object):
 
         Returns a new version of this recordset attached to the provided
         user.
+
+        By default this returns a `SUPERUSER` recordset, where access control
+        and record rules are bypassed.
+
+        .. note::
+            Using `sudo` could cause data access to cross the boundaries of
+            record rules, possibly mixing records that are meant to be
+            isolated (e.g. records from different companies in multi-company
+            environments).
+
+            It may lead to un-intuitive results in methods which select one
+            record among many - for example getting the default company, or
+            selecting a Bill of Materials.
+
+        .. note::
+            Because the record rules and access control will have to be
+            re-evaluated, the new recordset will not benefit from the current
+            environment's data cache, so later data access may incur extra
+            delays while re-fetching from the database.
         """
         return self.with_env(self.env(user=user))
 

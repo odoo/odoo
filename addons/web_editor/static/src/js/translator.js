@@ -41,13 +41,14 @@ var RTE_Translate = rte.Class.extend({
             var key =  'translation:'+$el.data('oe-translation-id');
             if (this.__saved[key]) return true;
             this.__saved[key] = true;
+            var translation_content = this.getEscapedElement($el).html();
 
             return ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.translation',
                 method: 'write',
                 args: [
                     [+$el.data('oe-translation-id')],
-                    {value: $el.html(), state: 'translated'},
+                    {value: translation_content, state: 'translated'},
                     context || base.get_context()
                 ],
             });

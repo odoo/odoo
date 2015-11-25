@@ -403,6 +403,10 @@ var PlannerDialog = Widget.extend({
         ev.preventDefault();
         this.$el.modal('hide');
         this.$el.detach();
+    },
+    destroy: function() {
+        this.$el.modal('hide');
+        return this._super.apply(this, arguments);
     }
 });
 

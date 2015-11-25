@@ -33,18 +33,16 @@ class view(osv.osv):
 
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
-            try:
-                return self.pool['ir.model.data'].xmlid_to_object(
-                    cr, uid, view_id, raise_if_not_found=True, context=context
-                )
-            except:
-                # Try to fallback on key instead of xml_id
+            if 'website_id' in (context or {}):
+                domain = [('key', '=', view_id), '|', ('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
+                rec_id = self.search(cr, uid, domain, order='website_id', context=context)
+            else:
                 rec_id = self.search(cr, uid, [('key', '=', view_id)], context=context)
-                if rec_id:
-                    _logger.info("Could not find view with `xml_id' '%s', fallback on `key'" % (view_id))
-                    return self.browse(cr, uid, rec_id, context=context)[0]
-                else:
-                    raise
+            if rec_id:
+                return self.browse(cr, uid, rec_id, context=context)[0]
+            else:
+                return self.pool['ir.model.data'].xmlid_to_object(
+                    cr, uid, view_id, raise_if_not_found=True, context=context)
         elif isinstance(view_id, (int, long)):
             return self.browse(cr, uid, view_id, context=context)
 
@@ -128,7 +126,7 @@ class view(osv.osv):
                 qcontext.update(values)
 
             # in edit mode ir.ui.view will tag nodes
-            if not qcontext.get('translatable'):
+            if not qcontext.get('translatable') and not qcontext.get('rendering_bundle'):
                 if qcontext.get('editable'):
                     context = dict(context, inherit_branding=True)
                 elif request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):

@@ -738,9 +738,10 @@ var FieldPercentPie = common.AbstractField.extend({
                 .donut(true) 
                 .showLegend(false)
                 .showLabels(false)
-                .tooltips(false)
                 .color(['#7C7BAD','#DDD'])
                 .donutRatio(0.62);
+
+            chart.tooltip.enabled(false);
    
             d3.select(svg)
                 .datum([{'x': 'value', 'y': value}, {'x': 'complement', 'y': 100 - value}])
@@ -778,12 +779,13 @@ var FieldBarChart = common.AbstractField.extend({
                 .width(width)
                 .height(height)
                 .margin({top: 0, right: 0, bottom: 0, left: 0})
-                .tooltips(false)
                 .showValues(false)
                 .transition(350)
                 .showXAxis(false)
                 .showYAxis(false);
-   
+
+            chart.tooltip.enabled(false);
+
             d3.select(svg)
                 .datum([{key: 'values', values: value}])
                 .transition()
@@ -1655,7 +1657,8 @@ var AbstractFieldUpgrade = {
     },
     
     open_dialog: function() {
-        var message = _t('Upgrade to <a href="https://www.odoo.com/editions">Odoo Enterprise</a> to activate this feature.');
+        var message = $(QWeb.render('EnterpriseUpgrade'));
+
         var buttons = [
             {
                 text: _t("Upgrade now"),
@@ -1680,21 +1683,8 @@ var AbstractFieldUpgrade = {
     },
   
     confirm_upgrade: function() {
-        new Model("res.users").call("read", [session.uid, ["partner_id"]]).done(function(data) {
-            if(data.partner_id) {
-                new Model("res.partner").call("read", [data.partner_id[0], ["name", "lang", "country_id", "email", "phone"]]).done(function(data) {
-                    // Remove false value
-                    data.country_id = data.country_id[0];
-                    var sanitized_data = _.omit(data, function(value, key, object) {
-                        if (_.isUndefined(value) || ( (_.isBoolean(value)) && (value === false) ) || key === "id") {
-                            return true;
-                        }
-                    });
-                    // prepare to url (+urlencode)
-                    var url_args = $.param(sanitized_data);
-                    framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?" + url_args);
-                });
-            }
+        new Model("res.users").call("search_count", [[["share", "=", false]]]).then(function(data) {
+            framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + data);
         });
     },
     

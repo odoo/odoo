@@ -770,7 +770,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'state': fields.selection([('open', 'In Progress'), ('toclose','To Close'), ('closed', 'Terminated')],
                                   'Status', readonly=True, help='Choose wheter the contract is still valid or not',
                                   copy=False),
-        'notes': fields.text('Terms and Conditions', help='Write here all supplementary informations relative to this contract', copy=False),
+        'notes': fields.text('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False),
         'cost_generated': fields.float('Recurring Cost Amount', help="Costs paid at regular intervals, depending on the cost frequency. If the cost frequency is set to unique, the cost will be logged at the start date"),
         'cost_frequency': fields.selection([('no','No'), ('daily', 'Daily'), ('weekly','Weekly'), ('monthly','Monthly'), ('yearly','Yearly')], 'Recurring Cost Frequency', help='Frequency of the recuring cost', required=True),
         'generated_cost_ids': fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs'),

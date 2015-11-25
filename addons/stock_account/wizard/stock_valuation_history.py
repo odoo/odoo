@@ -133,8 +133,7 @@ class stock_history(osv.osv):
                 serial_number
                 FROM
                 ((SELECT
-                    stock_move.id::text || '-' || quant.id::text AS id,
-                    quant.id AS quant_id,
+                    stock_move.id AS id,
                     stock_move.id AS move_id,
                     dest_location.id AS location_id,
                     dest_location.company_id AS company_id,
@@ -148,19 +147,19 @@ class stock_history(osv.osv):
                     stock_production_lot.name AS serial_number
                 FROM
                     stock_quant as quant
-                LEFT JOIN
+                JOIN
                     stock_quant_move_rel ON stock_quant_move_rel.quant_id = quant.id
-                LEFT JOIN
+                JOIN
                     stock_move ON stock_move.id = stock_quant_move_rel.move_id
                 LEFT JOIN
                     stock_production_lot ON stock_production_lot.id = quant.lot_id
-                LEFT JOIN
+                JOIN
                     stock_location dest_location ON stock_move.location_dest_id = dest_location.id
-                LEFT JOIN
+                JOIN
                     stock_location source_location ON stock_move.location_id = source_location.id
-                LEFT JOIN
+                JOIN
                     product_product ON product_product.id = stock_move.product_id
-                LEFT JOIN
+                JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
                 WHERE quant.qty>0 AND stock_move.state = 'done' AND dest_location.usage in ('internal', 'transit')
                 AND (
@@ -168,10 +167,9 @@ class stock_history(osv.osv):
                     (source_location.company_id is not null and dest_location.company_id is null) or
                     source_location.company_id != dest_location.company_id or
                     source_location.usage not in ('internal', 'transit'))
-                ) UNION
+                ) UNION ALL
                 (SELECT
-                    '-' || stock_move.id::text || '-' || quant.id::text AS id,
-                    quant.id AS quant_id,
+                    (-1) * stock_move.id AS id,
                     stock_move.id AS move_id,
                     source_location.id AS location_id,
                     source_location.company_id AS company_id,
@@ -185,19 +183,19 @@ class stock_history(osv.osv):
                     stock_production_lot.name AS serial_number
                 FROM
                     stock_quant as quant
-                LEFT JOIN
+                JOIN
                     stock_quant_move_rel ON stock_quant_move_rel.quant_id = quant.id
-                LEFT JOIN
+                JOIN
                     stock_move ON stock_move.id = stock_quant_move_rel.move_id
                 LEFT JOIN
                     stock_production_lot ON stock_production_lot.id = quant.lot_id
-                LEFT JOIN
+                JOIN
                     stock_location source_location ON stock_move.location_id = source_location.id
-                LEFT JOIN
+                JOIN
                     stock_location dest_location ON stock_move.location_dest_id = dest_location.id
-                LEFT JOIN
+                JOIN
                     product_product ON product_product.id = stock_move.product_id
-                LEFT JOIN
+                JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
                 WHERE quant.qty>0 AND stock_move.state = 'done' AND source_location.usage in ('internal', 'transit')
                 AND (

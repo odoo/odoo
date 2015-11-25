@@ -705,11 +705,11 @@
     <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
       <t t-if="step&gt;40 and step&lt;50">
         <a href="/shop/payment"  class='text-success'>
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Payment</t><span class="chevron"></span>
+          Payment<span class="chevron"></span>
         </a>
       </t>
       <t t-if="not (step&gt;40 and step&lt;50)">
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Payment</t><span class="chevron"></span>
+          Payment<span class="chevron"></span>
       </t>
     </li>
   </xpath>
@@ -718,11 +718,11 @@
     <li t-att-class="(step==30 and 'text-primary') or 'text-muted'" id="step30">
       <t t-if="step&gt;30 and step&lt;50">
         <a href="/shop/extra_info"  class='text-success'>
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Extra Info</t><span class="chevron"></span>
+          Extra Info<span class="chevron"></span>
         </a>
       </t>
       <t t-if="not (step&gt;30 and step&lt;50)">
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Extra Info</t><span class="chevron"></span>
+          Extra Info<span class="chevron"></span>
       </t>
     </li>
   </xpath>
@@ -772,15 +772,14 @@
                   </div>
               </td>
               <td class="text-center" id="td-price" name="price">
-                  <del t-attf-class="text-danger #{compute_currency(line.product_id.lst_price) - line.price_reduce &lt; 1 and 'hidden' or ''}" style="text-decoration: line-through; white-space: nowrap;"
+                  <del t-attf-class="text-danger #{'' if (compute_currency(line.product_id.lst_price) - line.price_unit) &gt; 0.1 else 'hidden'}" style="text-decoration: line-through; white-space: nowrap;"
                     t-field="line.product_id.lst_price" t-field-options='{
                         "widget": "monetary",
                         "from_currency": "line.company_id.currency_id",
                         "display_currency": "website.currency_id"
                     }'/>
-                <span t-field="line.price_reduce" style="white-space: nowrap;" t-field-options='{
+                <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{
                      "widget": "monetary",
-                     "from_currency": "website_sale_order.pricelist_id.currency_id",
                      "display_currency": "website.currency_id"
                  }'/>
               </td>
@@ -1235,7 +1234,7 @@
 
 <template id="payment_sale_note" inherit_id="payment" name="Display Sale Note" customize_show="True" active="False">
   <xpath expr="//t[@id='acquirers_list']" position="before">
-    <t t-set="sale_note" t-value="website_sale_order.get_salenote(website_sale_order.partner_id.id)"/>
+    <t t-set="sale_note" t-value="website_sale_order.note"/>
     <t t-if="sale_note and sale_note != ''">
       <div class="oe_accept_cgv_button">
         <label><input type="checkbox" checked="checked" id="checkbox_cgv"/> <t t-esc="sale_note"/></label>

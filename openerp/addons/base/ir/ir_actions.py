@@ -8,6 +8,7 @@ import os
 import time
 import datetime
 import dateutil
+import pytz
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -80,6 +81,9 @@ class actions(osv.osv):
             'time': time,
             'datetime': datetime,
             'dateutil': dateutil,
+            # NOTE: only `timezone` function. Do not provide the whole `pytz` module as users
+            #       will have access to `pytz.os` and `pytz.sys` to do nasty things...
+            'timezone': pytz.timezone,
         }
 
 class ir_actions_report_xml(osv.osv):

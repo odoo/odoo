@@ -44,7 +44,7 @@
             <field name="name">crm.lead.tag.form</field>
             <field name="model">crm.lead.tag</field>
             <field name="arch" type="xml">
-                <form string="Sales Tags">
+                <form string="Lead Tags">
                     <group>
                         <field name="name"/>
                         <field name="color"/>
@@ -57,7 +57,7 @@
             <field name="name">crm.lead.tag.tree</field>
             <field name="model">crm.lead.tag</field>
             <field name="arch" type="xml">
-                <tree string="Sales Tags">
+                <tree string="Lead Tags">
                     <field name="name"/>
                     <field name="color"/>
                 </tree>
@@ -65,7 +65,7 @@
         </record>
 
         <record id="crm_lead_tag_action" model="ir.actions.act_window">
-            <field name="name">Sales Tags</field>
+            <field name="name">Lead Tags</field>
             <field name="res_model">crm.lead.tag</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_lead_tag_tree"/>
@@ -82,7 +82,7 @@
         </record>
 
         <menuitem action="crm_lead_tag_action"
-            id="menu_crm_lead_categ" name="Tags"
+            id="menu_crm_lead_categ" name="Lead Tags"
             parent="base.menu_crm_config_lead" sequence="1" groups="base.group_no_one"/>
 
         <!--
@@ -352,14 +352,7 @@
                     <field name="create_date"/>
                     <field name="country_id"/>
                     <separator />
-                    <filter string="Leads"
-                            name="type_lead"
-                            domain="[('type', '=', 'lead')]"/>
-                    <filter string="Opportunities"
-                            name="type_opportunity"
-                            domain="[('type', '=', 'opportunity')]"/>
-                    <separator/>
-                    <filter string="My Opportunities"
+                    <filter string="My Leads"
                             name="assigned_to_me"
                             domain="[('user_id','=',uid)]"
                             help="Leads that are assigned to me"/>
@@ -369,9 +362,6 @@
                     <separator />
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
-                    <separator />
-                    <filter string="Followup" name="activities"
-                        domain="[('date_action', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
                     <separator />
                     <filter string="Exclude Opt Out"
                             name='not_opt_out' domain="[('opt_out', '=', False)]"
@@ -383,9 +373,8 @@
                         <filter name="customer" string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Campaign" name="groupby_campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
                         <filter string="Source" name="groupby_source" domain="[]" context="{'group_by':'source_id'}"/>
-                        <filter string="Channel" name="groupby_channel" domain="[]" context="{'group_by':'medium_id'}"/>
+                        <filter string="Medium" name="groupby_channel" domain="[]" context="{'group_by':'medium_id'}"/>
                         <filter string="Creation Month" name="groupby_createmonth" domain="[]" context="{'group_by':'create_date'}"/>
-                        <filter string="Expected Closing" name="groupby_expectclosing" domain="[]" context="{'group_by':'date_deadline'}"/>
                     </group>
                 </search>
             </field>
@@ -538,7 +527,7 @@
 
                                 <group>
                                     <label for="contact_name"/>
-                                    <div>
+                                    <div class="o_row">
                                         <field name="contact_name"/>
                                         <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                     </div>
@@ -575,7 +564,7 @@
             <field name="name">Opportunities Tree</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" decoration-bf="message_needaction==True" decoration-muted="probability == 100" decoration-danger="date_deadline and (date_deadline &lt; current_date)">
+                <tree string="Opportunities" decoration-bf="message_needaction==True" decoration-muted="probability == 100" decoration-danger="date_action and (date_action &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date"/>
                     <field name="name" string="Opportunity"/>
@@ -650,7 +639,7 @@
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter name="stage" string="Stage" context="{'group_by':'stage_id'}"/>
                         <filter string="Campaign" domain="[]" context="{'group_by':'campaign_id'}"/>
-                        <filter string="Channel" domain="[]" context="{'group_by':'medium_id'}"/>
+                        <filter string="Medium" domain="[]" context="{'group_by':'medium_id'}"/>
                         <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>

@@ -222,7 +222,7 @@ class pos_config(osv.osv):
         'group_by' : True,
         'pricelist_id': _default_pricelist,
         'iface_invoicing': True,
-        'iface_print_auto': True,
+        'iface_print_auto': False,
         'iface_print_skip_screen': True,
         'stock_location_id': _get_default_location,
         'company_id': _get_default_company,
@@ -237,6 +237,9 @@ class pos_config(osv.osv):
         if p_type.default_location_src_id and p_type.default_location_src_id.usage == 'internal' and p_type.default_location_dest_id and p_type.default_location_dest_id.usage == 'customer':
             return {'value': {'stock_location_id': p_type.default_location_src_id.id}}
         return False
+
+    def onchange_iface_print_via_proxy(self, cr, uid, ids, print_via_proxy, context=None):
+        return {'value': {'iface_print_auto': print_via_proxy}}
 
     def set_active(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state' : 'active'}, context=context)
