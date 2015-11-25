@@ -6,6 +6,17 @@
             <field name="website_form_access">True</field>
             <field name="website_form_label">Create a lead</field>
         </record>
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>crm.lead</value>
+            <value eval="[
+                'contact_name',
+                'description',
+                'email_from',
+                'name',
+                'partner_name',
+                'phone',
+            ]"/>
+        </function>
     </data>
     <data noupdate="1">
         <record id="action_open_website" model="ir.actions.act_url">

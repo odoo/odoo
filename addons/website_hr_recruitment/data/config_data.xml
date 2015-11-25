@@ -23,5 +23,16 @@
             <field name="website_form_access">True</field>
             <field name="website_form_label">Apply for a Job</field>
         </record>
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>hr.applicant</value>
+            <value eval="[
+                'description',
+                'email_from',
+                'partner_name',
+                'partner_phone',
+                'job_id',
+                'department_id',
+            ]"/>
+        </function>
     </data>
 </openerp>
