@@ -89,7 +89,13 @@ class website_form_model_fields(models.Model):
         :param list(str) fields: list of fields to whitelist on the model
         :return: nothing of import
         """
-        # todo: check access rights yo
+        # postgres does *not* like ``in [EMPTY TUPLE]`` queries
+        if not fields: return False
+
+        # only allow users who can change the website structure
+        if not self.env['res.users'].has_group('base.group_website_designer'):
+            return False
+
         # the ORM only allows writing on custom fields and will trigger a
         # registry reload once that's happened. We want to be able to
         # whitelist non-custom fields and the registry reload absolutely
@@ -98,7 +104,7 @@ class website_form_model_fields(models.Model):
             "UPDATE ir_model_fields"
             " SET website_form_blacklisted=false"
             " WHERE model=%s AND name in %s", (model, tuple(fields)))
-        return False
+        return True
 
     website_form_blacklisted = fields.Boolean(
         'Blacklisted in web forms', default=True, select=True, # required=True,

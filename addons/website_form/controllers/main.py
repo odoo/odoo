@@ -15,7 +15,6 @@ class WebsiteForm(http.Controller):
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):
         model_record = request.env['ir.model'].search([('model', '=', model_name), ('website_form_access', '=', True)])
-
         if not model_record:
             return json.dumps(False)
 
