@@ -78,6 +78,13 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
      </record>
 
+    <record model="ir.rule" id="stock_quant_rule">
+        <field name="name">stock_quant multi-company</field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
     <record model="ir.rule" id="stock_inventory_line_comp_rule">
         <field name="name">Inventory Line multi-company</field>
         <field name="model_id" ref="model_stock_inventory_line"/>

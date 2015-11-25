@@ -126,7 +126,7 @@ class view(osv.osv):
                 qcontext.update(values)
 
             # in edit mode ir.ui.view will tag nodes
-            if not qcontext.get('translatable'):
+            if not qcontext.get('translatable') and not qcontext.get('rendering_bundle'):
                 if qcontext.get('editable'):
                     context = dict(context, inherit_branding=True)
                 elif request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):

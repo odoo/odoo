@@ -993,6 +993,7 @@ var SelectCreateDialog = ViewDialog.extend({
         }
         var $header = $('<div/>').addClass('o_modal_header').appendTo(this.$el);
         var $buttons = $('<div/>').addClass('o_search_options').appendTo($header);
+        var $pager = $('<div/>').addClass('o_pager').appendTo($header);
         this.searchview = new SearchView(this, this.dataset, false,  search_defaults, {$buttons: $buttons});
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
@@ -1012,7 +1013,7 @@ var SelectCreateDialog = ViewDialog.extend({
                     'import_enabled': false,
                     '$buttons': self.$footer,
                     'disable_editable_mode': true,
-                    '$pager': self.$('.o_popup_list_pager'),
+                    'pager': true,
                 }, self.options.list_view_options || {}));
             self.view_list.on('edit:before', self, function (e) {
                 e.cancel = true;
@@ -1020,6 +1021,7 @@ var SelectCreateDialog = ViewDialog.extend({
             self.view_list.popup = self;
             self.view_list.appendTo(self.$el).then(function() {
                 self.view_list.do_show();
+                self.view_list.render_pager($pager);
             }).then(function() {
                 if (self.options.initial_facet) {
                     self.searchview.query.reset([self.options.initial_facet], {
