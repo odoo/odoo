@@ -1,13 +1,6 @@
 odoo.define('website_sale.cart', function (require) {
 "use strict";
 
-function update_product_image(event_source, product_id) {
-    var $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
-    $img.attr("src", "/web/image/product.product/" + product_id + "/image");
-    $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
-        .data('oe-model', 'product.product').data('oe-id', product_id);
-}
-
 var core = require('web.core');
 var _t = core._t;
 
@@ -65,6 +58,13 @@ var base = require('web_editor.base');
 
 if(!$('#o_shop_collapse_category, .oe_website_sale').length) {
     return $.Deferred().reject("DOM doesn't contain '#o_shop_collapse_category, .oe_website_sale'");
+}
+
+function update_product_image(event_source, product_id) {
+    var $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
+    $img.attr("src", "/web/image/product.product/" + product_id + "/image");
+    $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
+        .data('oe-model', 'product.product').data('oe-id', product_id);
 }
 
 $('#o_shop_collapse_category').on('click', '.fa-chevron-right',function(){
