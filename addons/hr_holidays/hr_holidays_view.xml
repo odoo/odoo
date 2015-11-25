@@ -462,7 +462,7 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="context">{'search_default_department':1, 'search_default_approve':1}</field>
+            <field name="context">{'default_type':'add', 'search_default_department':1, 'search_default_approve':1}</field>
             <field name="domain">[('type','=','add')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>

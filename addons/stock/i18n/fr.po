@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-05 14:22+0000\n"
-"PO-Revision-Date: 2015-11-21 00:00+0000\n"
-"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
+"PO-Revision-Date: 2015-11-25 16:17+0000\n"
+"Last-Translator: Clo <clo@odoo.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,7 +158,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr ""
+msgstr "* Emplacement Fournisseur: emplacement virtuel représentant l'emplacement de la source pour les produits venant de votre fournisseur\n\n* Vue: emplacement virtuel utilisé pour créer des structures hiérarchiques pour votre entrepôt, agrégeant ses emplacements enfants; ne peut contenir directement des produits\n\n* Emplacement interne: emplacement physique dans vos entrepôts\n\n* Emplacement client: emplacement virtuel représentant l'emplacement de destination pour les produits envoyés à vos clients\n\n* Pertes d'inventaire: emplacement virtuel servant d'équivalent pour les opérations d'inventaire utilisées pour corriger les niveaux de stocks (inventaire physique)\n\n* Approvisionnement: emplacement virtuel servant d'équivalent temporaire pour les opération d'approvisionnement quand la source (fournisseur ou production) n'est pas encore connue. Cet emplacement doit être vide quand le planificateur d'approvisionnement a terminé de tourner.\n\n* Production: emplacement virtuel équivalent pour les opérations de production: cet emplacement utilise les matériaux bruts et produit des produits finis.\n\n* Emplacement de transit: Emplacement équivalent qui devrait être utilisé dans les opérations inter-sociétés ou inter-entrepôts."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -661,7 +661,7 @@ msgstr "Actif"
 #. module: stock
 #: selection:stock.config.settings,module_stock_calendar:0
 msgid "Adapt lead times using the suppliers' open days calendars (advanced)"
-msgstr "Adaptez les temps des leads en utilisant le calendrier des jours ouvrables du founisseur (fonction avancée)"
+msgstr "Adaptez les délais en utilisant le calendrier des jours ouvrables du fournisseur (fonction avancée)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -699,7 +699,7 @@ msgstr "Avancé"
 #. module: stock
 #: selection:stock.config.settings,group_stock_adv_location:0
 msgid "Advanced routing of products using rules"
-msgstr "Routage avancé des produits utilisants des règles"
+msgstr "Routage avancé des articles utilisants des règles"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -720,7 +720,7 @@ msgstr "Toutes les opérations"
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
 #: model:ir.ui.menu,name:stock.all_picking
 msgid "All Transfers"
-msgstr "Tous les Transferts"
+msgstr "Tous les transferts"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -752,7 +752,7 @@ msgstr "Tous les mouvements de stock ont été annulés pour cet approvisionneme
 #. module: stock
 #: selection:stock.config.settings,module_claim_from_delivery:0
 msgid "Allow claims on deliveries"
-msgstr "Autorise les réclamations sur les livraisons"
+msgstr "Permet les réclamations sur les livraisons"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_entire_packs
@@ -762,7 +762,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.config.settings,module_stock_dropshipping:0
 msgid "Allow suppliers to deliver directly to your customers"
-msgstr "Permettre aux fournisseurs de livrer directement à vos clients"
+msgstr "Permet aux fournisseurs de livrer directement à vos clients"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_procurement_jit
@@ -2451,7 +2451,7 @@ msgstr "S'il s'agit d'un quant négatif, ceci indique le mouvement de stock qui 
 msgid ""
 "If this is checked only, it will suppose you want to create new Serial "
 "Numbers / Lots, so you can provide them in a text field. "
-msgstr ""
+msgstr "Si uniquement coché, cela supposera que vous voulez créer un nouveau numéro de série / lots, afin que vous puissiez les donner dans un champ texte."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_use_existing_lots
@@ -2459,7 +2459,7 @@ msgid ""
 "If this is checked, you will be able to choose the Serial Number / Lots. You"
 " can also decide to not put lots in this picking type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
-msgstr ""
+msgstr "Si coché, vous serez capable de choisir le numéro de série / lots. Vous pouvez décider de ne pas mettre des lots dans le type de prélèvement. Cela veut dire que cela créera un stock sans lot ou sans restrictions sur le lot pris."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_backorder_id
@@ -2474,7 +2474,7 @@ msgid ""
 "If you are a developer <strong>you can use our\n"
 "                        API</strong> to load data automatically through\n"
 "                        scripts: take a look at our"
-msgstr ""
+msgstr "Si vous êtes un développeur <strong>vous pouvez utiliser notre\nAPI </strong> pour charger des données automatiquement via des\nscripts: jetez un oeil à notre"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
