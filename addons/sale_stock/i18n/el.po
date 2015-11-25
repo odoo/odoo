@@ -3,13 +3,14 @@
 # * sale_stock
 # 
 # Translators:
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-11-02 20:49+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-22 00:07+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr ""
+msgstr "Δυνατότητα προσθήκης κόστους για μεταφορικά"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
@@ -36,7 +37,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Allows you to tag sales order lines with properties."
-msgstr ""
+msgstr "Σας επιτρέπει να επισημάνετε γραμμές παραγγελίας πώλησης με ιδιότητες."
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
@@ -56,12 +57,12 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Παράδωση όλων το προϊόντων ταυτόχρονα"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Παράδοση κάθε προϊόντος μόλις είναι διαθέσιμο"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -71,7 +72,7 @@ msgstr "Παράδοση"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
 msgid "Delivery Orders"
-msgstr "Παραγγελίες Παράδοσης"
+msgstr "Εντολές Παράδοσης"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
@@ -81,7 +82,7 @@ msgstr ""
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "Ενεργοποίηση Διαδρομής στις Γραμμές Παραγγελίας Πώλησης"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
@@ -102,12 +103,12 @@ msgstr ""
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
+msgstr "Οι Διεθνείς Εμπορικοί Όροι είναι μία σειρά προκαθορισμένων εμπορικών όρων που χρησιμοποιούνται στις διεθνείς συναλλαγές."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "Διαδρομές Απογραφής"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice
@@ -117,7 +118,7 @@ msgstr "Τιμολόγιο"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Γραμμή Τιμολογίου"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
@@ -125,7 +126,7 @@ msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
-msgstr ""
+msgstr "Περιθώριο σφάλματος για ημερομηνίες που συμφωνήθηκαν με πελάτες. Τα προϊόντα θα προγραμματιστούν για προμήθεια και αποστολή πολλές μέρες πριν την πραγματική ημερομηνία που είχε υποσχεθεί, ώστε να αντιμετωπιστούν τυχόν μη αναμενόμενες καθυστερήσεις στην εφοδιαστική αλυσίδα."
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
@@ -135,7 +136,7 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "No shipping costs on sales orders"
-msgstr ""
+msgstr "Χωρίς έξοδα αποστολής στις Εντολές Πώλησης"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:141
@@ -158,7 +159,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:152
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Μειώθηκε η ποσότητα παραγγελίας!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -168,7 +169,7 @@ msgstr "Συσκευασία"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
 msgid "Picking associated to this sale"
-msgstr ""
+msgstr "Παραλαβή σχετιζόμενη με αυτή την πώληση"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_order
@@ -188,22 +189,22 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
 msgid "Route"
-msgstr ""
+msgstr "Διαδρομή"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sale Order"
-msgstr ""
+msgstr "Εντολή Πώλησης"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "Γραμμές Εντολής Πώλησης"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr "Παραγγελία Πώλησης"
+msgstr "Εντολή Πώλησης"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -213,7 +214,7 @@ msgstr "Γραμμή Εντολής Πώλησης"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Στατιστικά Πωλήσεων Παραγγελιών"
+msgstr "Στατιστικά Εντολών Πωλήσεων"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
@@ -223,7 +224,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "Επιλέξιμο στις Γραμμές Παραγγελίας Πώλησης"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
@@ -244,7 +245,7 @@ msgstr "Αποστολή"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
-msgstr ""
+msgstr "Πληροφορίες αποστολής"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
@@ -298,4 +299,4 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"

@@ -655,6 +655,10 @@ var AbstractManyField = common.AbstractField.extend({
                 if (record.to_create) {
                     command_list.push(COMMANDS.create(values));
                 } else {
+                    if (index === -1) {
+                        // because the UPDATE below does not imply LINK_TO
+                        command_list.push(COMMANDS.link_to(id));
+                    }
                     command_list.push(COMMANDS.update(record.id, values));
                 }
                 return;

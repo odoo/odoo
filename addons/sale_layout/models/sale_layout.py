@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import api
 from openerp.osv import osv, fields
 from itertools import groupby
 
@@ -113,3 +114,15 @@ class SaleOrderLine(osv.Model):
         if line.categ_sequence:
             invoice_vals['categ_sequence'] = line.categ_sequence
         return invoice_vals
+
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        """
+        Prepare the dict of values to create the new invoice line for a sales order line.
+
+        :param qty: float quantity to invoice
+        """
+        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        if self.sale_layout_cat_id:
+            res['sale_layout_cat_id'] = self.sale_layout_cat_id.id
+        return res

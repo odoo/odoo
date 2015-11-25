@@ -502,6 +502,7 @@
             <field name="arch" type="xml">
                 <search string="Search Invoice">
                     <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                    <field name="journal_id" />
                     <filter name="draft" string="Draft" domain="[('state','in',('draft', 'proforma'))]"/>
                     <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]" groups="account.group_proforma_invoices"/>
                     <filter name="invoices" string="Invoices" domain="[('state','in',['open','paid']),('type','in',('out_invoice','in_invoice'))]"/>

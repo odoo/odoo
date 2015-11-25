@@ -3,12 +3,13 @@
 # * website_quote
 # 
 # Translators:
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:19+0000\n"
-"PO-Revision-Date: 2015-11-10 00:07+0000\n"
+"PO-Revision-Date: 2015-11-22 00:07+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -105,14 +106,14 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'Πρόχειρο' or ''}"
 
 #. module: website_quote
 #: model:mail.template,subject:website_quote.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Προσφορά' or 'Παραγγελία'} (Ref ${object.name or 'n/a' })"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -138,7 +139,7 @@ msgid ""
 ":\n"
 "                                this content will appear on the quotation only if this\n"
 "                                product is put on the quote."
-msgstr ":\nαυτό το περιεχόμενο αυτό θα εμφανιστεί στην προσφορά μόνο εάν αυτό\nτο προϊόν περιλαμβάνεται στην προσφορά."
+msgstr ":\nαυτό το περιεχόμενο αυτό θα εμφανιστεί στην προσφορά μόνο εάν αυτό το προϊόν περιλαμβάνεται στην προσφορά."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -251,7 +252,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "<span>Suggested Products</span>"
-msgstr ""
+msgstr "<span>Προτεινόμενα Προϊόντα</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -266,7 +267,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "<strong>Expiration Date:</strong>"
-msgstr ""
+msgstr "<strong>Ημερομηνία Λήξης:</strong>"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -307,7 +308,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "<strong>Subtotal:</strong>"
-msgstr ""
+msgstr " <strong>Μερικό σύνολο:</strong>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -327,7 +328,7 @@ msgstr ""
 msgid ""
 "<strong>This offer expired!</strong><br/>\n"
 "                                  Contact us for new quote."
-msgstr ""
+msgstr "<strong>Αυτή η προσφορά έληξε! </strong><br/>\nΕπικοινωνήστε μαζί μας για νέα προσφορά."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -339,7 +340,7 @@ msgstr ""
 msgid ""
 "<strong>This quotation has been canceled.</strong> Contact us to get a new "
 "quote."
-msgstr ""
+msgstr "<strong>Αυτή η προσφορά έχει ακυρωθεί.</strong> Επικοινωνήστε μαζί μας για να πάρετε μια νέα προσφορά."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -359,7 +360,7 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "A Valuable Product"
-msgstr ""
+msgstr "Ένα Πολύτιμο Προϊόν"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -609,7 +610,7 @@ msgstr "Έκπτωση (%)"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_display_name
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_display_name
 msgid "Display Name"
-msgstr "Όνομα εμφάνισης"
+msgstr "Εμφάνιση Ονόματος"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -624,7 +625,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Edit Quote"
-msgstr ""
+msgstr "Επεξεργασία Σημειώματος"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -917,7 +918,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "My Account"
-msgstr ""
+msgstr "Ο Λογαριασμός μου"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1087,7 +1088,7 @@ msgstr ""
 #: code:addons/website_quote/controllers/main.py:64
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Πληρωμή & Επιβεβαίωση"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_require_payment
@@ -1098,12 +1099,12 @@ msgstr "Πληρωμή"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Payment Method:"
-msgstr ""
+msgstr "Τρόπος Πληρωμής:"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Συναλλαγή Πληρωμής"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -1288,7 +1289,7 @@ msgstr "Εντολή Πώλησης"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
 msgid "Sale Order Reference"
-msgstr "Αναφορά Παραγγελίας Πώλησης"
+msgstr "Αναφορά Εντολή Πώλησης"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_template
@@ -1300,7 +1301,7 @@ msgstr "Πρότυπο Προσφοράς Πώλησης"
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order
 msgid "Sales Order"
-msgstr "Παραγγελία Πώλησης"
+msgstr "Εντολή Πώλησης"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_line
@@ -1337,7 +1338,7 @@ msgstr "Ένδειξη ασφαλείας"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Send by Email"
-msgstr "Στάλθηκε με Email"
+msgstr "Αποστολή με Email"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
@@ -1362,7 +1363,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Sign &amp; Confirm"
-msgstr ""
+msgstr "Εγγραφή &amp; Επιβεβαίωση"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
@@ -1574,7 +1575,7 @@ msgstr "Ροές Εργασίας"
 #: code:addons/website_quote/controllers/main.py:137
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "Δεν μπορείτε να προσθέσετε επιλογές σε μια επιβεβαιωμένη εντολή."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1614,7 +1615,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your feedback....."
-msgstr ""
+msgstr "Το σχόλιό σας....."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1634,7 +1635,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your transaction is waiting confirmation."
-msgstr ""
+msgstr "Η συναλλαγή σας αναμένει επιβεβαίωση."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation

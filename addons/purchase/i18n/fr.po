@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-11-11 17:15+0000\n"
+"PO-Revision-Date: 2015-11-21 00:00+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -174,12 +174,12 @@ msgstr "Nb. de commandes d'achat"
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} Commande (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name|safe} Commande (Ref ${object.name or 'n/d' })"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name} Commande (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} Commande (Ref ${object.name or 'n/d' })"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -448,7 +448,7 @@ msgstr "Cliquez ici pour enregistrer une facture fournisseur."
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
 msgid "Click to create a draft invoice."
-msgstr "Cliquez pour créer une facture brouillon"
+msgstr "Cliquez pour créer une facture brouillon."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -459,17 +459,17 @@ msgstr "Cliquez pour créer un devis qui sera converti en un bon de commande d'a
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "Click to create a request for quotation."
-msgstr "Créer la demande de prix"
+msgstr "Cliquer pour créer la demande de prix"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid "Click to define a new product."
-msgstr "Cliquer pour définir un nouveau produit."
+msgstr "Cliquer pour définir un nouvel article."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Click to record a vendor bill related to this purchase."
-msgstr "Cliquez sur pour enregistrer une facture fournisseur liés à cet achat."
+msgstr "Cliquez pour enregistrer une facture fournisseur liée à cet achat."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -525,7 +525,7 @@ msgstr "Contrôle"
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_method
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_method
 msgid "Control Purchase Bills"
-msgstr "Controle des factures d'achats"
+msgstr "Contrôle des factures d'achats"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_costing_method
@@ -621,7 +621,7 @@ msgstr "Double validation du montant"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr "Bon de commande brouillon"
+msgstr "Bon de commande en brouillon"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -910,14 +910,14 @@ msgstr "Nouveau message"
 #. module: purchase
 #: selection:purchase.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr "Pas de variantes sur les produits"
+msgstr "Pas de variantes sur les articles"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:771
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
-msgstr "Pas de fournisseur associé au produit %s. Veuillez en ajouter un pour fixer cet approvisionnement. "
+msgstr "Pas de fournisseur associé à l'article %s. Veuillez en ajouter un pour corriger cet approvisionnement. "
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
