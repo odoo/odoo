@@ -82,7 +82,7 @@ def report_configuration():
 
 def rm_pid_file():
     config = openerp.tools.config
-    if not openerp.evented and config['pidfile']:
+    if openerp.boot_pid == os.getpid() and config['pidfile']:
         try:
             os.unlink(config['pidfile'])
         except OSError:
@@ -95,6 +95,7 @@ def setup_pid_file():
     """
     config = openerp.tools.config
     if not openerp.evented and config['pidfile']:
+        openerp.boot_pid = os.getpid()
         with open(config['pidfile'], 'w') as fd:
             pidtext = "%d" % (os.getpid())
             fd.write(pidtext)
