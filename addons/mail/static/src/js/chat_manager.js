@@ -39,6 +39,13 @@ function add_message (data, options) {
         messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
         _.each(msg.channel_ids, function (channel_id) {
             var channel = chat_manager.get_channel(channel_id);
+
+            if (channel) {
+                add_to_cache(msg, []);
+                if (options.domain && options.domain !== []) {
+                    add_to_cache(msg, options.domain);
+                }
+            }
             if (channel && channel.hidden) {
                 channel.hidden = false;
                 chat_manager.bus.trigger('new_channel', channel);
@@ -61,6 +68,8 @@ function add_message (data, options) {
         if (!options.silent) {
             chat_manager.bus.trigger('new_message', msg);
         }
+    } else if (options.domain && options.domain !== []) {
+        add_to_cache(msg, options.domain);
     }
     return msg;
 }
@@ -207,7 +216,7 @@ function make_channel (data, options) {
         cache: {'[]': {
             all_history_loaded: false,
             loaded: false,
-            message_ids: [],
+            messages: [],
         }},
     };
     if (channel.type === "channel" && data.public !== "private") {
@@ -229,17 +238,39 @@ function get_channel_cache (channel, domain) {
         channel.cache[stringified_domain] = {
             all_history_loaded: false,
             loaded: false,
-            message_ids: [],
+            messages: [],
         };
     }
     return channel.cache[stringified_domain];
+}
+
+function invalidate_caches(channel_ids) {
+    _.each(channel_ids, function (channel_id) {
+        var channel = chat_manager.get_channel(channel_id);
+        if (channel) {
+            channel.cache = { '[]': channel.cache['[]']};
+        }
+    });
+}
+
+function add_to_cache(message, domain) {
+    _.each(message.channel_ids, function (channel_id) {
+        var channel = chat_manager.get_channel(channel_id);
+        if (channel) {
+            var channel_cache = get_channel_cache(channel, domain);
+            var index = _.sortedIndex(channel_cache.messages, message, 'id');
+            if (channel_cache.messages[index] !== message) {
+                channel_cache.messages.splice(index, 0, message);
+            }
+        }
+    });
 }
 
 function remove_message_from_channel (channel_id, message) {
     message.channel_ids = _.without(message.channel_ids, channel_id);
     var channel = _.findWhere(channels, { id: channel_id });
     _.each(channel.cache, function (cache) {
-        cache.message_ids = _.without(cache.message_ids, message.id);
+        cache.messages = _.without(cache.messages, message);
     });
 }
 
@@ -256,28 +287,21 @@ function fetch_from_channel (channel, options) {
         domain = new data.CompoundDomain(domain, options.domain || []);
     }
     if (options.load_more) {
-        var min_message_id = _.chain(messages)
-            .filter(function (msg) { return _.contains(cache.message_ids, msg.id); })
-            .pluck("id")
-            .min()
-            .value();
-
+        var min_message_id = cache.messages[0].id;
         domain = new data.CompoundDomain([['id', '<', min_message_id]], domain);
     }
 
     return MessageModel.call('message_fetch', [domain], {limit: LIMIT}).then(function (msgs) {
-        cache.message_ids = _.uniq(cache.message_ids.concat(_.pluck(msgs, 'id')));
         if (!cache.all_history_loaded) {
             cache.all_history_loaded =  msgs.length < LIMIT;
         }
         cache.loaded = true;
 
         _.each(msgs, function (msg) {
-            add_message(msg, {channel_id: channel.id, silent: true});
+            add_message(msg, {channel_id: channel.id, silent: true, domain: options.domain});
         });
-        return _.filter(messages, function (m) {
-            return _.contains(cache.message_ids, m.id);
-        });
+        var channel_cache = get_channel_cache(channel, options.domain || []);
+        return channel_cache.messages;
     });
 }
 
@@ -335,6 +359,7 @@ function on_notification (notification) {
 
 function on_needaction_notification (message) {
     message = add_message(message, { channel_id: 'channel_inbox', show_notification: true} );
+    invalidate_caches(message.channel_ids);
     needaction_counter++;
     _.each(message.channel_ids, function (channel_id) {
         var channel = chat_manager.get_channel(channel_id);
@@ -360,6 +385,7 @@ function on_channel_notification (message) {
             }
         });
         add_message(message, { show_notification: true });
+        invalidate_caches(message.channel_ids);
     });
 }
 
@@ -382,6 +408,7 @@ function on_toggle_star_notification (data) {
     _.each(data.message_ids, function (msg_id) {
         var message = _.findWhere(messages, { id: msg_id });
         if (message) {
+            invalidate_caches(message.channel_ids);
             message.is_starred = data.starred;
             if (!message.is_starred) {
                 remove_message_from_channel("channel_starred", message);
@@ -395,6 +422,7 @@ function on_mark_as_read_notification (data) {
     _.each(data.message_ids, function (msg_id) {
         var message = _.findWhere(messages, { id: msg_id });
         if (message) {
+            invalidate_caches(message.channel_ids);
             remove_message_from_channel("channel_inbox", message);
             chat_manager.bus.trigger('update_message', message);
         }
@@ -419,6 +447,7 @@ function on_mark_as_unread_notification (data) {
     _.each(data.message_ids, function (message_id) {
         var message = _.findWhere(messages, { id: message_id });
         if (message) {
+            invalidate_caches(message.channel_ids);
             add_channel_to_message(message, 'channel_inbox');
         }
     });
@@ -460,9 +489,7 @@ var chat_manager = {
             var channel = this.get_channel(options.channel_id);
             var channel_cache = get_channel_cache(channel, options.domain);
             if (channel_cache.loaded) {
-                return $.when(_.filter(messages, function (message) {
-                    return _.contains(message.channel_ids, options.channel_id);
-                }));
+                return $.when(channel_cache.messages);
             } else {
                 return fetch_from_channel(channel, {domain: options.domain});
             }
