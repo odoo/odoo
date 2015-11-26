@@ -7,6 +7,7 @@ import hashlib
 from lxml import etree
 import math
 import pytz
+import threading
 import urllib2
 import urlparse
 
@@ -16,7 +17,6 @@ from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
-
 
 ADDRESS_FORMAT_LAYOUTS = {
     '%(city)s %(state_code)s\n%(zip)s': """
@@ -305,6 +305,9 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def _get_default_image(self, partner_type, is_company, parent_id):
+        if getattr(threading.currentThread(), 'testing', False):
+            return False
+
         colorize, img_path, image = False, False, False
 
         if partner_type in ['contact', 'other'] and parent_id:
