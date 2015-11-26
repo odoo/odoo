@@ -92,6 +92,9 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_class
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = _Cleaner(**kwargs)
+        if clean._is_javascript_scheme:
+            cleaner_pattern = r'(?:javascript:|jscript:|livescript:|vbscript:|data:[^(?:image/.+;base64)]+|about:|mocha:)'
+            clean._is_javascript_scheme = re.compile(cleaner_pattern, re.I).search
         cleaned = cleaner.clean_html(src)
         # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
         cleaned = cleaned.replace('%24', '$')
