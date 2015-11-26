@@ -2,7 +2,6 @@ odoo.define('mail.ChatThread', function (require) {
 "use strict";
 
 var core = require('web.core');
-var time = require('web.time');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -49,7 +48,6 @@ var Thread = Widget.extend({
             display_order: ORDER.ASC,
             display_needactions: true,
             display_stars: true,
-            default_username: _t('Anonymous'),
             display_document_link: true,
             display_avatar: true,
             squash_close_messages: true,
@@ -67,7 +65,7 @@ var Thread = Widget.extend({
         // one are both comments wrote by the same author at the same minute
         var prev_msg;
         _.each(msgs, function (msg) {
-            if (!prev_msg || (Math.abs(moment(msg.date).diff(prev_msg.date)) > 60000) ||
+            if (!prev_msg || (Math.abs(msg.date.diff(prev_msg.date)) > 60000) ||
                 prev_msg.message_type !== 'comment' || msg.message_type !== 'comment' ||
                 (prev_msg.author_id[0] !== msg.author_id[0])) {
                 msg.display_author = true;
@@ -113,30 +111,18 @@ var Thread = Widget.extend({
         var msg = _.extend({}, message);
 
         // Set the date in the browser timezone
-        msg.date = moment(time.str_to_datetime(msg.date)).format('YYYY-MM-DD HH:mm:ss');
+        var date = msg.date.format('YYYY-MM-DD');
 
-        // Compute displayed author name or email
-        if ((!msg.author_id || !msg.author_id[0]) && msg.email_from) {
-            msg.mailto = msg.email_from;
+        if (date === moment().format('YYYY-MM-DD')) {
+           msg.day = _t("Today");
+           msg.hour = msg.date.fromNow();
+        } else if (date === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
+           msg.day = _t("Yesterday");
+           msg.hour = msg.date.format('hh:mm');
         } else {
-            msg.displayed_author = msg.author_id && msg.author_id[1] ||
-                                   msg.email_from ||
-                                   this.options.default_username;
+            msg.day = msg.date.format('LL');
+            msg.hour = msg.date.format('hh:mm');
         }
-
-        // Compute the avatar_url
-        if (msg.author_id && msg.author_id[0]) {
-            msg.avatar_src = "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
-        } else if (msg.message_type === 'email') {
-            msg.avatar_src = "/mail/static/src/img/email_icon.png";
-        } else {
-            msg.avatar_src = "/mail/static/src/img/smiley/avatar.jpg";
-        }
-
-        // Compute url of attachments
-        _.each(msg.attachment_ids, function(a) {
-            a.url = '/web/content/' + a.id + '?download=true';
-        });
 
         return msg;
     },

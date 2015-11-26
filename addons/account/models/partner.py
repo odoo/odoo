@@ -232,7 +232,7 @@ class ResPartner(models.Model):
     def _credit_debit_get(self):
         tables, where_clause, where_params = self.env['account.move.line']._query_get()
         where_params = [tuple(self.ids)] + where_params
-        self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.debit-l.credit)
+        self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.amount_residual)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)
                       LEFT JOIN account_account_type act ON (a.user_type_id=act.id)

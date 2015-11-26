@@ -305,6 +305,7 @@ class WebRequest(object):
             # case, the request cursor is unusable. Rollback transaction to create a new one.
             if self._cr:
                 self._cr.rollback()
+                self.env.clear()
             result = self.endpoint(*a, **kw)
             if isinstance(result, Response) and result.is_qweb:
                 # Early rendering of lazy responses to benefit from @service_model.check protection

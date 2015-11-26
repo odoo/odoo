@@ -361,7 +361,7 @@
                     <filter string="My Orders" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
                     <separator/>
                     <filter string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
-                    <filter string="Sales" name="sales" domain="[('state','in',('progress','Done'))]"/>
+                    <filter string="Sales" name="sales" domain="[('state','in',('sale','done'))]"/>
                     <separator/>
                     <filter string="To Invoice" domain="[('invoice_status','=','to invoice')]"/>
                     <filter string="Upselling" domain="[('invoice_status','=','upselling')]"/>
