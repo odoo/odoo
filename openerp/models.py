@@ -3216,7 +3216,8 @@ class BaseModel(object):
                 if fcolumn._prefetch
                 if not fcolumn.groups or self.user_has_groups(fcolumn.groups)
             }
-        elif self._columns[field.name]._multi:
+        elif self._columns[field.name]._multi and\
+                self._context.get('prefetch_fields', True):
             # prefetch all function fields with the same value for 'multi'
             multi = self._columns[field.name]._multi
             fnames = {fname
