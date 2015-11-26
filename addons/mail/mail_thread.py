@@ -1861,7 +1861,7 @@ class mail_thread(osv.AbstractModel):
                 if msg_ids:
                     notification_obj = self.pool.get('mail.notification')
                     notification_obj._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
-                    message = message_obj.browse(cr, uid, msg_ids[0], context=context)
+                    message = message_obj.browse(cr, SUPERUSER_ID, msg_ids[0], context=context)
                     if message.parent_id:
                         partner_ids_to_parent_notify = set(partner_ids).difference(partner.id for partner in message.parent_id.notified_partner_ids)
                         for partner_id in partner_ids_to_parent_notify:
