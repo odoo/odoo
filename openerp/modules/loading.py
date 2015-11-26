@@ -453,7 +453,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         t0 = time.time()
         t0_sql = openerp.sql_db.sql_counter
         if openerp.tools.config['test_enable']:
-            cr.execute("SELECT name FROM ir_module_module WHERE state='installed'")
+            if update_module:
+                cr.execute("SELECT name FROM ir_module_module WHERE state='installed' and name = ANY(%s)", (processed_modules,))
+            else:
+                cr.execute("SELECT name FROM ir_module_module WHERE state='installed'")
             for module_name in cr.fetchall():
                 report.record_result(openerp.modules.module.run_unit_tests(module_name[0], cr.dbname, position=runs_post_install))
             _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
