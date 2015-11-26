@@ -6,7 +6,7 @@ from openerp.tools.translate import _
 
 class website_payment(http.Controller):
     @http.route(['/my/payment_method'], type='http', auth="user", website=True)
-    def payment_method(self):
+    def payment_method(self, **post):
         acquirers = list(request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)]))
         partner = request.env.user.partner_id
         payment_methods = partner.payment_method_ids
@@ -14,6 +14,8 @@ class website_payment(http.Controller):
             'pms': payment_methods,
             'acquirers': acquirers
         }
+        if post.get('error'):
+            values['error_message'] = [post.get('error')]
         for acquirer in acquirers:
             acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': '/my/payment_method', 'json': False, 'bootstrap_formatting': True})[0]
         return request.website.render("website_payment.pay_methods", values)
