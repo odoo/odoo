@@ -586,8 +586,6 @@
                     <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>
-                    <filter string="Lost" name="lost"
-                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.fold', '=', True)]"/>
                     <separator/>
                     <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"
@@ -602,14 +600,11 @@
                                      ('date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
                             ]"/>
                     <filter string="Overdue Activities" name="overdue"
-                            domain="[('date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <separator/>
-                    <filter string="Follow-up" name="follow_up"
-                            domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d') )]"
+                            domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all opportunities for which the next action date is today or before"/>
                     <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
-                    <filter string="Archived" domain="[('active', '=', False)]"/>
+                    <filter string="Lost" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" context="{'group_by':'team_id'}"/>
