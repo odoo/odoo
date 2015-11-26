@@ -77,7 +77,7 @@ var Thread = Widget.extend({
 
         this.$el.html(QWeb.render('mail.ChatThread', {
             messages: msgs,
-            options: _.extend({}, this.options, options),
+            options: options,
             ORDER: ORDER,
         }));
     },

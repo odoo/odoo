@@ -422,6 +422,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             display_needactions: this.channel.display_needactions,
             messages_separator_position: this.messages_separator_position,
             squash_close_messages: this.channel.type !== 'static',
+            display_empty_channel: !messages.length && !this.domain.length,
+            display_no_match: !messages.length && this.domain.length,
+            display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox",
         };
     },
 

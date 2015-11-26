@@ -489,10 +489,10 @@ function on_mark_as_unread_notification (data) {
 }
 
 function on_chat_session_notification (chat_session) {
-    if ((chat_session.channel_type === "channel") && (chat_session.public === "private") && (chat_session.state === "open")) {
+    if ((chat_session.channel_type === "channel") && (chat_session.state === "open")) {
         add_channel(chat_session, {autoswitch: false});
-        if (!chat_session.is_minimized) {
-            web_client.do_notify(_t("Private Channel"), _t("You have been invited to: ") + chat_session.name);
+        if (!chat_session.is_minimized && chat_session.info !== 'creation') {
+            web_client.do_notify(_t("Invitation"), _t("You have been invited to: ") + chat_session.name);
         }
     }
     // partner specific change (open a detached window for example)
