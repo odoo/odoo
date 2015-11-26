@@ -1245,7 +1245,7 @@ class purchase_order_line(osv.osv):
 
         price = price_unit
         if price_unit is False or price_unit is None:
-            # - determine price_unit and taxes_id
+           # - determine price_unit and taxes_id
             if pricelist_id:
                 date_order_str = datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT)
                 price = product_pricelist.price_get(cr, uid, [pricelist_id],

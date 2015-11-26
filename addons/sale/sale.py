@@ -274,7 +274,7 @@ class sale_order(osv.osv):
         sale_orders = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for s in sale_orders:
-            if s['state'] in ['draft', 'cancel']:
+            if s['state'] in ['draft', 'cancel', 'sent']:
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it before!'))
