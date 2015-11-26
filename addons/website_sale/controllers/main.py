@@ -803,6 +803,8 @@ class website_sale(http.Controller):
                     message += tx.acquirer_id.post_msg
             elif state == 'error':
                 message = '<p>%s</p>' % _('An error occurred during the transaction.')
+            else:
+                message = None
             validation = tx.acquirer_id.validation
 
         return {
