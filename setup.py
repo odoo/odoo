@@ -103,6 +103,7 @@ def py2exe_options():
                         'vobject',
                         'win32service', 'win32serviceutil',
                         'xlrd',
+                        'xlsxwriter',
                         'xlwt',
                         'xml', 'xml.dom',
                         'yaml',
@@ -164,6 +165,7 @@ setup(
         'vatnumber',
         'vobject',
         'werkzeug',
+        'xlsxwriter',
         'xlwt',
     ],
     extras_require={
