@@ -6,6 +6,7 @@ var core = require('web.core');
 var data = require('web.data');
 var Model = require('web.Model');
 var session = require('web.session');
+var time = require('web.time');
 var web_client = require('web.web_client');
 
 var _t = core._t;
@@ -80,7 +81,7 @@ function make_message (data) {
         author_id: data.author_id,
         body_short: data.body_short || "",
         body: data.body || "",
-        date: data.date,
+        date: moment(time.str_to_datetime(data.date)),
         message_type: data.message_type,
         subtype_description: data.subtype_description,
         is_note: data.is_note,
@@ -136,6 +137,29 @@ function make_message (data) {
             msg.origin_name = channel.name;
         }
     }
+
+    // Compute displayed author name or email
+    if ((!msg.author_id || !msg.author_id[0]) && msg.email_from) {
+        msg.mailto = msg.email_from;
+    } else {
+        msg.displayed_author = msg.author_id && msg.author_id[1] ||
+                               msg.email_from || _t('Anonymous');
+    }
+
+    // Compute the avatar_url
+    if (msg.author_id && msg.author_id[0]) {
+        msg.avatar_src = "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
+    } else if (msg.message_type === 'email') {
+        msg.avatar_src = "/mail/static/src/img/email_icon.png";
+    } else {
+        msg.avatar_src = "/mail/static/src/img/smiley/avatar.jpg";
+    }
+
+    // Compute url of attachments
+    _.each(msg.attachment_ids, function(a) {
+        a.url = '/web/content/' + a.id + '?download=true';
+    });
+
     return msg;
 }
 

@@ -30,11 +30,11 @@
         <t t-if="options.messages_separator_position == 'top'" t-call="mail.MessagesSeparator"/>
         <t t-set="current_day" t-value="0"/>
         <t t-foreach="messages" t-as="message">
-            <div t-if="current_day != message.date.split(' ')[0]" class="o_thread_date_separator">
+            <div t-if="current_day != message.day" class="o_thread_date_separator">
                 <span class="o_thread_date">
-                    <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LL')"/>
+                    <t t-esc="message.day"/>
                 </span>
-                <t t-set="current_day" t-value="message.date.split(' ')[0]"/>
+                <t t-set="current_day" t-value="message.day"/>
             </div>
 
             <t t-call="mail.ChatThread.Message"/>
@@ -56,8 +56,8 @@
                         t-att-src="message.avatar_src"
                         class="o_thread_message_avatar"/>
                 </t>
-                <span t-if="!message.display_author" t-att-title="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LLL')" class="o_thread_message_side_date">
-                    <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm')"/>
+                <span t-if="!message.display_author" t-att-title="message.date" class="o_thread_message_side_date">
+                    <t t-esc="message.date.format('hh:mm')"/>
                 </span>
                 <i t-if="!message.display_author &amp;&amp; options.display_stars &amp;&amp; message.message_type != 'notification'"
                     t-att-class="'fa o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
@@ -83,8 +83,8 @@
                         <t t-esc="message.displayed_author"/>
                     </strong>
 
-                    <small t-att-title="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LLL')">
-                        - <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm A')"/>
+                    <small t-att-title="message.date">
+                        - <t t-esc="message.hour"/>
                     </small>
                     <t t-if="message.model &amp;&amp; (message.model != 'mail.channel') &amp;&amp; options.display_document_link">
                         on <a class="o_mail_redirect" href="#" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id"><t t-esc="message.record_name"/></a>
