@@ -667,8 +667,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.order = options.order;
             this.product = options.product;
             this.price   = options.product.price;
-            this.quantity = 1;
-            this.quantityStr = '1';
+            this.set_quantity(1);
             this.discount = 0;
             this.discountStr = '0';
             this.type = 'unit';
