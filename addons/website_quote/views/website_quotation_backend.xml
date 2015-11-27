@@ -62,7 +62,6 @@
                                <div id="number_of_days">
                                    <field name="number_of_days" class="oe_inline"/> days
                                </div>
-                               <field name="require_payment" widget="radio"/>
                             </group>
                         </group>
                         <notebook>
@@ -117,6 +116,12 @@
                                 <field name="website_description" invisible="1"/>
                               </tree>
                             </field>
+                        </page>
+                        <page string="Other Settings">
+                            <group>
+                                <field name="require_payment" widget="radio"/>
+                                <field name="mail_template_id"/>
+                            </group>
                         </page>
                         </notebook>
                         <field name="website_description" invisible="1"/>
