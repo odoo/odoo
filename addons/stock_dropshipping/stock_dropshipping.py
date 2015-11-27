@@ -7,6 +7,7 @@ from openerp.exceptions import UserError
 class sale_order_line(models.Model):
     _inherit = 'sale.order.line'
 
+    # TODO @api.model as called from onchange
     @api.multi
     def _check_routing(self, product, warehouse):
         """ skip stock verification if the route goes from supplier to customer
@@ -14,12 +15,11 @@ class sale_order_line(models.Model):
         """
         res = super(sale_order_line, self)._check_routing(product, warehouse)
         if not res:
-            for line in self:
-                for pull_rule in line.route_id.pull_ids:
+            for route in product.route_ids:
+                for pull_rule in route.pull_ids:
                     if (pull_rule.picking_type_id.default_location_src_id.usage == 'supplier' and
                             pull_rule.picking_type_id.default_location_dest_id.usage == 'customer'):
-                        res = True
-                        break
+                        return True
         return res
 
 
