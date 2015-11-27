@@ -1582,7 +1582,7 @@ class MailThread(models.AbstractModel):
     @api.returns('self', lambda value: value.id)
     def message_post(self, body='', subject=None, message_type='notification',
                      subtype=None, parent_id=False, attachments=None,
-                     content_subtype='html', **kwargs):
+                     content_subtype='html', references=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
             :param int thread_id: thread ID to post into, or list with one ID;
@@ -1712,6 +1712,9 @@ class MailThread(models.AbstractModel):
 
         # Post the message
         new_message = MailMessage.create(values)
+
+        if references:
+            new_message.write({'reference_ids': map(lambda x: (0, 0, x), references)})
 
         # Post-process: subscribe author, update message_last_post
         # Note: the message_last_post mechanism is no longer used.  This

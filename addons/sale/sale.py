@@ -293,7 +293,7 @@ class SaleOrder(models.Model):
         inv_obj = self.env['account.invoice']
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         invoices = {}
-
+        references = {}
         for order in self:
             group_key = order.id if grouped else (order.partner_id.id, order.currency_id.id)
             for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
@@ -302,6 +302,7 @@ class SaleOrder(models.Model):
                 if group_key not in invoices:
                     inv_data = order._prepare_invoice()
                     invoice = inv_obj.create(inv_data)
+                    references[invoice.id] = [order.id]
                     invoices[group_key] = invoice
                 elif group_key in invoices and order.name not in invoices[group_key].origin.split(', '):
                     invoices[group_key].write({'origin': invoices[group_key].origin + ', ' + order.name})
@@ -310,6 +311,9 @@ class SaleOrder(models.Model):
                 elif line.qty_to_invoice < 0 and final:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
 
+            if references:
+                if order.id not in references[invoices[group_key].id]:
+                    references[invoice.id].append(order.id)
         for invoice in invoices.values():
             # If invoice is negative, do a refund invoice instead
             if invoice.amount_untaxed < 0:
@@ -319,6 +323,7 @@ class SaleOrder(models.Model):
             # Necessary to force computation of taxes. In account_invoice, they are triggered
             # by onchanges, which are not triggered when doing a create.
             invoice.compute_taxes()
+            invoice.message_post(references=map(lambda x: {'res_id': x, 'model': self._name}, references[invoice.id]))
 
         return [inv.id for inv in invoices.values()]
 
@@ -559,6 +564,8 @@ class SaleOrderLine(models.Model):
             vals = line._prepare_order_line_procurement(group_id=line.order_id.procurement_group_id.id)
             vals['product_qty'] = line.product_uom_qty - qty
             new_proc = self.env["procurement.order"].create(vals)
+            references = {'res_id': line.order_id.id, 'model': 'sale.order'}
+            new_proc.message_post(references=[references])
             new_procs += new_proc
         new_procs.run()
         return new_procs

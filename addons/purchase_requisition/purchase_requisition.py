@@ -200,6 +200,8 @@ class purchase_requisition(osv.osv):
             purchase_id = purchase_order.create(cr, uid, self._prepare_purchase_order(cr, uid, requisition, supplier, context=context), context=context)
             purchase_order.message_post(cr, uid, [purchase_id], body=_("RFQ created"), context=context)
             res[requisition.id] = purchase_id
+            references = {'model':self._model , 'res_id': requisition.id }
+            purchase_order.message_post(cr, uid, [purchase_id], references=[references], context=context)
             for line in requisition.line_ids:
                 purchase_order_line.create(cr, uid, self._prepare_purchase_order_line(cr, uid, requisition, line, purchase_id, supplier, context=context), context=context)
         return res

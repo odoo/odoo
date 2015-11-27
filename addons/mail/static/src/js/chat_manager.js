@@ -91,9 +91,11 @@ function make_message (data) {
         email_from: data.email_from,
         record_name: data.record_name,
         tracking_value_ids: data.tracking_value_ids,
+        reference_ids: data.reference_ids,
         channel_ids: data.channel_ids,
         model: data.model,
         res_id: data.res_id,
+        doc_name: data.doc_name
     };
 
     _.each(_.keys(emoji_substitutions), function (key) {
