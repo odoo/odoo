@@ -99,7 +99,7 @@ def exec_pg_environ():
     See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
     """
     env = os.environ.copy()
-    if openerp.tools.config['db_host']:
+        if openerp.tools.config['db_host']:
         env['PGHOST'] = openerp.tools.config['db_host']
     if openerp.tools.config['db_port']:
         env['PGPORT'] = str(openerp.tools.config['db_port'])
