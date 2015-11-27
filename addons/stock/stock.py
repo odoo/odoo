@@ -1922,6 +1922,113 @@ class StockMove(models.Model):
                         move.move_dest_id.write(propagated_changes_dict)
         return super(StockMove, self).write(vals)
 
+# on_change="onchange_quantity(product_id, product_uom_qty, product_uom)"
+    # def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom):
+    @api.onchange('product_id', 'product_uom_qty', 'product_uom')
+    def onchange_quantity(self):
+        """ On change of product quantity finds UoM
+        """
+        warning = {}
+        if (not self.product_id) or (self.product_uom_qty <= 0.0):
+            self.product_qty = 0.0
+            return
+
+        # Warn if the quantity was decreased
+        if self.ids:
+            for move in self.read(['product_qty']):
+                if self.product_uom_qty < move['product_qty']:
+                    warning.update({
+                        'title': _('Information'),
+                        'message': _("By changing this quantity here, you accept the "
+                                "new quantity as complete: Odoo will not "
+                                "automatically generate a back order.")})
+                break
+        return {'warning': warning}
+
+# on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"
+    # def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False, partner_id=False):
+    @api.onchange('product_id', 'location_id', 'location_dest_id', 'partner_id')
+    def onchange_product_id(self):
+        """ On change of product id, if finds UoM, quantity
+        """
+        if not self.product_id:
+            return {'domain': {'product_uom': []}}
+        user = self.env.user
+        lang = user and user.lang or False
+        if self.partner_id:
+            addr_rec = self.partner_id
+            if addr_rec:
+                lang = addr_rec and addr_rec.lang or False
+        self.with_context(lang=lang)
+        product = self.env['product.product'].browse(self.product_id.ids)[0]
+        self.name = product.partner_ref
+        self.product_uom = product.uom_id.id
+        self.product_uom_qty = 1.00
+        if self.location_id:
+            self.location_id = self.location_id
+        if self.location_dest_id:
+            self.location_dest_id = self.location_dest_id
+        res = {'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}}
+        return res
+
+    @api.model
+    def _prepare_picking_assign(self, move):
+        """ Prepares a new picking for this move as it could not be assigned to
+        another picking. This method is designed to be inherited.
+        """
+        values = {
+            'origin': move.origin,
+            'company_id': move.company_id and move.company_id.id or False,
+            'move_type': move.group_id and move.group_id.move_type or 'direct',
+            'partner_id': move.partner_id.id or False,
+            'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
+            'location_id': move.location_id.id,
+            'location_dest_id': move.location_dest_id.id,
+        }
+        return values
+
+    @api.multi
+    def _picking_assign(self):
+        """Try to assign the moves to an existing picking
+        that has not been reserved yet and has the same
+        procurement group, locations and picking type  (moves should already have them identical)
+         Otherwise, create a new picking to assign them to.
+        """
+        move = self[0]
+        pick_obj = self.env["stock.picking"]
+        picks = pick_obj.search([
+                ('group_id', '=', move.group_id.id),
+                ('location_id', '=', move.location_id.id),
+                ('location_dest_id', '=', move.location_dest_id.id),
+                ('picking_type_id', '=', move.picking_type_id.id),
+                ('state', 'in', ['draft', 'confirmed', 'waiting'])], limit=1)
+        if picks:
+            pick = picks[0]
+        else:
+            values = self._prepare_picking_assign(move)
+            pick = pick_obj.create(values)
+        return self.write({'picking_id': pick.id})
+
+    @api.onchange('date', 'date_expected')
+    def onchange_date(self):
+        """ On change of Scheduled Date gives a Move date.
+        @param date_expected: Scheduled Date
+        @param date: Move Date
+        @return: Move Date
+        """
+        if not self.date_expected:
+            self.date_expected = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.date = self.date_expected
+
+    @api.model
+    def attribute_price(self, move):
+        """
+            Attribute price to move, important in inter-company moves or receipts with only one partner
+        """
+        if not move.price_unit:
+            price = move.product_id.standard_price
+            move.write({'price_unit': price})
+
 class StockInventory(models.Model):
     _name = "stock.inventory"
     _description = "Inventory"
