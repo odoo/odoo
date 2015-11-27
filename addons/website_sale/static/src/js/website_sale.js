@@ -61,10 +61,11 @@ $('.oe_website_sale').each(function () {
         var line_id = parseInt($input.data('line-id'),10);
         var product_id = parseInt($input.data('product-id'),10);
         var product_ids = [product_id];
+        if (isNaN(value)) value = 0;
         $dom_optional.each(function(){
+            $(this).find('.js_quantity').text(value);
             product_ids.push($(this).find('span[data-product-id]').data('product-id'));
         });
-        if (isNaN(value)) value = 0;
         $input.data('update_change', true);
         openerp.jsonRpc("/shop/get_unit_price", 'call', {
             'product_ids': product_ids,
