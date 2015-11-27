@@ -431,17 +431,19 @@ class ir_translation(osv.osv):
         if len(langs):
             fields = [f.get('name') for f in translatable_fields]
             record = trans_model.read(cr, uid, [id], fields, context={ 'lang': main_lang })[0]
+            external_id = trans_model.get_external_id(cr, uid, [id])[id]
+            module = external_id.split('.')[0]  # if no xml_id, empty string
             for lg in langs:
                 for f in translatable_fields:
                     # Check if record exists, else create it (at once)
-                    sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value)
-                        SELECT %s, %s, %s, 'model', %s, %s WHERE NOT EXISTS
-                        (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s AND type='model');
-                        UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s AND type='model';
+                    sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value, module)
+                        SELECT %s, %s, %s, 'model', %s, %s, %s WHERE NOT EXISTS
+                        (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s AND type='model' AND module=%s);
+                        UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s AND type='model' AND module=%s;
                         """
                     src = record[f['name']] or None
                     name = "%s,%s" % (f['model'], f['name'])
-                    cr.execute(sql, (lg, src , name, f['id'], src, lg, name, f['id'], src, lg, name, id))
+                    cr.execute(sql, (lg, src, name, f['id'], src, module, lg, name, f['id'], module, src, lg, name, id, module))
 
         action = {
             'name': 'Translate',
