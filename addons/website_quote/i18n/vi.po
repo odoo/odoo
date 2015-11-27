@@ -198,7 +198,7 @@ msgstr ""
 #: view:website:website_quote.optional_products
 #: view:website:website_quote.pricing
 msgid "% discount"
-msgstr ""
+msgstr "% chiết khấu"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -212,6 +212,8 @@ msgid ""
 ",\n"
 "                                  for an amount of"
 msgstr ""
+",\n"
+"                                  cho số tiền"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -382,7 +384,8 @@ msgid ""
 "                        <div class=\"col-md-5\">\n"
 "                            <img src=\"/website_quote/static/src/img/partner_icon_02.png\" class=\"img\">\n"
 "                        </div>\n"
-"                    </div>\n"
+"                    </div>\n"                 this content will appear on the quotation only if this\n"
+"                                product is put on the quote."
 "                </section>\n"
 "\n"
 "                <section data-snippet-id=\"text-block\">\n"
@@ -688,12 +691,12 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.quotation_toolbar
 msgid "Accept"
-msgstr ""
+msgstr "Chấp thuận"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Accept Order"
-msgstr ""
+msgstr "Chấp thuận Đặt hàng"
 
 #. module: website_quote
 #: model:product.template,name:website_quote.product_product_quote_3_product_template
@@ -705,17 +708,17 @@ msgstr ""
 #. module: website_quote
 #: field:sale.order,amount_undiscounted:0
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Tổng trước Chiết khấu"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Ask Changes"
-msgstr ""
+msgstr "Yêu cầu thay đổi"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Bill To:"
-msgstr ""
+msgstr "Xuất hóa đơn đến:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -730,35 +733,35 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Contact us"
-msgstr ""
+msgstr "Liên hệ"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Contact us for new quote."
-msgstr ""
+msgstr "Liên hệ để lấy báo giá mới."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Contact us to get a new quote."
-msgstr ""
+msgstr "Liên hệ với chúng tôi để lấy báo giá mới."
 
 #. module: website_quote
 #: field:sale.order.option,create_uid:0 field:sale.quote.line,create_uid:0
 #: field:sale.quote.option,create_uid:0 field:sale.quote.template,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Tạo bởi"
 
 #. module: website_quote
 #: field:sale.order.option,create_date:0 field:sale.quote.line,create_date:0
 #: field:sale.quote.option,create_date:0
 #: field:sale.quote.template,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Customer:"
-msgstr ""
+msgstr "Khách hàng:"
 
 #. module: website_quote
 #: field:sale.order,website_description:0 field:sale.order.option,name:0
@@ -772,12 +775,12 @@ msgstr "Mô tả"
 #. module: website_quote
 #: field:product.template,quote_description:0
 msgid "Description for the quote"
-msgstr ""
+msgstr "Mô tả cho báo giá"
 
 #. module: website_quote
 #: field:product.template,website_description:0
 msgid "Description for the website"
-msgstr ""
+msgstr "Mô tả cho website"
 
 #. module: website_quote
 #: field:sale.order.option,discount:0 field:sale.quote.line,discount:0
@@ -788,34 +791,34 @@ msgstr "Chiết khấu (%)"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Draw your signature"
-msgstr ""
+msgstr "\"Vẽ\" Chữ ký của bạn"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Edit Template"
-msgstr ""
+msgstr "Sửa mẫu"
 
 #. module: website_quote
 #: field:sale.order,validity_date:0
 msgid "Expiry Date"
-msgstr ""
+msgstr "Ngày hết hạn"
 
 #. module: website_quote
 #: view:website:sale.report_saleorder_document
 msgid "Expiry Date:"
-msgstr ""
+msgstr "Ngày hết hạn:"
 
 #. module: website_quote
 #: view:website:website_quote.quotation_toolbar
 msgid "Feedback"
-msgstr ""
+msgstr "Phản hồi"
 
 #. module: website_quote
 #: model:product.template,name:website_quote.product_product_quote_1_product_template
 #: model:product.template,name:website_quote.product_template_quote_1
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_1
 msgid "Functional Training"
-msgstr ""
+msgstr "Tập huấn chức năng"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -838,6 +841,7 @@ msgid ""
 "I agree that by signing this proposal, I\n"
 "                                  accept it on the behalf of"
 msgstr ""
+"Bằng việc ký vào báo giá này, tôi chấp thuận các điều khoản của nó thay mặt cho"
 
 #. module: website_quote
 #: field:sale.order.option,id:0 field:sale.quote.line,id:0
@@ -848,24 +852,24 @@ msgstr "ID"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Incl. tax)"
-msgstr ""
+msgstr "bao gồm thuế)"
 
 #. module: website_quote
 #: view:website:website_quote.navigation_menu
 msgid "Introduction"
-msgstr ""
+msgstr "Đầu trang"
 
 #. module: website_quote
 #: field:sale.order.option,write_uid:0 field:sale.quote.line,write_uid:0
 #: field:sale.quote.option,write_uid:0 field:sale.quote.template,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: website_quote
 #: field:sale.order.option,write_date:0 field:sale.quote.line,write_date:0
 #: field:sale.quote.option,write_date:0 field:sale.quote.template,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Cập nhật lần cuối vào"
 
 #. module: website_quote
 #: model:product.template,description_sale:website_quote.product_product_quote_1_product_template
@@ -905,17 +909,17 @@ msgstr ""
 #. module: website_quote
 #: field:sale.quote.option,website_description:0
 msgid "Option Description"
-msgstr ""
+msgstr "Mô tả tùy chọn"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
 msgid "Optional Product:"
-msgstr ""
+msgstr "Sản phẩm tùy chọn:"
 
 #. module: website_quote
 #: view:sale.order:website_quote.sale_order_form_quote
 msgid "Optional Products & Services"
-msgstr ""
+msgstr "Sản phẩm & Dịch vụ tùy chọn:"
 
 #. module: website_quote
 #: field:sale.order,options:0 field:sale.order.line,option_line_id:0
@@ -932,7 +936,7 @@ msgstr "Options"
 #: code:addons/website_quote/controllers/main.py:69
 #, python-format
 msgid "Order signed by %s"
-msgstr ""
+msgstr "Đơn đặt hàng ký bởi"
 
 #. module: website_quote
 #: view:website:website_quote.optional_products
@@ -943,7 +947,7 @@ msgstr "Giá"
 #. module: website_quote
 #: view:website:website_quote.pricing
 msgid "Pricing"
-msgstr ""
+msgstr "Chi tiết Giá"
 
 #. module: website_quote
 #: field:sale.order.option,product_id:0 field:sale.quote.line,product_id:0
@@ -954,12 +958,12 @@ msgstr "Sản phẩm"
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_product_template
 msgid "Product Template"
-msgstr "Product Template"
+msgstr "Mẫu sản phẩm"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
 msgid "Product:"
-msgstr ""
+msgstr "Sản phẩm:"
 
 #. module: website_quote
 #: view:website:website_quote.optional_products
@@ -976,39 +980,39 @@ msgstr "Số lượng"
 #. module: website_quote
 #: field:sale.quote.template,name:0
 msgid "Quotation Template"
-msgstr ""
+msgstr "Mẫu Báo giá"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_line
 msgid "Quotation Template Lines"
-msgstr ""
+msgstr "Dòng trong Mẫu Báo giá"
 
 #. module: website_quote
 #: field:sale.quote.line,quote_id:0 field:sale.quote.option,template_id:0
 msgid "Quotation Template Reference"
-msgstr ""
+msgstr "Tham chiếu Mẫu Báo giá"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
 #: model:ir.ui.menu,name:website_quote.menu_sale_quote_template
 msgid "Quotation Templates"
-msgstr ""
+msgstr "Mẫu Báo giá"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:47
 #, python-format
 msgid "Quotation viewed by customer"
-msgstr ""
+msgstr "Báo giá được xem bởi khách hàng"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Quote Date:"
-msgstr ""
+msgstr "Ngày Báo giá:"
 
 #. module: website_quote
 #: field:sale.quote.template,number_of_days:0
 msgid "Quote Duration"
-msgstr ""
+msgstr "Hạn Báo giá"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
@@ -1029,12 +1033,12 @@ msgstr "Chi tiết Mẫu Báo giá"
 #: view:website:website_quote.quotation_toolbar
 #: view:website:website_quote.so_quotation
 msgid "Reject"
-msgstr ""
+msgstr "Từ chối"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Reject This Quote"
-msgstr ""
+msgstr "Từ chối Báo giá này"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_option
@@ -1050,7 +1054,7 @@ msgstr "Tham chiếu đơn hàng"
 #: model:ir.model,name:website_quote.model_sale_quote_template
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Sale Quotation Template"
-msgstr ""
+msgstr "Mẫu báo giá"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_tree
@@ -1060,7 +1064,7 @@ msgstr "Mẫu báo giá"
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order
 msgid "Sales Order"
-msgstr "Đơn hàng"
+msgstr "Đơn đặt hàng"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_line
@@ -1086,7 +1090,7 @@ msgstr "Gửi"
 #. module: website_quote
 #: view:website:website_quote.chatter
 msgid "Send us a note..."
-msgstr ""
+msgstr "Gửi ghi chú / yêu cầu cho chúng tôi..."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1157,12 +1161,12 @@ msgstr "Điều khoản và Điều kiện..."
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This offer expired!"
-msgstr "Offer này đã hết hạn!"
+msgstr "Chào hàng này đã hết hạn!"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This offer expires in"
-msgstr "Offer này sẽ hết hạn trong"
+msgstr "Chào hàng này sẽ hết hạn trong"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1170,21 +1174,22 @@ msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                          and do not hesitate to"
 msgstr ""
+"Đơn đặt hàng này đã được thẩm định. Cám ơn sự tin tưởng của bạn và đừng ngần ngại"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This quotation has been canceled."
-msgstr ""
+msgstr "Báo giá này đã bị hủy bỏ."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This quotation has been rejected."
-msgstr ""
+msgstr "Báo giá này đã bị từ chối."
 
 #. module: website_quote
 #: view:website:website_quote.so_template
 msgid "Titles with style"
-msgstr ""
+msgstr "Tiêu đề có phong cách"
 
 #. module: website_quote
 #: view:website:website_quote.pricing
@@ -1211,7 +1216,7 @@ msgstr "Cập nhật Báo giá"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Validate Order"
-msgstr ""
+msgstr "Xác nhận báo giá"
 
 #. module: website_quote
 #: view:sale.order:website_quote.sale_order_form_quote
@@ -1221,7 +1226,7 @@ msgstr "Xem Báo giá"
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Website Description"
-msgstr ""
+msgstr "Mô tả Website"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1256,12 +1261,12 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your feedback....."
-msgstr ""
+msgstr "Phản hồi của bạn..."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your message has been successfully sent!"
-msgstr ""
+msgstr "Thông điệp của bạn đã được gửi thành công!"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -1313,6 +1318,7 @@ msgid ""
 "                                will appear on all quotations using this\n"
 "                                template."
 msgstr ""
+"nội dung này sẽ xuất hiện trên tất cả báo giá sử dụng mẫu này."
 
 #. module: website_quote
 #: field:sale.order.option,line_id:0
