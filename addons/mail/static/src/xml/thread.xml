@@ -9,8 +9,12 @@
             <t t-if="options.display_load_more &amp;&amp; options.display_order == ORDER.DESC"
                t-call="mail.ChatThread.LoadMore"/>
         </t>
-        <t t-if="!messages.length &amp;&amp; options.display_help">
+        <t t-if="options.display_empty_channel">
             <t t-call="mail.EmptyChannel" />
+        </t>
+        <t t-if="options.display_no_match">
+            <div class="o_thread_title">No matches found</div>
+            <div>No message matches your search. Try to change your search filters.</div>
         </t>
     </t>
 
@@ -107,7 +111,7 @@
                     </t>
                     <t t-call="mail.ChatThread.MessageTracking"/>
                 </t>
-                <p t-if="message.subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
+                <p t-if="options.display_subject &amp;&amp; message.subject &amp;&amp; message.message_type != 'notification'" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
                 <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
                     <t t-if="message.body_short">
                         <div class="o_mail_body_short">
@@ -115,7 +119,6 @@
                         </div>
                         <div class="o_mail_body_long">
                             <t t-raw="message.body"/>
-                            <span class="oe_mail_expand"><a href="#">... read less</a></span>
                         </div>
                     </t>
                     <t t-if="! message.body_short">

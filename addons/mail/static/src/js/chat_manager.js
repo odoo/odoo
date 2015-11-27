@@ -24,6 +24,7 @@ var channel_defs = {};
 var emojis = [];
 var emoji_substitutions = {};
 var needaction_counter = 0;
+var mention_partner_suggestions = [];
 var discuss_ids = {};
 
 // Message and channel manipulation helpers
@@ -488,10 +489,10 @@ function on_mark_as_unread_notification (data) {
 }
 
 function on_chat_session_notification (chat_session) {
-    if ((chat_session.channel_type === "channel") && (chat_session.public === "private") && (chat_session.state === "open")) {
+    if ((chat_session.channel_type === "channel") && (chat_session.state === "open")) {
         add_channel(chat_session, {autoswitch: false});
-        if (!chat_session.is_minimized) {
-            web_client.do_notify(_t("Private Channel"), _t("You have been invited to: ") + chat_session.name);
+        if (!chat_session.is_minimized && chat_session.info !== 'creation') {
+            web_client.do_notify(_t("Invitation"), _t("You have been invited to: ") + chat_session.name);
         }
     }
     // partner specific change (open a detached window for example)
@@ -584,6 +585,27 @@ var chat_manager = {
         return get_channel_cache(channel, domain).all_history_loaded;
     },
 
+    get_mention_partner_suggestions: function (channel) {
+        if (!channel) {
+            return mention_partner_suggestions;
+        }
+        if (!channel.members_deferred) {
+            channel.members_deferred = ChannelModel
+                .call("channel_fetch_listeners", [channel.uuid])
+                .then(function (members) {
+                    var suggestions = [];
+                    _.each(mention_partner_suggestions, function (partners) {
+                        suggestions.push(_.filter(partners, function (partner) {
+                            return !_.findWhere(members, { id: partner.id });
+                        }));
+                    });
+
+                    return [members].concat(suggestions);
+                });
+        }
+        return channel.members_deferred;
+    },
+
     get_emojis: function() {
         return emojis;
     },
@@ -671,6 +693,7 @@ function init () {
             _.each(channels, add_channel);
         });
         needaction_counter = result.needaction_inbox_counter;
+        mention_partner_suggestions = result.mention_partner_suggestions;
     });
 
     var load_emojis = session.rpc("/mail/chat_init").then(function (result) {

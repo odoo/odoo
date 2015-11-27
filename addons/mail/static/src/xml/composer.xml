@@ -2,14 +2,13 @@
 <templates xml:space="preserve">
 
      <div t-name="mail.ChatComposer" class="o_chat_composer">
-        <div class="o_composer_mentioned_partners"/>
         <div class="o_composer_attachments_list"/>
         <div class="o_composer">
-            <textarea class="o_composer_input" placeholder="Write something"/>
+            <textarea class="o_composer_input" placeholder="Write something..."/>
             <div class="btn-group o_composer_buttons">
-                <button class="btn btn-sm btn-primary o_composer_button_send" type="button">Send</button> 
                 <button class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
                 <button class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
+                <button class="btn btn-sm btn-primary o_composer_button_send" type="button">Send</button> 
             </div>
         </div>
 
@@ -33,43 +32,21 @@
         </t>
     </t>
 
-    <t t-name="mail.ChatComposer.MentionPartnerSuggestions">
+    <t t-name="mail.ChatComposer.MentionSuggestions">
         <ul class="dropdown-menu" aria-labelledby="dropdownMailMentionMenu">
             <t t-set="show_divider" t-value="false"/>
             <t t-foreach="suggestions" t-as="group">
-                <t t-foreach="group" t-as="partner">
-                    <li t-if="show_divider &amp;&amp; (partner_index === 0)" class="divider"/>
+                <t t-foreach="group" t-as="suggestion">
+                    <li t-if="show_divider &amp;&amp; (suggestion_index === 0)" class="divider"/>
                     <t t-set="show_divider" t-value="true"/>
-                    <li class="o_mention_proposition" t-att-data-id="partner.id">
+                    <li class="o_mention_proposition" t-att-data-id="suggestion.id">
                         <a href="#">
-                            <t t-esc="partner.name"/> <t t-if="partner.email">(<t t-esc="partner.email"/>)</t>
+                            <t t-esc="suggestion.name"/> <t t-if="suggestion.email">(<t t-esc="suggestion.email"/>)</t>
                         </a>
                     </li>
                 </t>
             </t>
         </ul>
-    </t>
-
-    <t t-name="mail.ChatComposer.MentionChannelSuggestions">
-        <ul class="dropdown-menu" aria-labelledby="dropdownMailMentionMenu">
-            <t t-set="show_divider" t-value="false"/>
-            <t t-foreach="suggestions" t-as="group">
-                <t t-foreach="group" t-as="channel">
-                    <li t-if="show_divider &amp;&amp; (channel_index === 0)" class="divider"/>
-                    <t t-set="show_divider" t-value="true"/>
-                    <li class="o_mention_proposition" t-att-data-id="channel.id">
-                        <a href="#"><t t-esc="channel.name"/></a>
-                    </li>
-                </t>
-            </t>
-        </ul>
-    </t>
-
-    <t t-name="mail.ChatComposer.MentionTags">
-        <t t-if="partners.length">Mention(s): </t>
-        <t t-foreach="partners" t-as="partner">
-            <span class="badge"><t t-esc="partner.name"/></span>
-        </t>
     </t>
 
 </templates>

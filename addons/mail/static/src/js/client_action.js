@@ -160,11 +160,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.searchview = new SearchView(this, dataset, view_id, {}, options);
         this.searchview.on('search_data', this, this.on_search);
 
-        this.composer = new ChatComposer(this, {
-            get_channel_info: function () {
-                return { channel_id: self.channel.id };
-            },
-        });
+        this.composer = new ChatComposer(this);
         this.thread = new ChatThread(this, {
             display_help: true
         });
@@ -200,6 +196,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             chat_manager.toggle_star_status(message_id);
         });
         this.composer.on('post_message', this, this.on_post_message);
+        this.composer.on('input_focused', this, this.on_composer_input_focused);
 
         var def1 = this.thread.prependTo(this.$('.o_mail_chat_content'));
         var def2 = this.composer.appendTo(this.$('.o_mail_chat_content'));
@@ -425,6 +422,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             display_needactions: this.channel.display_needactions,
             messages_separator_position: this.messages_separator_position,
             squash_close_messages: this.channel.type !== 'static',
+            display_empty_channel: !messages.length && !this.domain.length,
+            display_no_match: !messages.length && this.domain.length,
+            display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox",
         };
     },
 
@@ -580,6 +580,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         if (channel.autoswitch) {
             this.set_channel(channel);
         }
+    },
+    on_composer_input_focused: function () {
+        var suggestions = chat_manager.get_mention_partner_suggestions(this.channel);
+        this.composer.mention_set_prefetched_partners(suggestions);
     },
 
     on_click_button_invite: function () {
