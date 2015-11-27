@@ -7,7 +7,6 @@ from odoo.tools.misc import formatLang
 
 class ReportProductPricelist(models.AbstractModel):
     _name = 'report.product.report_pricelist'
-    _inherit = 'report.abstract_report'
     _template = 'product.report_pricelist'
 
     def _get_titles(self, form):

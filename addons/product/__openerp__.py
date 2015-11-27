@@ -34,7 +34,6 @@ Print product labels with barcode.
     'data': [
         'security/product_security.xml',
         'security/ir.model.access.csv',
-        'wizard/product_price_views.xml',
         'data/product_data.xml',
         'views/res_config_views.xml',
         'report/product_report.xml',
@@ -42,6 +41,7 @@ Print product labels with barcode.
         'views/pricelist_views.xml',
         'views/partner_views.xml',
         'views/pricelist_report.xml',
-        'views/productlabel_report.xml'
+        'views/productlabel_report.xml',
+        'wizard/product_price_views.xml'
     ]
 }

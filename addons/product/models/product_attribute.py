@@ -38,9 +38,9 @@ class ProductAttributeValue(models.Model):
     def _compute_price_extra(self):
         product_tmpl_id = self.env.context.get('active_id')
         if product_tmpl_id and self.env.context.get('active_model') == 'product.template':
-            for Pattr_price in self:
-                for price_id in Pattr_price.price_ids.filtered(lambda x: x.product_tmpl_id.id == product_tmpl_id):
-                    Pattr_price.price_extra = price_id.price_extra
+            for attr_price in self:
+                for price_id in attr_price.price_ids.filtered(lambda x: x.product_tmpl_id.id == product_tmpl_id):
+                    attr_price.price_extra = price_id.price_extra
 
     def _inverse_price_extra(self):
         ProductAttributePrice = self.env['product.attribute.price']

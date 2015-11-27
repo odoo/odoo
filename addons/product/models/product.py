@@ -95,10 +95,10 @@ class ProducePriceHistory(models.Model):
     def _default_get_company(self):
         return self.env.context.get('force_company', self.env.user.company_id).id
 
-    company_id = fields.Many2one('res.company', required=True, default=_default_get_company)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=_default_get_company)
     product_id = fields.Many2one('product.product', string='Product', required=True, ondelete='cascade')
     datetime = fields.Datetime(string='Date', default=fields.datetime.now())
-    cost = fields.Float(string='Cost')
+    cost = fields.Float()
 
 #----------------------------------------------------------
 # Products
@@ -136,20 +136,20 @@ class ProductTemplate(models.Model):
     categ_id = fields.Many2one('product.category', string='Internal Category', required=True, change_default=True, domain="[('type', '=', 'normal')]",
         help="Select category for the current product", default=_default_get_category)
 
-    price = fields.Float(compute='_product_template_price', inverse='_set_product_template_price', digits=dp.get_precision('Product Price'))
+    price = fields.Float(compute='_compute_product_template_price', inverse='_inverse_product_template_price', digits=dp.get_precision('Product Price'))
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string='Currency')
     list_price = fields.Float(string='Sale Price', digits=dp.get_precision('Product Price'),
         help="Base price to compute the customer price. Sometimes called the catalog price.", default=1)
     lst_price = fields.Float(related='list_price', string='Public Price', digits=dp.get_precision('Product Price'))
-    standard_price = fields.Float(compute='_compute_product_template_field', inverse='_set_standard_price_product_template_field', string='Cost',
+    standard_price = fields.Float(compute='_compute_product_template_field', inverse='_inverse_standard_price_product_template_field', string='Cost',
         digits=dp.get_precision('Product Price'), groups="base.group_user", store=True, default=0.0,
         help="Cost of the product, in the default unit of measure of the product.")
-    volume = fields.Float(compute='_compute_product_template_field', inverse='_set_volume_product_template_field',
+    volume = fields.Float(compute='_compute_product_template_field', inverse='_inverse_volume_product_template_field',
         help="The volume in m3.", store=True)
-    weight = fields.Float(compute='_compute_product_template_field', inverse='_set_weight_product_template_field', string='Gross Weight', digits=dp.get_precision('Stock Weight'),
+    weight = fields.Float(compute='_compute_product_template_field', inverse='_inverse_weight_product_template_field', string='Gross Weight', digits=dp.get_precision('Stock Weight'),
         help="The weight of the contents in Kg, not including any packaging, etc.", store=True)
 
-    warranty = fields.Float(string='Warranty')
+    warranty = fields.Float()
     sale_ok = fields.Boolean(string='Can be Sold', help="Specify if the product can be selected in a sales order line.", default=1)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True,
@@ -177,7 +177,7 @@ class ProductTemplate(models.Model):
 
     active = fields.Boolean(help="If unchecked, it will allow you to hide the product without removing it.", default=True)
     color = fields.Integer(string='Color Index', default=0)
-    is_product_variant = fields.Boolean(compute='_is_product_variant', string='Is a product variant')
+    is_product_variant = fields.Boolean(compute='_compute_is_product_variant', string='Is a product variant')
 
     attribute_line_ids = fields.One2many('product.attribute.line', 'product_tmpl_id', string='Product Attributes')
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', string='Products', required=True)
@@ -185,11 +185,11 @@ class ProductTemplate(models.Model):
 
     # related to display product product information if is_product_variant
     barcode = fields.Char(related='product_variant_ids.barcode', oldname='ean13')
-    default_code = fields.Char(compute='_compute_product_template_field', inverse='_set_default_code_product_template_field', string='Internal Reference', store=True)
+    default_code = fields.Char(compute='_compute_product_template_field', inverse='_inverse_default_code_product_template_field', string='Internal Reference', store=True)
     item_ids = fields.One2many('product.pricelist.item', 'product_tmpl_id', string='Pricelist Items')
 
     @api.multi
-    def _product_template_price(self):
+    def _compute_product_template_price(self):
         context = self.env.context
         ProductPricelist = self.env['product.pricelist']
         quantity = context.get('quantity') or 1.0
@@ -206,11 +206,12 @@ class ProductTemplate(models.Model):
                 for product in self:
                     product.price = price.get(product.id, 0.0)
 
-    def _set_product_template_price(self):
+    def _inverse_product_template_price(self):
         for product in self:
+            value = product.price or 0.0
             if 'uom' in self.env.context:
                 value = self.env['product.uom'].browse(self.env.context['uom'])._compute_price(product.price, product.uom_id.id)
-            product.list_price = value or 0.0
+            product.list_price = value
 
     @api.depends('product_variant_ids.standard_price', 'product_variant_ids.volume', 'product_variant_ids.weight', 'product_variant_ids.default_code')
     def _compute_product_template_field(self):
@@ -221,22 +222,22 @@ class ProductTemplate(models.Model):
             product.weight = product.product_variant_ids.weight
             product.default_code = product.product_variant_ids.default_code
 
-    def _set_standard_price_product_template_field(self):
+    def _inverse_standard_price_product_template_field(self):
         ''' Set the standard price modification on the variant if there is only one variant '''
         for product in self.filtered(lambda x: x.product_variant_count == 1):
             product.product_variant_ids.write({'standard_price': product.standard_price})
 
-    def _set_volume_product_template_field(self):
+    def _inverse_volume_product_template_field(self):
         ''' Set the volume modification on the variant if there is only one variant '''
         for product in self.filtered(lambda x: x.product_variant_count == 1):
             product.product_variant_ids.write({'volume': product.volume})
 
-    def _set_weight_product_template_field(self):
+    def _inverse_weight_product_template_field(self):
         ''' Set the weight modification on the variant if there is only one variant '''
         for product in self.filtered(lambda x: x.product_variant_count == 1):
             product.product_variant_ids.write({'weight': product.weight})
 
-    def _set_default_code_product_template_field(self):
+    def _inverse_default_code_product_template_field(self):
         ''' Set the default_code modification on the variant if there is only one variant '''
         for product in self.filtered(lambda x: x.product_variant_count == 1):
             product.product_variant_ids.write({'default_code': product.default_code})
@@ -244,9 +245,8 @@ class ProductTemplate(models.Model):
     @api.depends('image')
     def _compute_image(self):
         for product in self:
-            image = tools.image_get_resized_images(product.image)
-            product.image_medium = image['image_medium']
-            product.image_small = image['image_small']
+            product.image_medium = tools.image_resize_image_medium(product.image, avoid_if_small=True)
+            product.image_small = tools.image_resize_image_small(product.image)
 
     def _inverse_image_medium(self):
         for product in self:
@@ -257,12 +257,9 @@ class ProductTemplate(models.Model):
             product.image = tools.image_resize_image_big(product.image_small)
 
     @api.multi
-    def _is_product_variant(self):
-        return self._is_product_variant_impl()
-
-    @api.multi
-    def _is_product_variant_impl(self):
-        return dict.fromkeys(self.ids, False)
+    def _compute_is_product_variant(self):
+        for product in self:
+            product.is_product_variant = False
 
     @api.multi
     def _compute_product_variant_count(self):
@@ -277,7 +274,7 @@ class ProductTemplate(models.Model):
     def _price_get(self, products, ptype='list_price'):
         context = self.env.context
         if context.get('currency_id'):
-            currency_id = self.env.user.company_id.currency_id
+            currency = self.env.user.company_id.currency_id
             to_cureency = self.env['res.currency'].browse(context['currency_id'])
         res = {}
         for product in products:
@@ -297,7 +294,7 @@ class ProductTemplate(models.Model):
             if 'currency_id' in context:
                 # Take current user company currency.
                 # This is right cause a field cannot be in more than one currency
-                res[product.id] = currency_id.compute(res[product.id], to_cureency)
+                res[product.id] = currency.compute(res[product.id], to_cureency)
         return res
 
     @api.onchange('uom_id', 'uom_po_id')
@@ -307,8 +304,8 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def create_variant_ids(self):
-        Product = self.env["product.product"]
         ctx = self.env.context.copy()
+        Product = self.env["product.product"]
         if ctx.get("create_product_variant"):
             return None
 
@@ -395,16 +392,15 @@ class ProductTemplate(models.Model):
             if vals.get(r):
                 related_vals[r] = vals[r]
         product_template.write(related_vals)
-
         return product_template
 
     @api.multi
     def write(self, vals):
+        ctx = self.env.context.copy()
         res = super(ProductTemplate, self).write(vals)
         if 'attribute_line_ids' in vals or vals.get('active'):
             self.create_variant_ids()
         if 'active' in vals and not vals.get('active'):
-            ctx = self.env.context.copy()
             ctx.update(active_test=False)
             products = self.with_context(ctx).mapped('product_variant_ids')
             products.with_context(ctx).write({'active': vals.get('active')})
@@ -424,19 +420,16 @@ class ProductTemplate(models.Model):
         if not name or any(term[0] == 'id' for term in (args or [])):
             return super(ProductTemplate, self).name_search(
                 name=name, args=args, operator=operator, limit=limit)
-        template_ids = set()
         results = Product.name_search(name, args, operator=operator, limit=limit)
         product_ids = [p[0] for p in results]
-        for product in Product.browse(product_ids):
-            template_ids.add(product.product_tmpl_id.id)
+        template_ids = map(int, Product.browse(product_ids).mapped('product_tmpl_id'))
         while (results and len(template_ids) < limit):
             domain = [('product_tmpl_id', 'not in', list(template_ids))]
             args = args if args is not None else []
             results = Product.name_search(
                 name, args+domain, operator=operator, limit=limit)
             product_ids = [p[0] for p in results]
-            for product in Product.browse(product_ids):
-                template_ids.add(product.product_tmpl_id.id)
+            template_ids = map(int, Product.browse(product_ids).mapped('product_tmpl_id'))
 
         # re-apply product.template order + name_get
         return super(ProductTemplate, self).name_search('', args=[('id', 'in', list(template_ids))], operator='ilike', limit=limit)
@@ -449,29 +442,29 @@ class ProductProduct(models.Model):
     _inherit = ['mail.thread']
     _order = 'default_code, name_template'
 
-    price = fields.Float(compute='_product_price', inverse='_set_product_price', digits=dp.get_precision('Product Price'))
-    price_extra = fields.Char(compute='_get_price_extra', string='Variant Extra Price',
+    price = fields.Float(compute='_compute_product_price', inverse='_inverse_product_price', digits=dp.get_precision('Product Price'))
+    price_extra = fields.Char(compute='_compute_price_extra', string='Variant Extra Price',
         help="This is the sum of the extra price of all attributes", digits=dp.get_precision('Product Price'))
-    lst_price = fields.Float(compute='_product_lst_price', inverse='_set_product_lst_price', string='Sale Price', digits=dp.get_precision('Product Price'))
-    code = fields.Char(compute='_product_code', string='Internal Reference')
-    partner_ref = fields.Char(compute='_product_partner_ref', string='Customer ref')
+    lst_price = fields.Float(compute='_compute_product_lst_price', inverse='_inverse_product_lst_price', string='Sale Price', digits=dp.get_precision('Product Price'))
+    code = fields.Char(compute='_compute_product_code', string='Internal Reference')
+    partner_ref = fields.Char(compute='_compute_product_partner_ref', string='Customer ref')
     default_code = fields.Char(string='Internal Reference', index=True)
     active = fields.Boolean(help="If unchecked, it will allow you to hide the product without removing it.", default=1)
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', required=True, ondelete="cascade", index=True, auto_join=True)
     barcode = fields.Char(help="International Article Number used for product identification.", oldname='ean13', copy=False)
     name_template = fields.Char(related='product_tmpl_id.name', string="Template Name", store=True, index=True)
     attribute_value_ids = fields.Many2many('product.attribute.value', column1='prod_id', column2='att_id', string='Attributes', ondelete='restrict')
-    is_product_variant = fields.Boolean(compute='_is_product_variant_impl', string='Is a product variant')
+    is_product_variant = fields.Boolean(compute='_compute_is_product_variant_impl', string='Is a product variant')
 
     # image: all image fields are base64 encoded and PIL-supported
     image_variant = fields.Binary(string="Variant Image", attachment=True,
         help="This field holds the image used as image for the product variant, limited to 1024x1024px.")
-    image = fields.Binary(compute='_get_image_variant', inverse='_set_image_variant', string="Big-sized image",
+    image = fields.Binary(compute='_compute_image_variant', inverse='_inverse_image_variant', string="Big-sized image",
         help="Image of the product variant (Big-sized image of product template if false). It is automatically "\
             "resized as a 1024x1024px image, with aspect ratio preserved.")
-    image_small = fields.Binary(compute='_get_image_variant', inverse='_set_image_small_variant', string="Small-sized image",
+    image_small = fields.Binary(compute='_compute_image_variant', inverse='_inverse_image_small_variant', string="Small-sized image",
         help="Image of the product variant (Small-sized image of product tmplate if false).")
-    image_medium = fields.Binary(compute='_get_image_variant', inverse='_set_image_medium_variant', string="Medium-sized image",
+    image_medium = fields.Binary(compute='_compute_image_variant', inverse='_inverse_image_medium_variant', string="Medium-sized image",
         help="Image of the product variant (Medium-sized image of product template if false).")
 
     standard_price = fields.Float(digits=dp.get_precision('Product Price'), company_dependent=True,
@@ -485,9 +478,9 @@ class ProductProduct(models.Model):
     ]
 
     @api.multi
-    def _product_price(self):
-        ProductPricelist = self.env['product.pricelist']
+    def _compute_product_price(self):
         context = self.env.context
+        ProductPricelist = self.env['product.pricelist']
         quantity = context.get('quantity') or 1.0
         pricelist = context.get('pricelist', False)
         partner = context.get('partner', False)
@@ -505,14 +498,14 @@ class ProductProduct(models.Model):
         for product in self:
             product.price = product.price if product.price else 0.0
 
-    def _set_product_price(self):
+    def _inverse_product_price(self):
         for product in self:
             if 'uom' in self.env.context:
                 product.price = self.env['product.uom'].browse(self.env.context['uom'])._compute_price(product.price, product.uom_id.id)
             product.list_price = product.price
 
     @api.multi
-    def _get_price_extra(self):
+    def _compute_price_extra(self):
         for product in self:
             price_extra = 0.0
             for variant_id in product.attribute_value_ids:
@@ -521,7 +514,7 @@ class ProductProduct(models.Model):
             product.price_extra = price_extra
 
     @api.multi
-    def _product_lst_price(self):
+    def _compute_product_lst_price(self):
         for product in self:
             if 'uom' in self.env.context:
                 amount = product.uom_id._compute_price(product.list_price, self.env.context['uom'])
@@ -529,41 +522,48 @@ class ProductProduct(models.Model):
                 amount = product.list_price
             product.lst_price = amount + float(product.price_extra)
 
-    def _set_product_lst_price(self):
-        value = self.lst_price
-        if 'uom' in self.env.context:
-            value = self.env['product.uom'].browse(self.env.context['uom'])._compute_price(value, self.uom_id.id)
-        value = value - float(self.price_extra)
-        self.list_price = value
+    def _inverse_product_lst_price(self):
+        for product in self:
+            value = product.lst_price
+            if 'uom' in self.env.context:
+                value = self.env['product.uom'].browse(self.env.context['uom'])._compute_price(value, product.uom_id.id)
+            product.list_price = value - float(product.price_extra)
 
     @api.multi
-    def _product_code(self):
+    def _compute_product_code(self):
         for product in self:
             product.code = product._get_partner_code_name(self.env.context.get('partner_id', None))['code']
 
     @api.multi
-    def _product_partner_ref(self):
+    def _compute_product_partner_ref(self):
         for product in self:
             data = product._get_partner_code_name(self.env.context.get('partner_id', None))
-            if not data['code']:
-                data['code'] = product.code
-            if not data['name']:
-                data['name'] = product.name
+            data['code'] = data['code'] or product.code
+            data['name'] = data['name'] or product.name
             product.partner_ref = (data['code'] and ('['+data['code']+'] ') or '') + (data['name'] or '')
 
     @api.multi
-    def _is_product_variant_impl(self):
-        return dict.fromkeys(self.ids, True)
-
-    @api.depends('image_variant')
-    def _get_image_variant(self):
+    def _compute_is_product_variant_impl(self):
         for product in self:
-            image = tools.image_resize_image_big(product.image_variant)
-            product.image = image or product.product_tmpl_id.image
-            product.image_small = image or product.product_tmpl_id.image_small
-            product.image_medium = image or product.product_tmpl_id.image_medium
+            product.is_product_variant = True
 
-    def _set_image_variant(self):
+    def _compute_image_variant(self):
+        for product in self:
+            if not product.image_variant:
+                product.image = product.product_tmpl_id.image
+                product.image_small = product.product_tmpl_id.image_small
+                product.image_medium = product.product_tmpl_id.image_medium
+                continue
+            if self.env.context.get('bin_size'):
+                product.image = product.image_variant
+                product.image_small = product.image_variant
+                product.image_medium = product.image_variant
+            else:
+                product.image = tools.image_resize_image_big(product.image_variant)
+                product.image_small = tools.image_resize_image_small(product.image_variant)
+                product.image_medium = tools.image_resize_image_medium(product.image_variant)
+
+    def _inverse_image_variant(self):
         for product in self:
             image = tools.image_resize_image_big(product.image)
             if product.product_tmpl_id.image:
@@ -571,7 +571,7 @@ class ProductProduct(models.Model):
             else:
                 product.product_tmpl_id.image = image
 
-    def _set_image_small_variant(self):
+    def _inverse_image_small_variant(self):
         for product in self:
             image = tools.image_resize_image_big(product.image_small)
             if product.product_tmpl_id.image:
@@ -579,7 +579,7 @@ class ProductProduct(models.Model):
             else:
                 product.product_tmpl_id.image = image
 
-    def _set_image_medium_variant(self):
+    def _inverse_image_medium_variant(self):
         for product in self:
             image = tools.image_resize_image_big(product.image_medium)
             if product.product_tmpl_id.image:

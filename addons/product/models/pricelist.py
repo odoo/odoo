@@ -87,7 +87,6 @@ class ProductPricelist(models.Model):
                 results[product_id][pricelist.id] = price
         return results
 
-    @api.multi
     def _price_get_multi(self, products_by_qty_by_partner):
         self.ensure_one()
         return dict((key, price[0]) for key, price in self._price_rule_get_multi(products_by_qty_by_partner).items())
@@ -229,8 +228,7 @@ class ProductPricelist(models.Model):
         self.ensure_one()
         product = self.env['product.product'].browse(product_id)
         res_multi = self.price_rule_get_multi(products_by_qty_by_partner=[(product, qty, partner)])
-        res = res_multi[product_id]
-        return res
+        return res_multi[product_id]
 
 
 class ProductPricelistItem(models.Model):
@@ -270,10 +268,10 @@ class ProductPricelistItem(models.Model):
     fixed_price = fields.Float(string='Fixed Price')
     percent_price = fields.Float(string='Percentage Price')
     #functional fields used for usability purposes
-    name = fields.Char(compute='_get_pricelist_item_name_price', help="Explicit rule name for this pricelist line.")
-    price = fields.Char(compute='_get_pricelist_item_name_price',  help="Explicit rule name for this pricelist line.")
+    name = fields.Char(compute='_compute_pricelist_item_name_price', help="Explicit rule name for this pricelist line.")
+    price = fields.Char(compute='_compute_pricelist_item_name_price',  help="Explicit rule name for this pricelist line.")
 
-    def _get_pricelist_item_name_price(self):
+    def _compute_pricelist_item_name_price(self):
         for item in self:
             if item.categ_id:
                 item.name = _("Category: %s") % (item.categ_id.name)
