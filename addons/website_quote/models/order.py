@@ -27,6 +27,7 @@ class sale_quote_template(osv.osv):
             (0, 'Not mandatory on website quote validation'),
             (1, 'Immediate after website order validation')
             ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
+        'mail_template_id': fields.many2one('mail.template', 'Confirmation Mail', help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     }
     def open_template(self, cr, uid, quote_id, context=None):
         return {
@@ -292,6 +293,13 @@ class sale_order(osv.osv):
             template_values = self.onchange_template_id(cr, uid, [], defaults.get('template_id'), partner=values.get('partner_id'), fiscal_position_id=values.get('fiscal_position'), context=context).get('value', {})
             values = dict(template_values, **values)
         return super(sale_order, self).create(cr, uid, values, context=context)
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        res = super(sale_order, self).action_confirm(cr, uid, ids, context=context)
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.template_id and order.template_id.mail_template_id:
+                self.pool['mail.template'].send_mail(cr, uid, order.template_id.mail_template_id.id, order.id, context=context)
+        return res
 
 
 class sale_quote_option(osv.osv):
