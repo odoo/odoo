@@ -186,15 +186,14 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "              </p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new property.\n"
+"                Bấm để tạo mới một thuộc tính.\n"
 "              </p><p>\n"
-"                The Properties in Odoo are used to select the right bill of\n"
-"                materials for manufacturing a product when you have different\n"
-"                ways of building the same product.  You can assign several\n"
-"                properties to each bill of materials.  When a salesperson\n"
-"                creates a sales order, they can relate it to several properties\n"
-"                and Odoo will automatically select the BoM to use according\n"
-"                the needs.\n"
+"                Các Thuộc tính trong Odoo được sử dụng để chọn một Định mức nguyên liệu\n"
+"                phù hợp cho việc sản xuất một sản phẩm mà có nhiều Định mức nguyên liệu\n"
+"                khác nhau. Bạn có thể gán vài thuộc tính cho mỗi Định mức nguyên liệu.\n"
+"                Khi một người bán hàng tạo một đơn hàng bán, anh/côta có thể chọn một (vài)\n"
+"                thuộc tính và Odoo sẽ tự động chọn lựa Định mức nguyên liệu phù hợp để\n"
+"                sản xuất sản phẩm theo nhu cầu đó.\n"
 "              </p>\n"
 "            "
 
@@ -233,14 +232,14 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "              </p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to start a new manufacturing order. \n"
+"                Bấm để tạo mới một lệnh sản xuất. \n"
 "              </p><p>\n"
-"                A manufacturing order, based on a bill of materials, will\n"
-"                consume raw materials and produce finished products.\n"
+"                Một lệnh sản xuất, dự trên một định mức nguyên liệu, sẽ\n"
+"                tiêu thụ nguyên liệu thô và tạo ra (các) thành phẩm.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically based\n"
-"                on customer requirements or automated rules like the minimum\n"
-"                stock rule.\n"
+"                Thông thường, các lệnh sản xuất có thể được phần mềm tạo\n"
+"                tự động dựa trên nhu cầu bán hàng hoặc dựa trên các quy tắc\n"
+"                cung ứng như Quy tắc tồn kho tối thiểu.\n"
 "              </p>\n"
 "            "
 
@@ -258,7 +257,7 @@ msgstr "Một hệ số là 0,9 có nghĩa là bạn mất 10% trong quá trình
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
-msgstr "Hiệu lực"
+msgstr "Có hiệu lực"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:68
@@ -847,7 +846,7 @@ msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách Đị
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách quy trình sản xuất."
+msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách các Năng lực sản xuất định tuyến (routing work centers)."
 
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
@@ -1583,7 +1582,7 @@ msgstr "Năng lực sản xuất"
 #. module: mrp
 #: field:mrp.production,progress:0
 msgid "Production progress"
-msgstr "Quy trình sản xuất"
+msgstr "Quá trình sản xuất"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1770,7 +1769,7 @@ msgstr "Định tuyến"
 #: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_form_view
 #: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_tree_view
 msgid "Routing Work Centers"
-msgstr ""
+msgstr "Năng lực sản xuất định tuyến"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,routing_id:0
@@ -1828,7 +1827,7 @@ msgstr "Hàng hóa theo kế hoạch"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Scrap Products"
-msgstr "Sản phẩm phế liệu"
+msgstr "Phế phẩm"
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
@@ -1998,8 +1997,7 @@ msgstr "Việc lựa chọn Định mức nguyên liệu chính xác để sử 
 #: help:mrp.config.settings,module_mrp_operations:0
 msgid "This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
-msgstr "This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
-"-This installs the module mrp_operations."
+msgstr ""
 
 #. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
@@ -2319,7 +2317,7 @@ msgstr "Work Center name"
 #: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
-msgstr "Work Centers"
+msgstr "Năng lực sản xuất"
 
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
