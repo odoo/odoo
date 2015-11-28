@@ -98,7 +98,7 @@ class SaleOrder(orm.Model):
 
     def _get_delivery_methods(self, cr, uid, order, context=None):
         carrier_obj = self.pool.get('delivery.carrier')
-        carrier_ids = carrier_obj.search(cr, uid, [('website_published', '=', True)], context=context)
+        carrier_ids = carrier_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
         available_carrier_ids = []
         # Following loop is done to avoid displaying delivery methods who are not available for this order
         # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
