@@ -11,14 +11,15 @@
 # mrshelly <mrshelly@hotmail.com>, 2015
 # Xor3 <xor3@outlook.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
+# 珠海-老天 <liangjia@qq.com>, 2015
 # 钟小华 <mackz@sina.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-10-31 08:38+0000\n"
-"Last-Translator: 钟小华 <mackz@sina.com>\n"
+"PO-Revision-Date: 2015-11-28 08:22+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,7 +124,7 @@ msgstr " 秒"
 #. module: account
 #: field:analytic.entries.report,nbr:0
 msgid "# Entries"
-msgstr "# 条目"
+msgstr "# 分录"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
@@ -135,7 +136,7 @@ msgstr "# 数字"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Entries"
-msgstr "# 条目"
+msgstr "# 分录"
 
 #. module: account
 #: field:account.invoice.report,nbr:0
@@ -178,7 +179,7 @@ msgstr "%s (副本)"
 #. module: account
 #: view:website:account.report_partnerbalance
 msgid "(Account/Partner) Name"
-msgstr "(客户/业务伙伴)名称"
+msgstr "(账户/业务伙伴)名称"
 
 #. module: account
 #: view:account.chart:account.view_account_chart
@@ -1391,7 +1392,7 @@ msgstr "总额计算"
 #: field:account.model.line,amount_currency:0
 #: field:account.move.line,amount_currency:0
 msgid "Amount Currency"
-msgstr "总额外币"
+msgstr "外币总额"
 
 #. module: account
 #: view:account.payment.term.line:account.view_payment_term_line_form
@@ -3162,7 +3163,7 @@ msgstr "创建分录"
 #: field:validate.account.move.lines,create_uid:0
 #: field:wizard.multi.charts.accounts,create_uid:0
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建人"
 
 #. module: account
 #: field:account.account,create_date:0
@@ -3251,7 +3252,7 @@ msgstr "创建于"
 #: field:validate.account.move.lines,create_date:0
 #: field:wizard.multi.charts.accounts,create_date:0
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: account
 #: help:account.addtmpl.wizard,cparent_id:0
@@ -3495,7 +3496,7 @@ msgstr "创建日期"
 #. module: account
 #: field:account.entries.report,date_maturity:0
 msgid "Date Maturity"
-msgstr "成熟日期"
+msgstr "到期日期"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -4800,7 +4801,7 @@ msgstr "通用报告"
 #. module: account
 #: help:account.fiscalyear.close,report_name:0
 msgid "Give name of the new entries"
-msgstr "给新条目名称"
+msgstr "给新分录名称"
 
 #. module: account
 #: selection:account.tax,applicable_type:0
@@ -6081,7 +6082,7 @@ msgstr "最后信息日期"
 #: field:validate.account.move.lines,write_uid:0
 #: field:wizard.multi.charts.accounts,write_uid:0
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新人"
 
 #. module: account
 #: field:account.account,write_date:0
@@ -6168,7 +6169,7 @@ msgstr "最后更新"
 #: field:validate.account.move.lines,write_date:0
 #: field:wizard.multi.charts.accounts,write_date:0
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新时间"
 
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
@@ -6297,7 +6298,7 @@ msgstr "管理付款单"
 #. module: account
 #: field:account.invoice.tax,manual:0
 msgid "Manual"
-msgstr "人工"
+msgstr "手动"
 
 #. module: account
 #: view:account.invoice.tax:account.view_invoice_tax_form
@@ -6324,7 +6325,7 @@ msgstr "3月"
 #. module: account
 #: view:website:account.report_overdue_document
 msgid "Maturity"
-msgstr "成熟"
+msgstr "到期"
 
 #. module: account
 #: field:account.model.line,date_maturity:0
@@ -6875,7 +6876,7 @@ msgstr "打开表"
 #: view:account.journal.select:account.open_journal_button_view
 #: view:project.account.analytic.line:account.view_project_account_analytic_line_form
 msgid "Open Entries"
-msgstr "开帐条目"
+msgstr "开帐分录"
 
 #. module: account
 #: view:account.state.open:account.view_account_state_open
@@ -8317,7 +8318,7 @@ msgstr "残值总额"
 #. module: account
 #: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount in Currency"
-msgstr "外币残值总额"
+msgstr "外币结余总额"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -9699,7 +9700,7 @@ msgstr "分类账分录日期不在所选期间内！可以修改分类账分录
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
 #, python-format
 msgid "The entries to reconcile should belong to the same company."
-msgstr "调节的条目应属于同一公司。"
+msgstr "调节的分录应属于同一公司。"
 
 #. module: account
 #: help:res.partner,property_account_position:0
@@ -10322,7 +10323,7 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr "这个技术字段可以用于结算单明细创建或导入来避免以后在它上面的调节进程。结算单明细仅仅是在这个科目上创建一个对方条目。"
+msgstr "这个技术字段可以用于结算单明细创建或导入来避免以后在它上面的调节进程。结算单明细仅仅是在这个科目上创建一个对方分录。"
 
 #. module: account
 #: help:account.account.template,type:0 help:account.entries.report,type:0
@@ -10661,7 +10662,7 @@ msgstr "单元总额"
 #. module: account
 #: view:account.journal:account.view_account_journal_form
 msgid "Unit Of Currency Definition"
-msgstr "货币定义单元"
+msgstr "货币定义单位"
 
 #. module: account
 #: field:account.invoice.line,price_unit:0
@@ -10672,7 +10673,7 @@ msgstr "单价"
 #. module: account
 #: field:account.cashbox.line,pieces:0
 msgid "Unit of Currency"
-msgstr "币别单元"
+msgstr "币别单位"
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -11130,6 +11131,13 @@ msgid ""
 msgstr "您选择了应收应付科目。\n\n如果要继续处理，您需要弃选%s业务。"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr ""
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -11140,7 +11148,7 @@ msgstr "您可以勾选此，标记分类账项目正与相关业务伙伴在争
 #: code:addons/account/account_move_line.py:1246
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
-msgstr "不能添加/修改条目在关闭的期间 %s 分类账%s."
+msgstr "不能添加/修改分录在关闭的期间 %s 分类账%s."
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:42

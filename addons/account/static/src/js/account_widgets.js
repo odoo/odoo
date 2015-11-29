@@ -1047,7 +1047,7 @@ openerp.account = function (instance) {
                 new instance.web.Dialog(this, {
                     title: _t("Warning"),
                     size: 'medium',
-                }, $("<div />").text(_.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), last_selected_line.account_type))).open();
+                }, $("<div />").text(_.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), _t("last")))).open();
                 return;
             }
 
