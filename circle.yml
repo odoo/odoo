@@ -19,8 +19,7 @@ dependencies:
 test:
   override:
     - docker run -d --name postgresql -p 5433:5432 -e "POSTGRES_PASSWORD=odoo" -e  "POSTGRES_USER=odoo" -e "POSTGRES_DB=odoo"  xdevelsistemas/debian-env:postgresql-env
-    - docker run -d  -e "ADMIN_PASSWORD=admin" -e "PGPORT=5432" -e "PGHOST=postgresql" -e "PYTHONUNBUFFERED=1" -e "PGUSER=odoo" -e "PGPASSWORD=odoo"  -p 80:8069 --link postgresql:postgresql  claytonsilva/odoo:latest; sleep 30
-    - docker run  --privileged   -e "AWS_S3_KEY=$AWS_ACCESS_KEY_ID" -e "AWS_S3_SECRET=AWS_SECRET_ACCESS_KEY" -e "AWS_S3_BUCKET=odoo-test-env"  -e "ADMIN_PASSWORD=admin" -e "PGPORT=5433" -e "PGHOST=postgresql" -e "PYTHONUNBUFFERED=1" -e "PGUSER=odoo" -e "PGPASSWORD=odoo"  -p 8069:8069 --link postgresql:postgresql   claytonsilva/odoo:latest --
+    - docker run -d  --privileged   -e "AWS_S3_KEY=$AWS_ACCESS_KEY_ID" -e "AWS_S3_SECRET=AWS_SECRET_ACCESS_KEY" -e "AWS_S3_BUCKET=odoo-test-env"  -e "ADMIN_PASSWORD=admin" -e "PGPORT=5433" -e "PGHOST=postgresql" -e "PYTHONUNBUFFERED=1" -e "PGUSER=odoo" -e "PGPASSWORD=odoo"  -p 8069:8069 --link postgresql:postgresql   claytonsilva/odoo:latest -*
     - sleep 30
     - curl --retry 10 --retry-delay 5 -v http://localhost:8069
 deployment:
