@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Fahad Alqahtani <fahad@cloudland.sa>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-11-05 19:26+0000\n"
-"Last-Translator: Fahad Alqahtani <fahad@cloudland.sa>\n"
+"PO-Revision-Date: 2015-11-19 17:25+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgid ""
 "                    The goals are created for the specified users or member of the group.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    اضغط لإنشاء تحدي. \n                </p>\n                <p>\nعين قائمة أهداف لمستخدمين محددين لتقييمهم.\nيمكن تحديد فترة (اسبوعياً؛ شهرياً...) للإنشاء التلقائي للأهداف.\nالأهداف تنشأ للمستخدمين المحددين أو لأعضاء المجموعة.\n                </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    انقر لإنشاء تحدي جديد. \n                </p>\n                <p>\n                    قم بتعيين قائمة من الأهداف لمجموعة محددة من المستخدمين لتقييمهم.\n                    قد يكون التحدي دورياً (أسبوعياً أو شهرياً) وسيتم تجديد الأهداف آلياً.\n                    يتم إنشاء الأهداف للمستخدمين المحددين أو لأعضاء مجموعة ما.\n                </p>\n            "
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
@@ -43,7 +44,7 @@ msgid ""
 "                    Goals can be created automatically by using challenges.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    اضغط لإنشاء هدف. \n                </p>\n                <p>\nالهدف يعرف بمستخدم ونوع هدف.\nيمكن انشاء الإهداف تلقائياً بواسطة استخدام التحديات.\n                </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    انقر لإنشاء هدف جديد. \n                </p>\n                <p>\n                    يتم تحديد الهدف ونوعه بواسطة المستخدم.\n                    يمكن تجديد الأهداف آلياً أو إنشاءها عبر استخدام التحديات.\n                </p>\n            "
 
 #. module: hr_gamification
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
@@ -54,7 +55,7 @@ msgstr "الشارات"
 #: view:hr.employee:hr_gamification.hr_hr_employee_view_form
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr "الشارات هي جوائز العمل الجيد، أعطها للأشخاص اللذين تعتقد أنهم يستحقونها."
+msgstr "الشارات هي مكافئات أو منح للدلالة على العمل الجيد. امنح الشارات لمن ترى أنهم يستحقونها."
 
 #. module: hr_gamification
 #: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
@@ -70,12 +71,12 @@ msgstr "التحديات"
 #. module: hr_gamification
 #: view:hr.employee:hr_gamification.hr_hr_employee_view_form
 msgid "Click to grant this employee his first badge"
-msgstr "اضغط لتمنح هذا الموظف شارته الأولى"
+msgstr "انقر لمنح هذا الموظف شارته الأولى"
 
 #. module: hr_gamification
 #: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "صف مافعلوه وما أهميته (سيكون عام)"
+msgstr "صف مافعلوه وما أهميته (سيعرض على العامة)"
 
 #. module: hr_gamification
 #: field:gamification.badge.user,employee_id:0
@@ -92,22 +93,22 @@ msgstr "شارات الموظف"
 #. module: hr_gamification
 #: field:hr.employee,goal_ids:0
 msgid "Employee HR Goals"
-msgstr "أهداف الموظف الخاصة بالموارد البشرية"
+msgstr "أهداف الموظفين"
 
 #. module: hr_gamification
 #: model:ir.ui.menu,name:hr_gamification.menu_hr_gamification
 msgid "Engagement"
-msgstr "خوض"
+msgstr "التفاعل"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification badge"
-msgstr "شارة التلعيب"
+msgstr "شارة التنافسية"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification user badge"
-msgstr "شارة مستخدم التلعيب"
+msgstr "شارة تنافسية المستخدم"
 
 #. module: hr_gamification
 #: view:hr.employee:hr_gamification.hr_hr_employee_view_form
@@ -138,23 +139,23 @@ msgstr "لديه شارات"
 #. module: hr_gamification
 #: view:hr.employee:hr_gamification.hr_hr_employee_view_form
 msgid "Received Badges"
-msgstr "استلم شارات"
+msgstr "الشارات المتلقاة"
 
 #. module: hr_gamification
 #: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 msgid "Reward Employee"
-msgstr "كافأ موظف"
+msgstr "مكافأة الموظف"
 
 #. module: hr_gamification
 #: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee with"
-msgstr "كافأ موظف بـ"
+msgstr "مكافأة الموظف بـ"
 
 #. module: hr_gamification
 #: constraint:gamification.badge.user:0
 msgid "The selected employee does not correspond to the selected user."
-msgstr "الموظف المختار ﻻ يتوافق مع المستخدم المختار."
+msgstr "الموظف المحدد لا يتفق مع المستخدم المحدد."
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/grant_badge.py:45
@@ -166,7 +167,7 @@ msgstr "تحذير!"
 #. module: hr_gamification
 #: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
 msgid "What are you thank for?"
-msgstr "ماتريد الشكر عليه؟"
+msgstr "علام تشكره؟"
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/grant_badge.py:48
@@ -188,4 +189,4 @@ msgstr "أو"
 #. module: hr_gamification
 #: view:hr.employee:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
-msgstr "لمكافأة هذا الموظف على اجراء جيد"
+msgstr "لمكافأة هذا الموظف على أداء جيد"

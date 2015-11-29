@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-11-13 14:04+0000\n"
+"PO-Revision-Date: 2015-11-28 11:13+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -1800,7 +1800,7 @@ msgstr "Napačen skupni znesek!"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Balance"
-msgstr "Bilanca"
+msgstr "Saldo"
 
 #. module: account
 #: view:website:account.report_overdue_document
@@ -2592,7 +2592,7 @@ msgstr "Izberi proti-postavko"
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Close"
-msgstr "Zaključi"
+msgstr "Zapri"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -2642,7 +2642,7 @@ msgstr "Zaključi izpiske"
 #: view:account.fiscalyear:account.view_account_fiscalyear_search
 #: selection:account.fiscalyear,state:0 selection:account.period,state:0
 msgid "Closed"
-msgstr "Zaključeno"
+msgstr "Neaktivni"
 
 #. module: account
 #: field:account.bank.statement,closing_date:0
@@ -2951,7 +2951,7 @@ msgstr "Konsolidacija podrejenih postavk"
 #: selection:account.account,type:0 selection:account.account.template,type:0
 #: selection:account.entries.report,type:0
 msgid "Consolidation"
-msgstr "Konsolidacija"
+msgstr "Zbirni"
 
 #. module: account
 #: view:account.installer:account.view_account_configuration_installer
@@ -3666,7 +3666,7 @@ msgstr "Privzeti prodajni davek"
 #. module: account
 #: field:account.account.type,close_method:0
 msgid "Deferral Method"
-msgstr "Način odloga"
+msgstr "Način otvoritve"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_subscription_form
@@ -3703,7 +3703,7 @@ msgstr "Opis:"
 #. module: account
 #: selection:account.account.type,close_method:0
 msgid "Detail"
-msgstr "Podrobno"
+msgstr "Vse knjižbe"
 
 #. module: account
 #: help:account.tax.code,sequence:0 help:account.tax.code.template,sequence:0
@@ -6676,7 +6676,7 @@ msgstr "Število mest za kodo konta"
 #: selection:account.account.type,close_method:0 selection:account.tax,type:0
 #: selection:account.tax.template,type:0
 msgid "None"
-msgstr "Nič"
+msgstr "Ni prenosa"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -8752,7 +8752,7 @@ msgid ""
 " 'Balance' will generally be used for cash accounts.\n"
 " 'Detail' will copy each existing journal item of the previous year, even the reconciled ones.\n"
 " 'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."
-msgstr "Nastavite metodo ustvarjanja dnevniških vnosov za zaključek leta za vse konte tega tipa\n\n 'Ni prenosa' pomeni, da se ne izvede ničesar.\n 'Saldo' se običajno uporablja za gotovinske vnose.\n 'Vse postavke' kopira vse obstoječe dnevniške postavke prejšnjega leta, vključno neusklajene\n 'Odprte postavke\" kopira samo dnevniške postavke, ki so bile neusklajene na prvi dan novega poslovnega leta."
+msgstr "Nastavite metodo ustvarjanja dnevniških vnosov za zaključek leta za vse konte tega tipa.\n\n 'Ni prenosa' pomeni, da se ne izvede ničesar.\n 'Saldo' se običajno uporablja za gotovinske konte.\n 'Vse knjižbe' kopira vse obstoječe dnevniške postavke prejšnjega leta, vključno neusklajene.\n 'Odprte postavke' kopira samo dnevniške postavke, ki so bile neusklajene na prvi dan novega poslovnega leta."
 
 #. module: account
 #: help:account.tax.template,include_base_amount:0
@@ -10753,7 +10753,7 @@ msgstr "Neusklajene transakcije"
 #: view:account.entries.report:account.view_account_entries_report_search
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unreconciled"
-msgstr "Neusklajeno"
+msgstr "Odprte postavke"
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
@@ -11122,6 +11122,13 @@ msgid ""
 "\n"
 "In order to proceed, you first need to deselect the %s transactions."
 msgstr "Izbirate transakcije tako iz konta obveznosti kakor tudi iz konta terjatev.\n\nDa bi lahko nadaljevali, opustite izbiro %s transakcij."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr "zadnji"
 
 #. module: account
 #: help:account.move.line,blocked:0
