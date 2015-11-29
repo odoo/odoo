@@ -27,8 +27,6 @@ deployment:
     branch: publish
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - (npm install)
-      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push claytonsilva/odoo:latest
 #      - (bash ecscmd.sh)
 
