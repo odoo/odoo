@@ -20,7 +20,7 @@ test:
     - curl --retry 10 --retry-delay 5 -v http://localhost:8069
 deployment:
   prod:
-    branch: publicacao
+    branch: publish
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - (npm install)
