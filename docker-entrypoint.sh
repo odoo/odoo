@@ -12,7 +12,6 @@ chmod 600 ~/.passwd-s3fs
 case "$1" in
 	--)
 		shift
-		mkdir ~/.local
 		if [ ! -d "/home/odoo/.local" ]; then
 			mkdir ~/.local
 		fi
