@@ -5,6 +5,7 @@ set -e
 
 echo "[options]" >> server.conf
 echo "admin_passwd = $ADMIN_PASSWORD" >> server.conf
+echo "dbfilter = ^%d$" >> server.conf
 echo "xmlrpc_port = 8069" >> server.conf
 
 echo "$AWS_S3_KEY:$AWS_S3_SECRET" >> ~/.passwd-s3fs
