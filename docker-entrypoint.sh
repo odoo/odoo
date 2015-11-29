@@ -13,11 +13,16 @@ case "$1" in
 	--)
 		shift
 		mkdir ~/.local
+		if [ ! -d "~/.local" ]; then
+			mkdir ~/.local
+		fi
 		s3fs -o use_cache=/tmp/s3  $AWS_S3_BUCKET ~/.local 
 		python2.7 /home/odoo/odoo/openerp-server -c server.conf "$@"
 		;;
 	-*)
-		mkdir ~/.local
+		if [ ! -d "˜/.local" ]; then
+			mkdir ~/.local
+		fi
 		s3fs -o use_cache=/tmp/s3 $AWS_S3_BUCKET ~/.local 
 		python2.7 /home/odoo/odoo/openerp-server -c server.conf "$@"
 		;;
