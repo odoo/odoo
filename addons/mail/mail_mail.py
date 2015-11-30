@@ -263,8 +263,8 @@ class mail_mail(osv.Model):
                     email_list.append(self.send_get_email_dict(cr, uid, mail, partner=partner, context=context))
                 # headers
                 headers = {}
-                bounce_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.bounce.alias", context=context)
-                catchall_domain = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.catchall.domain", context=context)
+                bounce_alias = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, "mail.bounce.alias", context=context)
+                catchall_domain = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, "mail.catchall.domain", context=context)
                 if bounce_alias and catchall_domain:
                     if mail.model and mail.res_id:
                         headers['Return-Path'] = '%s-%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)

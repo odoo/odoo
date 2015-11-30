@@ -24,6 +24,8 @@ import re
 
 from openerp.addons.mail.mail_message import decode
 from openerp.addons.mail.mail_thread import decode_header
+
+from openerp import SUPERUSER_ID
 from openerp.osv import osv
 
 _logger = logging.getLogger(__name__)
@@ -39,7 +41,7 @@ class MailThread(osv.AbstractModel):
         """ Override to verify that the email_to is the bounce alias. If it is the
         case, log the bounce, set the parent and related document as bounced and
         return False to end the routing process. """
-        bounce_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.bounce.alias", context=context)
+        bounce_alias = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, "mail.bounce.alias", context=context)
         message_id = message.get('Message-Id')
         email_from = decode_header(message, 'From')
         email_to = decode_header(message, 'To')

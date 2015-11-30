@@ -21,6 +21,7 @@
 
 import urlparse
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 
 
@@ -34,7 +35,7 @@ class project_configuration(osv.TransientModel):
     }
 
     def get_default_alias_domain(self, cr, uid, ids, context=None):
-        alias_domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", default=None, context=context)
+        alias_domain = self.pool.get("ir.config_parameter").get_param(cr, SUPERUSER_ID, "mail.catchall.domain", default=None, context=context)
         if alias_domain is None:
             domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
             try:
@@ -46,4 +47,4 @@ class project_configuration(osv.TransientModel):
     def set_alias_domain(self, cr, uid, ids, context=None):
         config_parameters = self.pool.get("ir.config_parameter")
         for record in self.browse(cr, uid, ids, context=context):
-            config_parameters.set_param(cr, uid, "mail.catchall.domain", record.alias_domain or '', context=context)
+            config_parameters.set_param(cr, uid, "mail.catchall.domain", record.alias_domain or '', groups=['base.group_system'], context=context)

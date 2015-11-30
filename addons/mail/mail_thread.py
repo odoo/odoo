@@ -712,7 +712,7 @@ class mail_thread(osv.AbstractModel):
         if context is None:
             context = {}
         model_name = context.get('thread_model') or self._name
-        alias_domain = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.catchall.domain", context=context)
+        alias_domain = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, "mail.catchall.domain", context=context)
         res = dict.fromkeys(ids, False)
 
         # alias domain: check for aliases and catchall
@@ -735,7 +735,7 @@ class mail_thread(osv.AbstractModel):
             # left ids: use catchall
             left_ids = set(ids).difference(set(aliases.keys()))
             if left_ids:
-                catchall_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.catchall.alias", context=context)
+                catchall_alias = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, "mail.catchall.alias", context=context)
                 if catchall_alias:
                     aliases.update(dict((res_id, '%s@%s' % (catchall_alias, alias_domain)) for res_id in left_ids))
             # compute name of reply-to
