@@ -546,10 +546,13 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="type" position="after">
-                    <field name="invoice_policy" widget="radio"/>
-                    <field name="track_service" widget="radio" invisible="True"/>
-                </field>
+                <group name="sale" position="inside">
+                    <separator string="Invoicing Policy" colspan="4"/>
+                    <group>
+                        <field name="invoice_policy" widget="radio"/>
+                        <field name="track_service" widget="radio" invisible="True"/>
+                    </group>
+                </group>
             </field>
         </record>
 
