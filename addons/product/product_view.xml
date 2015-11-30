@@ -37,7 +37,7 @@
                     <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
                     <separator/>
                     <filter string="Services" name="services" domain="[('type','=','service')]"/>
-                    <filter string="Products" name="consumable" domain="[('type','=','consu')]" help="Products your store in the inventory"/>
+                    <filter string="Products" name="consumable" domain="[('type', 'in', ['consu', 'product'])]" help="Products your store in the inventory"/>
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',1)]"/>
                     <separator/>
