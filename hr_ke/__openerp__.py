@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "HR for Kenya ",
+    'name': "Payroll and HR system for Kenya",
 
     'summary': """
-        Kenya Specific HR details for Employees, Employers and Contracts""",
+        Automated Payroll and HR system customized for Kenya, with KRA reports and automated Tax Returns """,
 
     'description': """
         In this module, we are adding Kenya specific HR details and requirements for processing payroll. NSSF, NHIF, Next Of Kin, PAYE, HELB and others
@@ -11,13 +11,13 @@
     'images': ['static/description/hr.png'],
     'author': "Optima ICT Services LTD",
     'website': "http://www.optima.co.ke",
-    'price': 574,
+    'price': 514,
     'currency': 'EUR',
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
     # for the full list
-    'category': 'Uncategorized',
+    'category': 'Human Resources',
     'version': '0.1',
 
     # any module necessary for this one to work correctly
