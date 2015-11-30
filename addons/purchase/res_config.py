@@ -17,8 +17,8 @@ class purchase_config_settings(osv.osv_memory):
             implied_group='product.group_product_variant'),
         'group_uom':fields.selection([
             (0, 'Products have only one unit of measure (easier)'),
-            (1, 'Some products may be sold/puchased in different unit of measures (advanced)')
-            ], "Unit of Measures",
+            (1, 'Some products may be sold/puchased in different units of measure (advanced)')
+            ], "Units of Measure",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_costing_method':fields.selection([

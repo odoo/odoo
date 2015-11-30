@@ -22,7 +22,7 @@ class ChannelPartner(models.Model):
     channel_id = fields.Many2one('mail.channel', string='Channel')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
-    is_minimized = fields.Boolean("Conversation is minimied")
+    is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
 
 
