@@ -14,6 +14,7 @@
     'auto_install': True,
     'data': [
         'views/website_sale_stock.xml',
+        'security/ir.model.access.csv'
     ],
     'demo': [
     ],

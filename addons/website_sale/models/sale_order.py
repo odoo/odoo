@@ -79,6 +79,7 @@ class sale_order(osv.Model):
         sol = self.pool.get('sale.order.line')
 
         quantity = 0
+        res = {}
         for so in self.browse(cr, uid, ids, context=context):
             if so.state != 'draft':
                 request.session['sale_order_id'] = None
@@ -108,9 +109,13 @@ class sale_order(osv.Model):
             else:
                 # update line
                 values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=quantity, context=context)
+                if values.get('message'):
+                    quantity = values['product_uom_qty']
+                    res['message'] = values.pop('message')
+                    res['message_type'] = values.pop('message_type') #message_type : danger , warning , info etc.
                 sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
-
-        return {'line_id': line_id, 'quantity': quantity}
+        res.update({'line_id': line_id, 'quantity': quantity})
+        return res
 
     def _cart_accessories(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids, context=context):
