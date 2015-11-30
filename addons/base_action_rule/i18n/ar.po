@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2015-07-29 06:08+0000\n"
+"PO-Revision-Date: 2015-11-19 17:08+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,7 @@ msgstr ""
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr ""
+msgstr "متى يجب إطلاق الشرط. إذا كتبت شرطاً، فسيتم فحصه بواسطة المجدول. أما إذا تركته فارغاً فسيتم فحصه عند الإنشاء أو التحديث."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -56,17 +56,17 @@ msgstr "مسئول"
 #. module: base_action_rule
 #: help:base.action.rule,server_action_ids:0
 msgid "Examples: email reminders, call object service, etc."
-msgstr ""
+msgstr "أمثلة: تذكير البريد الإلكتروني، خدمة هدف المكالمة، الخ."
 
 #. module: base_action_rule
 #: field:base.action.rule,act_followers:0
 msgid "Add Followers"
-msgstr ""
+msgstr "إضافة متابعون"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_user_id:0
 msgid "Set Responsible"
-msgstr ""
+msgstr "تعيين مسؤول"
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_range:0
@@ -74,7 +74,7 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
+msgstr "تأخير بعد تاريخ الإطلاق. يمكن وضع رقم سالب إذا كنت في حاجة الى تأخير قبل تاريخ الإطلاق، مثل إرسال تذكير قبل الاجتماع ب 15 دقيقة ."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -114,7 +114,7 @@ msgstr "الحالة"
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr ""
+msgstr "قبل تحديث الفلتر"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -135,7 +135,7 @@ msgstr "حقول للتغيير"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "The filter must therefore be available in this page."
-msgstr ""
+msgstr "لذا يجب أن يكون المصفي متوفرا في هذه الصفحة."
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_id:0
@@ -223,12 +223,12 @@ msgstr "تأخير النوع"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Server actions to run"
-msgstr ""
+msgstr "إجراءات الخادم للتشغيل "
 
 #. module: base_action_rule
 #: help:base.action.rule,active:0
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "عند عدم الاختيار، القاعدة خفية ولن يتم تنفيذها."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -253,14 +253,14 @@ msgstr "دقائق"
 #. module: base_action_rule
 #: field:base.action.rule,model_id:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "نموذج الوثائق ذات الصلة"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
-msgstr ""
+msgstr "إذا كان موجودا، يجب أن يكون نفاذ هذا الشرط قبل التحديث للسجل."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -285,7 +285,7 @@ msgid ""
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لضبط قاعدة إجرائية تنفذ آلياً.\n</p><p>\nاستخدم القواعد الإجرائية الآلية لتنفيذ إجراءات معينة\nفي بعض الواجهات. مثل: عند إنشاء عميل مرشح جديد\nبواسطة مستخدم معين، يتم إسناده إلى فريق مبيعات\nمعين، أو أن فرصة بيع مفتوحة لمدة 14 يوماً بدون نشاط\nعليها سيرسل رسالة تذكير بالبريد الإلكتروني.\n</p>"
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0

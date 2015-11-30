@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-17 08:26+0000\n"
+"PO-Revision-Date: 2015-11-30 08:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-7/language/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr "Nustatyti rodomo pranešimo tvarką 'Apskaita \\ Ataskaitos \\ Bendra at
 #. module: account
 #: view:res.partner:0
 msgid "the parent company"
-msgstr ""
+msgstr "Tėvinė įmonė"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -665,7 +665,7 @@ msgstr "Ataskaita pagal pardavimų sąskaitos tipą"
 #: code:addons/account/account.py:3209
 #, python-format
 msgid "SAJ"
-msgstr ""
+msgstr "PARD"
 
 #. module: account
 #: code:addons/account/account.py:1562
@@ -749,7 +749,7 @@ msgstr "Kredituoti"
 msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
-msgstr ""
+msgstr "Šio žurnalo įrašo data nėra apibrėžta jokiam periode. Jūs turite pakeisti datą arba pašalinti įrašą."
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -783,7 +783,7 @@ msgstr "Spausdinti S/F"
 msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr ""
+msgstr "Negalima %s sąskaitos, kuri yra jau sugretinta, sąskaitą turėtų būti nesugretinta pirma. Jūs tik galite atlikti sąskaitos grąžinimą."
 
 #. module: account
 #: view:account.account:0
@@ -1173,7 +1173,7 @@ msgstr "Ginčytinas"
 #: code:addons/account/account_invoice.py:1474
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "Jūs turite pasirinkti partnerį!"
 
 #. module: account
 #: view:account.journal:0
@@ -1739,7 +1739,7 @@ msgstr "PVM SĄSKAITA-FAKTŪRA"
 #. module: account
 #: field:account.move,balance:0
 msgid "balance"
-msgstr ""
+msgstr "balansas"
 
 #. module: account
 #: model:process.node,note:account.process_node_analytic0
@@ -2348,7 +2348,7 @@ msgstr "Ši reikšmė naudojama išskirti sąskaitų tipus naudojant kai kurias 
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
-msgstr ""
+msgstr "Sąskaitų plano šablonų paieška"
 
 #. module: account
 #: report:account.invoice:0
@@ -2631,7 +2631,7 @@ msgstr "Sąskaitos modelio įrašai"
 #: code:addons/account/account.py:3210
 #, python-format
 msgid "EXJ"
-msgstr ""
+msgstr "IŠL"
 
 #. module: account
 #: field:product.template,supplier_taxes_id:0
@@ -4928,7 +4928,7 @@ msgstr "Žurnalų įrašai, kuriuos reikia peržiūrėti"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round Globally"
-msgstr ""
+msgstr "Apvalinti globaliai"
 
 #. module: account
 #: view:account.bank.statement:0 view:account.subscription:0
@@ -5569,7 +5569,7 @@ msgstr "Suma nurodyta valiuta"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round per Line"
-msgstr ""
+msgstr "Apvalinti kiekvienai eilutei"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -6726,7 +6726,7 @@ msgstr "Viso tranzakcijų"
 #: code:addons/account/account.py:645
 #, python-format
 msgid "You cannot remove an account that contains journal items."
-msgstr ""
+msgstr "Jūs negalite pašalinti sąskaitos, kurioje yra žurnalo įrašų."
 
 #. module: account
 #: field:account.financial.report,style_overwrite:0
@@ -6769,7 +6769,7 @@ msgstr "Atšaukti: sukurti kreditinę S/F ir sudengti su šia S/F"
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
 #, python-format
 msgid "You must set a start date."
-msgstr ""
+msgstr "Jūs privalote nustatyti pradžios datą"
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -7531,7 +7531,7 @@ msgstr "Uždaromi finansiniai metai"
 #: view:account.invoice.cancel:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_cancel
 msgid "Cancel Selected Invoices"
-msgstr ""
+msgstr "Atšaukti pasirinktas S/F"
 
 #. module: account
 #: help:account.account.type,report_type:0
@@ -9718,7 +9718,7 @@ msgstr "Iš viso"
 #: code:addons/account/wizard/account_invoice_refund.py:118
 #, python-format
 msgid "Cannot %s draft/proforma/cancel invoice."
-msgstr ""
+msgstr "Cannot %s draft/proforma/cancel invoice."
 
 #. module: account
 #: field:account.tax,account_analytic_paid_id:0
@@ -10373,7 +10373,7 @@ msgstr "Dažniausiai 1 arba -1"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Template Account Fiscal Mapping"
-msgstr ""
+msgstr "Sąskaitos fiskalinės pozicijos šablonas"
 
 #. module: account
 #: field:account.chart.template,property_account_expense:0

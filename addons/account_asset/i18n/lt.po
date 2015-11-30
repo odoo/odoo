@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2015-07-17 08:28+0000\n"
+"PO-Revision-Date: 2015-11-30 09:00+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-7/language/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -151,7 +151,7 @@ msgstr "Nusidėvėjimo data"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Klaida! Jūs negalite sukurti ciklinio turto"
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -288,7 +288,7 @@ msgstr "Likutinė vertė"
 #. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
-msgstr ""
+msgstr "Laikas mėnesyje tarp dviejų nusidevėjimų"
 
 #. module: account_asset
 #: view:asset.modify:0
@@ -327,7 +327,7 @@ msgstr "Ilgalaikio turto istorija"
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Search Asset Category"
-msgstr ""
+msgstr "Ieškoti ilg. turto kategorijoje"
 
 #. module: account_asset
 #: view:asset.modify:0
@@ -347,7 +347,7 @@ msgstr "Nusidėvėjimo lenta"
 #. module: account_asset
 #: field:asset.asset.report,unposted_value:0
 msgid "Unposted Amount"
-msgstr ""
+msgstr "Nepaskelbta suma"
 
 #. module: account_asset
 #: field:account.asset.asset,method_time:0
@@ -400,7 +400,7 @@ msgid ""
 "When an asset is created, the status is 'Draft'.\n"
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
+msgstr "Kai sukuriamas turtas, jam suteikiama \"Juodraštis\" būsena.\nJėigu turtas yra patvirtinimas, jo būsena pakeičiama į \"Veikiantis\" ir nusidevėjimo eilutės gali būti įrašytos į apskaitą.\nJūs rankiniu būdu galite uždaryti turtą, kai pasibaigia nusidevėjimas. Jeigu paskutinis nusidevėjimo įrašas yra įrašomas, turtas automatiškai yra uždaromas."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0 field:asset.asset.report,state:0
@@ -421,7 +421,7 @@ msgstr "Užregistruoti nusidėvėjimo DK įrašai"
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
 msgid "Children Assets"
-msgstr ""
+msgstr "Vaikinis turtas"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -466,7 +466,7 @@ msgstr "Aktyvus"
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
 msgid "State of Asset"
-msgstr ""
+msgstr "Turto būklė"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
@@ -556,7 +556,7 @@ msgstr "Naudojami"
 #: code:addons/account_asset/account_asset.py:82
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
-msgstr ""
+msgstr "Jūs negalite ištrinti turto, nes turtas turi nusidevėjimo eilučių"
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -626,7 +626,7 @@ msgid ""
 "            so, match this analysis to your needs;\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p>\n            Šioje ataskaitoje Jūs galite peržvelgti visą nusidevėjimą. Galite naudotis paieškos įrankiu, kuris padės labiau personalizuoti ilgalaikio turto ataskaitas,\n            kad jos atitiktų Jūsų analizės standartus;\n          </p>\n        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -653,7 +653,7 @@ msgstr "Metai"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr ""
+msgstr "Ilgalaikio turto nusidevėjimo eilutė"
 
 #. module: account_asset
 #: view:account.asset.category:0 field:asset.asset.report,asset_category_id:0
@@ -670,7 +670,7 @@ msgstr "Nusidėvėjusi vertė"
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:50
 #, python-format
 msgid "Created Asset Moves"
-msgstr ""
+msgstr "Sukurti nusidevėjimo įrašai"
 
 #. module: account_asset
 #: view:account.asset.asset:0

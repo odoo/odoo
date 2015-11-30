@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-10-21 09:46+0000\n"
+"PO-Revision-Date: 2015-11-15 07:26+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-7/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -20,13 +20,13 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "No order to invoice, create"
-msgstr ""
+msgstr "Buat & Lihat Faktur"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:548
 #, python-format
 msgid "Timesheets to Invoice of %s"
-msgstr ""
+msgstr "Jadwal untuk faktur dari %s"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -46,47 +46,47 @@ msgstr "Pada Faktur"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Remaining"
-msgstr ""
+msgstr "Sisa"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr ""
+msgstr "Tingkat Margin nyata (%)"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End date passed or prepaid unit consumed"
-msgstr ""
+msgstr "Akhir tanggal lulus atau prabayar unit dikonsumsi"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
 msgid "Date of Last Cost/Work"
-msgstr ""
+msgstr "Tanggal terakhir biaya kerja"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr ""
+msgstr "Jumlah"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "⇒ Invoice"
-msgstr ""
+msgstr "⇒ Faktur"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "Jumlah tagihan"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr ""
+msgstr "Tanggal terakhir ditagih biaya"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
-msgstr ""
+msgstr "Jumlah kutipan untuk kontrak ini."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
@@ -99,12 +99,12 @@ msgid ""
 "                at a fix price on a contract.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">Klik untuk membuat kuotasi yang dapat dikonversi menjadi order penjualan.</p><p>Penggunaan dijual perintah untuk melacak segala sesuatu yang harus ditagih dengan memperbaiki harga pada kontrak.</p>"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr ""
+msgstr "Pelanggan ditagih jumlah account ini."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -114,12 +114,12 @@ msgstr "Dibatalkan"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
-msgstr ""
+msgstr "Jumlah baris absen ditagih untuk kontrak ini."
 
 #. module: account_analytic_analysis
 #: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
 msgid "Contract expiration reminder ${user.company_id.name}"
-msgstr ""
+msgstr "Kontrak kedaluwarsa pengingat ${di user.company_id.name}"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:465
@@ -130,12 +130,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End date is in the next month"
-msgstr ""
+msgstr "Tanggal akhir adalah dalam bulan berikutnya"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr ""
+msgstr "Dihitung dengan menggunakan formula: ditagih jumlah / Total waktu"
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,account_id:0
@@ -152,7 +152,7 @@ msgstr "Rekanan"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts that are not assigned to an account manager."
-msgstr ""
+msgstr "Kontrak yang tidak ditetapkan ke manajer akun."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -189,22 +189,22 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expected"
-msgstr ""
+msgstr "Diharapkan margin * 100 / diharapkan dijual"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Closed contracts"
-msgstr ""
+msgstr "Kontrak tertutup"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theoretical Revenue - Total Costs"
-msgstr ""
+msgstr "Dihitung dengan menggunakan formula: teoritis pendapatan - biaya Total"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr ""
+msgstr "Waktu tagihan"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_to_invoice:0
@@ -212,14 +212,14 @@ msgstr ""
 #: field:account.analytic.account,remaining_hours_to_invoice:0
 #: field:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Remaining Time"
-msgstr ""
+msgstr "Sisa waktu"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid ""
 "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
 "'normal','template'])]}"
-msgstr ""
+msgstr "{'required': [('type', '=', 'kontrak')], 'tidak terlihat': [(' jenis', 'dalam', ['normal', 'Lihat', 'template'])]}"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -229,41 +229,41 @@ msgstr "Daftar Harga"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Worked Time"
-msgstr ""
+msgstr "Dihitung dengan menggunakan formula: waktu maksimum - Total waktu bekerja"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
 msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
-msgstr ""
+msgstr "Jumlah waktu yang Anda habiskan pada rekening analitik (dari absen). Itu menghitung jumlah pada semua jurnal jenis 'umum'."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Nothing to invoice, create"
-msgstr ""
+msgstr "tak ada faktur, membuat"
 
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
-msgstr ""
+msgstr "Wajib penggunaan template dalam kontrak"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
-msgstr ""
+msgstr "Jika faktur dari biaya, ini adalah waktu kerja terbaru atau biaya yang telah ditagih."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
-msgstr ""
+msgstr "Total bekerja waktu"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr ""
+msgstr "Margin nyata"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -275,27 +275,27 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts assigned to a customer."
-msgstr ""
+msgstr "Kontrak"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr ""
+msgstr "Jam Ringkasan oleh bulan"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending contracts"
-msgstr ""
+msgstr "Tertunda kontrak"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
+msgstr "Menghitung menggunakan rumus: (Real Margin / Total biaya) * 100."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "or view"
-msgstr ""
+msgstr "atau melihat"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -305,7 +305,7 @@ msgstr "Induk"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Units Consumed"
-msgstr ""
+msgstr "Unit Logistik"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -317,7 +317,7 @@ msgstr "Bulan"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "Time & Materials to Invoice"
-msgstr ""
+msgstr "Waktu & bahan untuk faktur"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -327,7 +327,7 @@ msgstr "Tanggal Mulai"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expiring soon"
-msgstr ""
+msgstr "Segera berakhir"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -403,7 +403,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Jadwal"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -415,12 +415,12 @@ msgstr "Ditutup"
 msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
-msgstr ""
+msgstr "Jumlah waktu (jam/hari) (dari jurnal jenis 'umum') yang dapat ditagih jika Anda faktur berdasarkan akun Analytics."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
 msgid "Overdue Quantity"
-msgstr ""
+msgstr "Jumlah yang terlambat"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -430,7 +430,7 @@ msgstr "Status"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
-msgstr ""
+msgstr "Pendapatan teoritis"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -453,7 +453,7 @@ msgstr "Order Penjualan"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "If invoice from the costs, this is the date of the latest invoiced."
-msgstr ""
+msgstr "Jika faktur dari biaya, ini adalah tanggal Pemesanan tagihan."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -461,7 +461,7 @@ msgid ""
 "Based on the costs you had on the project, what would have been the revenue "
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
-msgstr ""
+msgstr "Berdasarkan biaya Anda memiliki pada proyek, apa yang akan menjadi pendapatan jika semua biaya-biaya tersebut telah ditagih dengan harga normal penjualan yang disediakan oleh pricelist."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -472,7 +472,7 @@ msgstr "Pengguna"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Cancelled contracts"
-msgstr ""
+msgstr "Kontrak dibatalkan"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -485,12 +485,12 @@ msgid ""
 "                    terms and conditions of the contract.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\"\n>Klik di sini untuk membuat template kontrak.\n</p><p>\nTemplate yang digunakan untuk memberi gambaran kontrak/proyek yang dapat dipilih oleh para penjual untuk dengan cepat mengkonfigurasi\n syarat dan ketentuan kontrak.\n</p>"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours Summary by User"
-msgstr ""
+msgstr "Jam Ringkasan oleh pengguna"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -502,24 +502,24 @@ msgstr "Kontrak"
 msgid ""
 "Allows you to set the template field as required when creating an analytic "
 "account or a contract."
-msgstr ""
+msgstr "Memungkinkan Anda untuk mengatur bidang template sebagai diperlukan saat membuat account analitis atau kontrak."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
 msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
-msgstr ""
+msgstr "Jumlah waktu (jam/hari) yang dapat ditagih ditambah mereka yang sudah memiliki faktur."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Time (real)"
-msgstr ""
+msgstr "Pendapatan per waktu (real)"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expired or consumed"
-msgstr ""
+msgstr "Kadaluarsa atau dikonsumsi"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
@@ -537,22 +537,22 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
 msgid "Total to Invoice"
-msgstr ""
+msgstr "Total untuk faktur"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts not assigned"
-msgstr ""
+msgstr "Kontrak tidak ditetapkan"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Customer Contracts"
-msgstr ""
+msgstr "Pelanggan kontrak"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Total Faktur"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -562,22 +562,22 @@ msgstr "Dalam Proses"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr ""
+msgstr "Dihitung dengan menggunakan formula: Max faktur harga - jumlah tagihan."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts in progress (open, draft)"
-msgstr ""
+msgstr "Kontrak dalam kemajuan (terbuka, draft)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
-msgstr ""
+msgstr "Tanggal faktur terakhir"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Units Remaining"
-msgstr ""
+msgstr "Unit-unit yang tersisa"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -589,12 +589,12 @@ msgid ""
 "                menu instead.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>Anda akan menemukan di sini timesheets dan pembelian yang Anda lakukan untuk kontrak yang dapat reinvoiced kepada pelanggan.  Jika Anda ingin untuk merekam kegiatan baru untuk faktur, Anda harus menggunakan menu absen.</p>"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr ""
+msgstr "Uninvoiced waktu"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -604,7 +604,7 @@ msgstr "invoicing"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
 msgid "Total Costs"
-msgstr ""
+msgstr "Total biaya"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_total:0
@@ -612,48 +612,48 @@ msgid ""
 "Expectation of remaining income for this contract. Computed as the sum of "
 "remaining subtotals which, in turn, are computed as the maximum between "
 "'(Estimation - Invoiced)' and 'To Invoice' amounts"
-msgstr ""
+msgstr "Harapan sisa pendapatan untuk kontrak ini. Dihitung sebagai jumlah sisa subtotals yang, pada gilirannya, dihitung sebagai maksimum antara '(estimasi - ditagih)' dan 'Untuk faktur' jumlah"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "Kontrak untuk memperbarui"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
 msgid " Sum of everything that could be invoiced for this contract."
-msgstr ""
+msgstr "Jumlah dari segala sesuatu yang dapat ditagih untuk kontrak ini."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
-msgstr ""
+msgstr "Margin teoritis"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_total:0
 msgid "Total Remaining"
-msgstr ""
+msgstr "Jumlah sisa"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr ""
+msgstr "Dihitung dengan menggunakan formula: ditagih jumlah - biaya Total."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
 msgid "Estimation of Hours to Invoice"
-msgstr ""
+msgstr "Estimasi jam untuk faktur"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr ""
+msgstr "Harga Tetap"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr ""
+msgstr "Tanggal karya terakhir dilakukan pada account ini."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -672,54 +672,54 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:sale.config.settings,group_template_required:0
 msgid "Mandatory use of templates."
-msgstr ""
+msgstr "Wajib penggunaan template."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
 msgid "Contract Template"
-msgstr ""
+msgstr "Kontrak"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
-msgstr ""
+msgstr "Total biaya untuk account ini. Ini mencakup biaya riil (dari faktur) dan biaya tidak langsung, seperti waktu yang dihabiskan jadwal."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
 msgid "Total Estimation"
-msgstr ""
+msgstr "Total estimasi"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
-msgstr ""
+msgstr "Sisa pendapatan"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
 msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
-msgstr ""
+msgstr "Jika faktur dari rekening analitik, jumlah sisa Anda dapat faktur kepada pelanggan berdasarkan biaya total."
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
-msgstr ""
+msgstr "Waktu keseluruhan"
 
 #. module: account_analytic_analysis
 #: model:res.groups,comment:account_analytic_analysis.group_template_required
 msgid ""
 "the field template of the analytic accounts and contracts will be required."
-msgstr ""
+msgstr "template bidang analitik account dan kontrak akan diperlukan."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0
 msgid "On Timesheets"
-msgstr ""
+msgstr "Memungkinkan timesheets validasi oleh Manajer"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0

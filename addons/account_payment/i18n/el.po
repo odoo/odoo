@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-17 08:32+0000\n"
+"PO-Revision-Date: 2015-11-22 15:48+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-7/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgid ""
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Επιλέξτε για να δημιουργήσετε μία παραγγελία πληρωμής.\n              </p><p>\n                Μια παραγγελία πληρωμής είναι ένα αίτημα πληρωμής από την εταιρία σας για να πληρώσει\n                ένα τιμολόγιο προμηθευτή ή μία αποζημίωση πελάτη.\n              </p>\n            "
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -69,7 +69,7 @@ msgstr "Εταιρία"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "Λογιστική / Πληρωμές"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -100,7 +100,7 @@ msgstr "_Προσθήκη σε εντολή πληρωμής"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "Συμπλήρωση Δήλωσης Πληρωμής"
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
@@ -108,7 +108,7 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
+msgstr "Δεν μπορείτε να ακυρώσετε ένα τιμολόγιο το οποίο έχει ήδη εισαχθεί σε μία πληρωμή παραγγελίας. Αφαιρέστε το από την ακόλουθη πληρωμή παραγγελίας : %s."
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
@@ -176,7 +176,7 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
+msgstr "Όταν τοποθετηθεί μία παραγγελία η κατάσταση είναι 'Πρόχειρη'.\n Μόλις επιβεβαιωθεί η τράπεζα η κατάσταση ορίζεται ως 'Επιβεβαιωμένη'.\n Στη συνέχεια η παραγγελία πληρώνεται και η κατάσταση είναι 'Ολοκληρωμένη'."
 
 #. module: account_payment
 #: view:payment.order:0 selection:payment.order,state:0
@@ -201,7 +201,7 @@ msgstr "Δομημένο"
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import Payment Lines"
-msgstr ""
+msgstr "Εισαγωγή Γραμμών Πληρωμών"
 
 #. module: account_payment
 #: view:payment.line:0 view:payment.order:0
@@ -242,7 +242,7 @@ msgstr "Ημερομηνία Δημιουργίας"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Ημερολόγιο Τράπεζας ή Μετρητών για τον Τρόπο Πληρωμής"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -335,13 +335,13 @@ msgstr "Εάν δεν υπάρχει καθορισμένη ημερομηνία
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
-msgstr ""
+msgstr "Συμπλήρωση Δήλωσης Πληρωμής Λογαριασμού"
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "Δεν έχει οριστεί συνεργάτης στην γραμμή εισαγωγής."
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -351,7 +351,7 @@ msgstr "Κατάσταση των Πληρωμών"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "Αξία Ημερομηνίας"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -386,7 +386,7 @@ msgstr "Διεύθυνση του Πελάτη Παραγγελίας."
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr ""
+msgstr "Συμπλήρωση Δήλωσης:"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
@@ -433,7 +433,7 @@ msgstr "Σύνολο:"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Ημερομηνία Εκτέλεσης"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -463,7 +463,7 @@ msgstr "Ο Πελάτης Παραγγελίας"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "Πληρωμή Λογαριασμού"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -509,7 +509,7 @@ msgstr "Άκυρο"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "Τραπεζικός Λογαριασμός Προορισμού"
 
 #. module: account_payment
 #: view:payment.line:0 view:payment.order:0
@@ -582,7 +582,7 @@ msgstr "Πληρωμή"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "Πληρωμή Παραγγελίας / Πληρωμή"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -624,7 +624,7 @@ msgstr "Εντολή"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Cancel Payments"
-msgstr ""
+msgstr "Ακύρωση Πληρωμών"
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -651,7 +651,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "Προτιμώμενη Ημερομηνία"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0

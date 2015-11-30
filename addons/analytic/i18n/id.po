@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-10-21 09:46+0000\n"
+"PO-Revision-Date: 2015-11-17 03:49+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-7/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr ""
+msgstr "Akun"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -36,7 +36,7 @@ msgstr "Kontrak:"
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_pending
 msgid "Contract pending"
-msgstr ""
+msgstr "Ditunda"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -51,7 +51,7 @@ msgstr "Tanggal berakhir"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
+msgstr "Menentukan jumlah kuantitas untuk menghitung."
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -67,7 +67,7 @@ msgid ""
 "                                        reached, the account manager is notified \n"
 "                                        by email to renew the contract with the\n"
 "                                        customer."
-msgstr ""
+msgstr "Setelah tanggal akhir kontrak dilewatkan atau jumlah maksimum unit layanan (misalnya kontrak dukungan) tercapai, manajer account diberitahukan melalui email untuk memperbaharui kontrak dengan pelanggan."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -77,7 +77,7 @@ msgstr "Kontrak atau Proyek"
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account/Contract Name"
-msgstr ""
+msgstr "Nama kontrak untuk memperbaharui segera"
 
 #. module: analytic
 #: field:account.analytic.account,manager_id:0
@@ -95,7 +95,7 @@ msgstr "Pengikut"
 msgid ""
 "If you set a company, the currency selected has to be the same as it's currency. \n"
 "You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
-msgstr ""
+msgstr "Jika Anda menetapkan sebuah perusahaan, mata uang yang dipilih harus sama dengan itu mata uang. Anda dapat menghapus perusahaan milik, dan dengan demikian mengubah mata uang, hanya pada akun analitik tipe 'view'. Ini dapat benar-benar berguna untuk tujuan konsolidasi beberapa perusahaan grafik dengan mata uang yang berbeda, misalnya."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -131,7 +131,7 @@ msgstr "%s (copy)"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "analitik entri berdasarkan baris"
 
 #. module: analytic
 #: field:account.analytic.account,description:0
@@ -143,7 +143,7 @@ msgstr "Keterangan"
 #: code:addons/analytic/analytic.py:262
 #, python-format
 msgid "Quick account creation disallowed."
-msgstr ""
+msgstr "Pembuatan account cepat dianulir."
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
@@ -153,7 +153,7 @@ msgstr "Pesan Belum Dibaca"
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You cannot create recursive analytic accounts."
-msgstr ""
+msgstr "Salah ! Anda tidak dapat membuat aset rekursif"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -171,24 +171,24 @@ msgstr "Pembaruan"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Gelar ringkasan menyimpang (jumlah pesan, ...). Ringkasan ini langsung dalam format html untuk dimasukkan dalam pandangan kanban."
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
-msgstr ""
+msgstr "Menetapkan batas yang lebih tinggi dari waktu untuk bekerja pada kontrak, berdasarkan absen. (misalnya, jumlah jam dalam kontrak dukungan terbatas.)"
 
 #. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ini Pengikut"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -198,7 +198,7 @@ msgstr "Pengguna"
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
 msgid "Parent Analytic Account"
-msgstr ""
+msgstr "Induk Akun pajak"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -208,12 +208,12 @@ msgstr "Tanggal"
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_closed
 msgid "Contract Finished"
-msgstr ""
+msgstr "Selesai"
 
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Syarat dan Ketentuan"
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -225,7 +225,7 @@ msgstr "Tanggal kadaluarsa"
 msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
-msgstr ""
+msgstr "Dihitung dengan mengalikan kuantitas dan harga yang diberikan dalam harga biaya Produk. Selalu dinyatakan dalam mata uang utama perusahaan."
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
@@ -235,7 +235,7 @@ msgstr "Pelanggan"
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr ""
+msgstr "Akun Hierarchy"
 
 #. module: analytic
 #: field:account.analytic.account,message_ids:0
@@ -245,12 +245,12 @@ msgstr "Pesan"
 #. module: analytic
 #: help:account.analytic.account,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Pesan dan riwayat komunikasi"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You cannot create analytic line on view account."
-msgstr ""
+msgstr "Anda tidak dapat membuat garis analitik pada tampilan akun."
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -261,7 +261,7 @@ msgstr "Informasi kontrak"
 #: field:account.analytic.account,template_id:0
 #: selection:account.analytic.account,type:0
 msgid "Template of Contract"
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\"\n>Klik di sini untuk membuat template kontrak.\n</p><p>\nTemplate yang digunakan untuk memberi gambaran kontrak/proyek yang dapat dipilih oleh para penjual untuk dengan cepat mengkonfigurasi\n syarat dan ketentuan kontrak.\n</p>"
 
 #. module: analytic
 #: field:account.analytic.account,message_summary:0
@@ -271,7 +271,7 @@ msgstr "Ringkasan"
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Prepaid Service Units"
-msgstr ""
+msgstr "Layanan"
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -290,7 +290,7 @@ msgid ""
 "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
 "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
 "The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
-msgstr ""
+msgstr "Jika Anda memilih View Type, itu berarti Anda tidak akan memungkinkan untuk membuat entri jurnal menggunakan akun itu. Jenis 'akun Analytic' singkatan account biasa bahwa Anda hanya ingin menggunakan dalam akuntansi. Jika Anda memilih kontrak atau Proyek, ia menawarkan kemungkinan untuk mengelola validitas dan pilihan faktur untuk akun ini. Jenis khusus 'Template Kontrak' memungkinkan Anda untuk menentukan template dengan data default yang dapat Anda menggunakan kembali dengan mudah."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -300,7 +300,7 @@ msgstr "Dibatalkan"
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Analytic View"
-msgstr ""
+msgstr "Analisis"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -385,4 +385,4 @@ msgstr "Tanggal Mulai"
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr ""
+msgstr "analitik entri berdasarkan baris"

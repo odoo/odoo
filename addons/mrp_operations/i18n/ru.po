@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"PO-Revision-Date: 2015-11-19 22:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-7/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr "Наряд-заказы"
 #: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Operation is already finished!"
-msgstr ""
+msgstr "Операция уже завершена!"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_canceloperation0
@@ -75,7 +75,7 @@ msgstr "Возобновить"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Product to Produce"
-msgstr ""
+msgstr "Продукт к Производству"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation:0
@@ -106,7 +106,7 @@ msgstr ""
 #: code:addons/mrp_operations/mrp_operations.py:134
 #, python-format
 msgid "Manufacturing order cannot be started in state \"%s\"!"
-msgstr ""
+msgstr "Заказ на Производство не может быть запущен в состоянии \"%s\"!"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0 field:mrp.workorder,day:0
@@ -159,7 +159,7 @@ msgstr "Отменено"
 #: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Operation is Already Cancelled!"
-msgstr ""
+msgstr "Операция уже Отменена"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
@@ -176,14 +176,14 @@ msgstr "Движение запасов"
 #: code:addons/mrp_operations/mrp_operations.py:481
 #, python-format
 msgid "No operation to cancel."
-msgstr ""
+msgstr "Нет операций для отменены."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:474
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr ""
+msgstr "Для того, чтобы завершить операцию, он должен быть в состоянии Старт или в Продолжить!"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
@@ -201,7 +201,7 @@ msgstr "Черновик"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Actual Production Date"
-msgstr ""
+msgstr "Фактическая Дата Производства"
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,state:0
@@ -211,12 +211,12 @@ msgid ""
 "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
 "* When order is completely processed that time it is set in 'Finished' status."
-msgstr ""
+msgstr "* Когда заказ на производство создан он установлен в статус \"Черновик\".\n* Когда пользователь устанавливает заказ на производство в режим старта, это он будет установлен в статус \"В Процессе\".\n* Когда заказ на производство в запущенном в режиме, в течение этого времени, если пользователь хочет, чтобы остановить или внести изменения в заказ, то можно установить в статус \"В ожидании\".\n* Когда пользователь отменяет заказ на производство он будет установлен в статус ''Отменено\".\n* Когда заказ полностью обработан, в это время устанавливается статус в ''Завершено\"."
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production Workcenter"
-msgstr ""
+msgstr "Производственный Рабочий Центр"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
@@ -251,7 +251,7 @@ msgstr "Аналитика нарядов"
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 msgid "Work Orders By Resource"
-msgstr ""
+msgstr "Наряд-заказы по Ресурсам"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -299,7 +299,7 @@ msgstr "Будущие наряды"
 #. module: mrp_operations
 #: view:mrp.production:0
 msgid "Finish Order"
-msgstr ""
+msgstr "Завершенный Заказ"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
@@ -320,7 +320,7 @@ msgstr ""
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
 msgid "The elapsed time between operation start and stop in this Work Center"
-msgstr ""
+msgstr "Время, прошедшее между началом эксплуатации и остановки в этом Рабочем Центре"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
@@ -330,7 +330,7 @@ msgstr "Операция отменена"
 #. module: mrp_operations
 #: view:mrp.production:0
 msgid "Pause Work Order"
-msgstr ""
+msgstr "Приостановить Наряд [Заказ] на выполнение работы"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -376,7 +376,7 @@ msgstr "Ожидание товара"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
 msgid "Production Status"
-msgstr ""
+msgstr "Статус Производства"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,state:0
@@ -396,13 +396,13 @@ msgstr "Выполняется"
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
-msgstr ""
+msgstr "Для того, чтобы Приостановить операцию, она должна быть в состоянии Начать или в Продолжить!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:469
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr ""
+msgstr "Для того, чтобы Возобновить работу, он должен быть в состоянии Пауза!"
 
 #. module: mrp_operations
 #: view:mrp.production:0 view:mrp.production.workcenter.line:0
@@ -444,7 +444,7 @@ msgstr "Код производственной операции"
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
-msgstr ""
+msgstr "Операция уже началась! Вы можете выбрать Пауза/Завершено/Отменить для операции."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -459,7 +459,7 @@ msgstr "Запущено"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production started late"
-msgstr ""
+msgstr "Дата начато с опозданием"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -484,7 +484,7 @@ msgstr "Готово к производству"
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
 msgid "Children Moves"
-msgstr ""
+msgstr "Подчиненные Перемещения"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
@@ -519,7 +519,7 @@ msgstr "Январь"
 #. module: mrp_operations
 #: view:mrp.production:0
 msgid "Resume Work Order"
-msgstr ""
+msgstr "Возобновить Наряд-заказ"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_doneoperation0
@@ -591,7 +591,7 @@ msgstr "Отмена"
 #: code:addons/mrp_operations/mrp_operations.py:454
 #, python-format
 msgid "Operation is not started yet!"
-msgstr ""
+msgstr "Операция еще не начата!"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -643,7 +643,7 @@ msgstr "Производство"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Search Work Orders"
-msgstr ""
+msgstr "Поиск Наряд-заказов"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0 view:mrp.workorder:0
@@ -674,7 +674,7 @@ msgstr "Общее время"
 msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
-msgstr ""
+msgstr "Установите этот флажок, чтобы быть в состоянии двигаться самостоятельно все производственные заказы, без перемещения зависимых."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -691,7 +691,7 @@ msgstr "Завершено"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Hours by Work Center"
-msgstr ""
+msgstr "Часов по Рабочему центру"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0
@@ -701,7 +701,7 @@ msgstr "Рабочие часы"
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Planned Month"
-msgstr ""
+msgstr "Планируемый месяц"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-05-22 12:55+0000\n"
+"PO-Revision-Date: 2015-11-28 06:38+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-7/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "$ {(object.name atau '') Menggantikan ('/', '_')} _ $ {object.state == 'draft' dan 'draft' atau ''}"
 
 #. module: portal_sale
 #: model:res.groups,name:portal_sale.group_payment_options
@@ -168,12 +168,12 @@ msgstr "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'dra
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${di object.company_id.name|safe} ${object.state di ('draft', 'dikirim') dan 'Kutipan' atau 'Order'} (Ref ${object.name atau 'n/a'})"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Outgoing Mail"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
@@ -208,7 +208,7 @@ msgstr "Invoices"
 #. module: portal_sale
 #: view:account.config.settings:0
 msgid "Configure payment acquiring methods"
-msgstr ""
+msgstr "Mengkonfigurasi metode pembayaran mengakuisisi"
 
 #. module: portal_sale
 #: model:email.template,body_html:portal_sale.email_template_edi_invoice
