@@ -1922,31 +1922,6 @@ class StockMove(models.Model):
                         move.move_dest_id.write(propagated_changes_dict)
         return super(StockMove, self).write(vals)
 
-# on_change="onchange_quantity(product_id, product_uom_qty, product_uom)"
-    # def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom):
-    @api.onchange('product_id', 'product_uom_qty', 'product_uom')
-    def onchange_quantity(self):
-        """ On change of product quantity finds UoM
-        """
-        warning = {}
-        if (not self.product_id) or (self.product_uom_qty <= 0.0):
-            self.product_qty = 0.0
-            return
-
-        # Warn if the quantity was decreased
-        if self.ids:
-            for move in self.read(['product_qty']):
-                if self.product_uom_qty < move['product_qty']:
-                    warning.update({
-                        'title': _('Information'),
-                        'message': _("By changing this quantity here, you accept the "
-                                "new quantity as complete: Odoo will not "
-                                "automatically generate a back order.")})
-                break
-        return {'warning': warning}
-
-# on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"
-    # def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False, partner_id=False):
     @api.onchange('product_id', 'location_id', 'location_dest_id', 'partner_id')
     def onchange_product_id(self):
         """ On change of product id, if finds UoM, quantity
@@ -2028,6 +2003,87 @@ class StockMove(models.Model):
         if not move.price_unit:
             price = move.product_id.standard_price
             move.write({'price_unit': price})
+
+    @api.multi
+    def action_confirm(self):
+        """ Confirms stock move or put it in waiting if it's linked to another move.
+        @return: List of ids.
+        """
+        states = {
+            'confirmed': [],
+            'waiting': []
+        }
+        to_assign = {}
+        for move in self:
+            self.attribute_price(move)
+            state = 'confirmed'
+            #if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
+            if move.move_orig_ids:
+                state = 'waiting'
+            #if the move is split and some of the ancestor was preceeded, then it's waiting as well
+            elif move.split_from:
+                move2 = move.split_from
+                while move2 and state != 'waiting':
+                    if move2.move_orig_ids:
+                        state = 'waiting'
+                    move2 = move2.split_from
+            states[state].append(move.id)
+
+            if not move.picking_id and move.picking_type_id:
+                key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
+                if key not in to_assign:
+                    to_assign[key] = []
+                to_assign[key].append(move.id)
+        moves = [move for move in self.browse(states['confirmed']) if move.procure_method == 'make_to_order']
+        self._create_procurements(moves)
+        for move in moves:
+            states['waiting'].append(move.id)
+            states['confirmed'].remove(move.id)
+
+        for state, write_ids in states.items():
+            if len(write_ids):
+                self.browse(write_ids).write({'state': state})
+        #assign picking in batch for all confirmed move that share the same details
+        for key, move_ids in to_assign.items():
+            self.browse(move_ids)._picking_assign()
+        moves = self.browse(self.ids)
+        self._push_apply(moves)
+        return self.ids
+
+    @api.multi
+    def force_assign(self):
+        """ Changes the state to assigned.
+        @return: True
+        """
+        res = self.write({'state': 'assigned'})
+        self.check_recompute_pack_op()
+        return res
+
+    @api.model
+    def check_tracking(self, move, ops):
+        """ Checks if serial number is assigned to stock move or not and raise an error if it had to.
+        """
+        if move.picking_id and (move.picking_id.picking_type_id.use_existing_lots or move.picking_id.picking_type_id.use_create_lots) and \
+            move.product_id.tracking != 'none':
+            if not (move.restrict_lot_id or (ops and ops.pack_lot_ids)):
+                raise UserError(_('You need to provide a Lot/Serial Number for product %s') % move.product_id.name)
+
+    @api.multi
+    def check_recompute_pack_op(self):
+        pickings = list(set([x.picking_id for x in self if x.picking_id]))
+        pickings_partial = []
+        pickings_write = []
+        pick_obj = self.env['stock.picking']
+        for pick in pickings:
+            # Check if someone was treating the picking already
+            if not any([x.qty_done > 0 for x in pick.pack_operation_ids]):
+                pickings_partial.append(pick.id)
+            else:
+                pickings_write.append(pick.id)
+        if pickings_partial:
+            pick_obj.browse(pickings_partial).do_prepare_partial()
+        if pickings_write:
+            pick_obj.browse(pickings_write).write({'recompute_pack_op': True})
 
 class StockInventory(models.Model):
     _name = "stock.inventory"

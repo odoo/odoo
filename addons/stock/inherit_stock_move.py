@@ -21,86 +21,33 @@ from openerp.exceptions import UserError
 class stock_move(osv.osv):
     _inherit = "stock.move"
 
-    def action_confirm(self, cr, uid, ids, context=None):
-        """ Confirms stock move or put it in waiting if it's linked to another move.
-        @return: List of ids.
+    @api.v7
+    def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom):
+        """ On change of product quantity finds UoM
+        @param product_id: Product id
+        @param product_qty: Changed Quantity of product
+        @param product_uom: Unit of measure of product
+        @return: Dictionary of values
         """
-        if not context:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        states = {
-            'confirmed': [],
-            'waiting': []
-        }
-        to_assign = {}
-        for move in self.browse(cr, uid, ids, context=context):
-            self.attribute_price(cr, uid, move, context=context)
-            state = 'confirmed'
-            #if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
-            if move.move_orig_ids:
-                state = 'waiting'
-            #if the move is split and some of the ancestor was preceeded, then it's waiting as well
-            elif move.split_from:
-                move2 = move.split_from
-                while move2 and state != 'waiting':
-                    if move2.move_orig_ids:
-                        state = 'waiting'
-                    move2 = move2.split_from
-            states[state].append(move.id)
+        warning = {}
+        result = {}
 
-            if not move.picking_id and move.picking_type_id:
-                key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
-                if key not in to_assign:
-                    to_assign[key] = []
-                to_assign[key].append(move.id)
-        moves = [move for move in self.browse(cr, uid, states['confirmed'], context=context) if move.procure_method == 'make_to_order']
-        self._create_procurements(cr, uid, moves, context=context)
-        for move in moves:
-            states['waiting'].append(move.id)
-            states['confirmed'].remove(move.id)
+        if (not product_id) or (product_qty <= 0.0):
+            result['product_qty'] = 0.0
+            return {'value': result}
 
-        for state, write_ids in states.items():
-            if len(write_ids):
-                self.write(cr, uid, write_ids, {'state': state})
-        #assign picking in batch for all confirmed move that share the same details
-        for key, move_ids in to_assign.items():
-            self._picking_assign(cr, uid, move_ids, context=context)
-        moves = self.browse(cr, uid, ids, context=context)
-        self._push_apply(cr, uid, moves, context=context)
-        return ids
-
-    def force_assign(self, cr, uid, ids, context=None):
-        """ Changes the state to assigned.
-        @return: True
-        """
-        res = self.write(cr, uid, ids, {'state': 'assigned'}, context=context)
-        self.check_recompute_pack_op(cr, uid, ids, context=context)
-        return res
-
-    def check_tracking(self, cr, uid, move, ops, context=None):
-        """ Checks if serial number is assigned to stock move or not and raise an error if it had to.
-        """
-        if move.picking_id and (move.picking_id.picking_type_id.use_existing_lots or move.picking_id.picking_type_id.use_create_lots) and \
-            move.product_id.tracking != 'none':
-            if not (move.restrict_lot_id or (ops and ops.pack_lot_ids)):
-                raise UserError(_('You need to provide a Lot/Serial Number for product %s') % move.product_id.name)
-
-    def check_recompute_pack_op(self, cr, uid, ids, context=None):
-        pickings = list(set([x.picking_id for x in self.browse(cr, uid, ids, context=context) if x.picking_id]))
-        pickings_partial = []
-        pickings_write = []
-        pick_obj = self.pool['stock.picking']
-        for pick in pickings:
-            # Check if someone was treating the picking already
-            if not any([x.qty_done > 0 for x in pick.pack_operation_ids]):
-                pickings_partial.append(pick.id)
-            else:
-                pickings_write.append(pick.id)
-        if pickings_partial:
-            pick_obj.do_prepare_partial(cr, uid, pickings_partial, context=context)
-        if pickings_write:
-            pick_obj.write(cr, uid, pickings_write, {'recompute_pack_op': True}, context=context)
+        product_obj = self.pool.get('product.product')
+        # Warn if the quantity was decreased
+        if ids:
+            for move in self.read(cr, uid, ids, ['product_qty']):
+                if product_qty < move['product_qty']:
+                    warning.update({
+                        'title': _('Information'),
+                        'message': _("By changing this quantity here, you accept the "
+                                "new quantity as complete: Odoo will not "
+                                "automatically generate a back order.")})
+                break
+        return {'warning': warning}
 
     def action_assign(self, cr, uid, ids, no_prepare=False, context=None):
         """ Checks the product type and accordingly writes the state.

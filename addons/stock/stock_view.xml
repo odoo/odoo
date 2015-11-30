@@ -1314,7 +1314,7 @@
                                 <label for="product_uom_qty"/>
                                 <div class="o_row">
                                     <field name="product_uom_qty"
-                                        />
+                                        on_change="onchange_quantity(product_id, product_uom_qty, product_uom)"/>
                                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                                     <button name="%(stock.move_scrap)d" class="btn-default"
                                             string="Scrap" type="action" context="{'scrap': True}"
@@ -1371,7 +1371,7 @@
                         <field name="group_id" invisible="1"/>
                         <label for="product_uom_qty"/>
                         <div>
-                            <field name="product_uom_qty" class="oe_inline"/>
+                            <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom)" class="oe_inline"/>
                             <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
                             <button name="%(stock.move_scrap)d"
                                 string="Scrap" type="action"
