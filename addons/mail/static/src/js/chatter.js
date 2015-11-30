@@ -781,12 +781,7 @@ var Chatter = form_common.AbstractField.extend({
 
     on_channel_redirect: function (channel_id) {
         var self = this;
-        var def;
-        var channel = chat_manager.get_channel(channel_id);
-        // If not registered to 'channel' yet, do it
-        if (!channel) {
-            def = chat_manager.join_channel(channel_id);
-        }
+        var def = chat_manager.join_channel(channel_id);
         $.when(def).then(function () {
             // Execute Discuss client action with 'channel' as default channel
             var discuss_ids = chat_manager.get_discuss_ids();

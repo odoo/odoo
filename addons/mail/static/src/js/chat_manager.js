@@ -15,6 +15,7 @@ var preview_msg_max_size = 50;
 
 var MessageModel = new Model('mail.message', session.context);
 var ChannelModel = new Model('mail.channel', session.context);
+var UserModel = new Model('res.users', session.context);
 
 // Private model
 //----------------------------------------------------------------------------------
@@ -399,7 +400,7 @@ function on_needaction_notification (message) {
 
 function on_channel_notification (message) {
     var def;
-    if ((message.channel_ids.length === 1) && !chat_manager.get_channel(message.channel_ids[0])) {
+    if (message.channel_ids.length === 1) {
         def = chat_manager.join_channel(message.channel_ids[0], {autoswitch: false});
     } else {
         def = $.when();
@@ -638,15 +639,21 @@ var chat_manager = {
     },
     join_channel: function (channel_id, options) {
         if (channel_id in channel_defs) {
+            // prevents concurrent calls to channel_join_and_get_info
             return channel_defs[channel_id];
         }
-        var def = ChannelModel
-            .call('channel_join_and_get_info', [[channel_id]])
-            .then(function (result) {
-                add_channel(result, options);
-            });
-        channel_defs[channel_id] = def;
-        return def;
+        var channel = this.get_channel(channel_id);
+        if (channel) {
+            // channel already joined
+            channel_defs[channel_id] = $.when(channel);
+        } else {
+            channel_defs[channel_id] = ChannelModel
+                .call('channel_join_and_get_info', [[channel_id]])
+                .then(function (result) {
+                    return add_channel(result, options);
+                });
+        }
+        return channel_defs[channel_id];
     },
 
     unsubscribe: function (channel) {
@@ -670,6 +677,38 @@ var chat_manager = {
         return ChannelModel.call("channel_fold", [], {uuid : channel.uuid}).then(function () {
             channel.is_folded = !channel.is_folded;
         });
+    },
+    /**
+     * Special redirection handling for given model and id
+     *
+     * If the model is res.partner, and there is a user associated with this
+     * partner which isn't the current user, open the DM with this user.
+     * Otherwhise, open the record's form view, if this is not the current user's.
+     */
+    redirect: function (res_model, res_id, dm_redirection_callback) {
+        var self = this;
+        var redirect_to_document = function (res_model, res_id) {
+            web_client.do_action({
+                type:'ir.actions.act_window',
+                view_type: 'form',
+                view_mode: 'form',
+                res_model: res_model,
+                views: [[false, 'form']],
+                res_id: res_id,
+            });
+        };
+        if (res_model === "res.partner") {
+            var domain = [["partner_id", "=", res_id]];
+            UserModel.call("search", [domain]).then(function (user_ids) {
+                if (user_ids.length && user_ids[0] !== session.uid) {
+                    self.create_channel(res_id, 'dm').then(dm_redirection_callback || function () {});
+                } else if (!user_ids.length) {
+                    redirect_to_document(res_model, res_id);
+                }
+            });
+        } else {
+            redirect_to_document(res_model, res_id);
+        }
     },
 };
 

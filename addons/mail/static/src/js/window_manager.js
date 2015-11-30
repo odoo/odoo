@@ -43,6 +43,19 @@ function open_chat (session) {
         chat_session.window.on("messages_read", null, function () {
             chat_manager.mark_channel_as_seen(channel);
         });
+        chat_session.window.on("redirect", null, function (res_model, res_id) {
+            chat_manager.redirect(res_model, res_id, open_chat);
+        });
+        chat_session.window.on("redirect_to_channel", null, function (channel_id) {
+            var session = _.findWhere(chat_sessions, {id: channel_id});
+            if (!session) {
+                chat_manager.join_channel(channel_id).then(function (channel) {
+                    chat_manager.detach_channel(channel);
+                });
+            } else {
+                session.window.toggle_fold(false);
+            }
+        });
 
         chat_sessions.push(chat_session);
         chat_session.window.appendTo($('body'))
