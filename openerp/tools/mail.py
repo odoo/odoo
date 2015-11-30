@@ -140,7 +140,7 @@ def html_email_clean(html):
         node.getparent().remove(node)
 
     # 4. strip signatures
-    signature = re.compile(r'([-]{2}[\s]?[\r\n]{1,2}[^\z]+)')
+    signature = re.compile(r'(^[-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)', re.M)
     for elem in root.getiterator():
         if elem.text:
             match = re.search(signature, elem.text)
