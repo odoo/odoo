@@ -9,9 +9,6 @@ machine:
   services:
     - docker
 dependencies:
-  pre:
-    - npm install -g mocha
-    - npm install -g istanbul
   override:
     - sudo pip install awscli
     - docker info
