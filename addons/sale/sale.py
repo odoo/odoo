@@ -824,7 +824,11 @@ class ProductProduct(models.Model):
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
-    track_service = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service', default='manual')
+    track_service = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service',
+                                     help='Manually set quantities on order: It will create invoice for manually entered quanitity and no analytic account created.\n'
+                                     'Timesheets on contract: It will create invoice based on time tracking quantity (Like one hour, 5 hours).\n'
+                                     'Create a task and track hours: On confirmation of sales order it will create a task and work same as Timesheet on contract.',
+                                     default='manual')
 
     @api.multi
     @api.depends('product_variant_ids.sales_count')
@@ -855,4 +859,7 @@ class ProductTemplate(models.Model):
         [('order', 'Ordered quantities'),
          ('delivery', 'Delivered quantities'),
          ('cost', 'Invoice based on time and material')],
-        string='Invoicing Policy', default='order')
+        string='Invoicing Policy', help='Ordered Quantity: It will create the invoice on the basis of the quantity ordered by customer.\n'
+                                        'Delivered Quantity: It will create the invoice of quantity delivered by vendor.\n'
+                                        'Invoice based on time and material: It will create invoice including some additional charge in terms of expenses (like transfer of that product, labour charge etc.)',
+                                        default='order')
