@@ -171,11 +171,8 @@ var MediaDialog = Dialog.extend({
         var self = this;
         if (self.media) {
             this.media.innerHTML = "";
-            if (this.active !== this.imageDialog) {
+            if (this.active !== this.imageDialog && this.active !== this.documentDialog) {
                 this.imageDialog.clear();
-            }
-            if (this.active !== this.documentDialog) {
-                this.documentDialog.clear();
             }
             // if not mode only_images
             if (this.iconDialog && this.active !== this.iconDialog) {
@@ -355,7 +352,7 @@ var ImageDialog = Widget.extend({
         return this.media;
     },
     clear: function () {
-        this.media.className = this.media.className.replace(/(^|\s+)(img(\s|$)|img-(?!circle|rounded|thumbnail)[^\s]*)/g, ' ');
+        this.media.className = this.media.className.replace(/(^|\s+)((img(\s|$)|img-(?!circle|rounded|thumbnail))[^\s]*)/g, ' ');
     },
     cancel: function () {
         this.trigger('cancel');
