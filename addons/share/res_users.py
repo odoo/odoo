@@ -63,9 +63,3 @@ class res_groups(osv.osv):
         parent_class = super(res_groups, self)
         if hasattr(parent_class, 'init'):
             parent_class.init(cr)
-
-    def get_application_groups(self, cr, uid, domain=None, context=None):
-        if domain is None:
-            domain = []
-        domain.append(('share', '=', False))
-        return super(res_groups, self).get_application_groups(cr, uid, domain=domain, context=context)

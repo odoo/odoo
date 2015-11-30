@@ -864,8 +864,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             }
             this.product = options.product;
             this.price   = options.product.price;
-            this.quantity = 1;
-            this.quantityStr = '1';
+            this.set_quantity(1);
             this.discount = 0;
             this.discountStr = '0';
             this.type = 'unit';
@@ -928,7 +927,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                 if(unit){
                     if (unit.rounding) {
                         this.quantity    = round_pr(quant, unit.rounding);
-                        this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                        var decimals = Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10));
+                        this.quantityStr = openerp.instances[this.pos.session.name].web.format_value(this.quantity, { type: 'float', digits: [69, decimals]});
                     } else {
                         this.quantity    = round_pr(quant, 1);
                         this.quantityStr = this.quantity.toFixed(0);
