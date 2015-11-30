@@ -18,14 +18,14 @@ case "$1" in
 			mkdir ~/.local
 		fi
 		s3fs -o use_cache=/tmp/s3  $AWS_S3_BUCKET ~/.local 
-		python2.7 /home/odoo/odoo/openerp-server -c server.conf "$@"
+		newrelic-admin run-python  /home/odoo/odoo/openerp-server -c server.conf "$@"
 		;;
 	-*)
 		shift
 		if [ ! -d "/home/odoo/.local" ]; then
 			mkdir ~/.local
 		fi
-		python2.7 /home/odoo/odoo/openerp-server -c server.conf "$@"
+		newrelic-admin run-python  /home/odoo/odoo/openerp-server -c server.conf "$@"
 		;;
 	*)
 		exec "$@"
