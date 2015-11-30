@@ -1636,7 +1636,7 @@ class LessStylesheetAsset(PreprocessedCSS):
             if os.name == 'nt':
                 lessc = find_in_path('lessc.cmd')
             else:
-                lessc = find_in_path('lessc')
+                lessc =  find_in_path('lessc')
         except IOError:
             lessc = 'lessc'
         lesspath = get_resource_path('web', 'static', 'lib', 'bootstrap', 'less')
