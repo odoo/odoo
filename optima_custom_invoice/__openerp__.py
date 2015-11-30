@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Custom Invoice Report",
+    'name': "Professional Invoice Report",
 
     'summary': """
-        Customized invoice for odoo  accounting module""",
+        Odd Invoice Report customized to look elegant, proefessional and appealing, social media IDs added""",
 
     'description': """
         This module will install a customized client invoice report for accounting module.
     """,
-    'images': ['static/description/invoice1.png'],
+    'images': ['static/description/inv.png'],
     'price': 18,
     'currency': 'EUR',
 
@@ -19,7 +19,7 @@
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
     # for the full list
-    'category': 'Uncategorized',
+    'category': 'Accounting & Finance',
     'version': '0.1',
 
     # any module necessary for this one to work correctly
