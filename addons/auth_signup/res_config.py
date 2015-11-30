@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.safe_eval import safe_eval
 
@@ -31,4 +32,4 @@ class base_config_settings(osv.TransientModel):
         # we store the repr of the values, since the value of the parameter is a required string
         icp.set_param(cr, uid, 'auth_signup.reset_password', repr(config.auth_signup_reset_password))
         icp.set_param(cr, uid, 'auth_signup.allow_uninvited', repr(config.auth_signup_uninvited))
-        icp.set_param(cr, uid, 'auth_signup.template_user_id', repr(config.auth_signup_template_user_id.id))
+        icp.set_param(cr, uid, 'auth_signup.template_user_id', repr(config.auth_signup_template_user_id.id), groups=['base.group_system'])
