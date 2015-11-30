@@ -8,10 +8,7 @@ class ProductTemplate(models.Model):
     @api.multi
     def _product_availabity(self):
         self.ensure_one()
-        is_available = True
         if self.type=='product':
-            is_available = False
-            for route in self.sudo().mapped('route_ids.name'):
-                if route in [_("Manufacture"), _("Buy")]:
-                    is_available = True
-        return is_available
+            return (True in [(route == _("Make To Order")) for route in self.sudo().mapped('route_ids.name')])
+        else:
+            return True
