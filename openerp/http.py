@@ -321,6 +321,11 @@ class WebRequest(object):
         """ Indicates whether the current request is in "debug" mode
         """
         debug = 'debug' in self.httprequest.args
+
+        # check if request from rpc in debug mode
+        if not debug:
+            debug = self.httprequest.environ.get('HTTP_X_DEBUG_MODE')
+
         if not debug and self.httprequest.referrer:
             debug = bool(urlparse.parse_qs(urlparse.urlparse(self.httprequest.referrer).query, keep_blank_values=True).get('debug'))
         return debug
