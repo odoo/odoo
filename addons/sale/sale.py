@@ -858,8 +858,8 @@ class ProductTemplate(models.Model):
     invoice_policy = fields.Selection(
         [('order', 'Ordered quantities'),
          ('delivery', 'Delivered quantities'),
-         ('cost', 'Invoice based on time and material')],
+         ('cost', 'Reinvoice Costs')],
         string='Invoicing Policy', help='Ordered Quantity: It will create the invoice on the basis of the quantity ordered by customer.\n'
                                         'Delivered Quantity: It will create the invoice of quantity delivered by vendor.\n'
-                                        'Invoice based on time and material: It will create invoice including some additional charge in terms of expenses (like transfer of that product, labour charge etc.)',
+                                        'Reinvoice Costs: It will create invoice including some additional charge in terms of expenses (like transfer of that product, labour charge etc.)',
                                         default='order')
