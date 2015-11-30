@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "3 Images per website product",
+    'name': "Three Images Per Website Product",
 
     'summary': """
-        This Module will make it possible to add and display 2 more images for the website product """,
+        Add two more images per website product with zoom lens feature """,
 
     'description': """
         This Module will make it possible to add and display 2 more images for the website product
     """,
-    'images': ['static/description/upload.png'],
+    'images': ['static/description/photo.png'],
     'author': "Optima ICT Services LTD",
     'website': "http://optima.co.ke",
     'price': 15,

@@ -3,7 +3,7 @@
     'name': "Professional Invoice Report",
 
     'summary': """
-        Odd Invoice Report customized to look elegant, proefessional and appealing, social media IDs added""",
+        Odoo Invoice Report customized to look elegant, professional and appealing, social media IDs added""",
 
     'description': """
         This module will install a customized client invoice report for accounting module.
