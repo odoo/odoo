@@ -1,12 +1,14 @@
+general:
+  branches:
+    only:
+      - master
+      - publish
 machine:
   python:
     version: 2.7.10
   services:
     - docker
 dependencies:
-  pre:
-    - npm install -g mocha
-    - npm install -g istanbul
   override:
     - sudo pip install awscli
     - docker info
