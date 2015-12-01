@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:40+0000\n"
+"PO-Revision-Date: 2015-10-13 19:59+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -21,27 +21,27 @@ msgstr ""
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Zoznam materiálu"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,bom_id:0
 msgid "BoM"
-msgstr ""
+msgstr "BoM (zoznam materiálu)"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
 msgid "Byproduct"
-msgstr ""
+msgstr "Vedľajší produkt"
 
 #. module: mrp_byproduct
 #: view:mrp.bom:mrp_byproduct.mrp_subproduct_view field:mrp.bom,sub_products:0
 msgid "Byproducts"
-msgstr ""
+msgstr "Vedľajšie produkty"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Zmeniť množstvo produktov"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,create_uid:0
@@ -63,7 +63,7 @@ msgid ""
 "that the quantity will be computed as    '(quantity of byproduct set on the "
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
-msgstr ""
+msgstr "Určite, ako bude množstvo vedľajších produktov nastavená na výrobných objednávkach pomocou tohto zoznamu materiálu. \"Fixný\" popisuje situácie, keď je množstvo vytvoreného vedľajšieho produktu vždy rovné množstvu stanovenému na zozname materíalu, bez ohľadu na to, koľko ich je vytvorených vo výrobnej zákazke. Naopak, \"Variabilný\" znamená, že množstvo bude vypočítané ako \"(množstvo vedľajšieho produktu nastavenú na zozname materálu / množstvo vyrobeného produktu nastavené na zozname materiálu * množstvo vyrobeného produktu vo výrobnej zákazke.)\""
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -88,7 +88,7 @@ msgstr "Naposledy upravované"
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Výrobná objednávka"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_id:0
@@ -108,7 +108,7 @@ msgstr "Merná jednotka produktu"
 #. module: mrp_byproduct
 #: field:mrp.subproduct,subproduct_type:0
 msgid "Quantity Type"
-msgstr ""
+msgstr "Typ množstva"
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:63
@@ -116,7 +116,7 @@ msgstr ""
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "Jednotka merania produku korú ste vybrali má inú kategíu ako v produktovom formulári."
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0

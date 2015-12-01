@@ -1625,7 +1625,9 @@ class BaseModel(object):
             return len(res)
         return res
 
-    @api.returns('self')
+    @api.returns('self',
+        upgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
+        downgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else value.ids)
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         """ search(args[, offset=0][, limit=None][, order=None][, count=False])
 
@@ -2178,7 +2180,7 @@ class BaseModel(object):
         parent_alias, parent_alias_statement = query.add_join((current_model._table, parent_model._table, inherits_field, 'id', inherits_field), implicit=True)
         return parent_alias
 
-    def _inherits_join_calc(self, alias, field, query):
+    def _inherits_join_calc(self, alias, field, query, implicit=True, outer=False):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
         the field coming from an '_inherits' parent table (no duplicates).
@@ -2198,7 +2200,7 @@ class BaseModel(object):
             # JOIN parent_model._table AS parent_alias ON alias.parent_field = parent_alias.id
             parent_alias, _ = query.add_join(
                 (alias, parent_model._table, parent_field, 'id', parent_field),
-                implicit=True,
+                implicit=implicit, outer=outer,
             )
             model, alias = parent_model, parent_alias
         return '"%s"."%s"' % (alias, field)
@@ -2246,7 +2248,7 @@ class BaseModel(object):
                 # if val is a many2one, just write the ID
                 if type(val) == tuple:
                     val = val[0]
-                if val is not False:
+                if f._type == 'boolean' or val is not False:
                     cr.execute(update_query, (ss[1](val), key))
 
     @api.model
@@ -4614,7 +4616,7 @@ class BaseModel(object):
                 parent_obj = self.pool[self._inherit_fields[order_field][3]]
                 order_column = parent_obj._columns[order_field]
                 if order_column._classic_read:
-                    inner_clauses = [self._inherits_join_calc(alias, order_field, query)]
+                    inner_clauses = [self._inherits_join_calc(alias, order_field, query, implicit=False, outer=True)]
                     add_dir = True
                 elif order_column._type == 'many2one':
                     key = (parent_obj._name, order_column._obj, order_field)
@@ -5306,6 +5308,11 @@ class BaseModel(object):
         """ Returns a new version of this recordset attached to the provided
         environment
 
+        .. warning::
+            The new environment will not benefit from the current
+            environment's data cache, so later data access may incur extra
+            delays while re-fetching from the database.
+
         :type env: :class:`~openerp.api.Environment`
         """
         return self._browse(env, self._ids)
@@ -5315,6 +5322,25 @@ class BaseModel(object):
 
         Returns a new version of this recordset attached to the provided
         user.
+
+        By default this returns a `SUPERUSER` recordset, where access control
+        and record rules are bypassed.
+
+        .. note::
+            Using `sudo` could cause data access to cross the boundaries of
+            record rules, possibly mixing records that are meant to be
+            isolated (e.g. records from different companies in multi-company
+            environments).
+
+            It may lead to un-intuitive results in methods which select one
+            record among many - for example getting the default company, or
+            selecting a Bill of Materials.
+
+        .. note::
+            Because the record rules and access control will have to be
+            re-evaluated, the new recordset will not benefit from the current
+            environment's data cache, so later data access may incur extra
+            delays while re-fetching from the database.
         """
         return self.with_env(self.env(user=user))
 

@@ -1047,7 +1047,7 @@ openerp.account = function (instance) {
                 new instance.web.Dialog(this, {
                     title: _t("Warning"),
                     size: 'medium',
-                }, $("<div />").text(_.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), last_selected_line.account_type))).open();
+                }, $("<div />").text(_.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), _t("last")))).open();
                 return;
             }
 
@@ -1303,8 +1303,14 @@ openerp.account = function (instance) {
 
             // Show or hide partial reconciliation
             if (self.get("mv_lines_selected").length > 0) {
-                var propose_partial = self.getCreatedLines().length === 0 && self.get("mv_lines_selected").length === 1 && balance_type === "greater" && ! self.get("mv_lines_selected")[0].partial_reconcile;
-                self.get("mv_lines_selected")[0].propose_partial_reconcile = propose_partial;
+                var last_line = _.last(self.get("mv_lines_selected"));
+                var propose_partial = self.getCreatedLines().length === 0
+                    && balance_type === "greater"
+                    && Math.abs(self.get("balance")) < Math.abs(last_line.debit - last_line.credit)
+                    && self.get("balance") * (last_line.debit - last_line.credit) < 0
+                    && ! last_line.partial_reconcile
+                    && ! last_line.already_paid;
+                last_line.propose_partial_reconcile = propose_partial;
                 self.updateAccountingViewMatchedLines();
             }
 

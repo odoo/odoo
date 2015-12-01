@@ -5,12 +5,13 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2015
+# Vida Potočnik <vida.potocnik@mentis.si>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-09-05 05:43+0000\n"
+"POT-Creation-Date: 2015-10-15 06:40+0000\n"
+"PO-Revision-Date: 2015-11-28 11:13+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +47,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -88,7 +89,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Spoštovani ${object.partner_id.name},</p>\n\n    <p>Za vas je pripravljen nov račun: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>SKLICI</strong><br />\n       &nbsp;&nbsp;Številka računa: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Skupni znesek: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Datum računa: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Sklic naročila: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Plačilo je mogoče tudi preko Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Za dodatne informacije smo vam vedno na razpolago</p>\n    <p>Hvala, ker ste izbrali  ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Splet :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Spoštovani ${object.partner_id.name},</p>\n\n    <p>Za vas je pripravljen nov račun: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>SKLICI</strong><br />\n       &nbsp;&nbsp;Številka računa: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Skupni znesek: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Datum računa: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Sklic naročila: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Plačilo je mogoče tudi preko Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Za dodatne informacije smo vam vedno na razpolago.</p>\n    <p>Hvala, ker ste izbrali ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Splet:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -101,10 +102,17 @@ msgid ""
 msgstr " * Stanje 'Osnutek' je za nove in nepotrjene račune.\n * V stanju 'Pro-forma' račun še nima dodeljene številke računa.\n * Stanje 'Odprto' imajo računi z dodeljeno številko računa, ki pa še niso plačani.\n * Stanje 'Plačano' se samodejno nastavi ob plačilu računa. Povezani dnevniški vnosi so lahko usklajeni ali ne.\n * Stanje 'Preklic' imajo računi, ki jih je uporabnik preklical."
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
 msgstr " Centralizacija"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:521
+#, python-format
+msgid " seconds"
+msgstr "sekund"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -496,7 +504,7 @@ msgid ""
 "                account and the counterpart \"Account Payable\".\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Izberite obdobje in dnevnik, ki ju želite zapolniti.\n              </p><p>\n                Ta pogled uporabljajo računovodje za hitro knjiženje vnosov\n                v Odoo. Če želite vknjižiti prejeti račun, pričnite s postavko\n                konta stroškov. Odoo bo samodejno predlagal davek\n                povezan s tem kontom in njegovim proti-kontom\n                \"Konto obveznosti\".\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Izberite obdobje in dnevnik, ki ju želite zapolniti.\n              </p><p>\n                Ta prikaz uporabljajo računovodje za hitro knjiženje vnosov\n                v Odoo. Če želite vknjižiti prejeti račun, pričnite s postavko\n                konta stroškov. Odoo bo samodejno predlagal davek\n                povezan s tem kontom in njegovim proti-kontom\n                \"Konto obveznosti\".\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_tree
@@ -1600,23 +1608,27 @@ msgstr "Uporabi"
 
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
-msgid "Apply automatically this fiscal position."
-msgstr "Samodejno uporabi za ta davčni položaj."
-
-#. module: account
-#: help:account.fiscal.position,country_group_id:0
-msgid "Apply only if delivery or invocing country match the group."
-msgstr "Uporabi le, če ciljna država dostave ali računa ustreza skupini."
-
-#. module: account
-#: help:account.fiscal.position,country_id:0
-msgid "Apply only if delivery or invoicing country match."
-msgstr "Uporabi le, če ciljna država dostave ali računa ustreza."
+msgid "Apply automatically this fiscal position if the conditions match."
+msgstr "Ko pogoji ustrezajo samodejno uveljavi ta fiskalni položaj."
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
 msgid "Apply only if partner has a VAT number."
 msgstr "Uporabi le če ima partner DDV številko."
+
+#. module: account
+#: help:account.fiscal.position,country_group_id:0
+msgid ""
+"Apply when the shipping or invoicing country is in this country group, and "
+"no position matches the country directly."
+msgstr "Uveljavi, ko je država odpreme ali obračuna v tej skupini držav in noben položaj ne neposredno ustreza državi."
+
+#. module: account
+#: help:account.fiscal.position,country_id:0
+msgid ""
+"Apply when the shipping or invoicing country matches. Takes precedence over "
+"positions matching on a country group."
+msgstr "Uveljavi, ko država odpreme ali obračuna ustreza. Prevzame prednost pred položaji skupine držav."
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -1671,7 +1683,7 @@ msgstr "Sredstvo"
 #. module: account
 #: model:account.account.type,name:account.account_type_asset_view1
 msgid "Asset View"
-msgstr "Pogled sredstev"
+msgstr "Prikaz sredstev"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1788,7 +1800,7 @@ msgstr "Napačen skupni znesek!"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Balance"
-msgstr "Bilanca"
+msgstr "Saldo"
 
 #. module: account
 #: view:website:account.report_overdue_document
@@ -2570,10 +2582,17 @@ msgid "Choose Fiscal Year"
 msgstr "Izberi poslovno leto"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1297
+#, python-format
+msgid "Choose counterpart"
+msgstr "Izberi proti-postavko"
+
+#. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Close"
-msgstr "Zaključi"
+msgstr "Zapri"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -2623,7 +2642,7 @@ msgstr "Zaključi izpiske"
 #: view:account.fiscalyear:account.view_account_fiscalyear_search
 #: selection:account.fiscalyear,state:0 selection:account.period,state:0
 msgid "Closed"
-msgstr "Zaključeno"
+msgstr "Neaktivni"
 
 #. module: account
 #: field:account.bank.statement,closing_date:0
@@ -2857,7 +2876,7 @@ msgstr "Napaka v nastavitvah"
 msgid ""
 "Configuration Error!\n"
 "You cannot define children to an account with internal type different of \"View\"."
-msgstr "Napaka nastavitve!\nNadrejeni konto ni vrste \"Pogled\"."
+msgstr "Napaka nastavitve!\nNadrejeni konto ni vrste \"Prikaz\"."
 
 #. module: account
 #: constraint:account.account:0
@@ -2932,7 +2951,7 @@ msgstr "Konsolidacija podrejenih postavk"
 #: selection:account.account,type:0 selection:account.account.template,type:0
 #: selection:account.entries.report,type:0
 msgid "Consolidation"
-msgstr "Konsolidacija"
+msgstr "Zbirni"
 
 #. module: account
 #: view:account.installer:account.view_account_configuration_installer
@@ -2976,8 +2995,8 @@ msgstr "Proti-postavka"
 
 #. module: account
 #: field:account.fiscal.position,country_id:0
-msgid "Countries"
-msgstr "Države"
+msgid "Country"
+msgstr "Država"
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
@@ -3029,6 +3048,13 @@ msgstr "Ustvari mesečna obdobja"
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Create Refund"
 msgstr "Ustvari dobropis"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1294
+#, python-format
+msgid "Create Write-off"
+msgstr "Ustvari odpis"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -3640,7 +3666,7 @@ msgstr "Privzeti prodajni davek"
 #. module: account
 #: field:account.account.type,close_method:0
 msgid "Deferral Method"
-msgstr "Način odloga"
+msgstr "Način otvoritve"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_subscription_form
@@ -3677,7 +3703,7 @@ msgstr "Opis:"
 #. module: account
 #: selection:account.account.type,close_method:0
 msgid "Detail"
-msgstr "Podrobno"
+msgstr "Vse knjižbe"
 
 #. module: account
 #: help:account.tax.code,sequence:0 help:account.tax.code.template,sequence:0
@@ -4271,7 +4297,7 @@ msgstr "Konto kategorije izdatkov"
 #. module: account
 #: model:account.account.type,name:account.account_type_expense_view1
 msgid "Expense View"
-msgstr "Pogled izdatkov"
+msgstr "Prikaz izdatkov"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -4664,14 +4690,14 @@ msgid ""
 "From this view, have an analysis of your different financial accounts. The "
 "document shows your debit and credit taking in consideration some criteria "
 "you can choose by using the search tool."
-msgstr "Pogled z analizami različnih finančnih kontov. Prikaz obveznosti in terjatev ob upoštevanju izbranih kriterijev preko iskalnega orodja."
+msgstr "Prikaz z analizami različnih finančnih kontov. Prikaz obveznosti in terjatev ob upoštevanju izbranih kriterijev preko iskalnega orodja."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_treasury_report_all
 msgid ""
 "From this view, have an analysis of your treasury. It sums the balance of "
 "every accounting entries made on liquidity accounts per period."
-msgstr "Pogled z analizo denarnih sredstev. Sešteva stanje vseh kontnih vnosov na konte tipa likvidnost po obdobjih."
+msgstr "Prikaz analize denarnih sredstev. Sešteva stanje vseh kontnih vnosov na konte tipa likvidnost po obdobjih."
 
 #. module: account
 #: field:account.config.settings,module_account_accountant:0
@@ -4887,7 +4913,7 @@ msgstr "Ima privzeto družbo"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Povzetek (število sporočil,..) v html formatu, da se lahko neposredno vstavi v poglede tipa kanban."
+msgstr "Povzetek (število sporočil,..) v html formatu, da se lahko neposredno vstavi v prikaze tipa kanban."
 
 #. module: account
 #: field:account.account,id:0 field:account.account.template,id:0
@@ -5932,9 +5958,16 @@ msgstr "Pustite prazno, če želite uporabiti obdobje potrditve datum (računa) 
 
 #. module: account
 #. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1299
+#, python-format
+msgid "Keep open"
+msgstr "Obdrži odprto"
+
+#. module: account
+#. openerp-web
 #: field:account.statement.operation.template,label:0
-#: code:addons/account/static/src/js/account_widgets.js:75
-#: code:addons/account/static/src/js/account_widgets.js:80
+#: code:addons/account/static/src/js/account_widgets.js:74
+#: code:addons/account/static/src/js/account_widgets.js:79
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 #, python-format
@@ -6643,7 +6676,7 @@ msgstr "Število mest za kodo konta"
 #: selection:account.account.type,close_method:0 selection:account.tax,type:0
 #: selection:account.tax.template,type:0
 msgid "None"
-msgstr "Nič"
+msgstr "Ni prenosa"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -8306,7 +8339,7 @@ msgstr "Korenska davčna skupina"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_view
 msgid "Root/View"
-msgstr "Osnova/Pogled"
+msgstr "Osnova/Prikaz"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
@@ -8327,6 +8360,12 @@ msgstr "Zaokroževanje na vrstico"
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
 msgstr "Zaokroževanje na vrstici"
+
+#. module: account
+#: code:addons/account/account_bank_statement.py:899
+#, python-format
+msgid "Rounding error from currency conversion"
+msgstr "Napaka zaokroževanja pri valutni konverziji"
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -8713,7 +8752,7 @@ msgid ""
 " 'Balance' will generally be used for cash accounts.\n"
 " 'Detail' will copy each existing journal item of the previous year, even the reconciled ones.\n"
 " 'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."
-msgstr "Nastavite metodo ustvarjanja dnevniških vnosov za zaključek leta za vse konte tega tipa\n\n 'Ni prenosa' pomeni, da se ne izvede ničesar.\n 'Saldo' se običajno uporablja za gotovinske vnose.\n 'Vse postavke' kopira vse obstoječe dnevniške postavke prejšnjega leta, vključno neusklajene\n 'Odprte postavke\" kopira samo dnevniške postavke, ki so bile neusklajene na prvi dan novega poslovnega leta."
+msgstr "Nastavite metodo ustvarjanja dnevniških vnosov za zaključek leta za vse konte tega tipa.\n\n 'Ni prenosa' pomeni, da se ne izvede ničesar.\n 'Saldo' se običajno uporablja za gotovinske konte.\n 'Vse knjižbe' kopira vse obstoječe dnevniške postavke prejšnjega leta, vključno neusklajene.\n 'Odprte postavke' kopira samo dnevniške postavke, ki so bile neusklajene na prvi dan novega poslovnega leta."
 
 #. module: account
 #: help:account.tax.template,include_base_amount:0
@@ -9620,6 +9659,20 @@ msgid ""
 msgstr "Pravna oseba, ki bo uporabljena za dnevniške vnose za ta račun."
 
 #. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the gain exchange rate account must be the same than the "
+"company selected."
+msgstr "Družba konta pozitivnih tečajnih razlik mora biti enaka izbrani družbi."
+
+#. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the loss exchange rate account must be the same than the "
+"company selected."
+msgstr "Družba konta negativnih tečajnih razlik mora biti enaka izbrani družbi."
+
+#. module: account
 #: help:account.tax,type:0
 msgid "The computation method for the tax amount."
 msgstr "Metoda izračuna za znesek davka"
@@ -9647,6 +9700,11 @@ msgstr "Postavke, ki se usklajujejo, morajo pripadati isti družbi."
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
 msgstr "Davčno območje določa davke in konte za tega partnerja."
+
+#. module: account
+#: view:account.config.settings:account.view_account_config_settings
+msgid "The fiscal year is created when installing a Chart of Account."
+msgstr "Fiskalno leto se ustvari ob namestitvi kontnega plana."
 
 #. module: account
 #: constraint:account.aged.trial.balance:0 constraint:account.balance.report:0
@@ -9781,7 +9839,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
-msgstr "Izbrani konto zahteva sekundarno valuto.Odstranite sekundarno valuto na kontu ali pa izberite več-valutni pogled."
+msgstr "Izbrani konto zahteva sekundarno valuto.Odstranite sekundarno valuto na kontu ali pa izberite več-valutni prikaz."
 
 #. module: account
 #: code:addons/account/account_invoice.py:1391
@@ -9960,6 +10018,30 @@ msgid "This Year"
 msgstr "To leto"
 
 #. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr "Ta konto bo uporabljen namesto privzetega za vrednotenje izdatkov za trenutni proizvod."
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr "Ta konto bo uporabljen namesto privzetega za vrednotenje prodaje za trenutni proizvod."
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used for invoices to value expenses."
+msgstr "Ta konto bo uporabljen namesto privzetega za vrednotenje izdatkov."
+
+#. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used for invoices to value sales."
+msgstr "Ta konto bo uporabljen namesto privzetega za vrednotenje prodaje."
+
+#. module: account
 #: help:res.partner,property_account_payable:0
 msgid ""
 "This account will be used instead of the default one as the payable account "
@@ -9972,18 +10054,6 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr "Ta konto se bo uporabljaj namesto privzetega konta terjatev za tega partnerja"
-
-#. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid "This account will be used to value outgoing stock using cost price."
-msgstr "Konto izhodne zaloge po nabavni ceni."
-
-#. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid "This account will be used to value outgoing stock using sale price."
-msgstr "Na tem kontu bodo vrednosti izdanih izdelek po prodajni ceni"
 
 #. module: account
 #: help:account.config.settings,module_account_budget:0
@@ -10256,7 +10326,7 @@ msgid ""
 "accounts for multi-company consolidations, payable/receivable are for "
 "partners accounts (for debit/credit computations), closed for depreciated "
 "accounts."
-msgstr "Ta tip se uporablja za diferenciacijo tipov s posebnimi učinki v Odoo: pogled ne more imeti vnosov, konsolidacija je konto, ki ima načinu z večdružbami podrejene konte za konsolidacije, obveznosti/terjatve so za konte partnerjev (za izračun dobro/breme), zaprte za razvrednotene konte."
+msgstr "Ta tip se uporablja za diferenciacijo tipov s posebnimi učinki v Odoo: prikaz ne more imeti vnosov, konsolidacija je konto, ki ima načinu z več družbami podrejene konte za konsolidacije, obveznosti/terjatve so za konte partnerjev (za izračun dobro/breme), zaprte za razvrednotene konte."
 
 #. module: account
 #: help:account.account,currency_mode:0
@@ -10299,8 +10369,8 @@ msgstr "Čarovnik bo potrdil vse nepotrjene postavke za določen dnevnik in obdo
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
-msgid "Tip : Hit ctrl-enter to validate the whole sheet."
-msgstr "Namig: pritisni ctrl-enter za potrditev celotnega lista."
+msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
+msgstr "Namig: pritisni ctrl-enter za uskladitev vseh bilančnih postavk."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -10563,7 +10633,7 @@ msgstr "Ni možno spremeniti davka!"
 #: view:account.move.line:account.view_account_move_line_filter
 #: selection:account.move.line,state:0
 msgid "Unbalanced"
-msgstr "Neusklajeno"
+msgstr "Neuravnoteženo"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
@@ -10683,7 +10753,7 @@ msgstr "Neusklajene transakcije"
 #: view:account.entries.report:account.view_account_entries_report_search
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unreconciled"
-msgstr "Neusklajeno"
+msgstr "Odprte postavke"
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
@@ -10849,7 +10919,7 @@ msgstr "Orodje za potrjevanje"
 #: selection:account.entries.report,type:0
 #: selection:account.financial.report,type:0
 msgid "View"
-msgstr "Pogled:"
+msgstr "Prikaz:"
 
 #. module: account
 #: view:project.account.analytic.line:account.view_project_account_analytic_line_form
@@ -11054,6 +11124,13 @@ msgid ""
 msgstr "Izbirate transakcije tako iz konta obveznosti kakor tudi iz konta terjatev.\n\nDa bi lahko nadaljevali, opustite izbiro %s transakcij."
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr "zadnji"
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -11061,13 +11138,21 @@ msgid ""
 msgstr "Tu lahko označite, da je ta postavka stvar spora (usklajevanja) z partnerjem."
 
 #. module: account
-#: code:addons/account/account_move_line.py:1220
+#: code:addons/account/account_move_line.py:1246
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr "Ni možno knjižiti v zaprto obdobje  %s  v dnevniku %s."
 
 #. module: account
-#: code:addons/account/account.py:1047
+#: code:addons/account/wizard/account_open_closed_fiscalyear.py:42
+#, python-format
+msgid ""
+"You can not cancel closing entries if the 'End of Year Entries Journal' "
+"period is closed."
+msgstr "Če je 'dnevnik vnosov zaključka leta' zaključen, ne morete preklicati zaključnih vnosov."
+
+#. module: account
+#: code:addons/account/account.py:1057
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
 msgstr "Obdobja, ki pripada zaključenemu poslovnemu letu, ne morete ponovno odpirati."
@@ -11113,7 +11198,7 @@ msgid ""
 msgstr "Predznak s katerim se vrednost prenaša v nadrejeni konto."
 
 #. module: account
-#: code:addons/account/account.py:2273
+#: code:addons/account/account.py:2293
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the following labels:\n"
@@ -11188,7 +11273,7 @@ msgstr "Ne morete knjižiti na konto  %s %s, ki je zaprt"
 #: constraint:account.move.line:0
 msgid ""
 "You cannot create journal items on an account of type view or consolidation."
-msgstr "Ne morete ustvariti dnevniške postavke na kontu tipa pogled ali konsolidacija."
+msgstr "Ne morete ustvariti dnevniške postavke na kontu tipa prikaz ali konsolidacija."
 
 #. module: account
 #: constraint:account.move.line:0

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2015
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
 # Miku Laitinen <miku.laitinen@gmail.com>, 2015
@@ -13,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-09-03 08:14+0000\n"
-"Last-Translator: Miku Laitinen <miku.laitinen@gmail.com>\n"
+"PO-Revision-Date: 2015-11-17 08:36+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -227,7 +228,7 @@ msgstr "Vastaukset"
 msgid ""
 "Answers do not go in the original document' discussion thread. This has an "
 "impact on the generated message-id."
-msgstr ""
+msgstr "Vastaukset eivät mene alkuperäisen dokumentin keskusteluketjuun. Tämä vaikuttaa luodun viestin id-numeroon."
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -249,12 +250,12 @@ msgstr "Laatija"
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
-msgstr ""
+msgstr "Viestin luoja. Jos tätä ei ole asetettu, viestin lähettäjä (email_from) voi olla osoite, joka ei täsmännyt mihinkään kumppaniin."
 
 #. module: survey
 #: field:survey.mail.compose.message,author_avatar:0
 msgid "Author's Avatar"
-msgstr ""
+msgstr "Laatijan kuva"
 
 #. module: survey
 #: help:survey.mail.compose.message,body:0
@@ -264,7 +265,7 @@ msgstr "Automaattisesti puhdistetut HTML-sisällöt"
 #. module: survey
 #: view:website:survey.result_number
 msgid "Average"
-msgstr ""
+msgstr "Keskimääräinen"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_4
@@ -361,7 +362,7 @@ msgstr "Luo sähköposti"
 #. module: survey
 #: field:survey.mail.compose.message,composition_mode:0
 msgid "Composition mode"
-msgstr ""
+msgstr "Kirjoitustila"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_2
@@ -422,7 +423,7 @@ msgstr "Luontipäivämäärä"
 #. module: survey
 #: help:survey.mail.compose.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "Nykyinen käyttäjä on merkannut tähän viestiin linkitetyn huomautuksen tärkeäksi"
 
 #. module: survey
 #: help:survey.mail.compose.message,to_read:0
@@ -767,7 +768,7 @@ msgstr ""
 #: model:survey.question,comments_message:survey.feedback_4_1
 #, python-format
 msgid "If other, precise:"
-msgstr ""
+msgstr "Jos muu, tarkenna:"
 
 #. module: survey
 #: view:website:survey.sfinished
@@ -782,7 +783,7 @@ msgstr "Kesken"
 #. module: survey
 #: help:survey.mail.compose.message,parent_id:0
 msgid "Initial thread message."
-msgstr ""
+msgstr "Viestiketjun alkuperäinen viesti"
 
 #. module: survey
 #: field:survey.question,validation_email:0
@@ -1090,12 +1091,12 @@ msgstr "Kumppanit joille ilmoitettu"
 #. module: survey
 #: field:survey.mail.compose.message,notify:0
 msgid "Notify followers"
-msgstr ""
+msgstr "Ilmoita seuraajille"
 
 #. module: survey
 #: help:survey.mail.compose.message,notify:0
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "Ilmoita tämän dokumentin seuraajille (vain massapostitus)"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -1221,7 +1222,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.result_choice
 msgid "Pie Chart"
-msgstr ""
+msgstr "Sektoridiagrammi"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:213
@@ -1569,12 +1570,12 @@ msgstr "Alityyppi"
 #. module: survey
 #: field:survey.user_input_line,value_suggested:0
 msgid "Suggested answer"
-msgstr ""
+msgstr "Ehdotettu vastaus"
 
 #. module: survey
 #: field:survey.label,value:0
 msgid "Suggested value"
-msgstr ""
+msgstr "Ehdotettu arvo"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -1764,7 +1765,7 @@ msgstr ""
 #: model:survey.question,validation_error_msg:survey.feedback_4_1
 #, python-format
 msgid "The answer you entered has an invalid format."
-msgstr ""
+msgstr "Tarkista vastauksen sisältö"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:188
@@ -1876,7 +1877,7 @@ msgstr ""
 #: model:survey.question,constr_error_msg:survey.feedback_4_1
 #, python-format
 msgid "This question requires an answer."
-msgstr ""
+msgstr "Kysymykseen ei voi jättää vastaamatta."
 
 #. module: survey
 #: view:website:survey.nopages
@@ -1960,7 +1961,7 @@ msgstr "Lukemattomia viestejä"
 #. module: survey
 #: field:survey.mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr ""
+msgstr "Käytä aktiivista domainia"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message

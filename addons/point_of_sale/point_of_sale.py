@@ -586,14 +586,45 @@ class pos_order(osv.osv):
             'journal':      ui_paymentline['journal_id'],
         }
 
+    # This deals with orders that belong to a closed session. In order
+    # to recover from this we:
+    # - assign the order to another compatible open session
+    # - if that doesn't exist, create a new one
+    def _get_valid_session(self, cr, uid, order, context=None):
+        session = self.pool.get('pos.session')
+        closed_session = session.browse(cr, uid, order['pos_session_id'], context=context)
+        open_sessions = session.search(cr, uid, [('state', '=', 'opened'),
+                                                 ('config_id', '=', closed_session.config_id.id),
+                                                 ('user_id', '=', closed_session.user_id.id)],
+                                       limit=1, order="start_at DESC", context=context)
+
+        if open_sessions:
+            return open_sessions[0]
+        else:
+            new_session_id = session.create(cr, uid, {
+                'config_id': closed_session.config_id.id,
+            }, context=context)
+            new_session = session.browse(cr, uid, new_session_id, context=context)
+
+            # bypass opening_control (necessary when using cash control)
+            new_session.signal_workflow('open')
+
+            return new_session_id
+
     def _process_order(self, cr, uid, order, context=None):
+        session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+
+        if session.state == 'closing_control' or session.state == 'closed':
+            session_id = self._get_valid_session(cr, uid, order, context=context)
+            session = self.pool.get('pos.session').browse(cr, uid, session_id, context=context)
+            order['pos_session_id'] = session_id
+
         order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
         journal_ids = set()
         for payments in order['statement_ids']:
             self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
             journal_ids.add(payments[2]['journal_id'])
 
-        session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
         if session.sequence_number <= order['sequence_number']:
             session.write({'sequence_number': order['sequence_number'] + 1})
             session.refresh()

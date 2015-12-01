@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Thomas A. Jaeger, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 07:52+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-20 04:50+0000\n"
+"Last-Translator: Thomas A. Jaeger\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-8/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -547,8 +548,8 @@ msgstr "Ende"
 
 #. module: project
 #: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr "Fehler! Das Datum für das Ende muß nach dem Start sein."
+msgid "Error ! Task end-date must be greater than task start-date"
+msgstr "Fehler ! Das Enddatum des Tasks muss grösser sein als das Startdatum."
 
 #. module: project
 #: constraint:project.task:0
@@ -557,8 +558,8 @@ msgstr "Fehler! Sie können keine rekursiven Aufgaben definieren."
 
 #. module: project
 #: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr "Fehler! Der Projektstart muss vor dem Projektende liegen"
+msgid "Error! project start-date must be lower than project end-date."
+msgstr "Fehler ! Das Startdatum des Projektes muss kleiner sein als das Enddatum."
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -840,9 +841,9 @@ msgstr "Zuletzt aktualisiert am"
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to new pads (for example: http://etherpad.com/).\n"
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
-msgstr "Hiermit können Sie steuern, welche Pad Instanz für neue Pads genutzt wird (z.B.: http://etherpad.com/).\n- Hiermit installieren Sie das Modul Pad."
+msgstr "Hier können Sie einstellen, welche Pad Installation für neue Pads angewendet werden sollen (zB: http://ietherpad.com/) \n- Dies installiert das Modul pad"
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -1613,8 +1614,10 @@ msgstr "Diese Stufe wird in der Kanban Ansicht geschlossen dargestellt, wenn kei
 
 #. module: project
 #: help:project.config.settings,time_unit:0
-msgid "This will set the unit of measure used in projects and tasks."
-msgstr "Definieren Sie die Mengeneinheit für Projekte und Aufgaben."
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"Changing the unit will only impact new entries."
+msgstr "Dies setzt die Mengeneinheit für Projekte und Aufgaben.\nEine Änderung der Einheit wird nur für neue Einträge wirksam."
 
 #. module: project
 #: help:res.company,project_time_mode_id:0

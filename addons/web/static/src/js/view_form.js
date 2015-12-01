@@ -3300,10 +3300,8 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         var self = this;
         this.$el.toggleClass("oe_readonly", this.get('effective_readonly'));
         this.$("input:checked").prop("checked", false);
-        if (this.get_value()) {
-            this.$("input").filter(function () {return this.value == self.get_value();}).prop("checked", true);
-            this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
-        }
+        this.$("input").filter(function () {return this.value == self.get_value();}).prop("checked", true);
+        this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
     }
 });
 
@@ -4417,10 +4415,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         }));
         this.on('edit:after', this, this.proxy('_after_edit'));
         this.on('save:before cancel:before', this, this.proxy('_before_unedit'));
-
-        this.records
-            .bind('add', this.proxy("changed_records"))
-            .bind('remove', this.proxy("changed_records"));
         this.on('save:after', this, this.proxy("changed_records"));
     },
     start: function () {
