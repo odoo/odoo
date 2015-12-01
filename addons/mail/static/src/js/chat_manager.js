@@ -148,6 +148,13 @@ function make_message (data) {
                                msg.email_from || _t('Anonymous');
     }
 
+    // Don't redirect on author clicked of self-posted messages
+    if (msg.author_id && msg.author_id[0] === session.partner_id) {
+        msg.author_redirect = false;
+    } else {
+        msg.author_redirect = true;
+    }
+
     // Compute the avatar_url
     if (msg.author_id && msg.author_id[0]) {
         msg.avatar_src = "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
