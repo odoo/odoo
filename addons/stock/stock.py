@@ -2085,6 +2085,161 @@ class StockMove(models.Model):
         if pickings_write:
             pick_obj.browse(pickings_write).write({'recompute_pack_op': True})
 
+    @api.multi
+    def action_assign(self, no_prepare=False):
+        """ Checks the product type and accordingly writes the state.
+        """
+        quant_obj = self.env["stock.quant"]
+        uom_obj = self.env['product.uom']
+        to_assign_moves = []
+        main_domain = {}
+        todo_moves = []
+        operations = set()
+        for move in self:
+            if move.state not in ('confirmed', 'waiting', 'assigned'):
+                continue
+            if move.location_id.usage in ('supplier', 'inventory', 'production'):
+                to_assign_moves.append(move.id)
+                #in case the move is returned, we want to try to find quants before forcing the assignment
+                if not move.origin_returned_move_id:
+                    continue
+            if move.product_id.type == 'consu':
+                to_assign_moves.append(move.id)
+                continue
+            else:
+                todo_moves.append(move)
+
+                #we always keep the quants already assigned and try to find the remaining quantity on quants not assigned only
+                main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
+
+                #if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
+                ancestors = self.find_move_ancestors(move)
+                if move.state == 'waiting' and not ancestors:
+                    #if the waiting move hasn't yet any ancestor (PO/MO not confirmed yet), don't find any quant available in stock
+                    main_domain[move.id] += [('id', '=', False)]
+                elif ancestors:
+                    main_domain[move.id] += [('history_ids', 'in', ancestors)]
+
+                #if the move is returned from another, restrict the choice of quants to the ones that follow the returned move
+                if move.origin_returned_move_id:
+                    main_domain[move.id] += [('history_ids', 'in', move.origin_returned_move_id.id)]
+                for link in move.linked_move_operation_ids:
+                    operations.add(link.operation_id)
+        # Check all ops and sort them: we want to process first the packages, then operations with lot then the rest
+        operations = list(operations)
+        operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.pack_lot_ids and -1 or 0))
+        for ops in operations:
+            #first try to find quants based on specific domains given by linked operations for the case where we want to rereserve according to existing pack operations
+            if not (ops.product_id and ops.pack_lot_ids):
+                for record in ops.linked_move_operation_ids:
+                    move = record.move_id
+                    if move.id in main_domain:
+                        qty = record.qty
+                        domain = main_domain[move.id]
+                        if qty:
+                            quants = quant_obj.quants_get_preferred_domain(qty, move, ops=ops, domain=domain, preferred_domain_list=[])
+                            quant_obj.quants_reserve(quants, move, record)
+            else:
+                lot_qty = {}
+                rounding = ops.product_id.uom_id.rounding
+                for pack_lot in ops.pack_lot_ids:
+                    lot_qty[pack_lot.lot_id.id] = uom_obj._compute_qty(ops.product_uom_id.id, pack_lot.qty, ops.product_id.uom_id.id)
+                for record in ops.linked_move_operation_ids:
+                    move_qty = record.qty
+                    domain = main_domain[move.id]
+                    for lot in lot_qty:
+                        if float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(move_qty, 0, precision_rounding=rounding) > 0:
+                            qty = min(lot_qty[lot], move_qty)
+                            quants = quant_obj.quants_get_preferred_domain(qty, move, ops=ops, lot_id=lot, domain=domain, preferred_domain_list=[])
+                            quants_to_reserve = [x for x in quants if x[0] and x[0].lot_id]
+                            quant_obj.quants_reserve(quants_to_reserve, move, record)
+
+        for move in todo_moves:
+            if move.linked_move_operation_ids:
+                continue
+            #then if the move isn't totally assigned, try to find quants without any specific domain
+            if move.state != 'assigned':
+                qty_already_assigned = move.reserved_availability
+                qty = move.product_qty - qty_already_assigned
+                quants = quant_obj.quants_get_preferred_domain(qty, move, domain=main_domain[move.id], preferred_domain_list=[])
+                quant_obj.quants_reserve(quants, move)
+
+        #force assignation of consumable products and incoming from supplier/inventory/production
+        # Do not take force_assign as it would create pack operations
+        if to_assign_moves:
+            self.browse(to_assign_moves).write({'state': 'assigned'})
+        if not no_prepare:
+            self.check_recompute_pack_op()
+
+    @api.multi
+    def action_cancel(self):
+        """ Cancels the moves and if all moves are cancelled it cancels the picking.
+        @return: True
+        """
+        procurement_obj = self.env['procurement.order']
+        procs_to_check = []
+        for move in self:
+            if move.state == 'done':
+                raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'.'))
+            if move.reserved_quant_ids:
+                self.env["stock.quant"].quants_unreserve(move)
+            if self.env.context.get('cancel_procurement'):
+                if move.propagate:
+                    procurement_ids = procurement_obj.search([('move_dest_id', '=', move.id)])
+                    procurement_ids.cancel()
+            else:
+                if move.move_dest_id:
+                    if move.propagate:
+                        move.move_dest_id.action_cancel()
+                    elif move.move_dest_id.state == 'waiting':
+                        #If waiting, the chain will be broken and we are not sure if we can still wait for it (=> could take from stock instead)
+                        move.move_dest_id.write({'state': 'confirmed'})
+                if move.procurement_id:
+                    # Does the same as procurement check, only eliminating a refresh
+                    procs_to_check.append(move.procurement_id.id)
+
+        res = self.write({'state': 'cancel', 'move_dest_id': False})
+        if procs_to_check:
+            procurement_obj.check(procs_to_check)
+        return res
+
+    @api.multi
+    def _check_package_from_moves(self):
+        pack_obj = self.env["stock.quant.package"]
+        packs = set()
+        for move in self:
+            packs |= set([q.package_id for q in move.quant_ids if q.package_id and q.qty > 0])
+        return pack_obj._check_location_constraint(list(packs))
+
+    @api.model
+    def find_move_ancestors(self, move):
+        '''Find the first level ancestors of given move '''
+        ancestors = []
+        move2 = move
+        while move2:
+            ancestors += [x.id for x in move2.move_orig_ids]
+            #loop on the split_from to find the ancestor of split moves only if the move has not direct ancestor (priority goes to them)
+            move2 = not move2.move_orig_ids and move2.split_from or False
+        return ancestors
+
+    @api.model
+    def recalculate_move_state(self, move_ids):
+        '''Recompute the state of moves given because their reserved quants were used to fulfill another operation'''
+        for move in self.browse(move_ids):
+            vals = {}
+            reserved_quant_ids = move.reserved_quant_ids
+            if len(reserved_quant_ids) > 0 and not move.partially_available:
+                vals['partially_available'] = True
+            if len(reserved_quant_ids) == 0 and move.partially_available:
+                vals['partially_available'] = False
+            if move.state == 'assigned':
+                if self.find_move_ancestors(move):
+                    vals['state'] = 'waiting'
+                else:
+                    vals['state'] = 'confirmed'
+            if vals:
+                move.write(vals)
+
 class StockInventory(models.Model):
     _name = "stock.inventory"
     _description = "Inventory"
