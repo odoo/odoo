@@ -627,7 +627,7 @@ var KanbanView = View.extend({
                 self.reload_record(record);
                 self.resequence_column(column);
             }
-        });
+        }).fail(this.do_reload);
     },
 
     update_record: function(event) {
