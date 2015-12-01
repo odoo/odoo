@@ -124,6 +124,7 @@ var Thread = Widget.extend({
             msg.hour = msg.date.format('hh:mm');
         }
 
+        msg.display_subject = message.subject && message.message_type !== 'notification' && !(message.model && (message.model !== 'mail.channel'));
         return msg;
     },
 

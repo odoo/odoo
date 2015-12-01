@@ -111,7 +111,7 @@
                     </t>
                     <t t-call="mail.ChatThread.MessageTracking"/>
                 </t>
-                <p t-if="options.display_subject &amp;&amp; message.subject &amp;&amp; message.message_type != 'notification'" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
+                <p t-if="options.display_subject &amp;&amp; message.display_subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
                 <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
                     <t t-if="message.body_short">
                         <div class="o_mail_body_short">
