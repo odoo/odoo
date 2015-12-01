@@ -131,3 +131,17 @@ class product_template(osv.Model):
         # Remove context so it is not going to filter on product_id with active_id of template
         result['context'] = "{}"
         return result
+
+
+class stock_move(osv.Model):
+    _inherit = 'stock.move'
+
+    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
+        # It will set the default analtyic account on the invoice line
+        partner_id = self.pool['account.invoice'].browse(cr, uid, invoice_line_vals.get('invoice_id'), context=context).partner_id.id
+        if 'account_analytic_id' not in invoice_line_vals or not invoice_line_vals.get('account_analytic_id'):
+            rec = self.pool['account.analytic.default'].account_get(cr, uid, move.product_id.id, partner_id, uid, time.strftime('%Y-%m-%d'), company_id=move.company_id.id, context=context)
+            if rec:
+                invoice_line_vals.update({'account_analytic_id': rec.analytic_id.id})
+        res = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
+        return res

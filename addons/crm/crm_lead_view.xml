@@ -158,7 +158,7 @@
                         </group>
                         <group>
                             <field name="user_id" on_change="on_change_user(user_id, context)"
-                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads'] }" widget="selection"/>
+                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads'], 'team_id': team_id}"/>
                             <field name="team_id" widget="selection" domain="[('use_leads','=',True)]"/>
                             <field name="type" invisible="1"/>
                         </group>
@@ -496,7 +496,7 @@
                             </group>
 
                             <group>
-                                <field name="user_id" on_change="on_change_user(user_id, context)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}" widget="selection"/>
+                                <field name="user_id" on_change="on_change_user(user_id, context)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads'], 'team_id': team_id}"/>
                                 <field name="team_id" widget="selection"/>
                             </group>
                             <group>

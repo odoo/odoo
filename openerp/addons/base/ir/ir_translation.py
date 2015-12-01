@@ -130,11 +130,13 @@ class ir_translation_import_cursor(object):
             AND irt.type = ti.type
             AND irt.module = ti.module
             AND irt.name = ti.name
-            AND (ti.type IN ('field', 'help') OR irt.src = ti.src)
-            AND (    ti.type NOT IN ('model', 'view')
-                 OR (ti.type = 'model' AND ti.res_id = irt.res_id)
-                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id))
-                )
+            AND (
+                    (ti.type = 'model' AND ti.res_id = irt.res_id AND irt.src = ti.src)
+                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id) AND irt.src = ti.src)
+                 OR (ti.type = 'field')
+                 OR (ti.type = 'help')
+                 OR (ti.type NOT IN ('model', 'view', 'field', 'help') AND irt.src = ti.src)
+            )
         """
 
         # Step 2: update existing (matching) translations
@@ -536,41 +538,46 @@ class ir_translation(osv.osv):
     def insert_missing(self, field, records):
         """ Insert missing translations for `field` on `records`. """
         records = records.with_context(lang=None)
+        external_ids = records.get_external_id()  # if no xml_id, empty string
         if callable(field.translate):
             # insert missing translations for each term in src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
                         FROM res_lang l
                         WHERE NOT EXISTS (
                             SELECT 1 FROM ir_translation
-                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s AND module=%(module)s
                         );
                     """
             for record in records:
+                module = external_ids[record.id].split('.')[0]
                 src = record[field.name] or None
                 for term in set(field.get_trans_terms(src)):
                     self._cr.execute(query, {
                         'name': "%s,%s" % (field.model_name, field.name),
                         'res_id': record.id,
                         'src': term,
+                        'module': module
                     })
         else:
             # insert missing translations for src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
                         FROM res_lang l
                         WHERE l.code != 'en_US' AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
-                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND module=%(module)s
                         );
                         UPDATE ir_translation SET src=%(src)s
-                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
+                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s AND module=%(module)s;
                     """
             for record in records:
+                module = external_ids[record.id].split('.')[0]
                 self._cr.execute(query, {
                     'name': "%s,%s" % (field.model_name, field.name),
                     'res_id': record.id,
                     'src': record[field.name] or None,
+                    'module': module
                 })
         self.clear_caches()
 
