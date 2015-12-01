@@ -2,7 +2,7 @@
 from datetime import datetime
 import json
 import logging
-from openerp.exceptions import UserError, RedirectWarning, ValidationError
+from openerp.exceptions import  RedirectWarning, ValidationError
 _logger = logging.getLogger(__name__)
 
 class OandaExchange:

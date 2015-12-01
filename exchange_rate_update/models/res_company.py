@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api, _
-from openerp.exceptions import UserError, RedirectWarning, ValidationError
+from openerp.exceptions import  RedirectWarning, ValidationError
 from yahoo import YahooFinance as YAHOO
 from oanda import OandaExchange as OANDA
 import logging
 _logger = logging.getLogger(__name__)
-
+import time
 class res_company(models.Model):
     """inherits base company model and exchange rate fields and methods """
     _inherit = "res.company"
@@ -29,7 +29,9 @@ class res_company(models.Model):
         """Update the currency rates by pressing a button"""
 	quotes = []
 	if self.currency_id.rate != 1.0:
-	   self.env['res.currency.rate'].search([('currency_id', '=', self.currency_id.id), ('company_id', '=', self.id)]).unlink()
+	   date = time.strftime('%Y-%m-%d')
+	   self.env['res.currency.rate'].search([('currency_id', '=', self.currency_id.id)]).unlink()
+	   self.env['res.currency.rate'].create({'rate': 1.0, 'name': date, 'currency_id': self.currency_id.id})
 	if self.quotes:
 	   for quote in self.quotes:
 	       quotes.append(quote.name)
@@ -55,8 +57,8 @@ class res_company(models.Model):
            for name, rate in rates.items():
                currency = self.quotes.search([('name', '=', name)], limit=1)
                if currency:
-                  rate_obj.search([('currency_id', '=', currency.id), ('company_id', '=', self.id)]).unlink()
-                  rate_obj.create({'rate': rate, 'company_id': self.id, 'currency_id': currency.id})
+                  rate_obj.search([('currency_id', '=', currency.id)]).unlink()
+                  rate_obj.create({'rate': rate, 'currency_id': currency.id})
                else:
                  raise ValidationError(_('Error in updating exchange rate for currency: %s') % name)
 	else:
