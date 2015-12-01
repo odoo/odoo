@@ -130,11 +130,13 @@ class ir_translation_import_cursor(object):
             AND irt.type = ti.type
             AND irt.module = ti.module
             AND irt.name = ti.name
-            AND (ti.type IN ('field', 'help') OR irt.src = ti.src)
-            AND (    ti.type NOT IN ('model', 'view')
-                 OR (ti.type = 'model' AND ti.res_id = irt.res_id)
-                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id))
-                )
+            AND (
+                    (ti.type = 'model' AND ti.res_id = irt.res_id AND irt.src = ti.src)
+                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id) AND irt.src = ti.src)
+                 OR (ti.type = 'field')
+                 OR (ti.type = 'help')
+                 OR (ti.type NOT IN ('model', 'view', 'field', 'help') AND irt.src = ti.src)
+            )
         """
 
         # Step 2: update existing (matching) translations
