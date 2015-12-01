@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_invoice__inherit_customized" model="ir.ui.view">
+            <field name="name">account.invoice.customized</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+		 <xpath expr="//field[@name='user_id']" position="after">
+			<field name="template_id"/>
+		 </xpath>
+		 <xpath expr="//notebook" position="inside">
+                         <page string="Invoice Report Settings">
+			     <group>
+				<group>
+				   <field name="invoice_logo" widget="image" class="oe_avatar" string="Invoice Logo"/>
+				   <field name="odd"/>
+				   <field name="even"/>
+				   <field name="text_color"/>
+				</group>
+				<group>
+				   <field name="theme_color"/>
+				   <field name="theme_txt_color"/>
+				   <field name="name_color"/>
+				   <field name="cust_color"/>
+				</group>
+			     </group>
+			 </page>
+		 </xpath>
+	    </field>
+	</record>
+<record id="account.report_invoice_document" model="ir.ui.view">
+  <field name="name">Odoo Invoice</field>
+</record>
+    </data>
+</openerp>
+

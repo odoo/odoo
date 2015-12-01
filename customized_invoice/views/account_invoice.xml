@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+<template id="my_invoice">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+	<t t-call="{{o.template_id.xml_id}}" t-lang="o.partner_id.lang"/>
+     </t>
+    </t>
+</template>
+<template id="my_duplicate">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+	<t t-call="{{o.template_id.xml_id.replace('document', 'duplicate')}}" t-lang="o.partner_id.lang"/>
+     </t>
+    </t>
+</template>
+
+<!--<template id="web_portal_invoices" inherit_id="website_portal_sale.invoices" name="Invoices and Payments Inherited">
+	<xpath expr="//td//a[contains(@t-att-href, '/report/pdf/account.report_invoice/')]" position="replace">
+		<a t-att-href="'/report/pdf/customized_invoice.my_invoice/'+str(invoice.id)"><t t-esc="invoice.number"/></a>
+	</xpath>
+</template>-->
+</data>
+</openerp>
