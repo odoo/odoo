@@ -267,9 +267,33 @@ class ProductPricelistItem(models.Model):
     compute_price = fields.Selection([('fixed', 'Fix Price'), ('percentage', 'Percentage (discount)'), ('formula', 'Formula')], index=True, default='fixed')
     fixed_price = fields.Float(string='Fixed Price')
     percent_price = fields.Float(string='Percentage Price')
-    #functional fields used for usability purposes
-    name = fields.Char(compute='_compute_pricelist_item_name_price', help="Explicit rule name for this pricelist line.")
-    price = fields.Char(compute='_compute_pricelist_item_name_price',  help="Explicit rule name for this pricelist line.")
+
+    @api.constrains('price_min_margin', 'price_max_margin')
+    def _check_margin(self):
+        if self.price_min_margin > self.price_max_margin:
+            raise ValidationError(_("Error! The minimum margin should be lower than the maximum margin."))
+        return True
+
+    @api.constrains('base_pricelist_id')
+    def _check_recursion(self):
+        if self.base == 'pricelist' and self.pricelist_id == self.base_pricelist_id:
+            raise ValidationError(_("Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"))
+        return True
+
+class ProductPricelistItemNew(models.Model):
+    _inherit = "product.pricelist.item"
+
+    _applied_on_field_map = {
+        '0_product_variant': 'product_id',
+        '1_product': 'product_tmpl_id',
+        '2_product_category': 'categ_id',
+    }
+
+    _compute_price_field_map = {
+        'fixed': ['fixed_price'],
+        'percentage': ['percent_price'],
+        'formula': ['price_discount', 'price_surcharge', 'price_round', 'price_min_margin', 'price_max_margin'],
+    }
 
     def _compute_pricelist_item_name_price(self):
         for item in self:
@@ -289,14 +313,19 @@ class ProductPricelistItem(models.Model):
             else:
                 item.price = _("%s %% discount and %s surcharge") % (abs(item.price_discount), item.price_surcharge)
 
-    @api.constrains('price_min_margin', 'price_max_margin')
-    def _check_margin(self):
-        if self.price_min_margin > self.price_max_margin:
-            raise ValidationError(_("Error! The minimum margin should be lower than the maximum margin."))
-        return True
+       #functional fields used for usability purposes
+    name = fields.Char(compute='_compute_pricelist_item_name_price', help="Explicit rule name for this pricelist line.")
+    price = fields.Char(compute='_compute_pricelist_item_name_price',  help="Explicit rule name for this pricelist line.")
 
-    @api.constrains('base_pricelist_id')
-    def _check_recursion(self):
-        if self.base == 'pricelist' and self.pricelist_id == self.base_pricelist_id:
-            raise ValidationError(_("Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"))
-        return True
+    @api.onchange('applied_on')
+    def _onchange_applied_on(self):
+        for applied_on, field in self._applied_on_field_map.iteritems():
+            if self.applied_on != applied_on:
+                setattr(self, field, False)
+
+    @api.onchange('compute_price')
+    def _onchange_compute_price(self):
+        for compute_price, field in self._compute_price_field_map.iteritems():
+            if self.compute_price != compute_price:
+                for f in field:
+                    setattr(self, f, 0.0)
