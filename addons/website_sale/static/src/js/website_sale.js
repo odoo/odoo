@@ -30,7 +30,10 @@ $('.oe_website_sale').each(function () {
     $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
         product_ids = [];
         var product_dom = $(".js_add_cart_variants[data-attribute_value_ids]").first();
-        product_dom.data("attribute_value_ids").forEach(function(entry) {
+        if (!product_dom.length) {
+            return;
+        }
+        _.each(product_dom.data("attribute_value_ids"), function(entry) {
             product_ids.push(entry);});
         var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
 
