@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <record model="ir.cron" id="ir_cron_exchange_rate_daily">
+            <field name="name">Exchange.rate.update</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'res.company'"/>
+            <field name="function" eval="'cron_update_rate'"/>
+            <field name="args"></field>
+        </record>
+
+    </data>
+</openerp>
