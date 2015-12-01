@@ -1,6 +1,7 @@
 odoo.define('website_sale.cart', function (require) {
 "use strict";
 
+var base = require('web_editor.base');
 var core = require('web.core');
 var _t = core._t;
 
