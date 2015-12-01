@@ -23,6 +23,10 @@ _logger = logging.getLogger(__name__)
 
 MODULE_UNINSTALL_FLAG = '_force_unlink'
 
+def encode(s):
+    """ Return an UTF8-encoded version of ``s``. """
+    return s.encode('utf8') if isinstance(s, unicode) else s
+
 def _get_fields_type(self, cr, uid, context=None):
     # Avoid too many nested `if`s below, as RedHat's Python 2.6
     # break on it. See bug 939653.
@@ -90,7 +94,7 @@ class ir_model(osv.osv):
 
     _defaults = {
         'model': 'x_',
-        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': 'manual',
     }
 
     def _check_model_name(self, cr, uid, ids, context=None):
@@ -174,10 +178,8 @@ class ir_model(osv.osv):
     def create(self, cr, user, vals, context=None):
         if  context is None:
             context = {}
-        if context and context.get('manual'):
-            vals['state']='manual'
         res = super(ir_model,self).create(cr, user, vals, context)
-        if vals.get('state','base')=='manual':
+        if vals.get('state','manual')=='manual':
             # setup models; this automatically adds model in registry
             self.pool.setup_models(cr, partial=(not self.pool.ready))
             # update database schema
@@ -186,17 +188,18 @@ class ir_model(osv.osv):
             RegistryManager.signal_registry_change(cr.dbname)
         return res
 
-    def instanciate(self, cr, user, model, transient, context=None):
-        if isinstance(model, unicode):
-            model = model.encode('utf-8')
-
+    @api.model
+    def _instanciate(self, model_data):
+        """ Instanciate a model class for the custom model given by parameters ``model_data``. """
         class CustomModel(models.Model):
-            _name = model
+            _name = encode(model_data['model'])
+            _description = model_data['name']
             _module = False
             _custom = True
-            _transient = bool(transient)
+            _transient = bool(model_data['transient'])
+            __doc__ = model_data['info']
 
-        CustomModel._build_model(self.pool, cr)
+        CustomModel._build_model(self.pool, self._cr)
 
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
@@ -259,7 +262,7 @@ class ir_model_fields(osv.osv):
         'selection': "",
         'domain': "[]",
         'name': 'x_',
-        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': 'manual',
         'on_delete': 'set null',
         'field_description': '',
         'selectable': 1,
@@ -440,14 +443,12 @@ class ir_model_fields(osv.osv):
             vals['model'] = model_data.model
         if context is None:
             context = {}
-        if context and context.get('manual',False):
-            vals['state'] = 'manual'
         if vals.get('ttype', False) == 'selection':
             if not vals.get('selection',False):
                 raise UserError(_('For selection fields, the Selection Options must be given!'))
             self._check_selection(cr, user, vals['selection'], context=context)
         res = super(ir_model_fields,self).create(cr, user, vals, context)
-        if vals.get('state','base') == 'manual':
+        if vals.get('state','manual') == 'manual':
             if not vals['name'].startswith('x_'):
                 raise UserError(_("Custom fields must have a name that starts with 'x_' !"))
 
@@ -473,8 +474,6 @@ class ir_model_fields(osv.osv):
     def write(self, cr, user, ids, vals, context=None):
         if context is None:
             context = {}
-        if context and context.get('manual',False):
-            vals['state'] = 'manual'
 
         #For the moment renaming a sparse field or changing the storing system is not allowed. This may be done later
         if 'serialization_field_id' in vals or 'name' in vals:
@@ -517,7 +516,7 @@ class ir_model_fields(osv.osv):
                         raise UserError(_('Can only rename one field at a time!'))
                     if vals['name'] in obj._fields:
                         raise UserError(_('Cannot rename field to %s, because that field already exists!') % vals['name'])
-                    if vals.get('state', 'base') == 'manual' and not vals['name'].startswith('x_'):
+                    if vals.get('state', 'manual') == 'manual' and not vals['name'].startswith('x_'):
                         raise UserError(_('New field name must still start with x_ , because it is a custom field!'))
                     if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
                         raise ValueError('Invalid character in column name')

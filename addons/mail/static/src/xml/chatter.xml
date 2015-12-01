@@ -6,7 +6,7 @@
     -->
     <t t-name="mail.chatter.ChatComposer" t-extend="mail.ChatComposer">
         <!-- Insert information before the composer -->
-        <t t-jquery=".o_composer_mentioned_partners" t-operation="before">
+        <t t-jquery=".o_composer_attachments_list" t-operation="before">
             <!-- Internal note composer -->
             <t t-if="widget.options.is_log">
                 <span class="o_chatter_composer_info">
@@ -53,7 +53,7 @@
         </t>
 
         <!-- Add a button to open the full composer dialog -->
-        <t t-jquery=".o_composer_buttons" t-operation="append">
+        <t t-jquery=".o_composer_button_add_attachment" t-operation="after">
             <button class="btn btn-sm btn-icon fa fa-pencil-square-o o_composer_button_full_composer" type="button"/>
         </t>
     </t>

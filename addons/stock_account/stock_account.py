@@ -270,7 +270,7 @@ class stock_quant(osv.osv):
             valuation_amount = context.get('force_valuation_amount')
         else:
             if move.product_id.cost_method == 'average':
-                valuation_amount = cost if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' else move.product_id.standard_price
+                valuation_amount = cost if move.location_id.usage == 'supplier' and move.location_dest_id.usage == 'internal' else move.product_id.standard_price
             else:
                 valuation_amount = cost if move.product_id.cost_method == 'real' else move.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
@@ -281,12 +281,17 @@ class stock_quant(osv.osv):
             raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (move.product_id.name,))
         credit_value = debit_value
 
-        if move.product_id.cost_method == 'average' and move.location_dest_id.usage == 'supplier' and move.company_id.anglo_saxon_accounting:
+        if move.product_id.cost_method == 'average' and move.company_id.anglo_saxon_accounting:
             #in case of a supplier return in anglo saxon mode, for products in average costing method, the stock_input
             #account books the real purchase price, while the stock account books the average price. The difference is
             #booked in the dedicated price difference account.
-            if move.origin_returned_move_id and move.origin_returned_move_id.purchase_line_id:
-                debit_value = move.origin_returned_move_id.price_unit
+            if move.location_dest_id.usage == 'supplier' and move.origin_returned_move_id and move.origin_returned_move_id.purchase_line_id:
+                debit_value = move.origin_returned_move_id.price_unit * qty
+            #in case of a customer return in anglo saxon mode, for products in average costing method, the stock valuation
+            #is made using the original average price to negate the delivery effect.
+            if move.location_id.usage == 'customer' and move.origin_returned_move_id:
+                debit_value = move.origin_returned_move_id.price_unit * qty
+                credit_value = debit_value
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,

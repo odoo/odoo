@@ -149,6 +149,8 @@ class PurchaseOrder(models.Model):
 
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES, required=True, default=_default_picking_type,\
         help="This will determine picking type of incoming shipment")
+    default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',\
+        help="Technical field used to display the Drop Ship Address")
     group_id = fields.Many2one('procurement.group', string="Procurement Group")
 
     @api.model
@@ -206,6 +208,11 @@ class PurchaseOrder(models.Model):
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
             self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
         return {}
+
+    @api.onchange('picking_type_id')
+    def _onchange_picking_type_id(self):
+        if self.picking_type_id.default_location_dest_id.usage != 'customer':
+            self.dest_address_id = False
 
     @api.multi
     def action_rfq_send(self):
@@ -853,6 +860,7 @@ class ProcurementOrder(models.Model):
                         'price_unit': price_unit,
                         'procurement_ids': [(4, procurement.id)]
                     })
+                    break
             if not po_line:
                 vals = procurement._prepare_purchase_order_line(po, supplier)
                 self.env['purchase.order.line'].create(vals)

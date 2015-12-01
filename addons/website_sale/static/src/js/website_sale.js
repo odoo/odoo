@@ -146,9 +146,9 @@ $('.oe_website_sale').each(function () {
       clickwatch(function(){
 
         $dom_optional.each(function(){
+            $(this).find('.js_quantity').text(value);
             product_ids.push($(this).find('span[data-product-id]').data('product-id'));
         });
-        if (isNaN(value)) value = 0;
         $input.data('update_change', true);
 
         ajax.jsonRpc("/shop/cart/update_json", 'call', {

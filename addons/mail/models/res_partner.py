@@ -212,49 +212,27 @@ class Partner(models.Model):
         return 0
 
     @api.model
-    def get_mention_suggestions(self, search, channel, exclude=None, limit=8):
+    def get_static_mention_suggestions(self):
+        """ To be overwritten to return the id, name and email of partners used as static mention
+            suggestions loaded once at webclient initialization and stored client side. """
+        return []
+
+    @api.model
+    def get_mention_suggestions(self, search, limit=8):
         """ Return 'limit'-first partners' id, name and email such that the name or email matches a
-            'search' string. Prioritize partners registered to channel 'channel[channel_id]' if
-            given, or partners that are followers of a document identified by 'channel[res_model]'
-            and 'channel[res_id]' otherwise, then users, and finally extend the research to all
-            partners. Exclude partners whose id is in 'exclude'. """
-        if exclude is None:
-            exclude = []
-        members = []
-        users = []
-        partners = []
-        search_dom = expression.AND([
-                        expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]]),
-                        [('id', 'not in', exclude)]
-                    ])
+            'search' string. Prioritize users, and then extend the research to all partners. """
+        search_dom = expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]])
         fields = ['id', 'name', 'email']
 
-        def search_partners(domain, fields, limit, exclude):
-            partners = self.search_read(domain, fields, limit=limit)
-            limit -= len(partners)
-            exclude += [partner['id'] for partner in partners]
-            return partners, limit, exclude
+        # Search users
+        domain = expression.AND([[('user_ids.id', '!=', False)], search_dom])
+        users = self.search_read(domain, fields, limit=limit)
 
-        # Search users registered to the channel
-        if 'channel_id' in channel:
-            domain = expression.AND([[('channel_ids', 'in', [channel['channel_id']])], search_dom])
-            members, limit, exclude = search_partners(domain, fields, limit, exclude)
-        else:
-            domain = expression.AND([
-                [('res_model', '=', channel['res_model'])],
-                [('res_id', '=', channel['res_id'])]
-            ])
-            followers = self.env['mail.followers'].search(domain)
-            domain = expression.AND([[('id', 'in', followers.mapped('partner_id').ids)], search_dom])
-            members, limit, exclude = search_partners(domain, fields, limit, exclude)
+        # Search partners if less than 'limit' users found
+        partners = []
+        if len(users) < limit:
+            partners = self.search_read(search_dom, fields, limit=limit)
+            # Remove duplicates
+            partners = [p for p in partners if not len([u for u in users if u['id'] == p['id']])] 
 
-        if limit > 0:
-            # Search users
-            domain = expression.AND([[('user_ids.id', '!=', False)], search_dom])
-            users, limit, exclude = search_partners(domain, fields, limit, exclude)
-
-            if limit > 0:
-                # Search partners
-                partners = self.search_read(search_dom, fields, limit=limit)
-
-        return [members, users, partners]
+        return [users, partners]

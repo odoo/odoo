@@ -37,6 +37,7 @@ var Followers = form_common.AbstractField.extend({
 
         this.value = [];
         this.followers = [];
+        this.followers_fetched = $.Deferred();
         this.data_subtype = {};
 
         this.view_is_editable = this.__parentedParent.is_action_enabled('edit');
@@ -188,9 +189,14 @@ var Followers = form_common.AbstractField.extend({
     },
 
     fetch_followers: function (value_) {
+        var self = this;
         this.value = value_ || [];
         return ajax.jsonRpc('/mail/read_followers', 'call', {'follower_ids': this.value})
-            .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
+            .then(function (followers) {
+                self.trigger('followers_update', followers);
+                self.display_followers(followers);
+                self.fetch_generic();
+            })
             .then(this.proxy('display_buttons'))
             .then(this.proxy('fetch_subtypes'));
     },
@@ -706,6 +712,7 @@ var Chatter = form_common.AbstractField.extend({
         if (this.followers) {
             this.$('.o_chatter_topbar').append(this.followers.$el);
             this.followers.on('redirect', this, this.on_redirect);
+            this.followers.on('followers_update', this, this.on_followers_update);
         }
 
         this.thread = new ChatThread(this, {
@@ -798,6 +805,30 @@ var Chatter = form_common.AbstractField.extend({
         });
     },
 
+    on_followers_update: function (followers) {
+        this.mention_suggestions = [];
+        var self = this;
+        var prefetched_partners = chat_manager.get_mention_partner_suggestions();
+        var follower_suggestions = [];
+        _.each(followers, function (follower) {
+            if (follower.res_model === 'res.partner') {
+                follower_suggestions.push({
+                    id: follower.res_id,
+                    name: follower.name,
+                    email: follower.email,
+                });
+            }
+        });
+        if (follower_suggestions.length) {
+            this.mention_suggestions.push(follower_suggestions);
+        }
+        _.each(prefetched_partners, function (partners) {
+            self.mention_suggestions.push(_.filter(partners, function (partner) {
+                return !_.findWhere(follower_suggestions, { id: partner.id });
+            }));
+        });
+    },
+
     load_more_messages: function () {
         this.fetch_and_render_thread(this.msg_ids, {force_fetch: true});
     },
@@ -854,9 +885,9 @@ var Chatter = form_common.AbstractField.extend({
             internal_subtypes: this.options.internal_subtypes,
             is_log: options && options.is_log,
             record_name: this.record_name,
-            get_channel_info: function () {
-                return { res_id: self.res_id, res_model: self.model };
-            },
+        });
+        this.composer.on('input_focused', this, function () {
+            this.composer.mention_set_prefetched_partners(this.mention_suggestions || []);
         });
         this.composer.insertBefore(this.$('.o_mail_thread')).then(function () {
             // destroy existing composer

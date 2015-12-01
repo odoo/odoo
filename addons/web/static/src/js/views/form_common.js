@@ -992,8 +992,8 @@ var SelectCreateDialog = ViewDialog.extend({
             this.searchview.destroy();
         }
         var $header = $('<div/>').addClass('o_modal_header').appendTo(this.$el);
-        var $buttons = $('<div/>').addClass('o_search_options').appendTo($header);
         var $pager = $('<div/>').addClass('o_pager').appendTo($header);
+        var $buttons = $('<div/>').addClass('o_search_options').appendTo($header);
         this.searchview = new SearchView(this, this.dataset, false,  search_defaults, {$buttons: $buttons});
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
