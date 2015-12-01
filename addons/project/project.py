@@ -388,7 +388,7 @@ class task(osv.osv):
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
                 return {'value': {'partner_id': project.partner_id.id}}
-        return {'value': {'partner_id': False}}
+        return {}
 
     def onchange_user_id(self, cr, uid, ids, user_id, context=None):
         vals = {}

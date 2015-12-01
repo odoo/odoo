@@ -167,7 +167,7 @@
                             <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}"/>
                             <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
-                            <field name="project_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" groups="sale.group_analytic_accounting"/>
+                            <field name="project_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" groups="analytic.group_analytic_accounting"/>
                         </group>
                         <group>
                             <field name="date_order" invisible="1"/>
@@ -361,7 +361,7 @@
                     <filter string="My Orders" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
                     <separator/>
                     <filter string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
-                    <filter string="Sales" name="sales" domain="[('state','in',('progress','Done'))]"/>
+                    <filter string="Sales" name="sales" domain="[('state','in',('sale','done'))]"/>
                     <separator/>
                     <filter string="To Invoice" domain="[('invoice_status','=','to invoice')]"/>
                     <filter string="Upselling" domain="[('invoice_status','=','upselling')]"/>

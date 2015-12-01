@@ -166,7 +166,6 @@ class Channel(models.Model):
             self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         return result
 
-
     @api.multi
     def message_get_email_values(self, notif_mail=None):
         self.ensure_one()
@@ -423,6 +422,10 @@ class Channel(models.Model):
         for channel in self:
             partners_to_add = partners - channel.channel_partner_ids
             channel.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner_id}) for partner_id in partners_to_add.ids]})
+            for partner in partners_to_add:
+                notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
+                self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment", author_id=partner.id)
+
         # broadcast the channel header to the added partner
         self._broadcast(partner_ids)
 
@@ -525,7 +528,7 @@ class Channel(models.Model):
             'email_send': False,
             'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
-        channel_info = new_channel.channel_info()[0]
+        channel_info = new_channel.channel_info('creation')[0]
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (new_channel.id, new_channel.name,)
         new_channel.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
@@ -538,10 +541,21 @@ class Channel(models.Model):
             user isn't registered to. """
         domain = expression.AND([
                         [('name', 'ilike', search)],
-                        [('channel_type', '!=', 'chat')],
+                        [('channel_type', '=', 'channel')],
                         expression.OR([
                             [('public', '!=', 'private')],
                             [('channel_partner_ids', 'in', [self.env.user.partner_id.id])]
                         ])
                     ])
         return self.search_read(domain, ['id', 'name', 'public'], limit=limit)
+
+    @api.model
+    def channel_fetch_listeners(self, uuid):
+        """ Return the id, name and email of partners listening to the given channel """
+        self._cr.execute("""
+            SELECT P.id, P.name, P.email
+            FROM mail_channel_partner CP
+                INNER JOIN res_partner P ON CP.partner_id = P.id
+                INNER JOIN mail_channel C ON CP.channel_id = C.id
+            WHERE C.uuid = %s""", (uuid,))
+        return self._cr.dictfetchall()

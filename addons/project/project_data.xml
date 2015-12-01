@@ -296,7 +296,7 @@
             <field name="project_id" ref="project.project_project_data"/>
             <field name="name">You can set a deadline on a task</field>
             <field name="stage_id" ref="project_stage_data_1"/>
-            <field name="date_deadline" eval="'2015-%s-01' %(datetime.now().month+1)"/>
+            <field name="date_deadline" eval="datetime.now()+timedelta(days=30)"/>
         </record>
 
         <record id="project_task_data_14" model="project.task">

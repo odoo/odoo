@@ -894,7 +894,12 @@ class product_product(osv.osv):
     def _get_image_variant(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = obj.image_variant or getattr(obj.product_tmpl_id, name)
+            if context.get('bin_size'):
+                result[obj.id] = obj.image_variant
+            else:
+                result[obj.id] = tools.image_get_resized_images(obj.image_variant, return_big=True, avoid_resize_medium=True)[name]
+            if not result[obj.id]:
+                result[obj.id] = getattr(obj.product_tmpl_id, name)
         return result
 
     def _set_image_variant(self, cr, uid, id, name, value, args, context=None):

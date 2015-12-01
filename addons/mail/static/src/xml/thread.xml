@@ -9,8 +9,12 @@
             <t t-if="options.display_load_more &amp;&amp; options.display_order == ORDER.DESC"
                t-call="mail.ChatThread.LoadMore"/>
         </t>
-        <t t-if="!messages.length &amp;&amp; options.display_help">
+        <t t-if="options.display_empty_channel">
             <t t-call="mail.EmptyChannel" />
+        </t>
+        <t t-if="options.display_no_match">
+            <div class="o_thread_title">No matches found</div>
+            <div>No message matches your search. Try to change your search filters.</div>
         </t>
     </t>
 
@@ -30,11 +34,11 @@
         <t t-if="options.messages_separator_position == 'top'" t-call="mail.MessagesSeparator"/>
         <t t-set="current_day" t-value="0"/>
         <t t-foreach="messages" t-as="message">
-            <div t-if="current_day != message.date.split(' ')[0]" class="o_thread_date_separator">
+            <div t-if="current_day != message.day" class="o_thread_date_separator">
                 <span class="o_thread_date">
-                    <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LL')"/>
+                    <t t-esc="message.day"/>
                 </span>
-                <t t-set="current_day" t-value="message.date.split(' ')[0]"/>
+                <t t-set="current_day" t-value="message.day"/>
             </div>
 
             <t t-call="mail.ChatThread.Message"/>
@@ -56,8 +60,8 @@
                         t-att-src="message.avatar_src"
                         class="o_thread_message_avatar"/>
                 </t>
-                <span t-if="!message.display_author" t-att-title="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LLL')" class="o_thread_message_side_date">
-                    <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm')"/>
+                <span t-if="!message.display_author" t-att-title="message.date" class="o_thread_message_side_date">
+                    <t t-esc="message.date.format('hh:mm')"/>
                 </span>
                 <i t-if="!message.display_author &amp;&amp; options.display_stars &amp;&amp; message.message_type != 'notification'"
                     t-att-class="'fa o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
@@ -83,8 +87,8 @@
                         <t t-esc="message.displayed_author"/>
                     </strong>
 
-                    <small t-att-title="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LLL')">
-                        - <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm A')"/>
+                    <small t-att-title="message.date">
+                        - <t t-esc="message.hour"/>
                     </small>
                     <t t-if="message.model &amp;&amp; (message.model != 'mail.channel') &amp;&amp; options.display_document_link">
                         on <a class="o_mail_redirect" href="#" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id"><t t-esc="message.record_name"/></a>
@@ -107,7 +111,7 @@
                     </t>
                     <t t-call="mail.ChatThread.MessageTracking"/>
                 </t>
-                <p t-if="message.subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
+                <p t-if="options.display_subject &amp;&amp; message.subject &amp;&amp; message.message_type != 'notification'" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
                 <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
                     <t t-if="message.body_short">
                         <div class="o_mail_body_short">
@@ -115,7 +119,6 @@
                         </div>
                         <div class="o_mail_body_long">
                             <t t-raw="message.body"/>
-                            <span class="oe_mail_expand"><a href="#">... read less</a></span>
                         </div>
                     </t>
                     <t t-if="! message.body_short">

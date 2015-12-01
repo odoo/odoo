@@ -208,47 +208,54 @@ class HrExpense(models.Model):
         if any(not expense.journal_id for expense in self):
             raise UserError(_("Expenses must have an expense journal specified to generate accounting entries."))
 
-        #create the move that will contain the accounting entries
-        move = self.env['account.move'].create({
-            'journal_id': self.journal_id.id,
-            'company_id': self.env.user.company_id.id,
-        })
-
+        journal_dict = {}
         for expense in self:
-            company_currency = expense.company_id.currency_id
-            diff_currency_p = expense.currency_id != company_currency
-            #one account.move.line per expense (+taxes..)
-            move_lines = expense._move_line_get()
+            if expense.journal_id not in journal_dict:
+                journal_dict[expense.journal_id] = []
+            journal_dict[expense.journal_id].append(expense)
 
-            #create one more move line, a counterline for the total on payable account
-            total, total_currency, move_lines = expense._compute_expense_totals(company_currency, move_lines)
-            if expense.payment_mode == 'company_account':
-                if not expense.bank_journal_id.default_credit_account_id:
-                    raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.bank_journal_id.name))
-                emp_account = expense.bank_journal_id.default_credit_account_id.id
-            else:
-                if not expense.employee_id.address_home_id:
-                    raise UserError(_("No Home Address found for the employee %s, please configure one.") % (expense.employee_id.name))
-                emp_account = expense.employee_id.address_home_id.property_account_payable_id.id
+        for journal, expense_list in journal_dict.items():
+            #create the move that will contain the accounting entries
+            move = self.env['account.move'].create({
+                'journal_id': journal.id,
+                'company_id': self.env.user.company_id.id,
+            })
+            for expense in expense_list:
+                company_currency = expense.company_id.currency_id
+                diff_currency_p = expense.currency_id != company_currency
+                #one account.move.line per expense (+taxes..)
+                move_lines = expense._move_line_get()
 
-            move_lines.append({
-                    'type': 'dest',
-                    'name': '/',
-                    'price': total,
-                    'account_id': emp_account,
-                    'date_maturity': expense.date,
-                    'amount_currency': diff_currency_p and total_currency or False,
-                    'currency_id': diff_currency_p and expense.currency_id.id or False,
-                    'ref': expense.employee_id.address_home_id.ref or False
-                    })
+                #create one more move line, a counterline for the total on payable account
+                total, total_currency, move_lines = expense._compute_expense_totals(company_currency, move_lines)
+                if expense.payment_mode == 'company_account':
+                    if not expense.bank_journal_id.default_credit_account_id:
+                        raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.bank_journal_id.name))
+                    emp_account = expense.bank_journal_id.default_credit_account_id.id
+                else:
+                    if not expense.employee_id.address_home_id:
+                        raise UserError(_("No Home Address found for the employee %s, please configure one.") % (expense.employee_id.name))
+                    emp_account = expense.employee_id.address_home_id.property_account_payable_id.id
 
-            #convert eml into an osv-valid format
-            lines = map(lambda x:(0, 0, expense._prepare_move_line(x)), move_lines)
-            move.write({'line_ids': lines})
-            expense.write({'account_move_id': move.id, 'state': 'post'})
-            if expense.payment_mode == 'company_account':
-                expense.paid_expenses()
-        return move.post()
+                move_lines.append({
+                        'type': 'dest',
+                        'name': '/',
+                        'price': total,
+                        'account_id': emp_account,
+                        'date_maturity': expense.date,
+                        'amount_currency': diff_currency_p and total_currency or False,
+                        'currency_id': diff_currency_p and expense.currency_id.id or False,
+                        'ref': expense.employee_id.address_home_id.ref or False
+                        })
+
+                #convert eml into an osv-valid format
+                lines = map(lambda x:(0, 0, expense._prepare_move_line(x)), move_lines)
+                move.write({'line_ids': lines})
+                expense.write({'account_move_id': move.id, 'state': 'post'})
+                if expense.payment_mode == 'company_account':
+                    expense.paid_expenses()
+            move.post()
+        return True
 
     @api.multi
     def _move_line_get(self):

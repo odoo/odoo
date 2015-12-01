@@ -12,6 +12,19 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
+var accented_letters_mapping = {
+    'a': '[àáâãäå]',
+    'ae': 'æ',
+    'c': 'ç',
+    'e': '[èéêë]',
+    'i': '[ìíîï]',
+    'n': 'ñ',
+    'o': '[òóôõö]',
+    'oe': 'œ',
+    'u': '[ùúûűü]',
+    'y': '[ýÿ]',
+};
+
 // The MentionManager allows the Composer to register listeners. For each
 // listener, it detects if the user is currently typing a mention (starting by a
 // given delimiter). If so, if fetches mention suggestions and renders them. On
@@ -63,16 +76,14 @@ var MentionManager = Widget.extend({
         };
 
         // add the selected suggestion to the list
-        var selection = this.active_listener.selection;
-        if (selection.length && this.active_listener.sort_selection) {
+        if (this.active_listener.selection.length) {
             // get mention matches (ordered by index in the text)
             var matches = this._get_match(text_input, this.active_listener);
             var index = get_mention_index(matches, this._get_selection_positions().start);
-            selection.splice(index, 0, selected_suggestion);
+            this.active_listener.selection.splice(index, 0, selected_suggestion);
         } else {
-            selection = selection.concat([selected_suggestion]);
+            this.active_listener.selection.push(selected_suggestion);
         }
-        this._update_listener_selection(this.active_listener, selection);
 
         // update input text, and reset dropdown
         var cursor_position = this._get_selection_positions().start;
@@ -90,10 +101,7 @@ var MentionManager = Widget.extend({
      * @param {char} [delimiter] the mention delimiter
      * @param {function} [fetch_callback] the callback to fetch mention suggestions
      * @param {string} [model] the model used for redirection
-     * @param {boolean} [notify_selection_changed] true to trigger an event when the selection changes
      * @param {string} [redirect_classname] the classname of the <a> wrapping the mention
-     * @param {boolean} [sort_selection] true if the selection must be sorted
-     * @param {string} [suggestions_template] the QWeb template to render suggestions
      */
     register: function (listener) {
         this.listeners.push(_.extend(listener, {
@@ -137,7 +145,6 @@ var MentionManager = Widget.extend({
      */
     detect_delimiter: function () {
         var self = this;
-        var options = this.options;
         var text_val = this.composer.$input.val();
         var cursor_position = this._get_selection_positions().start;
         var left_string = text_val.substring(0, cursor_position);
@@ -146,7 +153,7 @@ var MentionManager = Widget.extend({
             var pattern = "(^"+delimiter+"|(^\\s"+delimiter+"))";
             var regex_start = new RegExp(pattern, "g");
             search_str = search_str.replace(/^\s\s*|^[\n\r]/g, '');
-            if (regex_start.test(search_str) && search_str.length > options.min_length) {
+            if (regex_start.test(search_str) && search_str.length > self.options.min_length) {
                 search_str = search_str.replace(pattern, '');
                 return search_str.indexOf(' ') < 0 && !/[\r\n]/.test(search_str) ? search_str.replace(delimiter, '') : false;
             }
@@ -164,19 +171,19 @@ var MentionManager = Widget.extend({
             }
         }
 
-        if (this.active_listener) {
-            // start a timeout to fetch data with the current 'mention word'. The timer avoid to start
-            // an RPC for each pushed key when the user is still typing.
-            // The 'typing_speed' option should approach the time for a human to type a letter.
-            clearTimeout(this.mention_fetch_timer);
-            this.mention_fetch_timer = setTimeout(function () {
-                $.when(listener.fetch_callback(self.mention_word, self.active_listener)).then(function (suggestions) {
+        // start a timeout to fetch data with the current 'mention word'. The timer avoid to start
+        // an RPC for each pushed key when the user is still typing.
+        // The 'typing_speed' option should approach the time for a human to type a letter.
+        clearTimeout(this.mention_fetch_timer);
+        this.mention_fetch_timer = setTimeout(function () {
+            if (self.active_listener) {
+                $.when(listener.fetch_callback(self.mention_word)).then(function (suggestions) {
                     self.set('mention_suggestions', suggestions);
                 });
-            }, this.options.typing_speed);               
-        } else {
-            this.set('mention_suggestions', []); // close the dropdown
-        }
+            } else {
+                self.set('mention_suggestions', []); // close the dropdown
+            }
+        }, this.options.typing_speed);
     },
 
     /**
@@ -201,7 +208,7 @@ var MentionManager = Widget.extend({
                 }
             }
             if (to_remove.length) {
-                self._update_listener_selection(listener, _.difference(mention_selection, to_remove));
+                listener.selection = _.difference(mention_selection, to_remove);
             }
         });
     },
@@ -235,9 +242,8 @@ var MentionManager = Widget.extend({
     },
 
     reset_selections: function () {
-        var self = this;
         _.each(this.listeners, function (listener) {
-            self._update_listener_selection(listener, []);
+            listener.selection = [];
         });
     },
 
@@ -269,7 +275,7 @@ var MentionManager = Widget.extend({
     },
     _render_suggestions: function () {
         if (_.flatten(this.get('mention_suggestions')).length) {
-            this.$el.html(QWeb.render(this.active_listener.suggestions_template, {
+            this.$el.html(QWeb.render('mail.ChatComposer.MentionSuggestions', {
                 suggestions: this.get('mention_suggestions'),
             }));
             this.$el
@@ -280,12 +286,6 @@ var MentionManager = Widget.extend({
             this.$el.removeClass('open');
             this.$el.empty();
             this.open = false;
-        }
-    },
-    _update_listener_selection: function (listener, selection) {
-        listener.selection = selection;
-        if (listener.notify_selection_changed) {
-            this.trigger('selection_changed', listener);
         }
     },
 
@@ -327,10 +327,8 @@ var Composer = Widget.extend({
             input_max_height: 150,
             input_min_height: 28,
             mention_fetch_limit: 8,
-            get_channel_info: function () {},
         });
         this.context = this.options.context;
-        this.get_channel_info = this.options.get_channel_info;
 
         // Attachments
         this.AttachmentDataSet = new data.DataSetSearch(this, 'ir.attachment', this.context);
@@ -343,19 +341,14 @@ var Composer = Widget.extend({
             delimiter: '@',
             fetch_callback: this.mention_fetch_partners.bind(this),
             model: 'res.partner',
-            notify_selection_changed: true,
             redirect_classname: 'o_mail_redirect',
-            sort_selection: true,
-            suggestions_template: 'mail.ChatComposer.MentionPartnerSuggestions',
         });
         this.mention_manager.register({
             delimiter: '#',
             fetch_callback: this.mention_fetch_channels.bind(this),
             model: 'mail.channel',
             redirect_classname: 'o_channel_redirect',
-            suggestions_template: 'mail.ChatComposer.MentionChannelSuggestions'
         });
-        this.mention_manager.on('selection_changed', this, this.mention_render_selection);
         this.PartnerModel = new Model('res.partner');
         this.ChannelModel = new Model('mail.channel');
     },
@@ -365,8 +358,10 @@ var Composer = Widget.extend({
 
         this.$attachment_button = this.$(".o_composer_button_add_attachment");
         this.$attachments_list = this.$('.o_composer_attachments_list');
-        this.$mention_partner_tags = this.$('.o_composer_mentioned_partners');
         this.$input = this.$('.o_composer_input');
+        this.$input.focus(function () {
+            self.trigger('input_focused');
+        });
         this.resize_input();
 
         // Attachments
@@ -403,7 +398,7 @@ var Composer = Widget.extend({
         return $.when({
             content: this.mention_manager.generate_links(value),
             attachment_ids: _.pluck(this.get('attachment_ids'), 'id'),
-            partner_ids: _.pluck(this.mention_manager.get_listener_selection('@'), 'id'),
+            partner_ids: _.uniq(_.pluck(this.mention_manager.get_listener_selection('@'), 'id')),
         });
     },
 
@@ -607,19 +602,38 @@ var Composer = Widget.extend({
                 });
             });
     },
-    mention_fetch_partners: function (search, listener) {
-        var kwargs = {
-            channel: this.get_channel_info(),
-            exclude: listener ? _.pluck(listener.selection, 'id') : [],
-            limit: this.options.mention_fetch_limit,
-            search: search,
-        };
-        return this.PartnerModel.call('get_mention_suggestions', kwargs);
+    mention_fetch_partners: function (search) {
+        var self = this;
+        return $.when(this.mention_prefetched_partners).then(function (prefetched_partners) {
+            // filter prefetched partners with the given search string
+            var suggestions = [];
+            var limit = self.options.mention_fetch_limit;
+            var search_regexp = new RegExp(self.unaccent(search), 'i');
+            _.each(prefetched_partners, function (partners) {
+                if (limit > 0) {
+                    var filtered_partners = _.filter(partners, function (partner) {
+                        return partner.email && partner.email.search(search_regexp) !== -1 ||
+                               partner.name && self.unaccent(partner.name).search(search_regexp) !== -1;
+                    });
+                    if (filtered_partners.length) {
+                        suggestions.push(filtered_partners.slice(0, limit));
+                        limit -= filtered_partners.length;
+                    }
+                }
+            });
+            if (!suggestions.length) {
+                // no result found among prefetched partners, fetch other suggestions
+                var kwargs = {
+                    limit: limit,
+                    search: search,
+                };
+                suggestions = self.PartnerModel.call('get_mention_suggestions', kwargs);
+            }
+            return suggestions;
+        });
     },
-    mention_render_selection: function (listener) {
-        this.$mention_partner_tags.html(QWeb.render('mail.ChatComposer.MentionTags', {
-            partners: listener.selection,
-        }));
+    mention_set_prefetched_partners: function (prefetched_partners) {
+        this.mention_prefetched_partners = prefetched_partners;
     },
 
     // Others
@@ -628,6 +642,12 @@ var Composer = Widget.extend({
     },
     focus: function () {
         this.$input.focus();
+    },
+    unaccent: function (str) {
+        _.each(accented_letters_mapping, function (value, key) {
+            str = str.replace(new RegExp(value, 'g'), key);
+        });
+        return str;
     },
 });
 
