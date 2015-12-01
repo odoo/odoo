@@ -2240,6 +2240,209 @@ class StockMove(models.Model):
             if vals:
                 move.write(vals)
 
+    @api.model
+    def _move_quants_by_lot(self, ops, lot_qty, quants_taken, false_quants, lot_move_qty, quant_dest_package_id):
+        quant_obj = self.env['stock.quant']
+        move_quants_dict = {}
+        domain = [('qty', '>', 0)]
+        fallback_domain = [('reservation_id', '=', False)]
+        fallback_domain2 = ['&', ('reservation_id', 'not in', [x for x in lot_move_qty.keys()]), ('reservation_id', '!=', False)]
+        preferred_domain_list = [fallback_domain] + [fallback_domain2]
+        rounding = ops.product_id.uom_id.rounding
+        # Iterate for every move through the different lots taken
+        # Take the reserved quants with the correct lot first
+        # Afterwards take the not reserved quants (or reserved on another move) with the correct lot
+        # If nothing found, take first the quants reserved with False lots before taking others
+        for move in lot_move_qty:
+            move_quants_dict[move] = {}
+            move_rec = self.env['stock.move'].browse(move)
+            #Needs to be divided by lot still
+            for quant in quants_taken:
+                move_quants_dict[move].setdefault(quant[0].lot_id.id, [])
+                move_quants_dict[move][quant[0].lot_id.id] += [quant]
+            false_quants_move = [x for x in false_quants if x[0].reservation_id.id == move]
+            for lot in lot_qty:
+                move_quants_dict[move].setdefault(lot, [])
+                if float_compare(lot_move_qty[move], 0, precision_rounding=rounding) > 0 and float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0:
+                    # Search if we can find quants with that lot
+                    quants = quant_obj.quants_get_preferred_domain(lot_move_qty[move], move_rec, ops=ops, lot_id=lot, domain=domain,
+                                                        preferred_domain_list=preferred_domain_list)
+                    while quants and float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(lot_move_qty[move], 0, precision_rounding=rounding) > 0:
+                        quant = quants.pop(0)
+                        if quant[0] and quant[0].lot_id:
+                            qty = min(lot_qty[lot], lot_move_qty[move], quant[1])
+                            move_quants_dict[move][lot] += [(quant[0], qty)]
+                            lot_qty[lot] -= qty
+                            lot_move_qty[move] -= qty
+                        else:
+                            #Take reserved False quants first if no quants with lot anymore
+                            while false_quants_move and float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(lot_move_qty[move], 0, precision_rounding=rounding) > 0:
+                                qty_min = min(lot_qty[lot], lot_move_qty[move])
+                                if false_quants_move[0][1] > qty_min:
+                                    false_quants_move[0][1] -= qty_min
+                                    move_quants_dict[move][lot] += [(false_quants_move[0][0], qty_min)]
+                                    qty = qty_min
+                                else:
+                                    move_quants_dict[move][lot] += [false_quants_move[0]]
+                                    qty = false_quants_move[0][1]
+                                    false_quants_move.pop(0)
+                                lot_qty[lot] -= qty
+                                lot_move_qty[move] -= qty
+                            if float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(lot_move_qty[move], 0, precision_rounding=rounding) > 0:
+                                qty = min(lot_qty[lot], lot_move_qty[move], quant[1])
+                                move_quants_dict[move][lot] += [(quant[0], qty)]
+                                lot_qty[lot] -= qty
+                                lot_move_qty[move] -= qty
+
+                #Move all the quants related to that lot/move
+                quant_obj.quants_move(move_quants_dict[move][lot], move_rec, ops.location_dest_id, location_from=ops.location_id,
+                                                    lot_id=lot, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id,
+                                                    dest_package_id=quant_dest_package_id)
+
+    @api.multi
+    def unlink(self):
+        for move in self:
+            if move.state not in ('draft', 'cancel'):
+                raise UserError(_('You can only delete draft moves.'))
+        return super(StockMove, self).unlink()
+
+    @api.multi
+    def action_scrap(self, quantity, location_id, restrict_lot_id=False, restrict_partner_id=False):
+        """ Move the scrap/damaged product into scrap location
+        @param quantity : specify scrap qty
+        @param location_id : specify scrap location
+        @return: Scraped lines
+        """
+        quant_obj = self.env["stock.quant"]
+        #quantity should be given in MOVE UOM
+        if quantity <= 0:
+            raise UserError(_('Please provide a positive quantity to scrap.'))
+        res = []
+        for move in self:
+            source_location = move.location_id
+            if move.state == 'done':
+                source_location = move.location_dest_id
+            #Previously used to prevent scraping from virtual location but not necessary anymore
+            #if source_location.usage != 'internal':
+                #restrict to scrap from a virtual location because it's meaningless and it may introduce errors in stock ('creating' new products from nowhere)
+                #raise UserError(_('Forbidden operation: it is not allowed to scrap products from a virtual location.'))
+            default_val = {
+                'location_id': source_location.id,
+                'product_uom_qty': quantity,
+                'state': move.state,
+                'scrapped': True,
+                'location_dest_id': location_id,
+                'restrict_lot_id': restrict_lot_id,
+                'restrict_partner_id': restrict_partner_id,
+            }
+            new_move = move.copy(default_val)
+
+            res += [new_move.id]
+            for product in move.product_id:
+                if move.picking_id:
+                    uom = product.uom_id.name if product.uom_id else ''
+                    message = _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, product.name)
+                    move.picking_id.message_post(body=message)
+
+            # We "flag" the quant from which we want to scrap the products. To do so:
+            #    - we select the quants related to the move we scrap from
+            #    - we reserve the quants with the scrapped move
+            # See self.action_done, et particularly how is defined the "preferred_domain" for clarification
+            # scrap_move = self.browse(cr, uid, new_move, context=context)
+            if move.state == 'done' and new_move.location_id.usage not in ('supplier', 'inventory', 'production'):
+                domain = [('qty', '>', 0), ('history_ids', 'in', [move.id])]
+                # We use scrap_move data since a reservation makes sense for a move not already done
+                quants = quant_obj.quants_get_preferred_domain(new_move.location_id,
+                        new_move.product_id, quantity, domain=domain, preferred_domain_list=[],
+                        restrict_lot_id=new_move.restrict_lot_id.id, restrict_partner_id=new_move.restrict_partner_id.id)
+                quant_obj.quants_reserve(quants, new_move)
+        new_move.action_done()
+        return res
+
+    @api.model
+    def split(self, move, qty, restrict_lot_id=False, restrict_partner_id=False):
+        """ Splits qty from move move into a new move
+        :param move: browse record
+        :param qty: float. quantity to split (given in product UoM)
+        :param restrict_lot_id: optional production lot that can be given in order to force the new move to restrict its choice of quants to this lot.
+        :param restrict_partner_id: optional partner that can be given in order to force the new move to restrict its choice of quants to the ones belonging to this partner.
+        returns the ID of the backorder move created
+        """
+        if move.state in ('done', 'cancel'):
+            raise UserError(_('You cannot split a move done'))
+        if move.state == 'draft':
+            #we restrict the split of a draft move because if not confirmed yet, it may be replaced by several other moves in
+            #case of phantom bom (with mrp module). And we don't want to deal with this complexity by copying the product that will explode.
+            raise UserError(_('You cannot split a draft move. It needs to be confirmed first.'))
+
+        if move.product_qty <= qty or qty == 0:
+            return move.id
+
+        uom_obj = self.env['product.uom']
+
+        #HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
+        uom_qty = uom_obj._compute_qty_obj(move.product_id.uom_id, qty, move.product_uom, rounding_method='HALF-UP')
+        defaults = {
+            'product_uom_qty': uom_qty,
+            'procure_method': 'make_to_stock',
+            'restrict_lot_id': restrict_lot_id,
+            'restrict_partner_id': restrict_partner_id,
+            'split_from': move.id,
+            'procurement_id': move.procurement_id.id,
+            'move_dest_id': move.move_dest_id.id,
+            'origin_returned_move_id': move.origin_returned_move_id.id,
+        }
+        if self.env.context.get('source_location_id'):
+            defaults['location_id'] = self.env.context['source_location_id']
+        new_move = move.copy(defaults)
+
+        # ctx = context.copy()
+        # ctx['do_not_propagate'] = True
+        move.with_context(do_not_propagate=True).write({
+            'product_uom_qty': move.product_uom_qty - uom_qty,
+        })
+
+        if move.move_dest_id and move.propagate and move.move_dest_id.state not in ('done', 'cancel'):
+            new_move_prop = self.split(move.move_dest_id, qty)
+            new_move.write({'move_dest_id': new_move_prop})
+        #returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and
+        #thus the result of action_confirm should always be a list of 1 element length)
+        return new_move.action_confirm()[0]
+
+    @api.model
+    def get_code_from_locs(self, move, location_id=False, location_dest_id=False):
+        """
+        Returns the code the picking type should have.  This can easily be used
+        to check if a move is internal or not
+        move, location_id and location_dest_id are browse records
+        """
+        code = 'internal'
+        src_loc = location_id or move.location_id
+        dest_loc = location_dest_id or move.location_dest_id
+        if src_loc.usage == 'internal' and dest_loc.usage != 'internal':
+            code = 'outgoing'
+        if src_loc.usage != 'internal' and dest_loc.usage == 'internal':
+            code = 'incoming'
+        return code
+
+    @api.multi
+    def show_picking(self):
+        assert len(self.ids) > 0
+        picking_id = self[0].picking_id.id
+        if picking_id:
+            view = self.env.ref('stock.view_picking_form')
+            return {
+                    'name': _('Transfer'),
+                    'type': 'ir.actions.act_window',
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'stock.picking',
+                    'views': [(view.id, 'form')],
+                    'view_id': view.id,
+                    'target': 'new',
+                    'res_id': picking_id,
+                }
+
 class StockInventory(models.Model):
     _name = "stock.inventory"
     _description = "Inventory"
